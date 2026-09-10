@@ -9,7 +9,7 @@
 | Name             | GitHub Handle | Contribution                                                             |
 |------------------|---------------|--------------------------------------------------------------------------|
 | Jenna Hunte      | @jehunte      | Break Through Tech Coach                                                 |
-|                  | @             |                                                                          |
+| Alesha Rafi      | @ralesh10     | Team Member                                                              |
 |                  | @             |                                                                          |
 |                  | @             |                                                                          |
 |                  | @             |                                                                          |

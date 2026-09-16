@@ -20,11 +20,17 @@ KPMG — AI Research Intelligence Agent for Business Insight Translation
 
 ## 🎯 **Project Highlights**
 
-**Example:**
+
 
 -Building a RAG (Retrieval-Augmented Generation) agent: parse AI research papers with PyMuPDF → chunk & embed the text with OpenAI's text-embedding-3-small → store/retrieve in ChromaDB → summarize and translate findings into business implications with OpenAI gpt-4-mini, always citing the source.
+
 -Success looks like: the system consistently retrieves relevant papers for a business question, accurately summarizes key points without losing important context, and its output (relevance, accuracy, business usefulness) holds up under KPMG stakeholder review.
--Milestone #1 (Sept 30): data exploration/preprocessing, an evaluation framework with benchmark queries, and a baseline retrieval pipeline. -Milestone #2 (Oct 31): full retrieval + summarization pipeline, business-translation prompt engineering, and initial accuracy evaluation. --Milestone #3 (Nov 30): output refinement, a lightweight UI/interaction layer, and final documentation.
+
+-Milestone #1 (Sept 30): data exploration/preprocessing, an evaluation framework with benchmark queries, and a baseline retrieval pipeline. 
+
+-Milestone #2 (Oct 31): full retrieval + summarization pipeline, business-translation prompt engineering, and initial accuracy evaluation. -
+
+-Milestone #3 (Nov 30): output refinement, a lightweight UI/interaction layer, and final documentation.
 Developed in partnership with KPMG as part of the Break Through Tech AI Studio program.
 
 ---

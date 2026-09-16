@@ -37,13 +37,6 @@ Developed in partnership with KPMG as part of the Break Through Tech AI Studio p
 
 ## 👩🏽‍💻 **Setup and Installation**
 
-**Provide step-by-step instructions so someone else can run your code and reproduce your results. Depending on your setup, include:**
-
-* How to clone the repository
-* How to install dependencies
-* How to set up the environment
-* How to access the dataset(s)
-* How to run the notebook or scripts
 Python 3.10+ installed (python.org)
 Git installed
 VS Code (team's standard IDE), or your editor of choice
@@ -78,12 +71,15 @@ Open the notebooks locally in JupyterLab, or in Google Colab by opening the note
 
 ## 🏗️ **Project Overview**
 
-**Describe:**
 
 - This project is part of the Break Through Tech AI Studio program, which pairs student fellows with host companies to solve real-world AI/ML challenges.
+  
 -Host company: KPMG — a professional services firm providing audit, tax, and advisory services, helping organizations manage risk, improve operations, and make business decisions. KPMG operates globally across industries including financial services, technology, healthcare, retail, consumer goods, energy, and the public sector.
+
 -Key stakeholders: KPMG employees and teams working with AI research and emerging technologies, plus consultants who apply these insights with clients.
+
 -Objective and scope: Build an AI research agent (RAG pipeline) that finds relevant information in AI research articles for a given business question, summarizes it, and translates it into clear business implications or actionable tasks — with citations back to the source.
+
 -Real-world significance: KPMG consultants and stakeholders need to stay current on AI research to advise clients, but reading and synthesizing academic papers is time-consuming. An agent that can accurately surface and translate relevant findings into business terms — with verifiable citations — could meaningfully speed up how research gets applied to client work.
 ---
 

@@ -11,7 +11,7 @@
 | Jenna Hunte      | @jehunte      | Break Through Tech Coach                                                 |
 | Alesha Rafi      | @ralesh10     | Team Member                                                              |
 | Latifa Abdraimova| @latiifkaa    | Team Member                                                              |
-| Teegawende Segrado| @Teegawende12|                                                                          |
+| Teegawende Segrado| @Teegawende12|  Team Member                                                                        |
 |                  | @             |                                                                          |
 
 ---

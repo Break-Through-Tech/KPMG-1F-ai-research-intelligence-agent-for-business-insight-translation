@@ -11,8 +11,8 @@ KPMG — AI Research Intelligence Agent for Business Insight Translation
 | Jenna Hunte        | @jehunte      | Break Through Tech Coach                                                 |
 | Alesha Rafi        | @ralesh10     | Team Member                                                              |
 | Latifa Abdraimova  | @latiifkaa    | Team Member                                                              |
-| Jooheon Lee        | @Teegawende12 | Team Member                                                              |
-| Teegawende Segrado | @             | Team Member                                                              |
+| Teegawende Segrado | @Teegawende12 | Team Member                                                              |
+| Jooheon Lee        | @             | Team Member                                                              |
 | Khoi Nguyen        | @             | Team Member                                                              |
 | James Zhu          | @             | Team Member                                                              |
 

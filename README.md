@@ -12,7 +12,7 @@ KPMG — AI Research Intelligence Agent for Business Insight Translation
 | Alesha Rafi        | @ralesh10     | Team Member                                                              |
 | Latifa Abdraimova  | @latiifkaa    | Team Member                                                              |
 | Teegawende Segrado | @Teegawende12 | Team Member                                                              |
-| Jooheon Lee        | @             | Team Member                                                              |
+| Jooheon Lee        | @leejooheonn  | Team Member                                                              |
 | Khoi Nguyen        | @             | Team Member                                                              |
 | James Zhu          | @             | Team Member                                                              |
 

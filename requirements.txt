@@ -4,3 +4,4 @@ pymupdf
 python-dotenv
 langchain
 langchain-openai
+jupyter

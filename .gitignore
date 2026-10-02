@@ -1,10 +1,16 @@
-# Environment variables
+# Environment & Virtual Envs
 .env
-
-# Virtual Environment
 venv/
 .venv/
 
-# Byte-compiled / Python cache
+# Python Cache & Databases
 __pycache__/
 *.pyc
+vector_db/
+
+# OS & Editor Metadata
+.DS_Store
+
+# Jupyter Checkpoints
+.ipynb_checkpoints/
+*-checkpoint.ipynb

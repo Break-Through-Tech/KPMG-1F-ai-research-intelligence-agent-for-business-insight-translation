@@ -1,6 +1,8 @@
 .venv/
+venv/
 .env
 vector_db/
+data/chroma_db/
 data/pdfs/
 data/processed/
 __pycache__/

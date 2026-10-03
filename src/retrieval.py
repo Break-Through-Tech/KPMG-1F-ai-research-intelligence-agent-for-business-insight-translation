@@ -1,3 +1,6 @@
+import argparse
+import json
+
 import pandas as pd
 from pathlib import Path
 from sentence_transformers import SentenceTransformer
@@ -90,7 +93,58 @@ def store_embeddings(df, embeddings):
 
     return collection
 
+
+def search(query, top_k=5, *, client=None, model=None):
+    """Return ranked passages with their paper and page citation fields."""
+    if not isinstance(query, str) or not query.strip():
+        raise ValueError("Query must be non-empty text")
+    if not isinstance(top_k, int) or isinstance(top_k, bool) or top_k < 1:
+        raise ValueError("top_k must be a positive integer")
+
+    client = client or chromadb.PersistentClient(path=str(CHROMA_DIR))
+    collection = client.get_collection(name=COLLECTION_NAME)
+    if (collection.metadata or {}).get("embedding_model") != EMBEDDING_MODEL:
+        raise ValueError("Index model is unknown or different; rerun indexing first")
+    count = collection.count()
+    if count == 0:
+        return []
+
+    model = model or SentenceTransformer(EMBEDDING_MODEL)
+    query_vector = model.encode([query.strip()]).tolist()
+    result = collection.query(
+        query_embeddings=query_vector,
+        n_results=min(top_k, count),
+        include=["documents", "metadatas", "distances"],
+    )
+    hits = []
+    for chunk_id, passage, metadata, distance in zip(
+        result["ids"][0],
+        result["documents"][0],
+        result["metadatas"][0],
+        result["distances"][0],
+    ):
+        if not metadata or not all(key in metadata for key in ("arxiv_id", "title", "page_number", "pdf_url")):
+            raise ValueError("Index contains passages without citations; rerun indexing first")
+        hits.append({
+            "chunk_id": chunk_id,
+            "text": passage,
+            "distance": distance,
+            "arxiv_id": metadata["arxiv_id"],
+            "title": metadata["title"],
+            "page_number": metadata["page_number"],
+            "pdf_url": metadata["pdf_url"],
+        })
+    return hits
+
+
 if __name__ == "__main__":
-    chunks = load_chunks()
-    embeddings = create_embeddings(chunks)
-    collection = store_embeddings(chunks, embeddings)
+    parser = argparse.ArgumentParser(description="Build or query the local arXiv vector index")
+    parser.add_argument("--query", help="Search indexed chunks instead of rebuilding the index")
+    parser.add_argument("--top-k", type=int, default=5, help="Maximum search results (default: 5)")
+    args = parser.parse_args()
+    if args.query is not None:
+        print(json.dumps(search(args.query, args.top_k), indent=2))
+    else:
+        chunks = load_chunks()
+        embeddings = create_embeddings(chunks)
+        store_embeddings(chunks, embeddings)

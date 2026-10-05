@@ -30,6 +30,12 @@ Example search result fields: `chunk_id`, `text`, `distance`, `arxiv_id`, `title
 
 ## Scope and next work
 
+The standalone [human-in-the-loop checkpoint](docs/human-checkpoint.md) notebook
+accepts an industry, insight, and jurisdiction, uses Gemini Search-grounded regulatory
+evidence, and produces a structured advisory assessment followed by explicit human
+review. It requires a local `GOOGLE_API_KEY` and is not yet integrated with the paper
+pipeline. Cited sources and applicability still require human verification.
+
 The 25-paper set is a prototype baseline, not a claim of full 100-paper coverage. Current chunking is character-based (2,000 characters, 200 overlap); figures, reference lists, and PDF extraction noise may degrade results. Before scaling, define benchmark questions and evaluate passage relevance and citation correctness. Then connect retrieval to source-grounded summarization and business-implication generation, with separate checks that generated claims actually cite supporting passages. No such end-to-end accuracy result is claimed yet.
 
 ## Team

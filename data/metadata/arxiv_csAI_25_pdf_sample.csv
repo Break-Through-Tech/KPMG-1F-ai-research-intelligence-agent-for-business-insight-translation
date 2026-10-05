@@ -1,0 +1,26 @@
+arxiv_id,title,published,pdf_url
+2602.00937v3,CLAMP: Contrastive Learning for 3D Multi-View Action-Conditioned Robotic Manipulation Pretraining,2026-01-31 23:32:54+00:00,https://arxiv.org/pdf/2602.00937v3
+2602.00933v3,MCP-Atlas: A Large-Scale Benchmark for Tool-Use Competency with Real MCP Servers,2026-01-31 23:19:39+00:00,https://arxiv.org/pdf/2602.00933v3
+2602.00931v2,Continuous-Utility Direct Preference Optimization,2026-01-31 23:15:32+00:00,https://arxiv.org/pdf/2602.00931v2
+2603.00829v2,Constitutional Black-Box Monitoring for Scheming in LLM Agents,2026-02-28 22:31:32+00:00,https://arxiv.org/pdf/2603.00829v2
+2603.00824v2,A Gauge Theory of Superposition: Toward a Sheaf-Theoretic Atlas of Neural Representations,2026-02-28 22:05:14+00:00,https://arxiv.org/pdf/2603.00824v2
+2603.00823v2,A Comprehensive Evaluation of LLM Unlearning Robustness under Multi-Turn Interaction,2026-02-28 22:01:31+00:00,https://arxiv.org/pdf/2603.00823v2
+2604.00324v1,The Persistent Vulnerability of Aligned AI Systems,2026-03-31 23:49:07+00:00,https://arxiv.org/pdf/2604.00324v1
+2604.00319v1,Collaborative AI Agents and Critics for Fault Detection and Cause Analysis in Network Telemetry,2026-03-31 23:33:56+00:00,https://arxiv.org/pdf/2604.00319v1
+2604.00314v1,Prompt-Guided Prefiltering for VLM Image Compression,2026-03-31 23:27:12+00:00,https://arxiv.org/pdf/2604.00314v1
+2605.00292v2,Caracal: Causal Architecture via Spectral Mixing,2026-04-30 23:31:10+00:00,https://arxiv.org/pdf/2605.00292v2
+2605.00276v1,Agentic AI for Trip Planning Optimization Application,2026-04-30 22:29:56+00:00,https://arxiv.org/pdf/2605.00276v1
+2605.00273v2,When Do Diffusion Models learn to Generate Multiple Objects?,2026-04-30 22:18:33+00:00,https://arxiv.org/pdf/2605.00273v2
+2606.01502v1,"Move the Query, Not the Cache: Characterizing Cross-Instance Latent Attention Redistribution Across GPU Fabrics",2026-05-31 23:53:24+00:00,https://arxiv.org/pdf/2606.01502v1
+2606.01498v1,TimeSage-MT: A Multi-Turn Benchmark for Evaluating Agentic Time Series Reasoning,2026-05-31 23:34:35+00:00,https://arxiv.org/pdf/2606.01498v1
+2606.01494v1,"ClawHub Security Signals: When VirusTotal, Static Analysis, and SkillSpector Disagree",2026-05-31 23:20:25+00:00,https://arxiv.org/pdf/2606.01494v1
+2607.00276v1,Testing Frontier Large Language Models' Physics Literacy in Parallel Physical Worlds,2026-06-30 23:52:15+00:00,https://arxiv.org/pdf/2607.00276v1
+2607.00275v1,Entropy-Regularized Probabilistic Gates for Sparse Model Discovery in Scarce-Data Federated Learning,2026-06-30 23:51:44+00:00,https://arxiv.org/pdf/2607.00275v1
+2607.00274v1,SEFORA: Student Essays with Feedback Corpus and LLM Feedback Evaluation Framework,2026-06-30 23:48:15+00:00,https://arxiv.org/pdf/2607.00274v1
+2608.00345v1,ORCA: ORgan-Centroid Aggregation for Training-Free 3D CT Visual Token Compression,2026-07-31 23:27:39+00:00,https://arxiv.org/pdf/2608.00345v1
+2608.00339v1,Bayesian and Motivated Reasoning in AI Agents,2026-07-31 23:02:58+00:00,https://arxiv.org/pdf/2608.00339v1
+2608.00335v1,"RMSWeb: Reflection, Failure-Mode Mining, and Salvage-DS for Web Agent Reinforcement Learning",2026-07-31 22:57:16+00:00,https://arxiv.org/pdf/2608.00335v1
+2609.00498v1,Validity-Aware Jailbreak Evaluation for Large Language Models,2026-08-31 23:57:53+00:00,https://arxiv.org/pdf/2609.00498v1
+2609.00495v1,Beyond Token Positions: Safety Alignment Across Denoising Steps in Diffusion Language Models,2026-08-31 23:50:31+00:00,https://arxiv.org/pdf/2609.00495v1
+2609.39215v1,"In a Streaming World, Should You Stand Still? A Comprehensive Benchmark of Anomaly Detection in Streams",2026-09-30 07:56:52+00:00,https://arxiv.org/pdf/2609.39215v1
+2609.39199v1,UniAE-MoE: A Unified Audio Encoder via Mixture of Experts,2026-09-30 07:49:18+00:00,https://arxiv.org/pdf/2609.39199v1

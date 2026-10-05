@@ -1,0 +1,24 @@
+insight = {
+    "industry": "finance"
+    "insight" : " Banks can fully automate quarterly reporting."
+}
+industry = insight["industry"]
+query = f"""(
+    Retrieve all the regulations around this topic {industry} and this insight: {insight}
+)
+rules = regulation_retriever.search(
+"query" 
+)
+prompt = f"""{
+    Industry:
+    {industry}
+ 
+    Relevant Regulations:
+    {retrieved_regulations}
+ 
+    Insight:
+    {insight}
+ 
+    Using the relevant regulations available, rate whether the insight that we have is legitimate and doable in the company.
+"""
+}

@@ -139,6 +139,37 @@ class CheckpointTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.validate(data)
 
+    def test_review_revalidates_edited_findings_and_citations(self):
+        for edit in ["conflict", "citation", "schema"]:
+            result = self.validate()
+            if edit == "conflict":
+                result["assessment"]["legal_constraints"]["status"] = "conflicts"
+            elif edit == "citation":
+                result["assessment"]["legal_constraints"]["source_ids"] = [99]
+            else:
+                del result["assessment"]["governance"]
+            with self.subTest(edit=edit), self.assertRaises(ValueError):
+                checkpoint.record_human_review(
+                    result, decision="approve", reviewer="Test", notes="Reviewed")
+
+    def test_assessment_owns_evidence_snapshot(self):
+        evidence = self.retrieve()
+        self.client.models.generate_content.return_value = SimpleNamespace(
+            text=json.dumps(assessment()))
+        result = checkpoint.assess_insight(self.client, evidence)
+        evidence["sources"][0]["url"] = "https://changed.example"
+        evidence["evidence"][0]["text"] = "Changed claim"
+        self.assertEqual(result["sources"][0]["url"], "https://regulator.example/rule")
+        self.assertEqual(result["evidence"][0]["text"], "A reviewer is required.")
+
+    def test_context_guard_rejects_each_changed_input(self):
+        evidence = self.retrieve()
+        checkpoint.require_current_context(evidence, self.context)
+        for key in self.context:
+            context = {**self.context, key: "Changed"}
+            with self.subTest(key=key), self.assertRaisesRegex(ValueError, "Inputs changed"):
+                checkpoint.require_current_context(evidence, context)
+
     def test_review_requires_identity_notes_and_valid_decision(self):
         result = self.validate()
         for decision, reviewer, notes in [("approve", "", "Reviewed"),
@@ -167,6 +198,14 @@ class CheckpointTests(unittest.TestCase):
                 exec(compile(source, f"notebook-cell-{index}", "exec"), namespace)
         self.assertTrue(namespace["reviewed_checkpoint"]["approved"])
         self.assertFalse(namespace["checkpoint"]["approved"])
+        # Editing an input without rerunning its cell must block both later paths.
+        namespace["insight_data"]["insight"] = "A different proposal"
+        with self.assertRaisesRegex(ValueError, "Inputs changed"):
+            exec(compile(cells[4], "review-stale-input", "exec"), namespace)
+        self.assertIsNone(namespace["reviewed_checkpoint"])
+        with self.assertRaisesRegex(ValueError, "Inputs changed"):
+            exec(compile(cells[3], "assessment-stale-input", "exec"), namespace)
+        self.assertIsNone(namespace["checkpoint"])
         self.client.models.generate_content.side_effect = errors.ClientError(
             403, {"error": {"message": "Denied"}})
         with self.assertRaises(RuntimeError):

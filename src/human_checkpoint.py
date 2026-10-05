@@ -1,6 +1,7 @@
 """Grounded regulatory assessment; a model recommendation is never human approval."""
 
 import os
+from copy import deepcopy
 from datetime import date
 from typing import Literal
 
@@ -126,6 +127,16 @@ def assess_insight(client, evidence):
     if not response.text:
         raise ValueError("Validator returned no structured assessment.")
     assessment = Assessment.model_validate_json(response.text)
+    _validate_findings(assessment, evidence)
+    return deepcopy({
+        "schema_version": "1.0", **evidence, "assessment": assessment.model_dump(),
+        "human_review": {"status": "pending", "reviewer": None, "notes": None},
+        "approved": False,
+    })
+
+
+def _validate_findings(assessment, evidence):
+    """Apply the same citation/verdict gates on generation and later review."""
     valid_ids = {source["source_id"] for source in evidence["sources"]}
     findings = [getattr(assessment, key) for key in (
         "regulatory_compliance", "legal_constraints", "governance", "operational_feasibility"
@@ -140,22 +151,25 @@ def assess_insight(client, evidence):
                 "insufficient_evidence" if "unknown" in statuses else "potentially_feasible")
     if assessment.verdict != expected:
         raise ValueError("Validator verdict contradicts its individual findings.")
-    return {
-        "schema_version": "1.0", **evidence, "assessment": assessment.model_dump(),
-        "human_review": {"status": "pending", "reviewer": None, "notes": None},
-        "approved": False,
-    }
+
+
+def require_current_context(artifact, context):
+    """Reject stale notebook evidence or assessments after an input edit."""
+    if not artifact or any(artifact.get(key) != context.get(key) for key in (
+        "industry", "insight", "jurisdiction"
+    )) or ("as_of" in context and artifact.get("as_of") != context["as_of"]):
+        raise ValueError("Inputs changed or results are missing; rerun retrieval and assessment.")
 
 
 def record_human_review(checkpoint, *, decision, reviewer, notes):
     """Record an explicit review; never infer approval from a model response."""
-    from copy import deepcopy
-
     if decision not in {"approve", "revise", "reject"}:
         raise ValueError("Decision must be approve, revise, or reject.")
     if not reviewer.strip() or not notes.strip():
         raise ValueError("Reviewer and review notes are required.")
-    if decision == "approve" and checkpoint["assessment"]["verdict"] != "potentially_feasible":
+    assessment = Assessment.model_validate(checkpoint["assessment"])
+    _validate_findings(assessment, checkpoint)
+    if decision == "approve" and assessment.verdict != "potentially_feasible":
         raise ValueError("Resolve conflicting or insufficient evidence before approval.")
     result = deepcopy(checkpoint)
     result["human_review"] = {"status": decision, "reviewer": reviewer, "notes": notes}

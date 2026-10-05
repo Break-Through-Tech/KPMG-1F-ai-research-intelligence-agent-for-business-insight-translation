@@ -46,6 +46,11 @@ precedence; otherwise any unknown finding requires `insufficient_evidence`.
 A verdict inconsistent with the findings is rejected. Conflicting or insufficient
 assessments cannot be approved: gather evidence or revise and reassess first.
 `record_human_review` returns a copy, leaving the pending checkpoint unchanged.
+It revalidates the assessment schema, citation IDs, and verdict consistency at
+review time, including for edited or reloaded results. Assessments retain an
+independent evidence snapshot. Notebook input edits invalidate earlier results;
+assessment and review also check the input context before continuing. Rerun
+retrieval and assessment after changing industry, insight, jurisdiction, or date.
 Downstream execution must use the reviewed result and require `approved is True`.
 
 ## Troubleshooting and verification

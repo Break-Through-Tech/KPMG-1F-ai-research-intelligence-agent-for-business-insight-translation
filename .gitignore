@@ -1,10 +1,12 @@
-# Environment variables
-.env
-
-# Virtual Environment
-venv/
 .venv/
-
-# Byte-compiled / Python cache
+venv/
+.env
+vector_db/
+data/chroma_db/
+data/pdfs/
+data/processed/
 __pycache__/
 *.pyc
+.DS_Store
+.ipynb_checkpoints/
+*-checkpoint.ipynb

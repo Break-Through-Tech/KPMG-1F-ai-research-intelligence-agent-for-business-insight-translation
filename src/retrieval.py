@@ -31,6 +31,7 @@ load_dotenv()
 
 AZURE_SEARCH_ENDPOINT = os.getenv("AZURE_SEARCH_ENDPOINT")
 AZURE_SEARCH_ADMIN_KEY = os.getenv("AZURE_SEARCH_ADMIN_KEY")
+AZURE_SEARCH_QUERY_KEY = os.getenv("AZURE_SEARCH_QUERY_KEY")
 INDEX_NAME = os.getenv("AZURE_SEARCH_INDEX_NAME", "arxiv-papers")
 
 
@@ -108,6 +109,26 @@ def get_search_client():
         credential=AzureKeyCredential(
             AZURE_SEARCH_ADMIN_KEY
         ),
+    )
+
+
+def get_query_search_client():
+    if not AZURE_SEARCH_ENDPOINT:
+        raise RuntimeError(
+            "AZURE_SEARCH_ENDPOINT is missing from .env"
+        )
+
+    key = AZURE_SEARCH_QUERY_KEY or AZURE_SEARCH_ADMIN_KEY
+
+    if not key:
+        raise RuntimeError(
+            "AZURE_SEARCH_QUERY_KEY or AZURE_SEARCH_ADMIN_KEY is missing"
+        )
+
+    return SearchClient(
+        endpoint=AZURE_SEARCH_ENDPOINT,
+        index_name=INDEX_NAME,
+        credential=AzureKeyCredential(key),
     )
 
 
@@ -292,6 +313,7 @@ def store_embeddings(df, embeddings):
         f"{client.get_document_count()}"
     )
 
+
 def search_chunks(query, top_k=5):
     model = SentenceTransformer(MODEL_NAME)
 
@@ -299,7 +321,7 @@ def search_chunks(query, top_k=5):
         query
     ).tolist()
 
-    client = get_search_client()
+    client = get_query_search_client()
 
     vector_query = VectorizedQuery(
         vector=query_embedding,
@@ -339,7 +361,6 @@ def search_chunks(query, top_k=5):
         )
 
     return retrieved_chunks
-
 
 
 if __name__ == "__main__":

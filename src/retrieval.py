@@ -4,6 +4,7 @@ from pathlib import Path
 
 import pandas as pd
 from dotenv import load_dotenv
+from azure.search.documents.models import VectorizedQuery
 from sentence_transformers import SentenceTransformer
 from azure.core.credentials import AzureKeyCredential
 from azure.search.documents import SearchClient
@@ -290,6 +291,55 @@ def store_embeddings(df, embeddings):
         f"Documents in Azure: "
         f"{client.get_document_count()}"
     )
+
+def search_chunks(query, top_k=5):
+    model = SentenceTransformer(MODEL_NAME)
+
+    query_embedding = model.encode(
+        query
+    ).tolist()
+
+    client = get_search_client()
+
+    vector_query = VectorizedQuery(
+        vector=query_embedding,
+        k_nearest_neighbors=top_k,
+        fields="embedding",
+    )
+
+    results = client.search(
+        search_text=None,
+        vector_queries=[vector_query],
+        select=[
+            "text",
+            "title",
+            "arxiv_id",
+            "page_number",
+            "authors",
+            "categories",
+            "pdf_url",
+        ],
+        top=top_k,
+    )
+
+    retrieved_chunks = []
+
+    for result in results:
+        retrieved_chunks.append(
+            {
+                "text": result["text"],
+                "title": result["title"],
+                "arxiv_id": result["arxiv_id"],
+                "page_number": result["page_number"],
+                "authors": result["authors"],
+                "categories": result["categories"],
+                "pdf_url": result["pdf_url"],
+                "score": result["@search.score"],
+            }
+        )
+
+    return retrieved_chunks
+
 
 
 if __name__ == "__main__":

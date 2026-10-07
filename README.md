@@ -24,7 +24,13 @@ python src/retrieval.py --query "How are AI agents evaluated?" --top-k 5
 python -m unittest discover -s tests -v
 ```
 
-The ingestion command downloads papers not already in `data/pdfs/`; expect network use and a delay between requests. It fails if the locked sample IDs are absent from the metadata snapshot rather than silently processing fewer papers. Some papers may still fail to download or parse; check the reported paper/chunk count. `data/pdfs/`, `data/processed/`, and `data/chroma_db/` are local generated artifacts and are ignored by Git. The five PDFs already tracked in `data/` belong to the earlier EDA notebook and are not used by this script's `data/pdfs/` cache.
+The ingestion command downloads papers not already in `data/pdfs/`; expect network use and a delay between requests. It fails if the locked sample IDs are absent from the metadata snapshot, a required PDF fails to download or parse, or a selected paper has no extractable text. A failed run preserves the previous `chunks.parquet`; a complete run replaces it atomically. Check the named paper IDs in any error and repair the inputs before rerunning. Blank or scanned PDFs may need OCR, which this pipeline does not perform. `data/pdfs/`, `data/processed/`, and `data/chroma_db/` are local generated artifacts and are ignored by Git. The five PDFs already tracked in `data/` belong to the earlier EDA notebook and are not used by this script's `data/pdfs/` cache.
+
+To validate the entire locked sample, run `python -m tests.validate_ingestion_sample`.
+This checks sample coverage, source metadata, page citations, chunk text against the
+cited cleaned pages, Parquet readback, and an identical rerun. It downloads missing
+PDFs, so it is separate from the offline CI tests. See the recorded
+[ingestion validation results](docs/ingestion-validation.md).
 
 Example search result fields: `chunk_id`, `text`, `distance`, `arxiv_id`, `title`, `page_number`, `pdf_url`. Page numbers are 1-based PDF pages, which may differ from page labels printed in a paper. If an older Chroma index lacks citation/model metadata, rerun `python src/retrieval.py` to refresh it before querying. Rebuild the collection when changing embedding models; vectors from different models must not be mixed.
 

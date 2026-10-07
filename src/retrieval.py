@@ -6,6 +6,8 @@ import chromadb
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 CHUNKS_FILE = PROJECT_ROOT / "data" / "processed" / "chunks.parquet"
 CHROMA_DIR = PROJECT_ROOT / "data" / "chroma_db"
+COLLECTION_NAME = "arxiv_papers"
+
 
 def load_chunks():
     if not CHUNKS_FILE.exists():
@@ -35,17 +37,53 @@ def create_embeddings(df):
 
     return embeddings
 
+def get_collection():
+    client = chromadb.PersistentClient(path=str(CHROMA_DIR))
+
+    try:
+        return client.get_collection(name=COLLECTION_NAME)
+    except Exception as e:
+        raise RuntimeError(
+            "ChromaDB collection not found. Run src/retrieval.py first."
+        ) from e
+    
 def store_embeddings(df, embeddings):
     client = chromadb.PersistentClient(path=str(CHROMA_DIR))
 
-    collection = client.get_or_create_collection(
-        name="arxiv_papers"
+    existing_collections = client.list_collections()
+
+    existing_names = [
+        collection.name if hasattr(collection, "name") else str(collection)
+        for collection in existing_collections
+    ]
+
+    if COLLECTION_NAME in existing_names:
+        client.delete_collection(name=COLLECTION_NAME)
+        print("Deleted old ChromaDB collection")
+
+    collection = client.create_collection(
+        name=COLLECTION_NAME
     )
 
-    collection.upsert(
+    metadatas = []
+
+    for _, row in df.iterrows():
+        metadata = {
+            "arxiv_id": str(row["arxiv_id"]),
+            "page_number": int(row["page_number"]),
+            "title": str(row["title"]),
+            "categories": str(row["categories"]),
+            "authors": str(row["authors"]),
+            "pdf_url": str(row["pdf_url"]),
+        }
+
+        metadatas.append(metadata)
+
+    collection.add(
         ids=df["chunk_id"].tolist(),
         documents=df["text"].tolist(),
-        embeddings=embeddings.tolist()
+        embeddings=embeddings.tolist(),
+        metadatas=metadatas
     )
 
     print(f"Stored {collection.count()} chunks in ChromaDB")

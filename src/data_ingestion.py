@@ -1,4 +1,5 @@
 import re
+import tempfile
 import time
 from pathlib import Path
  
@@ -48,9 +49,10 @@ def resolve_pdf_path(arxiv_id: str) -> Path | None:
  
  
 def download_pdfs(metadata_list: list[dict], delay: float = 3.0) -> None:
-    """Download each paper's pdf into data/pdfs/, skipping already downloaded pdfs"""
+    """Cache missing PDFs; fail the run if any required download fails."""
     PDF_DIR.mkdir(parents=True, exist_ok=True)
     headers = {"User-Agent": USER_AGENT}
+    failures = []
  
     for row in metadata_list:
         arxiv_id = row["arxiv_id"]
@@ -67,29 +69,32 @@ def download_pdfs(metadata_list: list[dict], delay: float = 3.0) -> None:
             print(f"[Downloaded] {arxiv_id}")
         except Exception as e:
             print(f"[Failed] {arxiv_id}: {e}")
+            failures.append(f"{arxiv_id}: {e}")
  
         time.sleep(delay)  
+
+    if failures:
+        raise RuntimeError("PDF downloads failed: " + "; ".join(failures))
  
  
 # Task 4.2: PDF Extraction & Cleaning
 def extract_and_clean_pdf(pdf_path: str) -> list[dict]:
-    doc = pymupdf.open(pdf_path)
     pages_data = []
-    for page_num, page in enumerate(doc, start=1):
-        text = page.get_text("text")
-        # Remove headers, footers, page numbers, and whitespace
-        text = re.sub(
-            r"arXiv:\d{4}\.\d{4,5}(v\d+)?\s*\[.*?\]\s*\d{1,2}\s+\w+\s+\d{4}",
-            "",
-            text,
-        )
-        text = re.sub(r"^\s*\d+\s*$", "", text, flags=re.MULTILINE).strip()
-        text = re.sub(r"[ \t]+", " ", text)
-        text = re.sub(r"\n{3,}", "\n\n", text)
-        text = text.strip()
-        if text:
-            pages_data.append({"page": page_num, "text": text})
-    doc.close()
+    with pymupdf.open(pdf_path) as doc:
+        for page_num, page in enumerate(doc, start=1):
+            text = page.get_text("text")
+            # Remove arXiv stamps, standalone page numbers, and excess whitespace.
+            text = re.sub(
+                r"arXiv:\d{4}\.\d{4,5}(v\d+)?\s*\[.*?\]\s*\d{1,2}\s+\w+\s+\d{4}",
+                "",
+                text,
+            )
+            text = re.sub(r"^\s*\d+\s*$", "", text, flags=re.MULTILINE).strip()
+            text = re.sub(r"[ \t]+", " ", text)
+            text = re.sub(r"\n{3,}", "\n\n", text)
+            text = text.strip()
+            if text:
+                pages_data.append({"page": page_num, "text": text})
     return pages_data
  
  
@@ -123,8 +128,12 @@ def chunk_document(pages_data: list[dict], arxiv_id: str) -> list[dict]:
 # Task 4.4: Deduplication & Storage
 def process_and_store(
     metadata_list: list[dict],
-    output_path: Path = PROCESSED_DIR / "chunks.parquet",
-):
+    output_path: Path | None = None,
+) -> pd.DataFrame:
+    """Publish a complete latest-version corpus, preserving prior output on failure."""
+    if not metadata_list:
+        raise ValueError("No papers selected for ingestion")
+    output_path = Path(output_path) if output_path is not None else PROCESSED_DIR / "chunks.parquet"
     df_meta = pd.DataFrame(metadata_list)
  
     # Recognize newer paper versions by base ID and keep latest updated
@@ -136,15 +145,23 @@ def process_and_store(
     )
  
     all_chunks = []
+    failures = []
     for _, row in df_latest.iterrows():
         pdf_path = resolve_pdf_path(row["arxiv_id"])
         if pdf_path is None:
-            print(f"[Skip] No local PDF for {row['arxiv_id']}")
+            failures.append(f"{row['arxiv_id']}: no local PDF")
             continue
  
         print(f"[Found] {pdf_path.name}")
-        pages = extract_and_clean_pdf(str(pdf_path))
-        for c in chunk_document(pages, row["arxiv_id"]):
+        try:
+            pages = extract_and_clean_pdf(str(pdf_path))
+            chunks = chunk_document(pages, row["arxiv_id"])
+            if not chunks:
+                raise ValueError("no extractable text; check whether OCR is needed")
+        except Exception as e:
+            failures.append(f"{row['arxiv_id']}: {e}")
+            continue
+        for c in chunks:
             c.update(
                 {
                     "title": row["title"],
@@ -158,21 +175,36 @@ def process_and_store(
             )
             all_chunks.append(c)
  
-    if not all_chunks:
-        print("No chunks produced. Check that PDFs exist in", PDF_DIR)
-        return
+    if failures:
+        raise RuntimeError(
+            "Incomplete ingestion; output was not replaced: " + "; ".join(failures)
+        )
  
     df_out = pd.DataFrame(all_chunks)
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    df_out.to_parquet(output_path, index=False)
+    # Write alongside the destination so a failed Parquet write cannot truncate
+    # the previous corpus and the final replacement stays on the same filesystem.
+    with tempfile.NamedTemporaryFile(dir=output_path.parent, suffix=".parquet", delete=False) as file:
+        temporary_path = Path(file.name)
+    try:
+        df_out.to_parquet(temporary_path, index=False)
+        temporary_path.replace(output_path)
+    finally:
+        temporary_path.unlink(missing_ok=True)
     print(
         f"Saved {len(df_out)} chunks from {df_out['arxiv_id'].nunique()} papers to {output_path}"
     )
+    return df_out
  
  
 # Task 4.1: Pipeline Entry Point
-if __name__ == "__main__":
+def run_pipeline() -> pd.DataFrame:
+    """Run metadata selection, PDF download, extraction, chunking, and storage."""
     metadata = load_metadata()   # 25-paper sample with full metadata
     download_pdfs(metadata)      # metadata -> PDFs (skips ones already downloaded)
-    process_and_store(metadata)  # PDFs -> text -> chunks -> parquet
+    return process_and_store(metadata)  # PDFs -> text -> chunks -> parquet
+
+
+if __name__ == "__main__":
+    run_pipeline()
  

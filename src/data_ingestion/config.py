@@ -12,4 +12,3 @@ SAMPLE_FILE = META_DIR / "arxiv_csAI_25_pdf_sample.csv"
 
 # arXiv asks automated clients to identify themselves
 USER_AGENT = "btt-fallstudio-kpmg1f (leejooheon215@gmail.com)"
-

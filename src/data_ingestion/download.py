@@ -10,19 +10,19 @@ def resolve_pdf_path(arxiv_id: str) -> Path | None:
         cfg.PDF_DIR.glob(f"{arxiv_id}.pdf")
     )
     return matches[0] if matches else None
- 
- 
+
+
 def download_pdfs(metadata_list: list[dict], delay: float = 3.0) -> None:
     """Download each paper's pdf into data/pdfs/, skipping already downloaded pdfs"""
     cfg.PDF_DIR.mkdir(parents=True, exist_ok=True)
     headers = {"User-Agent": cfg.USER_AGENT}
- 
+
     for row in metadata_list:
         arxiv_id = row["arxiv_id"]
         if resolve_pdf_path(arxiv_id):
             print(f"[Have] {arxiv_id}")
             continue
- 
+
         try:
             resp = requests.get(row["pdf_url"], headers=headers, timeout=60)
             resp.raise_for_status()
@@ -32,8 +32,8 @@ def download_pdfs(metadata_list: list[dict], delay: float = 3.0) -> None:
             print(f"[Downloaded] {arxiv_id}")
         except Exception as e:
             print(f"[Failed] {arxiv_id}: {e}")
- 
-        time.sleep(delay)  
+
+        time.sleep(delay)
 # HTML download + parsing
 def download_html(metadata_list: list[dict], delay: float = 3.0) -> None:
     """Cache arXiv's HTML version of each paper in data/html/. Papers with no HTML get a .nohtml marker."""

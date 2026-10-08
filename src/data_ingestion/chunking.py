@@ -1,4 +1,5 @@
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from urllib.parse import quote
 from .pdf_parser import split_into_sections, page_for
 
 # Sections most useful for business insight; others are kept but flagged
@@ -17,6 +18,10 @@ def chunk_html_sections(sections: list[dict], arxiv_id: str, title: str = "") ->
     )
     chunks, idx = [], 0
     for sec in sections:
+        anchor = sec.get("subsection_id") or sec.get("section_id") or ""
+        html_url = f"https://arxiv.org/html/{arxiv_id}"
+        if anchor:
+            html_url += "#" + quote(anchor, safe="")
         for piece in splitter.split_text(sec["text"]):
             body = piece.strip()
             if len(body) < 150:
@@ -25,6 +30,7 @@ def chunk_html_sections(sections: list[dict], arxiv_id: str, title: str = "") ->
                 "chunk_id": f"{arxiv_id}_c{idx:04d}",
                 "arxiv_id": arxiv_id,
                 "page_number": None,                      # HTML has no pages
+                "html_url": html_url,
                 "section": sec["section"],
                 "subsection": sec["subsection"],
                 "high_value": any(k in sec["section"] or k in sec["subsection"] for k in VALUE_KW),
@@ -34,7 +40,7 @@ def chunk_html_sections(sections: list[dict], arxiv_id: str, title: str = "") ->
                                      + f"\n\n{body}",
             })
             idx += 1
-    return chunks        
+    return chunks
 
 
 def chunk_document(pages_data, arxiv_id, title=""):
@@ -63,4 +69,3 @@ def chunk_document(pages_data, arxiv_id, title=""):
             })
             idx += 1
     return chunks
- 

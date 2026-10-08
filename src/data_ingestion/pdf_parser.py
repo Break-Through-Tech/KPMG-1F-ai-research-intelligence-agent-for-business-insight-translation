@@ -97,8 +97,8 @@ def extract_pages(pdf_path: str) -> list[dict]:
             if len(text) < 40 and not is_caption and not SECTION_RE.match(text):
                 continue
             blocks.append((rect, text))
-            
-            
+
+
 
         page_text = "\n\n".join(t for _, t in _order_blocks(blocks, W))
         page_text = re.sub(r"arXiv:\d{4}\.\d{4,5}(v\d+)?\s*\[.*?\]\s*\d{1,2}\s+\w+\s+\d{4}", "", page_text)

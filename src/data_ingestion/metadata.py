@@ -15,4 +15,3 @@ def load_metadata() -> list[dict]:
     df = df[df["arxiv_id"].isin(sample_ids)]
     print(f"Using {len(df)} sample articles (from {cfg.FULL_METADATA_FILE.name})")
     return df.to_dict("records")
-

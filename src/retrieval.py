@@ -11,7 +11,7 @@ CHUNKS_FILE = PROJECT_ROOT / "data" / "processed" / "chunks.parquet"
 CHROMA_DIR = PROJECT_ROOT / "data" / "chroma_db"
 COLLECTION_NAME = "arxiv_papers"
 EMBEDDING_MODEL = "all-MiniLM-L6-v2"
-REQUIRED_COLUMNS = {"chunk_id", "text", "arxiv_id", "title", "page_number", "pdf_url"}
+REQUIRED_COLUMNS = {"chunk_id", "text", "arxiv_id", "title", "pdf_url"}
 
 def load_chunks():
     if not CHUNKS_FILE.exists():
@@ -41,14 +41,43 @@ def create_embeddings(df):
 
     return embeddings
 
+def _source_text(row, field, default=""):
+    value = row.get(field)
+    return default if value is None or pd.isna(value) else str(value)
+
+
 def citation_metadata(row):
-    """Keep source fields in Chroma so results can be cited without Parquet."""
-    return {
+    """Keep source-specific citations in Chroma; never manufacture HTML pages."""
+    source = _source_text(row, "source", "pdf")
+    metadata = {
         "arxiv_id": str(row["arxiv_id"]),
         "title": str(row["title"]),
-        "page_number": int(row["page_number"]),
         "pdf_url": str(row["pdf_url"]),
+        "source": source,
     }
+    if source == "pdf":
+        page = row.get("page_number")
+        if page is None or pd.isna(page) or isinstance(page, bool):
+            raise ValueError("PDF chunks require a valid page_number")
+        try:
+            number = int(page)
+            valid = number > 0 and float(page) == number
+        except (TypeError, ValueError, OverflowError):
+            valid = False
+        if not valid:
+            raise ValueError("PDF chunks require a valid page_number")
+        metadata.update(page_number=number, source_url=f"{metadata['pdf_url']}#page={number}")
+    elif source == "html":
+        html_url = _source_text(row, "html_url")
+        if not html_url:
+            raise ValueError("HTML chunks require html_url")
+        metadata.update(html_url=html_url, source_url=html_url)
+    else:
+        raise ValueError(f"Unknown chunk source: {source}")
+    for field in ("section", "subsection"):
+        if value := _source_text(row, field):
+            metadata[field] = value
+    return metadata
 
 
 def store_embeddings(df, embeddings):
@@ -62,6 +91,7 @@ def store_embeddings(df, embeddings):
         raise ValueError("Duplicate chunk IDs in input")
     if len(embeddings) != len(df):
         raise ValueError("Embedding count does not match chunk count")
+    metadatas = [citation_metadata(row) for _, row in df.iterrows()]
 
     client = chromadb.PersistentClient(path=str(CHROMA_DIR))
 
@@ -83,7 +113,7 @@ def store_embeddings(df, embeddings):
         ids=ids,
         documents=df["text"].tolist(),
         embeddings=embeddings.tolist(),
-        metadatas=[citation_metadata(row) for _, row in df.iterrows()],
+        metadatas=metadatas,
     )
     if stale_ids:
         collection.delete(ids=stale_ids)
@@ -123,16 +153,15 @@ def search(query, top_k=5, *, client=None, model=None):
         result["metadatas"][0],
         result["distances"][0],
     ):
-        if not metadata or not all(key in metadata for key in ("arxiv_id", "title", "page_number", "pdf_url")):
+        if not metadata or not all(key in metadata for key in ("arxiv_id", "title", "pdf_url")):
             raise ValueError("Index contains passages without citations; rerun indexing first")
+        citation = citation_metadata(metadata)
         hits.append({
             "chunk_id": chunk_id,
             "text": passage,
             "distance": distance,
-            "arxiv_id": metadata["arxiv_id"],
-            "title": metadata["title"],
-            "page_number": metadata["page_number"],
-            "pdf_url": metadata["pdf_url"],
+            **citation,
+            "page_number": citation.get("page_number"),
         })
     return hits
 

@@ -314,7 +314,7 @@ def store_embeddings(df, embeddings):
     )
 
 
-def search_chunks(query, top_k=5):
+def search_chunks(query, top_k=5, hybrid=False):
     model = SentenceTransformer(MODEL_NAME)
 
     query_embedding = model.encode(
@@ -330,7 +330,7 @@ def search_chunks(query, top_k=5):
     )
 
     results = client.search(
-        search_text=None,
+        search_text=query if hybrid else None,
         vector_queries=[vector_query],
         select=[
             "text",

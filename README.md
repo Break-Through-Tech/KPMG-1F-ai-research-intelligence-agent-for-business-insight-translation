@@ -41,6 +41,9 @@ PDF citations retain their 1-based page number and a PDF page link. Existing PDF
 indexes remain readable. Reindex after changing ingestion mode to replace old chunks
 and populate the new citation fields. The locked-sample validator above exercises
 the stable PDF-only mode; it does not establish HTML extraction or retrieval quality.
+The HTML-first command also refuses to publish an incomplete corpus when a required
+PDF fallback is missing, corrupt, or produces no chunks. It reports the affected IDs,
+exits nonzero, and preserves the previous Parquet file, including on write failure.
 
 Example search result fields: `chunk_id`, `text`, `distance`, `arxiv_id`, `title`, `page_number`, `pdf_url`. Page numbers are 1-based PDF pages, which may differ from page labels printed in a paper. If an older Chroma index lacks citation/model metadata, rerun `python src/retrieval.py` to refresh it before querying. Rebuild the collection when changing embedding models; vectors from different models must not be mixed.
 

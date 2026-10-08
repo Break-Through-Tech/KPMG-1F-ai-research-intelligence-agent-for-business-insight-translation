@@ -1,6 +1,6 @@
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from urllib.parse import quote
-from .pdf_parser import split_into_sections, page_for
+from .pdf_parser import split_into_sections
 
 # Sections most useful for business insight; others are kept but flagged
 HIGH_VALUE = {"abstract", "introduction", "results", "result", "evaluation",
@@ -45,27 +45,35 @@ def chunk_html_sections(sections: list[dict], arxiv_id: str, title: str = "") ->
 
 def chunk_document(pages_data, arxiv_id, title=""):
     sections, offsets = split_into_sections(pages_data)
+    page_ranges = [(start, start + len(page["text"]), page["page"])
+                   for (start, _), page in zip(offsets, pages_data)]
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=1800, chunk_overlap=250,
         separators=["\n\n", "\n", ". ", " ", ""],
-        add_start_index=True,
     )
     chunks, idx = [], 0
     for sec in sections:
-        for doc in splitter.create_documents([sec["text"]]):
-            body = doc.page_content.strip()
-            if len(body) < 150:       # drop tiny fragments
+        if len(sec["text"].strip()) < 150:
+            continue
+        # Split each section at its original page boundaries before chunking.
+        # Overlap stays within a page; short tails of a retained section survive.
+        for page_start, page_end, page_number in page_ranges:
+            start, end = max(sec["start"], page_start), min(sec["end"], page_end)
+            if start >= end:
                 continue
-            abs_offset = sec["start"] + doc.metadata["start_index"]
-            chunks.append({
-                "chunk_id": f"{arxiv_id}_c{idx:04d}",
-                "arxiv_id": arxiv_id,
-                "page_number": page_for(abs_offset, offsets),
-                "section": sec["section"],
-                "high_value": sec["section"] in HIGH_VALUE,
-                "text": body,
-                # use this field for embedding: adds context to each chunk
-                "text_with_context": f"{title} | {sec['section'].title()}\n\n{body}",
-            })
-            idx += 1
+            page_text = sec["text"][start - sec["start"]:end - sec["start"]]
+            for piece in splitter.split_text(page_text):
+                body = piece.strip()
+                if not body:
+                    continue
+                chunks.append({
+                    "chunk_id": f"{arxiv_id}_c{idx:04d}",
+                    "arxiv_id": arxiv_id,
+                    "page_number": page_number,
+                    "section": sec["section"],
+                    "high_value": sec["section"] in HIGH_VALUE,
+                    "text": body,
+                    "text_with_context": f"{title} | {sec['section'].title()}\n\n{body}",
+                })
+                idx += 1
     return chunks

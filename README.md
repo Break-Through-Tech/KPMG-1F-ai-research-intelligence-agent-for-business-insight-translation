@@ -41,6 +41,8 @@ PDF citations retain their 1-based page number and a PDF page link. Existing PDF
 indexes remain readable. Reindex after changing ingestion mode to replace old chunks
 and populate the new citation fields. The locked-sample validator above exercises
 the stable PDF-only mode; it does not establish HTML extraction or retrieval quality.
+PDF fallback chunks are split within section and original page boundaries, so their
+text comes from the page cited by `page_number`. Overlap does not cross pages.
 The HTML-first command also refuses to publish an incomplete corpus when a required
 PDF fallback is missing, corrupt, or produces no chunks. It reports the affected IDs,
 exits nonzero, and preserves the previous Parquet file, including on write failure.

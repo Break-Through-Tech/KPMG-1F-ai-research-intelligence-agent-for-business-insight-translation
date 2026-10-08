@@ -11,7 +11,8 @@ import json
 import pandas as pd
 import pymupdf
 
-from src import data_ingestion, retrieval
+from src import retrieval
+from src.data_ingestion import pdf_pipeline as data_ingestion
 
 
 def validate_sample():

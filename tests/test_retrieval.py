@@ -77,6 +77,38 @@ class RetrievalTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "rerun indexing"):
             retrieval.search("agent", client=self.client, model=self.model)
 
+    def test_html_and_pdf_citations_round_trip_in_one_index(self):
+        frame = chunks("a", "b")
+        frame["source"] = ["html", "pdf"]
+        frame.loc[0, "page_number"] = None
+        frame.loc[0, "html_url"] = "https://arxiv.org/html/paper-a#S1"
+        frame.loc[0, "section"] = "results"
+        frame.loc[0, "subsection"] = "business impact"
+        collection = retrieval.store_embeddings(frame, self.model.encode(frame["text"].tolist()))
+        html_hit, pdf_hit = retrieval.search("agent", top_k=2, client=self.client, model=self.model)
+        self.assertEqual(html_hit["source"], "html")
+        self.assertIsNone(html_hit["page_number"])
+        self.assertEqual(html_hit["source_url"], frame.loc[0, "html_url"])
+        self.assertEqual(html_hit["section"], "results")
+        self.assertEqual(html_hit["subsection"], "business impact")
+        self.assertEqual(pdf_hit["source"], "pdf")
+        self.assertEqual(pdf_hit["page_number"], 3)
+        self.assertEqual(pdf_hit["source_url"], "https://arxiv.org/pdf/paper-b#page=3")
+        html_metadata = collection.get(ids=["a"])["metadatas"][0]
+        self.assertNotIn("page_number", html_metadata)  # Chroma cannot store None.
+
+    def test_invalid_source_citations_leave_existing_index_unchanged(self):
+        self.index("a")
+        for source in ("html", "pdf", "unknown"):
+            with self.subTest(source=source):
+                frame = chunks("b")
+                frame["source"] = source
+                frame["page_number"] = None
+                with self.assertRaises(ValueError):
+                    retrieval.store_embeddings(frame, self.model.encode(frame["text"].tolist()))
+                collection = self.client.get_collection(retrieval.COLLECTION_NAME)
+                self.assertEqual(collection.get()["ids"], ["a"])
+
 
 if __name__ == "__main__":
     unittest.main()

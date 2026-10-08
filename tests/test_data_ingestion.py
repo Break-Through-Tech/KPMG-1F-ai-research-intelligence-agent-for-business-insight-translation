@@ -1,6 +1,7 @@
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import subprocess
+import shutil
 import sys
 import tempfile
 import threading
@@ -11,7 +12,7 @@ from unittest.mock import patch
 import pandas as pd
 import pymupdf
 
-from src import data_ingestion
+from src.data_ingestion import pdf_pipeline as data_ingestion
 
 
 class MetadataSnapshotTests(unittest.TestCase):
@@ -217,7 +218,9 @@ class IngestionPipelineTests(unittest.TestCase):
         src = self.root / "src"
         src.mkdir()
         script = src / "data_ingestion.py"
-        script.write_text(Path(data_ingestion.__file__).read_text())
+        package = Path(data_ingestion.__file__).parent
+        shutil.copytree(package, src / "data_ingestion", ignore=shutil.ignore_patterns("__pycache__"))
+        script.write_text((package.parent / "data_ingestion.py").read_text())
         metadata_dir = self.root / "data" / "metadata"
         metadata_dir.mkdir(parents=True)
         pd.DataFrame([self.rows[-1]]).to_csv(metadata_dir / "arxiv_csAI_100_metadata.csv", index=False)

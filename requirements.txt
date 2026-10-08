@@ -19,3 +19,4 @@ requests
 
 # Development tools
 ipykernel
+beautifulsoup4

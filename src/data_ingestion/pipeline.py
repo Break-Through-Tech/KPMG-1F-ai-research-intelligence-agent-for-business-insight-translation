@@ -43,8 +43,8 @@ def process_and_store(
             except Exception as e:
                 print(f"[HTML parse failed] {aid}: {e}")
 
-        # 2) PDF fallback: no HTML, or the conversion produced almost nothing
-        if len(chunks) < 5:
+        # 2) PDF fallback only when HTML produced no usable chunks.
+        if not chunks:
             pdf_path = resolve_pdf_path(aid)
             if pdf_path is None:
                 failures.append(f"{aid}: no usable HTML or local PDF")

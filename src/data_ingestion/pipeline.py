@@ -1,4 +1,5 @@
 from pathlib import Path
+import tempfile
 import pandas as pd
 
 from . import config as cfg
@@ -12,8 +13,12 @@ from .chunking import chunk_html_sections, chunk_document
 # Task 4.4: Deduplication & Storage
 def process_and_store(
     metadata_list: list[dict],
-    output_path: Path = cfg.PROCESSED_DIR / "chunks.parquet",
-):
+    output_path: Path | None = None,
+) -> pd.DataFrame:
+    """Publish only a complete corpus; preserve the previous output on failure."""
+    if not metadata_list:
+        raise ValueError("No papers selected for ingestion")
+    output_path = Path(output_path) if output_path is not None else cfg.PROCESSED_DIR / "chunks.parquet"
     df_meta = pd.DataFrame(metadata_list)
 
     # Recognize newer paper versions by base ID and keep latest updated
@@ -25,6 +30,7 @@ def process_and_store(
     )
 
     all_chunks = []
+    failures = []
     for _, row in df_latest.iterrows():
         aid, chunks, source = row["arxiv_id"], [], None
 
@@ -41,14 +47,17 @@ def process_and_store(
         if not chunks:
             pdf_path = resolve_pdf_path(aid)
             if pdf_path is None:
-                print(f"[Skip] No HTML or PDF for {aid}")
+                failures.append(f"{aid}: no usable HTML or local PDF")
                 continue
             try:
                 pages = extract_pages(str(pdf_path))
                 chunks = chunk_document(pages, aid, row["title"])
+                if not chunks:
+                    raise ValueError("no extractable text; check whether OCR is needed")
                 source = "pdf"
             except Exception as e:
                 print(f"[PDF failed] {aid}: {e}")
+                failures.append(f"{aid}: {e}")
                 continue
 
         print(f"[{source}] {aid}: {len(chunks)} chunks")
@@ -65,15 +74,21 @@ def process_and_store(
             })
             all_chunks.append(c)
 
-    if not all_chunks:
-        print("No chunks produced. Check that HTML/PDFs exist in", cfg.DATA_DIR)
-        return
+    if failures:
+        raise RuntimeError("Incomplete ingestion; output was not replaced: " + "; ".join(failures))
 
     df_out = pd.DataFrame(all_chunks)
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    df_out.to_parquet(output_path, index=False)
+    with tempfile.NamedTemporaryFile(dir=output_path.parent, suffix=".parquet", delete=False) as file:
+        temporary_path = Path(file.name)
+    try:
+        df_out.to_parquet(temporary_path, index=False)
+        temporary_path.replace(output_path)
+    finally:
+        temporary_path.unlink(missing_ok=True)
     print(f"Saved {len(df_out)} chunks from {df_out['arxiv_id'].nunique()} papers to {output_path}")
     print(df_out.groupby("source")["arxiv_id"].nunique())
+    return df_out
 
 
 def main():

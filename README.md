@@ -41,6 +41,8 @@ PDF citations retain their 1-based page number and a PDF page link. Existing PDF
 indexes remain readable. Reindex after changing ingestion mode to replace old chunks
 and populate the new citation fields. The locked-sample validator above exercises
 the stable PDF-only mode; it does not establish HTML extraction or retrieval quality.
+Compact papers with usable HTML chunks remain HTML-backed even when their PDF is
+missing or corrupt. PDF fallback is used only when HTML produces no usable chunks.
 
 Example search result fields: `chunk_id`, `text`, `distance`, `arxiv_id`, `title`, `page_number`, `pdf_url`. Page numbers are 1-based PDF pages, which may differ from page labels printed in a paper. If an older Chroma index lacks citation/model metadata, rerun `python src/retrieval.py` to refresh it before querying. Rebuild the collection when changing embedding models; vectors from different models must not be mixed.
 

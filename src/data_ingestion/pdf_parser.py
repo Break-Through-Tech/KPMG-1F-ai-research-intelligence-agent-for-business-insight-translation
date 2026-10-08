@@ -5,7 +5,7 @@ SECTION_RE = re.compile(
     r"^\s*(?:\d+(?:\.\d+)*\.?\s+|[IVX]+\.\s+)?"
     r"(abstract|introduction|related work|background|methods?|methodology|approach|"
     r"experiments?|results?|evaluation|discussion|limitations?|conclusions?|"
-    r"future work|applications?|case study|references|appendix)\b.*$",
+    r"future work|applications?|case study|references|bibliography|appendix|appendices)\b.*$",
     re.IGNORECASE,
 )
 
@@ -123,7 +123,10 @@ def split_into_sections(pages: list[dict]) -> tuple[list[dict], list[tuple[int, 
     for m in re.finditer(r"^.+$", doc_text, flags=re.MULTILINE):
         line = m.group(0)
         if len(line) < 60 and (s := SECTION_RE.match(line)):
-            heads.append((m.start(), s.group(1).lower()))
+            section_name = s.group(1).lower()
+            if section_name == "appendices":
+                section_name = "appendix"
+            heads.append((m.start(), section_name))
 
     sections, start, name = [], 0, "front_matter"
     for h_start, h_name in heads + [(len(doc_text), "end")]:

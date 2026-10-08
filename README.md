@@ -10,6 +10,9 @@ Break Through Tech AI Studio project with KPMG. The current prototype ingests a 
 
 The first model run may download its weights. An OpenAI API key is **not** needed for ingestion, indexing, or retrieval. OpenAI packages remain in `requirements.txt` for future answer-generation work; no answer generator is wired up here.
 
+For source-specific cleaning, chunk settings, caches, stored fields, and validation
+boundaries, see [Data preparation](docs/data-preparation.md).
+
 ## Run locally
 
 Use Python 3.10 or newer. From the repository root:
@@ -61,7 +64,7 @@ evidence, and produces a structured advisory assessment followed by explicit hum
 review. It requires a local `GOOGLE_API_KEY` and is not yet integrated with the paper
 pipeline. Cited sources and applicability still require human verification.
 
-The 25-paper set is a prototype baseline, not a claim of full 100-paper coverage. Current chunking is character-based (2,000 characters, 200 overlap); figures, reference lists, and PDF extraction noise may degrade results. Before scaling, define benchmark questions and evaluate passage relevance and citation correctness. Then connect retrieval to source-grounded summarization and business-implication generation, with separate checks that generated claims actually cite supporting passages. No such end-to-end accuracy result is claimed yet.
+The 25-paper set is a prototype baseline, not a claim of full 100-paper coverage. Chunking is character-based: PDF-only uses 2,000 characters with 200 overlap; HTML-first and its PDF fallback use 1,800 with 250 overlap. Their source filters differ, and omitted source content or extraction noise may degrade results; see [Data preparation](docs/data-preparation.md). Before scaling, define benchmark questions and evaluate passage relevance and citation correctness. Then connect retrieval to source-grounded summarization and business-implication generation, with separate checks that generated claims actually cite supporting passages. No such end-to-end accuracy result is claimed yet.
 
 ## Team
 

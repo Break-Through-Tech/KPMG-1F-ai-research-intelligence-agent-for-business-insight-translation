@@ -43,6 +43,8 @@ and populate the new citation fields. The locked-sample validator above exercise
 the stable PDF-only mode; it does not establish HTML extraction or retrieval quality.
 PDF fallback chunks are split within section and original page boundaries, so their
 text comes from the page cited by `page_number`. Overlap does not cross pages.
+PDF fallback stops at References, Bibliography, Appendix, or Appendices headings,
+including numbered and uppercase forms, to keep back matter out of research chunks.
 The HTML-first command also refuses to publish an incomplete corpus when a required
 PDF fallback is missing, corrupt, or produces no chunks. It reports the affected IDs,
 exits nonzero, and preserves the previous Parquet file, including on write failure.

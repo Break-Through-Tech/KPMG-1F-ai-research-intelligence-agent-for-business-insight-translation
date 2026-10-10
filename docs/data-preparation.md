@@ -120,17 +120,17 @@ location. HTML-first output additionally records `source`, section labels,
 `page_number`. Its PDF fallback carries an original PDF page number. PDF-only output
 uses its PDF page number and does not require the newer source/section fields.
 
-`src/retrieval.py` embeds and stores **`text`** with local `all-MiniLM-L6-v2` vectors
-in Chroma. It does not currently embed `text_with_context` or apply `high_value` as
-ranking logic. Stored citations retain arXiv ID, title, PDF URL, source mode, and
-available section/subsection labels. `source_url` is an HTML heading link or a PDF
-`#page=` link. HTML has no invented PDF page. Search returns these fields and Chroma
-distance; distance is not calibrated confidence.
+`src/retrieval.py` embeds **`text`** locally with `all-MiniLM-L6-v2` (384 dimensions)
+and stores it in Azure AI Search. It does not embed `text_with_context` or use
+`high_value` as ranking logic. Citations retain paper identity and section labels.
+HTML uses its heading URL and has no invented page; PDF uses `#page=N`.
+Search returns these fields and an Azure ranking score, not calibrated confidence.
 
-After changing ingestion mode or corpus, rerun `python src/retrieval.py`. Upsert
-refreshes texts/metadata, including reused chunk IDs; IDs absent from the new corpus
-are removed. Keep the embedding model consistent with the collection, or rebuild
-it rather than mixing incompatible vectors.
+The shared index is queried without admin credentials using a query key. Corpus
+replacement is an explicit, destructive `python src/retrieval.py --rebuild` operation
+for the index owner, not part of ingestion or routine querying. Uploading alone does
+not remove stale records. Keep the same embedding model for documents and questions.
+See the README for the interface and failure limitations.
 
 ## Validation boundaries
 

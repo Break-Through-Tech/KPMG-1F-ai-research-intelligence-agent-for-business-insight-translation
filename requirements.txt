@@ -1,7 +1,6 @@
 # Core framework & LLM
 langchain>=0.1.0
 langchain-openai>=0.0.5
-chromadb>=0.4.0
 sentence-transformers>=2.2.0
 python-dotenv>=1.0.0
 google-genai>=1.0.0
@@ -20,3 +19,4 @@ requests
 # Development tools
 ipykernel
 beautifulsoup4
+azure-search-documents>=11.4.0,<13.0.0

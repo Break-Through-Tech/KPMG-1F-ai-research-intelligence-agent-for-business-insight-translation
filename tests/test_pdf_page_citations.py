@@ -1,7 +1,8 @@
 import tempfile
 import unittest
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
+from types import SimpleNamespace
 
 import pandas as pd
 import pymupdf
@@ -76,14 +77,18 @@ class PdfPageCitationTests(unittest.TestCase):
             self.assertEqual(set(frame["page_number"]), {2, 3})
             # Deterministic vectors isolate citation transport from relevance quality.
             import numpy as np
-            class CitationModel:
-                def encode(self, texts):
-                    return np.array([[1.0, 0.0]] * len(texts))
 
-            model = CitationModel()
-            with patch.object(retrieval, "CHROMA_DIR", root / "index"):
-                retrieval.store_embeddings(frame, np.array([[1.0, 0.0]] * len(frame)))
-                hits = retrieval.search("agent", top_k=len(frame), model=model)
+            model = MagicMock()
+            model.encode.return_value = np.ones(384)
+            client = MagicMock()
+            client.upload_documents.side_effect = lambda documents: [
+                SimpleNamespace(succeeded=True) for _ in documents]
+            with patch.object(retrieval, "get_search_client", return_value=client):
+                retrieval.store_embeddings(frame, np.ones((len(frame), 384)))
+            uploaded = [doc for call in client.upload_documents.call_args_list
+                        for doc in call.kwargs["documents"]]
+            client.search.return_value = [dict(doc, **{"@search.score": 1.0}) for doc in uploaded]
+            hits = retrieval.search("agent", top_k=len(frame), client=client, model=model)
             for hit in hits:
                 self.assertIn(hit["text"], {page["page"]: page["text"] for page in extract_pages(str(path))}
                               [hit["page_number"]])

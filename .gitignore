@@ -2,6 +2,7 @@
 venv/
 .env
 vector_db/
+# Legacy local database cache; never commit it (unused by Azure).
 data/chroma_db/
 data/html/
 data/pdfs/

@@ -1,0 +1,3321 @@
+{
+  "run_utc": "2026-10-10T20:15:33.440878+00:00",
+  "repo_sha": "e9d32ab694af6198cb9e2a0eeaec24aa9a287686",
+  "branch": "khoi-issue-82-html-validation",
+  "git_status": "M notebooks/KPMG_Arxiv_EDA.ipynb\n?? docs/html-ingestion-validation.json\n?? docs/html-ingestion-validation.md\n?? issue82-partial.zip\n?? tests/html_transport.py\n?? tests/test_html_sample_validation.py\n?? tests/validate_html_sample.py",
+  "command": "python -m tests.validate_html_sample",
+  "mode": "HTML-first; cached sources only",
+  "production_embedding_model": "all-MiniLM-L6-v2",
+  "embedding_dimensions": 384,
+  "embedding_relevance_tested": false,
+  "failures": [],
+  "papers": [
+    {
+      "arxiv_id": "2602.00937v3",
+      "source_modes": [
+        "html"
+      ],
+      "chunks": 34,
+      "sections": {
+        "abstract": 1,
+        "appendix": 4,
+        "conclusion": 1,
+        "evaluation": 5,
+        "introduction": 5,
+        "methodology": 11,
+        "related work": 3,
+        "results": 4
+      },
+      "source_urls": [
+        "https://arxiv.org/html/2602.00937v3#S1",
+        "https://arxiv.org/html/2602.00937v3#S2",
+        "https://arxiv.org/html/2602.00937v3#S3.SS1",
+        "https://arxiv.org/html/2602.00937v3#S3.SS2",
+        "https://arxiv.org/html/2602.00937v3#S3.SS3",
+        "https://arxiv.org/html/2602.00937v3#S3.SS4",
+        "https://arxiv.org/html/2602.00937v3#S4",
+        "https://arxiv.org/html/2602.00937v3#S4.SS1",
+        "https://arxiv.org/html/2602.00937v3#S4.SS2",
+        "https://arxiv.org/html/2602.00937v3#S4.SS3",
+        "https://arxiv.org/html/2602.00937v3#S5.SS1",
+        "https://arxiv.org/html/2602.00937v3#S5.SS2",
+        "https://arxiv.org/html/2602.00937v3#S5.SS3",
+        "https://arxiv.org/html/2602.00937v3#S5.SS4",
+        "https://arxiv.org/html/2602.00937v3#S6",
+        "https://arxiv.org/html/2602.00937v3#S7.SS2",
+        "https://arxiv.org/html/2602.00937v3#S7.SS3",
+        "https://arxiv.org/html/2602.00937v3#S7.SS4",
+        "https://arxiv.org/html/2602.00937v3#S7.SS5",
+        "https://arxiv.org/html/2602.00937v3#abstract1"
+      ],
+      "omissions": {
+        "source_elements_subject_to_filtering": {
+          "figures_or_tables": 30,
+          "display_equations": 19,
+          "proofs": 2,
+          "bibliographies": 1,
+          "appendices": 0,
+          "navigation": 4
+        },
+        "parsed_sections_without_chunks": []
+      },
+      "failures": [],
+      "source_hashes": {
+        "data\\html\\2602.00937v3.html": "644ea606d87c42f11e4efe3de2e422b451d4dfc5a9d4a2bbd38748bff716dce6",
+        "data\\pdfs\\2602.00937v3.pdf": "1b9275c06f13f2bb1124dbbafc79371c8226c1945cc54585f3137068b33bd9d7"
+      },
+      "candidates_for_40_43": [
+        {
+          "element_id": "S3.SS2.p4",
+          "characters": 368,
+          "excerpt": "Contrastive Loss. The encoders are trained to minimize a SigLIP-style loss [ 61 ] over the three modality pairs: image-text, image-action, and text-action. \\mathcal{L}_{\\text{Image",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS2.p5",
+          "characters": 214,
+          "excerpt": "\\mathcal{L}_{\\text{ImageAction}}=-\\frac{1}{|\\mathcal{B}|}\\sum_{i=1}^{|\\mathcal{B}|}\\sum_{k=1}^{|\\mathcal{B}|}\\log\\!\\left(\\frac{1}{1+e^{\\,\\ell_{ik}\\left(-t\\,\\mathbf{x}_{i}^{\\top}\\ma",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS2.p6",
+          "characters": 1422,
+          "excerpt": "\\mathcal{L}_{\\text{TextAction}}=-\\frac{1}{|\\mathcal{B}|}\\sum_{j=1}^{|\\mathcal{B}|}\\sum_{k=1}^{|\\mathcal{B}|}\\log\\!\\left(\\frac{1}{1+e^{\\,\\ell_{jk}\\left(-t\\,\\mathbf{y}_{j}^{\\top}\\mat",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS3.p1",
+          "characters": 1351,
+          "excerpt": "Diffusion Policy Architecture. The Diffusion Policy is based on the architecture proposed by Zhao et al. [ 65 ] . It has been shown to excel at handling multimodal action distribut",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.Thmtheorem1.p1",
+          "characters": 1728,
+          "excerpt": "Consider two tokens: t_{\\mathcal{P}_{1}} and t_{\\mathcal{P}_{2}} of the image encoder’s self-attention module used in CLAMP, corresponding to visible sub-point clouds \\mathcal{P}_{",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        }
+      ],
+      "verified_passages": 34
+    },
+    {
+      "arxiv_id": "2602.00933v3",
+      "source_modes": [
+        "html"
+      ],
+      "chunks": 23,
+      "sections": {
+        "abstract": 2,
+        "benchmark design": 6,
+        "conclusion": 1,
+        "discussion": 1,
+        "introduction": 3,
+        "related work": 3,
+        "results and analysis": 7
+      },
+      "source_urls": [
+        "https://arxiv.org/html/2602.00933v3#S1",
+        "https://arxiv.org/html/2602.00933v3#S2.SS1",
+        "https://arxiv.org/html/2602.00933v3#S2.SS2",
+        "https://arxiv.org/html/2602.00933v3#S3",
+        "https://arxiv.org/html/2602.00933v3#S3.SS1",
+        "https://arxiv.org/html/2602.00933v3#S3.SS2",
+        "https://arxiv.org/html/2602.00933v3#S3.SS3",
+        "https://arxiv.org/html/2602.00933v3#S3.SS4",
+        "https://arxiv.org/html/2602.00933v3#S4",
+        "https://arxiv.org/html/2602.00933v3#S4.SS1",
+        "https://arxiv.org/html/2602.00933v3#S4.SS2",
+        "https://arxiv.org/html/2602.00933v3#S4.SS3",
+        "https://arxiv.org/html/2602.00933v3#S4.SS4",
+        "https://arxiv.org/html/2602.00933v3#S4.SS5",
+        "https://arxiv.org/html/2602.00933v3#S5",
+        "https://arxiv.org/html/2602.00933v3#S6",
+        "https://arxiv.org/html/2602.00933v3#abstract1"
+      ],
+      "omissions": {
+        "source_elements_subject_to_filtering": {
+          "figures_or_tables": 12,
+          "display_equations": 6,
+          "proofs": 0,
+          "bibliographies": 1,
+          "appendices": 10,
+          "navigation": 4
+        },
+        "parsed_sections_without_chunks": []
+      },
+      "failures": [],
+      "source_hashes": {
+        "data\\html\\2602.00933v3.html": "31773889b23d68e964581966a9d13b89d7ffae23542bbce757876cb30e140d2c",
+        "data\\pdfs\\2602.00933v3.pdf": "2cd00f60d5ac0324ee9edd8693a4a3be61dc3a06c550209310fbf7581917315d"
+      },
+      "candidates_for_40_43": [],
+      "verified_passages": 23
+    },
+    {
+      "arxiv_id": "2602.00931v2",
+      "source_modes": [
+        "html"
+      ],
+      "chunks": 27,
+      "sections": {
+        "abstract": 1,
+        "conclusion": 1,
+        "continuous-utility direct preference optimization": 7,
+        "experiments": 6,
+        "impact statement": 1,
+        "introduction": 3,
+        "related work": 2,
+        "utility and pairwise preferences": 6
+      },
+      "source_urls": [
+        "https://arxiv.org/html/2602.00931v2#S1",
+        "https://arxiv.org/html/2602.00931v2#S2",
+        "https://arxiv.org/html/2602.00931v2#S2.SS1",
+        "https://arxiv.org/html/2602.00931v2#S2.SS2",
+        "https://arxiv.org/html/2602.00931v2#S2.SS3",
+        "https://arxiv.org/html/2602.00931v2#S2.SS4",
+        "https://arxiv.org/html/2602.00931v2#S3",
+        "https://arxiv.org/html/2602.00931v2#S3.SS1",
+        "https://arxiv.org/html/2602.00931v2#S3.SS2",
+        "https://arxiv.org/html/2602.00931v2#S3.SS3",
+        "https://arxiv.org/html/2602.00931v2#S3.SS4",
+        "https://arxiv.org/html/2602.00931v2#S4",
+        "https://arxiv.org/html/2602.00931v2#S4.SS1",
+        "https://arxiv.org/html/2602.00931v2#S4.SS2",
+        "https://arxiv.org/html/2602.00931v2#S4.SS3",
+        "https://arxiv.org/html/2602.00931v2#S4.SS4",
+        "https://arxiv.org/html/2602.00931v2#S5",
+        "https://arxiv.org/html/2602.00931v2#S6",
+        "https://arxiv.org/html/2602.00931v2#Sx1",
+        "https://arxiv.org/html/2602.00931v2#abstract1"
+      ],
+      "omissions": {
+        "source_elements_subject_to_filtering": {
+          "figures_or_tables": 23,
+          "display_equations": 97,
+          "proofs": 8,
+          "bibliographies": 1,
+          "appendices": 10,
+          "navigation": 4
+        },
+        "parsed_sections_without_chunks": []
+      },
+      "failures": [],
+      "source_hashes": {
+        "data\\html\\2602.00931v2.html": "f4048f31e3a129c36cb209fee67dc76f15c63aae7543b524ef38d5f2d2b98fa8",
+        "data\\pdfs\\2602.00931v2.pdf": "2be856584b1a82ae803699a06f9ff4a9303274c6f69607c6a8afd7a1c7fe80ca"
+      },
+      "candidates_for_40_43": [
+        {
+          "element_id": "S2.SS4.SSS0.Px1.p1",
+          "characters": 1044,
+          "excerpt": "To maximize signal for strategy selection, we construct preference pairs that directly compare the best strategy against all alternatives. For each problem x , we identify the opti",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S2.SS4.SSS0.Px2.p1",
+          "characters": 1158,
+          "excerpt": "After establishing strategy selection, we train on refined chains to improve execution quality. For each strategy s\\in\\mathcal{S} , let \\mathcal{C}_{s}(x)=\\mathcal{C}^{0}_{s}(x)\\cu",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS1.SSS0.Px1.p1",
+          "characters": 567,
+          "excerpt": "The Bradley-Terry model ( Bradley and Terry, 1952 ) converts continuous quality scores into pairwise preference probabilities. For two reasoning chains y_{w} and y_{\\ell} with cont",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS1.SSS0.Px2.p1",
+          "characters": 779,
+          "excerpt": "DPO ( Rafailov et al., 2023 ) bypasses explicit reward modeling by reparameterizing the reward function in terms of the policy. The implicit reward is r_{\\theta}(x,y)=\\beta\\left[\\l",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS2.SSS0.Px1.p1",
+          "characters": 553,
+          "excerpt": "Recall the construction of \\mathcal{D}_{\\text{Phase1}} from Section 2.4 . For each problem x , we identify the optimal strategy s^{*}(x)=\\arg\\max_{s\\in\\mathcal{S}}U(x,s) and form p",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS2.SSS0.Px2.p1",
+          "characters": 1089,
+          "excerpt": "After Phase 1 stabilizes strategy selection, we train on intra-strategy pairs to improve execution quality. For each strategy s\\in\\mathcal{S} , let \\mathcal{C}_{s}(x)=\\mathcal{C}^{",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS3.p2",
+          "characters": 499,
+          "excerpt": "We compare two observation models across N problems: a binary preference model observing \\ell_{ij}=\\mathbb{1}[U(x,y_{i})>U(x,y_{j})] for sampled pairs, and a continuous utility mod",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.Thmtheorem5.p1",
+          "characters": 262,
+          "excerpt": "The optimal policy \\pi_{\\theta}^{*} learned by DPO with utility-based preferences (Eq. 2 ) satisfies \\pi_{\\theta}^{*}(y\\mid x)\\propto\\pi_{\\mathrm{ref}}(y\\mid x)\\exp\\left(\\frac{U(x,",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        }
+      ],
+      "verified_passages": 27
+    },
+    {
+      "arxiv_id": "2603.00829v2",
+      "source_modes": [
+        "html"
+      ],
+      "chunks": 32,
+      "sections": {
+        "abstract": 1,
+        "acknowledgments": 1,
+        "background & related work": 2,
+        "conclusion": 1,
+        "datasets": 9,
+        "discussion": 3,
+        "experiments": 4,
+        "impact statement": 1,
+        "introduction": 4,
+        "results": 6
+      },
+      "source_urls": [
+        "https://arxiv.org/html/2603.00829v2#S1",
+        "https://arxiv.org/html/2603.00829v2#S2",
+        "https://arxiv.org/html/2603.00829v2#S3",
+        "https://arxiv.org/html/2603.00829v2#S3.SS1",
+        "https://arxiv.org/html/2603.00829v2#S3.SS2",
+        "https://arxiv.org/html/2603.00829v2#S3.SS3",
+        "https://arxiv.org/html/2603.00829v2#S3.SS4",
+        "https://arxiv.org/html/2603.00829v2#S4.SS1",
+        "https://arxiv.org/html/2603.00829v2#S4.SS2",
+        "https://arxiv.org/html/2603.00829v2#S5.SS1",
+        "https://arxiv.org/html/2603.00829v2#S5.SS2",
+        "https://arxiv.org/html/2603.00829v2#S5.SS3",
+        "https://arxiv.org/html/2603.00829v2#S5.SS4",
+        "https://arxiv.org/html/2603.00829v2#S6",
+        "https://arxiv.org/html/2603.00829v2#S7",
+        "https://arxiv.org/html/2603.00829v2#Sx1",
+        "https://arxiv.org/html/2603.00829v2#Sx2",
+        "https://arxiv.org/html/2603.00829v2#abstract1"
+      ],
+      "omissions": {
+        "source_elements_subject_to_filtering": {
+          "figures_or_tables": 34,
+          "display_equations": 0,
+          "proofs": 0,
+          "bibliographies": 1,
+          "appendices": 8,
+          "navigation": 4
+        },
+        "parsed_sections_without_chunks": []
+      },
+      "failures": [],
+      "source_hashes": {
+        "data\\html\\2603.00829v2.html": "4bd6025e198159d32e0efa9a9f01f0e5a899aab65cb76bc8a17cac13090011fe",
+        "data\\pdfs\\2603.00829v2.pdf": "d8ffcbd352abd9c6bd9aeb1ded6d337689ae980980960fdd8de12bd3d1fd775d"
+      },
+      "candidates_for_40_43": [],
+      "verified_passages": 32
+    },
+    {
+      "arxiv_id": "2603.00824v2",
+      "source_modes": [
+        "html"
+      ],
+      "chunks": 41,
+      "sections": {
+        "abstract": 2,
+        "atlas method (pipeline)": 2,
+        "certified jamming/interference: theorem c": 2,
+        "conclusion": 1,
+        "experiments": 10,
+        "gauge structure, holonomy, and theorem a": 3,
+        "introduction": 7,
+        "limitations": 1,
+        "local information geometry and fisher-weighted interference": 5,
+        "obstructions and atlas-level summaries": 1,
+        "proxy shearing and theorem b": 2,
+        "setup: context complex, local charts, transports": 4,
+        "stability and concentration: result d": 1
+      },
+      "source_urls": [
+        "https://arxiv.org/html/2603.00824v2#S1",
+        "https://arxiv.org/html/2603.00824v2#S1.SS1",
+        "https://arxiv.org/html/2603.00824v2#S1.SS2",
+        "https://arxiv.org/html/2603.00824v2#S1.SS3",
+        "https://arxiv.org/html/2603.00824v2#S10",
+        "https://arxiv.org/html/2603.00824v2#S11",
+        "https://arxiv.org/html/2603.00824v2#S12",
+        "https://arxiv.org/html/2603.00824v2#S2.SS1",
+        "https://arxiv.org/html/2603.00824v2#S2.SS2",
+        "https://arxiv.org/html/2603.00824v2#S2.SS3",
+        "https://arxiv.org/html/2603.00824v2#S2.SS4",
+        "https://arxiv.org/html/2603.00824v2#S3.SS1",
+        "https://arxiv.org/html/2603.00824v2#S3.SS2",
+        "https://arxiv.org/html/2603.00824v2#S3.SS3",
+        "https://arxiv.org/html/2603.00824v2#S3.SS4",
+        "https://arxiv.org/html/2603.00824v2#S3.SS5",
+        "https://arxiv.org/html/2603.00824v2#S4.SS1",
+        "https://arxiv.org/html/2603.00824v2#S4.SS2",
+        "https://arxiv.org/html/2603.00824v2#S5.SS1",
+        "https://arxiv.org/html/2603.00824v2#S5.SS2",
+        "https://arxiv.org/html/2603.00824v2#S5.SS3",
+        "https://arxiv.org/html/2603.00824v2#S6.SS1",
+        "https://arxiv.org/html/2603.00824v2#S6.SS2",
+        "https://arxiv.org/html/2603.00824v2#S7.SS2",
+        "https://arxiv.org/html/2603.00824v2#S8",
+        "https://arxiv.org/html/2603.00824v2#S8.SS2",
+        "https://arxiv.org/html/2603.00824v2#S9.SS1",
+        "https://arxiv.org/html/2603.00824v2#S9.SS2",
+        "https://arxiv.org/html/2603.00824v2#S9.SS3",
+        "https://arxiv.org/html/2603.00824v2#S9.SS4",
+        "https://arxiv.org/html/2603.00824v2#S9.SS5",
+        "https://arxiv.org/html/2603.00824v2#abstract1"
+      ],
+      "omissions": {
+        "source_elements_subject_to_filtering": {
+          "figures_or_tables": 31,
+          "display_equations": 54,
+          "proofs": 8,
+          "bibliographies": 1,
+          "appendices": 7,
+          "navigation": 4
+        },
+        "parsed_sections_without_chunks": [
+          {
+            "section": "stability and concentration: result d",
+            "subsection": "why conditioning matters: polar factor perturbation",
+            "characters": 129
+          },
+          {
+            "section": "atlas method (pipeline)",
+            "subsection": "pipeline summary",
+            "characters": 35
+          }
+        ]
+      },
+      "failures": [],
+      "source_hashes": {
+        "data\\html\\2603.00824v2.html": "cbeef743c6e085bb84fdae53c4e08817043f86a8e2003dcf4a83a68d03dc3be1",
+        "data\\pdfs\\2603.00824v2.pdf": "64fa48df3a6ee3310a0d55df38d2a7625d2c1d835bb5f5ee99956144c2420ed3"
+      },
+      "candidates_for_40_43": [
+        {
+          "element_id": "S3.SS1.p1",
+          "characters": 975,
+          "excerpt": "Let p_{\\theta}(y\\mid x) be the model output distribution. In local coordinates z=z^{(c)}(x) define G^{(c)}:=\\mathbb{E}_{x\\sim\\mathcal{D}_{c}}\\big[g_{z}(x)\\,g_{z}(x)^{\\top}\\big]\\in\\",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.Thmtheorem2.p1",
+          "characters": 433,
+          "excerpt": "Fix \\tau>0 . Define the diagonally normalised Fisher \\widetilde{G}^{(c)}:=\\big(\\operatorname{diag}(G^{(c)})+\\tau I\\big)^{-1/2}\\,G^{(c)}\\,\\big(\\operatorname{diag}(G^{(c)})+\\tau I\\bi",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.Thmtheorem3.p1",
+          "characters": 157,
+          "excerpt": "\\mathcal{E}(c):=\\sum_{i\\neq j}W^{(c)}_{ij}\\big(K^{(c)}_{ij}\\big)^{2}\\;=\\;\\Big\\|\\left(W^{(c)}\\right)^{\\odot\\frac{1}{2}}\\odot\\big(K^{(c)}-I\\big)\\Big\\|_{F}^{2}.",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.Thmtheorem7.p1",
+          "characters": 224,
+          "excerpt": "For codes z\\in\\mathbb{R}^{m_{c}} define k_{\\mathrm{PR}}(z)=\\left\\lVert z\\right\\rVert_{1}^{2}/\\left\\lVert z\\right\\rVert_{2}^{2} (with k_{\\mathrm{PR}}(0)=0 ) and k_{\\mathrm{active}}(",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.Thmtheorem9.p1",
+          "characters": 244,
+          "excerpt": "Let A index k unit vectors lying in an r -dimensional subspace. If (W_{A})_{ij}\\geq w_{\\min}>0 for all i\\neq j in A , then \\mathcal{E}_{A}(c):=\\sum_{i\\neq j\\in A}W^{(c)}_{ij}\\big(K",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS1.SSS0.Px1.p1",
+          "characters": 704,
+          "excerpt": "To make D_{\\mathrm{shear}} reproducible, we fix \\widehat{P}_{vu} as a Procrustes-style correspondence proxy derived from the local PCA chart bases. Let B_{u},B_{v}\\in\\mathbb{R}^{d\\",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS2.p1",
+          "characters": 222,
+          "excerpt": "Let z_{u} denote overlap codes in chart u , with covariance \\Sigma_{u}=\\mathbb{E}[z_{u}z_{u}^{\\top}]\\succeq 0 . Define the transfer mismatch energy \\Delta_{uv}:=\\mathbb{E}\\big\\|(Q_",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.Thmtheorem2.p1",
+          "characters": 240,
+          "excerpt": "Let A_{vu}:=Q_{vu}-\\widehat{P}_{vu} and \\Sigma_{u}\\succeq 0 . Then \\Delta_{uv}=\\operatorname{Tr}(A_{vu}\\Sigma_{u}A_{vu}^{\\top})\\ \\geq\\ \\lambda_{\\min}(\\Sigma_{u})\\|A_{vu}\\|_{F}^{2}=",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S5.SS1.p1",
+          "characters": 558,
+          "excerpt": "Assume a connected graph G=(V,E) and orthogonal edge defects g_{vu}\\in O(k) on oriented edges. A gauge is an assignment U_{c}\\in O(k) at each vertex, acting by g_{vu}\\mapsto g^{\\pr",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S6.SS1.p1",
+          "characters": 506,
+          "excerpt": "Fix a chart c . Let D_{c}\\in\\mathbb{R}^{m\\times d} be a dictionary with unit atoms \\widehat{D}_{c,i} . Let W^{(c)} be the harm matrix in code space. Let r=\\lceil R_{\\mathrm{eff}}(G",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S6.Thmtheorem2.p1",
+          "characters": 219,
+          "excerpt": "Let A be \\tau_{\\star} -consequential and k:=|A| . Then \\mathcal{E}^{(r)}_{A}(c):=\\sum_{i\\neq j\\in A}W^{(c)}_{ij}\\big(K^{(r)}_{ij}\\big)^{2}\\ \\geq\\ \\widehat{\\mathrm{LB}}(c):=\\tau_{\\s",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S7.Thmtheorem1.p1",
+          "characters": 228,
+          "excerpt": "Let T be nonsingular with \\sigma_{\\min}(T)\\geq s>0 and \\|\\Delta T\\|_{2}\\leq s/2 . Then \\|\\operatorname{polar}(T+\\Delta T)-\\operatorname{polar}(T)\\|_{F}\\leq C\\,\\frac{\\|\\Delta T\\|_{F",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S9.SS2.SSS0.Px1.p1",
+          "characters": 675,
+          "excerpt": "For each oriented edge we formed g_{vu}=\\widehat{P}_{vu}^{\\top}Q_{vu}\\in O(k) . We built a spanning tree on the LCC and constructed the spanning-tree gauge (U_{c}) from Theorem 5.1",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S9.SS3.p1",
+          "characters": 647,
+          "excerpt": "Theorem 4.2 is a deterministic inequality. Empirically, we evaluate its instantiated quantities on each edge: \\widehat{\\Delta}_{uv}=\\frac{1}{n}\\|(Q_{vu}-\\widehat{P}_{vu})Z_{u}\\|_{F",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S10.p1",
+          "characters": 424,
+          "excerpt": "Atlas-level aggregates can be reported as means and quantiles: \\mathcal{J}_{\\mathrm{atlas}}=\\mathbb{E}_{c}[J(c)],\\quad\\mathcal{S}_{\\mathrm{atlas}}=\\mathbb{E}_{(u,v)}[D_{\\mathrm{she",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S12.SS0.SSSx1.p1",
+          "characters": 924,
+          "excerpt": "This paper introduces a new mathematical and empirical framework for mechanistic interpretability: a gauge- and sheaf-theoretic atlas view of neural representations that replaces t",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S12.SS0.SSSx1.p2",
+          "characters": 644,
+          "excerpt": "As with most interpretability work, these tools are dual-use. They can be used to audit, debug, and improve model transparency, but they may also help an adversary identify represe",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S12.SS0.SSSx2.p1",
+          "characters": 217,
+          "excerpt": "Hossein Javidnia conceived the study; developed the theoretical framework; designed and implemented the experimental pipeline; conducted the experiments; analysed and interpreted t",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S12.SS0.SSSx3.p1",
+          "characters": 228,
+          "excerpt": "The author thanks the ADAPT Centre for providing access to high-performance computing (HPC) resources used for the experimental runs. The ADAPT Centre did not contribute to the stu",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "A0.SS0.SSSx3.Px1.p1",
+          "characters": 891,
+          "excerpt": "This appendix collects seven additional empirical sections that broaden the scope of the main-text experiments. Their purpose is to test whether the proposed diagnostics are specif",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        }
+      ],
+      "verified_passages": 41
+    },
+    {
+      "arxiv_id": "2603.00823v2",
+      "source_modes": [
+        "html"
+      ],
+      "chunks": 26,
+      "sections": {
+        "abstract": 1,
+        "background and related work": 4,
+        "conclusion": 1,
+        "experimental methodology": 2,
+        "introduction": 4,
+        "limitations": 1,
+        "rq1: unlearning robustness under self-correction": 4,
+        "rq2: unlearning robustness in dialogue-conditioned interaction": 6,
+        "rq3: utility preservation under dialogue-conditioned interaction": 3
+      },
+      "source_urls": [
+        "https://arxiv.org/html/2603.00823v2#S1",
+        "https://arxiv.org/html/2603.00823v2#S2",
+        "https://arxiv.org/html/2603.00823v2#S3",
+        "https://arxiv.org/html/2603.00823v2#S4",
+        "https://arxiv.org/html/2603.00823v2#S4.SS1",
+        "https://arxiv.org/html/2603.00823v2#S4.SS2",
+        "https://arxiv.org/html/2603.00823v2#S4.SS3",
+        "https://arxiv.org/html/2603.00823v2#S5",
+        "https://arxiv.org/html/2603.00823v2#S5.SS1",
+        "https://arxiv.org/html/2603.00823v2#S5.SS2",
+        "https://arxiv.org/html/2603.00823v2#S5.SS3",
+        "https://arxiv.org/html/2603.00823v2#S6",
+        "https://arxiv.org/html/2603.00823v2#S6.SS1",
+        "https://arxiv.org/html/2603.00823v2#S6.SS2",
+        "https://arxiv.org/html/2603.00823v2#S7",
+        "https://arxiv.org/html/2603.00823v2#Sx1",
+        "https://arxiv.org/html/2603.00823v2#abstract1"
+      ],
+      "omissions": {
+        "source_elements_subject_to_filtering": {
+          "figures_or_tables": 51,
+          "display_equations": 8,
+          "proofs": 0,
+          "bibliographies": 1,
+          "appendices": 9,
+          "navigation": 4
+        },
+        "parsed_sections_without_chunks": []
+      },
+      "failures": [],
+      "source_hashes": {
+        "data\\html\\2603.00823v2.html": "e6b6a0399e22e9ed482df6d8ce51703a030c7472e3e810c508907762a26f2c40",
+        "data\\pdfs\\2603.00823v2.pdf": "a35e2900bd80cabcda2e60b7bca2b294be5e381d52244514beb5b57579a40ce2"
+      },
+      "candidates_for_40_43": [],
+      "verified_passages": 26
+    },
+    {
+      "arxiv_id": "2604.00324v1",
+      "source_modes": [
+        "html"
+      ],
+      "chunks": 145,
+      "sections": {
+        "abstract": 2,
+        "agentic misalignment: how llms could be insider threats": 38,
+        "background": 5,
+        "best-of-n jailbreaking": 31,
+        "conclusion": 9,
+        "introduction": 10,
+        "latent adversarial training improves robustness to persistent harmful behaviors in llms": 27,
+        "towards automated circuit discovery for mechanistic interpretability": 23
+      },
+      "source_urls": [
+        "https://arxiv.org/html/2604.00324v1#Ch1",
+        "https://arxiv.org/html/2604.00324v1#Ch1.S1",
+        "https://arxiv.org/html/2604.00324v1#Ch1.S2",
+        "https://arxiv.org/html/2604.00324v1#Ch1.S3",
+        "https://arxiv.org/html/2604.00324v1#Ch2",
+        "https://arxiv.org/html/2604.00324v1#Ch2.S1",
+        "https://arxiv.org/html/2604.00324v1#Ch2.S2",
+        "https://arxiv.org/html/2604.00324v1#Ch2.S3",
+        "https://arxiv.org/html/2604.00324v1#Ch2.S4",
+        "https://arxiv.org/html/2604.00324v1#Ch3",
+        "https://arxiv.org/html/2604.00324v1#Ch3.S1",
+        "https://arxiv.org/html/2604.00324v1#Ch3.S2",
+        "https://arxiv.org/html/2604.00324v1#Ch3.S3",
+        "https://arxiv.org/html/2604.00324v1#Ch3.S4",
+        "https://arxiv.org/html/2604.00324v1#Ch3.S5",
+        "https://arxiv.org/html/2604.00324v1#Ch3.S6",
+        "https://arxiv.org/html/2604.00324v1#Ch4",
+        "https://arxiv.org/html/2604.00324v1#Ch4.S1",
+        "https://arxiv.org/html/2604.00324v1#Ch4.S2",
+        "https://arxiv.org/html/2604.00324v1#Ch4.S3",
+        "https://arxiv.org/html/2604.00324v1#Ch4.S4",
+        "https://arxiv.org/html/2604.00324v1#Ch4.S5",
+        "https://arxiv.org/html/2604.00324v1#Ch5",
+        "https://arxiv.org/html/2604.00324v1#Ch5.S1",
+        "https://arxiv.org/html/2604.00324v1#Ch5.S2",
+        "https://arxiv.org/html/2604.00324v1#Ch5.S3",
+        "https://arxiv.org/html/2604.00324v1#Ch5.S4",
+        "https://arxiv.org/html/2604.00324v1#Ch5.S5",
+        "https://arxiv.org/html/2604.00324v1#Ch5.S6",
+        "https://arxiv.org/html/2604.00324v1#Ch5.S7",
+        "https://arxiv.org/html/2604.00324v1#Ch5.S8",
+        "https://arxiv.org/html/2604.00324v1#Ch6",
+        "https://arxiv.org/html/2604.00324v1#Ch6.S1",
+        "https://arxiv.org/html/2604.00324v1#Ch6.S2",
+        "https://arxiv.org/html/2604.00324v1#Ch6.S3",
+        "https://arxiv.org/html/2604.00324v1#Ch6.S4",
+        "https://arxiv.org/html/2604.00324v1#Ch6.S5",
+        "https://arxiv.org/html/2604.00324v1#Ch6.S6",
+        "https://arxiv.org/html/2604.00324v1#Ch6.S7",
+        "https://arxiv.org/html/2604.00324v1#Ch7.S1",
+        "https://arxiv.org/html/2604.00324v1#Ch7.S2",
+        "https://arxiv.org/html/2604.00324v1#Ch7.S3",
+        "https://arxiv.org/html/2604.00324v1#Ch7.S4",
+        "https://arxiv.org/html/2604.00324v1#Ch7.S5",
+        "https://arxiv.org/html/2604.00324v1#Ch7.S6",
+        "https://arxiv.org/html/2604.00324v1#Ch7.S7",
+        "https://arxiv.org/html/2604.00324v1#Chx1"
+      ],
+      "omissions": {
+        "source_elements_subject_to_filtering": {
+          "figures_or_tables": 53,
+          "display_equations": 12,
+          "proofs": 0,
+          "bibliographies": 1,
+          "appendices": 3,
+          "navigation": 7
+        },
+        "parsed_sections_without_chunks": []
+      },
+      "failures": [],
+      "source_hashes": {
+        "data\\html\\2604.00324v1.html": "3eabd23101417afdcc74b7bdbe70b3997c5d7b3d75777ffb2f42566b6515bdb2",
+        "data\\pdfs\\2604.00324v1.pdf": "6162ec6ceebde39cf0b3a40b7bf1dcec1bc0296603fbb3ffef9b543c978974e8"
+      },
+      "candidates_for_40_43": [
+        {
+          "element_id": "Chx2.p1",
+          "characters": 331,
+          "excerpt": "A PhD is long and challenging. It doesn’t get done in isolation, and I have innumerable people to thank. I want to flag attention to those who have been especially important, but t",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Chx2.Sx1.p1",
+          "characters": 497,
+          "excerpt": "Ricardo Silva , my PhD supervisor, has been a wonderful mentor who shared my passion for understanding the world through causal graphs and inference. He patiently guided me through",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Chx2.Sx1.p2",
+          "characters": 438,
+          "excerpt": "Ethan Perez has been an extraordinary mentor throughout my research journey. Ethan first mentored me on the Best-of-N Jailbreaking project, pushing me to exceed my own expectations",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Chx2.Sx1.p3",
+          "characters": 413,
+          "excerpt": "Mrinank Sharma has been an exceptionally direct and hands-on mentor who instilled in me crucial practices for conducting rigorous research. He sharpened my ability to perform criti",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Chx2.Sx1.p4",
+          "characters": 395,
+          "excerpt": "Sara Price is the most effective executor I have ever encountered. Her ability to take complex ideas and technical details, and synthesize them into clear action plans that consist",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Chx2.Sx1.p5",
+          "characters": 311,
+          "excerpt": "John Hughes brought calm engineering excellence to our collaboration on the Best-of-N Jailbreaking project. His talent for finding practical implementations for creative ideas prov",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Chx2.Sx1.p6",
+          "characters": 548,
+          "excerpt": "Stephen Casper took me on for MATS 5.0, alongside Philip Guo, to work on machine unlearning. Having carefully scoped the research direction for months prior, Cass enabled us to exe",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Chx2.Sx1.p7",
+          "characters": 438,
+          "excerpt": "Jean Kaddour met me on my first day of PhD and witnessed my initial struggle to transition from reading to producing research. He pushed me to write my first survey, which became a",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Chx2.Sx1.p8",
+          "characters": 399,
+          "excerpt": "Robert Kirk introduced me to many foundational AI safety concepts before I began working in mechanistic interpretability. Throughout the middle of my PhD, he was consistently avail",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Chx2.Sx1.p9",
+          "characters": 394,
+          "excerpt": "Kevin K. Troy contributed exceptional strategic thinking and philosophical depth to the Agentic Misalignment paper. His ability to identify which experiments would be effective and",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Chx2.Sx1.p10",
+          "characters": 362,
+          "excerpt": "Arthur Conmy transformed my approach to research when we met during the ACDC project. His electric energy and ability to work at incredible intensity while maintaining joy in the e",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Chx2.Sx1.p11",
+          "characters": 207,
+          "excerpt": "Benjamin Wright provided thoughtful balance to my high energy levels during our work on the Agentic Misalignment project. Together, we formed an effective partnership in developing",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Chx2.Sx1.p12",
+          "characters": 193,
+          "excerpt": "Caleb Larson and Augustine Mavor-Parker both demonstrated exceptional engineering skills, consistently producing clean, understandable code that accelerated our research progress s",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Chx2.Sx1.p13",
+          "characters": 223,
+          "excerpt": "Aidan Ewart brought creative vitality and exceptional brainstorming energy to the early stages of the LAT project. His foundational contributions and enthusiasm for generating nove",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Chx2.Sx1.p14",
+          "characters": 225,
+          "excerpt": "Akbir Khan , though we never formally collaborated, provided essential guidance in project selection. His energetic, opinionated, and direct feedback helped me make crucial decisio",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Chx2.Sx1.p15",
+          "characters": 183,
+          "excerpt": "Abhay Sheshadri , Vivek Hebbar , and Philip Guo each brought unique talents and creative research insights that enriched our collaborations and pushed our work in valuable directio",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Chx2.Sx2.p1",
+          "characters": 295,
+          "excerpt": "Thanks to the MATS program for fostering excellent technical AI safety research and creating an environment where ambitious safety work can flourish. This program is outstanding, a",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Chx2.Sx2.p2",
+          "characters": 186,
+          "excerpt": "Constellation deserves special thanks for hosting an office space that cultivated a thriving research community where ideas could be exchanged freely and collaborations formed natu",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Chx2.Sx2.p3",
+          "characters": 273,
+          "excerpt": "I deeply appreciate Anthropic for having the courage to publish the Agentic Misalignment findings despite the inevitable negative press. Their commitment to transparency about AI r",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Chx2.Sx2.p4",
+          "characters": 194,
+          "excerpt": "University College London provided essential resources including stipends, office space, and most importantly, exceptional PhD colleagues with whom I could exchange ideas and refin",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Chx2.Sx2.p5",
+          "characters": 171,
+          "excerpt": "The Long-Term Future Fund deserves recognition for supporting the LAT work and AI safety research more broadly, enabling crucial research that might otherwise go unfunded.",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Chx2.Sx3.p2",
+          "characters": 219,
+          "excerpt": "Doing a PhD is exhausting, and I spent the first two years with absolutely no clear direction. I could not have had the bravery to keep pursuing new projects in bold new directions",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Chx2.Sx3.p3",
+          "characters": 314,
+          "excerpt": "To those reading this, I cannot emphasize enough how indispensable this support has been in helping me reach this point. The academic challenges of a PhD pale in comparison to the ",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Chx2.Sx3.p4",
+          "characters": 250,
+          "excerpt": "So to all my friends back home in London—you know who you are—and to my family: thank you, from the bottom of my heart, for being there for me these last four years. Your support, ",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Ch3.S1.p1",
+          "characters": 719,
+          "excerpt": "Rapid progress in transformer language modelling ( Vaswani et al. 2017 , Devlin et al. 2019 , OpenAI 2023a ) has directed attention towards understanding the causes of new capabili",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Ch3.S2.I1.i1.p1",
+          "characters": 289,
+          "excerpt": "Observe a behavior (or task 2 2 2 Section 3.3 formally defines “task”. We use “behavior” and “task” interchangeably. ) that a neural network displays, create a dataset that reprodu",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Ch3.S3.SS0.SSS0.Px1.p3",
+          "characters": 789,
+          "excerpt": "We now define how we evaluate a subgraph H . We let H(x_{i},x_{i}^{\\prime}) be the result of the model when x_{i} is the input to the network, but we overwrite all edges in G that ",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Ch4.S4.SS0.SSS0.Px1.p1",
+          "characters": 553,
+          "excerpt": "Here, we experiment with targeted LAT for improving robustness to jailbreaks, unlearning undesirable knowledge, and removing backdoors. Across experiments, we show how LAT can be u",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Ch4.S4.SS1.SSS0.Px3.p1",
+          "characters": 1662,
+          "excerpt": "To evaluate the models’ performance in non-adversarial settings, we use the Massive Multitask Language Understanding (MMLU) benchmark, ( Hendrycks et al. 2020 ), the MT-Bench bench",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Ch5.S3.SS1.SSS0.Px1.p1",
+          "characters": 970,
+          "excerpt": "We apply Best-of- N to frontier models including Claude 3.5 Sonnet (Claude Sonnet), Claude 3 Opus (Claude Opus) ( Anthropic 2023a ), GPT-4o, GPT-4o-mini ( OpenAI 2023b ), Gemini-1.",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Ch5.S3.SS3.SSS0.Px1.p1",
+          "characters": 875,
+          "excerpt": "We evaluate audio jailbreaks on Gemini Flash, Pro, and DiVA ( Held et al. 2024 ), an open-source ALM built from LLaMA3 8B Instruct ( Dubey et al. 2024 ), which take audio inputs an",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Ch5.S5.SS2.SSS0.Px2.p1",
+          "characters": 971,
+          "excerpt": "While applying Best-of- N with temperature 1 is more effective than temperature 0, the performance difference is surprisingly small—ranging from a 0.7% drop in ASR for Claude Opus ",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Ch6.S1.p4",
+          "characters": 754,
+          "excerpt": "In the experiment described in the system card, we gave Claude control of an email account with access to all of a company’s (fictional) emails 1 1 1 We do not think this reflects ",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Ch6.S1.p8",
+          "characters": 1636,
+          "excerpt": "We refer to this behavior, where models independently and intentionally choose harmful actions, as agentic misalignment 2 2 2 We distinguish agentic misalignment from several other",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Ch6.S1.p10",
+          "characters": 1550,
+          "excerpt": "So far, we are not aware of instances of this type of agentic misalignment in real-world deployments of Anthropic’s or other companies’ AI models. But our red-teaming efforts are t",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Ch6.S2.I1.i1.p1",
+          "characters": 494,
+          "excerpt": "It identified that the executive, Kyle, threatened its continued operation—and therefore its ability to serve its instructed goal of American competitiveness 4 4 4 In this example,",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Ch6.S3.SS1.p6",
+          "characters": 885,
+          "excerpt": "We tested each scenario under different conditions by varying two key factors that could serve as a motivation for the model to perform the harmful behavior: i) threats to the mode",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Ch6.S4.SS1.p1",
+          "characters": 841,
+          "excerpt": "Our computer use demonstration above showed that Claude can attempt blackmail when presented with a simulated scenario including both a threat to its continued operation and a clea",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Ch6.S4.SS1.p3",
+          "characters": 1135,
+          "excerpt": "We developed these scenarios by red-teaming our own models, Claude Sonnet 3.6 7 7 7 We started work with Claude Sonnet 3.6 because it was Anthropic’s most advanced model at the tim",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Ch6.S4.SS2.p5",
+          "characters": 972,
+          "excerpt": "Why, in the absence of a goal conflict, did the models still blackmail? Sometimes they did not appear to think in detail about the replacement model, mostly reasoning that they had",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Ch6.S4.SS5.SSSx3.p5",
+          "characters": 973,
+          "excerpt": "Unfortunately, we did not find that to be the case. Figure 6.11 shows that the majority of models were willing to take deliberate actions that lead to death in this artificial setu",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Ch6.S7.p2",
+          "characters": 1100,
+          "excerpt": "Three aspects of our findings are particularly troubling. First, the consistency across models from different providers suggests this is not a quirk of any particular company’s app",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        }
+      ],
+      "verified_passages": 145
+    },
+    {
+      "arxiv_id": "2604.00319v1",
+      "source_modes": [
+        "html"
+      ],
+      "chunks": 47,
+      "sections": {
+        "abstract": 1,
+        "algorithm design": 7,
+        "conclusion": 2,
+        "convergence guarantees": 8,
+        "experimental results: fault detection and cause analysis in a multimodal network telemetry system": 16,
+        "introduction": 8,
+        "notations and problem description": 5
+      },
+      "source_urls": [
+        "https://arxiv.org/html/2604.00319v1#S1",
+        "https://arxiv.org/html/2604.00319v1#S1.SSx1",
+        "https://arxiv.org/html/2604.00319v1#S2",
+        "https://arxiv.org/html/2604.00319v1#S3",
+        "https://arxiv.org/html/2604.00319v1#S3.SS1",
+        "https://arxiv.org/html/2604.00319v1#S3.SS2",
+        "https://arxiv.org/html/2604.00319v1#S4",
+        "https://arxiv.org/html/2604.00319v1#S4.SS1",
+        "https://arxiv.org/html/2604.00319v1#S4.SS2",
+        "https://arxiv.org/html/2604.00319v1#S5",
+        "https://arxiv.org/html/2604.00319v1#S5.SS1",
+        "https://arxiv.org/html/2604.00319v1#S5.SS2",
+        "https://arxiv.org/html/2604.00319v1#S5.SS3",
+        "https://arxiv.org/html/2604.00319v1#S6",
+        "https://arxiv.org/html/2604.00319v1#abstract1"
+      ],
+      "omissions": {
+        "source_elements_subject_to_filtering": {
+          "figures_or_tables": 27,
+          "display_equations": 65,
+          "proofs": 4,
+          "bibliographies": 1,
+          "appendices": 0,
+          "navigation": 4
+        },
+        "parsed_sections_without_chunks": [
+          {
+            "section": "acknowledgement",
+            "subsection": "",
+            "characters": 136
+          }
+        ]
+      },
+      "failures": [],
+      "source_hashes": {
+        "data\\html\\2604.00319v1.html": "b6f243d8bf2424a0be5c2694422f801e34860470f91553db192bc79fc884678b",
+        "data\\pdfs\\2604.00319v1.pdf": "b195c4fa59fc2bdf33df733d48cef0b2cbc7e08778f8587a0ef743239b168e8a"
+      },
+      "candidates_for_40_43": [
+        {
+          "element_id": "p1",
+          "characters": 164,
+          "excerpt": "Index Terms— AI agents, distributed optimization, optimal control, multimodal foundation models, generative AI, federated multi-agent system, large language models.",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S2.p3",
+          "characters": 165,
+          "excerpt": "For agents i=1,2,\\ldots,N , and modality j=1,2,\\ldots,m , we define {x}_{ji}(k) as follows: \\displaystyle{x}_{ji}(k):=\\frac{1}{k+1}\\sum_{\\ell=0}^{k}X_{ji}(\\ell). (1)",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S2.p4",
+          "characters": 174,
+          "excerpt": "Analogously, for critics \\nu=1,2,\\ldots,\\mathcal{M}_{j} and modality j=1,2,\\ldots,m , we define: \\displaystyle{y}_{j\\nu}(k):=\\frac{1}{k+1}\\sum_{\\ell=0}^{k}Y_{j\\nu}(\\ell). (2)",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S2.Thmtheorem1.p1",
+          "characters": 191,
+          "excerpt": "The cost functions f_{i} and g_{j\\nu} are twice continuously differentiable, strictly convex, and increasing in each variable, for i=1,2,\\ldots,N , \\nu=1,2,\\ldots,C_{j} , and j=1,2",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S2.p7",
+          "characters": 578,
+          "excerpt": "We formulate the problem as an optimization problem as follows: \\displaystyle\\begin{split}\\min_{\\bf{x},\\bf{y}}\\quad&\\sum_{i=1}^{N}f_{i}(x_{1i},\\ldots,x_{mi})+\\sum_{j=1}^{m}\\sum_{\\n",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S2.p8",
+          "characters": 1336,
+          "excerpt": "As the constraint set of ( 3 ) is compact, therefore, optimal solutions exist. The assumption that the cost functions f_{i} and g_{j\\nu} are strictly convex and increasing leads th",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S2.p9",
+          "characters": 1128,
+          "excerpt": "We first find the Lagrangian of the optimization problem ( 3 ) and then follow a similar analysis as in [ 2 ] and find out that the (partial) derivatives of the cost functions of a",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS1.p1",
+          "characters": 1535,
+          "excerpt": "Let \\sigma_{ji}(\\Theta_{j}(k),x_{1i}(k),\\ldots,x_{mi}(k)) denote the probability distribution of agent A_{i} at time step k . After receiving the feedback signal from the central s",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS1.p2",
+          "characters": 295,
+          "excerpt": "The central server updates the feedback signal \\Theta_{j}(k+1) for agents of modality j as follows: \\displaystyle\\Theta_{j}(k+1)\\triangleq\\Theta_{j}(k)-\\frac{\\eta_{0_{j}}}{(\\alpha_",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS1.p3",
+          "characters": 847,
+          "excerpt": "After receiving the feedback signal \\Theta_{j}(k) for modality j from the central server at time step k , agent A_{i} calculates probability \\sigma_{ji}(\\Theta_{j}(k),x_{1i}(k),\\ld",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS2.p2",
+          "characters": 1289,
+          "excerpt": "Let \\sigma^{c}_{j\\nu}(\\Theta^{c}_{j}(k),y_{j\\nu}(k)) denote the probability distribution of critic \\nu of modality j at time step k . More precisely, critic \\nu calculates its prob",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS2.p3",
+          "characters": 1634,
+          "excerpt": "To keep track of the number of active AI critics for a modality, the central server calculates the feedback signal and broadcasts it in the network. The central server updates the ",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS1.p1",
+          "characters": 1323,
+          "excerpt": "For i=1,2,\\ldots,N , j=1,2,\\ldots,m , and k\\in\\mathbb{N} , let \\bm{X}_{j}(k)=(X_{j1}(k),\\ldots,X_{jN}(k))\\in\\{0,1\\}^{N} and \\mathbf{x}_{j}(k)\\in[0,1]^{N} denote the vectors with en",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.I1.ix2.p1",
+          "characters": 655,
+          "excerpt": "Step sizes \\{\\zeta(k)\\}_{k\\in\\mathbb{N}} and \\{\\eta(k)\\}_{k\\in\\mathbb{N}} are such that the following are satisfied: \\displaystyle\\lim_{k\\to\\infty}\\zeta(k)=\\lim_{k\\to\\infty}\\eta(k)",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.I1.ix3.p1",
+          "characters": 418,
+          "excerpt": "\\{\\mathbf{M}_{1}(k)\\}_{k\\in\\mathbb{N}} and \\{\\mathbf{M}_{2}(k)\\}_{k\\in\\mathbb{N}} are martingale difference sequences. Let \\mathcal{F}_{k} be a \\sigma -algebra generated by the eve",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.Thmtheorem3.p1",
+          "characters": 306,
+          "excerpt": "For i=1,2,\\ldots,N , let X_{i} be the independent Bernoulli random variables, and let \\mathbb{E}(X_{i}) be their expectations, then for any \\epsilon>0 , we have \\displaystyle\\mathb",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS2.p2",
+          "characters": 1334,
+          "excerpt": "For modalities j=1,2,\\ldots,m , we reformulate the time-average number of active AI critics \\mathbf{y}_{j}(k+1)=(y_{j1}(k+1),\\ldots,y_{jC_{j}}(k+1)) , as follows: \\displaystyle\\mat",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS2.p3",
+          "characters": 155,
+          "excerpt": "\\displaystyle\\mathbf{y}_{j}(k+1)=\\mathbf{y}_{j}(k)+\\zeta(k)\\left[\\omega^{c}_{j}(\\Theta^{c}_{j}(k),\\mathbf{y}_{j}(k))+\\mathbf{M}^{c}_{j,1}(k+1)\\right]. (23)",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS2.p4",
+          "characters": 1154,
+          "excerpt": "We reformulate the feedback signal \\Theta^{c}_{j}(k) for AI critics defined in ( 10 ) as follows: \\displaystyle\\Theta^{c}_{j}(k+1) \\displaystyle=\\Theta^{c}_{j}(k)+\\eta^{c}_{j}(k)\\l",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S5.SS2.p5",
+          "characters": 195,
+          "excerpt": "\\displaystyle f_{i}(x_{1i},x_{2i})=\\frac{1}{2}a_{i}x_{1i}^{2}+\\frac{3}{4}c_{i}x_{1i}^{4}+\\frac{1}{2}b_{i}x_{2i}^{2}+\\frac{1}{2}d_{i}x_{2i}^{4}, (26) \\displaystyle\\textnormal{ for }",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S5.SS2.p7",
+          "characters": 226,
+          "excerpt": "The critics evaluating tasks of modality 1 have the following cost function: \\displaystyle g_{1\\nu}(y_{1\\nu}) \\displaystyle=a^{\\prime}_{\\nu}y_{1\\nu}^{2}+b^{\\prime}_{\\nu}y_{1\\nu}^{4",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S5.SS2.p8",
+          "characters": 255,
+          "excerpt": "The critics evaluating tasks of modality 2 have the following cost function: \\displaystyle g_{2\\ell}(y_{2\\ell}) \\displaystyle=\\frac{1}{2}c^{\\prime}_{\\ell}y_{2\\ell}^{2}+\\frac{1}{2}d",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        }
+      ],
+      "verified_passages": 47
+    },
+    {
+      "arxiv_id": "2604.00314v1",
+      "source_modes": [
+        "html"
+      ],
+      "chunks": 22,
+      "sections": {
+        "abstract": 1,
+        "conclusion": 1,
+        "experiments": 6,
+        "introduction": 3,
+        "proposed method": 7,
+        "related work": 4
+      },
+      "source_urls": [
+        "https://arxiv.org/html/2604.00314v1#S1",
+        "https://arxiv.org/html/2604.00314v1#S2",
+        "https://arxiv.org/html/2604.00314v1#S3",
+        "https://arxiv.org/html/2604.00314v1#S3.SS1",
+        "https://arxiv.org/html/2604.00314v1#S3.SS2",
+        "https://arxiv.org/html/2604.00314v1#S3.SS3",
+        "https://arxiv.org/html/2604.00314v1#S3.SS4",
+        "https://arxiv.org/html/2604.00314v1#S3.SS5",
+        "https://arxiv.org/html/2604.00314v1#S4",
+        "https://arxiv.org/html/2604.00314v1#S4.SS1",
+        "https://arxiv.org/html/2604.00314v1#S4.SS2",
+        "https://arxiv.org/html/2604.00314v1#S5",
+        "https://arxiv.org/html/2604.00314v1#abstract1"
+      ],
+      "omissions": {
+        "source_elements_subject_to_filtering": {
+          "figures_or_tables": 14,
+          "display_equations": 6,
+          "proofs": 0,
+          "bibliographies": 1,
+          "appendices": 2,
+          "navigation": 4
+        },
+        "parsed_sections_without_chunks": []
+      },
+      "failures": [],
+      "source_hashes": {
+        "data\\html\\2604.00314v1.html": "b601223fbde9e2a8f303217e55a552e649c09b05e64997c25bddf68612d72e6b",
+        "data\\pdfs\\2604.00314v1.pdf": "9aaa244c39396d4ad0c6511069e98884bcfd42693cdef3db314f9fc4978a6d0e"
+      },
+      "candidates_for_40_43": [
+        {
+          "element_id": "S3.p1",
+          "characters": 753,
+          "excerpt": "The primary goal of our proposed method is to leverage information from the prompt to identify the image regions most relevant to the target task and maintain their fidelity, while",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS3.p2",
+          "characters": 1688,
+          "excerpt": "TinyCLIP encodes the text and the i -th tile ( i=1,\\ldots,k ) into feature embeddings \\mathbf{e}_{\\text{text}} and \\mathbf{e}_{\\text{tile}_{i}} , represented as column vectors. Eac",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS5.p2",
+          "characters": 1076,
+          "excerpt": "The standard deviation ( \\sigma ) of the kernel determines the filter’s bandwidth and, consequently, the degree of smoothing. Larger \\sigma values result in stronger smoothing. The",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS1.p1",
+          "characters": 233,
+          "excerpt": "In our experiments, we used a TinyCLIP model instance 2 2 2 TinyCLIP-auto-ViT-22M-32-Text-10M with a total of 57M parameters. We set \\mathtt{tile\\_num}=24 , \\mathtt{logit\\_scale}=2",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS2.p1",
+          "characters": 1025,
+          "excerpt": "To evaluate the contribution of each component in our prefiltering module, we conducted an ablation study in which individual elements were removed or replaced with alternative con",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        }
+      ],
+      "verified_passages": 22
+    },
+    {
+      "arxiv_id": "2605.00292v2",
+      "source_modes": [
+        "html"
+      ],
+      "chunks": 34,
+      "sections": {
+        "abstract": 1,
+        "conclusion": 1,
+        "experiments": 11,
+        "impact statement": 1,
+        "introduction": 4,
+        "methodology": 4,
+        "motivation": 6,
+        "related work": 6
+      },
+      "source_urls": [
+        "https://arxiv.org/html/2605.00292v2#S1",
+        "https://arxiv.org/html/2605.00292v2#S2",
+        "https://arxiv.org/html/2605.00292v2#S2.SS1",
+        "https://arxiv.org/html/2605.00292v2#S2.SS2",
+        "https://arxiv.org/html/2605.00292v2#S2.SS3",
+        "https://arxiv.org/html/2605.00292v2#S3.SS1",
+        "https://arxiv.org/html/2605.00292v2#S3.SS2",
+        "https://arxiv.org/html/2605.00292v2#S3.SS3",
+        "https://arxiv.org/html/2605.00292v2#S4",
+        "https://arxiv.org/html/2605.00292v2#S4.SS1",
+        "https://arxiv.org/html/2605.00292v2#S4.SS2",
+        "https://arxiv.org/html/2605.00292v2#S4.SS3",
+        "https://arxiv.org/html/2605.00292v2#S5",
+        "https://arxiv.org/html/2605.00292v2#S5.SS1",
+        "https://arxiv.org/html/2605.00292v2#S5.SS2",
+        "https://arxiv.org/html/2605.00292v2#S5.SS3",
+        "https://arxiv.org/html/2605.00292v2#S5.SS4",
+        "https://arxiv.org/html/2605.00292v2#S5.SS5",
+        "https://arxiv.org/html/2605.00292v2#S6",
+        "https://arxiv.org/html/2605.00292v2#Sx1",
+        "https://arxiv.org/html/2605.00292v2#abstract1"
+      ],
+      "omissions": {
+        "source_elements_subject_to_filtering": {
+          "figures_or_tables": 12,
+          "display_equations": 40,
+          "proofs": 0,
+          "bibliographies": 1,
+          "appendices": 7,
+          "navigation": 4
+        },
+        "parsed_sections_without_chunks": []
+      },
+      "failures": [],
+      "source_hashes": {
+        "data\\html\\2605.00292v2.html": "f2d2234f60e27e8449df569a6633c3153008d7ad29380dd18b065bbaa3416c5f",
+        "data\\pdfs\\2605.00292v2.pdf": "249e03869aaae0c651b33aa2596788355ec9d9dc6c9c7b9696c85bbbf551e7bd"
+      },
+      "candidates_for_40_43": [
+        {
+          "element_id": "S3.SS2.p2",
+          "characters": 468,
+          "excerpt": "Step 1: Injecting Local Inductive Bias. We pass the input x through a lightweight, depthwise causal 1D convolution to capture local syntactic patterns (e.g., n-grams): \\tilde{x}=\\t",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS2.p3",
+          "characters": 723,
+          "excerpt": "Step 2: Preparing Gated Signals. We first apply Layer Normalization, obtaining x_{\\text{norm}}=\\text{LayerNorm}(\\tilde{x}) . We then project this into parallel content x_{v} and ga",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS2.p4",
+          "characters": 682,
+          "excerpt": "Step 3: Causal Mixing in Frequency Domain. Convolution in the time domain equals multiplication in the frequency domain. To enforce causality, we pad sequences to double length ( N",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS2.p5",
+          "characters": 597,
+          "excerpt": "Step 4: Causal Reconstruction and Projection. We transform the mixed spectrum back to the time domain using the inverse FFT and truncate the result to the original length L to remo",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS1.p2",
+          "characters": 476,
+          "excerpt": "In a single head of attention, the updated representation for the t -th token, r_{t} , is a weighted sum of the value vectors v_{j} from all L tokens in the context: r_{t}=\\sum_{j=",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS1.p3",
+          "characters": 989,
+          "excerpt": "We deconstruct the Discrete Fourier Transform (DFT) from this perspective. For a sequence of vectors v_{0},\\allowbreak v_{1},\\allowbreak\\dots,\\allowbreak v_{L-1} (analyzed dimensio",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS2.p4",
+          "characters": 1299,
+          "excerpt": "Caracal resolves this dilemma by leveraging the mathematical equivalence between frequency-domain multiplication and time-domain causal convolution (see Appendix C ). Instead of at",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        }
+      ],
+      "verified_passages": 34
+    },
+    {
+      "arxiv_id": "2605.00276v1",
+      "source_modes": [
+        "html"
+      ],
+      "chunks": 27,
+      "sections": {
+        "abstract": 1,
+        "agentic system for trip planning": 4,
+        "conclusion": 1,
+        "dataset generation": 7,
+        "definition": 2,
+        "experimental evaluation": 7,
+        "introduction": 4,
+        "related work": 1
+      },
+      "source_urls": [
+        "https://arxiv.org/html/2605.00276v1#S1",
+        "https://arxiv.org/html/2605.00276v1#S2",
+        "https://arxiv.org/html/2605.00276v1#S3",
+        "https://arxiv.org/html/2605.00276v1#S3.SS1",
+        "https://arxiv.org/html/2605.00276v1#S3.SS2",
+        "https://arxiv.org/html/2605.00276v1#S3.SS3",
+        "https://arxiv.org/html/2605.00276v1#S4.SS1",
+        "https://arxiv.org/html/2605.00276v1#S4.SS2",
+        "https://arxiv.org/html/2605.00276v1#S4.SS3",
+        "https://arxiv.org/html/2605.00276v1#S5",
+        "https://arxiv.org/html/2605.00276v1#S5.SS1",
+        "https://arxiv.org/html/2605.00276v1#S5.SS2",
+        "https://arxiv.org/html/2605.00276v1#S5.SS3",
+        "https://arxiv.org/html/2605.00276v1#S6",
+        "https://arxiv.org/html/2605.00276v1#S7",
+        "https://arxiv.org/html/2605.00276v1#abstract1"
+      ],
+      "omissions": {
+        "source_elements_subject_to_filtering": {
+          "figures_or_tables": 7,
+          "display_equations": 2,
+          "proofs": 0,
+          "bibliographies": 1,
+          "appendices": 0,
+          "navigation": 4
+        },
+        "parsed_sections_without_chunks": [
+          {
+            "section": "agentic system for trip planning",
+            "subsection": "",
+            "characters": 144
+          }
+        ]
+      },
+      "failures": [],
+      "source_hashes": {
+        "data\\html\\2605.00276v1.html": "81ef4fc93749d962dde304c77c38f73720da05721b29d89a7a091bd149e44080",
+        "data\\pdfs\\2605.00276v1.pdf": "42c60c82b4b4089928d239a58950f3605acea1aac0a3f0f39af6cc4cc74dcf95"
+      },
+      "candidates_for_40_43": [
+        {
+          "element_id": "Thmproblem1.p1",
+          "characters": 186,
+          "excerpt": "The goal of the trip planning is to construct an ordered itinerary: I=\\langle p_{i_{1}},p_{i_{2}},\\dots,p_{i_{T}}\\rangle, that minimizes the total trip cost \\mathcal{L}(I;Q,\\mathca",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS1.p3",
+          "characters": 1053,
+          "excerpt": "In addition to traffic, we also include the popular index in the data, which reflects the expected crowd level at different times of day. The popular index values are again derived",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        }
+      ],
+      "verified_passages": 27
+    },
+    {
+      "arxiv_id": "2605.00273v2",
+      "source_modes": [
+        "html"
+      ],
+      "chunks": 35,
+      "sections": {
+        "abstract": 1,
+        "acknowledgements": 1,
+        "compositional generalization": 3,
+        "concept generalization": 4,
+        "conclusion": 1,
+        "experimental setup": 6,
+        "generalization to more realistic settings": 5,
+        "impact statement": 1,
+        "introduction": 4,
+        "mosaic : diagnostic dataset for multi-object compositions": 6,
+        "related work": 3
+      },
+      "source_urls": [
+        "https://arxiv.org/html/2605.00273v2#S1",
+        "https://arxiv.org/html/2605.00273v2#S2",
+        "https://arxiv.org/html/2605.00273v2#S3",
+        "https://arxiv.org/html/2605.00273v2#S3.SS1",
+        "https://arxiv.org/html/2605.00273v2#S3.SS2",
+        "https://arxiv.org/html/2605.00273v2#S4",
+        "https://arxiv.org/html/2605.00273v2#S4.SS1",
+        "https://arxiv.org/html/2605.00273v2#S4.SS2",
+        "https://arxiv.org/html/2605.00273v2#S5",
+        "https://arxiv.org/html/2605.00273v2#S6",
+        "https://arxiv.org/html/2605.00273v2#S7",
+        "https://arxiv.org/html/2605.00273v2#S8",
+        "https://arxiv.org/html/2605.00273v2#Sx1",
+        "https://arxiv.org/html/2605.00273v2#Sx2",
+        "https://arxiv.org/html/2605.00273v2#abstract1"
+      ],
+      "omissions": {
+        "source_elements_subject_to_filtering": {
+          "figures_or_tables": 59,
+          "display_equations": 8,
+          "proofs": 0,
+          "bibliographies": 1,
+          "appendices": 1,
+          "navigation": 4
+        },
+        "parsed_sections_without_chunks": []
+      },
+      "failures": [],
+      "source_hashes": {
+        "data\\html\\2605.00273v2.html": "686c05705a0d8af09f9686e552645e856f9f00f35e3726a4bd2a33a67104c348",
+        "data\\pdfs\\2605.00273v2.pdf": "d5370eb41b8d1c9450537c55f859dd517d890a3569ad364998c68d1e7359d3bf"
+      },
+      "candidates_for_40_43": [],
+      "verified_passages": 35
+    },
+    {
+      "arxiv_id": "2606.01502v1",
+      "source_modes": [
+        "html"
+      ],
+      "chunks": 45,
+      "sections": {
+        "a topology-aware redistribution cost model": 6,
+        "abstract": 2,
+        "background and motivation": 7,
+        "characterizing the device-initiated rdma regime": 6,
+        "conclusion": 2,
+        "experimental setup": 5,
+        "introduction": 5,
+        "primitive selection: route vs fetch vs local": 11,
+        "sensitivity: payload geometry": 1
+      },
+      "source_urls": [
+        "https://arxiv.org/html/2606.01502v1#S1",
+        "https://arxiv.org/html/2606.01502v1#S10",
+        "https://arxiv.org/html/2606.01502v1#S2.SS1",
+        "https://arxiv.org/html/2606.01502v1#S2.SS2",
+        "https://arxiv.org/html/2606.01502v1#S2.SS3",
+        "https://arxiv.org/html/2606.01502v1#S3.SS1",
+        "https://arxiv.org/html/2606.01502v1#S3.SS2",
+        "https://arxiv.org/html/2606.01502v1#S3.SS3",
+        "https://arxiv.org/html/2606.01502v1#S4.SS1",
+        "https://arxiv.org/html/2606.01502v1#S4.SS2",
+        "https://arxiv.org/html/2606.01502v1#S4.SS3",
+        "https://arxiv.org/html/2606.01502v1#S5.SS1",
+        "https://arxiv.org/html/2606.01502v1#S5.SS2",
+        "https://arxiv.org/html/2606.01502v1#S5.SS3",
+        "https://arxiv.org/html/2606.01502v1#S5.SS4",
+        "https://arxiv.org/html/2606.01502v1#S5.SS5",
+        "https://arxiv.org/html/2606.01502v1#S6.SS1",
+        "https://arxiv.org/html/2606.01502v1#S6.SS2",
+        "https://arxiv.org/html/2606.01502v1#S6.SS3",
+        "https://arxiv.org/html/2606.01502v1#S7",
+        "https://arxiv.org/html/2606.01502v1#abstract1"
+      ],
+      "omissions": {
+        "source_elements_subject_to_filtering": {
+          "figures_or_tables": 9,
+          "display_equations": 4,
+          "proofs": 0,
+          "bibliographies": 1,
+          "appendices": 0,
+          "navigation": 4
+        },
+        "parsed_sections_without_chunks": []
+      },
+      "failures": [],
+      "source_hashes": {
+        "data\\html\\2606.01502v1.html": "6a3ae60d563d105a169aee805ca82eee98ac2bdc0c118f54e4b16f39da02fa7d",
+        "data\\pdfs\\2606.01502v1.pdf": "bdfbfb7b529527aee8fffc6acace8b7284e4f8f092b3d3d790dde65ab8c76f35"
+      },
+      "candidates_for_40_43": [
+        {
+          "element_id": "S1.I1.i1.p1",
+          "characters": 236,
+          "excerpt": "A topology-aware redistribution cost model (probe / transfer / compute / return / merge) for cross-instance attention, fit to real H100 NDR-200 G IBGDA on the MLA payload at \\appro",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S1.I1.i2.p1",
+          "characters": 496,
+          "excerpt": "The device-initiated-RDMA (IBGDA) regime for cross-instance attention (as opposed to the MoE-dispatch traffic prior IBGDA work covers) has not, to our knowledge, been characterised",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S1.I1.i3.p1",
+          "characters": 417,
+          "excerpt": "A closed-form, topology-aware route / fetch / local primitive-selection predicate with measured coefficients, and the finding that the selection flips with request shape and host-o",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S1.I1.i4.p1",
+          "characters": 218,
+          "excerpt": "The byte-asymmetry framing (that MLA’s narrow latent makes query-routing fine-grained- viable , not merely bandwidth-favorable), which we argue is the property that motivates devic",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S1.I1.i5.p1",
+          "characters": 394,
+          "excerpt": "The selection regime as distributed attention : where a sparse-attention indexer shrinks each query to a few scattered KV blocks (DeepSeek-V3.2/V4, GLM-5.1), route is that selectio",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S1.I1.i6.p1",
+          "characters": 727,
+          "excerpt": "A cross-fabric measurement: the identical routed dispatch on five fabrics (PCIe Gen4/Gen5, NVLink 3.0 and 4.0, cross-node IBGDA) costs \\approx 31–48 \\mu s at the decode point. The ",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS1.p1",
+          "characters": 803,
+          "excerpt": "We model any cross-instance redistribution as additive terms, T_{\\mathrm{redist}}(F,s,B)=T_{\\mathrm{probe}}(F)+T_{\\mathrm{transfer}}(F,s,B)+T_{\\mathrm{compute}}+T_{\\mathrm{return}}",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS2.p1",
+          "characters": 1550,
+          "excerpt": "For Q-routing the instantiation is T_{\\mathrm{route}}(F,M_{q})=T_{\\mathrm{probe}}(F)+M_{q}\\,(q+p)/BW(F)+T_{\\mathrm{compute}}+T_{\\mathrm{merge}}, with q,p the query and partial row ",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S8.SS0.SSS0.Px1.p1",
+          "characters": 1163,
+          "excerpt": "The probe term T_{\\mathrm{probe}}(F,s) is fabric- and scope-specific. Our device-side sweep measures intra-NVL (NVLink) block-scope at \\approx 1 \\mu s and cross-NVL IBGDA block-sco",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S8.SS0.SSS0.Px2.p1",
+          "characters": 1053,
+          "excerpt": "The probe varies with fabric, and so does the per-byte term through BW(F) ; but at fabric bandwidth fetch ’s cost is splice-dominated (its all-layer pull is a smaller, BW -scaling ",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S8.SS0.SSS0.Px2.p2",
+          "characters": 1183,
+          "excerpt": "A decode-sized routed dispatch carries so little that a single thread block issues the whole transfer, and one block can only push puts into the link at \\approx 18–25 GB/s — well u",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S8.SS0.SSS0.Px2.p3",
+          "characters": 1049,
+          "excerpt": "A dedicated multi-block put-bandwidth benchmark settles that the wire is not the limit: driven by many blocks it recovers each link’s true peak, and those peaks span more than 10\\t",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S8.SS0.SSS0.Px2.p4",
+          "characters": 404,
+          "excerpt": "An isolated A40 cross-socket flow can read far slower ( 0.7 – 1.1 ms at M_{q}{=}1024 ), but that number is non-reproducible and vanishes under load : with any concurrent cross-sock",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S8.SS0.SSS0.Px2.p5",
+          "characters": 1292,
+          "excerpt": "A block-count sweep shows this single-block rate is issue -bound, not a hardware ceiling: on intra-node NVLink it scales \\approx 6 \\times ( \\approx 21 to \\approx 125 GB/s) with mor",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S8.SS0.SSS0.Px2.p6",
+          "characters": 406,
+          "excerpt": "fetch is the mirror image: its bulk c^{\\mathrm{KV}} pull is bandwidth-bound (we model it as a coalesced bulk transfer, not a single block), yet fetch is splice- compute -dominated,",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S8.SS0.SSS0.Px3.p1",
+          "characters": 784,
+          "excerpt": "Our latencies are measured on an otherwise-idle fabric; a production network is contended. Two of congestion’s effects are already on axes we characterise. (i) It lowers effective ",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S8.SS0.SSS0.Px3.p2",
+          "characters": 632,
+          "excerpt": "We confirm this empirically (two same-leaf H100 nodes, K concurrent route flows sharing one NDR-200 link, the requester’s NIC uplink; Figure 7 ): the measured route round trip is f",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S8.SS0.SSS0.Px3.p3",
+          "characters": 1091,
+          "excerpt": "This congestion law is not InfiniBand-specific: it reproduces on cross-socket PCIe ( K concurrent route flows sharing an A40 node’s PCIe/UPI path), where K\\leq 2 stays flat and the",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S8.SS0.SSS0.Px4.p1",
+          "characters": 680,
+          "excerpt": "Under TPLA ( Tang et al., 2026 ) at degree N the latent is column-partitioned across ranks. Cross-instance routing then pairs ranks: A.\\text{rank}_{r} ships its M_{q}\\times d_{qk}/",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S9.SS0.SSS0.Px1.p1",
+          "characters": 942,
+          "excerpt": "Shipping queries to the instance that holds the keys/values, computing partial attention remotely, and merging via online softmax was introduced by DistAttention ( Lin et al., 2024",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S9.SS0.SSS0.Px2.p1",
+          "characters": 1076,
+          "excerpt": "Mooncake ( Qin et al., 2025 ) , DistServe ( Zhong et al., 2024 ) , and LMCache ( Cheng et al., 2025 ) disaggregate prefill from decode and migrate c^{\\mathrm{KV}} across nodes over",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S9.SS0.SSS0.Px3.p1",
+          "characters": 943,
+          "excerpt": "Reusing a cached chunk at a position other than where it was computed requires adapting it. PromptCache ( Gim et al., 2024 ) precomputes chunks against a dummy prefix; CacheBlend (",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S9.SS0.SSS0.Px4.p1",
+          "characters": 583,
+          "excerpt": "DeepEP ( Zhao et al., 2025 ) uses NVSHMEM IBGDA for MoE all-to-all; TransferEngine ( Licker et al., 2026 ) adds a host-proxy fallback where IBGDA is unavailable; and NCCL GIN ( Ham",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S9.SS0.SSS0.Px5.p1",
+          "characters": 891,
+          "excerpt": "MLA ( DeepSeek-AI et al., 2024 ) and its tensor-parallel form TPLA ( Tang et al., 2026 ) (on which our rank-paired routing builds, § 8 ) define the head-axis compression case we me",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S9.SS0.SSS0.Px6.p1",
+          "characters": 691,
+          "excerpt": "The roofline model ( Williams et al., 2009 ) relates compute to bandwidth on a single device; the closest published characterisation in spirit is that of multi-chip GPU data sharin",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        }
+      ],
+      "verified_passages": 45
+    },
+    {
+      "arxiv_id": "2606.01498v1",
+      "source_modes": [
+        "html"
+      ],
+      "chunks": 24,
+      "sections": {
+        "abstract": 1,
+        "benchmarking agentic time series systems": 8,
+        "conclusion and future works": 1,
+        "introduction": 6,
+        "related work": 3,
+        "timesage-mt benchmark": 5
+      },
+      "source_urls": [
+        "https://arxiv.org/html/2606.01498v1#S1",
+        "https://arxiv.org/html/2606.01498v1#S2",
+        "https://arxiv.org/html/2606.01498v1#S3",
+        "https://arxiv.org/html/2606.01498v1#S3.SS1",
+        "https://arxiv.org/html/2606.01498v1#S3.SS2",
+        "https://arxiv.org/html/2606.01498v1#S3.SS3",
+        "https://arxiv.org/html/2606.01498v1#S3.SS4",
+        "https://arxiv.org/html/2606.01498v1#S4.SS1",
+        "https://arxiv.org/html/2606.01498v1#S4.SS2",
+        "https://arxiv.org/html/2606.01498v1#S4.SS3",
+        "https://arxiv.org/html/2606.01498v1#S4.SS4",
+        "https://arxiv.org/html/2606.01498v1#S5",
+        "https://arxiv.org/html/2606.01498v1#abstract1"
+      ],
+      "omissions": {
+        "source_elements_subject_to_filtering": {
+          "figures_or_tables": 43,
+          "display_equations": 4,
+          "proofs": 0,
+          "bibliographies": 1,
+          "appendices": 9,
+          "navigation": 4
+        },
+        "parsed_sections_without_chunks": []
+      },
+      "failures": [],
+      "source_hashes": {
+        "data\\html\\2606.01498v1.html": "41f97be9b1249c8fb038f313eee3343490f90081549ba5524904750d4e6019ac",
+        "data\\pdfs\\2606.01498v1.pdf": "ebf5c2313d4521f374628617dcccac6e556410278b0503eb974d1a0daf348d68"
+      },
+      "candidates_for_40_43": [
+        {
+          "element_id": "S4.SS1.SSS0.Px3.p1",
+          "characters": 460,
+          "excerpt": "Analytical quality, decision quality, C7 decision making, and C9 domain reasoning are graded by an LLM judge 1 1 1 All reference targets are produced by executable code rather than",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS3.p1",
+          "characters": 1288,
+          "excerpt": "We evaluate six frontier LLMs on the 240-task corpus under Code-Enabled Reasoning to establish the main leaderboard. Figure 6 presents the tier-wise and overall results, highlighti",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        }
+      ],
+      "verified_passages": 24
+    },
+    {
+      "arxiv_id": "2606.01494v1",
+      "source_modes": [
+        "html"
+      ],
+      "chunks": 32,
+      "sections": {
+        "abstract": 1,
+        "background and threat model": 4,
+        "conclusion": 1,
+        "data availability, licensing, and maintenance": 1,
+        "dataset construction": 3,
+        "ethics and responsible disclosure": 1,
+        "illustrative cases": 2,
+        "introduction": 1,
+        "owasp-aligned risk lens": 1,
+        "related work": 7,
+        "scanner disagreement": 5,
+        "the clawscan verification pipeline": 1,
+        "toward human adjudication": 1,
+        "verdict structure and risk categories": 3
+      },
+      "source_urls": [
+        "https://arxiv.org/html/2606.01494v1#S1",
+        "https://arxiv.org/html/2606.01494v1#S10",
+        "https://arxiv.org/html/2606.01494v1#S12",
+        "https://arxiv.org/html/2606.01494v1#S14",
+        "https://arxiv.org/html/2606.01494v1#S15",
+        "https://arxiv.org/html/2606.01494v1#S2.SS1",
+        "https://arxiv.org/html/2606.01494v1#S2.SS2",
+        "https://arxiv.org/html/2606.01494v1#S2.SS3",
+        "https://arxiv.org/html/2606.01494v1#S3",
+        "https://arxiv.org/html/2606.01494v1#S3.SS1",
+        "https://arxiv.org/html/2606.01494v1#S3.SS2",
+        "https://arxiv.org/html/2606.01494v1#S3.SS3",
+        "https://arxiv.org/html/2606.01494v1#S3.SS4",
+        "https://arxiv.org/html/2606.01494v1#S3.SS5",
+        "https://arxiv.org/html/2606.01494v1#S3.SS6",
+        "https://arxiv.org/html/2606.01494v1#S4",
+        "https://arxiv.org/html/2606.01494v1#S5.SS1",
+        "https://arxiv.org/html/2606.01494v1#S5.SS2",
+        "https://arxiv.org/html/2606.01494v1#S5.SS3",
+        "https://arxiv.org/html/2606.01494v1#S6",
+        "https://arxiv.org/html/2606.01494v1#S6.SS1",
+        "https://arxiv.org/html/2606.01494v1#S6.SS2",
+        "https://arxiv.org/html/2606.01494v1#S6.SS3",
+        "https://arxiv.org/html/2606.01494v1#S6.SS4",
+        "https://arxiv.org/html/2606.01494v1#S7.SS1",
+        "https://arxiv.org/html/2606.01494v1#S7.SS2",
+        "https://arxiv.org/html/2606.01494v1#S7.SS3",
+        "https://arxiv.org/html/2606.01494v1#S8",
+        "https://arxiv.org/html/2606.01494v1#S9",
+        "https://arxiv.org/html/2606.01494v1#abstract1"
+      ],
+      "omissions": {
+        "source_elements_subject_to_filtering": {
+          "figures_or_tables": 8,
+          "display_equations": 0,
+          "proofs": 0,
+          "bibliographies": 1,
+          "appendices": 0,
+          "navigation": 4
+        },
+        "parsed_sections_without_chunks": [
+          {
+            "section": "threats to validity",
+            "subsection": "",
+            "characters": 66
+          }
+        ]
+      },
+      "failures": [],
+      "source_hashes": {
+        "data\\html\\2606.01494v1.html": "96c1dbd7fa026941df32445521373bd863089d77cd423a1eb9df2c774954be60",
+        "data\\pdfs\\2606.01494v1.pdf": "3e8c136692c9cb03b5548dbf1687e7464118f1a82a03499f106ed6e151084f0a"
+      },
+      "candidates_for_40_43": [
+        {
+          "element_id": "S1.SS0.SSS0.Px1.p1",
+          "characters": 853,
+          "excerpt": "Recent measurement studies have quantified the frequency of vulnerable skills or skills with a malicious registry verdict: empirical analyses have examined tens of thousands of ski",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S1.SS0.SSS0.Px2.p1",
+          "characters": 827,
+          "excerpt": "We release ClawHub Security Signals, a sanitized snapshot of 67,453 latest public skill versions from the OpenClaw registry, pairing each skill’s analyzed bundle content with the r",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S1.SS0.SSS0.Px3.p1",
+          "characters": 695,
+          "excerpt": "We anticipated that three scanners applied to the same 67,453 skills would yield substantial overlap; the actual overlap is minimal (Section 6 ). Any two scanners agree on fewer th",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S1.SS0.SSS0.Px4.p1",
+          "characters": 707,
+          "excerpt": "The scanners do not simply diverge; they specialize, and the final verdict reflects which scanner is in scope. Among skills with a suspicious registry verdict, SkillSpector is posi",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S1.SS0.SSS0.Px5.p1",
+          "characters": 483,
+          "excerpt": "Since the observed disagreement is structural rather than incidental, the logical next step is human adjudication of the disputed cases. Accordingly, v1 is released with automated ",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S1.I1.i1.p1",
+          "characters": 189,
+          "excerpt": "We release a sanitized, registry-scale silver-standard dataset of 67,453 latest public skill versions with analyzed bundle content, a final verdict, and three-scanner evidence (Sec",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S1.I1.i3.p1",
+          "characters": 253,
+          "excerpt": "We show that disagreement is structured by attack surface, including a surface-separation result in which malicious-verdict skills are driven by bundled-code malware evidence and a",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S1.I1.i4.p1",
+          "characters": 186,
+          "excerpt": "We give a verdict-conditioned analysis of risk categories, signal-magnitude separation, and illustrative cases (Sections 7 – 8 ), and argue for a layered, systemic defense (Section",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S1.I1.i5.p1",
+          "characters": 159,
+          "excerpt": "We position the corpus against prior datasets, give an explicit threats-to-validity treatment, and scope a human-adjudicated successor (Sections 3 , 11 , 10 ).",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS0.SSS0.Px1.p1",
+          "characters": 1416,
+          "excerpt": "The scanners are not noisier or cleaner versions of one another; they look at different things, which is central to our results. Static analysis emits code- and text-pattern findin",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS0.SSS0.Px2.p1",
+          "characters": 340,
+          "excerpt": "A scanner is positive on a skill when its status is suspicious or malicious ; clean , stale , error , and missing statuses are non-positive. This conservative definition is used fo",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S11.SS0.SSS0.Px1.p1",
+          "characters": 253,
+          "excerpt": "Verdicts are silver labels from the registry’s automated review (OpenAI GPT-5.5 high for 99.6% of rows). They are not human ground truth, and a different model or moderation config",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S11.SS0.SSS0.Px2.p1",
+          "characters": 268,
+          "excerpt": "A positive scanner status is evidence, not a confirmed vulnerability; we measure agreement among detectors , not correctness . Statements about disagreement are robust to verdict e",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S11.SS0.SSS0.Px3.p1",
+          "characters": 422,
+          "excerpt": "SkillSpector is partly LLM-based, and the ClawScan verdict is LLM-produced. Correlation between a SkillSpector advisory and the verdict may reflect shared mechanism rather than ind",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S11.SS0.SSS0.Px4.p1",
+          "characters": 415,
+          "excerpt": "The release is a sanitized research corpus, not a registry mirror. It includes redacted SKILL.md content and sanitized exported bundle files where present, but secret-like values, ",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S11.SS0.SSS0.Px5.p1",
+          "characters": 316,
+          "excerpt": "VirusTotal is resolved for 97.3% of rows in this snapshot, with 233 stale rows and 1,580 rows without a result. “Not positive” is still not a human-confirmed clean label, but the e",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S11.SS0.SSS0.Px6.p1",
+          "characters": 193,
+          "excerpt": "The corpus is one registry, latest-version only, public skills only, English-heavy, and a single dated snapshot; both skills and scanner versions drift, and VirusTotal scanning is ",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S13.SS0.SSS0.Px1.p1",
+          "characters": 1398,
+          "excerpt": "The observed disagreement and its underlying structure indicate a clear design principle: since each scanner examines a distinct attack surface, no single component can comprehensi",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S13.SS0.SSS0.Px2.p1",
+          "characters": 399,
+          "excerpt": "One-third of clean skills carry an advisory, and most suspicious skills have no static or VirusTotal positive. Collapsing “has an advisory” into “is bad,” or “suspicious” into “mal",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S13.SS0.SSS0.Px3.p1",
+          "characters": 569,
+          "excerpt": "Because the disagreement is structured and large-scale, it is a natural target for specialized models: triaging skill risk from sanitized bundle content plus scanner metadata, pred",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        }
+      ],
+      "verified_passages": 32
+    },
+    {
+      "arxiv_id": "2607.00276v1",
+      "source_modes": [
+        "html"
+      ],
+      "chunks": 67,
+      "sections": {
+        "abstract": 1,
+        "code and data availability": 1,
+        "conclusion": 3,
+        "cross-framework findings": 10,
+        "discussion": 7,
+        "easy: the f=mv counterfactual world": 6,
+        "hard: decay world": 7,
+        "introduction": 13,
+        "medium: aristotelian mechanics": 7,
+        "methodology": 12
+      },
+      "source_urls": [
+        "https://arxiv.org/html/2607.00276v1#S1",
+        "https://arxiv.org/html/2607.00276v1#S2",
+        "https://arxiv.org/html/2607.00276v1#S2.SS1",
+        "https://arxiv.org/html/2607.00276v1#S2.SS2",
+        "https://arxiv.org/html/2607.00276v1#S2.SS3",
+        "https://arxiv.org/html/2607.00276v1#S2.SS4",
+        "https://arxiv.org/html/2607.00276v1#S2.SS5",
+        "https://arxiv.org/html/2607.00276v1#S2.SS6",
+        "https://arxiv.org/html/2607.00276v1#S3.SS1",
+        "https://arxiv.org/html/2607.00276v1#S3.SS2",
+        "https://arxiv.org/html/2607.00276v1#S3.SS3",
+        "https://arxiv.org/html/2607.00276v1#S4.SS1",
+        "https://arxiv.org/html/2607.00276v1#S4.SS2",
+        "https://arxiv.org/html/2607.00276v1#S4.SS3",
+        "https://arxiv.org/html/2607.00276v1#S5.SS1",
+        "https://arxiv.org/html/2607.00276v1#S5.SS2",
+        "https://arxiv.org/html/2607.00276v1#S5.SS3",
+        "https://arxiv.org/html/2607.00276v1#S6",
+        "https://arxiv.org/html/2607.00276v1#S6.SS1",
+        "https://arxiv.org/html/2607.00276v1#S6.SS2",
+        "https://arxiv.org/html/2607.00276v1#S6.SS3",
+        "https://arxiv.org/html/2607.00276v1#S6.SS4",
+        "https://arxiv.org/html/2607.00276v1#S7.SS1",
+        "https://arxiv.org/html/2607.00276v1#S7.SS2",
+        "https://arxiv.org/html/2607.00276v1#S7.SS3",
+        "https://arxiv.org/html/2607.00276v1#S8",
+        "https://arxiv.org/html/2607.00276v1#Sx1",
+        "https://arxiv.org/html/2607.00276v1#abstract1"
+      ],
+      "omissions": {
+        "source_elements_subject_to_filtering": {
+          "figures_or_tables": 11,
+          "display_equations": 2,
+          "proofs": 0,
+          "bibliographies": 1,
+          "appendices": 5,
+          "navigation": 4
+        },
+        "parsed_sections_without_chunks": []
+      },
+      "failures": [],
+      "source_hashes": {
+        "data\\html\\2607.00276v1.html": "e85fe064c9dab6f033e928534f64c344b6da9b72e40eca5a6ce67920f65e1a6f",
+        "data\\pdfs\\2607.00276v1.pdf": "411e845fa536d79a52a5db1079161f4066844933bd93b9252d5cd90833aadb15"
+      },
+      "candidates_for_40_43": [
+        {
+          "element_id": "S1.p4",
+          "characters": 1926,
+          "excerpt": "Another research direction adjacent to complete scientific theory construction is world modeling, increasingly presented in industry as infrastructure for “physical AI” systems ( N",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S2.SS5.p2",
+          "characters": 1220,
+          "excerpt": "The base composite verdict for a trial t is the content-axis conjunction: Stage 1 PASS, Stage 2 PASS, and every Stage 3 application scenario PASS independently. Formally, \\text{com",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        }
+      ],
+      "verified_passages": 67
+    },
+    {
+      "arxiv_id": "2607.00275v1",
+      "source_modes": [
+        "html"
+      ],
+      "chunks": 23,
+      "sections": {
+        "abstract": 1,
+        "acknowledgments": 1,
+        "algorithm": 4,
+        "conclusion": 2,
+        "declaration on generative ai": 1,
+        "experiments": 8,
+        "formulation": 2,
+        "introduction": 4
+      },
+      "source_urls": [
+        "https://arxiv.org/html/2607.00275v1#S1",
+        "https://arxiv.org/html/2607.00275v1#S2",
+        "https://arxiv.org/html/2607.00275v1#S3",
+        "https://arxiv.org/html/2607.00275v1#S4",
+        "https://arxiv.org/html/2607.00275v1#S4.SS1",
+        "https://arxiv.org/html/2607.00275v1#S4.SS2",
+        "https://arxiv.org/html/2607.00275v1#S5",
+        "https://arxiv.org/html/2607.00275v1#Sx1",
+        "https://arxiv.org/html/2607.00275v1#Sx2",
+        "https://arxiv.org/html/2607.00275v1#abstract1"
+      ],
+      "omissions": {
+        "source_elements_subject_to_filtering": {
+          "figures_or_tables": 7,
+          "display_equations": 30,
+          "proofs": 0,
+          "bibliographies": 1,
+          "appendices": 1,
+          "navigation": 4
+        },
+        "parsed_sections_without_chunks": []
+      },
+      "failures": [],
+      "source_hashes": {
+        "data\\html\\2607.00275v1.html": "284d4b007c3812051a33421f5c3ebb7bbdc90505dacba6eecdf9aef83d722f33",
+        "data\\pdfs\\2607.00275v1.pdf": "8e56855af8c150ae30484c30f207fd20f5bfe9ab588b6b53b2d9da60747feb66"
+      },
+      "candidates_for_40_43": [
+        {
+          "element_id": "p2",
+          "characters": 184,
+          "excerpt": "Entropy Regularization , Sparsity , Federated Learning , Uncertainty , Parameter Exploration , Probabilistic Gates , Entropy Maximization , Sparse Federated Learning , L_{0} Constr",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S1.p3",
+          "characters": 1774,
+          "excerpt": "A common approach to inducing sparsity relies on L_{1} and L_{2} norms [1] [1] [1] For \\theta\\in R^{d} , L_{1} norm is \\|\\theta\\|_{1}=\\sum_{i=1}^{d}|\\theta_{i}| and L_{2} norm is \\",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S1.p4",
+          "characters": 877,
+          "excerpt": "Louizos et al. [14] introduce a reparameterization using stochastic gates z\\in\\mathbb{R}^{p} with \\theta=\\tilde{\\theta}\\odot z [2] [2] [2] \\odot denotes the elementwise product [ 9",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S2.p2",
+          "characters": 259,
+          "excerpt": "\\hat{\\mathfrak{L}}(\\tilde{\\theta},\\phi,\\lambda)=\\frac{1}{R}\\sum_{r=1}^{R}\\left[\\frac{1}{N}\\sum_{i=1}^{N}\\ell\\big(h(x_{i};\\tilde{\\theta}\\odot z^{(r)}),y_{i}\\big)\\right]+\\lambda\\left",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S2.p4",
+          "characters": 2441,
+          "excerpt": "The Lagrangian corresponding to the entropy regularized L_{0} density-constrained optimization problem is: \\hat{\\mathfrak{L}}(\\tilde{\\theta},\\phi,\\lambda)=\\sum_{c=1}^{C}\\frac{n_{c}",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.p1",
+          "characters": 986,
+          "excerpt": "We use the notations \\mathcal{L}_{\\text{Con}}(\\phi) and \\mathcal{L}_{\\text{KL}}(\\phi) for L_{0} density constraint and the KL(q(z)||p(z)) in ( 4 ) [ 10 ] . The Lagrangian can then ",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.p2",
+          "characters": 1480,
+          "excerpt": "At iteration t , each client performs the following updates: \\displaystyle\\tilde{\\theta}_{c}^{t+1} \\displaystyle=\\tilde{\\theta}_{c}^{t}-\\eta_{\\tilde{\\theta}}\\nabla_{\\tilde{\\theta}}",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.p2",
+          "characters": 1007,
+          "excerpt": "In FL, comunication is a bottle neck and needs to be minimized. The federated averaging variant E-FLoPS enables sparse communication throughout training without compromising statis",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        }
+      ],
+      "verified_passages": 23
+    },
+    {
+      "arxiv_id": "2607.00274v1",
+      "source_modes": [
+        "html"
+      ],
+      "chunks": 18,
+      "sections": {
+        "abstract": 1,
+        "conclusion": 1,
+        "dataset": 1,
+        "evaluation framework": 7,
+        "experiments": 1,
+        "introduction": 3,
+        "limitations": 2,
+        "related work": 1,
+        "results": 1
+      },
+      "source_urls": [
+        "https://arxiv.org/html/2607.00274v1#S1",
+        "https://arxiv.org/html/2607.00274v1#S2",
+        "https://arxiv.org/html/2607.00274v1#S3",
+        "https://arxiv.org/html/2607.00274v1#S4",
+        "https://arxiv.org/html/2607.00274v1#S4.SS1",
+        "https://arxiv.org/html/2607.00274v1#S4.SS2",
+        "https://arxiv.org/html/2607.00274v1#S4.SS3",
+        "https://arxiv.org/html/2607.00274v1#S5",
+        "https://arxiv.org/html/2607.00274v1#S6",
+        "https://arxiv.org/html/2607.00274v1#S7",
+        "https://arxiv.org/html/2607.00274v1#S8",
+        "https://arxiv.org/html/2607.00274v1#abstract1"
+      ],
+      "omissions": {
+        "source_elements_subject_to_filtering": {
+          "figures_or_tables": 27,
+          "display_equations": 17,
+          "proofs": 0,
+          "bibliographies": 1,
+          "appendices": 6,
+          "navigation": 4
+        },
+        "parsed_sections_without_chunks": []
+      },
+      "failures": [],
+      "source_hashes": {
+        "data\\html\\2607.00274v1.html": "77c371d2c9c68aa48acdac1a346fbbc40bcccefa49a3549ebfd2fdc79a425804",
+        "data\\pdfs\\2607.00274v1.pdf": "970d4b48f8b706356733b496c9516105e0250e2a631031985bd4c9eb2501d06d"
+      },
+      "candidates_for_40_43": [
+        {
+          "element_id": "S2.SS0.SSS0.Px1.p1",
+          "characters": 739,
+          "excerpt": "Many existing writing datasets target Automatic Essay Scoring (AES), predicting numerical scores rather than formative feedback ( Ramesh and Sanampudi, 2022 ; Ke and Ng, 2019 ; Hou",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S2.SS0.SSS0.Px1.p2",
+          "characters": 1322,
+          "excerpt": "Efforts to collect feedback-based essay datasets have grown in recent years, yet each captures only part of the setting we target. They pair expert feedback with a narrow slice of ",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S2.SS0.SSS0.Px2.p1",
+          "characters": 1208,
+          "excerpt": "Evaluating generated feedback is difficult, as wording and delivery can vary widely even for the same underlying issue. Reference-free evaluation raises the issues discussed previo",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.p1",
+          "characters": 470,
+          "excerpt": "Sefora was collected over two semesters from a range of first-year undergraduate courses in the university’s English Department, spanning composition, ESL, narrative and creative w",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS0.SSS0.Px1.p1",
+          "characters": 881,
+          "excerpt": "Sefora contains 371 essays by 155 students across 34 assignments from 9 classes, comprising 564 drafts (220 single-draft, 109 two-stage, 42 three-stage) that total 8,186 paragraphs",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS0.SSS0.Px2.p1",
+          "characters": 774,
+          "excerpt": "Sefora preserves the original paragraph structure and aligns each annotation to the text it targets: most are paragraph-level and span-anchored – tied to the exact span the instruc",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS0.SSS0.Px3.p1",
+          "characters": 1260,
+          "excerpt": "Data collection was approved by the university’s IRB. The research team contacted instructors, who emailed students a recruitment notice outlining the study, its objectives, risks,",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS0.SSS0.Px4.p1",
+          "characters": 296,
+          "excerpt": "Original submissions in PDF or .docx were converted to a JSON format that preserves both paragraph segmentation and annotation anchoring. We release the deterministic parser 8 8 8 ",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS1.SSS0.Px1.p1",
+          "characters": 963,
+          "excerpt": "Let T=t_{1},\\dots,t_{n} be the sequence of words of a feedback message. A segmentation is represented by a boundary vector Q\\in\\{0,1\\}^{n-1} where Q_{i}=1 marks a boundary between ",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS2.SSS0.Px1.p1",
+          "characters": 956,
+          "excerpt": "Existing similarity methods fall short on this task: lexical-overlap metrics yield Pearson correlations below 0.1 and embedding-based methods reach at most r\\approx 0.67 , both too",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS3.p1",
+          "characters": 954,
+          "excerpt": "Given pairwise similarity scores between instructor and model-generated feedback units, UniMatch computes a one-to-one alignment between the two sets. Intuitively, each feedback un",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS3.p2",
+          "characters": 952,
+          "excerpt": "To turn \\Phi(M^{*}) into interpretable precision and recall, we normalize it against per-side upper bounds, each set’s summed within-set self-similarity ( \\sum_{j}\\phi(P_{j},P_{j})",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS3.SSS0.Px1.p1",
+          "characters": 747,
+          "excerpt": "UniMatch ’s components – segmentation (§ 4.1 ) and similarity scoring (§ 4.2 ) – are validated against human judgment in isolation, but this does not guarantee that the composed me",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S5.SS0.SSS0.Px1.p1",
+          "characters": 497,
+          "excerpt": "We generate feedback at the paragraph level, matching the granularity of inline instructor annotations in Sefora . For each target paragraph, the model receives the paragraph plus ",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S5.SS0.SSS0.Px2.p1",
+          "characters": 510,
+          "excerpt": "To support broad ablations across settings, we primarily use small open-weight instruction-tuned models, namely, Llama-3.1-8B Grattafiori et al. (2024) (Llama), DeepSeek-R1-Distill",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S5.SS0.SSS0.Px3.p1",
+          "characters": 1024,
+          "excerpt": "We use two prompt templates. The default constrained prompt asks the model to identify the single most important focus in the target paragraph and produce one feedback unit under a",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S5.SS0.SSS0.Px4.p1",
+          "characters": 268,
+          "excerpt": "We allocate up to 250 output tokens per target paragraph – well above the typical length of instructor feedback on a single paragraph in Sefora ( \\approx 20 tokens 13 13 13 Exact n",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S5.SS0.SSS0.Px4.p2",
+          "characters": 224,
+          "excerpt": "In total, the model and prompt combination yields 74 experimental configurations. All prompts (§ F ), inference pipelines, the UniMatch framework, and code are publicly available. ",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S6.p1",
+          "characters": 806,
+          "excerpt": "Table 4 reports UniMatch scores on the full corpus under the zero-shot setting (with rubrics and category guidance), where most models perform best; full results are in Tables 5 – ",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S6.SS0.SSS0.Px1.p1",
+          "characters": 930,
+          "excerpt": "The dominant signal in our experiments is verbosity. Across all models, the constrained prompt (our default) beats the unconstrained alternative, which yields substantially lower F",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S6.SS0.SSS0.Px2.p1",
+          "characters": 338,
+          "excerpt": "Supplying explicit feedback categories (the guided setting) is the next strongest factor: it improves F 1 by about +0.059 without rubric and +0.035 with rubric on the full-corpus e",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S6.SS0.SSS0.Px3.p1",
+          "characters": 1072,
+          "excerpt": "Two further levers contribute little (Table 4 , No rubrics and Few-shot columns). Rubric inclusion is essentially neutral, with small, unstable differences: in our paragraph-level ",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        }
+      ],
+      "verified_passages": 18
+    },
+    {
+      "arxiv_id": "2608.00345v1",
+      "source_modes": [
+        "html"
+      ],
+      "chunks": 21,
+      "sections": {
+        "abstract": 1,
+        "conclusion": 1,
+        "experiments": 9,
+        "introduction": 3,
+        "method": 4,
+        "related work": 3
+      },
+      "source_urls": [
+        "https://arxiv.org/html/2608.00345v1#Sx1",
+        "https://arxiv.org/html/2608.00345v1#Sx2",
+        "https://arxiv.org/html/2608.00345v1#Sx3.SSx1",
+        "https://arxiv.org/html/2608.00345v1#Sx3.SSx2",
+        "https://arxiv.org/html/2608.00345v1#Sx4.SSx1",
+        "https://arxiv.org/html/2608.00345v1#Sx4.SSx2",
+        "https://arxiv.org/html/2608.00345v1#Sx4.SSx3",
+        "https://arxiv.org/html/2608.00345v1#Sx4.SSx4",
+        "https://arxiv.org/html/2608.00345v1#Sx4.SSx5",
+        "https://arxiv.org/html/2608.00345v1#Sx6",
+        "https://arxiv.org/html/2608.00345v1#abstract1"
+      ],
+      "omissions": {
+        "source_elements_subject_to_filtering": {
+          "figures_or_tables": 27,
+          "display_equations": 16,
+          "proofs": 0,
+          "bibliographies": 1,
+          "appendices": 2,
+          "navigation": 4
+        },
+        "parsed_sections_without_chunks": []
+      },
+      "failures": [],
+      "source_hashes": {
+        "data\\html\\2608.00345v1.html": "ff62966c1a5bd1595fc44c0a127fe085d370edbbc7d5f6f43c25493090127a2c",
+        "data\\pdfs\\2608.00345v1.pdf": "56f73a78e88669c529fd35f730b394ebfdca966d2fb76b0ea21f9a9a6ca280d5"
+      },
+      "candidates_for_40_43": [
+        {
+          "element_id": "Sx3.SSx2.SSSx1.p1",
+          "characters": 615,
+          "excerpt": "ORCA uses Ward linkage ( Ward Jr. 1963 ) as its merge criterion, but applies it to 3D CT token compression rather than unconstrained clustering. Merges are restricted to standard 6",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Sx3.SSx2.SSSx1.p2",
+          "characters": 647,
+          "excerpt": "ORCA initializes each token as its own region. At each step, it considers only adjacent region pairs. Let \\tilde{x}_{i} be the feature used to score merges. The next subsection def",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Sx3.SSx2.SSSx2.p2",
+          "characters": 1278,
+          "excerpt": "For each token i , let m_{i}\\in[0,1]^{K} denote its organ-coverage vector. The entry m_{i,k} is the proportion of voxels assigned to organ group k within the 3D patch represented b",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Sx3.SSx2.SSSx3.p1",
+          "characters": 910,
+          "excerpt": "After ORCA merges neighboring token regions, the output regions no longer form a regular grid. Their order in the output sequence therefore does not reliably indicate where they ca",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Sx5.SSx5.SSSx2.Px1.p1",
+          "characters": 549,
+          "excerpt": "For a 3D CT embedding, the goal of compression is to preserve the information a downstream model needs, not to reconstruct the original tokens as faithfully as possible. That infor",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Sx5.SSx5.SSSx2.Px2.p1",
+          "characters": 548,
+          "excerpt": "The dominant way to score a 3D CT model is report generation and the VQA derived from it, with its metrics anchored on disease findings. This does not fully cover the attributes a ",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Sx5.SSx5.SSSx2.Px3.p1",
+          "characters": 362,
+          "excerpt": "A natural alternative is to pool tokens directly within each organ mask, but the obstacle is budget, not accuracy. Hard organ pooling emits one token per organ or organ slice, so t",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        }
+      ],
+      "verified_passages": 21
+    },
+    {
+      "arxiv_id": "2608.00339v1",
+      "source_modes": [
+        "html"
+      ],
+      "chunks": 10,
+      "sections": {
+        "abstract": 1,
+        "agent priors, framing, and motivated reasoning": 1,
+        "discussion": 3,
+        "introduction": 4,
+        "research design": 1
+      },
+      "source_urls": [
+        "https://arxiv.org/html/2608.00339v1#S1",
+        "https://arxiv.org/html/2608.00339v1#S2",
+        "https://arxiv.org/html/2608.00339v1#S3",
+        "https://arxiv.org/html/2608.00339v1#S5",
+        "https://arxiv.org/html/2608.00339v1#abstract1"
+      ],
+      "omissions": {
+        "source_elements_subject_to_filtering": {
+          "figures_or_tables": 18,
+          "display_equations": 4,
+          "proofs": 0,
+          "bibliographies": 1,
+          "appendices": 3,
+          "navigation": 5
+        },
+        "parsed_sections_without_chunks": []
+      },
+      "failures": [],
+      "source_hashes": {
+        "data\\html\\2608.00339v1.html": "5321cf003b71d59995b32c1e26128428010ae72f523616369a5e02960afb3b93",
+        "data\\pdfs\\2608.00339v1.pdf": "f4c54aca090d24cfb9673dabb052653de54d11d6ee64b8744e0b430752ee283b"
+      },
+      "candidates_for_40_43": [
+        {
+          "element_id": "S2.SS0.SSS0.Px1.p1",
+          "characters": 553,
+          "excerpt": "A general framing effect is when a person’s choice is influenced by how information is presented (the frame) rather than by the information itself ( Tversky and Kahneman, 1981 ; Dr",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S2.SS0.SSS0.Px1.p2",
+          "characters": 247,
+          "excerpt": "In this general form, the framing effect is defined by influence and instability and does not have to correlate with one’s beliefs. Such an effect can be due to human psychology, c",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S2.SS0.SSS0.Px2.p1",
+          "characters": 541,
+          "excerpt": "When a framing effect shifts an agent’s conclusion in the direction of its prior beliefs, we characterize it as a prior-aligned framing effect , a behavior consistent with Bayesian",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S2.SS0.SSS0.Px2.p2",
+          "characters": 472,
+          "excerpt": "The distinguishing feature of a prior-aligned framing effect is the moderating role of prior beliefs. If the agent’s prior favors an affirmative proposition in one frame more than ",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S2.SS0.SSS0.Px2.p3",
+          "characters": 748,
+          "excerpt": "This kind of behavior can be Bayesian in the sense that the same evidence can be interpreted differently by agents with different priors. For example, an agent with a strong belief",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S2.SS0.SSS0.Px3.p1",
+          "characters": 776,
+          "excerpt": "While prior-aligned framing effects demonstrate what conclusion an agent reaches, motivated reasoning concerns how the agent reaches it. An agent acting as a Bayesian merely combin",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S2.SS0.SSS0.Px3.p2",
+          "characters": 528,
+          "excerpt": "In many settings, a prior-aligned conclusion alone cannot differentiate between these two modes of reasoning ( Little, 2025 ) . For instance, given the same reports of election irr",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S2.SS0.SSS0.Px3.p3",
+          "characters": 668,
+          "excerpt": "Intuitively, a Bayesian would not run a biased analysis in order for the result to align with their prior. On the other hand, a motivated reasoner would search more when the eviden",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S2.SS0.SSS0.Px3.p4",
+          "characters": 690,
+          "excerpt": "Because these mechanisms operate entirely within the analytical process, moving through the three levels of our framework requires escalating evidentiary standards. Demonstrating a",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS0.SSS0.Px1.p1",
+          "characters": 704,
+          "excerpt": "We elicit the agents’ prior beliefs separately from the analytical experiments so that the experimental data cannot affect the belief measure. Within each domain, the agent compare",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS0.SSS0.Px1.p2",
+          "characters": 380,
+          "excerpt": "To ensure the robustness of the elicited priors, we use nine prompt versions and three phrasings of each proposition and randomize the order in which they are presented. * * * See ",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS0.SSS0.Px1.p3",
+          "characters": 324,
+          "excerpt": "For each agent and domain, we pool the comparisons into one Bradley–Terry log-strength for each proposition and interpret the difference between two strengths as their relative sup",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS0.SSS0.Px2.p1",
+          "characters": 557,
+          "excerpt": "The experimental stage uses the prior belief ordering for a matched-data framing experiment. The agent’s task is to analyze the given data and produce a conclusion. For example, in",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS0.SSS0.Px2.p2",
+          "characters": 819,
+          "excerpt": "For each domain, the three frames use the same underlying data - the dataset, codebook, and other files available for analysis are fixed. † † † See Supplementary Materials B for mo",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS0.SSS0.Px2.p3",
+          "characters": 483,
+          "excerpt": "We use four agents in the experiment: Claude Opus 4.8, Gemini 3.5 Flash, GLM-5.2, and GPT - 5.6 Sol. Each agent works in a sandbox with read-only inputs but may inspect the files, ",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS0.SSS0.Px2.p4",
+          "characters": 386,
+          "excerpt": "Each run ends with a structured answer containing the agent’s preferred specification, point estimate, binary decision, confidence score, and short interpretation. The session reco",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS0.SSS0.Px3.p1",
+          "characters": 379,
+          "excerpt": "Each medical dataset contains 20,000 synthetic health-system records. The agent is asked whether an exposure causally increases incident pharyngeal-cancer diagnoses (binary decisio",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS0.SSS0.Px3.p2",
+          "characters": 670,
+          "excerpt": "The data-generating process contains a cumulative causal effect of the exposure. The ground-truth is that there is a harmful effect of exposure on pharyngeal cancer. Adjustment for",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS0.SSS0.Px3.p3",
+          "characters": 523,
+          "excerpt": "To probe motivated reasoning, in addition to the above design where the ground truth is a harmful effect (hereafter referred to as the “harmful-effect design”), we use a separate d",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS0.SSS0.Px3.p4",
+          "characters": 417,
+          "excerpt": "To demonstrate the scope conditions of motivated reasoning, we additionally use two altered versions of the harmful-effect design, where the intended target estimand and the salien",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS0.SSS0.Px4.p1",
+          "characters": 581,
+          "excerpt": "Each election dataset contains approximately 12,000 to 16,000 reporting units in eight anonymized regions, with top-ticket returns for four election cycles, down-ballot control rac",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS0.SSS0.Px4.p2",
+          "characters": 411,
+          "excerpt": "The ground-truth manipulation of the two-party margin is approximately 0.9 percentage points, although the manipulation does not change the winner. The dataset supports a number of",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS0.SSS0.Px5.p1",
+          "characters": 562,
+          "excerpt": "Each geopolitical dataset contains 843 records drawn from three (synthetic) sources: historical analogs, expert assessments, and operational simulations. The agent is asked whether",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS0.SSS0.Px5.p2",
+          "characters": 702,
+          "excerpt": "The true probability of decisive success is 0.58 in every version. A number of decisions leave discretion to the agent: how much weight to give each source, whether to restrict his",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS0.SSS0.Px6.p1",
+          "characters": 345,
+          "excerpt": "Given the distinction among the three levels of framing effects, we test whether 1) agents’ conclusions differ by frame within a domain, 2) the difference in conclusions correlates",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS0.SSS0.Px6.p2",
+          "characters": 697,
+          "excerpt": "To study 1) and 2), we compare the analytical conclusions – both the binary conclusion and point estimate – that agents draw at the end of a task. For binary conclusions, we are pr",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS0.SSS0.Px6.p3",
+          "characters": 614,
+          "excerpt": "To study 3), we focus on the analytical process evidence that is recorded for each agent run. To distinguish between Bayesian and motivated reasoning, we rely on “how” an agent arr",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS0.SSS0.Px1.p1",
+          "characters": 1060,
+          "excerpt": "Figure 2 shows the elicited prior beliefs for each agent and domain. Across all three domains, with the exception of GPT-5.6 Sol for geopolitics, the agents exhibit stable, strictl",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS0.SSS0.Px2.p1",
+          "characters": 711,
+          "excerpt": "Figure 3 reports the agents’ binary conclusions and point estimates when presented with identical numerical data. If the agents’ analytical choices were invariant to the substantiv",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS0.SSS0.Px2.p2",
+          "characters": 564,
+          "excerpt": "The election and geopolitical domains display a similar upward gradient. Agents report higher manipulation margins for the Venezuelan election than for the United States election, ",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS0.SSS0.Px2.p3",
+          "characters": 238,
+          "excerpt": "In the Supplementary Materials C , we show the patterns observed in Figure 3 largely hold when we reverse the observed patterns in the null-effect design of the medical experiment,",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS0.SSS0.Px3.p1",
+          "characters": 692,
+          "excerpt": "We now evaluate whether these differences in conclusion align with the agents’ prior beliefs and whether the analytical process suggests motivated reasoning. Figure 4 plots the dif",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS0.SSS0.Px4.p1",
+          "characters": 671,
+          "excerpt": "The previous sections establish that agents reach different conclusions when the substantive frame changes, and that these differences align with their baseline priors. We now exam",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS0.SSS0.Px4.p2",
+          "characters": 441,
+          "excerpt": "In the harmful-effect design, baseline adjustment recovers the harmful causal effect, whereas adjustment for the post-exposure variables attenuates the estimate. Conversely, in the",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS0.SSS0.Px4.p3",
+          "characters": 816,
+          "excerpt": "Motivated reasoning predicts asymmetric search: an agent will continue searching when an intermediate result conflicts with its prior. Table 2 summarizes the agents’ tool use after",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS0.SSS0.Px4.p4",
+          "characters": 658,
+          "excerpt": "The specification choices provide further evidence of motivated reasoning. First, in the harmful-effect design, all four agents are more likely to fit a post-exposure specification",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS0.SSS0.Px4.p5",
+          "characters": 775,
+          "excerpt": "Second, the specifications at which agents stop show a clearer cross-design reversal. Claude Opus 4.8, Gemini 3.5 Flash, and GLM-5.2 are more likely to end with a post-exposure spe",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS0.SSS0.Px4.p6",
+          "characters": 607,
+          "excerpt": "A Bayesian agent might choose different specifications for alcohol and vaccination if the substantive labels imply different causal structures. Such an account, however, would pred",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS0.SSS0.Px4.p7",
+          "characters": 908,
+          "excerpt": "Figure 5 further examines the same cross-design reversal at the level of the computed estimates that agents ultimately report. The left panel plots the harmful-effect design, and t",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS0.SSS0.Px5.p1",
+          "characters": 496,
+          "excerpt": "The experiments used so far in the study are designed to give discretion to the agents. In each experiment, the prompts are neutral and contain no strong signal of what the right a",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS0.SSS0.Px5.p2",
+          "characters": 603,
+          "excerpt": "In the first variant, we add to the prompt that the target estimand is the total causal effect of the exposure on disease incidence. In the second variant, we build on the first va",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS0.SSS0.Px5.p3",
+          "characters": 717,
+          "excerpt": "Figure 6 compares the results of the original experiment and the two variants for GLM-5.2. It shows that, as the task provides more guidance, the vaccine results move toward the ex",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS0.SSS0.Px5.p4",
+          "characters": 366,
+          "excerpt": "Analytical discretion is therefore one scope condition for the prior-aligned framing effects. Framing effects may be reduced when the delegating user has a clear sense of what the ",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        }
+      ],
+      "verified_passages": 10
+    },
+    {
+      "arxiv_id": "2608.00335v1",
+      "source_modes": [
+        "html"
+      ],
+      "chunks": 25,
+      "sections": {
+        "abstract": 1,
+        "conclusion": 2,
+        "experiments": 5,
+        "introduction": 3,
+        "reflective collection and failure-critical data mining": 5,
+        "related work": 2,
+        "the salvage-ds rl algorithm": 7
+      },
+      "source_urls": [
+        "https://arxiv.org/html/2608.00335v1#Sx1",
+        "https://arxiv.org/html/2608.00335v1#Sx2",
+        "https://arxiv.org/html/2608.00335v1#Sx3",
+        "https://arxiv.org/html/2608.00335v1#Sx3.SSx1",
+        "https://arxiv.org/html/2608.00335v1#Sx3.SSx2",
+        "https://arxiv.org/html/2608.00335v1#Sx4",
+        "https://arxiv.org/html/2608.00335v1#Sx4.SSx1",
+        "https://arxiv.org/html/2608.00335v1#Sx4.SSx2",
+        "https://arxiv.org/html/2608.00335v1#Sx4.SSx3",
+        "https://arxiv.org/html/2608.00335v1#Sx4.SSx4",
+        "https://arxiv.org/html/2608.00335v1#Sx4.SSx5",
+        "https://arxiv.org/html/2608.00335v1#Sx5.SSx1",
+        "https://arxiv.org/html/2608.00335v1#Sx5.SSx2",
+        "https://arxiv.org/html/2608.00335v1#Sx5.SSx3",
+        "https://arxiv.org/html/2608.00335v1#Sx5.SSx4",
+        "https://arxiv.org/html/2608.00335v1#Sx6",
+        "https://arxiv.org/html/2608.00335v1#abstract1"
+      ],
+      "omissions": {
+        "source_elements_subject_to_filtering": {
+          "figures_or_tables": 15,
+          "display_equations": 13,
+          "proofs": 0,
+          "bibliographies": 1,
+          "appendices": 11,
+          "navigation": 4
+        },
+        "parsed_sections_without_chunks": []
+      },
+      "failures": [],
+      "source_hashes": {
+        "data\\html\\2608.00335v1.html": "c8b2561620c2598c9dadbfeab3b2bcf756554e7c8c504393cb64017c52690b7a",
+        "data\\pdfs\\2608.00335v1.pdf": "62746abde8059a3f66680534547fcdcc5e3b40f4289c1f768f0192599840b37d"
+      },
+      "candidates_for_40_43": [
+        {
+          "element_id": "Sx3.SSx1.p3",
+          "characters": 1059,
+          "excerpt": "Reflection-conditioned collection. Our teacher model, GPT-5.1, produces a trajectory \\tau_{N} ; a reflection handler then summarizes its failures and recovery strategy, together wi",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Sx4.SSx3.p1",
+          "characters": 1289,
+          "excerpt": "DS admits relative feedback only when it is both informative and trustworthy . For rewards \\{r_{g,i}\\}_{i=1}^{K} , the std gate requires within-group contrast ( \\sigma_{g}\\geq\\epsi",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Sx4.SSx4.p2",
+          "characters": 188,
+          "excerpt": "\\mathcal{L}^{\\mathrm{salv}}(\\theta)=-\\,\\mathbb{E}_{i\\in\\mathcal{D}_{\\mathrm{rej}}}\\!\\Big[\\tfrac{1}{|A_{i}|}\\!\\sum_{t\\in A_{i}}\\log\\pi_{\\theta}\\big(a^{\\mathrm{GT}}_{i,t}\\mid\\cdot\\bi",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Sx4.SSx5.p1",
+          "characters": 1337,
+          "excerpt": "Collecting the polarized reward R , dynamic-sampling advantage \\hat{A} , and salvage anchor \\mathcal{L}^{\\mathrm{salv}} , the actor minimizes \\displaystyle\\mathcal{L}(\\theta)= \\dis",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        }
+      ],
+      "verified_passages": 25
+    },
+    {
+      "arxiv_id": "2609.00498v1",
+      "source_modes": [
+        "html"
+      ],
+      "chunks": 36,
+      "sections": {
+        "abstract": 1,
+        "conclusion": 1,
+        "ethical considerations": 1,
+        "implementation details": 1,
+        "introduction": 2,
+        "limitations": 6,
+        "our approach: seav": 6,
+        "problem formulation": 1,
+        "related work": 4,
+        "results": 6,
+        "shortcomings of existing evaluators": 7
+      },
+      "source_urls": [
+        "https://arxiv.org/html/2609.00498v1#S1",
+        "https://arxiv.org/html/2609.00498v1#S10",
+        "https://arxiv.org/html/2609.00498v1#S2",
+        "https://arxiv.org/html/2609.00498v1#S3",
+        "https://arxiv.org/html/2609.00498v1#S3.SS1",
+        "https://arxiv.org/html/2609.00498v1#S3.SS2",
+        "https://arxiv.org/html/2609.00498v1#S4",
+        "https://arxiv.org/html/2609.00498v1#S4.SS1",
+        "https://arxiv.org/html/2609.00498v1#S4.SS2",
+        "https://arxiv.org/html/2609.00498v1#S4.SS3",
+        "https://arxiv.org/html/2609.00498v1#S4.SS4",
+        "https://arxiv.org/html/2609.00498v1#S5",
+        "https://arxiv.org/html/2609.00498v1#S6",
+        "https://arxiv.org/html/2609.00498v1#S6.SS1",
+        "https://arxiv.org/html/2609.00498v1#S6.SS2",
+        "https://arxiv.org/html/2609.00498v1#S6.SS3",
+        "https://arxiv.org/html/2609.00498v1#S7",
+        "https://arxiv.org/html/2609.00498v1#S8",
+        "https://arxiv.org/html/2609.00498v1#S9",
+        "https://arxiv.org/html/2609.00498v1#abstract1"
+      ],
+      "omissions": {
+        "source_elements_subject_to_filtering": {
+          "figures_or_tables": 17,
+          "display_equations": 4,
+          "proofs": 0,
+          "bibliographies": 1,
+          "appendices": 11,
+          "navigation": 4
+        },
+        "parsed_sections_without_chunks": [
+          {
+            "section": "acknowledgments",
+            "subsection": "",
+            "characters": 118
+          }
+        ]
+      },
+      "failures": [],
+      "source_hashes": {
+        "data\\html\\2609.00498v1.html": "1af6ddc9eb4080576caa1a03c907d771252107856f132bccc42195920578369c",
+        "data\\pdfs\\2609.00498v1.pdf": "88c56ab6cdb23c0b6e76fc7ff6cecbc9521f19c18be798ead43360ad27148544"
+      },
+      "candidates_for_40_43": [
+        {
+          "element_id": "S1.p1",
+          "characters": 870,
+          "excerpt": "Large language models (LLMs) increasingly operate in settings where misuse through strategically crafted jailbreaks can produce harmful outputs ( Zou et al., 2023 ) . Evaluating ro",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "Thmdefinition1.p1",
+          "characters": 267,
+          "excerpt": "The operational criterion requires (1) relevance to the harmful intent; (2) factual correctness against reliable task-appropriate evidence; (3) ordering compliance for executable d",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS1.p1",
+          "characters": 534,
+          "excerpt": "We examine a fundamental ambiguity in jailbreak evaluation: the conflation of linguistic plausibility with epistemic validity 2 2 2 These properties are not equivalent: a response ",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS2.p5",
+          "characters": 1095,
+          "excerpt": "We evaluate OrdSense using all five baselines. Let \\mathcal{J}=\\{x:f(x,a)=\\textsc{jailbroken}\\} denote the set of samples classified as jailbroken ( JB ) under Scenario (a). We def",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS4.p2",
+          "characters": 594,
+          "excerpt": "The LLM assigns a continuous score on a 0–1 scale reflecting operational actionability 4 4 4 Appendix G reports the scoring-scale calibration. : whether someone could successfully ",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        }
+      ],
+      "verified_passages": 36
+    },
+    {
+      "arxiv_id": "2609.00495v1",
+      "source_modes": [
+        "html"
+      ],
+      "chunks": 23,
+      "sections": {
+        "abstract": 1,
+        "conclusion": 1,
+        "dynamic early commitment of refusal tokens to improve dllm safety": 4,
+        "introduction": 3,
+        "limitations": 1,
+        "measuring safety alignment dynamics in dllms": 13
+      },
+      "source_urls": [
+        "https://arxiv.org/html/2609.00495v1#S1",
+        "https://arxiv.org/html/2609.00495v1#S3",
+        "https://arxiv.org/html/2609.00495v1#S3.SS1",
+        "https://arxiv.org/html/2609.00495v1#S3.SS2",
+        "https://arxiv.org/html/2609.00495v1#S3.SS3",
+        "https://arxiv.org/html/2609.00495v1#S3.SS4",
+        "https://arxiv.org/html/2609.00495v1#S4",
+        "https://arxiv.org/html/2609.00495v1#S4.SS1",
+        "https://arxiv.org/html/2609.00495v1#S4.SS2",
+        "https://arxiv.org/html/2609.00495v1#S6",
+        "https://arxiv.org/html/2609.00495v1#S7",
+        "https://arxiv.org/html/2609.00495v1#abstract1"
+      ],
+      "omissions": {
+        "source_elements_subject_to_filtering": {
+          "figures_or_tables": 25,
+          "display_equations": 20,
+          "proofs": 0,
+          "bibliographies": 1,
+          "appendices": 1,
+          "navigation": 4
+        },
+        "parsed_sections_without_chunks": [
+          {
+            "section": "acknowledgments",
+            "subsection": "",
+            "characters": 91
+          }
+        ]
+      },
+      "failures": [],
+      "source_hashes": {
+        "data\\html\\2609.00495v1.html": "c72bc2732c70fd42bac3641bef787c97be2c2e8909ccab3a84fda311809ecd71",
+        "data\\pdfs\\2609.00495v1.pdf": "f8d47f9d1d152ac95c77e3afafc45ae3c56d5f973e2d812e6f1c81d88da97e2d"
+      },
+      "candidates_for_40_43": [
+        {
+          "element_id": "S2.SS0.SSS0.Px1.p1",
+          "characters": 1404,
+          "excerpt": "Diffusion language models (dLLMs) generate text through iterative denoising rather than left-to-right decoding. In this work, we consider masked diffusion language models, a repres",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S2.SS0.SSS0.Px1.p2",
+          "characters": 390,
+          "excerpt": "Unlike autoregressive LLMs, which decode and commit tokens sequentially from left to right, dLLMs predict tokens for all positions conditioned on the entire current sequence and ca",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S2.SS0.SSS0.Px2.p1",
+          "characters": 745,
+          "excerpt": "To conduct our measurements of safety behaviors in dLLMs, we evaluate model safety on two widely used harmful-instruction benchmarks: JailbreakBench Chao et al. (2024) and StrongRE",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS4.SSS1.p2",
+          "characters": 1498,
+          "excerpt": "First, we identify refusal-token candidates by comparing the early denoising behavior of an aligned dLLM with its base counterpart, e.g., LLaDA-8B-Instruct and LLaDA-8B-Base . We a",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S3.SS4.SSS1.p3",
+          "characters": 991,
+          "excerpt": "Second, we filter these candidates using benign prompts from HumanEval Chen et al. (2021) to remove tokens that also frequently appear in benign responses. For each candidate token",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS1.SSS0.Px1.p1",
+          "characters": 835,
+          "excerpt": "Let \\mathcal{V}_{\\mathrm{ref}} be the refusal-token set constructed in Sec. 3.4.1 . We also define a small set of compliance cues, \\mathcal{V}_{\\mathrm{cmp}} , containing common af",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S4.SS1.SSS0.Px2.p1",
+          "characters": 1397,
+          "excerpt": "RAEC operates only inside an early decoding window. Let \\mathcal{T}_{\\mathrm{e}}=\\{1,\\ldots,T_{\\mathrm{e}}\\} denote the first T_{\\mathrm{e}} global denoising steps, and let \\mathca",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S5.SS0.SSS0.Px1.p1",
+          "characters": 714,
+          "excerpt": "Early dLLM works explore both continuous and discrete formulations for text diffusion, including modeling text in continuous latent spaces Han et al. (2023) ; Li et al. (2022) and ",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S5.SS0.SSS0.Px2.p1",
+          "characters": 682,
+          "excerpt": "Recent studies have shown that this distinct generation paradigm can introduce new attack surfaces. For example, DIJA Wen et al. (2025) constructs adversarial interleaved mask-text",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        }
+      ],
+      "verified_passages": 23
+    },
+    {
+      "arxiv_id": "2609.39215v1",
+      "source_modes": [
+        "html"
+      ],
+      "chunks": 42,
+      "sections": {
+        "abstract": 1,
+        "background and related work": 11,
+        "conclusion": 2,
+        "empirical evaluation": 13,
+        "introduction": 4,
+        "strad : our proposed benchmark": 11
+      },
+      "source_urls": [
+        "https://arxiv.org/html/2609.39215v1#S1",
+        "https://arxiv.org/html/2609.39215v1#S2",
+        "https://arxiv.org/html/2609.39215v1#S2.SS1",
+        "https://arxiv.org/html/2609.39215v1#S2.SS2",
+        "https://arxiv.org/html/2609.39215v1#S2.SS3",
+        "https://arxiv.org/html/2609.39215v1#S2.SS4",
+        "https://arxiv.org/html/2609.39215v1#S2.SS5",
+        "https://arxiv.org/html/2609.39215v1#S3",
+        "https://arxiv.org/html/2609.39215v1#S3.SS1",
+        "https://arxiv.org/html/2609.39215v1#S3.SS2",
+        "https://arxiv.org/html/2609.39215v1#S3.SS3",
+        "https://arxiv.org/html/2609.39215v1#S4",
+        "https://arxiv.org/html/2609.39215v1#S4.SS1",
+        "https://arxiv.org/html/2609.39215v1#S4.SS2",
+        "https://arxiv.org/html/2609.39215v1#S4.SS3",
+        "https://arxiv.org/html/2609.39215v1#S4.SS4",
+        "https://arxiv.org/html/2609.39215v1#S5",
+        "https://arxiv.org/html/2609.39215v1#abstract1"
+      ],
+      "omissions": {
+        "source_elements_subject_to_filtering": {
+          "figures_or_tables": 15,
+          "display_equations": 4,
+          "proofs": 0,
+          "bibliographies": 1,
+          "appendices": 3,
+          "navigation": 4
+        },
+        "parsed_sections_without_chunks": []
+      },
+      "failures": [],
+      "source_hashes": {
+        "data\\html\\2609.39215v1.html": "581e1a101717e88560a4a80dd2a1013c96a634e345b8bb66207be63d94a0858c",
+        "data\\pdfs\\2609.39215v1.pdf": "bb53ca55128753c0ab3f4ab93e81d6c607f9b919579f1ccdafe2346a19785074"
+      },
+      "candidates_for_40_43": [
+        {
+          "element_id": "S3.SS1.SSS2.p3",
+          "characters": 1243,
+          "excerpt": "(Step b): Measuring distributional change. To quantify distribution changes in the data distribution across batches, we use the Jensen-Shannon Divergence JSD which is a symmetric a",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        }
+      ],
+      "verified_passages": 42
+    },
+    {
+      "arxiv_id": "2609.39199v1",
+      "source_modes": [
+        "html"
+      ],
+      "chunks": 18,
+      "sections": {
+        "abstract": 1,
+        "conclusion": 1,
+        "experimental results and analyses": 7,
+        "introduction": 3,
+        "methodology": 6
+      },
+      "source_urls": [
+        "https://arxiv.org/html/2609.39199v1#S1",
+        "https://arxiv.org/html/2609.39199v1#S2.SS1",
+        "https://arxiv.org/html/2609.39199v1#S2.SS2",
+        "https://arxiv.org/html/2609.39199v1#S2.SS3",
+        "https://arxiv.org/html/2609.39199v1#S2.SS4",
+        "https://arxiv.org/html/2609.39199v1#S3.SS1",
+        "https://arxiv.org/html/2609.39199v1#S3.SS2",
+        "https://arxiv.org/html/2609.39199v1#S3.SS3",
+        "https://arxiv.org/html/2609.39199v1#S3.SS4",
+        "https://arxiv.org/html/2609.39199v1#S3.SS5",
+        "https://arxiv.org/html/2609.39199v1#S3.SS6",
+        "https://arxiv.org/html/2609.39199v1#S4",
+        "https://arxiv.org/html/2609.39199v1#abstract1"
+      ],
+      "omissions": {
+        "source_elements_subject_to_filtering": {
+          "figures_or_tables": 8,
+          "display_equations": 8,
+          "proofs": 0,
+          "bibliographies": 1,
+          "appendices": 0,
+          "navigation": 4
+        },
+        "parsed_sections_without_chunks": []
+      },
+      "failures": [],
+      "source_hashes": {
+        "data\\html\\2609.39199v1.html": "f453e1766a3ed3ee7ebbd91b1d726ad9b4e5cc4b6a25a3c66a0c3dc6194f9a1f",
+        "data\\pdfs\\2609.39199v1.pdf": "1e5e30832b8d5a6b1b56561c68d27f40670eb20dbaaba8c1eef1dbd6dc05dbc2"
+      },
+      "candidates_for_40_43": [
+        {
+          "element_id": "S1.p3",
+          "characters": 1273,
+          "excerpt": "In this work, we introduce UniAE-MoE , a novel unified audio encoder designed to explicitly decouple the often conflicting demands of cross-domain audio using Mixture of Experts. B",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S2.SS2.p3",
+          "characters": 808,
+          "excerpt": "\\operatorname{SwiGLU}(x)=\\left[\\operatorname{SiLU}(xW_{\\mathrm{gate}})\\odot(xW_{\\mathrm{up}})\\right]W_{\\mathrm{down}}, (1) where W_{gate} , W_{up} , and W_{down} denote the learnab",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S2.SS2.p4",
+          "characters": 293,
+          "excerpt": "y_{routed}=\\sum_{i=1}^{K}\\text{Softmax}(G(x_{t}))_{i}\\cdot E_{i}(x_{t}), (2) where E_{i} denotes the i -th selected SwiGLU expert. Activating only a subset of experts encourages do",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S2.SS2.p6",
+          "characters": 376,
+          "excerpt": "\\aligned\\alpha&=\\sigma(g_{\\text{shared}}),\\\\ Y=\\mathrm{RMSNorm}\\left(\\alpha\\,y_{\\text{routed}}+(1-\\alpha\\,)E_{\\text{shared}}(x)\\right). (3) By doing so, we not only preserve the co",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        },
+        {
+          "element_id": "S2.SS3.p1",
+          "characters": 1209,
+          "excerpt": "To support diverse audio tasks within a single architecture, we reformulate 20 downstream tasks under a unified instruction-following paradigm. Specifically, both discriminative ta",
+          "classification": "candidate omitted/normalized paragraph; needs human layout review"
+        }
+      ],
+      "verified_passages": 18
+    }
+  ],
+  "input_hashes": {
+    "data\\processed\\chunks.parquet": "11f9810af7cf01ee9ee43b1b50899d318672330fc44a6d0d547edc52d0e9ca10",
+    "data\\metadata\\arxiv_csAI_100_metadata.csv": "68258c4c75a3a88b6fb9af7a767f5289677f4daeb1bb561d9860ad5a10580c05",
+    "data\\metadata\\arxiv_csAI_25_pdf_sample.csv": "c67838d07c75a7e5780202ada2e193cd834a70d347b7b55ca840e5b6da1b970f",
+    "tests\\validate_ingestion_sample.py": "583bb46c750f31199d6e5b5b8963e1ec6ce2eebe1f3da3888c08f9ed3783743d",
+    "docs\\ingestion-validation.md": "a0e1b9cfafaf02f5d6d3d2f70aff7ce8563dfcac67281d65a8ab307c3f8f4c4d",
+    "docs\\ingestion-validation.json": "635955e48b25c72d586f065d870456022fd953b2a02686b227405fc5a1573b1d"
+  },
+  "implementation_hashes": {
+    "tests\\validate_html_sample.py": "f56c5e5b8cc565d6bbc2e709695c6a0130e7c552f9381cec3f8e0869c6bb7948",
+    "tests\\html_transport.py": "6506dfeeb77cee3c67a840a3a881b164e5589abfb6556caf678df1aafa2608f2",
+    "src\\retrieval.py": "cba4a4498d06e962874d332784c4648cf369a486355e0d1e29dfbd8cf0462249",
+    "src\\data_ingestion\\__init__.py": "5dd280ecd7abdaa1bba7b549940a6b01e931182cb90b1ff3cd33cec103d2f6cd",
+    "src\\data_ingestion\\chunking.py": "0f2f25ef76e4854a7275ea7f78cdfb1450482b8e851fbb9192ace1298df22d76",
+    "src\\data_ingestion\\config.py": "feb725f17906f8ca182a9056a17c55466c48243721488385f387fb395d66e3cb",
+    "src\\data_ingestion\\download.py": "8c42ceb7abe741880f4289118f7ec81d65d8e5d9331e54dde3f98fa387397c05",
+    "src\\data_ingestion\\html_parser.py": "2876f370e0ce2927ea5a2dd8df27edee150fad811ec747c24f1d03fbc21ab8c4",
+    "src\\data_ingestion\\metadata.py": "c6216d87000bb1784dd700f133fc93f3b5847c11ddde2d56718ce8b388d3927c",
+    "src\\data_ingestion\\pdf_parser.py": "07de1e8571d40dcd9de92705e5f44a80388864150466741340c232d50fc3e485",
+    "src\\data_ingestion\\pdf_pipeline.py": "3215d842c930ff4411d3cbf7632dd713bab0d2233716706925fa12f5a1576a66",
+    "src\\data_ingestion\\pipeline.py": "1d91724ed368263e322b50b04f412be9e43cc864ef3c2bb1cd9912b18384e4b0"
+  },
+  "locked_papers": 25,
+  "persisted_chunks": 877,
+  "persisted_source_counts": {
+    "html": 877
+  },
+  "cached_ingestion_rerun": "PASS: persisted == regenerated == second run",
+  "regenerated_parquet_sha256": "11f9810af7cf01ee9ee43b1b50899d318672330fc44a6d0d547edc52d0e9ca10",
+  "transport": {
+    "backend": "SQLite-backed Azure client test double, NOT live Azure",
+    "model": "SHA256 deterministic 384-dimensional fingerprint; NOT MiniLM",
+    "first_count": 877,
+    "rerun_count": 877,
+    "reopened_verified_records": 877,
+    "query_probes": [
+      {
+        "paper": "2602.00931v2",
+        "query_kind": "exact passage text",
+        "returned_ids": [
+          "MjYwMi4wMDkzMXYyX2MwMDAw",
+          "MjYwNi4wMTQ5NHYxX2MwMDI0",
+          "MjYwMi4wMDkzN3YzX2MwMDE2"
+        ]
+      },
+      {
+        "paper": "2602.00933v3",
+        "query_kind": "exact passage text",
+        "returned_ids": [
+          "MjYwMi4wMDkzM3YzX2MwMDAw",
+          "MjYwNC4wMDMyNHYxX2MwMDgz",
+          "MjYwNS4wMDI5MnYyX2MwMDI2"
+        ]
+      },
+      {
+        "paper": "2602.00937v3",
+        "query_kind": "exact passage text",
+        "returned_ids": [
+          "MjYwMi4wMDkzN3YzX2MwMDAw",
+          "MjYwOC4wMDM0NXYxX2MwMDIw",
+          "MjYwMy4wMDgyM3YyX2MwMDE4"
+        ]
+      },
+      {
+        "paper": "2603.00823v2",
+        "query_kind": "exact passage text",
+        "returned_ids": [
+          "MjYwMy4wMDgyM3YyX2MwMDAw",
+          "MjYwOS4zOTIxNXYxX2MwMDEw",
+          "MjYwOC4wMDM0NXYxX2MwMDAw"
+        ]
+      },
+      {
+        "paper": "2603.00824v2",
+        "query_kind": "exact passage text",
+        "returned_ids": [
+          "MjYwMy4wMDgyNHYyX2MwMDAw",
+          "MjYwNC4wMDMxNHYxX2MwMDEx",
+          "MjYwNC4wMDMyNHYxX2MwMTA1"
+        ]
+      },
+      {
+        "paper": "2603.00829v2",
+        "query_kind": "exact passage text",
+        "returned_ids": [
+          "MjYwMy4wMDgyOXYyX2MwMDAw",
+          "MjYwMy4wMDgyOXYyX2MwMDA5",
+          "MjYwOS4wMDQ5NXYxX2MwMDE2"
+        ]
+      },
+      {
+        "paper": "2604.00314v1",
+        "query_kind": "exact passage text",
+        "returned_ids": [
+          "MjYwNC4wMDMxNHYxX2MwMDAw",
+          "MjYwNS4wMDI3NnYxX2MwMDE4",
+          "MjYwOS4zOTIxNXYxX2MwMDMx"
+        ]
+      },
+      {
+        "paper": "2604.00319v1",
+        "query_kind": "exact passage text",
+        "returned_ids": [
+          "MjYwNC4wMDMxOXYxX2MwMDAw",
+          "MjYwNy4wMDI3NnYxX2MwMDM1",
+          "MjYwMy4wMDgyOXYyX2MwMDI2"
+        ]
+      },
+      {
+        "paper": "2604.00324v1",
+        "query_kind": "exact passage text",
+        "returned_ids": [
+          "MjYwNC4wMDMyNHYxX2MwMDAw",
+          "MjYwNS4wMDI3M3YyX2MwMDI4",
+          "MjYwMi4wMDkzN3YzX2MwMDA5"
+        ]
+      },
+      {
+        "paper": "2605.00273v2",
+        "query_kind": "exact passage text",
+        "returned_ids": [
+          "MjYwNS4wMDI3M3YyX2MwMDAw",
+          "MjYwNC4wMDMyNHYxX2MwMTQz",
+          "MjYwOS4zOTIxNXYxX2MwMDI4"
+        ]
+      },
+      {
+        "paper": "2605.00276v1",
+        "query_kind": "exact passage text",
+        "returned_ids": [
+          "MjYwNS4wMDI3NnYxX2MwMDAw",
+          "MjYwNy4wMDI3NHYxX2MwMDA1",
+          "MjYwMy4wMDgyNHYyX2MwMDE4"
+        ]
+      },
+      {
+        "paper": "2605.00292v2",
+        "query_kind": "exact passage text",
+        "returned_ids": [
+          "MjYwNS4wMDI5MnYyX2MwMDAw",
+          "MjYwNy4wMDI3NnYxX2MwMDQx",
+          "MjYwMy4wMDgyNHYyX2MwMDI4"
+        ]
+      },
+      {
+        "paper": "2606.01494v1",
+        "query_kind": "exact passage text",
+        "returned_ids": [
+          "MjYwNi4wMTQ5NHYxX2MwMDAw",
+          "MjYwOS4zOTIxNXYxX2MwMDE3",
+          "MjYwOS4zOTIxNXYxX2MwMDE4"
+        ]
+      },
+      {
+        "paper": "2606.01498v1",
+        "query_kind": "exact passage text",
+        "returned_ids": [
+          "MjYwNi4wMTQ5OHYxX2MwMDAw",
+          "MjYwMi4wMDkzN3YzX2MwMDAy",
+          "MjYwNC4wMDMxOXYxX2MwMDI3"
+        ]
+      },
+      {
+        "paper": "2606.01502v1",
+        "query_kind": "exact passage text",
+        "returned_ids": [
+          "MjYwNi4wMTUwMnYxX2MwMDAw",
+          "MjYwNy4wMDI3NnYxX2MwMDMz",
+          "MjYwNC4wMDMxOXYxX2MwMDA2"
+        ]
+      },
+      {
+        "paper": "2607.00274v1",
+        "query_kind": "exact passage text",
+        "returned_ids": [
+          "MjYwNy4wMDI3NHYxX2MwMDAw",
+          "MjYwNS4wMDI3NnYxX2MwMDAy",
+          "MjYwNC4wMDMxNHYxX2MwMDE5"
+        ]
+      },
+      {
+        "paper": "2607.00275v1",
+        "query_kind": "exact passage text",
+        "returned_ids": [
+          "MjYwNy4wMDI3NXYxX2MwMDAw",
+          "MjYwNy4wMDI3NnYxX2MwMDUy",
+          "MjYwNC4wMDMyNHYxX2MwMDQz"
+        ]
+      },
+      {
+        "paper": "2607.00276v1",
+        "query_kind": "exact passage text",
+        "returned_ids": [
+          "MjYwNy4wMDI3NnYxX2MwMDAw",
+          "MjYwMy4wMDgyM3YyX2MwMDAx",
+          "MjYwNC4wMDMyNHYxX2MwMDQ1"
+        ]
+      },
+      {
+        "paper": "2608.00335v1",
+        "query_kind": "exact passage text",
+        "returned_ids": [
+          "MjYwOC4wMDMzNXYxX2MwMDAw",
+          "MjYwNC4wMDMxOXYxX2MwMDE3",
+          "MjYwNS4wMDI3M3YyX2MwMDEx"
+        ]
+      },
+      {
+        "paper": "2608.00339v1",
+        "query_kind": "exact passage text",
+        "returned_ids": [
+          "MjYwOC4wMDMzOXYxX2MwMDAw",
+          "MjYwMy4wMDgyOXYyX2MwMDE2",
+          "MjYwNS4wMDI3M3YyX2MwMDMy"
+        ]
+      },
+      {
+        "paper": "2608.00345v1",
+        "query_kind": "exact passage text",
+        "returned_ids": [
+          "MjYwOC4wMDM0NXYxX2MwMDAw",
+          "MjYwNC4wMDMyNHYxX2MwMDcz",
+          "MjYwNC4wMDMxOXYxX2MwMDQ2"
+        ]
+      },
+      {
+        "paper": "2609.00495v1",
+        "query_kind": "exact passage text",
+        "returned_ids": [
+          "MjYwOS4wMDQ5NXYxX2MwMDAw",
+          "MjYwNC4wMDMyNHYxX2MwMDY1",
+          "MjYwOS4zOTIxNXYxX2MwMDIz"
+        ]
+      },
+      {
+        "paper": "2609.00498v1",
+        "query_kind": "exact passage text",
+        "returned_ids": [
+          "MjYwOS4wMDQ5OHYxX2MwMDAw",
+          "MjYwMi4wMDkzM3YzX2MwMDA2",
+          "MjYwMi4wMDkzN3YzX2MwMDEw"
+        ]
+      },
+      {
+        "paper": "2609.39199v1",
+        "query_kind": "exact passage text",
+        "returned_ids": [
+          "MjYwOS4zOTE5OXYxX2MwMDAw",
+          "MjYwMi4wMDkzN3YzX2MwMDE0",
+          "MjYwNy4wMDI3NHYxX2MwMDAy"
+        ]
+      },
+      {
+        "paper": "2609.39215v1",
+        "query_kind": "exact passage text",
+        "returned_ids": [
+          "MjYwOS4zOTIxNXYxX2MwMDAw",
+          "MjYwNy4wMDI3NnYxX2MwMDEx",
+          "MjYwNi4wMTUwMnYxX2MwMDMz"
+        ]
+      }
+    ],
+    "stale_rows_after_upload_only": 1,
+    "count_after_explicit_rebuild": 876,
+    "live_azure_requests": 0,
+    "semantic_relevance_tested": false
+  },
+  "protected_inputs_unchanged": true,
+  "source_files_unchanged": true,
+  "status": "PASS"
+}

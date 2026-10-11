@@ -35,6 +35,8 @@ class RetrievalTests(unittest.TestCase):
         self.path_patch.start()
         self.addCleanup(self.path_patch.stop)
         self.client = chromadb.PersistentClient(path=self.temp.name)
+        # Stop this temporary system before Windows removes its open index files.
+        self.addCleanup(self.client._system.stop)
         self.model = FakeModel()
 
     def index(self, *ids):

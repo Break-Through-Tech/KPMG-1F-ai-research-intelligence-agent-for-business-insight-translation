@@ -32,7 +32,9 @@ The scoring tool validates IDs/rating ranges and computes Precision@5 with a
 fixed denominator of five. It reports scored-stage counts, failures, incomplete
 queries and disagreements; absent scores stay null. Fixture records are retained
 but excluded from actual human aggregates. Missing rubric dimensions are rejected.
-The tooling cannot establish full factual support from chunk-level checks alone;
+Claim checks use a stage and zero-based item index with exact citation IDs.
+Missing claim checks cannot satisfy the end-to-end gate. The tooling cannot
+establish factual support from declared verdicts alone;
 reviewers must inspect every claim against original linked paper pages/sections.
 
 For independent reviews, preserve one record per actual query/reviewer. Different

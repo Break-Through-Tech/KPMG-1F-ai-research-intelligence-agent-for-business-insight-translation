@@ -58,6 +58,24 @@ class ReviewTests(unittest.TestCase):
         report=aggregate(self.run,[a,b,c]);self.assertEqual(report['unresolved_disagreements'],[])
         self.assertEqual(len(report['reviews']),3)
 
+    def test_claim_locators_disambiguate_shared_citations_and_validate_identity(self):
+        review = self.review()
+        result = self.run['cases'][0]['result']
+        checks = [{'stage':stage,'item_index':i,'chunk_ids':item['chunk_ids'],
+                   'supported':True,'notes':'Synthetic source check.'}
+                  for stage, field in [('summary','claims'),('business_insight','implications')]
+                  for i, item in enumerate(result[stage][field])]
+        review['claim_checks'] = checks
+        self.assertEqual(aggregate(self.run,[review])['claims_complete_queries'], 1)
+        review['claim_checks'] = checks[:-1]
+        self.assertEqual(aggregate(self.run,[review])['claims_complete_queries'], 0)
+        for invalid in [{**checks[0],'item_index':99}, {**checks[0],'chunk_ids':['unknown']},
+                        {**checks[0],'item_index':True}]:
+            review['claim_checks'] = [invalid]
+            with self.assertRaises(ValueError): aggregate(self.run,[review])
+        review['claim_checks'] = [checks[0], checks[0]]
+        with self.assertRaises(ValueError): aggregate(self.run,[review])
+
     def test_available_dimensions_must_be_complete(self):
         review=self.review();review['summary_scores']={'accuracy':4}
         with self.assertRaises(ValueError):aggregate(self.run,[review])

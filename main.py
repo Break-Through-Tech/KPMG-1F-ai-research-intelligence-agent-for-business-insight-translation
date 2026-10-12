@@ -32,7 +32,16 @@ def persistent_retrieve(query, top_k):
         raise PipelineError('Persistent index missing. Run python -m src.data_ingestion.pipeline '
                             'then python src/retrieval.py before querying.')
     from src.retrieval import search
-    return search(query, top_k)
+    try:
+        return search(query, top_k)
+    except ValueError as exc:
+        if str(exc).startswith(('Index model is unknown or different',
+                                'Index contains passages without citations',
+                                'PDF chunks require', 'HTML chunks require', 'Unknown chunk source:')):
+            raise PipelineError('Local index has missing/incompatible model or citation metadata. '
+                                'Repair source chunks if necessary, then run python src/retrieval.py '
+                                'to reindex before querying.') from None
+        raise
 
 
 def demo_retrieve(query, top_k):

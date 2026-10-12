@@ -40,6 +40,18 @@ class CLITests(unittest.TestCase):
             self.assertIsNone(provenance['corpus_sha256'])
             self.assertEqual(provenance['input_file_sha256'], sha256(corpus.read_bytes()).hexdigest())
 
+    def test_legacy_index_preserves_safe_reindex_instructions(self):
+        try:
+            from src import retrieval
+        except ImportError:
+            self.skipTest('Legacy index boundary requires retrieval dependencies')
+        with patch('main.Path.is_file', autospec=True, side_effect=lambda p:p.name=='chroma.sqlite3'), \
+                patch.object(retrieval, 'search', side_effect=ValueError(
+                    'Index model is unknown or different; rerun indexing first')), \
+                redirect_stderr(io.StringIO()) as err:
+            self.assertEqual(main.main(['--query','agents','--mode','retrieval']),1)
+        self.assertIn('python src/retrieval.py',json.loads(err.getvalue())['error'])
+
     def test_cli_missing_index_key_or_adapter_is_actionable(self):
         for argv, expected in [(['--query', 'agents', '--mode', 'retrieval'], 'index missing'),
                                (['--query', 'agents', '--mode', 'business', '--industry', 'banking'], 'adapter unavailable'),

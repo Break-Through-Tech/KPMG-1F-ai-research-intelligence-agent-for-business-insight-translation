@@ -49,6 +49,9 @@ def capture(cases, *, research_fn, provenance, top_k=5, context=None):
             for stage, field in (('summary', 'claims'), ('business_insight', 'implications')):
                 if stage in result:
                     _validate_output(result[stage], field, ids)
+                    context_key = 'query' if stage == 'summary' else 'industry'
+                    if result[stage].get(context_key) != request.get(context_key):
+                        raise ValueError(f'{stage} {context_key} does not match the request')
             row['result'] = result
             # Catch non-JSON/NaN outputs per query rather than losing the full batch.
             json.dumps(result, allow_nan=False)

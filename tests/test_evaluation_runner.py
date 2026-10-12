@@ -73,6 +73,29 @@ class CaptureTests(unittest.TestCase):
                 self.assertEqual(rows[0]['query_status'], 'error')
                 self.assertTrue(any(r['query_id'] == 'good' for r in rows))
 
+    def test_mismatched_stage_context_fails_without_losing_later_queries(self):
+        for stage, key in [('summary', 'query'), ('business_insight', 'industry')]:
+            with self.subTest(stage=stage):
+                def adapter(request):
+                    from main import demo_translate
+                    result = run_research(request, retrieve=demo_retrieve,
+                                          summarize_fn=demo_summary, translate_fn=demo_translate)
+                    if request['query'] == 'bad':
+                        result[stage][key] = 'unrelated'
+                    return result
+                artifact = capture([{'query_id':'bad','query':'bad'},
+                                    {'query_id':'good','query':'agents'}],
+                                   research_fn=adapter, provenance={}, context={'industry':'banking'})
+                self.assertEqual([r['status'] for r in artifact['cases']], ['error', 'ok'])
+                self.assertIsNone(artifact['cases'][0]['result'])
+                with tempfile.TemporaryDirectory() as directory:
+                    path = Path(directory)/'review.csv'
+                    export_review_table(artifact, path)
+                    with path.open(newline='') as file:
+                        rows = list(csv.DictReader(file))
+                    self.assertEqual(rows[0]['query_status'], 'error')
+                    self.assertTrue(any(r['query_id'] == 'good' for r in rows))
+
     def test_control_prefixed_csv_formulas_are_neutralized_json_is_exact(self):
         for payload in ['=1+1', '\t=1+1', '\r@SUM(1)', '\n+1', '  -1+2']:
             def adapter(request):

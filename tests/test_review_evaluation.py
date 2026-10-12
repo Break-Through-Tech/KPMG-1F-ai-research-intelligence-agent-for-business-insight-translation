@@ -1,6 +1,6 @@
 import copy
 import unittest
-from evaluation.run_benchmarks import capture
+from evaluation.run_benchmarks import capture, artifact_id
 from evaluation.reviews.score_reviews import aggregate
 from main import demo_retrieve,demo_summary,demo_translate
 from src.research_pipeline import run_research
@@ -75,6 +75,30 @@ class ReviewTests(unittest.TestCase):
             with self.assertRaises(ValueError): aggregate(self.run,[review])
         review['claim_checks'] = [checks[0], checks[0]]
         with self.assertRaises(ValueError): aggregate(self.run,[review])
+
+    def test_adjudication_does_not_complete_an_incomplete_second_review(self):
+        result = self.run['cases'][0]['result']
+        for i in range(3):
+            passage = copy.deepcopy(result['evidence'][0])
+            passage['chunk_id'] = f'extra-{i}'
+            result['evidence'].append(passage)
+        self.run['provenance']['execution'] = 'persistent_corpus'
+        self.run['run_id'] = artifact_id(self.run)
+        checks = [{'stage':stage,'item_index':i,'chunk_ids':item['chunk_ids'],
+                   'supported':True,'notes':'Synthetic source check.'}
+                  for stage, field in [('summary','claims'),('business_insight','implications')]
+                  for i, item in enumerate(result[stage][field])]
+        a = self.review('synthetic-a'); a['claim_checks'] = checks
+        b = self.review('synthetic-b')
+        c = self.review('synthetic-resolver'); c['claim_checks'] = checks
+        c['adjudicates'] = ['synthetic-a','synthetic-b']
+        report = aggregate(self.run,[a,b,c])
+        self.assertFalse(report['end_to_end_targets_met'])
+        self.assertEqual(report['double_reviewed_types'], [])
+        b['claim_checks'] = checks
+        self.assertTrue(aggregate(self.run,[a,b,c])['end_to_end_targets_met'])
+        b['summary_scores'] = None
+        self.assertFalse(aggregate(self.run,[a,b,c])['end_to_end_targets_met'])
 
     def test_available_dimensions_must_be_complete(self):
         review=self.review();review['summary_scores']={'accuracy':4}

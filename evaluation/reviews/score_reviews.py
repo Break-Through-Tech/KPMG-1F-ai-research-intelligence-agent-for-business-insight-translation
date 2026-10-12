@@ -105,7 +105,13 @@ def aggregate(run, reviews):
         adjudicators=[pair for pair in group if pair[0].get('adjudicates')]
         independent=[pair for pair in group if not pair[0].get('adjudicates')]
         if len(adjudicators)>1:raise ValueError('Multiple adjudications require resolution outside the aggregate')
-        if len(independent)>1:double_types.add(queries[query_id]['case'].get('type'))
+        completed_independent = [pair for pair in independent if pair[1]['complete']
+                                 and pair[1]['claims_complete']
+                                 and pair[1]['abstention'] != 'not_checked'
+                                 and (not pair[1]['summary_available'] or pair[1]['summary_mean'] is not None)
+                                 and (not pair[1]['business_available'] or pair[1]['business_mean'] is not None)]
+        if len(completed_independent) > 1:
+            double_types.add(queries[query_id]['case'].get('type'))
         def signature(pair):
             r=pair[0]
             return json.dumps({k:r.get(k) for k in ('coverage','summary_scores','business_scores','abstention')},sort_keys=True)+json.dumps(

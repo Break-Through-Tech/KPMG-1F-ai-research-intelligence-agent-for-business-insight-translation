@@ -80,7 +80,7 @@ One review record per query and reviewer uses this JSON-compatible format:
   "reviewer_kind": "human",
   "coverage": "partially_covered",
   "passage_ratings": [{"chunk_id": "from this query", "rating": 2, "notes": "source check"}],
-  "claim_checks": [{"chunk_id": "from a cited claim", "supported": true, "notes": "location checked"}],
+  "claim_checks": [{"stage": "summary", "item_index": 0, "chunk_ids": ["from this claim"], "supported": true, "notes": "location checked"}],
   "summary_scores": {"accuracy": 4, "clarity": 4, "completeness": 3},
   "business_scores": null,
   "abstention": "not_applicable",
@@ -95,6 +95,24 @@ notes. Business keys are `actionability`, `kpmg_relevance`, `citation_quality`.
 Abstention is `correct`, `incorrect`, `not_applicable`, or `not_checked`.
 `reviewer_kind` is `human` or `fixture`; fixture arithmetic never counts as actual
 team review. Identify the frozen export with its `run_id` on every record.
+
+Identify each reviewed statement with `stage` (`summary` or `business_insight`)
+and zero-based `item_index` in the frozen `claims` or `implications` array.
+Keep that statement's citation IDs in `chunk_ids`; a source chunk is not a
+claim identifier. Check each available statement once, including statements that
+share citations. For example, two summary claims citing `chunk-a` can have
+opposite verdicts without ambiguity:
+
+```json
+[
+  {"stage": "summary", "item_index": 0, "chunk_ids": ["chunk-a"], "supported": true, "notes": "First statement confirmed on page 2."},
+  {"stage": "summary", "item_index": 1, "chunk_ids": ["chunk-a"], "supported": false, "notes": "Second statement goes beyond the same source."}
+]
+```
+
+`business_insight` item 0 is distinct from `summary` item 0. Missing checks are
+incomplete review, not supported claims. This locator does not change the pipeline
+output schema.
 
 Check each passage against the linked original source and exact page/heading.
 Check every claim for factual support, omissions and contradiction—not just an

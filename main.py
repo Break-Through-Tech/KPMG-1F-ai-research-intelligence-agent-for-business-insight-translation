@@ -86,10 +86,10 @@ def main(argv=None):
                 request[key] = getattr(args, key)
         provenance = {'execution': 'synthetic_fixture' if args.demo else 'persistent_corpus',
                       'embedding_model': None if args.demo else 'all-MiniLM-L6-v2',
-                      'corpus_sha256': None, 'generation': None}
+                      'corpus_sha256': None, 'input_file_sha256': None, 'generation': None}
         corpus = Path(__file__).resolve().parent / 'data/processed/chunks.parquet'
         if not args.demo and corpus.is_file():
-            provenance['corpus_sha256'] = sha256(corpus.read_bytes()).hexdigest()
+            provenance['input_file_sha256'] = sha256(corpus.read_bytes()).hexdigest()
         retrieve = demo_retrieve if args.demo else persistent_retrieve
         translate = None
         review = None

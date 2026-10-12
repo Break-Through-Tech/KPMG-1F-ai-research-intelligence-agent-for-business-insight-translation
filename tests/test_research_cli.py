@@ -2,6 +2,9 @@ import io
 import json
 import subprocess
 import sys
+import tempfile
+from hashlib import sha256
+from pathlib import Path
 import unittest
 from contextlib import redirect_stdout, redirect_stderr
 from unittest.mock import Mock, patch
@@ -23,11 +26,26 @@ class CLITests(unittest.TestCase):
                                 'assert "chromadb" not in sys.modules'], capture_output=True, text=True)
         self.assertEqual(check.returncode, 0, check.stderr)
 
+    def test_current_input_hash_is_not_claimed_as_indexed_corpus(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            corpus = root / 'data/processed/chunks.parquet'
+            corpus.parent.mkdir(parents=True)
+            corpus.write_bytes(b'current-input-not-verified-against-index')
+            with patch.object(main, '__file__', str(root / 'main.py')), patch.object(
+                    main, 'persistent_retrieve', return_value=main.demo_retrieve('agents', 5)), \
+                    redirect_stdout(io.StringIO()) as out:
+                self.assertEqual(main.main(['--query', 'agents', '--mode', 'retrieval']), 0)
+            provenance = json.loads(out.getvalue())['provenance']
+            self.assertIsNone(provenance['corpus_sha256'])
+            self.assertEqual(provenance['input_file_sha256'], sha256(corpus.read_bytes()).hexdigest())
+
     def test_cli_missing_index_key_or_adapter_is_actionable(self):
         for argv, expected in [(['--query', 'agents', '--mode', 'retrieval'], 'index missing'),
                                (['--query', 'agents', '--mode', 'business', '--industry', 'banking'], 'adapter unavailable'),
                                (['--query', 'agents', '--demo', '--mode', 'business'], '--industry')]:
-            with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()) as err:
+            with patch('main.Path.is_file', return_value=False), redirect_stdout(
+                    io.StringIO()), redirect_stderr(io.StringIO()) as err:
                 self.assertEqual(main.main(argv), 1)
             self.assertIn(expected, json.loads(err.getvalue())['error'])
         with patch.dict('os.environ', {'GOOGLE_API_KEY': ''}), patch.dict(

@@ -1,0 +1,72 @@
+[
+  {
+    "query_id": "q01",
+    "query": "What approaches improve reasoning efficiency in LLMs?",
+    "type": "factual",
+    "coverage": "not_checked",
+    "coverage_note": "Reasoning/efficiency candidates; breadth incomplete."
+  },
+  {
+    "query_id": "q02",
+    "query": "What risks have recent papers identified with multi-agent LLM systems?",
+    "type": "factual",
+    "coverage": "not_checked",
+    "coverage_note": "Agent-monitoring and collaboration candidates; confirm multi-agent risks."
+  },
+  {
+    "query_id": "q03",
+    "query": "What techniques are used for fine-tuning LLMs with limited data?",
+    "type": "factual",
+    "coverage": "not_checked",
+    "coverage_note": "No direct limited-data LLM fine-tuning abstract match."
+  },
+  {
+    "query_id": "q04",
+    "query": "How are sparse autoencoders used to interpret model behavior?",
+    "type": "factual",
+    "coverage": "not_checked",
+    "coverage_note": "No direct sparse-autoencoder abstract match."
+  },
+  {
+    "query_id": "q05",
+    "query": "How do different preference-optimization approaches (e.g. DPO variants) compare?",
+    "type": "comparative",
+    "coverage": "not_checked",
+    "coverage_note": "CU-DPO candidate; broad variant comparison not established."
+  },
+  {
+    "query_id": "q06",
+    "query": "What are the tradeoffs between supervised and self-supervised reasoning methods?",
+    "type": "comparative",
+    "coverage": "not_checked",
+    "coverage_note": "SFT/RL candidate; self-supervised comparison not established."
+  },
+  {
+    "query_id": "q07",
+    "query": "How does single-agent vs. multi-agent research differ in reported outcomes?",
+    "type": "comparative",
+    "coverage": "not_checked",
+    "coverage_note": "Trip-planning single/multi-agent comparison candidate."
+  },
+  {
+    "query_id": "q08",
+    "query": "What should a company evaluate before deploying an AI agent for customer-facing tasks?",
+    "type": "business_translation",
+    "coverage": "not_checked",
+    "coverage_note": "Evaluation/monitoring candidates; industry advice is inference."
+  },
+  {
+    "query_id": "q09",
+    "query": "What risks should a business weigh when fine-tuning an LLM on proprietary data?",
+    "type": "business_translation",
+    "coverage": "not_checked",
+    "coverage_note": "No direct proprietary-data fine-tuning guidance abstract match."
+  },
+  {
+    "query_id": "q10",
+    "query": "What should a business ask a vendor claiming their AI agent is \"interpretable\"?",
+    "type": "business_translation",
+    "coverage": "not_checked",
+    "coverage_note": "Circuit-discovery candidate; vendor checks need human confirmation."
+  }
+]

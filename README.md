@@ -86,8 +86,8 @@ stderr; successful JSON is on stdout. Provider exception payloads are not echoed
 The shared module boundary is `run_research(request, *, retrieve, summarize_fn,
 translate_fn=None, review_fn=None, provenance=None)` in `src/research_pipeline.py`.
 Retrieval accepts `(query, top_k)`; bound summary accepts `(query, passages)`;
-translation accepts `(summary, passages, *, industry)`. All return plain JSON-compatible
-dictionaries, with citations to retrieved chunk IDs. The pipeline defensively copies
+translation accepts `(summary, passages, *, industry)`. Retrieval returns a list of passage dictionaries; summary and translation return
+plain JSON-compatible dictionaries with citations to retrieved chunk IDs. The pipeline defensively copies
 adapter inputs and preserves retrieval fields exactly, including source locations
 and distances (never confidence). No-hit runs abstain without generation.
 
@@ -115,8 +115,10 @@ Citations are structurally validated; human checking must still establish that
 passages actually support claims and suggested actions.
 
 Provenance identifies fixture vs persistent execution, embedding/generation models,
-settings, prompt version and adapter names, and the local Parquet SHA-256 when present.
-The Parquet hash is **not proof that the current Chroma index matches it**; corpus/index
+settings, prompt version and adapter names. `input_file_sha256` identifies the current
+local Parquet file when present; `corpus_sha256` stays null because indexed-corpus
+identity has not been verified. The input hash is **not proof that the current
+Chroma index matches it**; corpus/index
 reconciliation is #82. Versioned benchmark-run capture (repo SHA/time, frozen corpus
 and actual outputs) remains #64. No real corpus/model result is claimed by the demo.
 

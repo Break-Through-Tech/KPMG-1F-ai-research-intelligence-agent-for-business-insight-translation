@@ -26,7 +26,7 @@ class CaptureTests(unittest.TestCase):
         self.assertEqual(artifact['run_id'],artifact_id(artifact))
         with tempfile.TemporaryDirectory() as directory:
             path=Path(directory)/'review.csv';export_review_table(artifact,path)
-            with path.open() as file:
+            with path.open(newline='') as file:
                 rows=list(csv.DictReader(file))
             self.assertEqual(len(rows),2)
             self.assertEqual(rows[0]['passage_rating'],'')
@@ -53,6 +53,42 @@ class CaptureTests(unittest.TestCase):
         artifact=capture(self.cases(),research_fn=self.research,provenance={})
         changed=copy.deepcopy(artifact);changed['cases'][0]['request']['query']='edited'
         self.assertNotEqual(artifact_id(changed),artifact['run_id'])
+
+    def test_malformed_adapter_output_is_a_failed_row_not_a_broken_export(self):
+        for mutation in ({'evidence': [None]}, {'summary': []},
+                         {'business_insight': 'invalid'}, {'evidence': [{}]}):
+            def adapter(request):
+                if request['query'] == 'bad':
+                    return {**self.research(request), **mutation}
+                return self.research(request)
+            artifact = capture([{'query_id':'bad','query':'bad'},
+                                {'query_id':'good','query':'agents'}],
+                               research_fn=adapter, provenance={})
+            self.assertEqual([r['status'] for r in artifact['cases']], ['error','ok'])
+            with tempfile.TemporaryDirectory() as directory:
+                path = Path(directory)/'review.csv'
+                export_review_table(artifact, path)
+                with path.open(newline='') as file:
+                    rows = list(csv.DictReader(file))
+                self.assertEqual(rows[0]['query_status'], 'error')
+                self.assertTrue(any(r['query_id'] == 'good' for r in rows))
+
+    def test_control_prefixed_csv_formulas_are_neutralized_json_is_exact(self):
+        for payload in ['=1+1', '\t=1+1', '\r@SUM(1)', '\n+1', '  -1+2']:
+            def adapter(request):
+                result = self.research(request)
+                result['evidence'][0]['source_url'] = payload
+                return result
+            artifact = capture([{'query_id':'q01','query':payload}],
+                               research_fn=adapter, provenance={})
+            self.assertEqual(artifact['cases'][0]['result']['evidence'][0]['source_url'], payload)
+            with tempfile.TemporaryDirectory() as directory:
+                path = Path(directory)/'review.csv'
+                export_review_table(artifact, path)
+                with path.open(newline='') as file:
+                    row = next(csv.DictReader(file))
+                self.assertEqual(row['query'], "'" + payload)
+                self.assertEqual(row['source_url'], "'" + payload)
 
     def test_original_ten_questions_and_unique_ids(self):
         cases=json.loads(Path('evaluation/benchmark_cases.json').read_text())

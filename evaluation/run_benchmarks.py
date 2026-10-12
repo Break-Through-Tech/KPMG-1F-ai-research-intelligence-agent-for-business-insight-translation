@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 import subprocess
 
-from src.research_pipeline import run_research
+from src.research_pipeline import run_research, _validate_output
 
 ROOT = Path(__file__).resolve().parents[1]
 CASES = ROOT / 'evaluation/benchmark_cases.json'
@@ -38,6 +38,17 @@ def capture(cases, *, research_fn, provenance, top_k=5, context=None):
             result = deepcopy(research_fn(deepcopy(request)))
             if not isinstance(result, dict) or result.get('request') != request or not isinstance(result.get('evidence'), list):
                 raise ValueError('Adapter result must match the request and contain evidence')
+            evidence = result['evidence']
+            if any(not isinstance(p, dict) or not isinstance(p.get('chunk_id'), str)
+                   or not p['chunk_id'].strip() or not isinstance(p.get('text'), str)
+                   or not p['text'].strip() for p in evidence):
+                raise ValueError('Evidence must contain identified passage dictionaries')
+            ids = {p['chunk_id'] for p in evidence}
+            if len(ids) != len(evidence):
+                raise ValueError('Evidence chunk IDs must be unique')
+            for stage, field in (('summary', 'claims'), ('business_insight', 'implications')):
+                if stage in result:
+                    _validate_output(result[stage], field, ids)
             row['result'] = result
             # Catch non-JSON/NaN outputs per query rather than losing the full batch.
             json.dumps(result, allow_nan=False)
@@ -82,7 +93,7 @@ def export_review_table(artifact, path):
                     'business_status': business.get('status'), 'business_implications': json.dumps(business.get('implications', [])),
                     'reviewer': '', 'passage_rating': '', 'notes': ''}
                 # Spreadsheet viewers must not execute formulas from source/query data.
-                writer.writerow({k: "'"+v if isinstance(v,str) and v.startswith(('=','+','-','@')) else v
+                writer.writerow({k: "'"+v if isinstance(v,str) and (v.lstrip(' \t\r\n').startswith(('=','+','-','@')) or v.startswith(('\t','\r','\n'))) else v
                                  for k,v in cells.items()})
 
 

@@ -33,13 +33,14 @@ def make_fake_generate(passages):
 def with_error_print(inner):
     """Local debugging only: summarize() hides exception text on purpose."""
 
-    def generate(prompt):
+    def generate(prompt, **kwargs):
         try:
-            return inner(prompt)
+            return inner(prompt, **kwargs)
         except Exception as exc:
             print("\nGENERATION ERROR:", exc)
             raise
 
+    generate.supports_response_schema = getattr(inner, 'supports_response_schema', False) is True
     return generate
 
 

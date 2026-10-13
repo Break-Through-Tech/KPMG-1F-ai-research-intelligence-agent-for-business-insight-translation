@@ -28,7 +28,8 @@ def test_real_runner_uses_google_configuration_without_llm_settings():
         "text": "Synthetic agents need task-specific evaluation.",
         "chunk_ids": ["synthetic-html-1"]}], "limitations": ["Synthetic fixture only."]})
     client = Mock()
-    client.models.generate_content.return_value = SimpleNamespace(text=response)
+    client.models.generate_content.return_value = SimpleNamespace(text=response,
+        candidates=[SimpleNamespace(finish_reason='STOP')])
     genai = ModuleType("google.genai")
     genai.Client = Mock(return_value=client)
     types = ModuleType("google.genai.types")
@@ -54,7 +55,9 @@ def test_real_runner_uses_google_configuration_without_llm_settings():
     assert call["model"] == "configured-test-model"
     assert "synthetic-html-1" in call["contents"]
     types.GenerateContentConfig.assert_called_once_with(
-        response_mime_type="application/json", temperature=0)
+        response_mime_type="application/json", temperature=0,
+        response_json_schema=__import__('src.summarization', fromlist=['response_schema']).response_schema(
+            ['synthetic-html-1','synthetic-pdf-2']))
     assert "status: ok" in output
 
 

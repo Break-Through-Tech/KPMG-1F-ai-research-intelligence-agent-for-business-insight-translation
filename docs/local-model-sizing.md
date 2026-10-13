@@ -96,9 +96,10 @@ For the next candidate, try a **JSON-capable instruction/chat model around
 point, not a measured recommendation or an enforced lower bound. An appropriately
 trained smaller model may pass; an unsuitable larger model may fail.
 
-Current requests use `response_format=json_object`, **not a strict JSON schema**.
-Schema-constrained decoding is possible future work, not an implemented switch
-in this client, and would still not establish factual support.
+The built-in summarizer requests a [strict per-context schema](schema-constrained-generation.md)
+and validates the response locally. The unbound generator still uses ordinary
+JSON-object mode. Schema/ID enforcement constrains output shape, not factual
+support: a small model can still fabricate a claim citing a real source ID.
 
 Use the [local-model E2E commands](local-model-e2e.md), then the unchanged ten
 benchmark questions. Record the exact model digest/quantization, runtime,

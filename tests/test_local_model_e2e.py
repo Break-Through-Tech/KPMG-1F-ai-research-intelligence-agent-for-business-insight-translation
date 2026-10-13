@@ -41,6 +41,8 @@ def test_real_local_summary_cli_and_benchmark():
         result = artifact['cases'][0]['result']
         assert result['evidence']
         assert result['summary']['error'] is None
+        assert result['summary']['structured_output']['mode'] == 'native_schema_and_local_validation'
+        assert result['summary']['structured_output']['schema_sha256']
         assert not result['approved']
         ids = {p['chunk_id'] for p in result['evidence']}
         assert all(set(c['chunk_ids']) <= ids for c in result['summary']['claims'])

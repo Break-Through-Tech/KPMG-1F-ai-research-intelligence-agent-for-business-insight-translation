@@ -93,8 +93,10 @@ python -m evaluation.run_benchmarks --mode summary --output /tmp/new-byok-run
 python main.py --demo --query "agents" --mode retrieval
 ```
 
-Custom endpoints must implement Chat Completions, `response_format=json_object`,
-and temperature zero. Unsupported models/endpoints fail visibly; there is no
+Custom endpoints must implement Chat Completions and temperature zero. Unbound
+calls request `json_object`; the built-in summarizer binds a strict `json_schema`
+request with local validation (see [schema enforcement](schema-constrained-generation.md)).
+Unsupported models/endpoints fail visibly; there is no
 silent relaxation to unstructured output. Compatibility is not a claim that every
 OpenAI-compatible model supports this contract. Existing structural/citation-ID
 checks remain necessary but do not establish factual support.
@@ -103,8 +105,9 @@ parameter counts, quantization, working-memory/context requirements and the
 measured small-model failures. The provider imposes no parameter-count ceiling.
 
 For Bedrock, choose a model supporting Converse text messages and temperature
-zero. JSON is **requested in the prompt and parsed/validated locally**, not
-guaranteed by a provider-wide JSON-mode switch. The adapter rejects non-object or
+zero; schema-bound calls additionally require native `outputConfig.textFormat`
+support. Unbound JSON is requested in the prompt and validated locally, not
+guaranteed by a provider-wide switch. The adapter rejects non-object or
 nonfinite JSON, nontext content, tool calls, truncation, guardrail interventions,
 and incomplete stop reasons instead of returning a partial draft or retrying.
 Model-specific output schemas, reasoning configuration, streaming, and InvokeModel

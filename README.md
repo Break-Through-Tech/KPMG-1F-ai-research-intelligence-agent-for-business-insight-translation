@@ -13,6 +13,10 @@ The first model run may download its weights. An OpenAI API key is **not** neede
 For source-specific cleaning, chunk settings, caches, stored fields, and validation
 boundaries, see [Data preparation](docs/data-preparation.md).
 
+For snapshot-bound findings, observed PDF layout losses, and prioritized
+remediation, see [Data quality findings](docs/data-quality-findings.md) and the
+[locked-sample PDF assessment](docs/pdf-layout-assessment.md).
+
 ## Run locally
 
 Use Python 3.10 or newer. From the repository root:

@@ -411,6 +411,24 @@ def validate_cached_pdf(metadata):
             'limitation': 'Matches cleaned PyMuPDF text on original pages, not visual layout/OCR accuracy.'}
 
 
+def serialize_report(report):
+    """Keep complete evidence, with one paper per line instead of expanded JSON."""
+    def compact(value):
+        return json.dumps(value, ensure_ascii=False, separators=(',', ':'))
+    lines = ['{']
+    items = list(report.items())
+    for index, (key, value) in enumerate(items):
+        suffix = ',' if index < len(items) - 1 else ''
+        if key == 'papers':
+            lines.append('  "papers": [')
+            lines.extend('    ' + compact(paper) + (',' if i < len(value) - 1 else '')
+                         for i, paper in enumerate(value))
+            lines.append('  ]' + suffix)
+        else:
+            lines.append('  ' + compact(key) + ': ' + compact(value) + suffix)
+    return '\n'.join(lines + ['}']) + '\n'
+
+
 def write_report(report, directory):
     """Short reviewer report; complete per-element evidence stays in JSON."""
     directory.mkdir(parents=True, exist_ok=True)
@@ -432,7 +450,7 @@ def write_report(report, directory):
                 'cached_source_hashes_rechecked': True,
                 'scope': 'Historical example inspection, not individual verification of all candidates.'}
     (directory/'html-ingestion-validation.json').write_text(
-        json.dumps(report, indent=2, ensure_ascii=False), encoding='utf-8')
+        serialize_report(report), encoding='utf-8')
     def cell(value):
         return str(value).replace('|', '/').replace('\n', ' ')
     omission = report['omission_summary']

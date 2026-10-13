@@ -33,6 +33,8 @@ def test_real_runner_uses_google_configuration_without_llm_settings():
     genai.Client = Mock(return_value=client)
     types = ModuleType("google.genai.types")
     types.GenerateContentConfig = Mock()
+    types.HttpOptions = Mock()
+    types.HttpRetryOptions = Mock()
     genai.types = types
     google = ModuleType("google")
     google.genai = genai
@@ -43,7 +45,11 @@ def test_real_runner_uses_google_configuration_without_llm_settings():
             "os.environ", {"GOOGLE_API_KEY": "fake-offline-key",
                            "GOOGLE_MODEL": "configured-test-model"}, clear=True):
         output = run_helper(real=True)
-    genai.Client.assert_called_once_with(api_key="fake-offline-key")
+    genai.Client.assert_called_once_with(api_key="fake-offline-key",
+                                       http_options=types.HttpOptions.return_value)
+    types.HttpRetryOptions.assert_called_once_with(attempts=1)
+    types.HttpOptions.assert_called_once_with(timeout=60000,
+        retry_options=types.HttpRetryOptions.return_value)
     call = client.models.generate_content.call_args.kwargs
     assert call["model"] == "configured-test-model"
     assert "synthetic-html-1" in call["contents"]

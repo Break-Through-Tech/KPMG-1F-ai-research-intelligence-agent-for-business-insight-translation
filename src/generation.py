@@ -1,4 +1,4 @@
-"""Lazy Gemini generation and interim summary adapter for workflow v1."""
+"""Lazy BYOK generation and interim summary adapter for workflow v1."""
 import json
 from src.research_pipeline import PipelineError
 
@@ -42,6 +42,35 @@ def create_generate(config=None):
                     model=config.model, contents=prompt,
                     config=types.GenerateContentConfig(response_mime_type='application/json', temperature=0))
                 return response.text
+        elif config.provider == 'bedrock':
+            import boto3
+            from botocore.config import Config
+            # AWS resolves its own credentials/bearer token. Never pass another
+            # provider's key, or honor ambient custom endpoint redirection.
+            client = boto3.client('bedrock-runtime', region_name=config.region,
+                config=Config(connect_timeout=10, read_timeout=60,
+                              retries={'total_max_attempts': 1, 'mode': 'standard'},
+                              ignore_configured_endpoint_urls=True))
+            def invoke(prompt):
+                response = client.converse(modelId=config.model,
+                    messages=[{'role': 'user', 'content': [{'text':
+                        'Return only one valid JSON object matching the requested '
+                        'format. No Markdown or surrounding commentary.\n\n' + prompt}]}],
+                    inferenceConfig={'temperature': 0})
+                if response.get('stopReason') not in {'end_turn', 'stop_sequence'}:
+                    raise ValueError('Bedrock did not complete a text response')
+                blocks = response['output']['message']['content']
+                # Do not discard tool calls, guardrail interventions, or other
+                # output types and accidentally treat a partial answer as JSON.
+                if not blocks or any(set(block) != {'text'} or
+                                     not isinstance(block['text'], str) for block in blocks):
+                    raise ValueError('Bedrock returned unsupported content')
+                text = ''.join(block['text'] for block in blocks)
+                parsed = json.loads(text)
+                if not isinstance(parsed, dict):
+                    raise ValueError('Bedrock must return a JSON object')
+                json.dumps(parsed, allow_nan=False)
+                return text
         else:
             from openai import OpenAI
             # Explicit base_url prevents ambient OPENAI_BASE_URL from redirecting
@@ -63,11 +92,16 @@ def create_generate(config=None):
         try:
             text = invoke(prompt)
         except Exception:
-            raise PipelineError('Selected generation provider failed; check model access, key and quota. No provider fallback or approval occurred.') from None
+            raise PipelineError('Selected generation provider failed; check model access, '
+                                'credentials, region, response format and quota. '
+                                'No provider fallback or approval occurred.') from None
         if not isinstance(text,str) or not text.strip():
             raise PipelineError('Selected generation provider returned empty output; no result was approved.')
         return text
 
-    return generate, {'provider':config.provider, 'model':config.model, 'temperature':0,
-                      'prompt_version':SUMMARY_PROMPT_VERSION,
-                      'endpoint_kind':'custom' if config.base_url else 'provider_default'}
+    metadata = {'provider':config.provider, 'model':config.model, 'temperature':0,
+                'prompt_version':SUMMARY_PROMPT_VERSION,
+                'endpoint_kind':'custom' if config.base_url else 'provider_default'}
+    if config.provider == 'bedrock':
+        metadata.update(region=config.region, json_mode='prompt_requested_and_validated')
+    return generate, metadata

@@ -11,14 +11,22 @@ from src.research_pipeline import PipelineError
 class GenerationConfig:
     provider: str
     model: str
-    api_key: str = field(repr=False)
+    api_key: str = field(default='', repr=False)
     base_url: str | None = None
+    region: str | None = None
 
     def __post_init__(self):
-        if self.provider not in {'gemini', 'openai', 'openai_compatible'}:
-            raise PipelineError('RESEARCH_PROVIDER must be gemini, openai, or openai_compatible.')
-        if not isinstance(self.api_key, str) or not self.api_key.strip():
+        if self.provider not in {'gemini', 'openai', 'openai_compatible', 'bedrock'}:
+            raise PipelineError('RESEARCH_PROVIDER must be gemini, openai, openai_compatible, or bedrock.')
+        if self.provider != 'bedrock' and (not isinstance(self.api_key, str) or not self.api_key.strip()):
             raise PipelineError('The selected generation provider requires a local API key.')
+        if self.provider == 'bedrock':
+            if self.api_key:
+                raise PipelineError('Bedrock uses AWS credentials or AWS_BEARER_TOKEN_BEDROCK, not a research API key.')
+            if not isinstance(self.region, str) or not re.fullmatch(r'[a-z]{2,}(?:-[a-z0-9]+)+-\d+', self.region):
+                raise PipelineError('Set AWS_REGION or AWS_DEFAULT_REGION explicitly for Bedrock.')
+        elif self.region is not None:
+            raise PipelineError('An AWS region is supported only for bedrock.')
         if not isinstance(self.model, str) or not self.model.strip():
             raise PipelineError('Set RESEARCH_MODEL explicitly for this generation provider.')
         if self.provider == 'openai_compatible' and not self.base_url:
@@ -41,8 +49,15 @@ class GenerationConfig:
     def from_environment(cls, environ=None):
         env = os.environ if environ is None else environ
         provider = env.get('RESEARCH_PROVIDER', 'gemini').strip().lower()
-        if provider not in {'gemini','openai','openai_compatible'}:
-            raise PipelineError('RESEARCH_PROVIDER must be gemini, openai, or openai_compatible.')
+        if provider not in {'gemini','openai','openai_compatible','bedrock'}:
+            raise PipelineError('RESEARCH_PROVIDER must be gemini, openai, openai_compatible, or bedrock.')
+        if provider == 'bedrock':
+            if env.get('RESEARCH_API_KEY_ENV', '').strip():
+                raise PipelineError('Bedrock does not use RESEARCH_API_KEY_ENV; configure AWS authentication locally.')
+            return cls(provider, env.get('RESEARCH_MODEL', '').strip(),
+                       base_url=env.get('RESEARCH_BASE_URL', '').strip() or None,
+                       region=(env.get('AWS_REGION', '').strip() or
+                               env.get('AWS_DEFAULT_REGION', '').strip() or None))
         default_key = {'gemini':'GOOGLE_API_KEY','openai':'OPENAI_API_KEY','openai_compatible':'RESEARCH_API_KEY'}[provider]
         key_env = (env.get('RESEARCH_API_KEY_ENV') or default_key).strip()
         if not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', key_env):

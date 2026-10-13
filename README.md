@@ -8,7 +8,7 @@ Break Through Tech AI Studio project with KPMG. The current prototype ingests a 
 2. `src/retrieval.py` embeds those chunks locally with SentenceTransformers `all-MiniLM-L6-v2` and stores text, vectors, and citation metadata in persistent Chroma (`data/chroma_db/`). Reindexing updates records and removes chunks no longer in the input corpus.
 3. The same script can embed a question and return ranked passages with arXiv ID, title, PDF URL, and **PDF page number**. Chroma distances are returned as distances, not calibrated relevance or confidence scores.
 
-The first model run may download its weights. An OpenAI API key is **not** needed for ingestion, indexing, or retrieval. Draft generation supports local bring-your-own-key Gemini, OpenAI, or an explicit OpenAI-compatible endpoint; retrieval-only and synthetic demo execution need no generation key. See [BYOK architecture](docs/byok-generation.md).
+The first model run may download its weights. An OpenAI API key is **not** needed for ingestion, indexing, or retrieval. Draft generation supports local bring-your-own-key Gemini, OpenAI, an explicit OpenAI-compatible endpoint, or native AWS Bedrock Converse with AWS credentials/a Bedrock API key; retrieval-only and synthetic demo execution need no generation credentials. See [BYOK architecture](docs/byok-generation.md).
 
 For source-specific cleaning, chunk settings, caches, stored fields, and validation
 boundaries, see [Data preparation](docs/data-preparation.md).
@@ -76,7 +76,7 @@ industry usefulness. For persistent retrieval, build the index as above, then:
 
 ```bash
 python main.py --query "How are AI agents evaluated?" --top-k 5 --mode retrieval
-# Copy .env.example to a local .env; select provider/model and supply its own key.
+# Copy .env.example to a local .env; select provider/model and its own credentials.
 python main.py --query "How are AI agents evaluated?" --top-k 5 --mode summary
 ```
 

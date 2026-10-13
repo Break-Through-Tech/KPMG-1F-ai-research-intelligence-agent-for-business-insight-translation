@@ -17,7 +17,9 @@ python -m evaluation.reviews.score_reviews --run /tmp/kpmg-fixture-run/run.json 
 ```
 
 The real-retrieval command needs an already built local index. Summary mode can
-use configured Gemini; actual business/review output requires a bound
+use the merged summarizer with an explicitly configured BYOK provider, including
+a loopback local endpoint (see [local-model E2E checks](local-model-e2e.md));
+actual business/review output requires a bound
 `--research-adapter module:function`. Neither indexing nor keys are needed for
 the synthetic demo. New run directories/report files refuse overwrites.
 

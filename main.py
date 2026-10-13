@@ -8,7 +8,7 @@ from pathlib import Path
 import sys
 
 from src.research_pipeline import PipelineError, run_research
-from src.generation import create_generate, summarize_with_generation
+from src.generation import create_generate
 
 
 def load_adapter(spec):
@@ -116,13 +116,17 @@ def main(argv=None):
                 if args.mode == 'business' and not args.translation_adapter:
                     raise PipelineError('Business adapter unavailable: supply --translation-adapter '
                                         'module:function from #80, or use --demo.')
-                adapter = load_adapter(args.summary_adapter) if args.summary_adapter else summarize_with_generation
+                spec = args.summary_adapter or 'src.summarization:summarize'
+                adapter = load_adapter(spec)
                 business_adapter = load_adapter(args.translation_adapter) if args.translation_adapter else None
                 generate, settings = create_generate()
                 provenance['generation'] = settings
-                provenance['generation']['summary_adapter'] = args.summary_adapter or 'workflow-interim'
-                if args.summary_adapter:
-                    provenance['generation']['prompt_version'] = 'external-adapter-unspecified'
+                if spec == 'src.summarization:summarize':
+                    from src.summarization import prompt_provenance
+                    provenance['generation'].update(prompt_provenance())
+                else:
+                    provenance['generation'].update(summary_adapter=spec,
+                        prompt_version='external-adapter-unspecified')
                 provenance['generation']['translation_adapter'] = args.translation_adapter
                 summary = lambda q, p: adapter(q, p, generate=generate)
                 if business_adapter:
@@ -132,7 +136,7 @@ def main(argv=None):
             result = run_research(request, retrieve=retrieve, summarize_fn=summary,
                                   translate_fn=translate, review_fn=review, provenance=provenance)
         print(json.dumps(result, indent=2, allow_nan=False))
-        return 0
+        return int(bool(result.get('summary', {}).get('error')))
     except ImportError:
         print(json.dumps({'error': 'Runtime dependency unavailable. Install requirements.txt '
                                   'in your active Python environment.', 'approved': False}), file=sys.stderr)

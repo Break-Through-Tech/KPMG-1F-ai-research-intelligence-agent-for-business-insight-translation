@@ -1,5 +1,6 @@
 """Cached, read-only-source corpus audit: python -m tests.validate_html_sample.
-Writes reports under docs and regenerated parquet/index only in a temporary directory.
+Writes reports under ignored data/processed/html-validation by default;
+regenerated parquet/index live only in a temporary directory.
 Does not download sources, overwrite the production corpus, or use a shared index.
 An optional separately executed offline MiniLM smoke result can be attached.
 """
@@ -411,12 +412,25 @@ def validate_cached_pdf(metadata):
             'limitation': 'Matches cleaned PyMuPDF text on original pages, not visual layout/OCR accuracy.'}
 
 
+def portable_evidence(value):
+    """Remove machine-local directory roots, including nested historical receipts."""
+    if isinstance(value, dict):
+        return {key: portable_evidence(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [portable_evidence(item) for item in value]
+    if isinstance(value, str):
+        local_path = r"(?<![\w:/])(?:[A-Za-z]:[/\\]|/(?:Users|home|private/var/folders)/)[^\s\"'<>]+"
+        return re.sub(local_path, lambda match: '<local-output>/' +
+                      match.group().replace('\\', '/').rstrip('/').rsplit('/', 1)[-1], value)
+    return value
+
+
 def serialize_report(report):
     """Keep complete evidence, with one paper per line instead of expanded JSON."""
     def compact(value):
         return json.dumps(value, ensure_ascii=False, separators=(',', ':'))
     lines = ['{']
-    items = list(report.items())
+    items = list(portable_evidence(report).items())
     for index, (key, value) in enumerate(items):
         suffix = ',' if index < len(items) - 1 else ''
         if key == 'papers':
@@ -449,6 +463,7 @@ def write_report(report, directory):
                 'review_run_utc': previous.get('manual_parser_review_provenance', {}).get('review_run_utc', previous['run_utc']),
                 'cached_source_hashes_rechecked': True,
                 'scope': 'Historical example inspection, not individual verification of all candidates.'}
+    report = portable_evidence(report)
     (directory/'html-ingestion-validation.json').write_text(
         serialize_report(report), encoding='utf-8')
     def cell(value):
@@ -465,14 +480,14 @@ def write_report(report, directory):
         '## 2. Scope and objectives', '',
         'Audit the locked corpus, source text, heading anchors, Chroma transport, public search contract, and rerun safety. Production ingestion/retrieval are unchanged. No shared index, cloud service, or API credentials are used.',
         'Storage/search use `src/retrieval.py` and Chroma. `python -m src.data_ingestion.pipeline` is HTML-first; the compatibility entrypoint `python src/data_ingestion.py` remains PDF-only.',
-        '`main.py` only initializes the environment. The Gemini human-checkpoint notebook/module is standalone and is not connected to arXiv search; no end-to-end Gemini handoff is claimed.', '',
+        'This audit does not exercise answer generation or the human-checkpoint notebook/module; no end-to-end Gemini handoff is claimed.', '',
         '## 3. Environment and reproducibility', '',
         f"Run UTC: `{report['run_utc']}`. Branch: `{report['branch']}`. HEAD/base: `{report['repo_sha']}`.",
         f"Python {report['environment']['python']}; Chroma {report['environment']['packages']['chromadb']}; SentenceTransformers {report['environment']['packages']['sentence-transformers']}.",
         'Uncommitted implementation hashes, all source/corpus hashes, dependency versions, query records, and complete omission evidence are in [the companion JSON](html-ingestion-validation.json). Cached sources only; no downloads or fresh availability checks.',
         'Fresh-checkout prerequisites: install `python -m pip install -r requirements.txt pytest`. The exact audited `data/processed/chunks.parquet`, 25 locked `data/html/<arxiv_id>.html` caches, and any cached PDFs listed under `source_hashes` in JSON are ignored by Git and must be supplied separately at those repository-relative paths. Compare their SHA-256 values with JSON. A code-only clone cannot reproduce the cached-corpus audit; downloading newer sources is a different run.',
         'No `.env` file, Azure credentials, personal Git branches, or existing vector database is needed. Run the base audit with `python -m tests.validate_html_sample --cached-pdf --report-dir audit-output`. Optional semantic checks additionally require an already cached MiniLM model; use new local output paths and regenerate semantic evidence whenever implementation hashes change.',
-        'On this Windows run, `TEMP` and `TMP` point to the writable test directory recorded in JSON. Chroma workers exit before their temporary storage is removed.', '',
+        'Chroma workers exit before their temporary storage is removed. Machine-local output paths in receipts use portable placeholders.', '',
         'Run from the repository root (replace angle-bracket placeholders with local output paths). Exact execution commands remain in JSON.', '```text', portable_command(report), '```', '',
         'Semantic worker reproduction (set HF_HUB_OFFLINE=1 and TRANSFORMERS_OFFLINE=1; use a new temporary directory):',
         '```text', 'python -m tests.html_transport data/processed/chunks.parquet <temporary-index> <temporary-results.json> --semantic', '```', '',
@@ -535,7 +550,7 @@ def write_report(report, directory):
         lines += [f"- `{run['command']}` — {run['summary']}; exit {run['exit_code']}."]
     if not report.get('automated_tests'):
         lines.append('Pytest results not attached to this run.')
-    lines += ['', 'Warnings: Python 3.14 dependency deprecations in Chroma (`asyncio.iscoroutinefunction`) and Google GenAI (`_UnionGenericAlias`). They do not indicate failed citation/storage checks. No warnings are suppressed and no dependency upgrade is attempted.', '',
+    lines += ['', 'Attached test receipts record their own outcomes and warnings; no historical dependency warnings are inferred for this run. No warnings are suppressed and no dependency upgrade is attempted.', '',
         '## 9. Known limitations', '',
         'Automated omission candidates need individual review. Source coverage also has intentional equation/table/proof/back-matter exclusions. Short sections below 150 characters can still contain meaningful caveats. No visual layout evaluation, fresh-source check, paid Gemini call, full answer-generation handoff, held-out retrieval benchmark, process-kill test, or atomic rollback test was performed.',
         'Production citation metadata omits `high_value`, authors, and categories; those remain in Parquet but are not part of the current public search contract. The retrieval module has no Azure dependency or credential requirement; private `.env` settings are irrelevant to backend selection.', '',
@@ -547,7 +562,7 @@ def write_report(report, directory):
     (directory/'html-ingestion-validation.md').write_text('\n'.join(lines)+'\n', encoding='utf-8')
 if __name__ == '__main__':
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--report-dir',type=Path,default=config.PROJECT_ROOT/'docs')
+    parser.add_argument('--report-dir',type=Path,default=config.PROCESSED_DIR/'html-validation')
     parser.add_argument('--cached-pdf', action='store_true', help='Validate fallback against one original cached PDF')
     parser.add_argument('--semantic-evidence', type=Path, help='JSON from separately executed offline MiniLM smoke worker')
     parser.add_argument('--test-results', type=Path, help='JSON recording separately executed pytest commands and results')

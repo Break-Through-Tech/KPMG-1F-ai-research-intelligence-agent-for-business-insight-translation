@@ -8,7 +8,7 @@ import pandas as pd
 
 from src.data_ingestion.chunking import chunk_html_sections
 from src.data_ingestion.html_parser import parse_html_sections
-from tests.validate_html_sample import inspect_paper, is_subsequence, classify_candidate, normalize, git_provenance, summarize_omissions, verify_semantic_evidence, portable_command, write_report
+from tests.validate_html_sample import inspect_paper, is_subsequence, classify_candidate, normalize, git_provenance, summarize_omissions, verify_semantic_evidence, portable_command, write_report, serialize_report
 from tests.html_transport import validate_transport
 
 
@@ -136,9 +136,14 @@ class HtmlValidationTests(unittest.TestCase):
         self.assertIn('not individual human confirmations', summary['review_scope'])
 
     def test_report_uses_current_counts_and_does_not_claim_old_absence(self):
-        paper = {'arxiv_id': self.aid, 'source_modes': ['html'], 'chunks': 1,
+        paper = {'arxiv_id': '2606.01494v1', 'source_modes': ['html'], 'chunks': 1,
                  'sections': {'results': 1}, 'source_urls': [], 'source_hashes': {},
-                 'omissions': {}, 'candidates_for_40_43': []}
+                 'omissions': {}, 'failures': [], 'candidates_for_40_43': [{
+                     'element_id': 'S1.SS0.SSS0.Px3.p1', 'triage': {
+                         'category': 'false_positive_review_candidate',
+                         'projected_text': 'Retained example prose.',
+                         'projected_text_in_parser': True,
+                         'automated_structural_omission_candidate': False}}]}
         report = {'status': 'PASS', 'papers': [paper], 'persisted_chunks': 1,
                   'failures': [], 'omission_summary': summarize_omissions([paper]),
                   'run_utc': 'fixture', 'branch': 'fixture', 'repo_sha': 'fixture',
@@ -152,6 +157,23 @@ class HtmlValidationTests(unittest.TestCase):
         self.assertNotIn('113 are potentially missing', text)
         self.assertNotIn('Confirmed behavioral examples', text)
         self.assertNotIn('their projected prose is absent', text)
+        self.assertIn('Projected prose retained: True', text)
+
+    def test_serialized_receipts_remove_personal_paths_without_changing_evidence(self):
+        import json
+        report = {'command': 'python -m tests.html_transport data/processed/chunks.parquet '
+                             'C:/Users/contributor/private/run/index /Users/contributor/run/result.json --semantic',
+                  'historical_execution_details': [{'log_path': r'C:\Users\contributor\run\full.log'}],
+                  'corpus_sha256': 'original-hash', 'indexed_count': 877,
+                  'papers': [{'text': 'Source passage unchanged.', 'source_url': 'https://arxiv.org/html/example'}]}
+        encoded = serialize_report(report)
+        public = json.loads(encoded)
+        self.assertNotIn('contributor', encoded)
+        self.assertIn('<local-output>/index', public['command'])
+        self.assertEqual(public['historical_execution_details'][0]['log_path'], '<local-output>/full.log')
+        for key in ('corpus_sha256', 'indexed_count', 'papers'):
+            self.assertEqual(public[key], report[key])
+        self.assertIn('contributor', report['command'])
 
     def test_semantic_receipt_rejects_stale_corpus_and_implementation(self):
         from src import retrieval

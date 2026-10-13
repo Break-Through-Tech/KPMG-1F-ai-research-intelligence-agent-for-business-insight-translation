@@ -23,6 +23,7 @@ is never converted into a confidence score.
 from __future__ import annotations
 
 import json
+from hashlib import sha256
 import re
 from pathlib import Path
 from string import Template
@@ -44,6 +45,13 @@ TRUNCATION_MARKER = " [truncated]"
 
 PROMPT_DIR = Path(__file__).resolve().parent.parent / "prompts" 
 PROMPT_FILE = "research_summary.txt"
+
+
+def prompt_provenance():
+    """Identify the exact built-in template, not the provider's interim prompt."""
+    return {"summary_adapter": "src.summarization:summarize",
+            "prompt_version": "research-summary-v1",
+            "prompt_sha256": sha256((PROMPT_DIR / PROMPT_FILE).read_bytes()).hexdigest()}
 
 # Source fields carried into the included-chunk mapping (distance is omitted on
 # purpose: it is a retrieval score, not a confidence).

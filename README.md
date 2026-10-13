@@ -81,11 +81,15 @@ python main.py --query "How are AI agents evaluated?" --top-k 5 --mode summary
 ```
 
 Summary is the default mode. Generation defaults to Gemini (`GOOGLE_MODEL`, default
-`gemini-2.5-flash`, temperature 0, JSON output). The small interim prompt is
-`workflow-summary-v1`; it is not a substitute for #77's final summarizer acceptance.
+`gemini-2.5-flash`, temperature 0, JSON output). The default summarizer is
+`src.summarization:summarize`, using the bounded `research-summary-v1` template
+with its SHA-256 recorded in generation provenance. Explicit local endpoints
+can use the existing BYOK provider; see [local-model E2E checks](docs/local-model-e2e.md).
 Importing the workflow/CLI does not import a model, download weights, or call an API.
 Missing index/credentials and unavailable stages exit nonzero with JSON errors on
-stderr; successful JSON is on stdout. Provider exception payloads are not echoed.
+stderr. Generated drafts are JSON on stdout; rejected summaries also preserve
+that JSON but exit nonzero when `summary.error` is set. Ordinary evidence
+abstention without an error exits zero. Provider exception payloads are not echoed.
 
 The shared module boundary is `run_research(request, *, retrieve, summarize_fn,
 translate_fn=None, review_fn=None, provenance=None)` in `src/research_pipeline.py`.

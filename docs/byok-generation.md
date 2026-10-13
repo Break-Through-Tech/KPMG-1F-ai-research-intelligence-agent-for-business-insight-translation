@@ -1,6 +1,6 @@
 # Bring-your-own-key generation architecture
 
-Draft implementation for the existing local research CLI and benchmark runner.
+BYOK implementation for the existing local research CLI and benchmark runner.
 It adds Gemini, OpenAI, explicit OpenAI-compatible endpoints, and native AWS
 Bedrock Converse selection without changing research-result contracts or human
 approval gates.
@@ -98,6 +98,9 @@ and temperature zero. Unsupported models/endpoints fail visibly; there is no
 silent relaxation to unstructured output. Compatibility is not a claim that every
 OpenAI-compatible model supports this contract. Existing structural/citation-ID
 checks remain necessary but do not establish factual support.
+For local endpoints, [model-sizing guidance](local-model-sizing.md) explains
+parameter counts, quantization, working-memory/context requirements and the
+measured small-model failures. The provider imposes no parameter-count ceiling.
 
 For Bedrock, choose a model supporting Converse text messages and temperature
 zero. JSON is **requested in the prompt and parsed/validated locally**, not

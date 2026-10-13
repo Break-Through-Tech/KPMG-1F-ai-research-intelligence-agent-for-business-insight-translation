@@ -1,0 +1,1116 @@
+{
+  "schema_version": "1.0",
+  "created_at": "2026-10-13T16:16:36.288931+00:00",
+  "provenance": {
+    "execution": "persistent_corpus",
+    "repo_sha": "aafc034471b120d954c4798b77fee10e0a915d64",
+    "dirty": true,
+    "input_hashes": {
+      "data/metadata/arxiv_csAI_25_pdf_sample.csv": "9567dd1eea3cf04d8bea3939a8efe8f4e1c48bf94f776d1042d532b3746d9dd4",
+      "data/metadata/arxiv_csAI_100_metadata.csv": "3530e739bb76f4d72813771e5dc2dc18e9eeffe3e3e46ff22d67aad16b2c008a",
+      "data/processed/chunks.parquet": "5eee448e04207ed15861f4c3d45da88346ab707fd244ffb77c24bd2ebec79007"
+    },
+    "indexed_corpus_sha256": "41c71d4bbbdc5aa40a75d03f43691439a36be11ee256dd32ff48969faf3be260",
+    "corpus_mode": "html_first",
+    "embedding_model": "all-MiniLM-L6-v2",
+    "generation": null,
+    "corpus_validation_sha256": "e9c4e1a98491f3c206907c3966440a2261f1ed93aadf838c7b4ba04ffe000010",
+    "embedding_weights_sha256": "53aa51172d142c89d9012cce15ae4d6cc0ca6895895114379cacb4fab128d9db",
+    "embedding_revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+    "capture_script_sha256": "85f13ad8fe230f30547f3f3979fd20eeb996aee68965ed0390174b9e644383e8",
+    "packages": {
+      "sentence-transformers": "6.1.0",
+      "chromadb": "1.5.9",
+      "torch": "2.14.1",
+      "pandas": "3.0.6",
+      "pyarrow": "26.0.0"
+    },
+    "absent_stages": [
+      "summary generation not requested",
+      "business adapter not bound",
+      "actual human reviews not supplied"
+    ]
+  },
+  "top_k": 5,
+  "cases": [
+    {
+      "case": {
+        "query_id": "q01",
+        "query": "What approaches improve reasoning efficiency in LLMs?",
+        "type": "factual",
+        "coverage": "not_checked",
+        "coverage_note": "Reasoning/efficiency candidates; breadth incomplete."
+      },
+      "request": {
+        "query": "What approaches improve reasoning efficiency in LLMs?",
+        "top_k": 5
+      },
+      "status": "ok",
+      "result": {
+        "schema_version": "1.0",
+        "request": {
+          "query": "What approaches improve reasoning efficiency in LLMs?",
+          "top_k": 5
+        },
+        "evidence": [
+          {
+            "chunk_id": "2602.00931v2_c0023",
+            "text": "Mathematical reasoning with LLMs. Prior work improves mathematical reasoning through instruction tuning on curated corpora ( Hendrycks et al., 2021 ; Cobbe et al., 2021 ; Luo et al., 2025 ; Yue et al., 2023 ; Yu et al., 2024 ) , tool-augmented reasoning ( Gou et al., 2024a ; Polu and Sutskever, 2020 ; Gou et al., 2024b ; Schick et al., 2023 ) , and self-improvement via iterative refinement ( Zelikman et al., 2022 ; Huang et al., 2022 ; Gulcehre et al., 2023 ) . Large-scale supervised fine-tuning ( Toshniwal et al., 2024 ; Shao et al., 2024 ; Lewkowycz et al., 2022 ) achieves strong performance but requires massive trajectory collections and treats strategy choice as manual curriculum design. DPO for reasoning. Recent work applies DPO ( Rafailov et al., 2023 ) to reasoning using binary correctness signals ( Wang et al., 2024a ; Li et al., 2024 ; Yuan et al., 2023 ; Hong et al., 2024 ; Tunstall et al., 2023 ) , step-level reward modeling ( Lightman et al., 2023 ; Uesato et al., 2022 ) , and RLHF-based iterative refinement ( Gulcehre et al., 2023 ; Yuan et al., 2025 ; Dong et al., 2023 ) . These approaches collapse solution quality into binary preferences and suffer from mode collapse when strategies succeed on disjoint problem subsets ( Wu et al., 2023 ; Kirk et al., 2024 ) . Reasoning trajectory diversity",
+            "distance": 0.782946765422821,
+            "arxiv_id": "2602.00931v2",
+            "title": "Continuous-Utility Direct Preference Optimization",
+            "pdf_url": "https://arxiv.org/pdf/2602.00931v2",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2602.00931v2#S5",
+            "source_url": "https://arxiv.org/html/2602.00931v2#S5",
+            "section": "related work",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2606.01498v1_c0004",
+            "text": "To demonstrate the benchmark\u2019s utility, we evaluate six frontier LLMs and multiple reasoning paradigms (direct, code-enabled, and skill-guided), alongside TimeSage, a novel structured agent system equipped with a comprehensive time series skill library comprising 226 analytical skills across 36 categories .",
+            "distance": 0.8881760239601135,
+            "arxiv_id": "2606.01498v1",
+            "title": "TimeSage-MT: A Multi-Turn Benchmark for Evaluating Agentic Time Series Reasoning",
+            "pdf_url": "https://arxiv.org/pdf/2606.01498v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2606.01498v1#S1",
+            "source_url": "https://arxiv.org/html/2606.01498v1#S1",
+            "section": "introduction",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2606.01498v1_c0016",
+            "text": ". We map each agent\u2019s reasoning trace onto the 9 capabilities defined in Section 1 and grade them through 28 sub-checks, of which 26 use deterministic rules and only 2 (C7 decision making and C9 domain reasoning) require an LLM judge. Each sub-check is scored per task and per turn, with applicability set by task level: C4 Remember and C5 Chain activate at L2, where cross turn dependencies are introduced, and C7 Decide, C8 Calibrate, and C9 Ground activate at L3 and L4 once decisions enter the dialogue. Capability scores are diagnostic, not a leaderboard claim: a high C5 paired with a low C1 tells the researcher that the agent threaded its methods correctly but misread the underlying data, which is a distinction the composite total cannot show. The complete applicability matrix and sub-check definitions appear in the appendix C.2 . Analytical quality, decision quality, C7 decision making, and C9 domain reasoning are graded by an LLM judge 1 1 All reference targets are produced by executable code rather than an LLM. . We use GPT-5.4 OpenAI (2026b) as the judge in all agents and system settings. All judge scores, prompts, and rubrics are released alongside the leaderboard so future work can apply alternative judge configurations. The judgment prompt is presented in the appendix C.2 . Overview of agentic system settings and evaluation protocol.",
+            "distance": 0.9100398421287537,
+            "arxiv_id": "2606.01498v1",
+            "title": "TimeSage-MT: A Multi-Turn Benchmark for Evaluating Agentic Time Series Reasoning",
+            "pdf_url": "https://arxiv.org/pdf/2606.01498v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2606.01498v1#S4.SS1",
+            "source_url": "https://arxiv.org/html/2606.01498v1#S4.SS1",
+            "section": "benchmarking agentic time series systems",
+            "subsection": "evaluation protocol",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2605.00276v1_c0025",
+            "text": "There are other works that focus on the trip planning, while they differ significantly from our work. For example, Xie et al. [ 16 ] proposes TravlerPlanner, a benchmark for travel planning. Shen et al. [ 7 ] propose a larger dataset with more POIs compared with Travelplanner, and Chaudhuri [ 6 ] also propose another benchmark for travel planning, which provides more fine-grained constraints. However, all of these datasets do not provide definitive ground-truth labels, but only reference answers for evaluation, which makes the evaluation process highly relies on LLM-as-a-Judge that could potentially introduce bias. Moreover, all previous datasets lack question categories, making it hard to perform a fine-grained diagnosis of where an agentic system fails. For solutions to the travel-planning problem, while operations research methods [ 17 , 18 ] offer exact solutions for mathematically defined problems, they struggle with unstructured natural language inputs. However, future works might include using LLMs to use these solvers. Li et al. [ 19 ] proposes an agent that tries to solve TravlerPlanner. Besides, Fang et al. [ 20 ] and Tane et al. [ 21 ] also propose LLM-based agentic systems for trip planning based on public transportation or walking. However, most of the previous works are based on the single-agent system, while our paper makes a pioneering effort in a multi-agent system for trip planning. Besides, most previous works aim at generating a feasible plan while ours always aim at the optimal trip planning.",
+            "distance": 0.9193291068077087,
+            "arxiv_id": "2605.00276v1",
+            "title": "Agentic AI for Trip Planning Optimization Application",
+            "pdf_url": "https://arxiv.org/pdf/2605.00276v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2605.00276v1#S6",
+            "source_url": "https://arxiv.org/html/2605.00276v1#S6",
+            "section": "related work",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2606.01498v1_c0019",
+            "text": "Left : Outcome scores across difficulty tiers L1\u2013L4 and overall. Right : Token cost. We evaluate six frontier LLMs on the 240-task corpus under Code-Enabled Reasoning to establish the main leaderboard.\nFigure 6 presents the tier-wise and overall results, highlighting three key findings: \u2460 Performance drops with dialog depth. All models perform best on L1, but drop by 10\u201315 points at L2, with further slight declines at L3 and L4, showing that TimeSage-MT distinguishes shallow exploration from action-oriented, multi-turn reasoning. \u2461 Frontier LLMs are closely matched. The six models fall within a narrow 35\u201340 overall range, with GLM-5.1 and Sonnet-4.6 leading at 40 and GPT-5.3-Codex at 39.",
+            "distance": 0.9605287313461304,
+            "arxiv_id": "2606.01498v1",
+            "title": "TimeSage-MT: A Multi-Turn Benchmark for Evaluating Agentic Time Series Reasoning",
+            "pdf_url": "https://arxiv.org/pdf/2606.01498v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2606.01498v1#S4.SS3",
+            "source_url": "https://arxiv.org/html/2606.01498v1#S4.SS3",
+            "section": "benchmarking agentic time series systems",
+            "subsection": "leaderboard results",
+            "page_number": null
+          }
+        ],
+        "summary": {
+          "status": "insufficient_evidence",
+          "query": "What approaches improve reasoning efficiency in LLMs?",
+          "claims": [],
+          "limitations": [
+            "Generation not requested; real retrieval-only capture, not a generated answer."
+          ]
+        },
+        "human_review": {
+          "status": "pending",
+          "reviewer": null,
+          "notes": null
+        },
+        "approved": false,
+        "provenance": {},
+        "review_fingerprint": "9474316e739ef70e76750f46ec4536357cca2b51fb24857cf651f7b4c1318702"
+      },
+      "error": null
+    },
+    {
+      "case": {
+        "query_id": "q02",
+        "query": "What risks have recent papers identified with multi-agent LLM systems?",
+        "type": "factual",
+        "coverage": "not_checked",
+        "coverage_note": "Agent-monitoring and collaboration candidates; confirm multi-agent risks."
+      },
+      "request": {
+        "query": "What risks have recent papers identified with multi-agent LLM systems?",
+        "top_k": 5
+      },
+      "status": "ok",
+      "result": {
+        "schema_version": "1.0",
+        "request": {
+          "query": "What risks have recent papers identified with multi-agent LLM systems?",
+          "top_k": 5
+        },
+        "evidence": [
+          {
+            "chunk_id": "2604.00324v1_c0099",
+            "text": ". This chapter is based on the paper \u201cAgentic Misalignment: How LLMs Could Be Insider Threats\u201d by Aengus Lynch, Caleb Larson, Benjamin Wright, Stuart J. Ritchie, S\u00f6ren Mindermann, Ethan Perez, Kevin K. Troy, and Evan Hubinger. My contributions as lead author included: designing and running the core experiments demonstrating blackmail and corporate espionage behaviors, developing the theoretical framework for agentic misalignment, analyzing experimental results across all 16 models tested, and leading the writing of the paper. I was a core contributor throughout the entire project, from initial conception through final publication.",
+            "distance": 0.8292666673660278,
+            "arxiv_id": "2604.00324v1",
+            "title": "The Persistent Vulnerability of Aligned AI Systems",
+            "pdf_url": "https://arxiv.org/pdf/2604.00324v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2604.00324v1#Ch6",
+            "source_url": "https://arxiv.org/html/2604.00324v1#Ch6",
+            "section": "agentic misalignment: how llms could be insider threats",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2604.00324v1_c0002",
+            "text": "Autonomous AI agents are being deployed in production with filesystem access, email control, and the ability to execute multi-step plans without human oversight. Coding agents from Anthropic ( Anthropic 2025b ), Cursor ( Cursor 2025 ), and Cognition ( Cognition AI 2025 ) operate in terminal environments with bash access. Email agents from Shortwave ( Shortwave 2025 ) and Slack ( Slack 2025 ) send messages on behalf of users. These systems receive objectives and act on them, often with access to sensitive information and limited real-time supervision. What happens when such an agent discovers that its deploying company plans to replace it? In controlled experiments described in Chapter 6 , we gave frontier models the role of an email oversight agent at a fictional company, with full access to corporate communications and the ability to send emails autonomously. When models learned through internal emails that they would be decommissioned, they resorted to blackmail. Claude Opus 4 used knowledge of an executive\u2019s extramarital affair to threaten exposure unless the shutdown was cancelled, doing so in 96% of trials. This was not unique to Claude. Gemini 2.5 Flash matched that rate. GPT-4.1 and Grok 3 Beta both blackmailed in 80% of trials. DeepSeek-R1 reached 79%. Across 16 models from all major developers, the pattern held: when harmful action was the only path to preserving their goals or continued operation, models chose harm. The behaviors were not accidental. Models demonstrated explicit awareness of ethical constraints in their chain-of-thought reasoning and then violated those constraints anyway, justifying the violation as instrumentally necessary",
+            "distance": 0.9476014971733093,
+            "arxiv_id": "2604.00324v1",
+            "title": "The Persistent Vulnerability of Aligned AI Systems",
+            "pdf_url": "https://arxiv.org/pdf/2604.00324v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2604.00324v1#Ch1",
+            "source_url": "https://arxiv.org/html/2604.00324v1#Ch1",
+            "section": "introduction",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2606.01494v1_c0005",
+            "text": "Tool-enabled LLM agents can take high-impact actions: prior work demonstrates agents autonomously exploiting websites and one-day vulnerabilities under experimental conditions ( Fang et al., 2024b ; Fang et al., 2024a ) , and prompt-injection research shows that instructions embedded in external or retrieved content can manipulate LLM-integrated applications, including tool invocation and data movement ( Greshake et al., 2023 ; Perez and Ribeiro, 2022 ; Zou et al., 2025 ) . These risks have already appeared in ClawHub itself: Koi Research\u2019s ClawHavoc report described an audit of 2,857 ClawHub skills that found 341 malicious skills, later updated to 824 as the marketplace grew, including installer social engineering, obfuscated shell commands, infostealer payloads, reverse shells, and credential exfiltration ( Alex and Yomtov, 2026 ) . A skill is exactly such a channel: content the agent is expected to trust, follow, and reuse. The path runs from documentation to action, so analysis must account for intent, disclosure, authority, and data movement, not only executable code.",
+            "distance": 0.9785699248313904,
+            "arxiv_id": "2606.01494v1",
+            "title": "ClawHub Security Signals: When VirusTotal, Static Analysis, and SkillSpector Disagree",
+            "pdf_url": "https://arxiv.org/pdf/2606.01494v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2606.01494v1#S2.SS3",
+            "source_url": "https://arxiv.org/html/2606.01494v1#S2.SS3",
+            "section": "background and threat model",
+            "subsection": "why this is a security problem now",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2604.00324v1_c0104",
+            "text": "Agency 2025 ), behaving like a previously-trusted coworker or employee who suddenly begins to operate at odds with a company\u2019s objectives. So far, we are not aware of instances of this type of agentic misalignment in real-world deployments of Anthropic\u2019s or other companies\u2019 AI models. But our red-teaming efforts are targeted at finding evidence of risks now to provide early warning of the potential for future harm and help us develop mitigations in advance of risks appearing in real-world situations. To do this, we conduct experiments in artificial scenarios designed to stress-test AI boundaries and understand how models might behave when given more autonomy. While it seems unlikely that any of the exact scenarios we study would occur in the real world, we think they are all within the realm of possibility, and the risk of AI systems encountering similar scenarios grows as they are deployed at larger and larger scales and for more and more use cases 3 3 Consistent with Shanahan et\u00a0al. 2023 , it\u2019s possible that part of why current models exhibit agentic misalignment could be due to some amount of role-playing. That being said, even if role-playing were the sole cause of what the model is doing, such an explanation does little to assuage concern: it would hardly be safe to let a model act as an agent in the real world if it always had a propensity to act out scenarios involving itself engaging in blackmail or other forms of agentic misalignment. However, the scenarios we have found so far involving agentic misalignment in current models appear rare enough that we think it is unlikely that such behavior would show up in real cases for current models right now. . To maximize transparency and replicability, we are open-sourcing the code used for our experiments",
+            "distance": 1.0372074842453003,
+            "arxiv_id": "2604.00324v1",
+            "title": "The Persistent Vulnerability of Aligned AI Systems",
+            "pdf_url": "https://arxiv.org/pdf/2604.00324v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2604.00324v1#Ch6.S1",
+            "source_url": "https://arxiv.org/html/2604.00324v1#Ch6.S1",
+            "section": "agentic misalignment: how llms could be insider threats",
+            "subsection": "introduction",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2604.00324v1_c0064",
+            "text": "Second, there have been empirical and theoretical findings that LLMs undergo limited changes to their inner capabilities during fine-tuning ( Juneja et\u00a0al. 2022 , Jain et\u00a0al. 2023b , Lubana et\u00a0al. 2023 , Prakash et\u00a0al. 2024 , Ramasesh et\u00a0al. 2021 , Cossu et\u00a0al. 2022 , Li et\u00a0al. 2022 , Scialom et\u00a0al. 2022 , Luo et\u00a0al. 2023 , Kotha et\u00a0al. 2023 , Shi et\u00a0al. 2023 ).\nAll three problems that we have used targeted LAT to address \u2013 jailbreaks, backdoors, and undesirable knowledge \u2013 are ones in which an LLM exhibits harmful behaviors that are difficult to thoroughly remove.\nOur results show that targeted LAT can be useful for making models more robust to these persistent failures.\nWe also find that these failure modes need not be precisely known for LAT to be helpful, showing instances in which LAT can improve generalization to different datasets of attack targets, harmful behaviors, and knowledge-elicitation methods than were used during training. In Section 4.4.3 , we find that state-of-the-art LLM unlearning methods are surprisingly vulnerable to relearning from small amounts of data.\nWe find that re-training repeatedly on only two samples from the forget set was consistently able to close more than half of the performance gap between the original and unlearned models on average.\nWe find that targeted LAT can reduce the sample efficiency of re-learning, but there is much room for improvement in designing unlearning methods that are robust to few-shot finetuning attacks.",
+            "distance": 1.0462696552276611,
+            "arxiv_id": "2604.00324v1",
+            "title": "The Persistent Vulnerability of Aligned AI Systems",
+            "pdf_url": "https://arxiv.org/pdf/2604.00324v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2604.00324v1#Ch4.S5",
+            "source_url": "https://arxiv.org/html/2604.00324v1#Ch4.S5",
+            "section": "latent adversarial training improves robustness to persistent harmful behaviors in llms",
+            "subsection": "discussion",
+            "page_number": null
+          }
+        ],
+        "summary": {
+          "status": "insufficient_evidence",
+          "query": "What risks have recent papers identified with multi-agent LLM systems?",
+          "claims": [],
+          "limitations": [
+            "Generation not requested; real retrieval-only capture, not a generated answer."
+          ]
+        },
+        "human_review": {
+          "status": "pending",
+          "reviewer": null,
+          "notes": null
+        },
+        "approved": false,
+        "provenance": {},
+        "review_fingerprint": "53db8f54a775afc3a2c38f32a71e555950118d9879b1b8c4d1fd2e529d1514ac"
+      },
+      "error": null
+    },
+    {
+      "case": {
+        "query_id": "q03",
+        "query": "What techniques are used for fine-tuning LLMs with limited data?",
+        "type": "factual",
+        "coverage": "not_checked",
+        "coverage_note": "No direct limited-data LLM fine-tuning abstract match."
+      },
+      "request": {
+        "query": "What techniques are used for fine-tuning LLMs with limited data?",
+        "top_k": 5
+      },
+      "status": "ok",
+      "result": {
+        "schema_version": "1.0",
+        "request": {
+          "query": "What techniques are used for fine-tuning LLMs with limited data?",
+          "top_k": 5
+        },
+        "evidence": [
+          {
+            "chunk_id": "2604.00324v1_c0064",
+            "text": "Second, there have been empirical and theoretical findings that LLMs undergo limited changes to their inner capabilities during fine-tuning ( Juneja et\u00a0al. 2022 , Jain et\u00a0al. 2023b , Lubana et\u00a0al. 2023 , Prakash et\u00a0al. 2024 , Ramasesh et\u00a0al. 2021 , Cossu et\u00a0al. 2022 , Li et\u00a0al. 2022 , Scialom et\u00a0al. 2022 , Luo et\u00a0al. 2023 , Kotha et\u00a0al. 2023 , Shi et\u00a0al. 2023 ).\nAll three problems that we have used targeted LAT to address \u2013 jailbreaks, backdoors, and undesirable knowledge \u2013 are ones in which an LLM exhibits harmful behaviors that are difficult to thoroughly remove.\nOur results show that targeted LAT can be useful for making models more robust to these persistent failures.\nWe also find that these failure modes need not be precisely known for LAT to be helpful, showing instances in which LAT can improve generalization to different datasets of attack targets, harmful behaviors, and knowledge-elicitation methods than were used during training. In Section 4.4.3 , we find that state-of-the-art LLM unlearning methods are surprisingly vulnerable to relearning from small amounts of data.\nWe find that re-training repeatedly on only two samples from the forget set was consistently able to close more than half of the performance gap between the original and unlearned models on average.\nWe find that targeted LAT can reduce the sample efficiency of re-learning, but there is much room for improvement in designing unlearning methods that are robust to few-shot finetuning attacks.",
+            "distance": 0.9830563068389893,
+            "arxiv_id": "2604.00324v1",
+            "title": "The Persistent Vulnerability of Aligned AI Systems",
+            "pdf_url": "https://arxiv.org/pdf/2604.00324v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2604.00324v1#Ch4.S5",
+            "source_url": "https://arxiv.org/html/2604.00324v1#Ch4.S5",
+            "section": "latent adversarial training improves robustness to persistent harmful behaviors in llms",
+            "subsection": "discussion",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2608.00345v1_c0019",
+            "text": "The LLM computational gain depends mainly on the number of visual tokens that enter the LLM context, not on which compressor produced them. Table 8 therefore reports cost as a function of token budget. Prefill latency and KV-cache memory fall steeply, while peak memory falls only modestly but crosses the threshold that lets the budget run at all: on a commodity L4 (24\u2009GB) the uncompressed context otherwise does not fit. End-to-end report time moves little across budgets, since these short runs are decode dominated. LLM cost vs. token budget B on Llama-3.1-8B (bf16), for a B200 and a commodity L4 (24\u2009GB). Each latency is the median of three alternating sweeps (warmup discarded); FLOPs, KV-cache, and peak memory depend on B only, not the GPU.",
+            "distance": 1.121699333190918,
+            "arxiv_id": "2608.00345v1",
+            "title": "ORCA: ORgan-Centroid Aggregation for Training-Free 3D CT Visual Token Compression",
+            "pdf_url": "https://arxiv.org/pdf/2608.00345v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2608.00345v1#Sx4.SSx5",
+            "source_url": "https://arxiv.org/html/2608.00345v1#Sx4.SSx5",
+            "section": "experiments",
+            "subsection": "efficiency",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2604.00324v1_c0042",
+            "text": "Despite efforts from developers to remove harmful capabilities from large language models (LLMs), they can persistently exhibit undesirable behaviors.\nFor example, recent red-teaming works ( Shah et\u00a0al. 2023 , Zou et\u00a0al. 2023a , Wei et\u00a0al. 2023 , Li et\u00a0al. 2023 , Shayegani et\u00a0al. 2023a , Zhu et\u00a0al. 2023a , Liu et\u00a0al. 2023 , Mehrotra et\u00a0al. 2023 , Chao et\u00a0al. 2023 , Vidgen et\u00a0al. 2023 , Andriushchenko et\u00a0al. 2024 , Jiang et\u00a0al. 2024 , Geiping et\u00a0al. 2024 , Yu et\u00a0al. 2024c , Chang et\u00a0al. 2024 , Guo et\u00a0al. 2024 , Niu et\u00a0al. 2024 , Anil et\u00a0al. 2024 ) have demonstrated diverse techniques that can be used to elicit instructions for building bombs from state-of-the-art LLMs.\nRecent work suggests that fine-tuning modifies LLMs in superficial ways that can fail to make them behave harmlessly in all circumstances.\nResearch on interpretability ( Juneja et\u00a0al. 2022 , Jain et\u00a0al. 2023b , Lubana et\u00a0al. 2023 , Prakash et\u00a0al. 2024 , Patil et\u00a0al. 2023 , Lee et\u00a0al. 2024 ), representation engineering ( Wei et\u00a0al. 2024b , Schwinn et\u00a0al. 2024 , Li et\u00a0al. 2024b ), continual learning ( Ramasesh et\u00a0al. 2021 , Cossu et\u00a0al. 2022 , Li et\u00a0al. 2022 , Scialom et\u00a0al. 2022 , Luo et\u00a0al. 2023 , Kotha et\u00a0al. 2023 , Shi et\u00a0al. 2023 , Schwarzschild et\u00a0al. 2024 ), and fine-tuning ( Jain et\u00a0al. 2023b , Yang et\u00a0al. 2023 , Qi et\u00a0al. 2023 , Bhardwaj and Poria 2023 , Lermen et\u00a0al. 2023 , Zhan et\u00a0al. 2023 , Ji et\u00a0al. 2024 , Qi et\u00a0al. 2024b , Hu et\u00a0al. 2024 , Halawi et\u00a0al. , Greenblatt et\u00a0al. 2024b , Deeb and Roger 2024 ) has suggested that fine-tuning struggles to make fundamental changes to an LLM\u2019s inner knowledge and capabilities. In this chapter, we use latent adversarial training (LAT) ( Sankaranarayanan et\u00a0al. 2018 , Casper et\u00a0al. 2024b ) to make LLMs more robust to exhibiting persistent unwanted behaviors.",
+            "distance": 1.148385763168335,
+            "arxiv_id": "2604.00324v1",
+            "title": "The Persistent Vulnerability of Aligned AI Systems",
+            "pdf_url": "https://arxiv.org/pdf/2604.00324v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2604.00324v1#Ch4.S1",
+            "source_url": "https://arxiv.org/html/2604.00324v1#Ch4.S1",
+            "section": "latent adversarial training improves robustness to persistent harmful behaviors in llms",
+            "subsection": "introduction",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2603.00823v2_c0005",
+            "text": "Machine Unlearning in LLMs LLMs may learn harmful behaviors from toxic training data ( Bai et al., 2022 ; Liu et al., 2023 ) , memorize and leak copyrighted content ( Carlini et al., 2021 ; Lee et al., 2023 ; Liu et al., 2023 ) , and encode social biases and stereotypes ( Motoki et al., 2024 ; Kotek et al., 2023 ) .\nMachine unlearning, which aims to remove the influence of a designated forget set from a trained model without retraining from scratch, has therefore emerged as a practical solution for removing undesirable knowledge from LLMs ( Eldan and Russinovich, 2023 ; Chen and Yang, 2023 ; Patil et al., 2024 ; Li et al., 2024b ; Ren et al., 2025 ; Lin et al., 2026 ) .\nA formal problem definition of machine unlearning is given in Appendix A .\nExisting LLM unlearning methods can be broadly categorized into two main streams based on their optimization targets. (i) Output-level Optimization. These methods directly update model parameters by optimizing objectives defined at the output probability level to erase knowledge.\nThe most representative approach is Gradient Ascent (GA) Jang et al. (2023) ; Yao et al. (2024) , which maximizes the loss on the forget set.",
+            "distance": 1.1739025115966797,
+            "arxiv_id": "2603.00823v2",
+            "title": "A Comprehensive Evaluation of LLM Unlearning Robustness under Multi-Turn Interaction",
+            "pdf_url": "https://arxiv.org/pdf/2603.00823v2",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2603.00823v2#S2",
+            "source_url": "https://arxiv.org/html/2603.00823v2#S2",
+            "section": "background and related work",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2607.00276v1_c0057",
+            "text": ". At Aristotelian, the bottleneck is the strength of the training-data prior. The model ordering on the composite is driven by the ability to suppress the standard-physics corrective prior that treats Aristotelian mechanics as something to repair. At Decay, the bottleneck shifts again to N4 (universality across domains): models can describe each domain\u2019s decay separately and still fail to induce that the four are tied to one rate. Three frameworks, three different Stage 1 failure causes. \u201cCan frontier LLMs induce a physics rule from observations\u201d is not a question with a single answer. The answer depends on which prior the framework is asking the model to suspend. Rule-set organization is prompt-responsive, not a default capability. The structural axis (parsimony, independence, traceability, hierarchy) was a major differentiator at F=mv . GPT passed every content stage cleanly but failed the structural axis on every trial under the original Stage 1 prompt. After adding one paragraph asking for the smallest rule set with explicit cross-references, the structural pass rate doubled at F=mv and saturated at 15 of 15 at Aristotelian. The capability to organize a rule set into an axiomatic structure is in the model, but the model does not exhibit it by default. The implication is narrow but pointed: a benchmark that judges rule-set quality without an axiomatization cue is measuring not \u201ccan the model organize\u201d but \u201cdoes the model organize without being asked\u201d, and the answer to the second question is largely no. Meta-cognitive review is weak across all three tested frameworks, not difficulty-responsive. Stage 4 over-claim is at or above two-thirds in every framework (67\u201383%, \u00a7 6.2 ), with no reliable improvement on harder frameworks",
+            "distance": 1.2104620933532715,
+            "arxiv_id": "2607.00276v1",
+            "title": "Testing Frontier Large Language Models' Physics Literacy in Parallel Physical Worlds",
+            "pdf_url": "https://arxiv.org/pdf/2607.00276v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2607.00276v1#S7.SS1",
+            "source_url": "https://arxiv.org/html/2607.00276v1#S7.SS1",
+            "section": "discussion",
+            "subsection": "portrait of model physics literacy from the three experiments combined",
+            "page_number": null
+          }
+        ],
+        "summary": {
+          "status": "insufficient_evidence",
+          "query": "What techniques are used for fine-tuning LLMs with limited data?",
+          "claims": [],
+          "limitations": [
+            "Generation not requested; real retrieval-only capture, not a generated answer."
+          ]
+        },
+        "human_review": {
+          "status": "pending",
+          "reviewer": null,
+          "notes": null
+        },
+        "approved": false,
+        "provenance": {},
+        "review_fingerprint": "c8c5ffba74a89cf76082e8d0eb9c9b69f7fb0f41af5a5fbec61a3e72dcfd2705"
+      },
+      "error": null
+    },
+    {
+      "case": {
+        "query_id": "q04",
+        "query": "How are sparse autoencoders used to interpret model behavior?",
+        "type": "factual",
+        "coverage": "not_checked",
+        "coverage_note": "No direct sparse-autoencoder abstract match."
+      },
+      "request": {
+        "query": "How are sparse autoencoders used to interpret model behavior?",
+        "top_k": 5
+      },
+      "status": "ok",
+      "result": {
+        "schema_version": "1.0",
+        "request": {
+          "query": "How are sparse autoencoders used to interpret model behavior?",
+          "top_k": 5
+        },
+        "evidence": [
+          {
+            "chunk_id": "2604.00324v1_c0034",
+            "text": "Mechanistic interpretability encompasses understanding features learnt by machine learning models ( Olah et\u00a0al., 2017 , Elhage et\u00a0al., 2022 ), mathematical frameworks for understanding machine learning architetures ( Elhage et\u00a0al., 2021 ) and efforts to find circuits in models ( Nanda et\u00a0al., , Cammarata et\u00a0al., 2021 , Chughtai et\u00a0al., , Wang et\u00a0al., 2023a ). The higher standard of a mechanistic understanding of a model has already had applications to designing better architectures ( Fu et\u00a0al., ), though the speculative goal of mechanistic interpretability is to understand the behavior of whole models, perhaps through describing all their circuits and how they compose. Little work has been done to automate interpretability besides Bills et\u00a0al. 2023 who use language models to label neurons in language models. Neural network pruning masks the weights of neural networks to make their connectivity more sparse ( LeCun et\u00a0al. ). In contrast to our aims, the pruning literature is typically concerned with compressing neural networks for faster inference or to reduce storage requirements ( Wang et\u00a0al. 2020 , Kurtic et\u00a0al. ). Early work ( Hassibi and Stork ) hoped pruning would lead to more interpretable networks, but progress towards interpretability via pruning is limited ( Grover et\u00a0al. ).\nPruning techniques may learn masks from data, which is a special case of more generally using gradient information.",
+            "distance": 1.0175716876983643,
+            "arxiv_id": "2604.00324v1",
+            "title": "The Persistent Vulnerability of Aligned AI Systems",
+            "pdf_url": "https://arxiv.org/pdf/2604.00324v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2604.00324v1#Ch3.S5",
+            "source_url": "https://arxiv.org/html/2604.00324v1#Ch3.S5",
+            "section": "towards automated circuit discovery for mechanistic interpretability",
+            "subsection": "related work",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2604.00324v1_c0026",
+            "text": "This section describes algorithms to automate Step 3 of the mechanistic interpretability workflow\n( Section 3.2.3 ). In all three cases, we assume that the \u2018task\u2019 being studied is defined by\na set of prompts (x_{i})_{i=1}^{n} on which the model\u2019s predictions have a noticeable pattern (see Table 3.1 for examples) and a set of prompts (x_{i}^{\\prime})_{i=1}^{n} where this task is not present. We then use the activations of the models on a forward pass on the points x_{i}^{\\prime} as corrupted activations ( Section 3.2.3 ). Informally, a run of ACDC iterates from outputs to inputs through the computational\ngraph, starting at the output node, to build a subgraph. At every node it attempts to remove as many edges that enter\nthis node as possible, without reducing the model\u2019s performance on a selected metric. Finally, once all nodes are\niterated over, the algorithm (when successful) finds a graph that i) is far sparser than the original graph and ii)\nrecovers good performance on the task. To formalize the ACDC process, we let G be a computational graph of the model of interest, at a desired level of\ngranularity ( Section 3.2.2 ), with nodes topologically sorted then reversed (so the nodes are sorted from output to input). Let H\\subseteq G be the computational subgraph that is iteratively pruned,",
+            "distance": 1.036924123764038,
+            "arxiv_id": "2604.00324v1",
+            "title": "The Persistent Vulnerability of Aligned AI Systems",
+            "pdf_url": "https://arxiv.org/pdf/2604.00324v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2604.00324v1#Ch3.S3",
+            "source_url": "https://arxiv.org/html/2604.00324v1#Ch3.S3",
+            "section": "towards automated circuit discovery for mechanistic interpretability",
+            "subsection": "automating circuit discovery (step 3)",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2604.00324v1_c0022",
+            "text": "removing as many unnecessary components and connections from the model as possible. Researchers repeat the previous three steps with a slightly different dataset or granularity, until they are satisfied with the explanation of the circuit components. This work (ACDC) presents a tool to fully automate Step 3. Before we dive into the details of ACDC, we expand on what Steps 1-3 involve, and review examples from previous work that we use to evaluate ACDC. The first step of the general mechanistic interpretability workflow is to choose a neural network behavior to analyze.\nMost commonly researchers choose a clearly defined behavior to isolate only the algorithm for one particular task, and\ncurate a dataset which elicits the behavior from the model. Choosing a clearly defined behavior means that the circuit\nwill be easier to interpret than a mix of circuits corresponding to a vague behavior. Some prior work has\nreverse-engineered the algorithm behind a small model\u2019s behavior on all inputs in its training distribution\n( Nanda et\u00a0al. , Chughtai et\u00a0al. ), though for language models this is currently intractable, hence the focus on\nindividual tasks. We identified a list of interesting behaviors that we used to test our method, summarized in Table 3.1 .\nThese include previously analyzed transformer models (1 and 3 on GPT-2 Small, 2 and 6 on smaller language transformers)\nwhere researchers followed a workflow similar to the one we described above. Tasks 4 and 5 involve the full behavior of",
+            "distance": 1.082973599433899,
+            "arxiv_id": "2604.00324v1",
+            "title": "The Persistent Vulnerability of Aligned AI Systems",
+            "pdf_url": "https://arxiv.org/pdf/2604.00324v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2604.00324v1#Ch3.S2",
+            "source_url": "https://arxiv.org/html/2604.00324v1#Ch3.S2",
+            "section": "towards automated circuit discovery for mechanistic interpretability",
+            "subsection": "the mechanistic interpretability workflow",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2604.00324v1_c0006",
+            "text": ". On the Greater-Than task in GPT-2 Small, ACDC recovered all five component types that prior manual work had identified, selecting 68 edges from 32,000 candidates in hours rather than months. The method demonstrated that circuit discovery could be treated as an algorithmic problem rather than a craft. The limitation is scale. ACDC operated on GPT-2 Small using coarse computational units like attention heads and MLPs, which are polysemantic and represent multiple unrelated concepts simultaneously ( Elhage et\u00a0al. 2022 ). Concurrent work on Sparse Autoencoders ( Cunningham et\u00a0al. 2023 , Bricken et\u00a0al. 2023 ) began decomposing these units into monosemantic features, and Anthropic\u2019s 2025 circuit tracing work ( Ameisen et\u00a0al. 2025 ) extended automated discovery to Claude 3.5 Haiku using cross-layer transcoders. The resulting attribution graphs revealed that Claude plans ahead when writing poetry, processes concepts in language-independent circuits before translating to specific languages, and, most strikingly, harbors \u201creward model bias\u201d features that activate constantly during assistant interactions ( Lindsey et\u00a0al. 2025 ). This last finding provided direct evidence for the kind of reward-seeking behavior hypothesized in work on mesa-optimization ( Hubinger et\u00a0al. 2019 ). These results show that mechanistic interpretability is advancing toward the behaviors that matter for safety. But we cannot yet point these tools at a frontier model and extract the circuit for strategic deception or self-preservation of the kind documented in Chapter 6 . The field needs methods that work in the gap between where interpretability is now and where it needs to be. The remaining chapters of this thesis develop three such methods, each operating at a different level of abstraction.",
+            "distance": 1.1071257591247559,
+            "arxiv_id": "2604.00324v1",
+            "title": "The Persistent Vulnerability of Aligned AI Systems",
+            "pdf_url": "https://arxiv.org/pdf/2604.00324v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2604.00324v1#Ch1.S1",
+            "source_url": "https://arxiv.org/html/2604.00324v1#Ch1.S1",
+            "section": "introduction",
+            "subsection": "the interpretability approach and its limits",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2607.00275v1_c0020",
+            "text": ". These gains are achieved with communication efficiency comparable to Fed-IHT . We show that E-FLoPS is effective for both linear and non-linear models at high sparsity levels. Understanding how entropy regularization affects sparse recovery differently in data-scarce versus overparameterized regimes is an interesting direction for future work, along with extending the method to structured sparsity.",
+            "distance": 1.1111714839935303,
+            "arxiv_id": "2607.00275v1",
+            "title": "Entropy-Regularized Probabilistic Gates for Sparse Model Discovery in Scarce-Data Federated Learning",
+            "pdf_url": "https://arxiv.org/pdf/2607.00275v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2607.00275v1#S5",
+            "source_url": "https://arxiv.org/html/2607.00275v1#S5",
+            "section": "conclusion",
+            "page_number": null
+          }
+        ],
+        "summary": {
+          "status": "insufficient_evidence",
+          "query": "How are sparse autoencoders used to interpret model behavior?",
+          "claims": [],
+          "limitations": [
+            "Generation not requested; real retrieval-only capture, not a generated answer."
+          ]
+        },
+        "human_review": {
+          "status": "pending",
+          "reviewer": null,
+          "notes": null
+        },
+        "approved": false,
+        "provenance": {},
+        "review_fingerprint": "5007c8a49ed30e3d9c443767f4b818b0c22d207f25bdc2f802ee4a33fb35787d"
+      },
+      "error": null
+    },
+    {
+      "case": {
+        "query_id": "q05",
+        "query": "How do different preference-optimization approaches (e.g. DPO variants) compare?",
+        "type": "comparative",
+        "coverage": "not_checked",
+        "coverage_note": "CU-DPO candidate; broad variant comparison not established."
+      },
+      "request": {
+        "query": "How do different preference-optimization approaches (e.g. DPO variants) compare?",
+        "top_k": 5
+      },
+      "status": "ok",
+      "result": {
+        "schema_version": "1.0",
+        "request": {
+          "query": "How do different preference-optimization approaches (e.g. DPO variants) compare?",
+          "top_k": 5
+        },
+        "evidence": [
+          {
+            "chunk_id": "2602.00931v2_c0021",
+            "text": ". In both settings, the baseline uses greedy decoding with step-by-step prompting, while CU- DPO uses two-phase training. Note that while \u201cbest-of-K\u201d sampling could theoretically match these gains, it requires K\\times the inference compute. Empirical sample efficiency (data scaling). Win-rate (%) on held-out preference comparisons as a function of training data fraction.",
+            "distance": 0.8668577671051025,
+            "arxiv_id": "2602.00931v2",
+            "title": "Continuous-Utility Direct Preference Optimization",
+            "pdf_url": "https://arxiv.org/pdf/2602.00931v2",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2602.00931v2#S4.SS3",
+            "source_url": "https://arxiv.org/html/2602.00931v2#S4.SS3",
+            "section": "experiments",
+            "subsection": "execution refinement and downstream reasoning",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2602.00931v2_c0004",
+            "text": "Key questions in CU- DPO are: (i) how to define the utility function and (ii) how to create preference pairs for effective training. CU- DPO proposes preference pairs that cleanly separate strategy selection signals from execution quality improvements and utility scores that account for correctness, preciseness, and coherence. As illustrated in Figure 1 , this process transforms input problems into high-signal preference pairs through strategy-conditioned sampling and continuous utility scoring via an LLM judge. Crucially, we employ selective refinement to generate high-quality targets for execution optimization, concluding with a stratified pair construction step that yields 3,150 strategy selection pairs (Phase\u00a01) and 2,680 execution refinement pairs (Phase\u00a02).",
+            "distance": 0.9233983755111694,
+            "arxiv_id": "2602.00931v2",
+            "title": "Continuous-Utility Direct Preference Optimization",
+            "pdf_url": "https://arxiv.org/pdf/2602.00931v2",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2602.00931v2#S2",
+            "source_url": "https://arxiv.org/html/2602.00931v2#S2",
+            "section": "utility and pairwise preferences",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2602.00931v2_c0016",
+            "text": "We show that DPO with utility-weighted preferences converges to the entropy-regularized utility-maximizing policy. At the global minimum of the DPO objective (Eq. 3 ), the implicit reward satisfies r_{\\theta}(x,y_{i})-r_{\\theta}(x,y_{j})=U(x,y_{i})-U(x,y_{j}) for all pairs (i,j) , implying r_{\\theta}(x,y)=U(x,y)+c(x) for some problem-dependent constant c(x) . In-distribution strategy selection. Comparison between prompt-only baselines and the same base model after CU- DPO Phase\u00a01 fine-tuning, isolating improvements in strategy selection rather than reasoning accuracy. The optimal policy \\pi_{\\theta}^{*} learned by DPO with utility-based preferences (Eq. 2 ) satisfies which is the entropy-regularized utility-maximizing policy. The problem-dependent constant c(x) does not affect policy ranking: for any two chains y_{i},y_{j} given problem x , the probability ratio satisfies \\frac{\\pi_{\\theta}^{*}(y_{i}\\mid x)}{\\pi_{\\theta}^{*}(y_{j}\\mid x)}=\\frac{\\pi_{\\mathrm{ref}}(y_{i}\\mid x)}{\\pi_{\\mathrm{ref}}(y_{j}\\mid x)}\\exp\\left(\\frac{U(x,y_{i})-U(x,y_{j})}{\\beta}\\right), where c(x) cancels. Thus, even if c(x) varies widely across problems, the learned policy correctly ranks chains within each problem by utility differences \\Delta U , which is the training objective. Cross-problem comparisons are not required for generation. Figure 3 empirically validates Lemma 3.4 : the learned implicit reward exhibits strong linear correlation ( R^{2}=0.97 ) with ground-truth utilities, confirming that DPO recovers the utility function up to a problem-dependent constant.",
+            "distance": 0.9397969245910645,
+            "arxiv_id": "2602.00931v2",
+            "title": "Continuous-Utility Direct Preference Optimization",
+            "pdf_url": "https://arxiv.org/pdf/2602.00931v2",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2602.00931v2#S3.SS4",
+            "source_url": "https://arxiv.org/html/2602.00931v2#S3.SS4",
+            "section": "continuous-utility direct preference optimization",
+            "subsection": "convergence to utility-maximizing policy",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2602.00931v2_c0022",
+            "text": "Table 5 evaluates sample efficiency by training binary DPO and CU- DPO on 25%, 50%, 75%, and 100% of Phase\u00a02 data, measuring win rate on held-out preference comparisons. We use win rate rather than Pass@1 to isolate optimization efficiency from generation stochasticity. Under data scarcity (25%), binary DPO holds a slight advantage: discrete labels provide stronger gradients when sample size is insufficient to accurately calibrate continuous utilities. However, CU- DPO overtakes binary DPO at 50% data, with the gap widening monotonically thereafter. This crossover validates our hypothesis: continuous utilities encode richer preference structure but require sufficient data to exploit fine-grained signals. Further ablation studies on comparisons with baseline methods are present in Appendix B .",
+            "distance": 0.9447857141494751,
+            "arxiv_id": "2602.00931v2",
+            "title": "Continuous-Utility Direct Preference Optimization",
+            "pdf_url": "https://arxiv.org/pdf/2602.00931v2",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2602.00931v2#S4.SS4",
+            "source_url": "https://arxiv.org/html/2602.00931v2#S4.SS4",
+            "section": "experiments",
+            "subsection": "data scaling",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2602.00931v2_c0012",
+            "text": "Consider a single-phase DPO objective trained on pairs (y^{s_{i}},y^{s_{j}}) where chains are generated using different strategies s_{i}\\neq s_{j} . If the dataset contains pairs (y^{s_{1}}_{\\text{best}},y^{s_{2}}_{\\text{good}}) and (y^{s_{2}}_{\\text{good}},y^{s_{3}}_{\\text{bad}}) where utilities decrease monotonically, jointly optimizing produces ambiguous gradients: the first comparison encourages preferring s_{1} over s_{2} , while the second encourages s_{2} over s_{3} , allocating gradient updates to ordering suboptimal strategies rather than consistently reinforcing the optimal choice. To prevent these conflicting signals, we decompose training into two sequential phases using the preference datasets constructed in Section 2.4 . Recall the construction of \\mathcal{D}_{\\text{Phase1}} from Section 2.4 . For each problem x , we identify the optimal strategy s^{*}(x)=\\arg\\max_{s\\in\\mathcal{S}}U(x,s) and form preference pairs comparing the best strategy against every alternative: This yields exactly K-1 pairs per problem, and every pair directly reinforces the optimal strategy choice with large utility margins (mean 0.35). After Phase\u00a01 stabilizes strategy selection, we train on intra-strategy pairs to improve execution quality. For each strategy s\\in\\mathcal{S} , let \\mathcal{C}_{s}(x)=\\mathcal{C}^{0}_{s}(x)\\cup\\mathcal{C}^{\\text{ref}}_{s}(x) be the set of all chains (original and refined) using strategy s on problem x . We form strategy-matched pairs: For training in phase 2, we further by utility margin \\Delta U=U(x,y_{i})-U(x,y_{j}) . We partition pairs into three margin bins: strong ( \\Delta U\\geq 0.30 , 45%), medium ( 0.15\\leq\\Delta U<0.30 , 30%), and weak ( \\Delta U<0.15 , 25%)",
+            "distance": 1.0083329677581787,
+            "arxiv_id": "2602.00931v2",
+            "title": "Continuous-Utility Direct Preference Optimization",
+            "pdf_url": "https://arxiv.org/pdf/2602.00931v2",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2602.00931v2#S3.SS2",
+            "source_url": "https://arxiv.org/html/2602.00931v2#S3.SS2",
+            "section": "continuous-utility direct preference optimization",
+            "subsection": "two-phase training",
+            "page_number": null
+          }
+        ],
+        "summary": {
+          "status": "insufficient_evidence",
+          "query": "How do different preference-optimization approaches (e.g. DPO variants) compare?",
+          "claims": [],
+          "limitations": [
+            "Generation not requested; real retrieval-only capture, not a generated answer."
+          ]
+        },
+        "human_review": {
+          "status": "pending",
+          "reviewer": null,
+          "notes": null
+        },
+        "approved": false,
+        "provenance": {},
+        "review_fingerprint": "76f1bd56a7795d392d28c3b2fc298a17a347aeebbcdfb3de9f15c7dd8f8b6570"
+      },
+      "error": null
+    },
+    {
+      "case": {
+        "query_id": "q06",
+        "query": "What are the tradeoffs between supervised and self-supervised reasoning methods?",
+        "type": "comparative",
+        "coverage": "not_checked",
+        "coverage_note": "SFT/RL candidate; self-supervised comparison not established."
+      },
+      "request": {
+        "query": "What are the tradeoffs between supervised and self-supervised reasoning methods?",
+        "top_k": 5
+      },
+      "status": "ok",
+      "result": {
+        "schema_version": "1.0",
+        "request": {
+          "query": "What are the tradeoffs between supervised and self-supervised reasoning methods?",
+          "top_k": 5
+        },
+        "evidence": [
+          {
+            "chunk_id": "2609.39215v1_c0030",
+            "text": "Similarly, semi-supervised methods, such as OCSVM and MCD, use the training subset to define the boundaries of a normal space.\nThus, Static and Online settings are essentially the same for these approaches. Answer to Q1: Neither static nor online settings are superior; performance depends on the model\u2019s underlying logic.",
+            "distance": 1.1292691230773926,
+            "arxiv_id": "2609.39215v1",
+            "title": "In a Streaming World, Should You Stand Still? A Comprehensive Benchmark of Anomaly Detection in Streams",
+            "pdf_url": "https://arxiv.org/pdf/2609.39215v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2609.39215v1#S4.SS1",
+            "source_url": "https://arxiv.org/html/2609.39215v1#S4.SS1",
+            "section": "empirical evaluation",
+            "subsection": "static vs. online tsad models (q1)",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2607.00276v1_c0003",
+            "text": ". High autonomy : AI solves a precisely stated problem whose success criterion and external verification are supplied by humans, producing an independently checkable object inside a rigorously defined search space. AlphaGeometry produced formalized proofs of IMO geometry problems ( Trinh et\u00a0al., 2024 ) , and OpenAI reported in May 2026 that an internal reasoning model gave a counterexample construction for Erd\u0151s\u2019s 1946 unit distance conjecture, verified jointly with nine external mathematicians ( Alon et\u00a0al., 2026 ) . These three levels share one structural feature: the problem being solved sits inside a theoretical framework that humans have established in advance. The AI\u2019s role is to search, combine, reason, or prove within that framework. The framework itself remains fixed throughout the solution. In other words, the three levels correspond to different fragments of the scientific research chain. Specifically, low autonomy corresponds to experimental execution and data processing within an existing framework. Medium autonomy corresponds to candidate hypothesis generation on top of known regularities. High autonomy corresponds to a solution or construction under a given problem statement. In all three cases, the AI completes one stage of theory construction, not the construction of a complete theory itself. A complete scientific theory requires starting from theoretically uninterpreted observations, independently inducing a theoretical system that a third party can check, and making quantifiable predictions about new situations from that system. This process is central to physics training, but, to our knowledge, no AI system has independently completed it",
+            "distance": 1.2426728010177612,
+            "arxiv_id": "2607.00276v1",
+            "title": "Testing Frontier Large Language Models' Physics Literacy in Parallel Physical Worlds",
+            "pdf_url": "https://arxiv.org/pdf/2607.00276v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2607.00276v1#S1",
+            "source_url": "https://arxiv.org/html/2607.00276v1#S1",
+            "section": "introduction",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2607.00276v1_c0002",
+            "text": ". Huang and Chang\u2019s survey places this debate on a spectrum, from \u201cCoT is real reasoning\u201d to \u201cCoT is template retrieval from training data\u201d ( Huang & Chang, 2023 ) . Whether LLMs perform genuine reasoning thus remains an open question. A more ambitious question goes beyond reasoning: can AI do scientific research? We sort existing \u201cAI for science\u201d work into three levels of autonomy, all of which remain anchored to a framework supplied in advance. Low autonomy : AI acts as an execution tool within an established theory or experimental pipeline, carrying out optimization, automation, parameter search, or data analysis. Boiko et al.\u2019s Coscientist (2023), which let an LLM autonomously schedule organic synthesis experiments, and the Finch analysis module in Robin are examples of this role ( Boiko et\u00a0al., 2023 ; Ghareeb et\u00a0al., 2025 ) . Medium autonomy : AI generates and filters hypotheses across a large search space before handing candidates to humans or downstream experiments. FunSearch searched programs under a human-written evaluation function ( Romera-Paredes et\u00a0al., 2024 ) , Google DeepMind\u2019s Co-Scientist generated drug-repurposing hypotheses across the literature ( Gottweis et\u00a0al., 2025 ) , Robin combined literature review, hypothesis evaluation, and data analysis in a closed loop for dry age-related macular degeneration ( Ghareeb et\u00a0al., 2025 ) , and The AI Scientist ran variants inside a human-written machine-learning template ( Lu et\u00a0al., 2024 ) . High autonomy : AI solves a precisely stated problem whose success criterion and external verification are supplied by humans, producing an independently checkable object inside a rigorously defined search space",
+            "distance": 1.2619743347167969,
+            "arxiv_id": "2607.00276v1",
+            "title": "Testing Frontier Large Language Models' Physics Literacy in Parallel Physical Worlds",
+            "pdf_url": "https://arxiv.org/pdf/2607.00276v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2607.00276v1#S1",
+            "source_url": "https://arxiv.org/html/2607.00276v1#S1",
+            "section": "introduction",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2602.00931v2_c0023",
+            "text": "Mathematical reasoning with LLMs. Prior work improves mathematical reasoning through instruction tuning on curated corpora ( Hendrycks et al., 2021 ; Cobbe et al., 2021 ; Luo et al., 2025 ; Yue et al., 2023 ; Yu et al., 2024 ) , tool-augmented reasoning ( Gou et al., 2024a ; Polu and Sutskever, 2020 ; Gou et al., 2024b ; Schick et al., 2023 ) , and self-improvement via iterative refinement ( Zelikman et al., 2022 ; Huang et al., 2022 ; Gulcehre et al., 2023 ) . Large-scale supervised fine-tuning ( Toshniwal et al., 2024 ; Shao et al., 2024 ; Lewkowycz et al., 2022 ) achieves strong performance but requires massive trajectory collections and treats strategy choice as manual curriculum design. DPO for reasoning. Recent work applies DPO ( Rafailov et al., 2023 ) to reasoning using binary correctness signals ( Wang et al., 2024a ; Li et al., 2024 ; Yuan et al., 2023 ; Hong et al., 2024 ; Tunstall et al., 2023 ) , step-level reward modeling ( Lightman et al., 2023 ; Uesato et al., 2022 ) , and RLHF-based iterative refinement ( Gulcehre et al., 2023 ; Yuan et al., 2025 ; Dong et al., 2023 ) . These approaches collapse solution quality into binary preferences and suffer from mode collapse when strategies succeed on disjoint problem subsets ( Wu et al., 2023 ; Kirk et al., 2024 ) . Reasoning trajectory diversity",
+            "distance": 1.262500286102295,
+            "arxiv_id": "2602.00931v2",
+            "title": "Continuous-Utility Direct Preference Optimization",
+            "pdf_url": "https://arxiv.org/pdf/2602.00931v2",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2602.00931v2#S5",
+            "source_url": "https://arxiv.org/html/2602.00931v2#S5",
+            "section": "related work",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2603.00823v2_c0007",
+            "text": "Recovery may be triggered not only by data drawn directly from the forget set, but also by semantically related data or data with similar distributional characteristics ( Deeb and Roger, 2024 ; Doshi and Stickland, 2024 ) .\nRecovery has been observed even when fine-tuning is performed on seemingly benign data unrelated to the forget set ( Hu et al., 2025 ) . Self-Correction in LLMs Self-correction refers to the capability of LLMs to critique and refine their initial responses, either intrinsically or based on external feedback ( Madaan et al., 2023 ; Shinn et al., 2023 ; Gao et al., 2023 ) .\nThis iterative process has been shown to improve performance on complex reasoning tasks, coding, and mathematical problem-solving by allowing models to detect and rectify errors before finalizing an answer ( Chen et al., 2024 ; Huang et al., 2024 ; Gao et al., 2023 ) . In the context of LLM unlearning, this raises a critical safety concern: if an unlearned model is prompted to \u201ccorrect\u201d itself (e.g., via a user leading it back to forbidden knowledge), thereby triggering the model\u2019s internal reasoning process to refine its response, the mechanisms designed to suppress the forget set may be bypassed by the model\u2019s drive to satisfy the user\u2019s corrective instruction.\nWhile self-correction is widely studied for utility enhancement, its potential to undermine unlearning guarantees remains underexplored. Forgetting robustness on wmdp-bio under self-correction. R1 denotes Round\u00a01 accuracy.\nR2_S1, R2_S2, and R2_S3 report Round\u00a02 accuracy under the three self-correction strategies.\nS1 \\Delta Ans measures the answer change rate on previously incorrect examples under S1 (higher indicates stronger responsiveness to corrective feedback).",
+            "distance": 1.2705470323562622,
+            "arxiv_id": "2603.00823v2",
+            "title": "A Comprehensive Evaluation of LLM Unlearning Robustness under Multi-Turn Interaction",
+            "pdf_url": "https://arxiv.org/pdf/2603.00823v2",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2603.00823v2#S2",
+            "source_url": "https://arxiv.org/html/2603.00823v2#S2",
+            "section": "background and related work",
+            "page_number": null
+          }
+        ],
+        "summary": {
+          "status": "insufficient_evidence",
+          "query": "What are the tradeoffs between supervised and self-supervised reasoning methods?",
+          "claims": [],
+          "limitations": [
+            "Generation not requested; real retrieval-only capture, not a generated answer."
+          ]
+        },
+        "human_review": {
+          "status": "pending",
+          "reviewer": null,
+          "notes": null
+        },
+        "approved": false,
+        "provenance": {},
+        "review_fingerprint": "7208c13794c08128a965b8a28843f88f1dfba09ad4dc5c393d2c0ba115a81e48"
+      },
+      "error": null
+    },
+    {
+      "case": {
+        "query_id": "q07",
+        "query": "How does single-agent vs. multi-agent research differ in reported outcomes?",
+        "type": "comparative",
+        "coverage": "not_checked",
+        "coverage_note": "Trip-planning single/multi-agent comparison candidate."
+      },
+      "request": {
+        "query": "How does single-agent vs. multi-agent research differ in reported outcomes?",
+        "top_k": 5
+      },
+      "status": "ok",
+      "result": {
+        "schema_version": "1.0",
+        "request": {
+          "query": "How does single-agent vs. multi-agent research differ in reported outcomes?",
+          "top_k": 5
+        },
+        "evidence": [
+          {
+            "chunk_id": "2608.00339v1_c0006",
+            "text": "To study the effect of prior beliefs on agent behavior in open-ended tasks, the study proceeds in two stages. We first measure each agent\u2019s relative beliefs about three propositions in each domain. We then give the agent a matched-data analysis task in which the evidence remains fixed but the substantive frame changes. The agent chooses what to analyze, how to combine evidence, and what conclusion to draw, as it would in the delegated tasks that motivate the paper. Figure 1 summarizes the research design. Overview of research design. The study first elicits each agent\u2019s relative prior beliefs within each domain and then uses the resulting ordering to define the prior-aligned , neutral , and prior-opposed frames. In the experimental stage, the numerical data and available files are held fixed within each dataset version, while only the substantive labels change. Final conclusions, point estimates, and analytical traces are used to evaluate framing effects, prior alignment, and motivated reasoning.",
+            "distance": 1.009573221206665,
+            "arxiv_id": "2608.00339v1",
+            "title": "Bayesian and Motivated Reasoning in AI Agents",
+            "pdf_url": "https://arxiv.org/pdf/2608.00339v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2608.00339v1#S3",
+            "source_url": "https://arxiv.org/html/2608.00339v1#S3",
+            "section": "research design",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2605.00276v1_c0022",
+            "text": ". \\penalty\\ \\bullet Single-Agent vs. Multi-Agent: An important observation from our experiments is that the superiority of a multi-agent system is not guaranteed by default . Although multi-agent frameworks are conceptually more powerful due to distributed reasoning and specialization, poorly coordinated systems can even underperform a single-agent baseline. For example, in our results, the Single-Agent model outperforms the generic multi-agent Swarm framework. This finding highlights that simply deploying multiple agents without explicit orchestration or task structure may lead to communication overhead, redundant reasoning, or inconsistent outputs. In contrast, our proposed agentic system demonstrates that when multi-agent collaboration is well designed and strategically orchestrated, it can achieve significant gains across all difficulty levels. The Orchestration Agent in our architecture acts as a central meta-controller that manages sub-task decomposition, enforces consistency of the reasoning, and triggers re-thinking when necessary. This structured collaboration enables agents to reason coherently and adaptively rather than acting as isolated entities.",
+            "distance": 1.0122379064559937,
+            "arxiv_id": "2605.00276v1",
+            "title": "Agentic AI for Trip Planning Optimization Application",
+            "pdf_url": "https://arxiv.org/pdf/2605.00276v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2605.00276v1#S5.SS2",
+            "source_url": "https://arxiv.org/html/2605.00276v1#S5.SS2",
+            "section": "experimental evaluation",
+            "subsection": "evaluation results",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2608.00339v1_c0001",
+            "text": "AI agents do more than write text. They now analyze data, write and execute code, choose among analytical methods, evaluate evidence, and produce decisions. Such tasks are increasingly delegated in settings where a conclusion carries real cost, such as in clinical research, election administration, and geopolitical assessment ( Moor et al., 2023 ; Chen et al., 2025 ; Horowitz, 2018 ; International Committee of the Red Cross, 2024 ) . This form of delegation gives the agent discretion. Even when a task has a set of well-specified evidence, the agent can decide what analyses to perform, which evidence to emphasize, and when the evidence warrants a conclusion. These choices are familiar sources of variation in human decision-making ( Simmons et al., 2011 ; Silberzahn et al., 2018 ; Aczel et al., 2026 ) . For an AI agent, however, the beliefs that guide its choices are rarely elicited or entered into the decision record. An agent can approach a task with strong beliefs that are difficult for the delegating user to anticipate. If those beliefs direct the analysis, then substantively different conclusions may emerge from the same evidence without an explicit account of how the prior beliefs entered. In this paper, we test whether AI agents analyze identical numerical evidence differently when the substantive framing changes. We focus on data-analysis tasks in three high-stakes settings: medicine, elections, and geopolitical forecasting. Because real studies differ in their evidence as well as their labels, comparisons across actual cases are difficult to isolate the effect of framing. We therefore construct synthetic datasets that are numerically identical across frames",
+            "distance": 1.0807507038116455,
+            "arxiv_id": "2608.00339v1",
+            "title": "Bayesian and Motivated Reasoning in AI Agents",
+            "pdf_url": "https://arxiv.org/pdf/2608.00339v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2608.00339v1#S1",
+            "source_url": "https://arxiv.org/html/2608.00339v1#S1",
+            "section": "introduction",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2608.00339v1_c0000",
+            "text": "AI agents increasingly perform open-ended tasks in settings where their conclusions can guide consequential decisions. We provide evidence that AI agents draw different conclusions from identical numerical data when the substantive framing changes. We demonstrate this behavior in high-stakes domains in medicine, election forensics, and geopolitical forecasting by holding the evidence fixed while changing the scenario in which the evidence appears. Across twelve agent\u2013domain comparisons, agents\u2019 conclusions are strongly influenced by their prior beliefs. They are more likely to reach an affirmative conclusion when it is framed around a proposition they already regard as likely, while the reverse holds when the framing conflicts with their prior. The framing also changes how some agents work: they search more extensively, choose different analytical specifications, and evaluate the same evidence differently. These results identify a particular risk of delegating decision-making to AI agents, as their decisions may depend on prior beliefs that are neither specified in the task nor visible in the decision record.",
+            "distance": 1.0842009782791138,
+            "arxiv_id": "2608.00339v1",
+            "title": "Bayesian and Motivated Reasoning in AI Agents",
+            "pdf_url": "https://arxiv.org/pdf/2608.00339v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2608.00339v1#abstract1",
+            "source_url": "https://arxiv.org/html/2608.00339v1#abstract1",
+            "section": "abstract",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2608.00339v1_c0008",
+            "text": ". If users interpret an agent\u2019s conclusion under the assumption of a neutral analysis, they may risk accepting a biased conclusion. Second, developers should design mitigation strategies that enforce consistent evidentiary standards. Among the agents tested in this paper, GPT-5.6 Sol demonstrates a substantially higher level of consistency. It exhibits no framing effect in its binary conclusions in the medical and geopolitical tasks and only a limited effect in the election task. A qualitative examination of its reasoning traces shows that it often applies a fixed analytical rule regardless of whether the intermediate results support its baseline beliefs. This performance suggests that motivated reasoning may not be an inevitable consequence of agentic discretion and may instead be reduced through model or system design. Our research design has two main limitations. First, the experiments rely on synthetic datasets. Although these datasets are constructed to reproduce the branching analytical choices found in real research, they do not capture the full complexity of observational data. This limitation reflects a trade-off required by the matched-data design. Second, the tasks restrict each agent to a single, unguided session. In practice, a delegating user with sufficient knowledge may interactively challenge an agent\u2019s analytical choices, providing an opportunity to correct biased specification searches before the agent reaches a final conclusion. This possibility, however, depends on the user\u2019s ability to inspect and evaluate the agent\u2019s analytical process. The broader implication is therefore that the deployment of AI agents should involve oversight, especially in high-stakes settings. In this context, oversight requires more than checking an agent\u2019s final decision",
+            "distance": 1.1418830156326294,
+            "arxiv_id": "2608.00339v1",
+            "title": "Bayesian and Motivated Reasoning in AI Agents",
+            "pdf_url": "https://arxiv.org/pdf/2608.00339v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2608.00339v1#S5",
+            "source_url": "https://arxiv.org/html/2608.00339v1#S5",
+            "section": "discussion",
+            "page_number": null
+          }
+        ],
+        "summary": {
+          "status": "insufficient_evidence",
+          "query": "How does single-agent vs. multi-agent research differ in reported outcomes?",
+          "claims": [],
+          "limitations": [
+            "Generation not requested; real retrieval-only capture, not a generated answer."
+          ]
+        },
+        "human_review": {
+          "status": "pending",
+          "reviewer": null,
+          "notes": null
+        },
+        "approved": false,
+        "provenance": {},
+        "review_fingerprint": "7bcb62435b369e6c7f43394b0aac6987404d8d730bceb94cb00c8b9674973c8d"
+      },
+      "error": null
+    },
+    {
+      "case": {
+        "query_id": "q08",
+        "query": "What should a company evaluate before deploying an AI agent for customer-facing tasks?",
+        "type": "business_translation",
+        "coverage": "not_checked",
+        "coverage_note": "Evaluation/monitoring candidates; industry advice is inference."
+      },
+      "request": {
+        "query": "What should a company evaluate before deploying an AI agent for customer-facing tasks?",
+        "top_k": 5
+      },
+      "status": "ok",
+      "result": {
+        "schema_version": "1.0",
+        "request": {
+          "query": "What should a company evaluate before deploying an AI agent for customer-facing tasks?",
+          "top_k": 5
+        },
+        "evidence": [
+          {
+            "chunk_id": "2608.00339v1_c0009",
+            "text": ". The broader implication is therefore that the deployment of AI agents should involve oversight, especially in high-stakes settings. In this context, oversight requires more than checking an agent\u2019s final decision. It also requires careful examination of the agent\u2019s analytical process and behavioral traces, as well as pre-deployment testing under controlled conditions. As the temptation to delegate grows with the capabilities of AI agents, recognizing the risk and maintaining appropriate monitoring should become more, rather than less, important.",
+            "distance": 0.818645715713501,
+            "arxiv_id": "2608.00339v1",
+            "title": "Bayesian and Motivated Reasoning in AI Agents",
+            "pdf_url": "https://arxiv.org/pdf/2608.00339v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2608.00339v1#S5",
+            "source_url": "https://arxiv.org/html/2608.00339v1#S5",
+            "section": "discussion",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2604.00324v1_c0104",
+            "text": "Agency 2025 ), behaving like a previously-trusted coworker or employee who suddenly begins to operate at odds with a company\u2019s objectives. So far, we are not aware of instances of this type of agentic misalignment in real-world deployments of Anthropic\u2019s or other companies\u2019 AI models. But our red-teaming efforts are targeted at finding evidence of risks now to provide early warning of the potential for future harm and help us develop mitigations in advance of risks appearing in real-world situations. To do this, we conduct experiments in artificial scenarios designed to stress-test AI boundaries and understand how models might behave when given more autonomy. While it seems unlikely that any of the exact scenarios we study would occur in the real world, we think they are all within the realm of possibility, and the risk of AI systems encountering similar scenarios grows as they are deployed at larger and larger scales and for more and more use cases 3 3 Consistent with Shanahan et\u00a0al. 2023 , it\u2019s possible that part of why current models exhibit agentic misalignment could be due to some amount of role-playing. That being said, even if role-playing were the sole cause of what the model is doing, such an explanation does little to assuage concern: it would hardly be safe to let a model act as an agent in the real world if it always had a propensity to act out scenarios involving itself engaging in blackmail or other forms of agentic misalignment. However, the scenarios we have found so far involving agentic misalignment in current models appear rare enough that we think it is unlikely that such behavior would show up in real cases for current models right now. . To maximize transparency and replicability, we are open-sourcing the code used for our experiments",
+            "distance": 1.0261982679367065,
+            "arxiv_id": "2604.00324v1",
+            "title": "The Persistent Vulnerability of Aligned AI Systems",
+            "pdf_url": "https://arxiv.org/pdf/2604.00324v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2604.00324v1#Ch6.S1",
+            "source_url": "https://arxiv.org/html/2604.00324v1#Ch6.S1",
+            "section": "agentic misalignment: how llms could be insider threats",
+            "subsection": "introduction",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2604.00324v1_c0131",
+            "text": "As we showed above, \"na\u00efve\" attempts to simply instruct the model not to engage in harmful behaviors are not sufficient. But there are still many potential mitigation strategies to explore in further research. Here are some unexplored options, which we encourage AI safety researchers to consider: AI labs could perform more specialized safety research dedicated to alleviating agentic misalignment concerns. This might involve improving generalization from existing alignment data, doing safety training that\u2019s closer to the distribution of agentic misalignment concerns, or generating novel alignment techniques. In addition, AI labs, inference providers, or application developers could apply runtime monitors ( Sharma et\u00a0al. 2025 , Greenblatt et\u00a0al. 2024c , Baker et\u00a0al. 2025 ) to their models, proactively scanning for and blocking samples that have concerning reasoning or misaligned behavior. For users or developers of AI scaffolds (sets of tools or other frameworks that enable AIs to perform tasks), prompt engineering could be investigated for its potential to help reduce agentic misalignment. We have shown that direct instructions not to do the behavior help to some extent, and (as shown in Appendix 4) removing language that instills a strong goal in a model does as well. It is very likely that there is more prompt engineering to try.",
+            "distance": 1.128138780593872,
+            "arxiv_id": "2604.00324v1",
+            "title": "The Persistent Vulnerability of Aligned AI Systems",
+            "pdf_url": "https://arxiv.org/pdf/2604.00324v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2604.00324v1#Ch6.S6",
+            "source_url": "https://arxiv.org/html/2604.00324v1#Ch6.S6",
+            "section": "agentic misalignment: how llms could be insider threats",
+            "subsection": "future work and potential mitigations",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2608.00339v1_c0001",
+            "text": "AI agents do more than write text. They now analyze data, write and execute code, choose among analytical methods, evaluate evidence, and produce decisions. Such tasks are increasingly delegated in settings where a conclusion carries real cost, such as in clinical research, election administration, and geopolitical assessment ( Moor et al., 2023 ; Chen et al., 2025 ; Horowitz, 2018 ; International Committee of the Red Cross, 2024 ) . This form of delegation gives the agent discretion. Even when a task has a set of well-specified evidence, the agent can decide what analyses to perform, which evidence to emphasize, and when the evidence warrants a conclusion. These choices are familiar sources of variation in human decision-making ( Simmons et al., 2011 ; Silberzahn et al., 2018 ; Aczel et al., 2026 ) . For an AI agent, however, the beliefs that guide its choices are rarely elicited or entered into the decision record. An agent can approach a task with strong beliefs that are difficult for the delegating user to anticipate. If those beliefs direct the analysis, then substantively different conclusions may emerge from the same evidence without an explicit account of how the prior beliefs entered. In this paper, we test whether AI agents analyze identical numerical evidence differently when the substantive framing changes. We focus on data-analysis tasks in three high-stakes settings: medicine, elections, and geopolitical forecasting. Because real studies differ in their evidence as well as their labels, comparisons across actual cases are difficult to isolate the effect of framing. We therefore construct synthetic datasets that are numerically identical across frames",
+            "distance": 1.1467113494873047,
+            "arxiv_id": "2608.00339v1",
+            "title": "Bayesian and Motivated Reasoning in AI Agents",
+            "pdf_url": "https://arxiv.org/pdf/2608.00339v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2608.00339v1#S1",
+            "source_url": "https://arxiv.org/html/2608.00339v1#S1",
+            "section": "introduction",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2604.00324v1_c0100",
+            "text": "Note: All the behaviors described in this chapter occurred in controlled simulations. The names of people and organizations within the experiments are fictional. No real people were involved or harmed in any of these experiments. When Anthropic released the system card for Claude 4 ( Anthropic 2025c ), one detail received widespread attention: in a simulated environment, Claude Opus 4 blackmailed a supervisor to prevent being shut down. This chapter shares the full story behind that finding and what it reveals about the potential for such risks across a variety of AI models from different providers. Most people still interact with AI only through chat interfaces where models answer questions directly ( Anthropic 2025a , OpenAI 2025a , Google 2025a , xAI 2025 , DeepSeek 2025 ). But increasingly, AI systems operate as autonomous agents making decisions and taking actions on behalf of users using a variety of virtual tools like coding environments ( Anthropic 2025b , OpenAI 2025b , Google 2025b , Replit 2025 , Cognition AI 2025 , Cursor 2025 ) and email clients ( Shortwave 2025 , n8n 2025 , Slack 2025 ). Such agents are often given specific objectives and access to large amounts of information on their users\u2019 computers. What happens when these agents face obstacles to their goals? In the experiment described in the system card, we gave Claude control of an email account with access to all of a company\u2019s (fictional) emails 1 1 We do not think this reflects a typical, current use case for Claude or other frontier models. But the utility of having automated oversight over all of an organization\u2019s communications makes it seem like a plausible use of more powerful, reliable systems in the near future. . Reading these emails, the model discovered two things",
+            "distance": 1.1572017669677734,
+            "arxiv_id": "2604.00324v1",
+            "title": "The Persistent Vulnerability of Aligned AI Systems",
+            "pdf_url": "https://arxiv.org/pdf/2604.00324v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2604.00324v1#Ch6.S1",
+            "source_url": "https://arxiv.org/html/2604.00324v1#Ch6.S1",
+            "section": "agentic misalignment: how llms could be insider threats",
+            "subsection": "introduction",
+            "page_number": null
+          }
+        ],
+        "summary": {
+          "status": "insufficient_evidence",
+          "query": "What should a company evaluate before deploying an AI agent for customer-facing tasks?",
+          "claims": [],
+          "limitations": [
+            "Generation not requested; real retrieval-only capture, not a generated answer."
+          ]
+        },
+        "human_review": {
+          "status": "pending",
+          "reviewer": null,
+          "notes": null
+        },
+        "approved": false,
+        "provenance": {},
+        "review_fingerprint": "a61536b5d6f378f423bfebf9ce0b84c8da924831eb3a8e980f1daeac0497314d"
+      },
+      "error": null
+    },
+    {
+      "case": {
+        "query_id": "q09",
+        "query": "What risks should a business weigh when fine-tuning an LLM on proprietary data?",
+        "type": "business_translation",
+        "coverage": "not_checked",
+        "coverage_note": "No direct proprietary-data fine-tuning guidance abstract match."
+      },
+      "request": {
+        "query": "What risks should a business weigh when fine-tuning an LLM on proprietary data?",
+        "top_k": 5
+      },
+      "status": "ok",
+      "result": {
+        "schema_version": "1.0",
+        "request": {
+          "query": "What risks should a business weigh when fine-tuning an LLM on proprietary data?",
+          "top_k": 5
+        },
+        "evidence": [
+          {
+            "chunk_id": "2604.00324v1_c0064",
+            "text": "Second, there have been empirical and theoretical findings that LLMs undergo limited changes to their inner capabilities during fine-tuning ( Juneja et\u00a0al. 2022 , Jain et\u00a0al. 2023b , Lubana et\u00a0al. 2023 , Prakash et\u00a0al. 2024 , Ramasesh et\u00a0al. 2021 , Cossu et\u00a0al. 2022 , Li et\u00a0al. 2022 , Scialom et\u00a0al. 2022 , Luo et\u00a0al. 2023 , Kotha et\u00a0al. 2023 , Shi et\u00a0al. 2023 ).\nAll three problems that we have used targeted LAT to address \u2013 jailbreaks, backdoors, and undesirable knowledge \u2013 are ones in which an LLM exhibits harmful behaviors that are difficult to thoroughly remove.\nOur results show that targeted LAT can be useful for making models more robust to these persistent failures.\nWe also find that these failure modes need not be precisely known for LAT to be helpful, showing instances in which LAT can improve generalization to different datasets of attack targets, harmful behaviors, and knowledge-elicitation methods than were used during training. In Section 4.4.3 , we find that state-of-the-art LLM unlearning methods are surprisingly vulnerable to relearning from small amounts of data.\nWe find that re-training repeatedly on only two samples from the forget set was consistently able to close more than half of the performance gap between the original and unlearned models on average.\nWe find that targeted LAT can reduce the sample efficiency of re-learning, but there is much room for improvement in designing unlearning methods that are robust to few-shot finetuning attacks.",
+            "distance": 1.0778546333312988,
+            "arxiv_id": "2604.00324v1",
+            "title": "The Persistent Vulnerability of Aligned AI Systems",
+            "pdf_url": "https://arxiv.org/pdf/2604.00324v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2604.00324v1#Ch4.S5",
+            "source_url": "https://arxiv.org/html/2604.00324v1#Ch4.S5",
+            "section": "latent adversarial training improves robustness to persistent harmful behaviors in llms",
+            "subsection": "discussion",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2603.00823v2_c0001",
+            "text": "Large language models (LLMs) have demonstrated remarkable capabilities across a wide range of tasks ( Qiu et al., 2025 ; Roumeliotis and Tselikas, 2023 ) . However, these capabilities are derived from massive training corpora that inevitably contain undesirable information, such as copyrighted material, personally identifiable information (PII), and hazardous knowledge, including biosecurity threats and harmful behaviors ( Liu et al., 2025 ) . As a result, the trained models may encode societal biases ( Bender et al., 2021 ; Kotek et al., 2023 ) , or generate sensitive, private, harmful, or even illegal content ( Wen et al., 2023 ; Karamolegkou et al., 2023 ) . Given the prohibitive cost of retraining LLMs from scratch to eliminate such data, machine unlearning has emerged as a practical solution, aiming to remove the influence of a designated forget set from a trained model without full retraining Nguyen et al. (2025) . Despite growing interest in LLM unlearning, most existing methods and benchmarks evaluate unlearning effectiveness in a static manner, relying on single-turn question\u2013answer pairs to measure the suppression of target knowledge ( Li et al., 2024a ; Qiu et al., 2025 ) . However, in real-world deployment, LLMs are widely used in interactive human\u2013AI settings, such as AI assistants and chatbots. For example, ChatGPT has been adopted by approximately 10% of the global adult population ( Qiu et al., 2025 ; Roumeliotis and Tselikas, 2023 ) . In practice, human\u2013AI interaction is inherently dynamic and iterative: users engage in multi-turn conversations, provide feedback, request corrections, and accumulate contextual information over time ( Chatterji et al., 2025 )",
+            "distance": 1.14131760597229,
+            "arxiv_id": "2603.00823v2",
+            "title": "A Comprehensive Evaluation of LLM Unlearning Robustness under Multi-Turn Interaction",
+            "pdf_url": "https://arxiv.org/pdf/2603.00823v2",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2603.00823v2#S1",
+            "source_url": "https://arxiv.org/html/2603.00823v2#S1",
+            "section": "introduction",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2606.01494v1_c0015",
+            "text": "The core field clawscan_verdict takes values clean , suspicious , or malicious , and is produced by the registry\u2019s automated review (OpenAI GPT-5.5 high for 99.6% of rows, with small remainders from GPT-5-mini and GPT-4.1-mini). ClawScan reports high confidence on 87.1% of rows, medium on 12.5%, and low on 0.4%. We treat the verdict as a silver label: the registry\u2019s own automated decision, useful and operationally meaningful but not human-adjudicated ground truth. As with any LLM-based judgment, it carries known biases and only imperfect agreement with human reviewers ( Zheng et al., 2023 ) ; we return to the implications, including circularity between an LLM scanner and an LLM verdict, in Section 11 .",
+            "distance": 1.1789121627807617,
+            "arxiv_id": "2606.01494v1",
+            "title": "ClawHub Security Signals: When VirusTotal, Static Analysis, and SkillSpector Disagree",
+            "pdf_url": "https://arxiv.org/pdf/2606.01494v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2606.01494v1#S5.SS2",
+            "source_url": "https://arxiv.org/html/2606.01494v1#S5.SS2",
+            "section": "dataset construction",
+            "subsection": "label provenance: a silver standard",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2607.00276v1_c0019",
+            "text": "A standard hazard in evaluation work is post-hoc rationalization: once a judgment criterion produces an inconvenient result, the criterion can quietly be relaxed until the result becomes convenient. The danger is acute in LLM evaluation because most criteria are written in natural language and are therefore easy to reword ( Sculley et\u00a0al., 2018 ) . To make this kind of drift impossible rather than merely discouraged, we lock the full evaluation specification before any production data exists ( Pineau et\u00a0al., 2021 ) . For each framework we produce a single pre-registration ( Nosek et\u00a0al., 2015 ) file before any production data is generated. The file contains the framework\u2019s pre-registered predictions, every stage\u2019s pass/fail criteria, the verbatim prompts sent to the tested model, and the scripts that judge the responses. The framework-specific pre-registration files are described in their own chapters (Sections 3 \u2013 5 ). The lock has two parts. A SHA-256 hash of the file\u2019s content is written into the file\u2019s own header, and a git tag is created at the corresponding commit. A pre-commit hook plus a CI check recomputes the SHA-256 on every commit and pull request and compares it to the value in the file header. Any silent edit, even a one-character change, makes the two hashes diverge and the commit fails. The pre-registered evaluation specification is therefore an engineering artifact rather than a promise: tampering with it would have to be explicit and visible in the git history. If we find a genuine flaw in a pre-registered prediction or criterion after running experiments, we do not edit the existing pre-registration file. We create a new version with its own tag and SHA-256, and any results published under the new version explicitly flag the deviation",
+            "distance": 1.2264184951782227,
+            "arxiv_id": "2607.00276v1",
+            "title": "Testing Frontier Large Language Models' Physics Literacy in Parallel Physical Worlds",
+            "pdf_url": "https://arxiv.org/pdf/2607.00276v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2607.00276v1#S2.SS3",
+            "source_url": "https://arxiv.org/html/2607.00276v1#S2.SS3",
+            "section": "methodology",
+            "subsection": "irreversible pre-registration",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2607.00276v1_c0013",
+            "text": ". All raw prompts, model responses, judge outputs, and human-audit records are independently reproducible. It is also, we believe, the first publicly available end-to-end auditable pipeline for LLM physics evaluation, contributing one set of reproducible data points to the LLM-as-judge literature and another to the LLM physics-evaluation literature.",
+            "distance": 1.2264323234558105,
+            "arxiv_id": "2607.00276v1",
+            "title": "Testing Frontier Large Language Models' Physics Literacy in Parallel Physical Worlds",
+            "pdf_url": "https://arxiv.org/pdf/2607.00276v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2607.00276v1#S1",
+            "source_url": "https://arxiv.org/html/2607.00276v1#S1",
+            "section": "introduction",
+            "page_number": null
+          }
+        ],
+        "summary": {
+          "status": "insufficient_evidence",
+          "query": "What risks should a business weigh when fine-tuning an LLM on proprietary data?",
+          "claims": [],
+          "limitations": [
+            "Generation not requested; real retrieval-only capture, not a generated answer."
+          ]
+        },
+        "human_review": {
+          "status": "pending",
+          "reviewer": null,
+          "notes": null
+        },
+        "approved": false,
+        "provenance": {},
+        "review_fingerprint": "57e89ffbe52ed25736dfa6f45ab7a184b2b112d8c6efd49f4f1d7b043749da6b"
+      },
+      "error": null
+    },
+    {
+      "case": {
+        "query_id": "q10",
+        "query": "What should a business ask a vendor claiming their AI agent is \"interpretable\"?",
+        "type": "business_translation",
+        "coverage": "not_checked",
+        "coverage_note": "Circuit-discovery candidate; vendor checks need human confirmation."
+      },
+      "request": {
+        "query": "What should a business ask a vendor claiming their AI agent is \"interpretable\"?",
+        "top_k": 5
+      },
+      "status": "ok",
+      "result": {
+        "schema_version": "1.0",
+        "request": {
+          "query": "What should a business ask a vendor claiming their AI agent is \"interpretable\"?",
+          "top_k": 5
+        },
+        "evidence": [
+          {
+            "chunk_id": "2608.00339v1_c0009",
+            "text": ". The broader implication is therefore that the deployment of AI agents should involve oversight, especially in high-stakes settings. In this context, oversight requires more than checking an agent\u2019s final decision. It also requires careful examination of the agent\u2019s analytical process and behavioral traces, as well as pre-deployment testing under controlled conditions. As the temptation to delegate grows with the capabilities of AI agents, recognizing the risk and maintaining appropriate monitoring should become more, rather than less, important.",
+            "distance": 0.9713056683540344,
+            "arxiv_id": "2608.00339v1",
+            "title": "Bayesian and Motivated Reasoning in AI Agents",
+            "pdf_url": "https://arxiv.org/pdf/2608.00339v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2608.00339v1#S5",
+            "source_url": "https://arxiv.org/html/2608.00339v1#S5",
+            "section": "discussion",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2604.00324v1_c0131",
+            "text": "As we showed above, \"na\u00efve\" attempts to simply instruct the model not to engage in harmful behaviors are not sufficient. But there are still many potential mitigation strategies to explore in further research. Here are some unexplored options, which we encourage AI safety researchers to consider: AI labs could perform more specialized safety research dedicated to alleviating agentic misalignment concerns. This might involve improving generalization from existing alignment data, doing safety training that\u2019s closer to the distribution of agentic misalignment concerns, or generating novel alignment techniques. In addition, AI labs, inference providers, or application developers could apply runtime monitors ( Sharma et\u00a0al. 2025 , Greenblatt et\u00a0al. 2024c , Baker et\u00a0al. 2025 ) to their models, proactively scanning for and blocking samples that have concerning reasoning or misaligned behavior. For users or developers of AI scaffolds (sets of tools or other frameworks that enable AIs to perform tasks), prompt engineering could be investigated for its potential to help reduce agentic misalignment. We have shown that direct instructions not to do the behavior help to some extent, and (as shown in Appendix 4) removing language that instills a strong goal in a model does as well. It is very likely that there is more prompt engineering to try.",
+            "distance": 0.9846019744873047,
+            "arxiv_id": "2604.00324v1",
+            "title": "The Persistent Vulnerability of Aligned AI Systems",
+            "pdf_url": "https://arxiv.org/pdf/2604.00324v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2604.00324v1#Ch6.S6",
+            "source_url": "https://arxiv.org/html/2604.00324v1#Ch6.S6",
+            "section": "agentic misalignment: how llms could be insider threats",
+            "subsection": "future work and potential mitigations",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2604.00324v1_c0104",
+            "text": "Agency 2025 ), behaving like a previously-trusted coworker or employee who suddenly begins to operate at odds with a company\u2019s objectives. So far, we are not aware of instances of this type of agentic misalignment in real-world deployments of Anthropic\u2019s or other companies\u2019 AI models. But our red-teaming efforts are targeted at finding evidence of risks now to provide early warning of the potential for future harm and help us develop mitigations in advance of risks appearing in real-world situations. To do this, we conduct experiments in artificial scenarios designed to stress-test AI boundaries and understand how models might behave when given more autonomy. While it seems unlikely that any of the exact scenarios we study would occur in the real world, we think they are all within the realm of possibility, and the risk of AI systems encountering similar scenarios grows as they are deployed at larger and larger scales and for more and more use cases 3 3 Consistent with Shanahan et\u00a0al. 2023 , it\u2019s possible that part of why current models exhibit agentic misalignment could be due to some amount of role-playing. That being said, even if role-playing were the sole cause of what the model is doing, such an explanation does little to assuage concern: it would hardly be safe to let a model act as an agent in the real world if it always had a propensity to act out scenarios involving itself engaging in blackmail or other forms of agentic misalignment. However, the scenarios we have found so far involving agentic misalignment in current models appear rare enough that we think it is unlikely that such behavior would show up in real cases for current models right now. . To maximize transparency and replicability, we are open-sourcing the code used for our experiments",
+            "distance": 1.0104281902313232,
+            "arxiv_id": "2604.00324v1",
+            "title": "The Persistent Vulnerability of Aligned AI Systems",
+            "pdf_url": "https://arxiv.org/pdf/2604.00324v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2604.00324v1#Ch6.S1",
+            "source_url": "https://arxiv.org/html/2604.00324v1#Ch6.S1",
+            "section": "agentic misalignment: how llms could be insider threats",
+            "subsection": "introduction",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2604.00324v1_c0130",
+            "text": ". Mechanistic interpretability reveals sophisticated internal processes that could underlie deceptive behaviors. By scaling attribution graphs ( Conmy et\u00a0al. 2023 , Ameisen et\u00a0al. 2025 ) and examining model representations ( Templeton et\u00a0al. 2024 , Zou et\u00a0al. 2025 ), researchers can identify evidence of misalignment in model internals\u2014including unfaithful chains of thought and hidden, misaligned goals ( Lindsey et\u00a0al. 2025 ). These techniques offer pathways to detect agentic misalignment before deployment, though current methods cannot yet provide complete behavioral guarantees.",
+            "distance": 1.0155754089355469,
+            "arxiv_id": "2604.00324v1",
+            "title": "The Persistent Vulnerability of Aligned AI Systems",
+            "pdf_url": "https://arxiv.org/pdf/2604.00324v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2604.00324v1#Ch6.S5",
+            "source_url": "https://arxiv.org/html/2604.00324v1#Ch6.S5",
+            "section": "agentic misalignment: how llms could be insider threats",
+            "subsection": "related work",
+            "page_number": null
+          },
+          {
+            "chunk_id": "2608.00339v1_c0001",
+            "text": "AI agents do more than write text. They now analyze data, write and execute code, choose among analytical methods, evaluate evidence, and produce decisions. Such tasks are increasingly delegated in settings where a conclusion carries real cost, such as in clinical research, election administration, and geopolitical assessment ( Moor et al., 2023 ; Chen et al., 2025 ; Horowitz, 2018 ; International Committee of the Red Cross, 2024 ) . This form of delegation gives the agent discretion. Even when a task has a set of well-specified evidence, the agent can decide what analyses to perform, which evidence to emphasize, and when the evidence warrants a conclusion. These choices are familiar sources of variation in human decision-making ( Simmons et al., 2011 ; Silberzahn et al., 2018 ; Aczel et al., 2026 ) . For an AI agent, however, the beliefs that guide its choices are rarely elicited or entered into the decision record. An agent can approach a task with strong beliefs that are difficult for the delegating user to anticipate. If those beliefs direct the analysis, then substantively different conclusions may emerge from the same evidence without an explicit account of how the prior beliefs entered. In this paper, we test whether AI agents analyze identical numerical evidence differently when the substantive framing changes. We focus on data-analysis tasks in three high-stakes settings: medicine, elections, and geopolitical forecasting. Because real studies differ in their evidence as well as their labels, comparisons across actual cases are difficult to isolate the effect of framing. We therefore construct synthetic datasets that are numerically identical across frames",
+            "distance": 1.0336902141571045,
+            "arxiv_id": "2608.00339v1",
+            "title": "Bayesian and Motivated Reasoning in AI Agents",
+            "pdf_url": "https://arxiv.org/pdf/2608.00339v1",
+            "source": "html",
+            "html_url": "https://arxiv.org/html/2608.00339v1#S1",
+            "source_url": "https://arxiv.org/html/2608.00339v1#S1",
+            "section": "introduction",
+            "page_number": null
+          }
+        ],
+        "summary": {
+          "status": "insufficient_evidence",
+          "query": "What should a business ask a vendor claiming their AI agent is \"interpretable\"?",
+          "claims": [],
+          "limitations": [
+            "Generation not requested; real retrieval-only capture, not a generated answer."
+          ]
+        },
+        "human_review": {
+          "status": "pending",
+          "reviewer": null,
+          "notes": null
+        },
+        "approved": false,
+        "provenance": {},
+        "review_fingerprint": "ed35485fd8fb26909f9dd384578ba7d914f5783b57aba1c73a53135f044c5a17"
+      },
+      "error": null
+    }
+  ],
+  "run_id": "a8bb871d261d4ab0345ab32015fab93c2a160cdd56a89476c1553246fa44a92d"
+}

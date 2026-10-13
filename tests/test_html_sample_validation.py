@@ -49,6 +49,26 @@ class HtmlValidationTests(unittest.TestCase):
         self.assertTrue(is_subsequence('one three','one two three'))
         self.assertFalse(is_subsequence('three one','one two three'))
 
+    def test_pdf_passage_must_belong_to_the_cited_original_page(self):
+        pdf = self.root / 'fixture.pdf'
+        pdf.write_bytes(b'page extraction is injected for this source-scope check')
+        frame = self.frame.copy()
+        frame['source'] = 'pdf'
+        frame['page_number'] = 2
+        frame['text'] = 'Evidence on page two.'
+        with patch('tests.validate_html_sample.config.PROJECT_ROOT', self.root), \
+             patch('tests.validate_html_sample.resolve_pdf_path', return_value=pdf), \
+             patch('tests.validate_html_sample.extract_pages', return_value=[
+                 {'page': 1, 'text': 'Different page evidence.'},
+                 {'page': 2, 'text': 'Evidence on page two.'}]):
+            self.assertEqual(inspect_paper(self.metadata, frame)['failures'], [])
+            for page in (1, 3):
+                frame['page_number'] = page
+                result = inspect_paper(self.metadata, frame)
+                self.assertEqual(result['verified_passages'], 0)
+                self.assertEqual(result['failures'], [
+                    f"{cid}: Passage absent from cited PDF page" for cid in frame.chunk_id])
+
     def test_persistent_transport_and_stale_records(self):
         frame=pd.concat([self.frame,self.frame],ignore_index=True)
         frame.loc[0,'chunk_id']='original:/ chunk id \u03b1'

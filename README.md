@@ -1,6 +1,6 @@
 # KPMG AI Research Intelligence Agent for Business Insight Translation
 
-Break Through Tech AI Studio project with KPMG. The current prototype ingests a fixed sample of public arXiv papers and supports **local, citation-bearing passage retrieval**. Summarization, business translation, a user interface, and evaluation are still planned work; search results are not generated answers.
+Break Through Tech AI Studio project with KPMG. The current prototype ingests a fixed sample of public arXiv papers and supports **local, citation-bearing passage retrieval**. A draft research workflow and JSON CLI are available; business translation and review accept independently developed adapters. A user interface and human-scored evaluation remain planned work. Search results are not generated answers.
 
 ## Current pipeline
 
@@ -8,7 +8,7 @@ Break Through Tech AI Studio project with KPMG. The current prototype ingests a 
 2. `src/retrieval.py` embeds those chunks locally with SentenceTransformers `all-MiniLM-L6-v2` and stores text, vectors, and citation metadata in persistent Chroma (`data/chroma_db/`). Reindexing updates records and removes chunks no longer in the input corpus.
 3. The same script can embed a question and return ranked passages with arXiv ID, title, PDF URL, and **PDF page number**. Chroma distances are returned as distances, not calibrated relevance or confidence scores.
 
-The first model run may download its weights. An OpenAI API key is **not** needed for ingestion, indexing, or retrieval. OpenAI packages remain in `requirements.txt` for future answer-generation work; no answer generator is wired up here.
+The first model run may download its weights. An OpenAI API key is **not** needed for ingestion, indexing, or retrieval. Draft generation uses the existing Gemini dependency only when selected; retrieval-only and synthetic demo execution need no generation key.
 
 For source-specific cleaning, chunk settings, caches, stored fields, and validation
 boundaries, see [Data preparation](docs/data-preparation.md).
@@ -55,6 +55,72 @@ Compact papers with usable HTML chunks remain HTML-backed even when their PDF is
 missing or corrupt. PDF fallback is used only when HTML produces no usable chunks.
 
 Example search result fields: `chunk_id`, `text`, `distance`, `arxiv_id`, `title`, `page_number`, `pdf_url`. Page numbers are 1-based PDF pages, which may differ from page labels printed in a paper. If an older Chroma index lacks citation/model metadata, rerun `python src/retrieval.py` to refresh it before querying. Rebuild the collection when changing embedding models; vectors from different models must not be mixed.
+
+## Research workflow (draft interface v1)
+
+Run an entirely offline, synthetic end-to-end example (standard library only):
+
+```bash
+python main.py --demo --query "How are AI agents evaluated?"
+python main.py --demo --query "How are AI agents evaluated?" --mode business --industry banking --jurisdiction US
+python -m unittest tests.test_research_pipeline -v
+```
+
+`--demo` uses explicitly synthetic HTML/PDF fixtures and fake summary/business
+adapters. It does not measure actual retrieval relevance, model accuracy, or
+industry usefulness. For persistent retrieval, build the index as above, then:
+
+```bash
+python main.py --query "How are AI agents evaluated?" --top-k 5 --mode retrieval
+# Copy .env.example to a local .env and set GOOGLE_API_KEY before generation.
+python main.py --query "How are AI agents evaluated?" --top-k 5 --mode summary
+```
+
+Summary is the default mode. Generation uses Gemini (`GOOGLE_MODEL`, default
+`gemini-2.5-flash`, temperature 0, JSON output). The small interim prompt is
+`workflow-summary-v1`; it is not a substitute for #77's final summarizer acceptance.
+Importing the workflow/CLI does not import a model, download weights, or call an API.
+Missing index/credentials and unavailable stages exit nonzero with JSON errors on
+stderr; successful JSON is on stdout. Provider exception payloads are not echoed.
+
+The shared module boundary is `run_research(request, *, retrieve, summarize_fn,
+translate_fn=None, review_fn=None, provenance=None)` in `src/research_pipeline.py`.
+Retrieval accepts `(query, top_k)`; bound summary accepts `(query, passages)`;
+translation accepts `(summary, passages, *, industry)`. Retrieval returns a list of passage dictionaries; summary and translation return
+plain JSON-compatible dictionaries with citations to retrieved chunk IDs. The pipeline defensively copies
+adapter inputs and preserves retrieval fields exactly, including source locations
+and distances (never confidence). No-hit runs abstain without generation.
+
+When independent lanes land, select their callable without editing this entrypoint:
+
+```bash
+# Replace module:function placeholders with the actual installed adapter names.
+python main.py --query "Your question" --summary-adapter module:function
+python main.py --query "Your question" --mode business --industry banking --jurisdiction US --translation-adapter module:function --review-adapter module:function
+```
+
+CLI summary/translation adapters additionally receive the injected `generate(prompt)`
+callable. Business mode requires an explicit industry and a translation adapter
+(#80); the optional review adapter (#81) receives the complete draft, including
+jurisdiction, and returns a separate `regulatory_checkpoint`. It may wrap the
+standalone checkpoint but never merges regulatory source IDs into paper citations.
+`--demo` cannot be combined with live adapters.
+
+Every new run has `approved=false` and pending human review, even if a checkpoint
+returns an approval recommendation. `review_fingerprint` binds review to request,
+evidence, generated outputs, checkpoint, and execution provenance;
+`require_current_review` rejects material edits. It detects stale content, not a
+reviewer's identity or authorization. Explicit human approval remains #81's work.
+Citations are structurally validated; human checking must still establish that
+passages actually support claims and suggested actions.
+
+Provenance identifies fixture vs persistent execution, embedding/generation models,
+settings, prompt version and adapter names. `input_file_sha256` identifies the current
+local Parquet file when present; `corpus_sha256` stays null because indexed-corpus
+identity has not been verified. The input hash is **not proof that the current
+Chroma index matches it**; corpus/index
+reconciliation is #82. Versioned benchmark-run capture (repo SHA/time, frozen corpus
+and actual outputs) remains #64. No real corpus/model result is claimed by the demo.
 
 ## Scope and next work
 

@@ -1,49 +1,76 @@
-# Issue acceptance reconciliation — October 13, 2026
+# Evaluation acceptance handoff — October 13, 2026
 
-Audited merged main `eaaf0e819b5c7aeb9a78be08924a506c10620666` and published
-follow-up artifacts. Merged code is not automatically full acceptance. Existing
-PRs #84–#93 were already merged before this recovery and were not replayed.
+## Current main versus this proposed stack
 
-| Issue | Verified implementation/evidence | Remaining acceptance / disposition |
+Checked main `b00c736b2cb4800db6aa68f45c9931ff97bb6aff` and live issue/PR states
+on October 13. Main includes Khoi's HTML validator (#102), source-grounded
+summarization (#99), and BYOK generation (#94). The updated #95/#96/#97 stack
+is still proposed work, not merged acceptance evidence.
+
+- **#95:** retains the single validator from main and adds complementary HTML
+  cross-section and PDF wrong-page citation regressions. No competing validator.
+- **#96:** consumes that validator's `PASS` receipt, protected input hashes,
+  implementation hashes, passage counts, and persistent-transport checks. It
+  reconciles every indexed ID/text/citation against the validated corpus before
+  freezing retrieval outputs. Old lowercase-status receipts are not accepted
+  as fresh validation; regenerate a receipt rather than rewriting history.
+- **#97:** this handoff only. Historical generated reports, frozen retrieval
+  exports, and review worksheets are in the PR discussion, not the source diff.
+  Full original records remain recoverable at contributor commit
+  `09b47f2916edaef21945626a28f97c0397b322cc`; moving evidence is not a new run.
+
+## Issue dispositions
+
+| Issue | Current implementation/evidence | Remaining acceptance |
 |---|---|---|
-| #44, quality assessment parent | #40/#43 reports merged in #91/#92; category status and explicit untested boundaries documented | Closed after checking the assessment deliverables. Not a claim that all numeric/table/diagram defects are repaired |
-| #76, shared contracts | Pipeline contains structural checks and test fixtures | Dedicated `research_contracts.py`, source-specific schema validation, documented reusable fixtures/versioning still missing; keep open |
-| #77, summarizer | Interim Gemini summary adapter merged through #85 | Dedicated evidence-grounded summarizer/acceptance criteria not delivered; interim adapter is not full closure evidence |
-| #78, workflow/CLI | Injected pipeline, generation configuration, CLI and docs merged in #84–#87; 86 existing offline tests pass | Actual summary/business/review adapter join and generated-output proof remain; keep open |
-| #80, business translation | Prompt candidates in #93 and injected workflow contract | No `business_translation.py` implementation or real bound output; keep open |
-| #81, review integration | Existing standalone regulatory checkpoint and pipeline approval safeguards | No dedicated `research_review.py` adapter/review packet; preserve separate regulatory namespace and explicit human approval |
-| #82, corpus validation | New locked 25-paper/877-chunk HTML audit, actual-source text/anchor checks, Parquet and persistent deterministic transport; separate real forced-PDF diagnostic | Candidate PR must merge before closure; actual retrieval captured separately; unscored results are not relevance proof |
-| #64, benchmark outputs | Runner and frozen exports merged in #89; follow-up captures all 10 questions with real embeddings | Real generation/business stages missing; final combined run still outstanding; keep open |
-| #65, scored evaluation | Review validation/scoring tooling merged in #90 | No actual named reviews, double-review/adjudication, end-to-end scores or stakeholder feedback; keep open |
-| #57, evaluation framework | Rubrics, coverage rules and instructions merged in #88 | Actual team pilot, reviewer allocation and full-paper answerability confirmation still required; keep open |
-| #59, framework parent | Benchmark/rubric definitions and protocol exist | #57's real pilot/allocation/coverage acceptance not complete; keep open |
-| #66, retrieval pipeline parent | Ingestion/index/retrieval implementations and frozen real retrieval capture exist | #64 final combined outputs and #65 human scoring remain; keep open |
+| #44 | Closed; PDF/layout and data-quality assessments landed | Closure is not proof that every extraction defect is repaired |
+| #76 | Open; workflow structural checks and fixtures exist | Dedicated shared interfaces/versioning and acceptance still need their own work |
+| #77 | Closed; dedicated `src/summarization.py` landed in #99 | Preserve its semantic-quality limits; this stack does not establish full evaluation |
+| #78 | Open; workflow/CLI and configurable generation exist | Bind summary, business, and actual review stages; produce combined-run evidence |
+| #80 | Open; prompts landed; translator is proposed in #100 | #100 has not landed; no business-quality or stakeholder approval is inferred |
+| #81 | Open; standalone regulatory checkpoint and approval safeguards exist | A dedicated research-review integration and real human review remain |
+| #82 | Closed by merged #102; locked-sample HTML validation and audit evidence exist | Omission candidates and scientific-completeness follow-up are not parser fixes |
+| #64 | Open; benchmark runner exists; proposed #96 binds capture to the current validator | Fresh validated retrieval capture and a later combined generation/business run |
+| #65 | Open; scoring/review tooling exists | Actual named reviews, double review/adjudication, scores, and stakeholder feedback |
+| #57/#59 | Open; benchmark/rubric definitions exist | Team pilot, reviewer allocation, and original-paper answerability confirmation |
+| #66 | Open; ingestion/index/retrieval exist | Combined outputs and scored human evaluation remain |
 
-## Frozen evidence versus quality claims
+No issue is closed or reopened by this handoff. #82 is already closed; this
+stack must not claim a second closure or pretend that implementation equals
+semantic acceptance.
 
-The real capture uses `all-MiniLM-L6-v2` and audited HTML-first corpus, with exact
-commit/input/index/model-weight hashes and package versions. All ten questions
-executed successfully. Every returned passage retains source/citation metadata;
-all indexed documents and metadata were reconciled to the audited Parquet.
+## Reproduce new evidence without committing generated output
 
-No summary generation was executed: no local `GOOGLE_API_KEY` was configured.
-No real business adapter or actual human review was supplied. Summary placeholders
-explicitly say generation was not requested. Empty review input leaves scores
-null, targets unmet and `approved=false`. This is retrieval execution evidence,
-not Precision@5, factual accuracy, business usefulness or KPMG approval.
+Supply the exact cached sources and processed Parquet required by the validator.
+Then use new local output locations (the examples are ignored by Git):
 
-## Review handoff
+```bash
+python -m tests.validate_html_sample --report-dir data/processed/html-validation
+python -m evaluation.capture_validated_retrieval \
+  --validation data/processed/html-validation/html-ingestion-validation.json \
+  --output data/processed/evaluation-runs/new-retrieval-run
+```
 
-1. Use the frozen run and blank passage worksheet, without rewriting the run.
-2. Actual teammates claim bounded batches in #65; names/commitments are not
-   assigned by this report. Double-review a shared subset per question type.
-3. Confirm answerability from original full papers, not metadata keyword absence.
-4. Bind actual summary/business adapters and an operator-authorized BYOK provider
-   for a **new** frozen combined run. Provider calls may be billed to that key.
-5. Score actual outputs and inspect each claim at its original section/page; retain
-   abstention judgments, disagreements, absent stages and empirical failure cases.
+The validator uses temporary regenerated Parquet/Chroma; capture can rebuild
+this checkout's persistent retrieval index. The capture output refuses overwrite.
+No answer-generation provider is invoked. The real embedding model must be
+available; query execution success does not measure passage relevance.
 
-The BYOK architecture is a separate draft PR and is not assumed merged or
-live-provider verified. No historical checkout was deleted: it hosts the shared
-Git database for two linked worktrees and cannot be reliably audited while its
-filesystem mmap error persists.
+Publish redacted receipts in a PR comment or attachment. Retain corpus,
+validation, implementation, index, and model-weight provenance. Never edit an
+old receipt's hashes or schema to make it pass the updated gate.
+
+## Historical capture and next evaluation
+
+The October 13 historical run recorded 877 HTML chunks and ten actual MiniLM
+retrieval queries with zero execution failures. Its validator schema and code
+revision are historical. It did not run answer generation/business translation
+or receive actual human scores. It is not proof that the revised capture has
+completed a fresh real-corpus run, nor Precision@5 or end-to-end quality proof.
+
+BYOK and summarization are now implemented on main; #100's business adapter and
+#81's review integration remain separate. For a new combined run, bind the real
+adapters and an authorized provider, retain abstentions/disagreements, then
+have actual reviewers inspect claims at original sections/pages. Provider
+calls may incur costs; none were made to update this stack. Empty review input
+continues to leave scores null, targets unmet, and `approved=false`.

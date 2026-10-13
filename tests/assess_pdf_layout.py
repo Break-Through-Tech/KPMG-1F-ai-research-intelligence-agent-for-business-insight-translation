@@ -54,11 +54,33 @@ def assess(pdf_dir):
             'papers': records}
 
 
+def write_report(result, output):
+    """One page record per line keeps generated evidence reviewable."""
+    lines = ['{']
+    for key, value in result.items():
+        if key != 'papers':
+            lines.append(f'  {json.dumps(key)}: {json.dumps(value)},')
+    lines.append('  "papers": [')
+    for index, paper in enumerate(result['papers']):
+        lines.append('    {')
+        for key, value in paper.items():
+            if key != 'pages':
+                lines.append(f'      {json.dumps(key)}: {json.dumps(value)},')
+        lines.append('      "pages": [')
+        for number, page in enumerate(paper['pages']):
+            comma = ',' if number + 1 < len(paper['pages']) else ''
+            lines.append('        ' + json.dumps(page, separators=(',', ':')) + comma)
+        lines.append('      ]')
+        lines.append('    }' + (',' if index + 1 < len(result['papers']) else ''))
+    lines.extend(['  ]', '}'])
+    output.write_text('\n'.join(lines) + '\n')
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--pdf-dir', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
     result = assess(args.pdf_dir)
-    args.output.write_text(json.dumps(result, indent=2) + '\n')
+    write_report(result, args.output)
     print(f"Assessed {len(result['papers'])} cached PDFs; report: {args.output}")

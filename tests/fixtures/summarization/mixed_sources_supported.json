@@ -1,0 +1,67 @@
+{
+  "description": "Synthetic example: mixed HTML + PDF evidence, model returns two cited claims. IDs and text are invented for testing; real IDs come from src.retrieval.search.",
+  "query": "What does the evidence say about LLM agents for invoice reconciliation?",
+  "passages": [
+    {
+      "chunk_id": "syn-0001-html-003",
+      "text": "In a pilot on 1,200 synthetic invoices, the agent matched 91% of line items to purchase orders without human help. Mismatches concentrated in invoices with partial deliveries.",
+      "distance": 0.21,
+      "arxiv_id": "0000.00001",
+      "title": "Synthetic Paper One: Agents for Accounts Payable",
+      "pdf_url": "https://example.org/pdf/0000.00001",
+      "source": "html",
+      "source_url": "https://example.org/html/0000.00001",
+      "page_number": null,
+      "html_url": "https://example.org/html/0000.00001",
+      "section": "Results",
+      "subsection": "Matching accuracy"
+    },
+    {
+      "chunk_id": "syn-0002-pdf-p004-001",
+      "text": "The authors note that all experiments used a single vendor's invoice templates, so generalization to other layouts is untested.",
+      "distance": 0.34,
+      "arxiv_id": "0000.00002",
+      "title": "Synthetic Paper Two: Limits of Document Agents",
+      "pdf_url": "https://example.org/pdf/0000.00002",
+      "source": "pdf",
+      "source_url": "https://example.org/pdf/0000.00002",
+      "page_number": 4
+    },
+    {
+      "chunk_id": "syn-0003-pdf-p009-000",
+      "text": "Human reviewers spent 40% less time per batch when flagged mismatches were pre-sorted by the agent.",
+      "distance": 0.41,
+      "arxiv_id": "0000.00003",
+      "title": "Synthetic Paper Three: Reviewer Workload",
+      "pdf_url": "https://example.org/pdf/0000.00003",
+      "source": "pdf",
+      "source_url": "https://example.org/pdf/0000.00003",
+      "page_number": 9
+    }
+  ],
+  "model_response": {
+    "status": "ok",
+    "claims": [
+      {
+        "text": "A pilot on synthetic invoices reported the agent matched about 91% of line items without human help, with errors concentrated in partial deliveries.",
+        "chunk_ids": ["syn-0001-html-003"]
+      },
+      {
+        "text": "Pre-sorting flagged mismatches reduced reviewer time per batch by roughly 40%, though results come from a single vendor's invoice templates and may not generalize.",
+        "chunk_ids": ["syn-0003-pdf-p009-000", "syn-0002-pdf-p004-001"]
+      }
+    ],
+    "limitations": ["The 91% figure comes from synthetic invoices, not production data."]
+  },
+  "expected": {
+    "status": "ok",
+    "error": null,
+    "included_chunk_ids": ["syn-0001-html-003", "syn-0002-pdf-p004-001", "syn-0003-pdf-p009-000"],
+    "omitted_chunk_ids": [],
+    "claim_chunk_ids": [
+      ["syn-0001-html-003"],
+      ["syn-0003-pdf-p009-000", "syn-0002-pdf-p004-001"]
+    ],
+    "limitations": ["The 91% figure comes from synthetic invoices, not production data."]
+  }
+}

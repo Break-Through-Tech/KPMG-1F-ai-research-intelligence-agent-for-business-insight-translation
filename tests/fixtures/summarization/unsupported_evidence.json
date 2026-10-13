@@ -1,0 +1,42 @@
+{
+  "description": "Synthetic example: retrieved passages are off-topic, so the model reports insufficient_evidence and no claims are produced.",
+  "query": "What capital requirements apply to AI-based credit scoring models in Brazil?",
+  "passages": [
+    {
+      "chunk_id": "syn-0004-html-001",
+      "text": "We propose a lightweight encoder for medical image segmentation that reduces memory use by 30% on a public CT benchmark.",
+      "distance": 0.88,
+      "arxiv_id": "0000.00004",
+      "title": "Synthetic Paper Four: Efficient Segmentation",
+      "pdf_url": "https://example.org/pdf/0000.00004",
+      "source": "html",
+      "source_url": "https://example.org/html/0000.00004",
+      "page_number": null,
+      "section": "Method"
+    },
+    {
+      "chunk_id": "syn-0005-pdf-p002-000",
+      "text": "Our reinforcement learning agent learns grid-world navigation faster with curiosity-driven exploration.",
+      "distance": 0.93,
+      "arxiv_id": "0000.00005",
+      "title": "Synthetic Paper Five: Curiosity in Grid Worlds",
+      "pdf_url": "https://example.org/pdf/0000.00005",
+      "source": "pdf",
+      "source_url": "https://example.org/pdf/0000.00005",
+      "page_number": 2
+    }
+  ],
+  "model_response": {
+    "status": "insufficient_evidence",
+    "claims": [],
+    "limitations": ["The passages cover medical imaging and reinforcement learning; none address credit scoring or Brazilian capital requirements."]
+  },
+  "expected": {
+    "status": "insufficient_evidence",
+    "error": null,
+    "included_chunk_ids": ["syn-0004-html-001", "syn-0005-pdf-p002-000"],
+    "omitted_chunk_ids": [],
+    "claim_chunk_ids": [],
+    "limitations": ["The passages cover medical imaging and reinforcement learning; none address credit scoring or Brazilian capital requirements."]
+  }
+}

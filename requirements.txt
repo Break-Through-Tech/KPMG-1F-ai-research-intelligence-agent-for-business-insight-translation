@@ -22,3 +22,6 @@ requests
 # Development tools
 ipykernel
 beautifulsoup4
+
+#Testing 
+pytest

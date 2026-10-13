@@ -2,42 +2,19 @@
 
 Run from the repo root:
     python3 try_summarize.py "your question"            # wiring check, fake model
-    python3 try_summarize.py "your question" --real     # real model (needs GEMINI_API_KEY)
+    python3 try_summarize.py "your question" --real     # real model (needs GOOGLE_API_KEY; optional GOOGLE_MODEL)
 """
 
 import argparse
 import json
-import os
-
-try:  # optional: load GEMINI_API_KEY from a git-ignored .env file
-    from dotenv import load_dotenv
-
-    load_dotenv()
-except ImportError:
-    pass
-
-
 from src.retrieval import search
 from src.summarization import summarize
 
 
 def make_real_generate():
-    from openai import OpenAI
+    from src.generation import create_generate
 
-    client = OpenAI(
-        api_key=os.environ["LLM_API_KEY"],
-        base_url=os.environ["LLM_BASE_URL"],
-    )
-    model = os.environ["LLM_MODEL"]
-
-    def generate(prompt):
-        resp = client.chat.completions.create(
-            model=model,
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0,
-        )
-        return resp.choices[0].message.content
-
+    generate, _ = create_generate()
     return generate
 
 
@@ -84,8 +61,6 @@ if not passages:
     raise SystemExit("Index returned nothing; rebuild it first.")
 
 if args.real:
-    if not os.environ.get("LLM_API_KEY"):
-        raise SystemExit("Set LLM_API_KEY, LLM_BASE_URL and LLM_MODEL first.")
     generate = with_error_print(make_real_generate())
 else:
     generate = make_fake_generate(passages)

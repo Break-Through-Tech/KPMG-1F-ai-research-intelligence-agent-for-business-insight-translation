@@ -291,7 +291,7 @@ def summarize(
     """Produce a cited ``ResearchSummary`` from retrieved passages.
 
     Args:
-        query: the research question (non-empty).
+        query: the research question (non-empty), preserved exactly in the output.
         passages: ``EvidencePassage`` dicts as returned by ``src.retrieval.search``.
         generate: ``prompt text -> response text``; injected so tests use fakes.
         max_context_chars: hard cap on the evidence section of the prompt.
@@ -309,7 +309,6 @@ def summarize(
         raise ValueError(f"max_context_chars must be an int >= {MIN_MAX_CONTEXT_CHARS}")
     if not isinstance(max_passage_chars, int) or max_passage_chars < MIN_MAX_PASSAGE_CHARS:
         raise ValueError(f"max_passage_chars must be an int >= {MIN_MAX_PASSAGE_CHARS}")
-    query = query.strip()
 
     usable, dropped = _normalize_passages(passages)
     notes: list[str] = []

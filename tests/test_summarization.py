@@ -255,3 +255,17 @@ def test_fixture_examples(name):
 
 def test_at_least_two_fixture_examples_exist():
     assert len(list(FIXTURES.glob("*.json"))) >= 2
+
+def test_empty_evidence_preserves_exact_query():
+    gen = FakeGenerate("{}")
+    result = summarize(" agents ", [], generate=gen)
+    assert result["query"] == " agents "
+    assert result["status"] == S.STATUS_INSUFFICIENT
+    assert gen.prompts == []
+
+
+def test_generation_failure_preserves_exact_query():
+    result = summarize(" agents ", [passage("a")],
+                       generate=FakeGenerate(exc=TimeoutError("private")))
+    assert result["query"] == " agents "
+    assert result["error"] == S.ERROR_GENERATION_FAILED

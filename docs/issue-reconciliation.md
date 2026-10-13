@@ -4,12 +4,13 @@
 
 Checked main `b00c736b2cb4800db6aa68f45c9931ff97bb6aff` and live issue/PR states
 on October 13. Main includes Khoi's HTML validator (#102), source-grounded
-summarization (#99), and BYOK generation (#94). The updated #95/#96/#97 stack
+summarization (#99), and BYOK generation (#94). The updated #96/#97 stack
 is still proposed work, not merged acceptance evidence.
 
-- **#95:** retains the single validator from main and adds complementary HTML
-  cross-section and PDF wrong-page citation regressions. No competing validator.
-- **#96:** consumes that validator's `PASS` receipt, protected input hashes,
+- **#95:** superseded by the merged validator and the retained PDF regression
+  in #96. The overlapping HTML test was removed; no separate test PR is needed.
+- **#96:** builds directly on main, retaining a precise PDF wrong-page rejection
+  test. Consumes the shared validator's `PASS` receipt, protected input hashes,
   implementation hashes, passage counts, and persistent-transport checks. It
   reconciles every indexed ID/text/citation against the validated corpus before
   freezing retrieval outputs. Old lowercase-status receipts are not accepted

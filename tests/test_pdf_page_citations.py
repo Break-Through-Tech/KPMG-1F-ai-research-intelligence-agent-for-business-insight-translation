@@ -3,6 +3,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
+import chromadb
 import pandas as pd
 import pymupdf
 
@@ -82,8 +83,13 @@ class PdfPageCitationTests(unittest.TestCase):
 
             model = CitationModel()
             with patch.object(retrieval, "CHROMA_DIR", root / "index"):
-                retrieval.store_embeddings(frame, np.array([[1.0, 0.0]] * len(frame)))
-                hits = retrieval.search("agent", top_k=len(frame), model=model)
+                client = chromadb.PersistentClient(path=str(root / "index"))
+                try:
+                    retrieval.store_embeddings(frame, np.array([[1.0, 0.0]] * len(frame)))
+                    hits = retrieval.search("agent", top_k=len(frame), client=client, model=model)
+                finally:
+                    # Release this temporary index before Windows directory cleanup.
+                    client._system.stop()
             for hit in hits:
                 self.assertIn(hit["text"], {page["page"]: page["text"] for page in extract_pages(str(path))}
                               [hit["page_number"]])

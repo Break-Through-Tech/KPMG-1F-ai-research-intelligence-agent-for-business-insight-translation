@@ -1,5 +1,6 @@
 import copy
 import io
+import json
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from unittest.mock import Mock, patch
@@ -24,6 +25,28 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual(result['human_review']['status'], 'pending')
         self.assertEqual(result['regulatory_checkpoint']['jurisdiction'], 'US')
         require_current_review(result)
+
+    def test_summarization_adapter_preserves_exact_query(self):
+        from src.summarization import summarize
+        query = " agents "
+        responses = [
+            main.demo_summary(query, main.demo_retrieve(query, 5)),
+            {'status': 'insufficient_evidence', 'claims': [], 'limitations': ['No support.']},
+            {'status': 'ok', 'claims': [{'text': 'Unknown.', 'chunk_ids': ['unknown']}],
+             'limitations': []},
+            'not JSON',
+        ]
+        for response in responses:
+            with self.subTest(response=response):
+                raw = json.dumps(response) if isinstance(response, dict) else response
+                result = run_research({'query': query}, retrieve=main.demo_retrieve,
+                    summarize_fn=lambda q, p: summarize(q, p, generate=lambda prompt: raw))
+                self.assertEqual(result['request']['query'], query)
+                self.assertEqual(result['summary']['query'], query)
+                self.assertEqual(result['summary']['status'],
+                                 'ok' if response is responses[0] else 'insufficient_evidence')
+                self.assertFalse(result['approved'])
+                require_current_review(result)
 
     def test_no_hits_skips_all_generation(self):
         summary, business = Mock(), Mock()

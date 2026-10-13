@@ -79,7 +79,7 @@ def source_provenance(*, execution, generation=None):
 
 def export_review_table(artifact, path):
     columns = ['run_id', 'query_id', 'query', 'query_status', 'rank', 'chunk_id', 'source_url',
-               'page_number', 'distance', 'summary_status', 'summary_claims', 'business_status',
+               'page_number', 'distance', 'summary_status', 'summary_error', 'summary_limitations', 'summary_claims', 'business_status',
                'business_implications', 'reviewer', 'passage_rating', 'notes']
     with Path(path).open('w', newline='') as file:
         writer = csv.DictWriter(file, fieldnames=columns)
@@ -93,6 +93,8 @@ def export_review_table(artifact, path):
                     'query': row['case']['query'], 'query_status': row['status'],
                     'rank': rank if passage else '', **{k: passage.get(k) for k in ('chunk_id','source_url','page_number','distance')},
                     'summary_status': summary.get('status'), 'summary_claims': json.dumps(summary.get('claims', [])),
+                    'summary_error': summary.get('error'),
+                    'summary_limitations': json.dumps(summary.get('limitations', [])),
                     'business_status': business.get('status'), 'business_implications': json.dumps(business.get('implications', [])),
                     'reviewer': '', 'passage_rating': '', 'notes': ''}
                 # Spreadsheet viewers must not execute formulas from source/query data.

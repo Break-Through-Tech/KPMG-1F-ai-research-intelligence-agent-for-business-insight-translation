@@ -48,7 +48,11 @@ research-adapter modes reject a conflicting summary override.
 The benchmark reports query execution failures and `summary_failed` separately.
 Malformed responses, invented citations and provider errors remain frozen in
 the export as empty, unapproved insufficient-evidence summaries; they also
-produce a nonzero exit status. Ordinary abstention without an error is not an
+produce a nonzero exit status in both benchmark and CLI. The review CSV includes
+the summary error and limitations; aggregation counts those failures separately
+from query execution failures and includes them in `failed_queries`. Older frozen
+outputs without the additive error field remain compatible.
+Ordinary abstention without an error is not an
 execution failure. A small local model may fail this contract: don't weaken
 validation, relabel a rejected response as successful, or manufacture scores.
 

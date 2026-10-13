@@ -136,7 +136,7 @@ def main(argv=None):
             result = run_research(request, retrieve=retrieve, summarize_fn=summary,
                                   translate_fn=translate, review_fn=review, provenance=provenance)
         print(json.dumps(result, indent=2, allow_nan=False))
-        return 0
+        return int(bool(result.get('summary', {}).get('error')))
     except ImportError:
         print(json.dumps({'error': 'Runtime dependency unavailable. Install requirements.txt '
                                   'in your active Python environment.', 'approved': False}), file=sys.stderr)

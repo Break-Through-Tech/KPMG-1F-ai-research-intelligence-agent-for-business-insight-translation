@@ -1,5 +1,6 @@
 """Exercise the CLI/capture join, not just the adapter in isolation."""
 import io
+import csv
 import json
 from contextlib import redirect_stdout
 from pathlib import Path
@@ -55,6 +56,18 @@ def test_benchmark_rejected_model_citation_is_retained_and_nonzero():
         assert summary['error'] == 'invalid_citations'
         assert summary['claims'] == []
         assert json.loads(stdout.getvalue())['summary_failed'] == 1
+        with (output / 'review.csv').open(newline='') as file:
+            row = next(csv.DictReader(file))
+        assert row['summary_error'] == 'invalid_citations'
+        assert json.loads(row['summary_limitations'])
+        from evaluation.reviews.score_reviews import aggregate
+        report = aggregate(artifact, [])
+        assert report['failed_queries'] == 1
+        assert report['query_execution_failures'] == 0
+        assert report['summary_failed_queries'] == 1
+        assert report['summary_errors'] == [{'query_id': 'q01', 'error': 'invalid_citations'}]
+        assert report['summary_mean'] is None
+        assert not report['end_to_end_targets_met']
 
 
 def test_cli_default_uses_the_same_merged_adapter_and_prompt():
@@ -66,6 +79,30 @@ def test_cli_default_uses_the_same_merged_adapter_and_prompt():
     assert result['summary']['query'] == ' agents '
     assert result['summary']['included_chunks']
     assert result['provenance']['generation']['prompt_sha256'] == prompt_provenance()['prompt_sha256']
+
+
+def test_cli_summary_failure_is_nonzero_but_genuine_abstention_succeeds():
+    replies = [(response('invented'), 1, 'invalid_citations'),
+               (json.dumps({'status':'insufficient_evidence','claims':[],
+                            'limitations':['Evidence does not answer the question.']}), 0, None)]
+    for reply, code, error in replies:
+        with patch.object(main, 'persistent_retrieve', main.demo_retrieve), patch.object(
+                main, 'create_generate', return_value=(lambda p: reply, {})), \
+                redirect_stdout(io.StringIO()) as stdout:
+            assert main.main(['--query','agents','--mode','summary']) == code
+        result = json.loads(stdout.getvalue())
+        assert result['summary']['error'] == error
+        assert not result['approved']
+
+
+def test_cli_provider_exception_keeps_sanitized_json_and_nonzero_status():
+    def fail(prompt):
+        raise TimeoutError('private provider detail')
+    with patch.object(main, 'persistent_retrieve', main.demo_retrieve), patch.object(
+            main, 'create_generate', return_value=(fail, {})), redirect_stdout(io.StringIO()) as stdout:
+        assert main.main(['--query','agents','--mode','summary']) == 1
+    assert json.loads(stdout.getvalue())['summary']['error'] == 'generation_failed'
+    assert 'private provider detail' not in stdout.getvalue()
 
 
 def test_explicit_external_adapter_does_not_claim_builtin_prompt():

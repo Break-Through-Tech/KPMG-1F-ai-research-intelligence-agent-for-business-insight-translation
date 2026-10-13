@@ -1,6 +1,6 @@
 # Local-model summary end-to-end checks
 
-This branch builds on draft provider PR #94 and merged summarizer PR #99.
+This branch builds on merged provider PR #94 and merged summarizer PR #99.
 It reuses `openai_compatible`; it does not introduce another provider or alter
 the provider draft. Both the CLI and benchmark summary mode now default to
 `src.summarization:summarize`. Generation provenance records the actual adapter,
@@ -15,6 +15,9 @@ an isolated checkout. Never overwrite a teammate's index. Retrieve with the
 same MiniLM weights used to build that index. Ollama must be serving the named
 model locally; `ollama pull llama3.2:1b` downloads weights, not a paid API call.
 Other installed JSON-capable local models may be selected explicitly.
+See [choosing a local model](local-model-sizing.md) for weight/memory estimates,
+context and latency limits, and the distinction between loading a model and
+passing the summary contract. There is no hard model-size limit in this provider.
 
 ```sh
 export RESEARCH_PROVIDER=openai_compatible

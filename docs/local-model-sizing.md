@@ -93,7 +93,7 @@ diagnosed as lack of memory or insufficient parameter count.
 
 For the next candidate, try a **JSON-capable instruction/chat model around
 7–8B**, quantized to fit with memory headroom. This is an engineering starting
-point, not a measured recommendation or a enforced lower bound. An appropriately
+point, not a measured recommendation or an enforced lower bound. An appropriately
 trained smaller model may pass; an unsuitable larger model may fail.
 
 Current requests use `response_format=json_object`, **not a strict JSON schema**.

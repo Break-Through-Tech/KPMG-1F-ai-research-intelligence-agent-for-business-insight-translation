@@ -17,26 +17,57 @@ def summarize_with_generation(query, passages, *, generate):
     return json.loads(generate(prompt))
 
 
-def create_generate():
-    """Lazy Gemini client: no network/model/key work until generation is selected."""
-    import os
-    from dotenv import load_dotenv
-    load_dotenv()
-    key = os.getenv('GOOGLE_API_KEY', '').strip()
-    if not key or 'Your API Key' in key:
-        raise PipelineError('Set GOOGLE_API_KEY in your local .env for generation; '
-                            'use --mode retrieval or --demo without a key.')
-    from google import genai
-    from google.genai import types
-    model = os.getenv('GOOGLE_MODEL', 'gemini-2.5-flash')
-    client = genai.Client(api_key=key)
+def create_generate(config=None):
+    """Build only the explicitly selected BYOK client; never fall back providers.
+
+    Config/keys are loaded only when generation is requested. Keys are not part
+    of returned provenance, prompts, review exports, or user-facing errors.
+    """
+    from src.generation_config import GenerationConfig
+    if config is None:
+        from dotenv import load_dotenv
+        load_dotenv(override=False)
+        config = GenerationConfig.from_environment()
+    if not isinstance(config, GenerationConfig):
+        raise PipelineError('Generation requires a validated GenerationConfig.')
+    try:
+        if config.provider == 'gemini':
+            from google import genai
+            from google.genai import types
+            client = genai.Client(api_key=config.api_key,
+                                  http_options=types.HttpOptions(timeout=60000,
+                                      retry_options=types.HttpRetryOptions(attempts=1)))
+            def invoke(prompt):
+                response = client.models.generate_content(
+                    model=config.model, contents=prompt,
+                    config=types.GenerateContentConfig(response_mime_type='application/json', temperature=0))
+                return response.text
+        else:
+            from openai import OpenAI
+            # Explicit base_url prevents ambient OPENAI_BASE_URL from redirecting
+            # the named OpenAI provider or receiving another provider's key.
+            client = OpenAI(api_key=config.api_key,
+                base_url=config.base_url or 'https://api.openai.com/v1',
+                timeout=60, max_retries=0)
+            def invoke(prompt):
+                response = client.chat.completions.create(
+                    model=config.model, messages=[{'role':'user','content':prompt}],
+                    response_format={'type':'json_object'}, temperature=0)
+                return response.choices[0].message.content
+    except Exception:
+        raise PipelineError('Could not initialize the selected generation provider; check local configuration and SDK.') from None
 
     def generate(prompt):
-        response = client.models.generate_content(
-            model=model, contents=prompt,
-            config=types.GenerateContentConfig(response_mime_type='application/json', temperature=0))
-        if not response.text:
-            raise PipelineError('Gemini returned empty output; check model access and quota.')
-        return response.text
-    return generate, {'provider': 'gemini', 'model': model, 'temperature': 0,
-                      'prompt_version': SUMMARY_PROMPT_VERSION}
+        if not isinstance(prompt,str) or not prompt.strip():
+            raise PipelineError('Generation requires nonempty prompt text.')
+        try:
+            text = invoke(prompt)
+        except Exception:
+            raise PipelineError('Selected generation provider failed; check model access, key and quota. No provider fallback or approval occurred.') from None
+        if not isinstance(text,str) or not text.strip():
+            raise PipelineError('Selected generation provider returned empty output; no result was approved.')
+        return text
+
+    return generate, {'provider':config.provider, 'model':config.model, 'temperature':0,
+                      'prompt_version':SUMMARY_PROMPT_VERSION,
+                      'endpoint_kind':'custom' if config.base_url else 'provider_default'}

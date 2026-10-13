@@ -49,6 +49,33 @@ class HtmlValidationTests(unittest.TestCase):
         self.assertTrue(is_subsequence('one three','one two three'))
         self.assertFalse(is_subsequence('three one','one two three'))
 
+    def test_other_section_cannot_support_the_cited_passage(self):
+        other = 'Evidence exclusive to the other section. ' * 10
+        html = self.html + ('<section class="ltx_section" id="S2">'
+                           '<h2 class="ltx_title">Discussion</h2>'
+                           '<div class="ltx_para">' + other + '</div></section>')
+        (self.root / f'{self.aid}.html').write_text(html)
+        frame = self.frame.copy()
+        frame['text'] = other.strip()
+        self.assertTrue(self.inspect(frame)['failures'])
+
+    def test_pdf_passage_must_belong_to_the_cited_original_page(self):
+        pdf = self.root / 'fixture.pdf'
+        pdf.write_bytes(b'page extraction is injected for this source-scope check')
+        frame = self.frame.copy()
+        frame['source'] = 'pdf'
+        frame['page_number'] = 2
+        frame['text'] = 'Evidence on page two.'
+        with patch('tests.validate_html_sample.config.PROJECT_ROOT', self.root), \
+             patch('tests.validate_html_sample.resolve_pdf_path', return_value=pdf), \
+             patch('tests.validate_html_sample.extract_pages', return_value=[
+                 {'page': 1, 'text': 'Different page evidence.'},
+                 {'page': 2, 'text': 'Evidence on page two.'}]):
+            self.assertEqual(inspect_paper(self.metadata, frame)['failures'], [])
+            for page in (1, 3):
+                frame['page_number'] = page
+                self.assertTrue(inspect_paper(self.metadata, frame)['failures'])
+
     def test_persistent_transport_and_stale_records(self):
         frame=pd.concat([self.frame,self.frame],ignore_index=True)
         frame.loc[0,'chunk_id']='original:/ chunk id \u03b1'

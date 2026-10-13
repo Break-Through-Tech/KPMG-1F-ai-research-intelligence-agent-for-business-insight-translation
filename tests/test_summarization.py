@@ -1,7 +1,10 @@
 """Offline tests for src.summarization. Run from the repo root: python -m pytest tests/test_summarization.py"""
+import sys 
 
 import json
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import pytest
 

@@ -6,6 +6,9 @@ the provider draft. Both the CLI and benchmark summary mode now default to
 `src.summarization:summarize`. Generation provenance records the actual adapter,
 template version and SHA-256, replacing the interim prompt label. Explicit
 external adapters retain an unknown prompt version rather than borrowing that hash.
+The built-in summarizer also requests and locally validates a
+[per-context response schema](schema-constrained-generation.md); business and
+arbitrary injected stages do not inherit that schema automatically.
 
 ## Prerequisites and execution
 

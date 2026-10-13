@@ -41,6 +41,9 @@ DEFAULT_MAX_CONTEXT_CHARS = 12_000
 DEFAULT_MAX_PASSAGE_CHARS = 2_500
 MIN_MAX_CONTEXT_CHARS = 200
 MIN_MAX_PASSAGE_CHARS = 50
+MAX_SCHEMA_CLAIMS = 8
+MAX_SCHEMA_LIMITATIONS = 8
+MAX_SCHEMA_TEXT_CHARS = 600
 TRUNCATION_MARKER = " [truncated]"
 
 PROMPT_DIR = Path(__file__).resolve().parent.parent / "prompts" 
@@ -52,6 +55,26 @@ def prompt_provenance():
     return {"summary_adapter": "src.summarization:summarize",
             "prompt_version": "research-summary-v1",
             "prompt_sha256": sha256((PROMPT_DIR / PROMPT_FILE).read_bytes()).hexdigest()}
+
+
+def response_schema(chunk_ids):
+    """Strict portable shape; only IDs actually included in context may be cited.
+
+    Cross-field status/claim rules and factual support remain separately checked.
+    """
+    ids = list(dict.fromkeys(chunk_ids))
+    if not ids:
+        raise ValueError('A summary schema requires included evidence IDs')
+    return {'type':'object', 'additionalProperties':False,
+        'required':['status','claims','limitations'], 'properties': {
+            'status':{'type':'string','enum':['ok','insufficient_evidence']},
+            'claims':{'type':'array','maxItems':MAX_SCHEMA_CLAIMS,'items':{'type':'object','additionalProperties':False,
+                'required':['text','chunk_ids'], 'properties':{
+                    'text':{'type':'string','maxLength':MAX_SCHEMA_TEXT_CHARS},
+                    'chunk_ids':{'type':'array','minItems':1,'maxItems':len(ids),
+                                 'items':{'type':'string','enum':ids}}}}},
+            'limitations':{'type':'array','maxItems':MAX_SCHEMA_LIMITATIONS,
+                           'items':{'type':'string','maxLength':MAX_SCHEMA_TEXT_CHARS}}}}
 
 # Source fields carried into the included-chunk mapping (distance is omitted on
 # purpose: it is a retrieval score, not a confidence).
@@ -343,24 +366,38 @@ def summarize(
     if shortened:
         notes.append(f"Passage text was shortened before summarizing: {', '.join(shortened)}.")
 
+    if not included:
+        return _result(query, STATUS_INSUFFICIENT, [],
+            ['No evidence fit the context budget; generation skipped.'] + notes,
+            included, omitted)
+    constrained = getattr(generate, 'supports_response_schema', False) is True
+    schema = response_schema([p['chunk_id'] for p, _ in included]) if constrained else None
+    def result(*args):
+        output = _result(*args)
+        output['structured_output'] = {'mode':'native_schema_and_local_validation' if constrained
+                                      else 'injected_callable_unconstrained',
+            'schema_sha256':sha256(json.dumps(schema, sort_keys=True, allow_nan=False).encode()).hexdigest()
+                            if schema is not None else None}
+        return output
     prompt = build_prompt(query, context)
     try:
-        raw = generate(prompt)
+        raw = generate(prompt, response_schema=schema) if constrained else generate(prompt)
     except Exception as exc:  # noqa: BLE001 - any generator failure must not crash the workflow
-        return _result(
+        from src.generation import SchemaResponseError
+        return result(
             query,
             STATUS_INSUFFICIENT,
             [],
             [f"Summary generation failed ({type(exc).__name__}); no findings were produced."] + notes,
             included,
             omitted,
-            ERROR_GENERATION_FAILED,
+            ERROR_MALFORMED_RESPONSE if isinstance(exc, SchemaResponseError) else ERROR_GENERATION_FAILED,
         )
 
     try:
         status, claims, limitations = parse_response(raw, [p["chunk_id"] for p, _ in included])
     except SummaryResponseError as exc:
-        return _result(
+        return result(
             query,
             STATUS_INSUFFICIENT,
             [],
@@ -372,4 +409,4 @@ def summarize(
 
     if status == STATUS_INSUFFICIENT and not limitations:
         limitations = ["The supplied passages do not support an answer to the query."]
-    return _result(query, status, claims, limitations + notes, included, omitted)
+    return result(query, status, claims, limitations + notes, included, omitted)

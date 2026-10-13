@@ -135,11 +135,17 @@ def aggregate(run, reviews):
                m['coverage'] in {'answerable', 'partially_covered'} and m['precision_at_5'] is not None]
     total=len(queries)
     complete=sum(m['complete'] for m in metrics)
-    failed=sum(r['status']=='error' for r in run['cases'])
+    summary_errors = [{'query_id':r['case']['query_id'],
+                       'error':r['result']['summary']['error']}
+                      for r in run['cases'] if (r.get('result') or {}).get('summary', {}).get('error')]
+    failed=sum(r['status']=='error' or bool((r.get('result') or {}).get('summary', {}).get('error'))
+               for r in run['cases'])
     retrieval=mean('precision_at_5');summary=mean('summary_mean');business=mean('business_mean')
     types={r['case'].get('type') for r in run['cases']}
     return {'run_id':run['run_id'],'total_queries':total,'complete_queries':complete,
             'failed_queries':failed,'unresolved_disagreements':disagreements,
+            'query_execution_failures':sum(r['status']=='error' for r in run['cases']),
+            'summary_failed_queries':len(summary_errors), 'summary_errors':summary_errors,
             'fixture_review_count':fixture_count,'selected_scores':metrics,'reviews':deepcopy(reviews),
             'precision_at_5':retrieval,'retrieval_target_met':complete==total and failed==0 and retrieval is not None and retrieval>=0.7,
             'covered_precision_at_5':sum(covered)/len(covered) if covered else None,

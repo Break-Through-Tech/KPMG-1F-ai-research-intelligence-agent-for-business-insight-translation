@@ -79,7 +79,7 @@ def source_provenance(*, execution, generation=None):
 
 def export_review_table(artifact, path):
     columns = ['run_id', 'query_id', 'query', 'query_status', 'rank', 'chunk_id', 'source_url',
-               'page_number', 'distance', 'summary_status', 'summary_claims', 'business_status',
+               'page_number', 'distance', 'summary_status', 'summary_error', 'summary_limitations', 'summary_claims', 'business_status',
                'business_implications', 'reviewer', 'passage_rating', 'notes']
     with Path(path).open('w', newline='') as file:
         writer = csv.DictWriter(file, fieldnames=columns)
@@ -93,6 +93,8 @@ def export_review_table(artifact, path):
                     'query': row['case']['query'], 'query_status': row['status'],
                     'rank': rank if passage else '', **{k: passage.get(k) for k in ('chunk_id','source_url','page_number','distance')},
                     'summary_status': summary.get('status'), 'summary_claims': json.dumps(summary.get('claims', [])),
+                    'summary_error': summary.get('error'),
+                    'summary_limitations': json.dumps(summary.get('limitations', [])),
                     'business_status': business.get('status'), 'business_implications': json.dumps(business.get('implications', [])),
                     'reviewer': '', 'passage_rating': '', 'notes': ''}
                 # Spreadsheet viewers must not execute formulas from source/query data.
@@ -110,9 +112,12 @@ def main(argv=None):
     parser.add_argument('--industry')
     parser.add_argument('--jurisdiction')
     parser.add_argument('--research-adapter', help='module:function receiving a request and returning a complete ResearchResult')
+    parser.add_argument('--summary-adapter', help='Override src.summarization:summarize (module:function)')
     args = parser.parse_args(argv)
     if args.demo and args.research_adapter:
         parser.error('--demo cannot be combined with a live research adapter')
+    if args.summary_adapter and (args.demo or args.research_adapter or args.mode == 'retrieval'):
+        parser.error('--summary-adapter requires live summary mode without --research-adapter')
     if args.mode == 'business' and not args.industry:
         parser.error('Business mode requires --industry')
     from main import demo_retrieve, demo_summary, demo_translate, persistent_retrieve, load_adapter
@@ -132,9 +137,14 @@ def main(argv=None):
             summary = demo_summary
             generation = {'provider':'synthetic', 'model':None, 'prompt_version':'fixture-v1'}
         else:
-            from src.generation import create_generate, summarize_with_generation
+            from src.generation import create_generate
+            from src.summarization import prompt_provenance
+            spec = args.summary_adapter or 'src.summarization:summarize'
+            adapter = load_adapter(spec)
             generate, generation = create_generate()
-            summary = lambda q,p: summarize_with_generation(q,p,generate=generate)
+            generation.update(prompt_provenance() if spec == 'src.summarization:summarize' else
+                              {'summary_adapter': spec, 'prompt_version': 'external-adapter-unspecified'})
+            summary = lambda q,p: adapter(q,p,generate=generate)
         research = lambda request: run_research(request, retrieve=retrieve, summarize_fn=summary, translate_fn=translate)
     provenance = source_provenance(execution='synthetic_fixture' if args.demo else 'adapter_unspecified' if args.research_adapter else 'persistent_corpus', generation=generation)
     context = {k:getattr(args,k) for k in ('industry','jurisdiction') if getattr(args,k) is not None}
@@ -143,9 +153,12 @@ def main(argv=None):
     args.output.mkdir(parents=True, exist_ok=False)
     (args.output/'run.json').write_text(json.dumps(artifact, indent=2, allow_nan=False)+'\n')
     export_review_table(artifact, args.output/'review.csv')
+    failed = sum(r['status'] == 'error' for r in artifact['cases'])
+    summary_failed = sum(bool((r['result'] or {}).get('summary', {}).get('error'))
+                         for r in artifact['cases'])
     print(json.dumps({'run_id':artifact['run_id'],'queries':len(artifact['cases']),
-                      'failed':sum(r['status']=='error' for r in artifact['cases'])}))
-    return int(any(r['status']=='error' for r in artifact['cases']))
+                      'failed':failed, 'summary_failed':summary_failed}))
+    return int(bool(failed or summary_failed))
 
 
 if __name__ == '__main__':

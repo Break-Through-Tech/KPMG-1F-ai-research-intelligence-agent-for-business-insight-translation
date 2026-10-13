@@ -13,26 +13,43 @@ from src import retrieval
 from evaluation.run_benchmarks import capture, export_review_table, source_provenance
 from evaluation.reviews.score_reviews import aggregate
 from src.research_pipeline import run_research
+from tests.html_transport import implementation_hashes
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 def verify_validation(report, root=ROOT):
-    if report.get('status') != 'passed' or report.get('mode') != 'html_first':
+    if report.get('status') != 'PASS' or report.get('mode') != 'HTML-first; cached sources only':
         raise ValueError('A passed HTML-first validation report is required')
     if report.get('failures') or not report.get('papers') or any(
-            p.get('status') != 'passed' for p in report['papers']):
+            p.get('failures') != [] for p in report['papers']):
         raise ValueError('Validation contains incomplete paper checks')
+    if (report.get('protected_inputs_unchanged') is not True or
+            report.get('source_files_unchanged') is not True or
+            not str(report.get('cached_ingestion_rerun', '')).startswith('PASS:')):
+        raise ValueError('Validation did not preserve its inputs or verify the ingestion rerun')
+    if report.get('implementation_hashes') != implementation_hashes():
+        raise ValueError('Validation implementation changed; regenerate the audit report')
+    hashes = {key.replace('\\', '/'): value for key, value in report.get('input_hashes', {}).items()}
     corpus = root/'data/processed/chunks.parquet'
-    if not corpus.is_file() or sha256(corpus.read_bytes()).hexdigest() != report.get('parquet_sha256'):
+    if not corpus.is_file() or sha256(corpus.read_bytes()).hexdigest() != hashes.get('data/processed/chunks.parquet'):
         raise ValueError('Current Parquet differs from the validated corpus')
     for relative in ('data/metadata/arxiv_csAI_25_pdf_sample.csv','data/metadata/arxiv_csAI_100_metadata.csv'):
         path = root/relative
-        if not path.is_file() or sha256(path.read_bytes()).hexdigest() != report.get('metadata_hashes',{}).get(relative):
+        if not path.is_file() or sha256(path.read_bytes()).hexdigest() != hashes.get(relative):
             raise ValueError('Current metadata differs from the validated snapshot')
     frame = pd.read_parquet(corpus)
-    if len(frame) != report.get('chunks') or set(frame['arxiv_id']) != {p['arxiv_id'] for p in report['papers']}:
+    papers = {p['arxiv_id']: p for p in report['papers']}
+    if (len(papers) != len(report['papers']) or len(frame) != report.get('persisted_chunks') or
+            set(frame['arxiv_id']) != set(papers) or len(papers) != report.get('locked_papers')):
         raise ValueError('Corpus counts/IDs differ from the validation report')
+    for aid, rows in frame.groupby('arxiv_id'):
+        paper = papers[aid]
+        if paper.get('chunks') != len(rows) or paper.get('verified_passages') != len(rows):
+            raise ValueError('Validation contains incomplete passage checks')
+    transport = report.get('transport', {})
+    if any(transport.get(key) != len(frame) for key in ('first_count', 'rerun_count', 'reopened_verified_records')):
+        raise ValueError('Validation contains incomplete persistent transport checks')
     return frame
 
 
@@ -40,7 +57,9 @@ def reconcile(collection, frame):
     expected = {r['chunk_id']:r for r in frame.to_dict('records')}
     if len(expected) != len(frame): raise ValueError('Duplicate corpus chunk IDs')
     stored = collection.get(include=['documents','metadatas'])
-    if set(stored['ids']) != set(expected): raise ValueError('Index/corpus ID mismatch')
+    if (set(stored['ids']) != set(expected) or
+            any(len(stored[key]) != len(expected) for key in ('ids', 'documents', 'metadatas'))):
+        raise ValueError('Index/corpus ID mismatch or incomplete stored records')
     for ident,text,metadata in zip(stored['ids'],stored['documents'],stored['metadatas']):
         if text != expected[ident]['text'] or metadata != retrieval.citation_metadata(expected[ident]):
             raise ValueError('Indexed text/citation metadata differs from validated corpus')

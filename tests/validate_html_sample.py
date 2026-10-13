@@ -509,14 +509,16 @@ def write_report(report, directory):
     for category, count in sorted(omission['categories'].items()):
         lines.append(f'| {category} | {count} |')
     lines += ['',
-        f"The structural flag overlaps the primary categories: {omission['structural_candidates_by_primary_category']}. Structural candidates comprise the primary-category counts above; in this corpus, 113 are potentially missing meaningful text and one is scientific-detail filtering (`2609.00495v1` / `S2.SS0.SSS0.Px1.p1`, containing four filtered equations). Equation/proof filtering takes precedence in the primary category; the structural flag independently detects absent projected prose. These are automated detections, not 114 individually human-verified defects.",
-        'The manually inspected examples below were checked against cached DOM, parser output, and persisted text during the original audit; their automated absence checks are rerun here. Confirmed behavioral examples are the manually inspected ClawHub scanner-disagreement, gauge-theory dual-use-risk, and jailbreak-definition passages below: their projected prose is absent from the parser and persisted corpus. This does not confirm the other candidate passages. Zero executed check failures concerns retained text/citations and transport, not extraction completeness.']
-    lines += ['', 'Manually inspected examples (limited to the examples listed below; not all automated candidates):', '']
+        f"The structural flag overlaps the primary categories: {omission['structural_candidates_by_primary_category']}. Equation/proof filtering takes precedence in the primary category; the structural flag independently detects absent projected prose. These are automated detections, not {omission['automated_structural_omission_candidate_paragraphs']} individually human-verified defects.",
+        'Examples below are selected only from this run\'s candidate evidence. No historical absence or manual-confirmation claim is inferred. Zero executed check failures concerns retained text/citations and transport, not extraction completeness.']
+    lines += ['', 'Current omission candidates (automated checks, not new manual review):', '']
     chosen = [('2604.00324v1','Chx2.p1'), ('2602.00937v3','S3.SS2.p4'),
               ('2606.01494v1','S1.SS0.SSS0.Px3.p1'), ('2603.00824v2','S12.SS0.SSSx1.p2'),
               ('2609.00498v1','Thmdefinition1.p1')]
     for aid, eid in chosen:
-        paper = next(p for p in report['papers'] if p['arxiv_id'] == aid)
+        paper = next((p for p in report['papers'] if p['arxiv_id'] == aid), None)
+        if paper is None:
+            continue
         candidate = next((c for c in paper['candidates_for_40_43'] if c['element_id'] == eid), None)
         if candidate:
             triage = candidate['triage']
@@ -535,7 +537,7 @@ def write_report(report, directory):
         lines.append('Pytest results not attached to this run.')
     lines += ['', 'Warnings: Python 3.14 dependency deprecations in Chroma (`asyncio.iscoroutinefunction`) and Google GenAI (`_UnionGenericAlias`). They do not indicate failed citation/storage checks. No warnings are suppressed and no dependency upgrade is attempted.', '',
         '## 9. Known limitations', '',
-        'The inspected examples demonstrate nested-wrapper gaps; the remaining candidates need individual review. Source coverage also has and intentional equation/table/proof/back-matter exclusions. Short sections below 150 characters can still contain meaningful caveats. No visual layout evaluation, fresh-source check, paid Gemini call, full answer-generation handoff, held-out retrieval benchmark, process-kill test, or atomic rollback test was performed.',
+        'Automated omission candidates need individual review. Source coverage also has intentional equation/table/proof/back-matter exclusions. Short sections below 150 characters can still contain meaningful caveats. No visual layout evaluation, fresh-source check, paid Gemini call, full answer-generation handoff, held-out retrieval benchmark, process-kill test, or atomic rollback test was performed.',
         'Production citation metadata omits `high_value`, authors, and categories; those remain in Parquet but are not part of the current public search contract. The retrieval module has no Azure dependency or credential requirement; private `.env` settings are irrelevant to backend selection.', '',
         '## 10. Follow-up recommendations for #40 and #43', '',
         '**#40:** reproduce direct child `ltx_paragraph`, `ltx_subsubsection`, and theorem-wrapper omissions. Traverse substantive wrappers while retaining the correct heading and avoiding nested duplicates. Prioritize ClawHub scanner disagreements, gauge-theory dual-use risks, and jailbreak validity criteria. Add owner-reviewed real-source regression cases before regenerating the corpus.',

@@ -8,7 +8,7 @@ import pandas as pd
 
 from src.data_ingestion.chunking import chunk_html_sections
 from src.data_ingestion.html_parser import parse_html_sections
-from tests.validate_html_sample import inspect_paper, is_subsequence, classify_candidate, normalize, git_provenance, summarize_omissions, verify_semantic_evidence, portable_command
+from tests.validate_html_sample import inspect_paper, is_subsequence, classify_candidate, normalize, git_provenance, summarize_omissions, verify_semantic_evidence, portable_command, write_report
 from tests.html_transport import validate_transport
 
 
@@ -134,6 +134,24 @@ class HtmlValidationTests(unittest.TestCase):
         self.assertEqual(summary['automated_structural_omission_candidate_paragraphs'], 2)
         self.assertEqual(summary['structural_candidates_by_primary_category']['scientific_detail_filtered'], 1)
         self.assertIn('not individual human confirmations', summary['review_scope'])
+
+    def test_report_uses_current_counts_and_does_not_claim_old_absence(self):
+        paper = {'arxiv_id': self.aid, 'source_modes': ['html'], 'chunks': 1,
+                 'sections': {'results': 1}, 'source_urls': [], 'source_hashes': {},
+                 'omissions': {}, 'candidates_for_40_43': []}
+        report = {'status': 'PASS', 'papers': [paper], 'persisted_chunks': 1,
+                  'failures': [], 'omission_summary': summarize_omissions([paper]),
+                  'run_utc': 'fixture', 'branch': 'fixture', 'repo_sha': 'fixture',
+                  'environment': {'python': '3.12', 'packages': {
+                      'chromadb': 'fixture', 'sentence-transformers': 'fixture'}},
+                  'source_files_unchanged': True, 'protected_inputs_unchanged': True}
+        write_report(report, self.root / 'report')
+        text = (self.root / 'report/html-ingestion-validation.md').read_text()
+        self.assertIn('0 paragraphs are automatically flagged', text)
+        self.assertIn('not 0 individually human-verified defects', text)
+        self.assertNotIn('113 are potentially missing', text)
+        self.assertNotIn('Confirmed behavioral examples', text)
+        self.assertNotIn('their projected prose is absent', text)
 
     def test_semantic_receipt_rejects_stale_corpus_and_implementation(self):
         from src import retrieval

@@ -5,7 +5,7 @@ from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
-from src.codex_generation import create_codex_generate
+from src.codex_generation import create_codex_generate, DISABLED_FEATURES
 from src.research_pipeline import PipelineError
 
 
@@ -27,15 +27,20 @@ class CodexSubscriptionTests(unittest.TestCase):
                 return SimpleNamespace(returncode=0,stdout='',stderr='Logged in using ChatGPT')
             output=Path(command[command.index('-o')+1]);output.write_text('{"answer":"ok"}')
             return SimpleNamespace(returncode=0,stdout=json.dumps({'type':'turn.completed','usage':{'output_tokens':3}}),stderr='')
-        with patch.dict('os.environ',{'CODEX_API_KEY':'secret','OPENAI_API_KEY':'secret','OPENAI_BASE_URL':'private'}),patch('src.codex_generation.subprocess.run',side_effect=run):
+        with patch.dict('os.environ',{'CODEX_API_KEY':'secret','OPENAI_API_KEY':'secret','OPENAI_BASE_URL':'private','UNRELATED_SECRET':'private'}),patch('src.codex_generation.subprocess.run',side_effect=run):
             receipts=[];fn,meta=create_codex_generate(model='gpt-test',binary=self.binary,receipts=receipts)
             text=fn('Return JSON.',response_schema={'type':'object','properties':{'answer':{'type':'string'}},'required':['answer'],'additionalProperties':False})
         self.assertEqual(json.loads(text),{'answer':'ok'});self.assertEqual(receipts[0]['status'],'ok')
         command,kw=seen[-1]
-        for flag in ['--ignore-user-config','--ephemeral','--skip-git-repo-check','--output-schema']:self.assertIn(flag,command)
+        for flag in ['--ignore-user-config','--ephemeral','--skip-git-repo-check','--strict-config','--output-schema']:self.assertIn(flag,command)
         self.assertEqual(command[command.index('--sandbox')+1],'read-only')
         for _,kw in seen:
             self.assertNotIn('CODEX_API_KEY',kw['env']);self.assertNotIn('OPENAI_API_KEY',kw['env'])
+        self.assertNotIn('UNRELATED_SECRET',seen[-1][1]['env'])
+        for feature in DISABLED_FEATURES:
+            self.assertIn(feature,command)
+            self.assertEqual(command[command.index(feature)-1],'--disable')
+        self.assertIn('approval_policy="never"',command)
         self.assertEqual(meta['auth'],'existing_chatgpt_login')
 
     def test_tool_using_response_is_rejected_without_provider_fallback(self):
@@ -43,6 +48,18 @@ class CodexSubscriptionTests(unittest.TestCase):
             if command[-2:]==['login','status']:return SimpleNamespace(returncode=0,stdout='Logged in using ChatGPT',stderr='')
             Path(command[command.index('-o')+1]).write_text('{}')
             return SimpleNamespace(returncode=0,stdout=json.dumps({'type':'item.completed','item':{'type':'command_execution'}}),stderr='')
+        with patch('src.codex_generation.subprocess.run',side_effect=run):
+            fn,_=create_codex_generate(model='gpt-test',binary=self.binary)
+            with self.assertRaises(PipelineError):fn('Return JSON')
+
+    def test_ignored_configuration_fails_closed_even_with_valid_answer(self):
+        def run(command,**kwargs):
+            if command[-2:]==['login','status']:
+                return SimpleNamespace(returncode=0,stdout='Logged in using ChatGPT',stderr='')
+            Path(command[command.index('-o')+1]).write_text('{}')
+            event={'type':'item.completed','item':{'type':'error',
+                   'message':'Codex is ignoring an unrecognized configuration setting'}}
+            return SimpleNamespace(returncode=0,stdout=json.dumps(event),stderr='')
         with patch('src.codex_generation.subprocess.run',side_effect=run):
             fn,_=create_codex_generate(model='gpt-test',binary=self.binary)
             with self.assertRaises(PipelineError):fn('Return JSON')

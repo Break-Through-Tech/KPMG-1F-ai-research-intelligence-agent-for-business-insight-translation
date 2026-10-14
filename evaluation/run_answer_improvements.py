@@ -12,6 +12,16 @@ from src.research_pipeline import run_research
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def recovered_case_ids(baseline, recovery, cases, variant):
+    """Only selected failed integrated cases served from frozen recovery evidence."""
+    if variant not in {'model-only', 'evidence-led-frozen'}:
+        return []
+    selected = {c['query_id'] for c in cases}
+    available = {c['case']['query_id'] for c in recovery['cases'] if c['status'] == 'ok'}
+    return [c['case']['query_id'] for c in baseline['cases']
+            if c['status'] != 'ok' and c['case']['query_id'] in selected & available]
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--baseline',type=Path,required=True)
@@ -43,7 +53,8 @@ def main():
     provenance.update(experiment_variant=args.variant,
         baseline_run_id=baseline['run_id'],baseline_sha256=sha256(args.baseline.read_bytes()).hexdigest(),
         recovery_retrieval_run_id=retrieval_baseline['run_id'],
-        baseline_failure_recovered_from_frozen_retrieval=['q06'],
+        baseline_failure_recovered_from_frozen_retrieval=recovered_case_ids(
+            baseline, retrieval_baseline, cases, args.variant),
         implementation_hashes={str(p.relative_to(ROOT)):sha256(p.read_bytes()).hexdigest()
             for p in [ROOT/'src/codex_generation.py',ROOT/'src/evidence_led.py',ROOT/'src/hybrid_retrieval.py',Path(__file__)]})
     if args.cases_file:

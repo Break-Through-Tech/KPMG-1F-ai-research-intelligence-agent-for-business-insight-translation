@@ -2,7 +2,8 @@
 
 No API keys, auth copying, model fallback, or repository access. Saved ChatGPT
 login is checked before use. Each invocation has an empty temporary working
-directory and refuses tool-using responses; this is not a production API service.
+directory, disables execution/integration features before generation, and
+refuses unexpected tool-using responses; this is not a production API service.
 """
 from hashlib import sha256
 import json
@@ -17,6 +18,11 @@ from src.generation import SchemaResponseError
 from src.research_pipeline import PipelineError
 
 
+DISABLED_FEATURES = ('shell_tool', 'unified_exec', 'code_mode', 'code_mode_host',
+                     'apps', 'plugins', 'hooks', 'multi_agent', 'multi_agent_v2',
+                     'browser_use', 'computer_use', 'view_image', 'memories',
+                     'shell_snapshot', 'workspace_dependencies', 'skill_search')
+
 def create_codex_generate(*, model, binary=None, effort='medium', timeout=300,
                           receipts=None):
     binary = binary or shutil.which('codex')
@@ -26,8 +32,11 @@ def create_codex_generate(*, model, binary=None, effort='medium', timeout=300,
         raise ValueError('Specify the Codex model explicitly')
     if effort not in {'low', 'medium', 'high', 'xhigh'}:
         raise ValueError('Unsupported experiment reasoning effort')
-    env = {k: v for k, v in os.environ.items() if k not in {
-        'CODEX_API_KEY', 'OPENAI_API_KEY', 'OPENAI_BASE_URL', 'CODEX_ACCESS_TOKEN'}}
+    # Retain only runtime/auth location variables, not operator secrets or
+    # integration configuration. Existing ChatGPT credentials stay in place.
+    env = {k: v for k, v in os.environ.items() if k in {
+        'HOME', 'PATH', 'USER', 'LOGNAME', 'TMPDIR', 'CODEX_HOME',
+        'SYSTEMROOT', 'APPDATA', 'LOCALAPPDATA'}}
     try:
         login = subprocess.run([str(binary), 'login', 'status'], env=env,
                                capture_output=True, text=True, timeout=15)
@@ -47,11 +56,17 @@ def create_codex_generate(*, model, binary=None, effort='medium', timeout=300,
         with tempfile.TemporaryDirectory(prefix='research-codex-') as scratch:
             folder = Path(scratch)
             output = folder / 'answer.json'
-            command = [str(binary), 'exec', '--ignore-user-config', '--ephemeral',
+            command = [str(binary), 'exec', '--ignore-user-config', '--strict-config', '--ephemeral',
                        '--skip-git-repo-check', '--sandbox', 'read-only', '--json',
                        '--color', 'never', '-C', scratch, '-m', model,
                        '-c', 'model_provider="openai"', '-c', 'web_search="disabled"',
-                       '-c', f'model_reasoning_effort="{effort}"', '-o', str(output)]
+                       '-c', f'model_reasoning_effort="{effort}"',
+                       '-c', 'approval_policy="never"',
+                       '-o', str(output)]
+            # Prompt instructions and post-hoc rejection are not isolation.
+            # Remove shell/exec and integration routes before sending evidence.
+            for feature in DISABLED_FEATURES:
+                command += ['--disable', feature]
             if response_schema is not None:
                 from jsonschema import Draft202012Validator
                 Draft202012Validator.check_schema(response_schema)
@@ -68,9 +83,11 @@ def create_codex_generate(*, model, binary=None, effort='medium', timeout=300,
                     capture_output=True, timeout=timeout, env=env)
                 events = [json.loads(line) for line in response.stdout.splitlines() if line.strip()]
                 record['usage'] = [e['usage'] for e in events if e.get('type') == 'turn.completed']
+                config_errors = [e for e in events if e.get('item', {}).get('type') == 'error'
+                    and 'unrecognized configuration' in e.get('item', {}).get('message', '').lower()]
                 forbidden = [e for e in events if e.get('item', {}).get('type') in {
                     'command_execution', 'file_change', 'mcp_tool_call', 'web_search'}]
-                if response.returncode or forbidden or not output.is_file():
+                if response.returncode or config_errors or forbidden or not output.is_file():
                     raise PipelineError('Codex text-only generation failed; no provider fallback occurred.')
                 raw = output.read_text()
                 if response_schema is not None:

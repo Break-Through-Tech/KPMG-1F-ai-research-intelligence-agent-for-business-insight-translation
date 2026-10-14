@@ -25,8 +25,8 @@ def focus_terms(query):
     """Generic domain terminology expansion, never benchmark IDs or answers.
 
     A general web-search reranker can prefer business wording over the requested
-    technical subject. These anchors retain one subject-specific candidate, not
-    force a factual answer when the corpus does not cover the question.
+    technical subject. These terms expand lexical candidates only. Final selection follows the
+    reranker (or RRF) without overriding semantic relevance.
     """
     q = query.lower()
     if re.search(r'multi[- ]agent', q) and re.search(r'\b(risks?|failures?|limitations?|tradeoffs?)\b', q):
@@ -104,19 +104,6 @@ class HybridRetriever:
             for p, v in zip(candidates, values):
                 p['retrieval']['rerank_score'] = float(v)
             candidates.sort(key=lambda p: (-p['retrieval']['rerank_score'], -p['retrieval']['rrf_score'], p['chunk_id']))
-        anchors = focus_terms(query)
-        def matches(p):
-            body = ' '.join(tokens(p['text']))
-            return sum(' '.join(tokens(term)) in body for term in anchors)
-        if anchors and len(candidates) > top_k:
-            focused = [p for p in candidates if matches(p)]
-            if focused and max(matches(p) for p in focused) > max(matches(p) for p in candidates[:top_k]):
-                best = max(focused, key=lambda p:(matches(p), p['retrieval'].get('rerank_score',0), p['retrieval']['rrf_score']))
-                # Reserve one slot for explicit topic evidence; preserve rank
-                # ordering of the other results and disclose the retention.
-                candidates.remove(best)
-                best['retrieval']['focus_retained'] = True
-                candidates.insert(top_k-1,best)
         # No rigid paper cap: multiple passages from one comparative study can
         # legitimately supply complementary results and caveats.
         return candidates[:top_k]

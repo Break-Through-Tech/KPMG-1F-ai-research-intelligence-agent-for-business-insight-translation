@@ -24,6 +24,7 @@ def main():
     cases = [c for c in baseline['cases'] if c['case']['query_id'] in args.queries]
     if len(cases) != len(set(args.queries)) or any(c['status'] != 'ok' for c in cases):
         parser.error('Requested cases must be available in the frozen baseline')
+    failed = False
     for model in args.models:
         receipts = []
         generate, metadata = create_codex_generate(model=model, binary=args.codex_bin,
@@ -32,6 +33,7 @@ def main():
         for case in cases:
             start = time.monotonic()
             result = summarize(case['case']['query'], case['result']['evidence'], generate=generate)
+            failed = failed or bool(result.get('error'))
             outputs.append({'query_id': case['case']['query_id'], 'summary': result,
                             'elapsed_seconds': round(time.monotonic()-start, 3)})
             artifact = {'experiment': 'model_only_frozen_evidence',
@@ -44,6 +46,8 @@ def main():
             print(json.dumps({'model': model, 'query': case['case']['query_id'],
                               'status': result['status'], 'error': result.get('error')}), flush=True)
 
+    return int(failed)
+
 
 if __name__ == '__main__':
-    main()
+    raise SystemExit(main())

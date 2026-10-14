@@ -126,27 +126,57 @@ class HybridTests(unittest.TestCase):
         h=HybridRetriever(self.rows,dense_search=lambda q,k:[])
         self.assertEqual(h('sparse'),h('sparse'))
 
-    def test_topic_anchor_survives_business_wording_reranker_drift(self):
+    def test_topic_expansion_never_overrides_semantic_reranker(self):
         rows=[{'chunk_id':'a','text':'Interpretability examines internal features.'},
               {'chunk_id':'b','text':'Vendor agents provide business support.'}]
         h=HybridRetriever(rows,dense_search=lambda q,k:[{**p,'distance':i} for i,p in enumerate(rows)],
             rerank=lambda q,ps:[100 if p['chunk_id']=='b' else 0 for p in ps])
         out=h('What should a business ask a vendor whose agent is interpretable?',1)
-        self.assertEqual(out[0]['chunk_id'],'a');self.assertTrue(out[0]['retrieval']['focus_retained'])
+        self.assertEqual(out[0]['chunk_id'],'b')
+        self.assertNotIn('focus_retained',out[0]['retrieval'])
 
-    def test_data_scarcity_anchor_does_not_lose_to_adjacent_few_shot_attack(self):
-        rows=[{'chunk_id':'a','text':'A few-shot attack improves sample efficiency of relearning.'},
-              {'chunk_id':'b','text':'We measure sample efficiency under data scarcity.'}]
-        h=HybridRetriever(rows,dense_search=lambda q,k:[{**p,'distance':i} for i,p in enumerate(rows)],
-            rerank=lambda q,ps:[100 if p['chunk_id']=='a' else 0 for p in ps])
-        self.assertEqual(h('Fine-tuning with limited data',1)[0]['chunk_id'],'b')
-
-    def test_multi_agent_risks_retrieve_coordination_evidence_not_only_tool_threats(self):
-        rows=[{'chunk_id':'a','text':'LLM tools face malicious software threats.'},
+    def test_security_risk_is_not_displaced_by_coordination_keywords(self):
+        rows=[{'chunk_id':'a','text':'Multi-agent tool execution can run malicious software.'},
               {'chunk_id':'b','text':'Poorly coordinated multi-agent systems incur communication overhead.'}]
-        h=HybridRetriever(rows,dense_search=lambda q,k:[{**rows[0],'distance':0}],
-            rerank=lambda q,ps:[100 if p['chunk_id']=='a' else 0 for p in ps])
-        self.assertEqual(h('What risks do multi-agent LLM systems face?',1)[0]['chunk_id'],'b')
+        candidates=[]
+        def rank(q,ps):
+            candidates.extend(p['chunk_id'] for p in ps)
+            return [100 if p['chunk_id']=='a' else 0 for p in ps]
+        h=HybridRetriever(rows,dense_search=lambda q,k:[{**rows[0],'distance':0}],rerank=rank)
+        self.assertEqual(h('What are the security risks of multi-agent tool execution?',1)[0]['chunk_id'],'a')
+        self.assertIn('b',candidates)  # lexical expansion still adds candidates
+
+
+class ExperimentFailureTests(unittest.TestCase):
+    def test_recovery_provenance_only_records_selected_failed_frozen_cases(self):
+        from evaluation.run_answer_improvements import recovered_case_ids
+        rows=[{'case':{'query_id':ident},'status':status}
+              for ident,status in [('q03','ok'),('q06','error'),('q09','error')]]
+        baseline={'cases':rows}
+        recovery={'cases':[{'case':r['case'],'status':'ok'} for r in rows]}
+        self.assertEqual(recovered_case_ids(baseline,recovery,[{'query_id':'q09'}],'model-only'),['q09'])
+        self.assertEqual(recovered_case_ids(baseline,recovery,[{'query_id':'q03'}],'evidence-led-frozen'),[])
+        self.assertEqual(recovered_case_ids(baseline,recovery,[{'query_id':'q06'}],'evidence-led'),[])
+        self.assertEqual(recovered_case_ids(baseline,recovery,[{'query_id':'h01'}],'evidence-led'),[])
+        self.assertEqual(recovered_case_ids(baseline,{'cases':[]},[{'query_id':'q06'}],'model-only'),[])
+
+    def test_comparison_preserves_failed_artifacts_and_returns_nonzero(self):
+        import tempfile
+        from pathlib import Path
+        from evaluation import compare_answer_variants as runner
+        for error,expected in [('provider_failed',1),(None,0)]:
+            with self.subTest(error=error),tempfile.TemporaryDirectory() as folder:
+                baseline=Path(folder)/'baseline.json';output=Path(folder)/'run'
+                baseline.write_text(json.dumps({'run_id':'fixture','cases':[{'case':{'query_id':'q03','query':'DPO'},
+                    'status':'ok','result':{'evidence':[]}}]}))
+                argv=['compare','--baseline',str(baseline),'--output',str(output),'--codex-bin','fixture',
+                      '--models','fixture-model','--queries','q03']
+                with patch('sys.argv',argv),patch.object(runner,'create_codex_generate',return_value=(Mock(),{})), \
+                     patch.object(runner,'summarize',return_value={'status':'insufficient_evidence','error':error}), \
+                     redirect_stdout(io.StringIO()):
+                    self.assertEqual(runner.main(),expected)
+                data=json.loads((output/'fixture-model.json').read_text())
+                self.assertEqual(data['outputs'][0]['summary']['error'],error)
 
 
 if __name__=='__main__':unittest.main()

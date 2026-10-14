@@ -8,10 +8,9 @@ never attributed to a human reviewer or stakeholder.
 ## What changes
 
 - `src.hybrid_retrieval.HybridRetriever`: BM25 + dense candidates (25 each),
-  reciprocal-rank fusion, an optional local cross-encoder, and disclosed topic
-  retention for interpretability, SAEs, limited-data terminology and multi-agent
-  coordination risks. One topic
-  slot protects against generic business-language reranker drift. No benchmark
+  reciprocal-rank fusion, an optional local cross-encoder, and lexical candidate expansion for interpretability, SAEs, limited-data terminology and multi-agent
+  coordination risks. Final selection follows the cross-encoder (or RRF),
+  without keyword-based overrides. No benchmark
   IDs, known answer IDs, or fixed per-paper caps are used.
 - `src.evidence_led.summarize`: extraction first, then synthesis from an exact-
   quotation ledger. Unknown citations, fabricated quotations, quotations from
@@ -22,9 +21,11 @@ never attributed to a human reviewer or stakeholder.
   deployment prescription. Partial evidence may support conditional advice.
 - `src.codex_generation.create_codex_generate`: an explicit local experiment
   adapter using an existing ChatGPT Codex login. No API-key provider fallback.
-  It strips API-key overrides, uses an empty temporary working directory,
-  read-only ephemeral execution, ignores user config, and rejects tool-using
-  output. The CLI still needs network access to the model service.
+  It allowlists runtime/auth-location environment variables, uses an empty
+  temporary working directory, read-only ephemeral execution, and ignores user
+  config. Shell/exec, code mode, integrations, browsing, computer use,
+  multi-agent, hooks, image access and memory features are disabled before
+  evidence is supplied. Unexpected tool-using output is also rejected. The CLI still needs network access to the model service.
 
 ## Run locally using a Codex subscription
 
@@ -77,7 +78,7 @@ scope and abstentions; counting valid JSON or nonempty answers is insufficient.
 ## Quality safeguards and remaining limits
 
 Quote membership is deterministic; semantic support remains an AI-review task.
-Generic rerankers may favor adjacent topics, and topic retention is not proof of
+Generic rerankers may favor adjacent topics; lexical expansion is not proof of
 relevance. Keep results that underperform. Do not suppress malformed responses,
 convert missing stages to scores, treat abstention as inherently good or bad,
 or move a study's limitations to another paper. New questions over the same

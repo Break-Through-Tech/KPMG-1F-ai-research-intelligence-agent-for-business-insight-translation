@@ -1,6 +1,7 @@
 """Capture real retrieval against a validated, reconciled frozen corpus.
 
-No generation provider is invoked. Output directories refuse overwrite.
+Retrieval mode invokes no generation provider. Summary/business modes use the
+explicit generation configuration. Output directories refuse overwrite.
 """
 import argparse
 from hashlib import sha256

@@ -12,7 +12,7 @@ from string import Template
 from src.research_pipeline import PipelineError, _validate_output
 
 PROMPT_ID = 'business-translation/baseline'
-PROMPT_VERSION = '1.0'
+PROMPT_VERSION = '1.1'
 PROMPT_PATH = Path(__file__).resolve().parents[1] / 'prompts/business_translation/baseline-v1.txt'
 BUSINESS_KEYS = {'status', 'industry', 'implications', 'risks', 'limitations'}
 IMPLICATION_KEYS = {'text', 'chunk_ids', 'suggested_action', 'assumptions'}

@@ -33,7 +33,7 @@ class BusinessTranslationTests(unittest.TestCase):
         self.assertEqual(self.call(generate=generator), self.fixture['expected'])
         self.assertEqual(before, self.fixture)
         prompt = generator.call_args.args[0]
-        self.assertIn('Prompt ID: business-translation/baseline; version: 1.0', prompt)
+        self.assertIn('Prompt ID: business-translation/baseline; version: 1.1', prompt)
         self.assertIn(json.dumps(self.fixture['summary']), prompt)
         self.assertIn(json.dumps(self.fixture['evidence']), prompt)
         self.assertEqual(generator.call_count, 1)
@@ -177,7 +177,7 @@ class BusinessTranslationTests(unittest.TestCase):
 
     def test_prompt_provenance_binds_selected_artifact(self):
         self.assertEqual(prompt_provenance(), {
-            'prompt_id': 'business-translation/baseline', 'prompt_version': '1.0',
+            'prompt_id': 'business-translation/baseline', 'prompt_version': '1.1',
             'template_sha256': sha256(PROMPT_PATH.read_bytes()).hexdigest()})
 
     def test_pipeline_integration_preserves_citations_and_pending_review(self):

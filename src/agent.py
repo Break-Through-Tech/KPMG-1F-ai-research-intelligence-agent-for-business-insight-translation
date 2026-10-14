@@ -80,6 +80,9 @@ def ask_question(question: str, top_k: int = 5, *, retrieve=None, generate=None,
         answer.append(f"{claim['text']} [{'; '.join(labels)}]")
     if not answer:
         answer = result["summary"]["limitations"] or ["Insufficient evidence to answer."]
+    elif result["summary"]["limitations"]:
+        answer.append("Evidence limits:\n" + "\n".join(
+            f"- {limit}" for limit in result["summary"]["limitations"]))
     result["answer"] = "\n\n".join(answer)
     result["sources"] = [{**evidence[chunk_id], "page": evidence[chunk_id].get("page_number")}
                          for chunk_id in cited]

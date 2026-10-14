@@ -71,6 +71,16 @@ class BaselineAgentTests(unittest.TestCase):
                 agent.ask_question(" ", retrieve=lambda q, k: self.fail("must not retrieve"))
         factory.assert_not_called()
 
+    def test_compact_answer_keeps_research_scope_caveats(self):
+        def scoped(_prompt):
+            return json.dumps({"status": "ok", "claims": [
+                {"text": "A study evaluated intended tasks.", "chunk_ids": ["html-1"]}],
+                "limitations": ["One study only; no deployment prevalence was established."]})
+        result = agent.ask_question("Question", retrieve=lambda q, k: passages(), generate=scoped)
+        self.assertIn("One study only; no deployment prevalence was established.", result["answer"])
+        self.assertIn("Evidence limits:", result["answer"])
+        self.assertFalse(result["approved"])
+
 
 if __name__ == "__main__":
     unittest.main()

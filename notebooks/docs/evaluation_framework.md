@@ -152,8 +152,8 @@ A topic absent from these abstracts is not proven absent from every paper body.
 |---|---|---|
 | q01 | partially_covered | 2602.00931v2 (reasoning strategies), 2608.00335v1 (web-agent step efficiency); not a comprehensive LLM-efficiency survey |
 | q02 | partially_covered | 2604.00319v1 (collaboration), 2603.00829v2 (agent monitoring); multi-agent-specific risk coverage needs checking |
-| q03 | unanswerable, tentative | CLAMP concerns robotic policies, not limited-data LLM fine-tuning; no direct abstract match found |
-| q04 | unanswerable, tentative | 2603.00824v2 discusses representations, not a demonstrated sparse-autoencoder study; no direct abstract match found |
+| q03 | partially_covered candidate; human confirmation pending | Full-text `2602.00931v2#S4.SS4.p1` compares binary DPO/CU-DPO using 25%, 50%, 75%, and 100% of Phase 2 data. This is relevant limited-data preference tuning, not a complete survey |
+| q04 | partially_covered candidate; human confirmation pending | Full-text `2604.00324v1#Ch1.S1.p4` discusses sparse autoencoders decomposing polysemantic units into monosemantic features. Secondary context, not a standalone SAE experiment |
 | q05 | partially_covered | 2602.00931v2 covers CU-DPO vs binary preference supervision; breadth of DPO variants is limited |
 | q06 | partially_covered | 2608.00335v1 covers SFT/RL recipes, but self-supervised-reasoning comparison is not established |
 | q07 | partially_covered | 2605.00276v1 explicitly compares an orchestrated trip-planning system with single-agent/workflow baselines |
@@ -183,3 +183,28 @@ Report KPMG stakeholder feedback only when received, separately from team review
 Remaining acceptance: full-paper coverage confirmation, a pilot by actual team
 reviewers, claimed reviewer allocation, and final frozen-run scoring. These are
 not supplied or fabricated by this documentation PR.
+
+
+### Prepared pilot delivery — October 13, 2026
+
+The requested packet recipient is Jacqueline. Delivery is not a completed review,
+reviewer commitment, or team pilot. The packet uses a fresh locked-source snapshot
+and separates the integrated model run from model-free retrieval diagnostics.
+The full-text q03/q04 candidates above supersede the earlier abstract-only absence
+screen; all machine-readable `coverage` fields remain `not_checked` until actual
+reviewers confirm answerability. Keyword discovery alone never proves absence.
+
+Start with q01 (factual), q07 (comparative), and q08 (business translation).
+For each, inspect the five linked passages, verify every generated claim at its
+source, record actual ratings/coverage/abstention, and note unclear instructions.
+These three queries provide a bounded first pilot covering each question type.
+A second actual reviewer must independently review that same subset before
+claiming the double-review requirement. Delivery to Jacqueline assigns nobody
+else and supplies no ratings. Preserve both records and adjudicate disagreements
+separately. Continue the remaining seven queries only when capacity permits.
+
+Complete the JSON worksheet with the protocol's actual `reviewer`, `run_id`,
+passage ratings and statement locators. Blank CSV cells and JSON nulls are not
+review records and must not be submitted as scores. Retain model/provider errors
+and skipped/insufficient stages; failed model output is not a grounded answer.
+No score or KPMG approval is inferred from this packet.

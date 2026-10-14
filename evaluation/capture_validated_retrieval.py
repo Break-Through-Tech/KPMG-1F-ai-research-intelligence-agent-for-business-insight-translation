@@ -1,6 +1,7 @@
 """Capture real retrieval against a validated, reconciled frozen corpus.
 
-No generation provider is invoked. Output directories refuse overwrite.
+Retrieval mode invokes no generation provider. Summary/business modes use the
+explicit generation configuration. Output directories refuse overwrite.
 """
 import argparse
 from hashlib import sha256
@@ -71,7 +72,11 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--validation',type=Path,required=True)
     parser.add_argument('--output',type=Path,required=True)
+    parser.add_argument('--mode', choices=('retrieval', 'summary', 'business'), default='retrieval')
+    parser.add_argument('--industry', help='Explicit industry for business mode')
     args=parser.parse_args()
+    if args.mode == 'business' and not args.industry:
+        parser.error('Business mode requires --industry')
     if args.output.exists(): parser.error('Choose a new frozen output directory')
     report=json.loads(args.validation.read_text())
     frame=verify_validation(report)
@@ -84,27 +89,47 @@ def main():
     weights=Path(hf_hub_download('sentence-transformers/'+retrieval.EMBEDDING_MODEL,
                                'model.safetensors',local_files_only=True))
     provenance=source_provenance(execution='persistent_corpus')
+    generate = None
+    translate_fn = None
+    if args.mode != 'retrieval':
+        from src.generation import create_generate
+        from src.summarization import summarize, prompt_provenance
+        generate, generation = create_generate()
+        provenance['generation'] = {**generation, **prompt_provenance()}
+        if args.mode == 'business':
+            from src.business_translation import translate, prompt_provenance as business_provenance
+            provenance['generation']['business_translation'] = business_provenance()
+            translate_fn = lambda summary, passages, *, industry: translate(
+                summary, passages, industry=industry, generate=generate)
     provenance.update(corpus_mode='html_first',indexed_corpus_sha256=index_hash,
         corpus_validation_sha256=sha256(args.validation.read_bytes()).hexdigest(),
         embedding_weights_sha256=sha256(weights.read_bytes()).hexdigest(),
         embedding_revision=weights.parent.name,
         capture_script_sha256=sha256(Path(__file__).read_bytes()).hexdigest(),
         packages={n:importlib.metadata.version(n) for n in ('sentence-transformers','chromadb','torch','pandas','pyarrow')},
-        absent_stages=['summary generation not requested','business adapter not bound','actual human reviews not supplied'])
+        absent_stages=([ 'summary generation not requested'] if args.mode == 'retrieval' else []) +
+            (['business adapter not bound'] if args.mode != 'business' else []) +
+            ['actual human reviews not supplied'])
     def research(request):
         return run_research(request,retrieve=lambda q,k:retrieval.search(q,k,model=model),
-            summarize_fn=lambda q,p:{'status':'insufficient_evidence','query':q,'claims':[],
-                'limitations':['Generation not requested; real retrieval-only capture, not a generated answer.']})
+            summarize_fn=(lambda q,p: summarize(q,p,generate=generate)) if generate else
+                (lambda q,p:{'status':'insufficient_evidence','query':q,'claims':[],
+                    'limitations':['Generation not requested; real retrieval-only capture, not a generated answer.']}),
+            translate_fn=translate_fn, provenance=provenance)
     artifact=capture(json.loads((ROOT/'evaluation/benchmark_cases.json').read_text()),
-                     research_fn=research,provenance=provenance)
+                     research_fn=research,provenance=provenance,
+                     context={'industry':args.industry} if args.mode == 'business' else None)
     args.output.mkdir(parents=True,exist_ok=False)
     (args.output/'run.json').write_text(json.dumps(artifact,indent=2,allow_nan=False)+'\n')
     export_review_table(artifact,args.output/'review.csv')
     (args.output/'unscored.json').write_text(json.dumps(aggregate(artifact,[]),indent=2)+'\n')
     (args.output/'corpus-validation.json').write_bytes(args.validation.read_bytes())
     failed=sum(row['status']=='error' for row in artifact['cases'])
-    print(json.dumps({'run_id':artifact['run_id'],'queries':len(artifact['cases']),'failures':failed,'chunks':len(frame)}))
-    return int(failed>0)
+    summary_failed=sum(bool((row['result'] or {}).get('summary', {}).get('error'))
+                       for row in artifact['cases'])
+    print(json.dumps({'run_id':artifact['run_id'],'queries':len(artifact['cases']),
+                     'failures':failed,'summary_failures':summary_failed,'chunks':len(frame)}))
+    return int(bool(failed or summary_failed))
 
 
 if __name__ == '__main__': raise SystemExit(main())

@@ -125,8 +125,11 @@ def main():
     (args.output/'unscored.json').write_text(json.dumps(aggregate(artifact,[]),indent=2)+'\n')
     (args.output/'corpus-validation.json').write_bytes(args.validation.read_bytes())
     failed=sum(row['status']=='error' for row in artifact['cases'])
-    print(json.dumps({'run_id':artifact['run_id'],'queries':len(artifact['cases']),'failures':failed,'chunks':len(frame)}))
-    return int(failed>0)
+    summary_failed=sum(bool((row['result'] or {}).get('summary', {}).get('error'))
+                       for row in artifact['cases'])
+    print(json.dumps({'run_id':artifact['run_id'],'queries':len(artifact['cases']),
+                     'failures':failed,'summary_failures':summary_failed,'chunks':len(frame)}))
+    return int(bool(failed or summary_failed))
 
 
 if __name__ == '__main__': raise SystemExit(main())

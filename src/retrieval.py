@@ -86,6 +86,8 @@ def store_embeddings(df, embeddings):
         raise ValueError(f"Chunk data missing columns: {', '.join(sorted(missing))}")
     if df.empty or df[list(REQUIRED_COLUMNS)].isna().any().any():
         raise ValueError("Chunk data is empty or contains missing source fields")
+    if df["text"].astype(str).str.strip().eq("").any():
+        raise ValueError("Chunk data contains empty text")
     ids = df["chunk_id"].astype(str).tolist()
     if len(ids) != len(set(ids)):
         raise ValueError("Duplicate chunk IDs in input")
@@ -164,6 +166,11 @@ def search(query, top_k=5, *, client=None, model=None):
             "page_number": citation.get("page_number"),
         })
     return hits
+
+
+def search_chunks(query, top_k=5):
+    """Compatibility wrapper for the contributor's baseline entry points."""
+    return search(query, top_k=top_k)
 
 
 if __name__ == "__main__":

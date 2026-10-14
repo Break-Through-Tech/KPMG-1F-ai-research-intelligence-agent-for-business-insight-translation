@@ -98,11 +98,14 @@ class HybridRetriever:
                        'retrieval': {**details[k], 'rrf_score': scores[k], 'method': 'hybrid-bm25-rrf-v2'}}
                       for k in ordered]
         if self.rerank and candidates:
-            values = list(self.rerank(query, candidates))
+            results = list(self.rerank(query, candidates))
+            values = [r['score'] if isinstance(r, dict) else r for r in results]
             if len(values) != len(candidates) or any(not math.isfinite(float(v)) for v in values):
                 raise ValueError('Reranker must return one finite score per candidate')
-            for p, v in zip(candidates, values):
+            for p, v, detail in zip(candidates, values, results):
                 p['retrieval']['rerank_score'] = float(v)
+                if isinstance(detail, dict):
+                    p['retrieval']['rerank_assessment'] = detail['assessment']
             candidates.sort(key=lambda p: (-p['retrieval']['rerank_score'], -p['retrieval']['rrf_score'], p['chunk_id']))
         # No rigid paper cap: multiple passages from one comparative study can
         # legitimately supply complementary results and caveats.

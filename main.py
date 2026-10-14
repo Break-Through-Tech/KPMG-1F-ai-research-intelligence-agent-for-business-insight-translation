@@ -44,7 +44,7 @@ def persistent_retrieve(query, top_k):
         raise
 
 
-def hybrid_retrieve(query, top_k, *, reranker_model=None):
+def hybrid_retrieve(query, top_k, *, reranker_model=None, rerank=None):
     from src import retrieval
     from src.hybrid_retrieval import HybridRetriever
     frame = retrieval.load_chunks()
@@ -52,7 +52,7 @@ def hybrid_retrieve(query, top_k, *, reranker_model=None):
                  **retrieval.citation_metadata(row),
                  'page_number': retrieval.citation_metadata(row).get('page_number')}
                 for row in frame.to_dict('records')]
-    rank = None
+    rank = rerank
     if reranker_model:
         from sentence_transformers import CrossEncoder
         model = CrossEncoder(reranker_model)
@@ -95,6 +95,7 @@ def main(argv=None):
     parser.add_argument('--jurisdiction')
     parser.add_argument('--demo', action='store_true', help='Synthetic offline adapters; no keys or downloads')
     parser.add_argument('--retrieval-mode', choices=['dense', 'hybrid'], default='dense')
+    parser.add_argument('--intent-rerank', action='store_true', help='Opt-in quote-checked model relevance for hybrid summary/business mode')
     parser.add_argument('--reranker-model', help='Optional local cross-encoder for hybrid retrieval')
     parser.add_argument('--generation-route', choices=['byok', 'codex'], default='byok')
     parser.add_argument('--codex-model', help='Explicit model for existing ChatGPT Codex login')
@@ -105,6 +106,8 @@ def main(argv=None):
     parser.add_argument('--review-adapter', help='module:function accepting the complete result, including jurisdiction')
     args = parser.parse_args(argv)
     try:
+        if args.intent_rerank and (args.demo or args.mode == 'retrieval' or args.retrieval_mode != 'hybrid' or args.reranker_model):
+            raise ValueError('--intent-rerank requires hybrid summary/business mode without --demo or --reranker-model')
         if args.mode == 'business' and not args.industry:
             raise ValueError('Business mode requires --industry')
         if args.demo and (args.summary_adapter or args.translation_adapter or args.review_adapter):
@@ -156,6 +159,11 @@ def main(argv=None):
                     generate, settings = create_codex_generate(model=args.codex_model, binary=args.codex_bin)
                 else:
                     generate, settings = create_generate()
+                if args.intent_rerank:
+                    from src.intent_reranking import create_intent_rerank
+                    rank, rank_settings = create_intent_rerank(generate)
+                    retrieve = lambda q, k: hybrid_retrieve(q, k, rerank=rank)
+                    provenance['retrieval']['reranker'] = rank_settings
                 provenance['generation'] = settings
                 if spec == 'src.summarization:summarize':
                     from src.summarization import prompt_provenance

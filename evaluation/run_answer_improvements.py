@@ -31,6 +31,7 @@ def main():
     parser.add_argument('--model',required=True)
     parser.add_argument('--variant',choices=['model-only','evidence-led','evidence-led-frozen'],required=True)
     parser.add_argument('--queries',nargs='+')
+    parser.add_argument('--intent-rerank',action='store_true',help='Quote-checked model relevance instead of the local cross-encoder')
     parser.add_argument('--cases-file',type=Path,help='New-question probes over the same frozen corpus; hybrid evidence-led only')
     parser.add_argument('--reranker-model',default='cross-encoder/ms-marco-MiniLM-L6-v2')
     args=parser.parse_args()
@@ -40,6 +41,8 @@ def main():
     for artifact in (baseline,retrieval_baseline):
         if artifact_id(artifact)!=artifact['run_id']:
             parser.error('Frozen input artifact hash mismatch')
+    if args.intent_rerank and args.variant!='evidence-led':
+        parser.error('Intent reranking requires hybrid evidence-led mode')
     if args.cases_file and args.variant!='evidence-led':
         parser.error('New questions require hybrid retrieval, not frozen query results')
     source_cases=json.loads(args.cases_file.read_text()) if args.cases_file else [c['case'] for c in baseline['cases']]
@@ -56,7 +59,7 @@ def main():
         baseline_failure_recovered_from_frozen_retrieval=recovered_case_ids(
             baseline, retrieval_baseline, cases, args.variant),
         implementation_hashes={str(p.relative_to(ROOT)):sha256(p.read_bytes()).hexdigest()
-            for p in [ROOT/'src/codex_generation.py',ROOT/'src/evidence_led.py',ROOT/'src/hybrid_retrieval.py',Path(__file__)]})
+            for p in [ROOT/'src/codex_generation.py',ROOT/'src/evidence_led.py',ROOT/'src/hybrid_retrieval.py',ROOT/'src/intent_reranking.py',Path(__file__)]})
     if args.cases_file:
         provenance['new_question_probes_sha256']=sha256(args.cases_file.read_bytes()).hexdigest()
     if provenance['input_hashes']['data/processed/chunks.parquet']!=baseline['provenance']['input_hashes']['data/processed/chunks.parquet']:
@@ -87,8 +90,13 @@ def main():
         if index_hash!=baseline['provenance']['indexed_corpus_sha256']:
             parser.error('Index differs from the frozen baseline')
         dense_model=SentenceTransformer(retrieval.EMBEDDING_MODEL)
-        reranker=CrossEncoder(args.reranker_model)
-        def rank(q,ps):return reranker.predict([(q,p['text']) for p in ps],show_progress_bar=False)
+        intent_settings=None
+        if args.intent_rerank:
+            from src.intent_reranking import create_intent_rerank
+            rank,intent_settings=create_intent_rerank(generate)
+        else:
+            reranker=CrossEncoder(args.reranker_model)
+            def rank(q,ps):return reranker.predict([(q,p['text']) for p in ps],show_progress_bar=False)
         passages=[{'chunk_id':r['chunk_id'],'text':r['text'],**retrieval.citation_metadata(r),
                    'page_number':retrieval.citation_metadata(r).get('page_number')}
                   for r in frame.to_dict('records')]
@@ -98,7 +106,7 @@ def main():
         provenance.update(indexed_corpus_sha256=index_hash,corpus_mode='html_first')
         provenance['generation']={**metadata,**prompt_provenance(),'business_translation':'evidence-led-business-v1'}
         provenance['retrieval']={'method':'hybrid-bm25-rrf-v2','candidate_pool':25,
-                                 'reranker':args.reranker_model,'reranker_local':True}
+                                 'reranker':intent_settings or args.reranker_model,'reranker_local':not args.intent_rerank}
     args.output.mkdir(parents=True)
     (args.output/'retrieval.json').write_text(json.dumps(evidence,indent=2,allow_nan=False)+'\n')
     artifact={'schema_version':'1.0','created_at':datetime.now(timezone.utc).isoformat(),

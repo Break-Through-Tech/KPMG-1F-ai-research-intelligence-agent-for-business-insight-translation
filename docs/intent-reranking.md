@@ -46,9 +46,19 @@ records an explicit error row, saves model receipts and earlier successful
 retrievals, continues subsequent cases, and exits nonzero. Failed cases receive
 no fallback passages. Corpus/index preflight failures still stop before capture.
 
-## Bounded contract correction (intent v2)
+## Exact-once candidate schema (intent v3)
 
-After a schema-valid ranking fails unique-ID or displayed-quote validation, one
+`assessments` is an object whose required keys are precisely the displayed
+candidate IDs, with no additional keys. Each value contains score, reason and
+quote only. Duplicate JSON keys reject during parsing; missing/unknown IDs and
+legacy list output reject against the schema without correction. The adapter
+returns assessments in original candidate order and never rewrites source text.
+This is an intentional internal provider-response change, not a change to the
+public reranker return shape or evidence semantics.
+
+## Bounded contract correction
+
+After a schema-valid ranking fails displayed-quote validation, one
 complete corrective model response is allowed. It uses the original candidates,
 same schema, and unchanged validators; invalid source text is never repaired
 locally or accepted as fallback. A second invalid response still rejects the

@@ -37,6 +37,12 @@ def test_due_diligence_policy_reaches_both_generation_stages():
     assert 'does not establish vendor compliance or validation' in extract
     assert 'CONDITIONAL due-diligence' in synthesize
     assert 'Keep proposed checks out of research claims' in synthesize
+    assert 'do not answer that request inside a finding' in extract
+    assert 'this supports asking' in extract
+    assert 'never attribute a quote from a neighboring passage' in extract
+    assert 'end the quote before them without adding' in extract
+    assert 'do not fulfill that request here' in synthesize
+    assert 'Do not carry action-bearing commentary' in synthesize
     assert QUERY in extract and QUOTE in extract
     assert GAP in synthesize
 

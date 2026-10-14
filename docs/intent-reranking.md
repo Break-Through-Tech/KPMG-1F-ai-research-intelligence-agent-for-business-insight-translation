@@ -40,3 +40,8 @@ python -m evaluation.run_answer_improvements \
 The capture records the relevance prompt hash and budgets separately from answer
 prompt provenance. Keep uniform captures, paraphrased-query controls and adverse
 results; recovering a known paragraph is not evidence of generalization.
+
+Controlled captures retrieve inside each checkpointed case. A rejected ranking
+records an explicit error row, saves model receipts and earlier successful
+retrievals, continues subsequent cases, and exits nonzero. Failed cases receive
+no fallback passages. Corpus/index preflight failures still stop before capture.

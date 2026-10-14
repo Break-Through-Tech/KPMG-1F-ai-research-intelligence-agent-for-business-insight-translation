@@ -60,5 +60,5 @@ def create_intent_rerank(generate, *, max_candidates=50, max_passage_chars=2000)
                 'quote':by_id[i]['quote'], 'displayed_chars':len(visible[n]['text'])}}
                 for n,i in enumerate(ids)]
         except Exception:
-            raise PipelineError('Intent relevance assessment failed validation; no ranking fallback occurred.') from None
+            raise PipelineError('Intent relevance assessment failed; no ranking was produced. Retry the request or explicitly rerun without --intent-rerank. No ranking fallback occurred.') from None
     return rank, provenance

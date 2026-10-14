@@ -101,8 +101,13 @@ def main():
                    'page_number':retrieval.citation_metadata(r).get('page_number')}
                   for r in frame.to_dict('records')]
         hybrid=HybridRetriever(passages,dense_search=lambda q,k:retrieval.search(q,k,client=client,model=dense_model),rerank=rank)
-        evidence={case['query']:hybrid(case['query'],5) for case in cases}
-        retrieve=lambda q,k:evidence[q][:k]
+        evidence={}
+        def retrieve(q,k):
+            # Retrieval includes model validation in intent mode. Keep it
+            # inside capture's case boundary so rejections become error rows.
+            passages=hybrid(q,k)
+            evidence[q]=passages
+            return passages
         provenance.update(indexed_corpus_sha256=index_hash,corpus_mode='html_first')
         provenance['generation']={**metadata,**prompt_provenance(),'business_translation':'evidence-led-business-v1'}
         provenance['retrieval']={'method':'hybrid-bm25-rrf-v2','candidate_pool':25,
@@ -121,6 +126,7 @@ def main():
         artifact['cases'].append(row);artifact['run_id']=artifact_id(artifact)
         (args.output/'run.json').write_text(json.dumps(artifact,indent=2,allow_nan=False)+'\n')
         (args.output/'receipts.json').write_text(json.dumps(receipts,indent=2)+'\n')
+        (args.output/'retrieval.json').write_text(json.dumps(evidence,indent=2,allow_nan=False)+'\n')
         result=row['result'] or {}
         print(json.dumps({'query':case['query_id'],'status':row['status'],
             'summary':result.get('summary',{}).get('status'),'summary_error':result.get('summary',{}).get('error'),

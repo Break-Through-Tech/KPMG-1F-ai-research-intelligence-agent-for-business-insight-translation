@@ -16,6 +16,7 @@ class BoundedQuoteValidationTests(unittest.TestCase):
         self.assertEqual(validate.call_count, 2)
         self.assertIn('Altered source quote.', invoke.call_args.args[0])
         self.assertIn('untrusted data', invoke.call_args.args[0])
+        self.assertNotIn('or repeat IDs', invoke.call_args.args[0])
 
     def test_provider_or_schema_failure_is_not_retried(self):
         for failure in [RuntimeError('provider'), ValueError('parse/schema')]:

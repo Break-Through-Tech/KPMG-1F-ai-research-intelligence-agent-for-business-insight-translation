@@ -15,3 +15,14 @@ Question:
 $query
 Passages:
 $evidence
+
+For a business question requesting CONDITIONAL due-diligence checks, a quoted
+technical validation workflow, studied model/task scope, or expressly stated limit
+can directly support the technical basis for a proposed check. Do not require
+literal vendor-question wording in the paper. This is partial evidence, not evidence
+that a vendor complies, that its deployed system was validated, or that a method
+guarantees behavior. Require an explicit coverage gap saying the supplied evidence
+does not establish vendor compliance or validation of the deployed system.
+Keep findings factual and quote-supported; proposed checks belong only in business
+translation. Do not promote unrelated methods/setup to direct evidence, or use
+this rule to fill a missing efficacy result, comparator, or proprietary-data evidence.

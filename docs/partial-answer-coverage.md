@@ -43,3 +43,20 @@ receipts retain both model calls. This can add one extraction call per request.
 Correction is not proof of semantic entailment: setup-only evidence is contextual,
 and limited-data efficacy requires a quoted data-scale result. Review real claims
 separately; a correct abstention is not successful retrieval of missing evidence.
+
+## Conditional due-diligence boundary
+
+For a business question asking what to check, quote-supported technical validation
+workflows, studied scope and expressly stated limits can supply a **partial**
+technical basis even when a paper does not literally list vendor questions.
+Extraction/synthesis retain factual findings only. Business translation supplies
+separately labeled conditional checks and transfer assumptions. The coverage gap
+must state that the evidence does not establish vendor compliance or validation
+of the deployed system; interpretability is not a behavioral guarantee.
+
+This does not make arbitrary background direct, supply a missing comparator or
+efficacy result, or fill proprietary-training privacy gaps. Validators and the
+unapproved-review state remain unchanged. `tests/test_conditional_due_diligence.py`
+checks the rendered prompt contract and strict pipeline shape with scripted replies;
+it is not a model-quality test. A separate bounded q10 capture is needed to assess
+whether the model actually applies this boundary faithfully.

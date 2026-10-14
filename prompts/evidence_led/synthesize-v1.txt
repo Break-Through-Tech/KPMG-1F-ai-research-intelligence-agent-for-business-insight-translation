@@ -24,3 +24,11 @@ partial answer, answer only the supported requested component. Do not fill space
 with a different method/comparison or a detailed adjacent-study result. Preserve
 essential qualifiers and adverse findings in these concise claims. Never make a
 partial result sound like the missing comparison has been established.
+
+For questions requesting CONDITIONAL due-diligence, summarize only the quoted
+technical basis (validation workflow, studied scope, or stated limits). A paper need
+not itself list vendor questions. Keep proposed checks out of research claims;
+business translation owns those separately labeled actions and transfer assumptions.
+Preserve partial scope and the explicit gap: the supplied evidence does not establish
+vendor compliance or validation of the deployed system. Never turn a workflow into
+a demonstrated deployment result, or interpretability into a behavioral guarantee.

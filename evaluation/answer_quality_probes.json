@@ -1,0 +1,23 @@
+[
+  {
+    "query_id": "h01",
+    "type": "factual",
+    "query": "How does ORCA visual-token compression affect prefill latency, KV-cache memory, and end-to-end CT report time?",
+    "coverage": "not_checked",
+    "coverage_note": "New question over the same locked corpus; not proof of generalization to unseen papers."
+  },
+  {
+    "query_id": "h02",
+    "type": "comparative",
+    "query": "Why does the ClawHub security study distinguish automated silver labels from human-adjudicated ground truth?",
+    "coverage": "not_checked",
+    "coverage_note": "New question over the same locked corpus; not proof of generalization to unseen papers."
+  },
+  {
+    "query_id": "h03",
+    "type": "business_translation",
+    "query": "What should a team measure beyond whether generated time-series analysis code executes successfully, according to TimeSage-MT?",
+    "coverage": "not_checked",
+    "coverage_note": "New question over the same locked corpus; not proof of generalization to unseen papers."
+  }
+]

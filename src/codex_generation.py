@@ -1,0 +1,101 @@
+"""Explicit subscription-backed, text-only Codex CLI generation for experiments.
+
+No API keys, auth copying, model fallback, or repository access. Saved ChatGPT
+login is checked before use. Each invocation has an empty temporary working
+directory and refuses tool-using responses; this is not a production API service.
+"""
+from hashlib import sha256
+import json
+import os
+from pathlib import Path
+import shutil
+import subprocess
+import tempfile
+import time
+
+from src.generation import SchemaResponseError
+from src.research_pipeline import PipelineError
+
+
+def create_codex_generate(*, model, binary=None, effort='medium', timeout=300,
+                          receipts=None):
+    binary = binary or shutil.which('codex')
+    if not binary or not Path(binary).is_file():
+        raise PipelineError('Codex CLI unavailable; specify its installed binary.')
+    if not isinstance(model, str) or not model.strip():
+        raise ValueError('Specify the Codex model explicitly')
+    if effort not in {'low', 'medium', 'high', 'xhigh'}:
+        raise ValueError('Unsupported experiment reasoning effort')
+    env = {k: v for k, v in os.environ.items() if k not in {
+        'CODEX_API_KEY', 'OPENAI_API_KEY', 'OPENAI_BASE_URL', 'CODEX_ACCESS_TOKEN'}}
+    try:
+        login = subprocess.run([str(binary), 'login', 'status'], env=env,
+                               capture_output=True, text=True, timeout=15)
+    except (OSError, subprocess.TimeoutExpired):
+        raise PipelineError('Codex login status check failed') from None
+    if login.returncode or 'Logged in using ChatGPT' not in login.stdout + login.stderr:
+        raise PipelineError('This adapter requires an existing ChatGPT Codex login, not API-key auth.')
+    receipts = receipts if receipts is not None else []
+
+    def generate(prompt, *, response_schema=None):
+        if not isinstance(prompt, str) or not prompt.strip():
+            raise ValueError('Generation requires a nonempty prompt')
+        record = {'provider': 'codex_subscription', 'model': model, 'reasoning_effort': effort,
+                  'prompt_sha256': sha256(prompt.encode()).hexdigest(), 'status': 'started'}
+        receipts.append(record)
+        start = time.monotonic()
+        with tempfile.TemporaryDirectory(prefix='research-codex-') as scratch:
+            folder = Path(scratch)
+            output = folder / 'answer.json'
+            command = [str(binary), 'exec', '--ignore-user-config', '--ephemeral',
+                       '--skip-git-repo-check', '--sandbox', 'read-only', '--json',
+                       '--color', 'never', '-C', scratch, '-m', model,
+                       '-c', 'model_provider="openai"', '-c', 'web_search="disabled"',
+                       '-c', f'model_reasoning_effort="{effort}"', '-o', str(output)]
+            if response_schema is not None:
+                from jsonschema import Draft202012Validator
+                Draft202012Validator.check_schema(response_schema)
+                schema_path = folder / 'schema.json'
+                schema_path.write_text(json.dumps(response_schema, allow_nan=False))
+                command += ['--output-schema', str(schema_path)]
+                record['schema_sha256'] = sha256(schema_path.read_bytes()).hexdigest()
+            command += ['-']
+            instruction = ('You are a text-only research generation function. Do not use tools, '
+                           'read files, browse, or execute commands. All evidence is provided below. '
+                           'Return only the requested JSON object.\n\n' + prompt)
+            try:
+                response = subprocess.run(command, input=instruction, text=True,
+                    capture_output=True, timeout=timeout, env=env)
+                events = [json.loads(line) for line in response.stdout.splitlines() if line.strip()]
+                record['usage'] = [e['usage'] for e in events if e.get('type') == 'turn.completed']
+                forbidden = [e for e in events if e.get('item', {}).get('type') in {
+                    'command_execution', 'file_change', 'mcp_tool_call', 'web_search'}]
+                if response.returncode or forbidden or not output.is_file():
+                    raise PipelineError('Codex text-only generation failed; no provider fallback occurred.')
+                raw = output.read_text()
+                if response_schema is not None:
+                    def pairs(items):
+                        result = {}
+                        for k, v in items:
+                            if k in result:
+                                raise ValueError('Duplicate JSON member')
+                            result[k] = v
+                        return result
+                    def nonfinite(value):
+                        raise ValueError('Nonfinite JSON constant')
+                    parsed = json.loads(raw, object_pairs_hook=pairs, parse_constant=nonfinite)
+                    Draft202012Validator(response_schema).validate(parsed)
+                record.update(status='ok', response_sha256=sha256(raw.encode()).hexdigest())
+                return raw
+            except (ValueError, KeyError) as exc:
+                record['status'] = 'invalid_response'
+                raise SchemaResponseError('Codex returned invalid JSON; no result was approved.') from None
+            except Exception:
+                record['status'] = 'failed'
+                raise PipelineError('Codex generation failed; check login, model access or subscription limits.') from None
+            finally:
+                record['elapsed_seconds'] = round(time.monotonic() - start, 3)
+    generate.supports_response_schema = True
+    return generate, {'provider': 'codex_subscription', 'model': model,
+                      'reasoning_effort': effort, 'auth': 'existing_chatgpt_login',
+                      'schema_capability': 'cli_schema_and_local_validation'}

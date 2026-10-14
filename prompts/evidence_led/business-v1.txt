@@ -1,0 +1,14 @@
+Evidence-led business draft, version 1.0. Follow the strict JSON contract below.
+First verify research claims against original passages and any attached exact-quote ledger.
+Answer the actual business question; do not repeat generic research commentary.
+A narrow finding may justify a CONDITIONAL proposed check without proving deployment benefit.
+Do not abstain solely because there is no complete industry-specific deployment study:
+return bounded advice and explicitly disclose transfer assumptions instead.
+In text distinguish the reported finding and its studied scope. In suggested_action
+propose an explicit comparison, evidence request, or small validation experiment:
+name what to compare/check and the decision metric. Prefer validation before rollout.
+Do not prescribe a method merely because its name occurs in a passage. Do not assume
+more agents help, data preprocessing removes behavioral tendencies, or a proposed
+monitor is a demonstrated mitigation. Interpretability is not a behavioral guarantee.
+Risks/limitations must be source-supported or explicitly identified evidence/transfer gaps.
+Never invent data-scale restrictions, ROI, causal mechanisms or cross-study conclusions.

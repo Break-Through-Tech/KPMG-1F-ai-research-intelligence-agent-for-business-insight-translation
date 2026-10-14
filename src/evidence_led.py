@@ -45,9 +45,10 @@ def ledger_schema(ids):
                     'answerability': {'type':'string','enum':['full','partial','none']}})
 
 
-def _synthesis_schema(fact_ids):
+def _synthesis_schema(fact_ids, direct_fact_ids=None):
     ids = _array({'type': 'integer', 'enum': fact_ids})
-    row = _object({'text': _string(), 'fact_ids': {**ids, 'minItems': 1}})
+    claim_ids = ids if direct_fact_ids is None else _array({'type':'integer','enum':direct_fact_ids})
+    row = _object({'text': _string(), 'fact_ids': {**claim_ids, 'minItems': 1}})
     limit = _object({'text': _string(), 'kind': {'type': 'string', 'enum': ['source_limit', 'coverage_gap']},
                      'fact_ids': ids})
     return _object({'status': {'type': 'string', 'enum': ['ok', 'insufficient_evidence']},
@@ -138,7 +139,7 @@ def summarize(query, passages, *, generate,
                 query=query, ledger=json.dumps({'facts':facts,'coverage_gaps':ledger['coverage_gaps'],
                     'answerability':ledger['answerability']}, allow_nan=False))
             direct_ids = [i for i,f in enumerate(facts) if f['relevance']=='direct']
-            answer = _invoke(generate, prompt, _synthesis_schema(direct_ids))
+            answer = _invoke(generate, prompt, _synthesis_schema(list(range(len(facts))), direct_ids))
             if (answer['status'] == 'ok') != bool(answer['claims']):
                 raise ValueError('Status and claims disagree')
             for limitation in answer['limitations']:

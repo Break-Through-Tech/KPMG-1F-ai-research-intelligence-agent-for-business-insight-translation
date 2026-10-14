@@ -42,6 +42,15 @@ class EvidenceLedTests(unittest.TestCase):
         out=summarize('DPO',self.passages,generate=Mock(side_effect=[json.dumps(self.ledger),json.dumps(bad)]))
         self.assertEqual(out['error'],'evidence_led_failed')
 
+    def test_context_can_support_a_limitation_but_not_an_answer_claim(self):
+        self.ledger['facts'].append({'chunk_id':'a','quote':'CU-DPO overtakes it at 50% data.',
+            'finding':'Comparison qualifier.','relevance':'context'})
+        self.answer['limitations']=[{'text':'The comparator overtakes it at the larger fraction.',
+                                   'kind':'source_limit','fact_ids':[1]}]
+        out=summarize('DPO',self.passages,generate=Mock(side_effect=[json.dumps(self.ledger),json.dumps(self.answer)]))
+        self.assertEqual(out['status'],'ok')
+        self.assertEqual(out['limitation_support'][0]['fact_ids'],[1])
+
     def test_adjacent_only_question_abstains_and_missing_partial_gap_fails(self):
         self.ledger['answerability']='none'
         fn=Mock(return_value=json.dumps(self.ledger))

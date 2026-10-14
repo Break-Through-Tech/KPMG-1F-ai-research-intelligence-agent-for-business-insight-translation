@@ -9,7 +9,8 @@ never attributed to a human reviewer or stakeholder.
 
 - `src.hybrid_retrieval.HybridRetriever`: BM25 + dense candidates (25 each),
   reciprocal-rank fusion, an optional local cross-encoder, and disclosed topic
-  retention for interpretability, SAEs and limited-data terminology. One topic
+  retention for interpretability, SAEs, limited-data terminology and multi-agent
+  coordination risks. One topic
   slot protects against generic business-language reranker drift. No benchmark
   IDs, known answer IDs, or fixed per-paper caps are used.
 - `src.evidence_led.summarize`: extraction first, then synthesis from an exact-

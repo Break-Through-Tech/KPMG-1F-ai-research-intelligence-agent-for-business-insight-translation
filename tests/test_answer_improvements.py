@@ -141,5 +141,12 @@ class HybridTests(unittest.TestCase):
             rerank=lambda q,ps:[100 if p['chunk_id']=='a' else 0 for p in ps])
         self.assertEqual(h('Fine-tuning with limited data',1)[0]['chunk_id'],'b')
 
+    def test_multi_agent_risks_retrieve_coordination_evidence_not_only_tool_threats(self):
+        rows=[{'chunk_id':'a','text':'LLM tools face malicious software threats.'},
+              {'chunk_id':'b','text':'Poorly coordinated multi-agent systems incur communication overhead.'}]
+        h=HybridRetriever(rows,dense_search=lambda q,k:[{**rows[0],'distance':0}],
+            rerank=lambda q,ps:[100 if p['chunk_id']=='a' else 0 for p in ps])
+        self.assertEqual(h('What risks do multi-agent LLM systems face?',1)[0]['chunk_id'],'b')
+
 
 if __name__=='__main__':unittest.main()

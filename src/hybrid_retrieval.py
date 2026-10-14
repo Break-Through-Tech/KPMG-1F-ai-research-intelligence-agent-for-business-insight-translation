@@ -29,6 +29,8 @@ def focus_terms(query):
     force a factual answer when the corpus does not cover the question.
     """
     q = query.lower()
+    if re.search(r'multi[- ]agent', q) and re.search(r'\b(risks?|failures?|limitations?|tradeoffs?)\b', q):
+        return ['coordination failures', 'communication overhead', 'poorly coordinated']
     if re.search(r'(limited|scarce|scarcity|low[- ]resource|low[- ]data).{0,20}data|data.{0,15}scarcity', q):
         return ['data scarcity', 'data scarce', 'sample efficiency']
     if 'interpret' in q:

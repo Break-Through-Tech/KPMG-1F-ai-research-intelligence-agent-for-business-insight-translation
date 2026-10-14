@@ -8,7 +8,8 @@ facts or `none` skips synthesis and returns evidence insufficiency.
 Synthesis may cite only direct fact IDs. Context facts remain in the auditable
 ledger but cannot be promoted into claims. At most four focused claims preserve
 needed scope and adverse findings. Partial summaries prepend the extracted gaps
-to limitations and add `answer_scope="partial"` and `answer_lead` containing the
+to limitations, retain source-supported study caveats rather than duplicating
+those gaps as synthesis paraphrases, and add `answer_scope="partial"` and `answer_lead` containing the
 first extracted gap. Full summaries have scope `full` and no lead; abstention has
 scope `unavailable`. These fields are additive; status/citation/approval contracts
 and the existing dense/BYOK defaults are unchanged. Extraction/validation failures

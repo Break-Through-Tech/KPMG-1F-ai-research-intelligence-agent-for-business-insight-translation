@@ -147,12 +147,17 @@ def summarize(query, passages, *, generate,
                     raise ValueError('A study limitation requires source evidence')
             claims = [{'text':c['text'], 'chunk_ids':list(dict.fromkeys(
                 facts[i]['chunk_id'] for i in c['fact_ids']))} for c in answer['claims']]
-            limits = [x['text'] for x in answer['limitations']]
+            rendered_limits = answer['limitations']
             if ledger['answerability']=='partial':
-                limits = list(dict.fromkeys(ledger['coverage_gaps'] + limits))
+                # Extraction owns partial coverage gaps. Avoid repeating them
+                # as newly paraphrased synthesis limitations; keep study caveats.
+                rendered_limits = ([{'text':g,'kind':'coverage_gap','fact_ids':[]}
+                    for g in ledger['coverage_gaps']] +
+                    [x for x in answer['limitations'] if x['kind']=='source_limit'])
+            limits = list(dict.fromkeys(x['text'] for x in rendered_limits))
             out = _result(query, answer['status'], claims, limits + notes, included, omitted)
             out['claim_support'] = answer['claims']
-            out['limitation_support'] = answer['limitations']
+            out['limitation_support'] = rendered_limits
         out['answer_scope'] = ledger['answerability'] if out['status']=='ok' else 'unavailable'
         out['answer_lead'] = ledger['coverage_gaps'][0] if out['answer_scope']=='partial' else None
         out['evidence_ledger'] = ledger

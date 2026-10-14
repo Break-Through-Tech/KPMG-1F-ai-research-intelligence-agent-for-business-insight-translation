@@ -42,6 +42,13 @@ class EvidenceLedTests(unittest.TestCase):
         out=summarize('DPO',self.passages,generate=Mock(side_effect=[json.dumps(self.ledger),json.dumps(bad)]))
         self.assertEqual(out['error'],'evidence_led_failed')
 
+    def test_partial_gap_is_not_repeated_as_synthesis_paraphrase(self):
+        self.answer['limitations']=[{'text':'Other variants were not compared.',
+                                    'kind':'coverage_gap','fact_ids':[]}]
+        out=summarize('DPO',self.passages,generate=Mock(side_effect=[json.dumps(self.ledger),json.dumps(self.answer)]))
+        self.assertEqual(out['limitations'],self.ledger['coverage_gaps'])
+        self.assertEqual(out['limitation_support'][0]['text'],out['limitations'][0])
+
     def test_context_can_support_a_limitation_but_not_an_answer_claim(self):
         self.ledger['facts'].append({'chunk_id':'a','quote':'CU-DPO overtakes it at 50% data.',
             'finding':'Comparison qualifier.','relevance':'context'})

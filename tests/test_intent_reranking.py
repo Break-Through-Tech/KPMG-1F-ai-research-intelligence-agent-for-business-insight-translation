@@ -51,6 +51,30 @@ class IntentTests(unittest.TestCase):
         rank,_=create_intent_rerank(lambda p:json.dumps(reply))
         with self.assertRaises(PipelineError):rank('risks',self.rows)
 
+    def test_single_correction_rechecks_quotes_and_unique_ids_under_same_schema(self):
+        for kind in ['case','duplicate']:
+            invalid=self.reply()
+            if kind=='case':invalid['assessments'][1]['quote']=self.rows[0]['text'].lower()
+            else:invalid['assessments'][0]['chunk_id']='threat'
+            fn=Mock(side_effect=[json.dumps(invalid),json.dumps(self.reply())])
+            fn.supports_response_schema=True
+            rank,_=create_intent_rerank(fn)
+            with self.subTest(kind=kind):
+                out=rank('tool security',self.rows)
+                self.assertEqual(out[0]['assessment']['quote'],self.rows[0]['text'])
+                self.assertEqual(out[0]['assessment']['validation_attempts'],2)
+                self.assertEqual(fn.call_count,2)
+                self.assertEqual(fn.call_args_list[0].kwargs,fn.call_args_list[1].kwargs)
+
+    def test_second_invalid_output_still_has_no_ranking_or_provider_retry(self):
+        invalid=self.reply();invalid['assessments'][1]['quote']='Not the displayed source quotation.'
+        fn=Mock(return_value=json.dumps(invalid));rank,_=create_intent_rerank(fn)
+        with self.assertRaises(PipelineError):rank('risks',self.rows)
+        self.assertEqual(fn.call_count,2)
+        fn=Mock(side_effect=RuntimeError('SECRET'));rank,_=create_intent_rerank(fn)
+        with self.assertRaises(PipelineError):rank('risks',self.rows)
+        self.assertEqual(fn.call_count,1)
+
     def test_empty_skips_generation_and_budget_is_not_silent_truncation(self):
         fn=Mock();rank,_=create_intent_rerank(fn,max_candidates=1)
         self.assertEqual(rank('risks',[]),[]);fn.assert_not_called()

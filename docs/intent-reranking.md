@@ -45,3 +45,18 @@ Controlled captures retrieve inside each checkpointed case. A rejected ranking
 records an explicit error row, saves model receipts and earlier successful
 retrievals, continues subsequent cases, and exits nonzero. Failed cases receive
 no fallback passages. Corpus/index preflight failures still stop before capture.
+
+## Bounded contract correction (intent v2)
+
+After a schema-valid ranking fails unique-ID or displayed-quote validation, one
+complete corrective model response is allowed. It uses the original candidates,
+same schema, and unchanged validators; invalid source text is never repaired
+locally or accepted as fallback. A second invalid response still rejects the
+ranking inside the checkpointed case boundary. Provider, JSON and schema failures
+are not retried. This adds at most one relevance call per request.
+
+Every successful assessment records `validation_attempts` (1 or 2); provenance
+includes the policy and implementation hash. Configured model receipts preserve
+both calls. The original rejected attempt is not a successful capture and must
+not be overwritten or hidden when reporting quality. Exact quote membership
+remains distinct from semantic relevance, even after a successful correction.

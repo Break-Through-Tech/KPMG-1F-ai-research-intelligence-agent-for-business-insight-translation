@@ -19,7 +19,7 @@ PROMPTS = Path(__file__).resolve().parents[1] / 'prompts/evidence_led'
 
 def prompt_provenance():
     return {'summary_adapter': 'src.evidence_led:summarize',
-            'prompt_version': 'evidence-led-v1',
+            'prompt_version': 'evidence-led-v2',
             'prompt_hashes': {p.name: sha256(p.read_bytes()).hexdigest()
                              for p in sorted(PROMPTS.glob('*.txt'))}}
 
@@ -41,7 +41,8 @@ def ledger_schema(ids):
     row = _object({'chunk_id': {'type': 'string', 'enum': ids},
                    'quote': _string(), 'finding': _string(),
                    'relevance': {'type': 'string', 'enum': ['direct', 'context']}})
-    return _object({'facts': _array(row), 'coverage_gaps': _array(_string(), 8)})
+    return _object({'facts': _array(row), 'coverage_gaps': _array(_string(), 8),
+                    'answerability': {'type':'string','enum':['full','partial','none']}})
 
 
 def _synthesis_schema(fact_ids):
@@ -50,7 +51,7 @@ def _synthesis_schema(fact_ids):
     limit = _object({'text': _string(), 'kind': {'type': 'string', 'enum': ['source_limit', 'coverage_gap']},
                      'fact_ids': ids})
     return _object({'status': {'type': 'string', 'enum': ['ok', 'insufficient_evidence']},
-                     'claims': _array(row, 8), 'limitations': _array(limit, 8)})
+                     'claims': _array(row, 4), 'limitations': _array(limit, 8)})
 
 
 def _invoke(generate, prompt, schema):
@@ -126,14 +127,18 @@ def summarize(query, passages, *, generate,
         ledger = _invoke(generate, prompt, ledger_schema([p['chunk_id'] for p, _ in included]))
         validate_ledger(ledger, visible)
         direct = [f for f in ledger['facts'] if f['relevance'] == 'direct']
-        if not direct:
+        if ledger['answerability']=='partial' and not ledger['coverage_gaps']:
+            raise ValueError('Partial answerability requires an explicit coverage gap')
+        if not direct or ledger['answerability']=='none':
             out = _result(query, 'insufficient_evidence', [],
                 ledger['coverage_gaps'] or ['No directly relevant evidence was extracted.'], included, omitted)
         else:
             facts = [dict(f, fact_id=i) for i, f in enumerate(ledger['facts'])]
             prompt = Template((PROMPTS/'synthesize-v1.txt').read_text()).substitute(
-                query=query, ledger=json.dumps({'facts':facts,'coverage_gaps':ledger['coverage_gaps']}, allow_nan=False))
-            answer = _invoke(generate, prompt, _synthesis_schema(list(range(len(facts)))))
+                query=query, ledger=json.dumps({'facts':facts,'coverage_gaps':ledger['coverage_gaps'],
+                    'answerability':ledger['answerability']}, allow_nan=False))
+            direct_ids = [i for i,f in enumerate(facts) if f['relevance']=='direct']
+            answer = _invoke(generate, prompt, _synthesis_schema(direct_ids))
             if (answer['status'] == 'ok') != bool(answer['claims']):
                 raise ValueError('Status and claims disagree')
             for limitation in answer['limitations']:
@@ -141,13 +146,17 @@ def summarize(query, passages, *, generate,
                     raise ValueError('A study limitation requires source evidence')
             claims = [{'text':c['text'], 'chunk_ids':list(dict.fromkeys(
                 facts[i]['chunk_id'] for i in c['fact_ids']))} for c in answer['claims']]
-            out = _result(query, answer['status'], claims,
-                          [x['text'] for x in answer['limitations']] + notes, included, omitted)
+            limits = [x['text'] for x in answer['limitations']]
+            if ledger['answerability']=='partial':
+                limits = list(dict.fromkeys(ledger['coverage_gaps'] + limits))
+            out = _result(query, answer['status'], claims, limits + notes, included, omitted)
             out['claim_support'] = answer['claims']
             out['limitation_support'] = answer['limitations']
+        out['answer_scope'] = ledger['answerability'] if out['status']=='ok' else 'unavailable'
+        out['answer_lead'] = ledger['coverage_gaps'][0] if out['answer_scope']=='partial' else None
         out['evidence_ledger'] = ledger
         out['support_check'] = 'exact_quote_membership_only_not_semantic_entailment'
-        out['generation_method'] = 'evidence-led-v1'
+        out['generation_method'] = 'evidence-led-v2'
         return out
     except Exception:
         out = _result(query, 'insufficient_evidence', [],
@@ -167,7 +176,7 @@ def translate(summary, passages, *, industry, generate):
         'industry': {'type':'string','enum':[industry]},
         'implications': _array(_object({'text':_string(),
             'chunk_ids': {'type':'array','minItems':1,'items':{'type':'string','enum':ids}},
-            'suggested_action':_string(),'assumptions':_array(_string())}), 8),
+            'suggested_action':_string(),'assumptions':_array(_string())}), 3),
         'risks':_array(_string()),'limitations':_array(_string())})
     def bounded(prompt):
         if getattr(generate, 'supports_response_schema', False) is True:

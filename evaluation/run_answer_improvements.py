@@ -70,7 +70,7 @@ def main():
             provenance['generation']={**metadata,**prompt_provenance(),'business_translation':bp()}
         else:
             from src.evidence_led import summarize,translate,prompt_provenance
-            provenance['generation']={**metadata,**prompt_provenance(),'business_translation':'evidence-led-business-v1'}
+            provenance['generation']={**metadata,**prompt_provenance(),'business_translation':'evidence-led-business-v2'}
         retrieve=lambda q,k:evidence[q][:k]
         provenance['retrieval']={'method':'frozen_dense_baseline'}
     else:
@@ -96,7 +96,7 @@ def main():
         evidence={case['query']:hybrid(case['query'],5) for case in cases}
         retrieve=lambda q,k:evidence[q][:k]
         provenance.update(indexed_corpus_sha256=index_hash,corpus_mode='html_first')
-        provenance['generation']={**metadata,**prompt_provenance(),'business_translation':'evidence-led-business-v1'}
+        provenance['generation']={**metadata,**prompt_provenance(),'business_translation':'evidence-led-business-v2'}
         provenance['retrieval']={'method':'hybrid-bm25-rrf-v2','candidate_pool':25,
                                  'reranker':args.reranker_model,'reranker_local':True}
     args.output.mkdir(parents=True)

@@ -14,7 +14,7 @@ class EvidenceLedTests(unittest.TestCase):
     def setUp(self):
         self.passages = [{'chunk_id':'a','text':'Binary DPO wins at 25% data. CU-DPO overtakes it at 50% data.',
                           'arxiv_id':'paper-a','title':'Comparison'}]
-        self.ledger = {'facts':[{'chunk_id':'a','quote':'Binary DPO wins at 25% data.',
+        self.ledger = {'answerability':'partial','facts':[{'chunk_id':'a','quote':'Binary DPO wins at 25% data.',
              'finding':'Binary DPO has a low-data advantage.', 'relevance':'direct'}],
                        'coverage_gaps':['No comparison with all variants.']}
         self.answer = {'status':'ok','claims':[{'text':'Binary DPO wins at 25% data.','fact_ids':[0]}],
@@ -30,6 +30,26 @@ class EvidenceLedTests(unittest.TestCase):
         self.assertEqual(out['evidence_ledger'],self.ledger)
         self.assertEqual(fn.call_count,2)
         self.assertEqual(self.passages,before)
+
+    def test_partial_coverage_is_gap_first_and_context_cannot_become_claims(self):
+        self.ledger['facts'].append({'chunk_id':'a','quote':'CU-DPO overtakes it at 50% data.',
+            'finding':'Adjacent comparison.','relevance':'context'})
+        out=summarize('DPO',self.passages,generate=Mock(side_effect=[json.dumps(self.ledger),json.dumps(self.answer)]))
+        self.assertEqual(out['answer_scope'],'partial')
+        self.assertEqual(out['answer_lead'],self.ledger['coverage_gaps'][0])
+        self.assertEqual(out['limitations'][0],out['answer_lead'])
+        bad=deepcopy(self.answer);bad['claims'][0]['fact_ids']=[1]
+        out=summarize('DPO',self.passages,generate=Mock(side_effect=[json.dumps(self.ledger),json.dumps(bad)]))
+        self.assertEqual(out['error'],'evidence_led_failed')
+
+    def test_adjacent_only_question_abstains_and_missing_partial_gap_fails(self):
+        self.ledger['answerability']='none'
+        fn=Mock(return_value=json.dumps(self.ledger))
+        out=summarize('Absent comparator',self.passages,generate=fn)
+        self.assertEqual(out['answer_scope'],'unavailable');self.assertEqual(fn.call_count,1)
+        self.ledger['answerability']='partial';self.ledger['coverage_gaps']=[]
+        out=summarize('DPO',self.passages,generate=Mock(return_value=json.dumps(self.ledger)))
+        self.assertEqual(out['error'],'evidence_led_failed')
 
     def test_fabricated_or_misattributed_quote_stops_before_synthesis(self):
         for change in [{'quote':'CU-DPO wins at every data scale.'},{'chunk_id':'unknown'}]:
@@ -93,7 +113,7 @@ class EvidenceLedTests(unittest.TestCase):
             code=main.main(['--query','DPO','--generation-route','codex','--codex-model','gpt-test','--evidence-led'])
         result=json.loads(stdout.getvalue())
         self.assertEqual(code,0);self.assertEqual(result['summary']['status'],'ok')
-        self.assertEqual(result['provenance']['generation']['prompt_version'],'evidence-led-v1')
+        self.assertEqual(result['provenance']['generation']['prompt_version'],'evidence-led-v2')
 
 
 class HybridTests(unittest.TestCase):

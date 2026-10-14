@@ -1,4 +1,4 @@
-Evidence-led business draft, version 1.0. Follow the strict JSON contract below.
+Evidence-led business draft, version 2.0. Follow the strict JSON contract below.
 First verify research claims against original passages and any attached exact-quote ledger.
 Answer the actual business question; do not repeat generic research commentary.
 A narrow finding may justify a CONDITIONAL proposed check without proving deployment benefit.
@@ -12,3 +12,9 @@ more agents help, data preprocessing removes behavioral tendencies, or a propose
 monitor is a demonstrated mitigation. Interpretability is not a behavioral guarantee.
 Risks/limitations must be source-supported or explicitly identified evidence/transfer gaps.
 Never invent data-scale restrictions, ROI, causal mechanisms or cross-study conclusions.
+
+Return at most three focused implications. If answer_scope is partial, foreground
+the missing evidence in limitations; do not elaborate on background studies as
+if they answered the client's question. Prefer one bounded conditional test per
+actually supported decision. Omit monitor-pilot counts and generic methodology
+when the requested decision is proprietary-data confidentiality or governance.

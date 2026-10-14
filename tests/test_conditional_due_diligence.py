@@ -15,11 +15,11 @@ QUOTE = 'First, pin down a behavior using a metric and data set.'
 PASSAGES = [{'chunk_id': '2604.00324v1_c0038', 'text': QUOTE,
              'arxiv_id': '2604.00324v1', 'title': 'The Persistent Vulnerability of Aligned AI Systems'}]
 GAP = 'The evidence does not establish vendor compliance or validation of the deployed system.'
-LEDGER = {'coverage_gaps': [GAP], 'facts': [
+LEDGER = {'answerability': 'partial', 'coverage_gaps': [GAP], 'facts': [
     {'chunk_id': PASSAGES[0]['chunk_id'], 'quote': QUOTE,
      'finding': 'The described workflow specifies a behavior, metric and dataset.', 'relevance': 'direct'}]}
 ANSWER = {'status': 'ok', 'claims': [
-    {'text': LEDGER['facts'][0]['finding'], 'fact_ids': [0]}], 'limitations': [{'text': GAP, 'kind': 'coverage_gap', 'fact_ids': []}]}
+    {'text': LEDGER['facts'][0]['finding'], 'fact_ids': [0]}], 'limitations': []}
 
 
 def test_due_diligence_policy_reaches_both_generation_stages():
@@ -37,6 +37,12 @@ def test_due_diligence_policy_reaches_both_generation_stages():
     assert 'does not establish vendor compliance or validation' in extract
     assert 'CONDITIONAL due-diligence' in synthesize
     assert 'Keep proposed checks out of research claims' in synthesize
+    assert 'do not answer that request inside a finding' in extract
+    assert 'this supports asking' in extract
+    assert 'never attribute a quote from a neighboring passage' in extract
+    assert 'end the quote before them without adding' in extract
+    assert 'do not fulfill that request here' in synthesize
+    assert 'Do not carry action-bearing commentary' in synthesize
     assert QUERY in extract and QUOTE in extract
     assert GAP in synthesize
 
@@ -55,8 +61,8 @@ def test_conditional_partial_chain_preserves_gap_quotes_and_unapproved_status():
         retrieve=lambda q, k: deepcopy(PASSAGES),
         summarize_fn=lambda q, p: summarize(q, p, generate=provider),
         translate_fn=lambda s, p, *, industry: translate(s, p, industry=industry, generate=provider))
-    assert result['summary']['status'] == 'ok'
-    assert GAP in result['summary']['limitations']
+    assert result['summary']['answer_scope'] == 'partial'
+    assert result['summary']['answer_lead'] == GAP
     assert result['summary']['evidence_ledger']['facts'][0]['quote'] == QUOTE
     assert result['business_insight'] == business
     assert result['approved'] is False
@@ -64,6 +70,7 @@ def test_conditional_partial_chain_preserves_gap_quotes_and_unapproved_status():
 
 def test_due_diligence_does_not_bypass_quote_or_context_gates():
     context = deepcopy(LEDGER)
+    context['answerability'] = 'none'
     context['facts'][0]['relevance'] = 'context'
     provider = Mock(return_value=json.dumps(context))
     assert summarize(QUERY, PASSAGES, generate=provider)['claims'] == []
@@ -74,4 +81,4 @@ def test_due_diligence_does_not_bypass_quote_or_context_gates():
     out = summarize(QUERY, PASSAGES, generate=provider)
     assert out['error'] == 'evidence_led_failed'
     assert out['claims'] == []
-    assert provider.call_count == 1  # Main fails closed without a correction call.
+    assert provider.call_count == 2  # Existing one correction, then fail closed.

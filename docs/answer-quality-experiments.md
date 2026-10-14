@@ -15,7 +15,9 @@ never attributed to a human reviewer or stakeholder.
 - `src.evidence_led.summarize`: extraction first, then synthesis from an exact-
   quotation ledger. Unknown citations, fabricated quotations, quotations from
   text hidden by truncation, and unsupported study-limitations without evidence
-  locators fail closed. Source membership does **not** prove semantic entailment.
+  locators fail closed. v2 additionally classifies full/partial/unavailable query
+  coverage, leads partial answers with the extracted gap, and permits only direct
+  facts in at most four summary claims. Source membership does **not** prove semantic entailment.
 - `src.evidence_led.translate`: the existing strict business contract, with a
   scoped comparison/check and a decision metric instead of an unsupported
   deployment prescription. Partial evidence may support conditional advice.

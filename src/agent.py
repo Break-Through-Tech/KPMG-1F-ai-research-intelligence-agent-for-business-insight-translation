@@ -1,108 +1,101 @@
-from dotenv import load_dotenv
-load_dotenv()
+"""Baseline compatibility entry point using the shared, unapproved research pipeline.
 
-import os
-from google import genai
-from google.genai import types
+Run from the repository root: ``python -m src.agent --query '...'``.
+Provider configuration is the same as main.py; imports never create a client.
+"""
+import argparse
+import json
 
-from retrieval import search_chunks
-
-
-MODEL_NAME = "gemini-3.5-flash-lite"
-
-SYSTEM_PROMPT = (
-    "You are a research assistant that answers business questions using only "
-    "the provided research excerpts. Always cite the specific source "
-    "(paper title and page number) for each claim you make. "
-    "If the excerpts don't contain enough information to answer, "
-    "say so clearly rather than guessing."
-)
+from src.generation import create_generate
+from src.research_pipeline import run_research
+from src.summarization import prompt_provenance, summarize
 
 
-client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+def source_location(hit):
+    """Retain the actual retrieved source; HTML has sections, not PDF pages."""
+    if hit.get("source") == "html":
+        url = hit.get("source_url") or hit.get("html_url")
+        section = " / ".join(str(hit[k]) for k in ("section", "subsection") if hit.get(k))
+        return f"{url}" + (f" ({section})" if section else "")
+    page = hit.get("page_number")
+    url = hit.get("source_url") or hit.get("pdf_url")
+    return f"{url}" + (f" (p.{page})" if page is not None else "")
 
 
 def format_context(hits):
-    """Turn search results into a labeled context block for the prompt."""
-    blocks = []
-
-    for hit in hits:
-        blocks.append(
-            f"[Source: {hit['title']} "
-            f"(arXiv:{hit['arxiv_id']}, p.{hit['page_number']})]\n"
-            f"{hit['text']}"
-        )
-
-    return "\n\n".join(blocks)
-
-
-def ask_question(question: str, top_k: int = 5) -> dict:
-    hits = search_chunks(question, top_k=top_k)
-
-    if not hits:
-        return {
-            "answer": "No relevant research found in the indexed papers for this question.",
-            "sources": []
-        }
-
-    context = format_context(hits)
-
-    user_prompt = (
-        f"Question: {question}\n\n"
-        f"Relevant research excerpts:\n{context}\n\n"
-        "Answer the question, translating the findings into clear "
-        "business implications. Cite the paper title and page number "
-        "for every claim."
+    """Readable evidence display; generation uses the shared bounded prompt."""
+    return "\n\n".join(
+        f"[Source: {hit['title']} (arXiv:{hit['arxiv_id']}) — {source_location(hit)}]\n{hit['text']}"
+        for hit in hits
     )
 
-    response = client.models.generate_content(
-        model=MODEL_NAME,
-        contents=user_prompt,
-        config=types.GenerateContentConfig(
-            system_instruction=SYSTEM_PROMPT
-        )
-    )
 
-    return {
-        "answer": response.text,
-        "sources": [
-            {
-                "title": h["title"],
-                "pdf_url": h["pdf_url"],
-                "page": h["page_number"]
-            }
-            for h in hits
-        ]
-    }
+def ask_question(question: str, top_k: int = 5, *, retrieve=None, generate=None,
+                 industry=None) -> dict:
+    """Return a cited draft plus the full workflow, never automatic approval.
+
+    Optional injected adapters support offline verification. Business translation
+    requires explicit industry context; provider construction is deferred until
+    nonempty evidence actually needs generation.
+    """
+    if retrieve is None:
+        from main import persistent_retrieve
+        retrieve = persistent_retrieve
+    provenance = {"entry_point": "src.agent", "generation": None}
+    active_generate = generate
+
+    def get_generate():
+        nonlocal active_generate
+        if active_generate is None:
+            active_generate, settings = create_generate()
+            provenance["generation"] = {**settings, **prompt_provenance()}
+        elif provenance["generation"] is None:
+            provenance["generation"] = {"execution": "injected_adapter", **prompt_provenance()}
+        return active_generate
+
+    def summary(query, passages):
+        return summarize(query, passages, generate=get_generate())
+
+    request = {"query": question, "top_k": top_k}
+    translation = None
+    if industry is not None:
+        request["industry"] = industry
+        from src.business_translation import translate
+        def translation(summary_result, passages, *, industry):
+            return translate(summary_result, passages, industry=industry, generate=get_generate())
+
+    result = run_research(request, retrieve=retrieve, summarize_fn=summary,
+                          translate_fn=translation, provenance=provenance)
+    evidence = {hit["chunk_id"]: hit for hit in result["evidence"]}
+    claims = result["summary"]["claims"]
+    answer = []
+    cited = []
+    for claim in claims:
+        labels = []
+        for chunk_id in claim["chunk_ids"]:
+            hit = evidence[chunk_id]
+            labels.append(f"{hit['title']} — {source_location(hit)}")
+            if chunk_id not in cited:
+                cited.append(chunk_id)
+        answer.append(f"{claim['text']} [{'; '.join(labels)}]")
+    if not answer:
+        answer = result["summary"]["limitations"] or ["Insufficient evidence to answer."]
+    result["answer"] = "\n\n".join(answer)
+    result["sources"] = [{**evidence[chunk_id], "page": evidence[chunk_id].get("page_number")}
+                         for chunk_id in cited]
+    return result
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description="Baseline cited draft using shared provider settings")
+    parser.add_argument("--query", required=True)
+    parser.add_argument("--top-k", type=int, default=5)
+    parser.add_argument("--industry", help="Explicit business context for optional translation")
+    args = parser.parse_args(argv)
+    result = ask_question(args.query, args.top_k, industry=args.industry)
+    print(json.dumps(result, indent=2, allow_nan=False))
+    return int(bool(result["summary"].get("error")))
+
 
 if __name__ == "__main__":
-    questions = [
-        "What capabilities and limitations does MCP-Atlas identify when evaluating LLM tool use with real MCP servers?",
-        "What risks or failure modes of AI agents are identified in research on agentic misalignment?",
-        "How does multi-turn interaction affect the robustness of LLM unlearning?",
-        "What approaches are used to improve the interpretability of neural network representations?",
-        "How does Continuous-Utility Direct Preference Optimization use continuous utility scores during preference optimization?",        "How do single-agent and multi-agent approaches compare in agentic trip-planning tasks?",
-        "What are the different approaches used to evaluate safety and reliability in LLM agents?",
-        "What should a company evaluate before giving an AI system access to external tools or MCP servers?",
-        "What risks should a business consider when deploying autonomous AI agents in workflows where the system can take actions on its own?",
-        'If a vendor claims that its AI system is safe or reliable, what evidence should a business look for before trusting that claim?',
-    ]
-
-    for i, question in enumerate(questions, start=1):
-        print("\n" + "=" * 80)
-        print(f"QUESTION {i}")
-        print("=" * 80)
-        print(question)
-
-        result = ask_question(question)
-
-        print("\nANSWER:")
-        print(result["answer"])
-
-        print("\nSOURCES:")
-
-        for source in result["sources"]:
-            print(
-                f"- {source['title']} "
-                f"(p.{source['page']}) — {source['pdf_url']}"
-            )
+    raise SystemExit(main())

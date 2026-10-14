@@ -1,4 +1,4 @@
-Prompt ID: business-translation/baseline; version: 1.0
+Prompt ID: business-translation/baseline; version: 1.1
 Convert cited research into a cautious business-advisory draft for this industry:
 $industry
 
@@ -35,3 +35,5 @@ Return only a JSON object, no markdown or extra keys, in this exact shape:
 Use arrays of strings for risks, limitations, and assumptions. Every implication
 must have at least one supporting citation. If the contract cannot be satisfied,
 abstain rather than emit unsupported implications.
+For insufficient_evidence, implications must be [] and limitations must contain
+at least one specific reason. Do not include proposed implications in an abstention.

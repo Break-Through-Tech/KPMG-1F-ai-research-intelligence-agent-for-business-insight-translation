@@ -8,7 +8,7 @@ No shared workflow, prompt-library, dependency, or configuration files change.
 ## Selected prompt and provenance
 
 The adapter adopts #79's proposed default, `business-translation/baseline`, version
-`1.0`, from `prompts/business_translation/baseline-v1.txt`. This is a design choice,
+`1.1`, from `prompts/business_translation/baseline-v1.txt`. This is a design choice,
 not a measured winner over the counterevidence candidate. JSON-serialized summary
 and complete passages are substituted with `string.Template`; input dollar signs
 are not re-templated. Inputs and original source metadata remain unchanged.

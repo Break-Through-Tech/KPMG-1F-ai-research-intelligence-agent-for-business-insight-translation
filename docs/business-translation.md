@@ -44,8 +44,9 @@ python main.py --query "Should we pilot an AI triage assistant?" \
   --translation-adapter src.business_translation:translate
 ```
 
-This uses the existing interim summarizer unless `--summary-adapter` selects #77's
-adapter. It can make billed provider calls; it was **not** used for this PR's offline
+This defaults to the grounded `src.summarization:summarize` adapter already on
+main; `--summary-adapter` overrides that default. It can make billed provider
+calls; it was **not** used for this PR's offline
 verification. No actual corpus/model business translation or quality claim is made.
 
 ## Inspectable offline fixture outputs

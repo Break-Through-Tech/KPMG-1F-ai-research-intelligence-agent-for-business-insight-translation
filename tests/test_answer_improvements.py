@@ -56,7 +56,7 @@ class EvidenceLedTests(unittest.TestCase):
                                    'kind':'source_limit','fact_ids':[1]}]
         out=summarize('DPO',self.passages,generate=Mock(side_effect=[json.dumps(self.ledger),json.dumps(self.answer)]))
         self.assertEqual(out['status'],'ok')
-        self.assertEqual(out['limitation_support'][0]['fact_ids'],[1])
+        self.assertEqual(out['limitation_support'][-1]['fact_ids'],[1])
 
     def test_adjacent_only_question_abstains_and_missing_partial_gap_fails(self):
         self.ledger['answerability']='none'

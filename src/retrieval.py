@@ -1,40 +1,17 @@
-import base64
-import os
-from pathlib import Path
+import argparse
+import json
 
 import pandas as pd
-from dotenv import load_dotenv
-from azure.search.documents.models import VectorizedQuery
+from pathlib import Path
 from sentence_transformers import SentenceTransformer
-from azure.core.credentials import AzureKeyCredential
-from azure.search.documents import SearchClient
-from azure.search.documents.indexes import SearchIndexClient
-from azure.search.documents.indexes.models import (
-    HnswAlgorithmConfiguration,
-    SearchField,
-    SearchFieldDataType,
-    SearchIndex,
-    SearchableField,
-    SimpleField,
-    VectorSearch,
-    VectorSearchProfile,
-)
+import chromadb
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 CHUNKS_FILE = PROJECT_ROOT / "data" / "processed" / "chunks.parquet"
-
-MODEL_NAME = "all-MiniLM-L6-v2"
-EMBEDDING_DIMENSIONS = 384
-BATCH_SIZE = 100
-
-load_dotenv()
-
-AZURE_SEARCH_ENDPOINT = os.getenv("AZURE_SEARCH_ENDPOINT")
-AZURE_SEARCH_ADMIN_KEY = os.getenv("AZURE_SEARCH_ADMIN_KEY")
-AZURE_SEARCH_QUERY_KEY = os.getenv("AZURE_SEARCH_QUERY_KEY")
-INDEX_NAME = os.getenv("AZURE_SEARCH_INDEX_NAME", "arxiv-papers")
-
-
+CHROMA_DIR = PROJECT_ROOT / "data" / "chroma_db"
+COLLECTION_NAME = "arxiv_papers"
+EMBEDDING_MODEL = "all-MiniLM-L6-v2"
+REQUIRED_COLUMNS = {"chunk_id", "text", "arxiv_id", "title"}
 def load_chunks():
     if not CHUNKS_FILE.exists():
         raise FileNotFoundError(
@@ -48,324 +25,149 @@ def load_chunks():
 
     return df
 
-
 def create_embeddings(df):
-    model = SentenceTransformer(MODEL_NAME)
+    model = SentenceTransformer(EMBEDDING_MODEL)
 
-    texts = df["text"].astype(str).tolist()
+    texts = df["text"].tolist()
 
     embeddings = model.encode(
         texts,
-        show_progress_bar=True,
+        show_progress_bar=True
     )
 
     print(f"Created {len(embeddings)} embeddings")
     print(f"Embedding size: {embeddings.shape[1]}")
 
-    if embeddings.shape[1] != EMBEDDING_DIMENSIONS:
-        raise ValueError(
-            f"Embedding dimension does not match expected size of "
-            f"{EMBEDDING_DIMENSIONS}"
-        )
-
     return embeddings
 
+def citation_metadata(row):
+    """Keep source fields in Chroma so results can be cited."""
+    metadata = {
+        "arxiv_id": str(row["arxiv_id"]),
+        "title": str(row["title"]),
+    }
 
-def make_azure_key(chunk_id):
-    return base64.urlsafe_b64encode(
-        str(chunk_id).encode("utf-8")
-    ).decode("utf-8")
+    for field in [
+        "page_number",
+        "pdf_url",
+        "html_url",
+        "section",
+        "subsection",
+        "source",
+    ]:
+        if field in row.index and pd.notna(row[field]):
+            value = row[field]
+            if field == "page_number":
+                metadata[field] = int(value)
+            else:
+                metadata[field] = str(value)
 
-
-def check_azure_config():
-    if not AZURE_SEARCH_ENDPOINT:
-        raise RuntimeError(
-            "AZURE_SEARCH_ENDPOINT is missing from .env"
-        )
-
-    if not AZURE_SEARCH_ADMIN_KEY:
-        raise RuntimeError(
-            "AZURE_SEARCH_ADMIN_KEY is missing from .env"
-        )
-
-
-def get_index_client():
-    check_azure_config()
-
-    return SearchIndexClient(
-        endpoint=AZURE_SEARCH_ENDPOINT,
-        credential=AzureKeyCredential(
-            AZURE_SEARCH_ADMIN_KEY
-        ),
-    )
-
-
-def get_search_client():
-    check_azure_config()
-
-    return SearchClient(
-        endpoint=AZURE_SEARCH_ENDPOINT,
-        index_name=INDEX_NAME,
-        credential=AzureKeyCredential(
-            AZURE_SEARCH_ADMIN_KEY
-        ),
-    )
-
-
-def get_query_search_client():
-    if not AZURE_SEARCH_ENDPOINT:
-        raise RuntimeError(
-            "AZURE_SEARCH_ENDPOINT is missing from .env"
-        )
-
-    key = AZURE_SEARCH_QUERY_KEY or AZURE_SEARCH_ADMIN_KEY
-
-    if not key:
-        raise RuntimeError(
-            "AZURE_SEARCH_QUERY_KEY or AZURE_SEARCH_ADMIN_KEY is missing"
-        )
-
-    return SearchClient(
-        endpoint=AZURE_SEARCH_ENDPOINT,
-        index_name=INDEX_NAME,
-        credential=AzureKeyCredential(key),
-    )
-
-
-def create_index():
-    index_client = get_index_client()
-
-    existing_indexes = list(
-        index_client.list_index_names()
-    )
-
-    if INDEX_NAME in existing_indexes:
-        index_client.delete_index(INDEX_NAME)
-        print(
-            f"Deleted old Azure index: {INDEX_NAME}"
-        )
-
-    fields = [
-        SimpleField(
-            name="chunk_id",
-            type=SearchFieldDataType.String,
-            key=True,
-            filterable=True,
-        ),
-        SearchableField(
-            name="text",
-            type=SearchFieldDataType.String,
-        ),
-        SearchField(
-            name="embedding",
-            type=SearchFieldDataType.Collection(
-                SearchFieldDataType.Single
-            ),
-            searchable=True,
-            vector_search_dimensions=EMBEDDING_DIMENSIONS,
-            vector_search_profile_name="vector-profile",
-        ),
-        SimpleField(
-            name="arxiv_id",
-            type=SearchFieldDataType.String,
-            filterable=True,
-        ),
-        SimpleField(
-            name="page_number",
-            type=SearchFieldDataType.Int32,
-            filterable=True,
-        ),
-        SearchableField(
-            name="title",
-            type=SearchFieldDataType.String,
-            filterable=True,
-        ),
-        SearchableField(
-            name="authors",
-            type=SearchFieldDataType.String,
-        ),
-        SearchableField(
-            name="categories",
-            type=SearchFieldDataType.String,
-            filterable=True,
-        ),
-        SimpleField(
-            name="pdf_url",
-            type=SearchFieldDataType.String,
-        ),
-    ]
-
-    vector_search = VectorSearch(
-        algorithms=[
-            HnswAlgorithmConfiguration(
-                name="hnsw-config"
-            )
-        ],
-        profiles=[
-            VectorSearchProfile(
-                name="vector-profile",
-                algorithm_configuration_name="hnsw-config",
-            )
-        ],
-    )
-
-    index = SearchIndex(
-        name=INDEX_NAME,
-        fields=fields,
-        vector_search=vector_search,
-    )
-
-    index_client.create_index(index)
-
-    print(
-        f"Created fresh Azure AI Search index: {INDEX_NAME}"
-    )
+    return metadata
 
 
 def store_embeddings(df, embeddings):
-    if len(df) != len(embeddings):
+    missing = REQUIRED_COLUMNS - set(df.columns)
+    if missing:
+        raise ValueError(f"Chunk data missing columns: {', '.join(sorted(missing))}")
+    if df.empty or df[list(REQUIRED_COLUMNS)].isna().any().any():
+        raise ValueError("Chunk data is empty or contains missing required fields")
+    if df["text"].astype(str).str.strip().eq("").any():
+        raise ValueError("Chunk data contains empty text")
+    ids = df["chunk_id"].astype(str).tolist()
+    if len(ids) != len(set(ids)):
+        raise ValueError("Duplicate chunk IDs in input")
+    if len(embeddings) != len(df):
+        raise ValueError("Embedding count does not match chunk count")
+
+    client = chromadb.PersistentClient(path=str(CHROMA_DIR))
+
+    collection = client.get_or_create_collection(
+        name=COLLECTION_NAME
+    )
+    indexed_model = (collection.metadata or {}).get("embedding_model")
+    if indexed_model and indexed_model != EMBEDDING_MODEL:
         raise ValueError(
-            "Number of chunks does not match number of embeddings"
+            f"Index uses {indexed_model}, expected {EMBEDDING_MODEL}; rebuild the collection"
         )
 
-    client = get_search_client()
+    # Upsert refreshes existing rows (including indexes created before metadata
+    # was stored). Delete IDs absent from this corpus so reruns do not serve stale papers.
+    existing_ids = set(collection.get(include=[])["ids"])
+    stale_ids = sorted(existing_ids - set(ids))
 
-    documents = []
+    collection.upsert(
+        ids=ids,
+        documents=df["text"].tolist(),
+        embeddings=embeddings.tolist(),
+        metadatas=[citation_metadata(row) for _, row in df.iterrows()],
+    )
+    if stale_ids:
+        collection.delete(ids=stale_ids)
+    collection.modify(metadata={"embedding_model": EMBEDDING_MODEL})
 
-    for (_, row), embedding in zip(
-        df.iterrows(),
-        embeddings,
+    print(f"Stored {collection.count()} chunks in ChromaDB ({len(stale_ids)} stale removed)")
+
+    return collection
+
+
+def search(query, top_k=5, *, client=None, model=None):
+    """Return ranked passages with their paper and page citation fields."""
+    if not isinstance(query, str) or not query.strip():
+        raise ValueError("Query must be non-empty text")
+    if not isinstance(top_k, int) or isinstance(top_k, bool) or top_k < 1:
+        raise ValueError("top_k must be a positive integer")
+
+    client = client or chromadb.PersistentClient(path=str(CHROMA_DIR))
+    collection = client.get_collection(name=COLLECTION_NAME)
+    if (collection.metadata or {}).get("embedding_model") != EMBEDDING_MODEL:
+        raise ValueError("Index model is unknown or different; rerun indexing first")
+    count = collection.count()
+    if count == 0:
+        return []
+
+    model = model or SentenceTransformer(EMBEDDING_MODEL)
+    query_vector = model.encode([query.strip()]).tolist()
+    result = collection.query(
+        query_embeddings=query_vector,
+        n_results=min(top_k, count),
+        include=["documents", "metadatas", "distances"],
+    )
+    hits = []
+    for chunk_id, passage, metadata, distance in zip(
+        result["ids"][0],
+        result["documents"][0],
+        result["metadatas"][0],
+        result["distances"][0],
     ):
-        document = {
-            "chunk_id": make_azure_key(
-                row["chunk_id"]
-            ),
-            "text": str(
-                row["text"]
-            ),
-            "embedding": embedding.tolist(),
-            "arxiv_id": str(
-                row["arxiv_id"]
-            ),
-            "page_number": int(
-                row["page_number"]
-            ),
-            "title": str(
-                row["title"]
-            ),
-            "authors": str(
-                row["authors"]
-            ),
-            "categories": str(
-                row["categories"]
-            ),
-            "pdf_url": str(
-                row["pdf_url"]
-            ),
-        }
+        if not metadata or not all(key in metadata for key in ("arxiv_id", "title")):
+            raise ValueError("Index contains passages without citations; rerun indexing first")
+        hits.append({
+            "chunk_id": chunk_id,
+            "text": passage,
+            "distance": distance,
+            "arxiv_id": metadata["arxiv_id"],
+            "title": metadata["title"],
+            "page_number": metadata.get("page_number"),
+            "pdf_url": metadata.get("pdf_url"),
+            "html_url": metadata.get("html_url"),
+            "section": metadata.get("section"),
+            "subsection": metadata.get("subsection"),
+            "source": metadata.get("source"),
+        })
+    return hits
 
-        documents.append(document)
-
-    successful = 0
-
-    for start in range(
-        0,
-        len(documents),
-        BATCH_SIZE,
-    ):
-        batch = documents[
-            start:start + BATCH_SIZE
-        ]
-
-        results = client.upload_documents(
-            documents=batch
-        )
-
-        batch_success = sum(
-            result.succeeded
-            for result in results
-        )
-
-        successful += batch_success
-
-        print(
-            f"Uploaded "
-            f"{min(start + BATCH_SIZE, len(documents))}"
-            f"/{len(documents)}"
-        )
-
-        for result in results:
-            if not result.succeeded:
-                print(
-                    "Upload error:",
-                    result.error_message,
-                )
-
-    print()
-
-    print(
-        f"Successfully uploaded: "
-        f"{successful}/{len(documents)}"
-    )
-
-    print(
-        f"Documents in Azure: "
-        f"{client.get_document_count()}"
-    )
-
-
-def search_chunks(query, top_k=5, hybrid=False):
-    model = SentenceTransformer(MODEL_NAME)
-
-    query_embedding = model.encode(
-        query
-    ).tolist()
-
-    client = get_query_search_client()
-
-    vector_query = VectorizedQuery(
-        vector=query_embedding,
-        k_nearest_neighbors=top_k,
-        fields="embedding",
-    )
-
-    results = client.search(
-        search_text=query if hybrid else None,
-        vector_queries=[vector_query],
-        select=[
-            "text",
-            "title",
-            "arxiv_id",
-            "page_number",
-            "authors",
-            "categories",
-            "pdf_url",
-        ],
-        top=top_k,
-    )
-
-    retrieved_chunks = []
-
-    for result in results:
-        retrieved_chunks.append(
-            {
-                "text": result["text"],
-                "title": result["title"],
-                "arxiv_id": result["arxiv_id"],
-                "page_number": result["page_number"],
-                "authors": result["authors"],
-                "categories": result["categories"],
-                "pdf_url": result["pdf_url"],
-                "score": result["@search.score"],
-            }
-        )
-
-    return retrieved_chunks
-
-
+def search_chunks(query, top_k=5):
+    """Compatibility wrapper used by agent.py."""
+    return search(query, top_k=top_k)
+    
 if __name__ == "__main__":
-    chunks = load_chunks()
-    embeddings = create_embeddings(chunks)
-
-    create_index()
-    store_embeddings(chunks, embeddings)
+    parser = argparse.ArgumentParser(description="Build or query the local arXiv vector index")
+    parser.add_argument("--query", help="Search indexed chunks instead of rebuilding the index")
+    parser.add_argument("--top-k", type=int, default=5, help="Maximum search results (default: 5)")
+    args = parser.parse_args()
+    if args.query is not None:
+        print(json.dumps(search(args.query, args.top_k), indent=2))
+    else:
+        chunks = load_chunks()
+        embeddings = create_embeddings(chunks)
+        store_embeddings(chunks, embeddings)

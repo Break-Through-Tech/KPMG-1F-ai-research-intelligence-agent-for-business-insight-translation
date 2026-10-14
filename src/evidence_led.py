@@ -19,7 +19,9 @@ PROMPTS = Path(__file__).resolve().parents[1] / 'prompts/evidence_led'
 
 def prompt_provenance():
     return {'summary_adapter': 'src.evidence_led:summarize',
-            'prompt_version': 'evidence-led-v2',
+            'prompt_version': 'evidence-led-v3',
+            'quote_validation': {'policy': 'one-correction-after-schema-valid-rejection-v1',
+                'implementation_sha256': sha256((PROMPTS.parents[1]/'src/quote_validation.py').read_bytes()).hexdigest()},
             'prompt_hashes': {p.name: sha256(p.read_bytes()).hexdigest()
                              for p in sorted(PROMPTS.glob('*.txt'))}}
 
@@ -83,7 +85,7 @@ def validate_ledger(ledger, visible_passages):
     for fact in ledger['facts']:
         quote = _norm(fact['quote'])
         if len(quote) < 15 or fact['chunk_id'] not in texts or quote not in texts[fact['chunk_id']]:
-            raise ValueError('Ledger quote must occur in its displayed source passage')
+            raise ValueError('Ledger quote must occur in its displayed source passage: ' + fact['chunk_id'])
     return ledger
 
 
@@ -125,8 +127,11 @@ def summarize(query, passages, *, generate,
     ledger = None
     try:
         prompt = Template((PROMPTS/'extract-v1.txt').read_text()).substitute(query=query, evidence=context)
-        ledger = _invoke(generate, prompt, ledger_schema([p['chunk_id'] for p, _ in included]))
-        validate_ledger(ledger, visible)
+        from src.quote_validation import generate_quote_checked
+        schema = ledger_schema([p['chunk_id'] for p, _ in included])
+        ledger, attempts = generate_quote_checked(
+            lambda text: _invoke(generate, text, schema), prompt,
+            lambda value: validate_ledger(value, visible))
         direct = [f for f in ledger['facts'] if f['relevance'] == 'direct']
         if ledger['answerability']=='partial' and not ledger['coverage_gaps']:
             raise ValueError('Partial answerability requires an explicit coverage gap')
@@ -162,7 +167,8 @@ def summarize(query, passages, *, generate,
         out['answer_lead'] = ledger['coverage_gaps'][0] if out['answer_scope']=='partial' else None
         out['evidence_ledger'] = ledger
         out['support_check'] = 'exact_quote_membership_only_not_semantic_entailment'
-        out['generation_method'] = 'evidence-led-v2'
+        out['generation_method'] = 'evidence-led-v3'
+        out['extraction_validation_attempts'] = attempts
         return out
     except Exception:
         out = _result(query, 'insufficient_evidence', [],

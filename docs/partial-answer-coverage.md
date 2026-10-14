@@ -26,3 +26,20 @@ not replace a different requested comparator, framing consistency is not
 mechanistic interpretability, and unlearning attacks are not confidentiality
 measurements or useful task adaptation. Prompt hashes/version v2 identify new
 runs; older v1 ledgers are historical artifacts, not silently migrated outputs.
+
+## Bounded quote correction
+
+Evidence-led v3 permits one correction only after a schema-valid extraction
+fails the unchanged displayed-source quote validator. The rejected structured
+output and generic validation error are provided as untrusted feedback alongside
+the original visible evidence. The complete replacement must pass the same schema
+and quote validator before synthesis. No capitalization, math, citation, punctuation
+or hidden-tail mismatch is repaired locally. A second rejection still emits no
+findings; provider, parsing/schema and synthesis failures are not retried.
+
+Successful results record `extraction_validation_attempts` (1 or 2); provenance
+records the policy and implementation hash. The configured generation adapter's
+receipts retain both model calls. This can add one extraction call per request.
+Correction is not proof of semantic entailment: setup-only evidence is contextual,
+and limited-data efficacy requires a quoted data-scale result. Review real claims
+separately; a correct abstention is not successful retrieval of missing evidence.

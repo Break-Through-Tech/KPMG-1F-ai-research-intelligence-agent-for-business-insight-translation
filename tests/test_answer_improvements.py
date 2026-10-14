@@ -72,7 +72,31 @@ class EvidenceLedTests(unittest.TestCase):
             ledger=deepcopy(self.ledger);ledger['facts'][0].update(change)
             fn=Mock(return_value=json.dumps(ledger));out=summarize('DPO',self.passages,generate=fn)
             self.assertEqual(out['error'],'evidence_led_failed');self.assertEqual(out['claims'],[])
-            self.assertEqual(fn.call_count,1);self.assertNotIn('evidence_ledger',out)
+            self.assertEqual(fn.call_count,1 if 'chunk_id' in change else 2);self.assertNotIn('evidence_ledger',out)
+
+    def test_one_literal_quote_correction_precedes_synthesis_with_same_schema(self):
+        wrong=deepcopy(self.ledger)
+        wrong['facts'][0]['quote']='binary DPO wins at 25% data.'
+        fn=Mock(side_effect=[json.dumps(wrong),json.dumps(self.ledger),json.dumps(self.answer)])
+        fn.supports_response_schema=True
+        out=summarize('DPO',self.passages,generate=fn)
+        self.assertEqual(out['status'],'ok')
+        self.assertEqual(out['evidence_ledger'],self.ledger)
+        self.assertEqual(out['extraction_validation_attempts'],2)
+        self.assertEqual(fn.call_args_list[0].kwargs,fn.call_args_list[1].kwargs)
+        self.assertIn('binary DPO',fn.call_args_list[1].args[0])
+        self.assertEqual(fn.call_count,3)
+
+    def test_setup_only_context_does_not_produce_data_efficiency_claims(self):
+        self.passages=[{'chunk_id':'a','text':'We train the model for three epochs using SFT.'}]
+        ledger={'answerability':'none','facts':[{'chunk_id':'a','quote':self.passages[0]['text'],
+            'finding':'Training setup only.','relevance':'context'}],
+            'coverage_gaps':['No data-scale efficacy result is displayed.']}
+        fn=Mock(return_value=json.dumps(ledger))
+        out=summarize('Does this adapt effectively with limited data?',self.passages,generate=fn)
+        self.assertEqual(out['claims'],[])
+        self.assertEqual(out['answer_scope'],'unavailable')
+        self.assertEqual(fn.call_count,1)
 
     def test_hidden_truncated_tail_cannot_be_quoted(self):
         self.passages[0]['text']='Visible introductory text. '*15+'Hidden decisive finding is here.'
@@ -129,7 +153,7 @@ class EvidenceLedTests(unittest.TestCase):
             code=main.main(['--query','DPO','--generation-route','codex','--codex-model','gpt-test','--evidence-led'])
         result=json.loads(stdout.getvalue())
         self.assertEqual(code,0);self.assertEqual(result['summary']['status'],'ok')
-        self.assertEqual(result['provenance']['generation']['prompt_version'],'evidence-led-v2')
+        self.assertEqual(result['provenance']['generation']['prompt_version'],'evidence-led-v3')
 
 
 class HybridTests(unittest.TestCase):

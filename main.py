@@ -44,6 +44,22 @@ def persistent_retrieve(query, top_k):
         raise
 
 
+def hybrid_retrieve(query, top_k, *, reranker_model=None):
+    from src import retrieval
+    from src.hybrid_retrieval import HybridRetriever
+    frame = retrieval.load_chunks()
+    passages = [{'chunk_id': row['chunk_id'], 'text': row['text'],
+                 **retrieval.citation_metadata(row),
+                 'page_number': retrieval.citation_metadata(row).get('page_number')}
+                for row in frame.to_dict('records')]
+    rank = None
+    if reranker_model:
+        from sentence_transformers import CrossEncoder
+        model = CrossEncoder(reranker_model)
+        rank = lambda q, ps: model.predict([(q, p['text']) for p in ps], show_progress_bar=False)
+    return HybridRetriever(passages, dense_search=persistent_retrieve, rerank=rank)(query, top_k)
+
+
 def demo_retrieve(query, top_k):
     return [{'chunk_id': 'synthetic-html-1', 'text': 'Synthetic agents need task-specific evaluation.',
              'distance': 0.25, 'arxiv_id': 'synthetic', 'title': 'Synthetic fixture, not a paper',
@@ -78,6 +94,12 @@ def main(argv=None):
     parser.add_argument('--industry')
     parser.add_argument('--jurisdiction')
     parser.add_argument('--demo', action='store_true', help='Synthetic offline adapters; no keys or downloads')
+    parser.add_argument('--retrieval-mode', choices=['dense', 'hybrid'], default='dense')
+    parser.add_argument('--reranker-model', help='Optional local cross-encoder for hybrid retrieval')
+    parser.add_argument('--generation-route', choices=['byok', 'codex'], default='byok')
+    parser.add_argument('--codex-model', help='Explicit model for existing ChatGPT Codex login')
+    parser.add_argument('--codex-bin', help='Installed Codex CLI binary path')
+    parser.add_argument('--evidence-led', action='store_true', help='Quote-backed extraction before synthesis')
     parser.add_argument('--summary-adapter', help='module:function with summarize(query, passages, *, generate)')
     parser.add_argument('--translation-adapter', help='module:function with translate(summary, passages, *, industry, generate)')
     parser.add_argument('--review-adapter', help='module:function accepting the complete result, including jurisdiction')
@@ -87,6 +109,12 @@ def main(argv=None):
             raise ValueError('Business mode requires --industry')
         if args.demo and (args.summary_adapter or args.translation_adapter or args.review_adapter):
             raise ValueError('--demo cannot be combined with live adapters')
+        if args.demo and (args.generation_route == 'codex' or args.evidence_led or args.retrieval_mode != 'dense' or args.reranker_model):
+            raise ValueError('--demo cannot be combined with experimental live routes')
+        if args.reranker_model and args.retrieval_mode != 'hybrid':
+            raise ValueError('--reranker-model requires hybrid retrieval')
+        if args.evidence_led and (args.summary_adapter or args.translation_adapter):
+            raise ValueError('--evidence-led selects its own adapters')
         if args.mode != 'business' and args.translation_adapter:
             raise ValueError('--translation-adapter requires --mode business')
         request = {'query': args.query, 'top_k': args.top_k}
@@ -100,6 +128,9 @@ def main(argv=None):
         if not args.demo and corpus.is_file():
             provenance['input_file_sha256'] = sha256(corpus.read_bytes()).hexdigest()
         retrieve = demo_retrieve if args.demo else persistent_retrieve
+        if args.retrieval_mode == 'hybrid':
+            retrieve = lambda q, k: hybrid_retrieve(q, k, reranker_model=args.reranker_model)
+            provenance['retrieval'] = {'method':'hybrid-bm25-rrf-v2','reranker':args.reranker_model}
         translate = None
         review = None
         # Keep stdout machine-readable even if imported retrieval prints diagnostics.
@@ -113,21 +144,29 @@ def main(argv=None):
                 if args.mode == 'business':
                     translate = demo_translate
             else:
-                if args.mode == 'business' and not args.translation_adapter:
+                if args.mode == 'business' and not args.translation_adapter and not args.evidence_led:
                     raise PipelineError('Business adapter unavailable: supply --translation-adapter '
                                         'module:function from #80, or use --demo.')
-                spec = args.summary_adapter or 'src.summarization:summarize'
+                spec = 'src.evidence_led:summarize' if args.evidence_led else args.summary_adapter or 'src.summarization:summarize'
                 adapter = load_adapter(spec)
-                business_adapter = load_adapter(args.translation_adapter) if args.translation_adapter else None
-                generate, settings = create_generate()
+                translation_spec = 'src.evidence_led:translate' if args.evidence_led and args.mode == 'business' else args.translation_adapter
+                business_adapter = load_adapter(translation_spec) if translation_spec else None
+                if args.generation_route == 'codex':
+                    from src.codex_generation import create_codex_generate
+                    generate, settings = create_codex_generate(model=args.codex_model, binary=args.codex_bin)
+                else:
+                    generate, settings = create_generate()
                 provenance['generation'] = settings
                 if spec == 'src.summarization:summarize':
                     from src.summarization import prompt_provenance
                     provenance['generation'].update(prompt_provenance())
+                elif spec == 'src.evidence_led:summarize':
+                    from src.evidence_led import prompt_provenance
+                    provenance['generation'].update(prompt_provenance())
                 else:
                     provenance['generation'].update(summary_adapter=spec,
                         prompt_version='external-adapter-unspecified')
-                provenance['generation']['translation_adapter'] = args.translation_adapter
+                provenance['generation']['translation_adapter'] = translation_spec
                 summary = lambda q, p: adapter(q, p, generate=generate)
                 if business_adapter:
                     translate = lambda s, p, *, industry: business_adapter(s, p, industry=industry, generate=generate)

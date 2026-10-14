@@ -1,151 +1,151 @@
-KPMG — AI Research Intelligence Agent for Business Insight Translation
+# KPMG AI Research Intelligence Agent for Business Insight Translation
 
-> 💡 **Note for the team:** This is just a template. Update the above title with your AI Studio Challenge Project name. Remove all guidance notes and example text in this template and populate this README with your own content. You can work on this README throughout AI Studio, and get feedback from your AI Studio Coach and Challenge Advisor before finalizing it.  
+Break Through Tech AI Studio project with KPMG. The current prototype ingests a fixed sample of public arXiv papers and supports **local, citation-bearing passage retrieval**. A draft research workflow and JSON CLI are available; business translation and review accept independently developed adapters. A user interface and human-scored evaluation remain planned work. Search results are not generated answers.
 
----
+## Current pipeline
 
-### 👥 **Team Members**
+1. The PDF-only compatibility entrypoint `src/data_ingestion.py`, backed by `src/data_ingestion/pdf_pipeline.py`, selects the 25 IDs in `data/metadata/arxiv_csAI_25_pdf_sample.csv` from `data/metadata/arxiv_csAI_100_metadata.csv`, downloads missing PDFs, extracts page text with PyMuPDF, and writes page-associated chunks to `data/processed/chunks.parquet`.
+2. `src/retrieval.py` embeds those chunks locally with SentenceTransformers `all-MiniLM-L6-v2` and stores text, vectors, and citation metadata in persistent Chroma (`data/chroma_db/`). Reindexing updates records and removes chunks no longer in the input corpus.
+3. The same script can embed a question and return ranked passages with arXiv ID, title, PDF URL, and **PDF page number**. Chroma distances are returned as distances, not calibrated relevance or confidence scores.
 
-| Name               | GitHub Handle | Contribution                                                             |
-|------------------  |---------------|--------------------------------------------------------------------------|
-| Jenna Hunte        | @jehunte      | Break Through Tech Coach                                                 |
-| Alesha Rafi        | @ralesh10     | Team Member                                                              |
-| Latifa Abdraimova  | @latiifkaa    | Team Member                                                              |
-| Teegawende Segrado | @Teegawende12 | Team Member                                                              |
-| Jooheon Lee        | @leejooheonn  | Team Member                                                              |
-| Khoi Nguyen        | @             | Team Member                                                              |
-| James Zhu          | @             | Team Member                                                              |
+The first model run may download its weights. An OpenAI API key is **not** needed for ingestion, indexing, or retrieval. Draft generation supports local bring-your-own-key Gemini, OpenAI, an explicit OpenAI-compatible endpoint, or native AWS Bedrock Converse with AWS credentials/a Bedrock API key; retrieval-only and synthetic demo execution need no generation credentials. See [BYOK architecture](docs/byok-generation.md).
 
----
+For source-specific cleaning, chunk settings, caches, stored fields, and validation
+boundaries, see [Data preparation](docs/data-preparation.md).
 
-## 🎯 **Project Highlights**
+For snapshot-bound findings, observed PDF layout losses, and prioritized
+remediation, see [Data quality findings](docs/data-quality-findings.md) and the
+[locked-sample PDF assessment](docs/pdf-layout-assessment.md).
 
+## Run locally
 
+Use Python 3.10 or newer. From the repository root:
 
--Building a RAG (Retrieval-Augmented Generation) agent: parse AI research papers with PyMuPDF → chunk & embed the text with OpenAI's text-embedding-3-small → store/retrieve in ChromaDB → summarize and translate findings into business implications with OpenAI gpt-4-mini, always citing the source.
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+python src/data_ingestion.py
+python src/retrieval.py
+python src/retrieval.py --query "How are AI agents evaluated?" --top-k 5
+python -m unittest discover -s tests -v
+```
 
--Success looks like: the system consistently retrieves relevant papers for a business question, accurately summarizes key points without losing important context, and its output (relevance, accuracy, business usefulness) holds up under KPMG stakeholder review.
+The PDF-only ingestion command downloads papers not already in `data/pdfs/`; expect network use and a delay between requests. It fails if the locked sample IDs are absent from the metadata snapshot, a required PDF fails to download or parse, or a selected paper has no extractable text. A failed run preserves the previous `chunks.parquet`; a complete run replaces it atomically. Check the named paper IDs in any error and repair the inputs before rerunning. Blank or scanned PDFs may need OCR, which this pipeline does not perform. `data/pdfs/`, `data/processed/`, and `data/chroma_db/` are local generated artifacts and are ignored by Git. The five PDFs already tracked in `data/` belong to the earlier EDA notebook and are not used by this script's `data/pdfs/` cache.
 
--Milestone #1 (Sept 30): data exploration/preprocessing, an evaluation framework with benchmark queries, and a baseline retrieval pipeline. 
+To validate the entire locked sample, run `python -m tests.validate_ingestion_sample`.
+This checks sample coverage, source metadata, page citations, chunk text against the
+cited cleaned pages, Parquet readback, and an identical rerun. It downloads missing
+PDFs, so it is separate from the offline CI tests. See the recorded
+[ingestion validation results](docs/ingestion-validation.md).
 
--Milestone #2 (Oct 31): full retrieval + summarization pipeline, business-translation prompt engineering, and initial accuracy evaluation. -
+For HTML-first ingestion, run `python -m src.data_ingestion.pipeline`. Its modules
+separate metadata, download, HTML/PDF parsing, chunking, and storage. The HTML cache
+lives in `data/html/`. HTML chunks carry `source="html"`, section/subsection labels,
+and an `html_url` with the source heading anchor when available. Indexing and search
+use that HTML citation through `source_url`; `page_number` is `null` for HTML.
+PDF citations retain their 1-based page number and a PDF page link. Existing PDF-only
+indexes remain readable. Reindex after changing ingestion mode to replace old chunks
+and populate the new citation fields. The locked-sample validator above exercises
+the stable PDF-only mode; it does not establish HTML extraction or retrieval quality.
+PDF fallback chunks are split within section and original page boundaries, so their
+text comes from the page cited by `page_number`. Overlap does not cross pages.
+PDF fallback stops at References, Bibliography, Appendix, or Appendices headings,
+including numbered and uppercase forms, to keep back matter out of research chunks.
+The HTML-first command also refuses to publish an incomplete corpus when a required
+PDF fallback is missing, corrupt, or produces no chunks. It reports the affected IDs,
+exits nonzero, and preserves the previous Parquet file, including on write failure.
+Compact papers with usable HTML chunks remain HTML-backed even when their PDF is
+missing or corrupt. PDF fallback is used only when HTML produces no usable chunks.
 
--Milestone #3 (Nov 30): output refinement, a lightweight UI/interaction layer, and final documentation.
-Developed in partnership with KPMG as part of the Break Through Tech AI Studio program.
+Example search result fields: `chunk_id`, `text`, `distance`, `arxiv_id`, `title`, `page_number`, `pdf_url`. Page numbers are 1-based PDF pages, which may differ from page labels printed in a paper. If an older Chroma index lacks citation/model metadata, rerun `python src/retrieval.py` to refresh it before querying. Rebuild the collection when changing embedding models; vectors from different models must not be mixed.
 
----
+## Research workflow (draft interface v1)
 
-## 👩🏽‍💻 **Setup and Installation**
+Run an entirely offline, synthetic end-to-end example (standard library only):
 
-Python 3.10+ installed (python.org)
-Git installed
-VS Code (team's standard IDE), or your editor of choice
-JupyterLab for exploratory data analysis and prototyping
-A Google Colab account, used for cloud compute (e.g. GPUs) when needed
-An OpenAI API key (for embeddings and gpt-4-mini)
-1. Clone the repository
+```bash
+python main.py --demo --query "How are AI agents evaluated?"
+python main.py --demo --query "How are AI agents evaluated?" --mode business --industry banking --jurisdiction US
+python -m unittest tests.test_research_pipeline -v
+```
 
-Clone the repo from GitHub to your local machine using Git, then navigate into the project folder.
+`--demo` uses explicitly synthetic HTML/PDF fixtures and fake summary/business
+adapters. It does not measure actual retrieval relevance, model accuracy, or
+industry usefulness. For persistent retrieval, build the index as above, then:
 
-2. Set up the environment
+```bash
+python main.py --query "How are AI agents evaluated?" --top-k 5 --mode retrieval
+# Copy .env.example to a local .env; select provider/model and its own credentials.
+python main.py --query "How are AI agents evaluated?" --top-k 5 --mode summary
+```
 
-Create and activate a Python virtual environment so the project's dependencies stay isolated from other Python projects on your machine.
+Summary is the default mode. Generation defaults to Gemini (`GOOGLE_MODEL`, default
+`gemini-2.5-flash`, temperature 0, JSON output). The default summarizer is
+`src.summarization:summarize`, using the bounded `research-summary-v1` template
+with its SHA-256 recorded in generation provenance. Explicit local endpoints
+can use the existing BYOK provider; see [local-model E2E checks](docs/local-model-e2e.md).
+Importing the workflow/CLI does not import a model, download weights, or call an API.
+Missing index/credentials and unavailable stages exit nonzero with JSON errors on
+stderr. Generated drafts are JSON on stdout; rejected summaries also preserve
+that JSON but exit nonzero when `summary.error` is set. Ordinary evidence
+abstention without an error exits zero. Provider exception payloads are not echoed.
 
-3. Install dependencies
+The shared module boundary is `run_research(request, *, retrieve, summarize_fn,
+translate_fn=None, review_fn=None, provenance=None)` in `src/research_pipeline.py`.
+Retrieval accepts `(query, top_k)`; bound summary accepts `(query, passages)`;
+translation accepts `(summary, passages, *, industry)`. Retrieval returns a list of passage dictionaries; summary and translation return
+plain JSON-compatible dictionaries with citations to retrieved chunk IDs. The pipeline defensively copies
+adapter inputs and preserves retrieval fields exactly, including source locations
+and distances (never confidence). No-hit runs abstain without generation.
 
-Install the required packages listed in requirements.txt, which include the team's tech stack: PyMuPDF for PDF parsing, OpenAI for embeddings and the LLM, ChromaDB as the vector store, plus supporting libraries (pandas, numpy, jupyter, python-dotenv). Re-install whenever new packages are added.
+When independent lanes land, select their callable without editing this entrypoint:
 
-4. Set up API keys / secrets
+```bash
+# Replace module:function placeholders with the actual installed adapter names.
+python main.py --query "Your question" --summary-adapter module:function
+python main.py --query "Your question" --mode business --industry banking --jurisdiction US --translation-adapter module:function --review-adapter module:function
+```
 
-Create a .env file in the project root to store your OpenAI API key. This file is excluded from version control via .gitignore, so keys are never committed to the repo. If working in Google Colab, use Colab's built-in "Secrets" manager instead.
+CLI summary/translation adapters additionally receive the injected `generate(prompt)`
+callable. Business mode requires an explicit industry and a translation adapter
+(#80); the optional review adapter (#81) receives the complete draft, including
+jurisdiction, and returns a separate `regulatory_checkpoint`. It may wrap the
+standalone checkpoint but never merges regulatory source IDs into paper citations.
+`--demo` cannot be combined with live adapters.
 
-5. Access the dataset(s)
+Every new run has `approved=false` and pending human review, even if a checkpoint
+returns an approval recommendation. `review_fingerprint` binds review to request,
+evidence, generated outputs, checkpoint, and execution provenance;
+`require_current_review` rejects material edits. It detects stale content, not a
+reviewer's identity or authorization. Explicit human approval remains #81's work.
+Citations are structurally validated; human checking must still establish that
+passages actually support claims and suggested actions.
 
-Place the research paper corpus (PDFs) in the data/ folder. The starting corpus is 5 public AI research papers, with an expected total size under 1GB; the team also uses Google Drive for sharing datasets and documentation.
+Provenance identifies fixture vs persistent execution, embedding/generation models,
+settings, prompt version and adapter names. `input_file_sha256` identifies the current
+local Parquet file when present; `corpus_sha256` stays null because indexed-corpus
+identity has not been verified. The input hash is **not proof that the current
+Chroma index matches it**; corpus/index
+reconciliation is #82. Versioned benchmark-run capture (repo SHA/time, frozen corpus
+and actual outputs) remains #64. No real corpus/model result is claimed by the demo.
 
-6. Run the notebook or scripts
+## Scope and next work
 
-Open the notebooks locally in JupyterLab, or in Google Colab by opening the notebook directly from GitHub. The typical pipeline flow: parse the PDFs → clean and chunk the text → generate embeddings → store and query them in ChromaDB → retrieve relevant passages for a business question and generate a cited, business-translated answer using the LLM.
+The standalone [human-in-the-loop checkpoint](docs/human-checkpoint.md) notebook
+accepts an industry, insight, and jurisdiction, uses Gemini Search-grounded regulatory
+evidence, and produces a structured advisory assessment followed by explicit human
+review. It requires a local `GOOGLE_API_KEY` and is not yet integrated with the paper
+pipeline. Cited sources and applicability still require human verification.
 
----
+The 25-paper set is a prototype baseline, not a claim of full 100-paper coverage. Chunking is character-based: PDF-only uses 2,000 characters with 200 overlap; HTML-first and its PDF fallback use 1,800 with 250 overlap. Their source filters differ, and omitted source content or extraction noise may degrade results; see [Data preparation](docs/data-preparation.md). Before scaling, define benchmark questions and evaluate passage relevance and citation correctness. Then connect retrieval to source-grounded summarization and business-implication generation, with separate checks that generated claims actually cite supporting passages. No such end-to-end accuracy result is claimed yet.
 
-## 🏗️ **Project Overview**
+## Team
 
+Jenna Hunte (AI Studio Coach); Alesha Rafi, Latifa Abdraimova, Teegawende Segrado, Jooheon Lee, Khoi Nguyen, James Zhu (team members). Thanks to Challenge Advisor Agnieszka (AJ) Jeter and the KPMG team.
 
-- This project is part of the Break Through Tech AI Studio program, which pairs student fellows with host companies to solve real-world AI/ML challenges.
-  
--Host company: KPMG — a professional services firm providing audit, tax, and advisory services, helping organizations manage risk, improve operations, and make business decisions. KPMG operates globally across industries including financial services, technology, healthcare, retail, consumer goods, energy, and the public sector.
+## License
 
--Key stakeholders: KPMG employees and teams working with AI research and emerging technologies, plus consultants who apply these insights with clients.
+No project license has been selected in this repository. Confirm one with the Challenge Advisor before describing the code as open-source or redistributable.
 
--Objective and scope: Build an AI research agent (RAG pipeline) that finds relevant information in AI research articles for a given business question, summarizes it, and translates it into clear business implications or actionable tasks — with citations back to the source.
-
--Real-world significance: KPMG consultants and stakeholders need to stay current on AI research to advise clients, but reading and synthesizing academic papers is time-consuming. An agent that can accurately surface and translate relevant findings into business terms — with verifiable citations — could meaningfully speed up how research gets applied to client work.
----
-
-## 📊 **Data Exploration**
-
-Source: Public research articles about Artificial Intelligence.
--Type/format: Primarily unstructured text (PDF), and may include figures/images and numerical values; starting corpus is 5 papers, expected total size under 1GB.
--Planned EDA: examine what kinds of figures/images appear and how to extract useful information from them; check for missing or outdated information, duplicates, and papers not relevant to the project scope.
--Planned preprocessing: extract and clean text from PDFs, split into appropriately sized chunks, prepare text + metadata for retrieval, generate embeddings per chunk, and store those embeddings in the vector database (ChromaDB) for semantic similarity search.
-
-**Potential visualizations to include:**
-
-(Add EDA findings, visualizations, and preprocessing decisions here once that work is completed.)
-
----
-
-## 🧠 **Model Development**
-
-**You might consider describing the following (as applicable):**
-
-* Model(s) used (e.g., CNN with transfer learning, regression models)
-* Feature selection and Hyperparameter tuning strategies
-* Training setup (e.g., % of data for training/validation, evaluation metric, baseline performance)
-
-
----
-
-## 📈 **Results & Key Findings**
-
-**You might consider describing the following (as applicable):**
-
-* Performance metrics (e.g., Accuracy, F1 score, RMSE)
-* How your model performed
-* Insights from evaluating model fairness
-
-**Potential visualizations to include:**
-
-* Confusion matrix, precision-recall curve, feature importance plot, prediction distribution, outputs from fairness or explainability tools
-
----
-
-## 🚀 **Next Steps**
-
-**You might consider addressing the following (as applicable):**
-
-* What are some of the limitations of your model?
-* What would you do differently with more time/resources?
-* What additional datasets or techniques would you explore?
-
----
-
-## 📝 **License**
-
-Specify how your project can be used by others. Choose an appropriate license and link it here (e.g., MIT, Apache 2.0). Make sure your Challenge Advisor approves of the selected license type. 
-
-**Example:**
-This project is licensed under the MIT License.
-
----
-
-## 📄 **References** (Optional but encouraged)
-
-Cite relevant papers, articles, or resources that supported your project.
-
----
-
-## 🙏 **Acknowledgements** (Optional but encouraged)
-
-Thank you to Challenge Advisor Agnieszka (AJ) Jeter and the team at KPMG, and to AI Studio Coach Jenna Hunte, for their support on this project.
+For provider/key selection, endpoint compatibility, privacy boundaries and offline verification, see [Bring-your-own-key generation](docs/byok-generation.md).

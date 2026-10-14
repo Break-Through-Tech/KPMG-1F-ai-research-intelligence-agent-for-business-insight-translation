@@ -2,7 +2,12 @@
 langchain>=0.1.0
 langchain-openai>=0.0.5
 chromadb>=0.4.0
+sentence-transformers>=2.2.0
 python-dotenv>=1.0.0
+google-genai>=2.30.1
+openai>=1.0.0
+boto3>=1.43.113,<2
+jsonschema>=4.0
 tiktoken>=0.5.0
 pydantic>=2.0.0
 
@@ -17,3 +22,7 @@ requests
 
 # Development tools
 ipykernel
+beautifulsoup4
+
+#Testing 
+pytest

@@ -1,10 +1,49 @@
+# Local Python environments
 .venv/
+venv/
+env/
+ENV/
+
+# Local credentials; keep safe environment templates versionable
 .env
-vector_db/
-data/pdfs/
-data/processed/
+.env.*
+!.env.example
+!.env.*.example
+
+# Reproducible pipeline downloads, processed chunks, and vector indexes
+# Keep data/metadata/ and the source PDFs directly under data/ versionable.
+/vector_db/
+/data/chroma_db/
+/data/html/
+/data/pdfs/
+/data/processed/
+
+# Python bytecode, tool caches, and packaging output
 __pycache__/
-*.pyc
-.DS_Store
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+/.cache/
+/build/
+/dist/
+*.egg-info/
+
+# Coverage output
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# Notebook autosaves (not the source notebooks)
 .ipynb_checkpoints/
 *-checkpoint.ipynb
+
+# macOS metadata and editor temporary files
+.DS_Store
+._*
+*.swp
+*.swo
+*~

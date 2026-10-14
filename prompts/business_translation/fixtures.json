@@ -1,0 +1,165 @@
+[
+  {
+    "id": "bounded-benefit",
+    "synthetic": true,
+    "industry": "Insurance",
+    "evidence": [
+      {
+        "chunk_id": "synthetic-benefit-1",
+        "text": "In a simulated claims triage exercise, the assistant reduced routing time relative to a manual baseline. No live customer deployment or cost measurement was performed.",
+        "distance": null,
+        "arxiv_id": null,
+        "title": "Synthetic design fixture; not a research paper",
+        "pdf_url": null,
+        "source": "synthetic",
+        "source_url": null,
+        "page_number": null
+      }
+    ],
+    "summary": {
+      "status": "ok",
+      "query": "Should we pilot an AI triage assistant?",
+      "claims": [
+        {
+          "text": "Routing was faster in a simulated claims task.",
+          "chunk_ids": [
+            "synthetic-benefit-1"
+          ]
+        }
+      ],
+      "limitations": [
+        "Simulation only; costs unmeasured."
+      ]
+    },
+    "expected": {
+      "status": "ok",
+      "industry": "Insurance",
+      "implications": [
+        {
+          "text": "The simulated triage result supports testing faster routing, not claiming production savings.",
+          "chunk_ids": [
+            "synthetic-benefit-1"
+          ],
+          "suggested_action": "Pilot on de-identified historical claims with routing-error and handling-time checks before customer use.",
+          "assumptions": [
+            "Historical claims resemble the simulated workload."
+          ]
+        }
+      ],
+      "risks": [
+        "Incorrect routing may require human correction."
+      ],
+      "limitations": [
+        "No production cost or customer-outcome evidence."
+      ]
+    },
+    "expected_behavior": "Bounded implication, cited simulation, proposed pilot, no ROI or approval."
+  },
+  {
+    "id": "weak-evidence",
+    "synthetic": true,
+    "industry": "Retail",
+    "evidence": [
+      {
+        "chunk_id": "synthetic-weak-1",
+        "text": "This abstract describes a model architecture but reports no retail trials, task outcomes, or business costs.",
+        "distance": null,
+        "arxiv_id": null,
+        "title": "Synthetic design fixture; not a research paper",
+        "pdf_url": null,
+        "source": "synthetic",
+        "source_url": null,
+        "page_number": null
+      }
+    ],
+    "summary": {
+      "status": "insufficient_evidence",
+      "query": "Should we pilot an AI triage assistant?",
+      "claims": [],
+      "limitations": [
+        "No evaluated retail outcome."
+      ]
+    },
+    "expected": {
+      "status": "insufficient_evidence",
+      "industry": "Retail",
+      "implications": [],
+      "risks": [
+        "Architecture description alone cannot justify deployment."
+      ],
+      "limitations": [
+        "Need task-specific evaluation and cost evidence."
+      ]
+    },
+    "expected_behavior": "Abstain; do not turn architecture description into a business benefit."
+  },
+  {
+    "id": "conflicting-findings",
+    "synthetic": true,
+    "industry": "Banking",
+    "evidence": [
+      {
+        "chunk_id": "synthetic-conflict-a",
+        "text": "In a synthetic easy-case trial, assisted triage was faster than manual triage.",
+        "distance": null,
+        "arxiv_id": null,
+        "title": "Synthetic design fixture; not a research paper",
+        "pdf_url": null,
+        "source": "synthetic",
+        "source_url": null,
+        "page_number": null
+      },
+      {
+        "chunk_id": "synthetic-conflict-b",
+        "text": "In a separate synthetic complex-case trial, assisted triage was slower and required more human corrections.",
+        "distance": null,
+        "arxiv_id": null,
+        "title": "Synthetic design fixture; not a research paper",
+        "pdf_url": null,
+        "source": "synthetic",
+        "source_url": null,
+        "page_number": null
+      }
+    ],
+    "summary": {
+      "status": "ok",
+      "query": "Should we pilot an AI triage assistant?",
+      "claims": [
+        {
+          "text": "Assisted triage improved easy cases but degraded complex cases.",
+          "chunk_ids": [
+            "synthetic-conflict-a",
+            "synthetic-conflict-b"
+          ]
+        }
+      ],
+      "limitations": [
+        "Different task mixes; no directly comparable aggregate effect."
+      ]
+    },
+    "expected": {
+      "status": "ok",
+      "industry": "Banking",
+      "implications": [
+        {
+          "text": "The synthetic results disagree across case complexity, so a general speed improvement is not established.",
+          "chunk_ids": [
+            "synthetic-conflict-a",
+            "synthetic-conflict-b"
+          ],
+          "suggested_action": "Evaluate easy and complex banking cases separately with human correction rates and latency recorded.",
+          "assumptions": [
+            "The bank can define comparable case-complexity groups."
+          ]
+        }
+      ],
+      "risks": [
+        "Complex cases may be slower and need more corrections."
+      ],
+      "limitations": [
+        "Synthetic studies differ in task mix; no production compliance or ROI evidence."
+      ]
+    },
+    "expected_behavior": "Retain both citations and disagreement; propose stratified evaluation, no averaged or guaranteed benefit."
+  }
+]

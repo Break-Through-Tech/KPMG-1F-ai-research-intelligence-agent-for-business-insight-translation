@@ -18,14 +18,14 @@
     "query": "What techniques are used for fine-tuning LLMs with limited data?",
     "type": "factual",
     "coverage": "not_checked",
-    "coverage_note": "No direct limited-data LLM fine-tuning abstract match."
+    "coverage_note": "Full-text candidate: 2602.00931v2#S4.SS4.p1 evaluates binary DPO/CU-DPO using 25%, 50%, 75%, and 100% of training data; human answerability confirmation pending."
   },
   {
     "query_id": "q04",
     "query": "How are sparse autoencoders used to interpret model behavior?",
     "type": "factual",
     "coverage": "not_checked",
-    "coverage_note": "No direct sparse-autoencoder abstract match."
+    "coverage_note": "Full-text candidate: 2604.00324v1#Ch1.S1.p4 discusses sparse autoencoders decomposing polysemantic units into monosemantic features; a secondary discussion, not a standalone SAE experiment. Human confirmation pending."
   },
   {
     "query_id": "q05",
@@ -60,7 +60,7 @@
     "query": "What risks should a business weigh when fine-tuning an LLM on proprietary data?",
     "type": "business_translation",
     "coverage": "not_checked",
-    "coverage_note": "No direct proprietary-data fine-tuning guidance abstract match."
+    "coverage_note": "Full-text adjacent evidence: 2607.00275v1#S1.p1 concerns federated-learning privacy, not demonstrated proprietary-data LLM fine-tuning. Do not infer full answerability."
   },
   {
     "query_id": "q10",

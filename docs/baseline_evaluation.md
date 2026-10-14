@@ -1,5 +1,14 @@
 # Baseline Evaluation
 
+> **Historical contributor observations — not a verified current pipeline pass.**
+> These tables were supplied in Alesha's original PR head `41ca679` and are
+> retained with attribution. No frozen passages, generated answers, corpus/index
+> identity, run date, provider/model receipt, or named reviewer records accompany
+> the scores. The Q5 discussion identifies the revised **alesha-baseline-v1**
+> question set; the original framework listed a different set. That intended
+> mapping still needs confirmation from the original run records.
+> Assist tests do not revalidate these human judgments or approve the system.
+
 ## 1. Overview
 
 This document evaluates the baseline RAG pipeline using the evaluation
@@ -34,9 +43,12 @@ manually scored:
 | Q9 | 2, 2, 2, 2, 2 | 1.00 |
 | Q10 | 0, 2, 2, 1, 2 | 0.80 |
 
-**Overall Precision@5: 0.84**
+**Overall Precision@5 from the displayed ratings: 0.86**
 
-**Target: ≥ 0.70 — PASS**
+Arithmetic correction: 43 of the 50 displayed ratings are 1–2. The original
+report stated 0.84; correcting that mean is not a fresh retrieval evaluation.
+
+**Target: ≥ 0.70 — numerical threshold met in the unverified reported ratings.**
 
 ## 3. Summary Quality
 
@@ -57,7 +69,7 @@ Each answer was scored from 1–5 for accuracy, clarity, and completeness.
 
 **Overall Summary Quality: 4.83 / 5**
 
-**Target: ≥ 4.0 — PASS**
+**Target: ≥ 4.0 — numerical threshold met in the unverified reported ratings.**
 
 ## 4. Business Usefulness
 
@@ -78,21 +90,23 @@ Each answer was scored from 1–5 for actionability, KPMG relevance, and citatio
 
 **Overall Business Usefulness: 4.43 / 5**
 
-**Target: ≥ 4.0 — PASS**
+**Target: ≥ 4.0 — numerical threshold met in the unverified reported ratings.**
 
 ## 5. Overall Baseline Assessment
 
-The baseline retrieval and generation pipeline met all three evaluation
-targets.
+The historical reported ratings exceed the three numerical thresholds. Without
+the underlying run and actual review records, this does **not** establish that
+the current baseline retrieval and generation pipeline meets those targets.
 
-- Precision@5: **0.84**
+- Precision@5 from displayed ratings: **0.86**
 - Summary Quality: **4.83 / 5**
 - Business Usefulness: **4.43 / 5**
 
 The main observed limitation was Question 5, where the retrieved excerpts
 did not provide enough information to fully explain how continuous utility
-scores are used during preference optimization. The system appropriately
-abstained rather than introducing unsupported information.
+scores are used during preference optimization. The contributor reported that
+the system abstained rather than introducing unsupported information; the
+answer itself is unavailable for independent verification.
 
 The evaluation suggests that the baseline performs well on questions where
 the indexed research contains direct evidence, while more specific

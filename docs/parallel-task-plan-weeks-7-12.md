@@ -55,7 +55,7 @@ The canonical Challenge Project Overview places prompt work in Week 7, evaluatio
 
 ### 4. Evidence-grounded research and business output
 
-**Owner candidate:** Jooheon, based on evidence-grounded summarization in #99; confirm availability and coordinate with the business-translation owner.
+**Jooheon**, based on evidence-grounded summarization in #99; confirm availability and coordinate with the business-translation owner.
 
 - **Week 7:** Define stage-specific checks for extraction, factual research claims, gaps/limitations, and conditional business recommendations.
 - **Week 8:** Review fixed q03/q10 traces and representative baseline cases; classify exact-quote failures separately from semantic overreach.

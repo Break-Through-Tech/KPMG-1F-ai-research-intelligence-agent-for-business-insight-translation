@@ -31,7 +31,7 @@ The canonical Challenge Project Overview places prompt work in Week 7, evaluatio
 
 ### 2. Evaluation design and reporting
 
-**Owner candidate:** Alesha (ralesh10), based on benchmark-question work and #111; confirm capacity. Add an independent source/claim reviewer.
+**Alesha** based on benchmark-question work and #111; confirm capacity. Add an independent source/claim reviewer.
 
 - **Week 7:** Freeze code/config/corpus identity and capture the current baseline. Preserve #111’s bounded reported metrics with their explicit limits.
 - **Week 8:** Score outcomes per question and stage: retrieval, source/quote support, answer coverage, abstention, and business-claim grounding. Keep synthetic, teammate, and KPMG review separate.

@@ -1,0 +1,22 @@
+[
+  {
+    "query_id": "intent_coordination",
+    "query": "When can splitting a task among cooperating language-model agents hurt results compared with giving it to a single agent?",
+    "review_focus": "Reported coordination outcomes and study limits, not setup alone or tool-security background."
+  },
+  {
+    "query_id": "intent_low_data",
+    "query": "For preference-based task adaptation, what changes in the relative effectiveness of training methods when only a fraction of the preference examples is available?",
+    "review_focus": "Useful task learning and data-scaling comparison, not relearning attacks or unlearning alone."
+  },
+  {
+    "query_id": "intent_mechanistic",
+    "query": "How could an evaluator investigate which internal components of an agent's language model cause its behavior, beyond checking whether its answers look consistent?",
+    "review_focus": "Internal causal/mechanistic analysis and limitations; distinguish behavioral framing from mechanism."
+  },
+  {
+    "query_id": "intent_tool_security",
+    "query": "What threats arise when collaborating LLM agents execute third-party tools or install skills supplied by an untrusted publisher?",
+    "review_focus": "Preserve genuine tool/skill threat evidence; coordination mentions must not displace it."
+  }
+]

@@ -48,11 +48,24 @@ def _validate_output(output, field, ids):
         raise ValueError('Business risks must be a list of strings')
 
 
+_LEGACY_FINGERPRINT_FIELDS = (
+    'schema_version', 'request', 'evidence', 'summary', 'business_insight',
+    'provenance', 'regulatory_checkpoint',
+)
+_REVIEW_FINGERPRINT_VERSION = 2
+
 def content_fingerprint(result):
-    """Bind reviews to inputs, source content, outputs, and execution versions."""
-    content = {k: result.get(k) for k in (
-        'schema_version', 'request', 'evidence', 'summary', 'business_insight', 'provenance',
-        'regulatory_checkpoint')}
+    """Hash versioned review content; preserve validation of saved v1 results."""
+    version = result.get('review_fingerprint_version', 1)
+    if version == 1:
+        # Exact historical projection, including nulls for absent optional fields.
+        content = {k: result.get(k) for k in _LEGACY_FINGERPRINT_FIELDS}
+    elif version == _REVIEW_FINGERPRINT_VERSION:
+        content = {k: v for k, v in result.items()
+                   if k not in {'human_review', 'approved', 'review_fingerprint',
+                                'review_fingerprint_version'}}
+    else:
+        raise ValueError('Unsupported review fingerprint version')
     return sha256(json.dumps(content, sort_keys=True, allow_nan=False).encode()).hexdigest()
 
 
@@ -99,7 +112,8 @@ def run_research(request, *, retrieve, summarize_fn, translate_fn=None, review_f
     else:
         summary = {'status': 'insufficient_evidence', 'query': request['query'],
                    'claims': [], 'limitations': ['No passages retrieved; generation skipped.']}
-    result = {'schema_version': '1.0', 'request': request, 'evidence': passages,
+    result = {'schema_version': '1.0', 'review_fingerprint_version': _REVIEW_FINGERPRINT_VERSION,
+              'request': request, 'evidence': passages,
               'summary': summary, 'human_review': {'status': 'pending', 'reviewer': None,
                                                  'notes': None}, 'approved': False,
               'provenance': deepcopy(provenance or {})}

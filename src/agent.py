@@ -7,7 +7,7 @@ import argparse
 import json
 
 from src.generation import create_generate
-from src.research_pipeline import run_research
+from src.research_pipeline import content_fingerprint, run_research
 from src.summarization import prompt_provenance, summarize
 
 
@@ -86,6 +86,9 @@ def ask_question(question: str, top_k: int = 5, *, retrieve=None, generate=None,
     result["answer"] = "\n\n".join(answer)
     result["sources"] = [{**evidence[chunk_id], "page": evidence[chunk_id].get("page_number")}
                          for chunk_id in cited]
+    # Bind the final baseline-agent presentation fields, not the intermediate
+    # pipeline result returned before answer/sources were assembled.
+    result["review_fingerprint"] = content_fingerprint(result)
     return result
 
 

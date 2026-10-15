@@ -10,6 +10,8 @@ from google import genai
 from google.genai import errors, types
 from pydantic import BaseModel, ConfigDict, Field
 
+from src.regulatory_validation import validate_assessment_data
+
 
 class Finding(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -136,21 +138,8 @@ def assess_insight(client, evidence):
 
 
 def _validate_findings(assessment, evidence):
-    """Apply the same citation/verdict gates on generation and later review."""
-    valid_ids = {source["source_id"] for source in evidence["sources"]}
-    findings = [getattr(assessment, key) for key in (
-        "regulatory_compliance", "legal_constraints", "governance", "operational_feasibility"
-    )]
-    for finding in findings:
-        if not set(finding.source_ids).issubset(valid_ids):
-            raise ValueError("Validator cited an unknown source ID.")
-        if finding.status != "unknown" and not finding.source_ids:
-            raise ValueError("Validator made a finding without cited evidence.")
-    statuses = {finding.status for finding in findings}
-    expected = ("conflicts" if "conflicts" in statuses else
-                "insufficient_evidence" if "unknown" in statuses else "potentially_feasible")
-    if assessment.verdict != expected:
-        raise ValueError("Validator verdict contradicts its individual findings.")
+    """Apply the shared citation/verdict gates on generation and later review."""
+    validate_assessment_data(assessment.model_dump(), evidence)
 
 
 def require_current_context(artifact, context):

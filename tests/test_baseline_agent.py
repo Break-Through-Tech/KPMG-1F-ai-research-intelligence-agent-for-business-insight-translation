@@ -2,7 +2,8 @@ import json
 import unittest
 from unittest.mock import patch
 
-from src import agent
+from src import agent, research_review
+from src.research_pipeline import require_current_review
 
 
 def passages():
@@ -40,6 +41,13 @@ class BaselineAgentTests(unittest.TestCase):
         self.assertEqual(result["sources"][0]["source"], "html")
         self.assertEqual(result["sources"][0]["section"], "results")
         self.assertIsNone(result["sources"][0]["page"])
+        require_current_review(result)
+        decided = research_review.record_human_decision(
+            result, reviewer="reviewer", decision="revise")
+        require_current_review(decided)
+        edited = dict(result, answer=result["answer"] + " edited")
+        with self.assertRaises(ValueError):
+            require_current_review(edited)
 
     def test_empty_retrieval_needs_no_provider_or_key(self):
         with patch.object(agent, "create_generate") as factory:

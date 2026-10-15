@@ -52,6 +52,20 @@ class ReviewTests(unittest.TestCase):
         require_pipeline_review(packet_decision)
         rr.require_current_review(direct)
 
+    def test_legacy_saved_fingerprint_remains_valid_and_upgrades_on_decision(self):
+        result = demo_result()
+        # Version 1 used a fixed projection with null defaults for absent fields.
+        result["review_fingerprint"] = content_fingerprint(result)
+        rr.require_current_review(result)
+        changed = deepcopy(result)
+        changed["evidence"][0]["text"] = "edited"
+        with self.assertRaises(ValueError):
+            rr.require_current_review(changed)
+        upgraded = rr.record_human_decision(
+            result, reviewer="Reviewer", decision="revise")
+        self.assertEqual(upgraded["review_fingerprint_version"], 2)
+        rr.require_current_review(upgraded)
+
     def test_extra_review_context_is_fingerprinted(self):
         packet = rr.make_review_packet({**demo_result(), "review_context": {"as_of": "2026-10-14"}})
         packet["review_context"]["as_of"] = "2026-10-15"

@@ -25,6 +25,8 @@ def make_review_packet(result: Dict[str, Any]) -> Dict[str, Any]:
     packet = deepcopy(result)
     packet["human_review"] = {"status": "pending", "reviewer": None, "notes": None}
     packet["approved"] = False
+    # A newly issued packet is always sealed with the full-content v2 contract.
+    packet["review_fingerprint_version"] = 2
     packet["review_fingerprint"] = _fingerprint(packet)
     return packet
 
@@ -54,6 +56,8 @@ def record_human_decision(result: Dict[str, Any], *, reviewer: str, decision: st
     updated = deepcopy(result)
     if updated.get("review_fingerprint") is not None:
         require_current_review(updated)
+    # Decisions upgrade validated historical v1 packets to full-content v2.
+    updated["review_fingerprint_version"] = 2
     if decision == "approve":
         verdict = _regulatory_verdict(updated)
         if verdict is not None and verdict != "potentially_feasible":

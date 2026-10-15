@@ -50,9 +50,10 @@ def _validate_output(output, field, ids):
 
 def content_fingerprint(result):
     """Bind reviews to inputs, source content, outputs, and execution versions."""
-    content = {k: result.get(k) for k in (
-        'schema_version', 'request', 'evidence', 'summary', 'business_insight', 'provenance',
-        'regulatory_checkpoint')}
+    # Share this content contract with the explicit human-review bridge. Include
+    # additive context/output fields, excluding only review metadata.
+    content = {k: v for k, v in result.items()
+               if k not in {'human_review', 'approved', 'review_fingerprint'}}
     return sha256(json.dumps(content, sort_keys=True, allow_nan=False).encode()).hexdigest()
 
 

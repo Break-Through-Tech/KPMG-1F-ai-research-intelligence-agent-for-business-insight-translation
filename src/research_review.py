@@ -1,18 +1,18 @@
 """Human review bridge for research results (Issue #81)."""
 from __future__ import annotations
 from copy import deepcopy
-from hashlib import sha256
-import json
 from typing import Any, Callable, Dict, Optional
 
-_REVIEW_KEYS = {"human_review", "approved", "review_fingerprint"}
+from src.regulatory_validation import (
+    validate_assessment_data, validate_checkpoint, validate_regulatory_evidence,
+)
+from src.research_pipeline import content_fingerprint
+
 _ALLOWED_DECISIONS = {"approve", "revise", "reject"}
 
 def _fingerprint(result: Dict[str, Any]) -> str:
-    """Bind review to every JSON-compatible result/context field, not review metadata."""
-    content = {key: value for key, value in result.items() if key not in _REVIEW_KEYS}
-    encoded = json.dumps(content, sort_keys=True, separators=(",", ":"), allow_nan=False)
-    return sha256(encoded.encode("utf-8")).hexdigest()
+    """Use the pipeline's canonical content fingerprint for interoperability."""
+    return content_fingerprint(result)
 
 def _require_dict(value: Any, name: str) -> Dict[str, Any]:
     if not isinstance(value, dict):
@@ -34,10 +34,11 @@ def _regulatory_verdict(result: Dict[str, Any]) -> Optional[str]:
         return None
     if not isinstance(checkpoint, dict):
         return "unresolved"
-    assessment = checkpoint.get("assessment")
-    if not isinstance(assessment, dict):
+    try:
+        assessment = validate_checkpoint(checkpoint)
+    except (TypeError, ValueError, KeyError):
         return "unresolved"
-    return assessment.get("verdict", "unresolved")
+    return assessment["verdict"]
 
 def record_human_decision(result: Dict[str, Any], *, reviewer: str, decision: str,
                           notes: Optional[str] = None) -> Dict[str, Any]:
@@ -72,6 +73,8 @@ def require_current_review(result: Dict[str, Any]) -> None:
         raise ValueError("Human review record is missing or invalid")
     if bool(result.get("approved")) != (review.get("status") == "approve"):
         raise ValueError("Approval flag does not match the explicit human decision")
+    if result.get("approved") and _regulatory_verdict(result) not in {None, "potentially_feasible"}:
+        raise ValueError("Conflicting or unresolved regulatory evidence blocks approval")
 
 def _draft_insight(draft: Dict[str, Any]) -> str:
     business = draft.get("business_insight")
@@ -85,7 +88,8 @@ def _draft_insight(draft: Dict[str, Any]) -> str:
                      and item["text"].strip())
 
 def review_adapter(draft: Dict[str, Any], *, retrieve_regulations_fn: Optional[Callable] = None,
-                   assess_insight_fn: Optional[Callable] = None, industry: Optional[str] = None,
+                   assess_insight_fn: Optional[Callable] = None, client: Any = None,
+                   industry: Optional[str] = None,
                    jurisdiction: Optional[str] = None, insight: Optional[str] = None,
                    as_of: Optional[str] = None) -> Dict[str, Any]:
     """Return a separate advisory regulatory bundle; it is never human approval.
@@ -115,22 +119,20 @@ def review_adapter(draft: Dict[str, Any], *, retrieve_regulations_fn: Optional[C
     if any(not isinstance(value, str) or not value.strip() for value in values.values()):
         result["reason"] = "Industry, insight, and jurisdiction are required for regulatory assessment."
         return result
+    if client is None:
+        raise ValueError("An initialized regulatory client is required for the existing checkpoint functions")
     kwargs = {"industry": industry, "insight": insight, "jurisdiction": jurisdiction}
     if as_of is not None:
         kwargs["as_of"] = as_of
-    evidence = retrieve_regulations_fn(None, **kwargs)
-    if not isinstance(evidence, dict) or not isinstance(evidence.get("sources"), list) or not isinstance(evidence.get("evidence"), list):
-        raise ValueError("Regulatory retrieval must return a source-backed evidence dictionary")
-    assessment_bundle = assess_insight_fn(None, deepcopy(evidence))
+    evidence = retrieve_regulations_fn(client, **kwargs)
+    validate_regulatory_evidence(evidence)
+    assessment_bundle = assess_insight_fn(client, deepcopy(evidence))
     if not isinstance(assessment_bundle, dict):
         raise ValueError("Regulatory assessment must return a dictionary")
     assessment = assessment_bundle.get("assessment")
+    validate_assessment_data(assessment, evidence)
     result["regulatory_evidence"] = deepcopy(evidence)
-    result["assessment"] = deepcopy(assessment) if isinstance(assessment, dict) else None
-    result["assessment_bundle"] = deepcopy(assessment_bundle)
-    if isinstance(assessment, dict) and assessment.get("verdict") in {"potentially_feasible", "conflicts", "insufficient_evidence"}:
-        result["status"] = "assessed"
-        result["summary"] = assessment.get("summary", result["summary"])
-    else:
-        result["reason"] = "Assessment is unresolved; human approval remains blocked."
+    result["assessment"] = deepcopy(assessment)
+    result["status"] = "assessed"
+    result["summary"] = assessment["summary"]
     return result

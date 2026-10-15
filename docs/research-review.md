@@ -16,7 +16,7 @@ reviewed = record_human_decision(
 require_current_review(reviewed)
 ```
 
-Allowed decisions are approve, revise, and reject. Only an explicit human approve sets approved=true. The packet remains pending by default; making a fresh packet resets any earlier approval. Review is bound to the complete result/context JSON except the review record itself. Changing request/context, evidence, summary, business insight, provenance, or regulatory checkpoint makes the old fingerprint fail; create and review a new packet. Treat the fingerprint as a change detector, not as an authenticated signature or immutable audit log.
+Allowed decisions are approve, revise, and reject. Only an explicit human approve sets approved=true. The packet remains pending by default; making a fresh packet resets any earlier approval. Review uses the shared src.research_pipeline.content_fingerprint contract and binds complete result/context JSON except review metadata, so packets and pipeline results interoperate. Changing request/context, evidence, summary, business insight, provenance, or regulatory checkpoint makes the old fingerprint fail; create and review a new packet. Treat the fingerprint as a change detector, not as an authenticated signature or immutable audit log.
 
 If a regulatory checkpoint is attached, approval is blocked unless its assessment verdict is potentially_feasible. Conflicting, insufficient, missing, or unrecognized assessments stay unresolved. A model verdict is advisory and never sets approved=true.
 
@@ -25,16 +25,17 @@ If a regulatory checkpoint is attached, approval is blocked unless its assessmen
 Pass the existing human_checkpoint functions rather than duplicating policy or API calls:
 
 ```python
-from src.human_checkpoint import retrieve_regulations, assess_insight
+from src.human_checkpoint import create_client, retrieve_regulations, assess_insight
 advisory = review_adapter(
     draft,
+    client=create_client(),  # initialized explicitly; API access is opt-in
     retrieve_regulations_fn=retrieve_regulations,
     assess_insight_fn=assess_insight,
     as_of="2026-10-14",  # optional; use the intended assessment date
 )
 ```
 
-The adapter derives industry and jurisdiction from request and insight from business implications unless explicitly passed. It requires all three before retrieval; missing context returns a pending advisory without invoking either function. It calls retrieve_regulations(client, industry=..., insight=..., jurisdiction=..., as_of=...) and then assess_insight(client, evidence). The resulting regulatory evidence bundle is separate from the original research passages and their chunk IDs. A stubbed or missing assessment is unresolved. Do not treat successful execution, a potentially_feasible model verdict, or cited paper passages as human approval.
+The adapter derives industry and jurisdiction from request and insight from business implications unless explicitly passed. It requires all three before retrieval; missing context returns a pending advisory without invoking either function. When context is complete, pass an explicitly initialized client; the adapter forwards it to retrieve_regulations(client, industry=..., insight=..., jurisdiction=..., as_of=...) and assess_insight(client, evidence). Both retrieval evidence and the full assessment schema, source citations, and verdict consistency are validated through shared dependency-free gates also used by human_checkpoint. The resulting regulatory evidence bundle is separate from the original research passages and their chunk IDs. Missing, malformed, conflicting, or insufficient assessments cannot pass approval. Do not treat successful execution, a potentially_feasible model verdict, or cited paper passages as human approval.
 
 ## Human handoff and limits
 

@@ -13,7 +13,11 @@ from src.evidence_led import summarize, translate
 QUERY = 'What should a business ask a vendor claiming their AI agent is "interpretable"?'
 QUOTE = 'First, pin down a behavior using a metric and data set.'
 PASSAGES = [{'chunk_id': '2604.00324v1_c0038', 'text': QUOTE,
-             'arxiv_id': '2604.00324v1', 'title': 'The Persistent Vulnerability of Aligned AI Systems'}]
+             'arxiv_id': '2604.00324v1', 'title': 'The Persistent Vulnerability of Aligned AI Systems',
+             'source': 'html', 'page_number': None,
+             'pdf_url': 'https://arxiv.org/pdf/2604.00324v1',
+             'source_url': 'https://arxiv.org/html/2604.00324v1',
+             'html_url': 'https://arxiv.org/html/2604.00324v1'}]
 GAP = 'The evidence does not establish vendor compliance or validation of the deployed system.'
 LEDGER = {'answerability': 'partial', 'coverage_gaps': [GAP], 'facts': [
     {'chunk_id': PASSAGES[0]['chunk_id'], 'quote': QUOTE,

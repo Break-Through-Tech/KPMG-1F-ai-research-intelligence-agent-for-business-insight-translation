@@ -13,7 +13,9 @@ from src.hybrid_retrieval import HybridRetriever
 class EvidenceLedTests(unittest.TestCase):
     def setUp(self):
         self.passages = [{'chunk_id':'a','text':'Binary DPO wins at 25% data. CU-DPO overtakes it at 50% data.',
-                          'arxiv_id':'paper-a','title':'Comparison'}]
+                          'arxiv_id':'paper-a','title':'Comparison', 'source':'pdf',
+                          'pdf_url':'https://example.com/paper-a.pdf',
+                          'source_url':'https://example.com/paper-a.pdf#page=1', 'page_number':1}]
         self.ledger = {'answerability':'partial','facts':[{'chunk_id':'a','quote':'Binary DPO wins at 25% data.',
              'finding':'Binary DPO has a low-data advantage.', 'relevance':'direct'}],
                        'coverage_gaps':['No comparison with all variants.']}

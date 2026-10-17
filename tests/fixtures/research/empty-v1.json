@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "request": {
+    "query": "How should the synthetic agents be evaluated?",
+    "top_k": 5,
+    "industry": "banking",
+    "jurisdiction": "US"
+  },
+  "evidence": [],
+  "summary": {
+    "status": "insufficient_evidence",
+    "query": "How should the synthetic agents be evaluated?",
+    "claims": [],
+    "limitations": [
+      "No passages retrieved; generation skipped."
+    ]
+  },
+  "business_insight": {
+    "status": "insufficient_evidence",
+    "industry": "banking",
+    "implications": [],
+    "risks": [],
+    "limitations": [
+      "No supported summary available; translation skipped."
+    ]
+  },
+  "human_review": {
+    "status": "pending",
+    "reviewer": null,
+    "notes": null
+  },
+  "approved": false
+}

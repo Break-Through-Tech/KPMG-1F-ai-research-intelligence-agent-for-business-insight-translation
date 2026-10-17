@@ -1,10 +1,13 @@
 """Offline collector boundary tests."""
 import argparse
+import csv
+from hashlib import sha256
 import json
 from pathlib import Path
 import tempfile
 import unittest
-from src.arxiv_collection import collect, parse_feed, identity
+from unittest.mock import patch
+from src.arxiv_collection import atomic_write, collect, parse_feed, identity
 
 def feed(ids, total=None):
     entries = ''.join(f'''<entry><id>http://arxiv.org/abs/{i}</id><title>Title {i}</title>
@@ -71,6 +74,69 @@ class CollectorTests(unittest.TestCase):
             self.assertEqual((r['new_versions'],r['candidate_records']),(1,2))
             with self.assertRaises(ValueError):
                 collect(args(temp,category='cs.CL'),http=FakeHTTP())
+
+    def test_exhausted_resume_repairs_interrupted_manifest_without_redownload(self):
+        with tempfile.TemporaryDirectory() as temp:
+            collect(args(temp,download=True),http=FakeHTTP(
+                [feed(['2601.00001v1'])],pdf=OSError('offline')))
+            out = Path(temp)
+
+            def interrupt_manifest(path, text):
+                if Path(path).name == 'manifest.json':
+                    raise OSError('interrupted publication')
+                atomic_write(path, text)
+
+            with patch('src.arxiv_collection.atomic_write', side_effect=interrupt_manifest):
+                with self.assertRaisesRegex(OSError, 'interrupted publication'):
+                    collect(args(temp,download=True),http=FakeHTTP())
+            checkpoint = json.loads((out/'checkpoint.json').read_text())
+            self.assertTrue(checkpoint['exhausted'])
+            row = checkpoint['records']['2601.00001v1']
+            self.assertEqual(row['download_status'], 'complete')
+            self.assertEqual(json.loads((out/'manifest.json').read_text())['papers'][0]
+                             ['download_status'], 'failed')
+
+            fake = FakeHTTP()
+            report = collect(args(temp,download=True),http=fake)
+            self.assertEqual(report['coverage_status'], 'window_exhausted')
+            self.assertEqual(report['downloads_existing'], 1)
+            self.assertEqual(report['downloads_completed'], 0)
+            self.assertEqual(fake.calls, [])
+            manifest = json.loads((out/'manifest.json').read_text())
+            self.assertEqual(manifest['papers'], [row])
+            self.assertEqual(sha256((out/row['pdf_path']).read_bytes()).hexdigest(),
+                             manifest['papers'][0]['pdf_sha256'])
+
+    def test_exhausted_metadata_only_resume_restores_missing_exports(self):
+        with tempfile.TemporaryDirectory() as temp:
+            collect(args(temp),http=FakeHTTP([feed(['2601.00001v1'])]))
+            out = Path(temp)
+            for name in ('metadata.jsonl', 'metadata.csv', 'manifest.json'):
+                (out/name).unlink()
+            fake = FakeHTTP()
+            report = collect(args(temp),http=fake)
+            self.assertEqual(report['coverage_status'], 'window_exhausted')
+            self.assertEqual(fake.calls, [])
+            row = json.loads((out/'metadata.jsonl').read_text())
+            with (out/'metadata.csv').open(newline='') as source:
+                self.assertEqual(list(csv.DictReader(source)), [row])
+            manifest = json.loads((out/'manifest.json').read_text())
+            checkpoint = json.loads((out/'checkpoint.json').read_text())
+            self.assertEqual(manifest['papers'], list(checkpoint['records'].values()))
+            self.assertEqual(manifest['metadata_csv_sha256'],
+                             sha256((out/'metadata.csv').read_bytes()).hexdigest())
+
+    def test_exhausted_dry_run_does_not_repair_exports_or_mutate_files(self):
+        with tempfile.TemporaryDirectory() as temp:
+            collect(args(temp,download=True),http=FakeHTTP([feed(['2601.00001v1'])]))
+            out = Path(temp)
+            (out/'manifest.json').unlink()
+            before = {p.relative_to(out): p.read_bytes() for p in out.rglob('*') if p.is_file()}
+            fake = FakeHTTP()
+            collect(args(temp,dry_run=True,download=True),http=fake)
+            after = {p.relative_to(out): p.read_bytes() for p in out.rglob('*') if p.is_file()}
+            self.assertEqual(after, before)
+            self.assertEqual(fake.calls, [])
 
     def test_empty_page_not_false_completion(self):
         with tempfile.TemporaryDirectory() as temp:

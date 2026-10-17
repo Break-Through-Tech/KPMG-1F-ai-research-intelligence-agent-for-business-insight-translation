@@ -32,6 +32,11 @@ also capped per invocation by `--max-results`; `downloads_deferred` means more
 work remains. Existing validated files are reused. Only one writer may use a
 candidate directory at once; do not run concurrent collectors there.
 
+The checkpoint is authoritative. Every completed non-dry invocation republishes
+metadata and the manifest from it, including exhausted resumes that reuse all
+PDFs. If interrupted between output writes, rerun with the same filters/output
+to repair missing or stale exports; the files are not a multi-file atomic snapshot.
+
 Dry run discovers over the network but creates no directories, manifests,
 checkpoints or caches. Keywords are case-insensitive **AND** filters on abstracts;
 `--query` supplies an optional arXiv API query expression. IDs/versions remain

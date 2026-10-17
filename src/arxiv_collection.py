@@ -255,6 +255,9 @@ def collect(args, *, http=None):
     report['candidate_records'] = len(records)
     report['pending_download_failures'] = sum(r['download_status']=='failed' for r in records.values())
     if not args.dry_run:
+        # Repair exports after an interrupted save, even if discovery is exhausted
+        # and every PDF was reused. The checkpoint is the authoritative state.
+        save()
         atomic_write(out/'report.json',json.dumps(report,indent=2)+'\n')
     return report
 

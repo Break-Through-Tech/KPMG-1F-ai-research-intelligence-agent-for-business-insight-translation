@@ -15,6 +15,10 @@ The canonical Challenge Project Overview places prompt work in Week 7, evaluatio
 - **Current pipeline:** PRs #108–#111 have merged; #109 added exact-once candidate-ID ranking. The scoped q03/q10 proof is not a substitute for broader benchmark coverage.
 - **Open work:** [#76](https://github.com/Break-Through-Tech/KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation/issues/76) (source-specific shared contracts) and [#81](https://github.com/Break-Through-Tech/KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation/issues/81) (research-review bridge) are Ready; #81 is assigned to Teegawende12, #76 is unassigned. [#106](https://github.com/Break-Through-Tech/KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation/issues/106) remains open for retrieval-quality acceptance.
 
+## Cross-cutting role
+
+**Jacqueline — rogue operator (cross-cutting R&D):** independently explores interesting technical problems, research, experiments, and prototypes across the project rather than owning a fixed delivery lane. Retrieval/ranking is one possible area, not a standing assignment. Coordinate when work overlaps with someone else’s changes or affects a shared interface; no running activity report or prior approval is expected for exploration.
+
 ## Six parallel lanes
 
 ### 1. UI/UX interface
@@ -43,7 +47,7 @@ The canonical Challenge Project Overview places prompt work in Week 7, evaluatio
 
 ### 3. Retrieval and ranking quality
 
-**Owner candidate:** Jacqueline, based on #106/#109, if she wants this technical-review lane; implementation ownership/capacity to be confirmed.
+**Owner:** seek a volunteer; Jacqueline is not the designated owner. Her prior work on #106/#109 is relevant experience, not a commitment to this lane.
 
 - **Week 7:** Freeze query sets and current retrieval/ranking baseline after #109. Separate development queries from holdout/adverse queries.
 - **Week 8:** Diagnose misses by intent and evidence type; distinguish ranking failure from corpus absence and downstream extraction failure.
@@ -112,7 +116,7 @@ The canonical Challenge Project Overview places prompt work in Week 7, evaluatio
 
 1. Find a UI volunteer; pair with a pipeline consumer for the Week 9 adapter.
 2. Ask Alesha whether she can lead evaluation and identify an independent reviewer.
-3. Ask whether Jacqueline wants to own or review retrieval/ranking acceptance.
+3. Find a retrieval/ranking owner; Jacqueline remains cross-cutting rather than assigned to this lane.
 4. Confirm Jooheon for the evidence-grounded output lane and Khoi for #76 consumer/contract work.
 5. Keep Teegawende12 on assigned #81 unless she requests a change.
 6. Nominate an integration coordinator for the Week 11 E2E and Week 12 package; no availability is assumed.

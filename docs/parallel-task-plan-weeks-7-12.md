@@ -19,6 +19,24 @@ The canonical Challenge Project Overview places prompt work in Week 7, evaluatio
 
 **Jacqueline — rogue operator (cross-cutting R&D):** independently explores interesting technical problems, research, experiments, and prototypes across the project rather than owning a fixed delivery lane. Retrieval/ranking is one possible area, not a standing assignment. Coordinate when work overlaps with someone else’s changes or affects a shared interface; no running activity report or prior approval is expected for exploration.
 
+## This week's assigned work — 2026-10-17
+
+The following Week 7 kickoff issues are now assigned at Jacqueline's request. These concrete weekly increments supersede the candidate-owner discussion below for this cycle; they do not assign six-week commitments. The roadmap places Week 7 in October without exact calendar dates, so no calendar deadline is inferred.
+
+Three paired workstreams: James/Latifa on the interface; Alesha/Khoi on evaluation and retrieval; Jooheon/Teegawende on grounded outputs and review. Jacqueline remains independent cross-cutting R&D, researching peer-team architectures and useful feature candidates.
+
+| Contributor | This week | Issue |
+| --- | --- | --- |
+| James (@James-Zhu1) | Build a fixture-backed local research interface | [#119](https://github.com/Break-Through-Tech/KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation/issues/119) |
+| Latifa (@latiifkaa) | Design the query-to-evidence flow and interface acceptance cases | [#120](https://github.com/Break-Through-Tech/KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation/issues/120) |
+| Alesha (@ralesh10) | Capture a reproducible baseline and source-backed evaluation scorecard | [#121](https://github.com/Break-Through-Tech/KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation/issues/121) |
+| Khoi (@ngkhoi111) | Diagnose retrieval misses and exercise shared-contract failure cases | [#122](https://github.com/Break-Through-Tech/KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation/issues/122) |
+| Jooheon (@leejooheonn) | Audit grounded outputs and test a bounded prompt refinement | [#123](https://github.com/Break-Through-Tech/KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation/issues/123) |
+| Teegawende (@Teegawende12) | Validate review packets and contract handoffs on the integrated workflow | [#124](https://github.com/Break-Through-Tech/KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation/issues/124) |
+| Jacqueline (@jjjhenriksen) | Research peer-team architectures and bring back useful feature candidates | [#125](https://github.com/Break-Through-Tech/KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation/issues/125) |
+
+Current-state correction (2026-10-17): #76, #81, and #106 are closed, delivered through #115, #113, and #114 respectively. The weekly issues build on those implementations, not a repeat of the historical open-work snapshot or Week 7 tasks below. PRs #116–#118 remain open experiments and are linked in Jacqueline's research issue; no measured production improvement or acceptance is implied.
+
 ## Six parallel lanes
 
 ### 1. UI/UX interface

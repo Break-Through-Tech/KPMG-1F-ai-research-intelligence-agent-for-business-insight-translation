@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+  <title>Research desk · 1F</title>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to research desk</a>
+  <header class="masthead"><a href="/" class="brand">1F <span>Research intelligence</span></a><span>Local fixture demo · No live execution</span></header>
+  <main id="main">
+    <section class="intro">
+      <h1>Research desk</h1>
+      <p>Inspect the evidence. Understand the limits. Keep the human in the loop.</p>
+    </section>
+    <form id="research-form">
+      <label for="query">Research question</label>
+      <textarea id="query" name="query" rows="2" required maxlength="2000">How should the synthetic agents be evaluated?</textarea>
+      <div class="controls">
+        <div><label for="scenario">Example state</label><select id="scenario" name="scenario">
+          <option value="full">Full draft</option>
+          <option value="partial">Partial · summary only</option>
+          <option value="insufficient">Abstention · insufficient support</option>
+          <option value="empty">No evidence</option>
+          <option value="provider-error">Provider error (simulated)</option>
+        </select></div>
+        <button id="submit" type="submit">Inspect example <span aria-hidden="true">→</span></button>
+      </div>
+      <p class="note">Your question is not executed. Every state uses a fixed synthetic example, not real research or advice.</p>
+    </form>
+    <p id="feedback" role="status" aria-live="polite">Choose a state and inspect an example to begin.</p>
+    <section id="output" aria-label="Research example" aria-busy="false"></section>
+    <noscript>This local interface requires JavaScript. No provider credentials are needed.</noscript>
+  </main>
+  <footer>1F / AI Studio <span>Drafts are unapproved. Source links are example locators, not verified papers.</span></footer>
+</body>
+</html>

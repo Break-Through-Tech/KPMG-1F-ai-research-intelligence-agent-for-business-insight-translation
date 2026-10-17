@@ -23,11 +23,11 @@ The canonical Challenge Project Overview places prompt work in Week 7, evaluatio
 
 The following Week 7 kickoff issues are now assigned at Jacqueline's request. These concrete weekly increments supersede the candidate-owner discussion below for this cycle; they do not assign six-week commitments. The roadmap places Week 7 in October without exact calendar dates, so no calendar deadline is inferred.
 
-Three paired workstreams: James/Latifa on the interface; Alesha/Khoi on evaluation and retrieval; Jooheon/Teegawende on grounded outputs and review. Jacqueline remains independent cross-cutting R&D, researching peer-team architectures and useful feature candidates.
+Three paired workstreams: Jacqueline/Latifa on the interface; Alesha/Khoi on evaluation and retrieval; Jooheon/Teegawende on grounded outputs and review. Jacqueline also retains cross-cutting R&D, researching peer-team architectures and useful feature candidates, alongside the local-interface issue she has taken on.
 
 | Contributor | This week | Issue |
 | --- | --- | --- |
-| James (@James-Zhu1) | Build a fixture-backed local research interface | [#119](https://github.com/Break-Through-Tech/KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation/issues/119) |
+| Jacqueline (@jjjhenriksen) | Build a fixture-backed local research interface | [#119](https://github.com/Break-Through-Tech/KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation/issues/119) |
 | Latifa (@latiifkaa) | Design the query-to-evidence flow and interface acceptance cases | [#120](https://github.com/Break-Through-Tech/KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation/issues/120) |
 | Alesha (@ralesh10) | Capture a reproducible baseline and source-backed evaluation scorecard | [#121](https://github.com/Break-Through-Tech/KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation/issues/121) |
 | Khoi (@ngkhoi111) | Diagnose retrieval misses and exercise shared-contract failure cases | [#122](https://github.com/Break-Through-Tech/KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation/issues/122) |

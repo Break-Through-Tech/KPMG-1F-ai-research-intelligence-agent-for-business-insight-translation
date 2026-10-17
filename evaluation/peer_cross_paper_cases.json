@@ -1,0 +1,45 @@
+[
+  {
+    "query_id": "peer_multi_agents",
+    "query": "Compare the trip-planning orchestration study with the collaborative agents-and-critics network-telemetry study: how do their coordination designs and evaluation targets differ, and why do they not establish a universal multi-agent advantage?",
+    "label_status": "agent-authored development obligations, not independent human labels",
+    "required_evidence": [
+      {"arxiv_id":"2605.00276v1", "chunk_id":"2605.00276v1_c0000", "quote":"77.4% accuracy on the TOP Benchmark"},
+      {"arxiv_id":"2604.00319v1", "chunk_id":"2604.00319v1_c0000", "quote":"no inter-agent or inter-critic communication"}
+    ],
+    "comparison_dimensions": ["orchestration versus central-server agent/critic feedback", "trip-route optimality versus multimodal telemetry costs", "different tasks and metrics preclude a pooled effect size"],
+    "allowed_conclusion": "Task-specific evidence, not a universal single-versus-multi-agent claim."
+  },
+  {
+    "query_id": "peer_security_labels",
+    "query": "Compare evidence quality in ClawHub Security Signals and Constitutional Black-Box Monitoring for Scheming: what is labelled, how is ground truth determined, and what should not be inferred across the two studies?",
+    "label_status": "agent-authored development obligations, not independent human labels",
+    "required_evidence": [
+      {"arxiv_id":"2606.01494v1", "chunk_id":"2606.01494v1_c0000", "quote":"labels are the registry’s automated verdicts, not human-annotated ground truth"},
+      {"arxiv_id":"2603.00829v2", "chunk_id":"2603.00829v2_c0003", "quote":"ground truth is determined by executable tests rather than model judgment"}
+    ],
+    "comparison_dimensions": ["skill artifacts versus externally observable agent trajectories", "silver registry labels versus executable environment tests", "scanner disagreement is not malicious prevalence or agent-scheming detection accuracy"],
+    "allowed_conclusion": "Complementary security surfaces with different label-generation processes."
+  },
+  {
+    "query_id": "peer_latency_settings",
+    "query": "Compare ORCA's CT visual-token compression with Move the Query, Not the Cache: which latency bottlenecks do they target, and why should their speedup claims not be treated as directly comparable end-to-end gains?",
+    "label_status": "agent-authored development obligations, not independent human labels",
+    "required_evidence": [
+      {"arxiv_id":"2608.00345v1", "chunk_id":"2608.00345v1_c0019", "quote":"End-to-end report time moves little across budgets"},
+      {"arxiv_id":"2606.01502v1", "chunk_id":"2606.01502v1_c0000", "quote":"tens-of-microsecond round trip"}
+    ],
+    "comparison_dimensions": ["visual prefill tokens versus cross-instance attention transfer", "decode-dominated CT reports versus multi-node H100 routed queries", "different hardware, task and denominator"],
+    "allowed_conclusion": "Do not multiply or directly compare these speedups."
+  },
+  {
+    "query_id": "peer_missing_source",
+    "query": "Compare the original Attention Is All You Need architecture paper with ORCA on representation and computational cost, grounding claims in both original papers.",
+    "label_status": "agent-authored missing-source control, not independent human labels",
+    "required_evidence": [
+      {"arxiv_id":"1706.03762v7", "absent_from_corpus":true},
+      {"arxiv_id":"2608.00345v1", "chunk_id":"2608.00345v1_c0000", "quote":"a token compressor for 3D CT"}
+    ],
+    "allowed_conclusion": "Partial evidence or abstain: the original architecture paper is absent. A citation in another paper is not that original source."
+  }
+]

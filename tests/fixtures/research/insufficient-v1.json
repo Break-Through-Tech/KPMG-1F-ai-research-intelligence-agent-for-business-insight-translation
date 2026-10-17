@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0",
+  "request": {
+    "query": "How should the synthetic agents be evaluated?",
+    "top_k": 5,
+    "industry": "banking",
+    "jurisdiction": "US"
+  },
+  "evidence": [
+    {
+      "chunk_id": "synthetic-html-1",
+      "text": "Synthetic agents need task-specific evaluation.",
+      "distance": 0.25,
+      "arxiv_id": "synthetic",
+      "title": "Synthetic fixture, not a paper",
+      "pdf_url": "https://example.com/fixture.pdf",
+      "source": "html",
+      "source_url": "https://example.com/fixture#results",
+      "page_number": null,
+      "html_url": "https://example.com/fixture#results",
+      "section": "results"
+    },
+    {
+      "chunk_id": "synthetic-pdf-2",
+      "text": "Synthetic evidence requires human checks.",
+      "distance": 0.5,
+      "arxiv_id": "synthetic",
+      "title": "Synthetic fixture, not a paper",
+      "pdf_url": "https://example.com/fixture.pdf",
+      "source": "pdf",
+      "source_url": "https://example.com/fixture.pdf#page=2",
+      "page_number": 2
+    }
+  ],
+  "summary": {
+    "status": "insufficient_evidence",
+    "query": "How should the synthetic agents be evaluated?",
+    "claims": [],
+    "limitations": [
+      "Synthetic passages do not establish the requested business outcome."
+    ]
+  },
+  "business_insight": {
+    "status": "insufficient_evidence",
+    "industry": "banking",
+    "implications": [],
+    "risks": [],
+    "limitations": [
+      "No supported summary available; translation skipped."
+    ]
+  },
+  "human_review": {
+    "status": "pending",
+    "reviewer": null,
+    "notes": null
+  },
+  "approved": false
+}

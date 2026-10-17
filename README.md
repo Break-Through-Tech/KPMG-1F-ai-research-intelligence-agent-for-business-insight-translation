@@ -62,6 +62,9 @@ Example search result fields: `chunk_id`, `text`, `distance`, `arxiv_id`, `title
 
 ## Research workflow (draft interface v1)
 
+Shared JSON types, source-specific citation validation, callable signatures, and
+offline fixtures are documented in [Research contracts](docs/research-contracts.md).
+
 Run an entirely offline, synthetic end-to-end example (standard library only):
 
 ```bash

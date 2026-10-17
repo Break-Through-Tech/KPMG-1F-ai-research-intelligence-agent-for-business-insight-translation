@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0",
+  "base_fixture": "normal-v1.json",
+  "mutations": [
+    {
+      "name": "unknown-summary-citation",
+      "path": [
+        "summary",
+        "claims",
+        0,
+        "chunk_ids"
+      ],
+      "value": [
+        "unknown"
+      ]
+    },
+    {
+      "name": "unknown-business-citation",
+      "path": [
+        "business_insight",
+        "implications",
+        0,
+        "chunk_ids"
+      ],
+      "value": [
+        "unknown"
+      ]
+    },
+    {
+      "name": "negative-pdf-page",
+      "path": [
+        "evidence",
+        1,
+        "page_number"
+      ],
+      "value": -1
+    },
+    {
+      "name": "html-invented-page",
+      "path": [
+        "evidence",
+        0,
+        "page_number"
+      ],
+      "value": 1
+    },
+    {
+      "name": "pdf-wrong-location",
+      "path": [
+        "evidence",
+        1,
+        "source_url"
+      ],
+      "value": "https://example.com/fixture.pdf#page=99"
+    },
+    {
+      "name": "html-lost-heading",
+      "path": [
+        "evidence",
+        0,
+        "source_url"
+      ],
+      "value": "https://example.com/fixture"
+    }
+  ]
+}

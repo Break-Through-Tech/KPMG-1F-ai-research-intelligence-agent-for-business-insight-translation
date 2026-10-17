@@ -1,6 +1,6 @@
 # KPMG AI Research Intelligence Agent for Business Insight Translation
 
-Break Through Tech AI Studio project with KPMG. The current prototype ingests a fixed sample of public arXiv papers and supports **local, citation-bearing passage retrieval**. A draft research workflow and JSON CLI are available; business translation and review accept independently developed adapters. A user interface and human-scored evaluation remain planned work. Search results are not generated answers.
+Break Through Tech AI Studio project with KPMG. The current prototype ingests a fixed sample of public arXiv papers and supports **local, citation-bearing passage retrieval**. A draft research workflow and JSON CLI are available; business translation and review accept independently developed adapters. A fixture-backed local interface is available; live UI integration and human-scored evaluation remain planned work. Search results are not generated answers.
 
 ## Current pipeline
 
@@ -64,6 +64,12 @@ Example search result fields: `chunk_id`, `text`, `distance`, `arxiv_id`, `title
 
 Shared JSON types, source-specific citation validation, callable signatures, and
 offline fixtures are documented in [Research contracts](docs/research-contracts.md).
+
+To inspect the draft interface in a browser, run `python -m src.research_demo`
+and open `http://127.0.0.1:8765`. This **fixture-only demo needs no installed
+dependencies or keys** and never runs retrieval or generation. See the
+[local interface walkthrough](docs/local-research-interface.md) for full,
+partial, abstention, no-evidence, and simulated provider-error examples.
 
 Run an entirely offline, synthetic end-to-end example (standard library only):
 

@@ -6,6 +6,7 @@ semantic support, reviewer identity, or approval. Additive metadata is preserved
 from copy import deepcopy
 import json
 import math
+import re
 from typing import Literal, TypedDict
 from urllib.parse import urlsplit
 
@@ -29,7 +30,7 @@ class _Passage(TypedDict):
     arxiv_id: str | None
     title: str
     pdf_url: str | None
-    source: Literal['html', 'pdf', 'synthetic']
+    source: Literal['html', 'pdf', 'tex', 'synthetic']
     source_url: str | None
     page_number: int | None
 
@@ -39,6 +40,10 @@ class EvidencePassage(_Passage, total=False):
     html_url: str
     section: str
     subsection: str
+    source_file: str
+    source_sha256: str
+    line_start: int
+    line_end: int
 
 
 class ResearchClaim(TypedDict):
@@ -156,8 +161,8 @@ def validate_evidence(passages):
         if not _text(p.get('title')) or 'page_number' not in p:
             raise ValueError('Evidence requires title and explicit page_number')
         source = p.get('source')
-        if not isinstance(source, str) or source not in {'pdf', 'html', 'synthetic'}:
-            raise ValueError('Evidence source must be pdf, html, or synthetic')
+        if not isinstance(source, str) or source not in {'pdf', 'html', 'tex', 'synthetic'}:
+            raise ValueError('Evidence source must be pdf, html, tex, or synthetic')
         distance = p.get('distance')
         if distance is not None and (isinstance(distance, bool)
                 or not isinstance(distance, (int, float)) or not math.isfinite(distance)):
@@ -183,6 +188,19 @@ def validate_evidence(passages):
             if (location._replace(fragment='') != pdf
                     or location.fragment not in {'', f'page={page}'}):
                 raise ValueError('PDF source_url must match pdf_url and page_number')
+        elif source == 'tex':
+            if page is not None or p.get('html_url') is not None:
+                raise ValueError('TeX evidence has no HTML or PDF page locator')
+            if p['source_url'] != f"https://arxiv.org/src/{p['arxiv_id']}":
+                raise ValueError('TeX source_url must match arxiv_id')
+            if (not _text(p.get('source_file')) or not isinstance(p.get('source_sha256'), str)
+                    or not re.fullmatch(r'[0-9a-f]{64}', p['source_sha256'])):
+                raise ValueError('TeX evidence requires source_file and archive SHA256')
+            for key in ('line_start', 'line_end'):
+                if isinstance(p.get(key), bool) or not isinstance(p.get(key), int) or p[key] < 1:
+                    raise ValueError('TeX evidence requires positive source line numbers')
+            if p['line_end'] < p['line_start']:
+                raise ValueError('Invalid TeX source line range')
         else:
             if page is not None:
                 raise ValueError('HTML page_number must be null')

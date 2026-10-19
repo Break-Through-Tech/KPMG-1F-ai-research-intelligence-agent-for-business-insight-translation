@@ -47,3 +47,5 @@ coverage.xml
 *.swp
 *.swo
 *~
+
+/data/tex/

@@ -16,6 +16,24 @@ let previewTimer;
 let activeDemo = null;
 let savedResult = null;
 let liveSynthesis = false;
+let conversationHistory = [];
+let activePaperContextId = null;
+
+function rememberAcceptedTurn(query, demo) {
+  if (!isSynthesis(demo) || !activePaperContextId ||
+      demo.result?.provenance?.paper_context_id !== activePaperContextId) return;
+  const summary = demo.result.summary;
+  const content = Array.from([...(summary.claims || []).map(claim => claim.text),
+    ...(summary.limitations || [])].join('\n\n')).slice(0, 6000).join('');
+  if (!content.trim()) return;
+  conversationHistory.push({role: 'user', content: Array.from(query).slice(0, 2000).join('')},
+    {role: 'assistant', content});
+  while (conversationHistory.length > 12 ||
+    conversationHistory.reduce((total, message) => total + message.content.length, 0) > 24000) {
+    conversationHistory.splice(0, 2);
+  }
+}
+
 const isSynthesis = demo => demo.mode === 'live-synthesis' || demo.result?.summary.generation_method === 'cited-synthesis-v1';
 const isReal = demo => demo.mode !== 'fixture';
 const runLabel = demo => {
@@ -366,18 +384,28 @@ form.addEventListener('submit', async event => {
   output.setAttribute('aria-busy', 'true');
   feedback.textContent = loading;
   turn.scrollIntoView({block: 'start'});
+  let contextRecoveryMessage = null;
   try {
     const response = await fetch(liveSynthesis ? '/api/research' : '/api/demo', {
       method: 'POST', headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({query, scenario: form.elements.scenario.value}),
+      body: JSON.stringify({query, scenario: form.elements.scenario.value,
+        ...(liveSynthesis ? {history: conversationHistory, paper_context_id: activePaperContextId} : {})}),
       signal: AbortSignal.timeout(liveSynthesis ? 330000 : 10000),
     });
     const demo = await response.json();
-    if (!response.ok) throw new Error(demo.error || 'Request rejected.');
+    if (!response.ok) {
+      if (liveSynthesis && demo.code === 'paper_changed') {
+        conversationHistory = [];
+        activePaperContextId = demo.paper_context_id || null;
+        contextRecoveryMessage = 'The loaded paper changed. Previous conversation context was cleared. Your question is unchanged; select Ask paper again to ask about the current paper.';
+      }
+      throw new Error('Request rejected.');
+    }
     renderDemo(demo, number, answer);
+    if (liveSynthesis) rememberAcceptedTurn(query, demo);
     if (demo.result && form.elements.query.value === query) form.elements.query.value = '';
   } catch {
-    const message = liveSynthesis ? 'Synthesis unavailable or citation validation failed. No answer was accepted. Your question is unchanged; retry when ready.' : 'Could not load the local example. Check that the demo server is running, then retry. Your question is unchanged.';
+    const message = contextRecoveryMessage || (liveSynthesis ? 'Synthesis unavailable or citation validation failed. No answer was accepted. Your question is unchanged; retry when ready.' : 'Could not load the local example. Check that the demo server is running, then retry. Your question is unchanged.');
     answer.replaceChildren(element('h2', liveSynthesis ? 'Answer unavailable' : 'Example unavailable'), element('p', message, 'error'));
     feedback.textContent = message;
     feedback.classList.remove('sr-only');
@@ -396,16 +424,18 @@ Promise.all(['/api/config', '/api/saved-result'].map(async url => {
   return response.json();
 })).then(([config, demo]) => {
   liveSynthesis = config.live;
+  activePaperContextId = config.paper_context_id || null;
   if (liveSynthesis) {
     document.querySelector('.demo-settings').hidden = true;
     document.querySelector('#welcome h2').textContent = 'Ask about this paper.';
-    document.querySelector('#demo-note').textContent = 'Live LLM synthesis · This paper only · Each question is independent.';
+    document.querySelector('#demo-note').textContent = 'Live LLM synthesis · This paper only · Recent successful turns included; older context may be dropped.';
     document.querySelector('.rail-note').textContent = 'Inspect source quotes and the original paper. Citations are not proof of support.';
     submit.firstChild.textContent = 'Ask paper';
     form.elements.query.value = 'What does this paper suggest about AI agents’ ability to improve AI training?';
   }
   if (!demo) return;
   savedResult = demo;
+  if (liveSynthesis) rememberAcceptedTurn(demo.result.request.query, demo);
   if (liveSynthesis) form.elements.query.value = '';
   document.querySelector('.demo-settings').hidden = true;
   document.querySelector('#welcome').hidden = true;

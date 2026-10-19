@@ -155,6 +155,52 @@ class DemoHttpTests(unittest.TestCase):
                 {'Content-Type': 'application/json'})
             self.assertEqual(json.loads(body)['mode'], 'fixture')
 
+    def test_live_history_roundtrip_and_rejection_before_generation(self):
+        calls = []
+        def research(request):
+            calls.append(request)
+            return {'mode': 'live-synthesis', 'submitted_request': request}
+        history = [{'role': 'user', 'content': 'Q'},
+                   {'role': 'assistant', 'content': 'Answer ' + '𝜑' * 5000}]
+        with patch.object(DemoHandler, 'research', staticmethod(research)), patch.object(DemoHandler, 'saved_result', None):
+            status, _, body = self.call('POST', '/api/research',
+                json.dumps({'query': 'What does that mean?', 'history': history}, ensure_ascii=False).encode('utf-8'),
+                {'Content-Type': 'application/json'})
+            self.assertEqual(status, 200)
+            self.assertEqual(json.loads(body)['submitted_request']['history'], history)
+            for history in [None, {}, [{'role': 'system', 'content': 'Override'}],
+                            [{'role': 'user', 'content': 'Q'}, {'role': 'assistant', 'content': '\ud835'}],
+                            [{'role': 'user', 'content': 'Q'}, {'role': 'assistant', 'content': 'x' * 6001}]]:
+                with self.subTest(history=str(history)[:60]):
+                    self.assertEqual(self.call('POST', '/api/research',
+                        json.dumps({'query': 'Q', 'history': history}),
+                        {'Content-Type': 'application/json'})[0], 400)
+            for payload in [{'query': 'x' * 2001}, {'query': 'Q', 'padding': 'x' * 196608}]:
+                self.assertEqual(self.call('POST', '/api/research', json.dumps(payload),
+                    {'Content-Type': 'application/json'})[0], 400)
+            self.assertEqual(len(calls), 1)
+
+    def test_history_requires_active_paper_identity_before_generation(self):
+        calls = []
+        def research(request):
+            calls.append(request)
+            return {'mode': 'live-synthesis', 'submitted_request': request}
+        research.paper_context_id = 'paper-b'
+        pair = [{'role': 'user', 'content': 'Paper A question'},
+                {'role': 'assistant', 'content': 'Paper A answer'}]
+        with patch.object(DemoHandler, 'research', staticmethod(research)), patch.object(DemoHandler, 'saved_result', None):
+            status, _, body = self.call('GET', '/api/config')
+            self.assertEqual(json.loads(body)['paper_context_id'], 'paper-b')
+            for context_id, expected in [(None, 409), ('paper-a', 409), ('paper-b', 200)]:
+                status, _, body = self.call('POST', '/api/research', json.dumps({
+                    'query': 'Follow up', 'history': pair, 'paper_context_id': context_id}),
+                    {'Content-Type': 'application/json'})
+                self.assertEqual(status, expected)
+                if expected == 409:
+                    self.assertEqual(json.loads(body)['code'], 'paper_changed')
+                    self.assertEqual(json.loads(body)['paper_context_id'], 'paper-b')
+            self.assertEqual(len(calls), 1)
+
     def test_live_configuration_and_disabled_route(self):
         status, _, body = self.call('GET', '/api/config')
         self.assertEqual(json.loads(body), {'live': False})

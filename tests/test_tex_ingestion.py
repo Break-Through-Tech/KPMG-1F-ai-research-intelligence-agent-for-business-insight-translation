@@ -174,3 +174,28 @@ class TexIngestionTests(unittest.TestCase):
         for key, value in (('line_start', 0), ('line_end', -1), ('source_url', ROW['pdf_url'])):
             with self.subTest(key=key), self.assertRaises(ValueError):
                 citation_metadata({**chunk, key: value})
+
+    def test_corrupt_deflate_download_continues_and_cached_source_uses_pdf(self):
+        from unittest.mock import MagicMock
+        bad = bytes.fromhex('1f8b0800000000000003ff')
+        with self.assertRaisesRegex(ValueError, 'Corrupt gzip'):
+            tex.read_source(bad)
+        good = archive({'main.tex': ROOT.replace(r'\input{sections/results}', RESULT)})
+        response = MagicMock()
+        response.__enter__.return_value = response
+        response.status_code = 200
+        response.iter_content.side_effect = [[bad], [good]]
+        second = {**ROW, 'arxiv_id': '2601.00002v1'}
+        with tempfile.TemporaryDirectory() as directory, \
+             patch.object(config, 'TEX_DIR', Path(directory)), \
+             patch.object(tex.requests, 'get', return_value=response):
+            tex.download_sources([ROW, second], delay=0)
+            self.assertFalse(tex.cache_path(AID).exists())
+            self.assertEqual(tex.cache_path(second['arxiv_id']).read_bytes(), good)
+            tex.cache_path(AID).write_bytes(bad)
+            pages = [{'page': 2, 'text': 'Valid PDF fallback evidence. ' * 30}]
+            with patch.object(pipeline, 'load_html', return_value=None), \
+                 patch.object(pipeline, 'resolve_pdf_path', return_value=Path(directory) / 'paper.pdf'), \
+                 patch.object(pipeline, 'extract_pages', return_value=pages):
+                result = pipeline.process_and_store([ROW], Path(directory) / 'out.parquet', use_tex=True)
+                self.assertEqual(set(result.source), {'pdf'})

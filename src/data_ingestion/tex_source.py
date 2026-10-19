@@ -7,6 +7,7 @@ import re
 import tarfile
 import tempfile
 import time
+import zlib
 
 import requests
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -44,8 +45,11 @@ def read_source(data):
     if not data or len(data) > MAX_ARCHIVE:
         raise ValueError("Empty or oversized source archive")
     if data.startswith(b'\x1f\x8b'):
-        with gzip.GzipFile(fileobj=io.BytesIO(data)) as stream:
-            data = stream.read(MAX_EXPANDED + 1)
+        try:
+            with gzip.GzipFile(fileobj=io.BytesIO(data)) as stream:
+                data = stream.read(MAX_EXPANDED + 1)
+        except zlib.error as error:
+            raise ValueError('Corrupt gzip source') from error
         if len(data) > MAX_EXPANDED:
             raise ValueError("Expanded source exceeds limit")
     files = {}

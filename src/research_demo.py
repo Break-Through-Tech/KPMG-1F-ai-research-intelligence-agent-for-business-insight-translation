@@ -107,7 +107,11 @@ class DemoHandler(BaseHTTPRequestHandler):
             self.respond(403, {'error': 'Use the local research page.'})
             return
         if self.path == '/api/config':
-            self.respond(200, {'live': self.research is not None})
+            config = {'live': self.research is not None}
+            context_id = getattr(self.research, 'paper_context_id', None)
+            if context_id:
+                config['paper_context_id'] = context_id
+            self.respond(200, config)
             return
         if self.path == '/api/saved-result':
             self.respond(200, self.saved_result)
@@ -154,6 +158,9 @@ class DemoHandler(BaseHTTPRequestHandler):
             if self.path == '/api/research':
                 request = validate_request({'query': payload.get('query'),
                     'history': validate_history(payload.get('history', []))})
+                context_id = getattr(self.research, 'paper_context_id', None)
+                if request['history'] and context_id and payload.get('paper_context_id') != context_id:
+                    raise ValueError('Conversation belongs to a different or unknown paper.')
                 if len(request['query']) > 2000:
                     raise ValueError('Question exceeds 2000 characters.')
             else:

@@ -17,9 +17,11 @@ let activeDemo = null;
 let savedResult = null;
 let liveSynthesis = false;
 let conversationHistory = [];
+let activePaperContextId = null;
 
 function rememberAcceptedTurn(query, demo) {
-  if (!isSynthesis(demo) || !demo.result) return;
+  if (!isSynthesis(demo) || !activePaperContextId ||
+      demo.result?.provenance?.paper_context_id !== activePaperContextId) return;
   const summary = demo.result.summary;
   const content = [...(summary.claims || []).map(claim => claim.text),
     ...(summary.limitations || [])].join('\n\n').slice(0, 6000);
@@ -386,7 +388,7 @@ form.addEventListener('submit', async event => {
     const response = await fetch(liveSynthesis ? '/api/research' : '/api/demo', {
       method: 'POST', headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({query, scenario: form.elements.scenario.value,
-        ...(liveSynthesis ? {history: conversationHistory} : {})}),
+        ...(liveSynthesis ? {history: conversationHistory, paper_context_id: activePaperContextId} : {})}),
       signal: AbortSignal.timeout(liveSynthesis ? 330000 : 10000),
     });
     const demo = await response.json();
@@ -414,6 +416,7 @@ Promise.all(['/api/config', '/api/saved-result'].map(async url => {
   return response.json();
 })).then(([config, demo]) => {
   liveSynthesis = config.live;
+  activePaperContextId = config.paper_context_id || null;
   if (liveSynthesis) {
     document.querySelector('.demo-settings').hidden = true;
     document.querySelector('#welcome h2').textContent = 'Ask about this paper.';

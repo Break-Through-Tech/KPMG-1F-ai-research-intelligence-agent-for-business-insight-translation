@@ -114,6 +114,19 @@ class SynthesisTests(unittest.TestCase):
         self.assertEqual(pair[0]['content'], 'Q')
         self.assertEqual(validate_history([]), [])
 
+    def test_paper_identity_is_stable_and_binds_source_text(self):
+        generate = lambda p: json.dumps(ANSWER)
+        original = PaperResearch(PASSAGES, generate, {})
+        duplicate = PaperResearch(deepcopy(PASSAGES), generate, {})
+        different = deepcopy(PASSAGES)
+        different[0]['text'] += ' Different paper context.'
+        changed = PaperResearch(different, generate, {})
+        self.assertEqual(original.paper_context_id, duplicate.paper_context_id)
+        self.assertNotEqual(original.paper_context_id, changed.paper_context_id)
+        result = original({'query': 'Q'})['result']
+        self.assertEqual(result['provenance']['paper_context_id'], original.paper_context_id)
+        validate_result(result)
+
     def test_history_does_not_bleed_between_calls(self):
         prompts = []
         def generate(prompt):

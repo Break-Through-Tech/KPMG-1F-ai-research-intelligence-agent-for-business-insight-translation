@@ -134,6 +134,8 @@ class PaperResearch:
         validate_evidence(passages)
         self.passages, self.generate, self.metadata = passages, generate, metadata
         self.source = source
+        self.paper_context_id = sha256(json.dumps(
+            passages, sort_keys=True, ensure_ascii=True).encode()).hexdigest()
 
     def __call__(self, request):
         # History is caller-scoped context, not retrievable evidence or server session state.
@@ -143,6 +145,7 @@ class PaperResearch:
             summarize_fn=lambda q, ps: synthesize(q, ps, generate=self.generate, history=history),
             provenance={'execution': 'local_paper_llm_synthesis', 'generation': self.metadata,
                         'retriever': 'full_bounded_paper_context_no_vector_index',
+                        'paper_context_id': self.paper_context_id,
                         'source_file': self.source})
         return {'mode': 'live-synthesis', 'scenario': 'full' if result['summary']['status'] == 'ok'
                 else 'insufficient', 'submitted_request': result['request'],

@@ -103,8 +103,12 @@ History is scoped to the browser page, limited to the most recent six complete
 successful turns and 24,000 characters; each retained assistant answer is capped at
 6,000 characters. Oldest pairs are dropped first, and the UI discloses that older
 context may be dropped. Failed requests and fixtures are never added. Reloading
-seeds context from the displayed saved synthesis answer only, not the full earlier
-conversation. No localStorage, cookies, persistent chat sessions, or cross-paper
+seeds context from the displayed saved synthesis answer only when its paper-context
+identity matches the active paper, not the full earlier conversation. Mismatched or
+unknown saved identities seed no history. The identity hashes the complete bounded
+evidence (text and source metadata), not just a filename. History-bearing HTTP
+requests must also carry that identity, preventing a stale tab from forwarding
+context after the server switches papers. No localStorage, cookies, persistent chat sessions, or cross-paper
 memory are added. The live endpoint accepts at most 192 KiB (fixture stays 16 KiB),
 rejects malformed/oversized history before generation, and keeps the 2,000-character
 question limit. Roles are restricted to alternating user/assistant pairs; no system

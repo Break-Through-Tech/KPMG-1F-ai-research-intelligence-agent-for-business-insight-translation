@@ -10,9 +10,9 @@ import time
 import zlib
 
 import requests
-from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from . import config as cfg
+from .tex_chunking import split_tex
 
 MAX_ARCHIVE = 16 * 1024 * 1024
 MAX_EXPANDED = 32 * 1024 * 1024
@@ -152,19 +152,17 @@ def source_blocks(data):
 def chunk_source(data, aid, title=''):
     url = source_url(aid)
     digest = hashlib.sha256(data).hexdigest()
-    splitter = RecursiveCharacterTextSplitter(chunk_size=1800, chunk_overlap=250,
-        separators=['\n\n', '\n', ' ', ''], add_start_index=True)
     chunks = []
     for name, first_line, text in source_blocks(data):
-        for document in splitter.create_documents([text]):
-            offset = document.metadata['start_index']
+        for piece in split_tex(text):
+            offset = piece['start_index']
             start = first_line + text.count('\n', 0, offset)
-            end = start + document.page_content.count('\n')
+            end = start + piece['text'].count('\n')
             chunks.append(dict(chunk_id=f'{aid}_c{len(chunks):04d}', arxiv_id=aid,
                 source='tex', source_url=url, page_number=None,
                 source_file=name, line_start=start, line_end=end, source_sha256=digest,
-                section='', text=document.page_content,
-                text_with_context=f'{title} | {name}:{start}-{end}\n\n{document.page_content}'))
+                section='', text=piece['text'], oversized_math=piece['oversized_math'],
+                text_with_context=f'{title} | {name}:{start}-{end}\n\n{piece['text']}'))
     if not chunks:
         raise ValueError("No usable TeX document body")
     return chunks

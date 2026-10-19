@@ -73,8 +73,7 @@ def citation_metadata(row):
             raise ValueError("HTML chunks require html_url")
         metadata.update(html_url=html_url, source_url=html_url)
     elif source == "tex":
-        from src.data_ingestion.tex_source import source_url
-        url = source_url(metadata["arxiv_id"])
+        url = f"https://arxiv.org/src/{metadata['arxiv_id']}"
         if _source_text(row, "source_url") != url:
             raise ValueError("TeX chunks require the matching arXiv source URL")
         metadata["source_url"] = url
@@ -88,6 +87,10 @@ def citation_metadata(row):
             if isinstance(value, bool) or value is None or pd.isna(value) or int(value) != value or value < 1:
                 raise ValueError(f"TeX chunks require a positive {field}")
             metadata[field] = int(value)
+        flag = row.get('oversized_math', False)
+        if not pd.api.types.is_bool(flag):
+            raise ValueError('oversized_math must be boolean')
+        metadata['oversized_math'] = bool(flag)
         if metadata['line_end'] < metadata['line_start']:
             raise ValueError("Invalid TeX line range")
     else:

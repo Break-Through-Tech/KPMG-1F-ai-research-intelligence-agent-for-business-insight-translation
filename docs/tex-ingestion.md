@@ -23,8 +23,7 @@ remove the affected cache deliberately before retrying acquisition.
 Chunks retain raw document-body TeX (including math delimiters and commands),
 with comments and the preamble omitted. This is **not** rendered prose or a full
 TeX interpreter: no macro expansion, bibliography processing, package semantics,
-conditional evaluation, verbatim interpretation, or equation-boundary-aware
-splitting is supplied. Macro-generated/conditional includes and documents
+conditional evaluation or verbatim interpretation is supplied. Macro-generated/conditional includes and documents
 requiring other encodings are unsupported. TeX with these constructs should use
 the HTML/PDF route. As with any source, ingestion does not certify semantic
 fidelity, completeness, or model claim support.
@@ -33,8 +32,17 @@ TeX citations carry `source=tex`, `source_url=https://arxiv.org/src/<id>`,
 `source_file`, 1-based `line_start`/`line_end`, and `source_sha256` for the exact
 archive bytes. `page_number` is null. Source URLs identify the bundle, **not** a
 fabricated browser line anchor; file/line ranges locate text inside that bundle.
-The preamble remains recoverable from the archive. Long text/math can span
-multiple overlapping chunks. The existing retrieval adapter and evidence
+The preamble remains recoverable from the archive. Prose uses overlapping soft-size chunks. Explicit inline/display math and common
+`equation`, `align`, `alignat`, `flalign`, `gather`, `multline`, `eqnarray`,
+`displaymath`, and `math` environments (including starred variants) are atomic:
+chunk boundaries do not bisect them. Nearby preceding prose remains with an
+equation where possible. A chunk exceeding the 1800-character target to retain
+math is marked `oversized_math=true` and keeps its file/line locator. Individual
+math spans above 32768 characters or unclosed delimiters fail the TeX source
+and use PDF fallback. Macro-generated math is not recognized; equation
+interpretation remains separate. Model-context packing also treats TeX passages
+as atomic: if a whole passage cannot fit the per-passage or total budget, it
+and lower-ranked passages are omitted and reported, not silently truncated. The existing retrieval adapter and evidence
 contract preserve these locators; no UI or preview changes are part of this PR.
 
 Malformed/unusable TeX falls back to PDF. If no source produces chunks for any

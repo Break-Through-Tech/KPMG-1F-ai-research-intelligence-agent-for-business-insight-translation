@@ -199,3 +199,62 @@ class TexIngestionTests(unittest.TestCase):
                  patch.object(pipeline, 'extract_pages', return_value=pages):
                 result = pipeline.process_and_store([ROW], Path(directory) / 'out.parquet', use_tex=True)
                 self.assertEqual(set(result.source), {'pdf'})
+
+    def test_math_is_atomic_even_when_larger_than_target_chunk(self):
+        from src.data_ingestion.tex_chunking import split_tex
+        expressions = [r'\[' + 'x + ' * 600 + r'y\]',
+                       '$$' + 'x + ' * 600 + 'y$$',
+                       r'\begin{align*}' + 'x + ' * 600 + r'y\end{align*}',
+                       r'\begin {equation}' + 'x + ' * 600 + r'y\end {equation}',
+                       r'\(' + 'x + ' * 600 + r'y\)',
+                       '$' + 'x + ' * 600 + 'y$']
+        for expression in expressions:
+            with self.subTest(delimiter=expression[:15]):
+                text = ('Definitions and assumptions. ' * 90 + '\n' + expression
+                        + '\n' + 'Consequences of this equation. ' * 90)
+                pieces = list(split_tex(text))
+                owners = [piece for piece in pieces if expression in piece['text']]
+                self.assertTrue(owners)
+                self.assertTrue(all(piece['oversized_math'] for piece in owners))
+                for piece in pieces:
+                    self.assertEqual(piece['text'], text[piece['start_index']:piece['start_index'] + len(piece['text'])])
+                    if 'x + ' in piece['text']:
+                        self.assertIn(expression, piece['text'])
+                self.assertTrue(any('Definitions' in piece['text'] for piece in owners))
+
+    def test_unterminated_or_pathologically_large_math_is_rejected(self):
+        from src.data_ingestion import tex_chunking
+        for text in (r'\[unclosed', r'\begin{equation}unclosed', '$unclosed'):
+            with self.subTest(text=text), self.assertRaises(ValueError):
+                list(tex_chunking.split_tex(text))
+        with patch.object(tex_chunking, 'MAX_MATH', 20), self.assertRaises(ValueError):
+            list(tex_chunking.split_tex(r'\[' + 'x' * 30 + r'\]'))
+        pieces = list(tex_chunking.split_tex(r'Costs 10\% and \$5. ' * 200))
+        self.assertFalse(any(piece['oversized_math'] for piece in pieces))
+
+    def test_tex_citation_helper_in_direct_script_import_environment(self):
+        import json, subprocess, sys
+        data = archive({'main.tex': ROOT.replace(r'\input{sections/results}', RESULT)})
+        chunk = {**tex.chunk_source(data, AID)[0], **ROW}
+        script = Path(__file__).resolve().parents[1] / 'src' / 'retrieval.py'
+        command = ("import runpy,json; namespace=runpy.run_path(" + repr(str(script))
+                   + "); print(json.dumps(namespace['citation_metadata']("
+                   + repr(chunk) + ")))" )
+        result = subprocess.run([sys.executable, '-I', '-c', command],
+                                capture_output=True, text=True, timeout=60)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(json.loads(result.stdout)['source'], 'tex')
+
+    def test_generation_context_omits_tex_instead_of_truncating_math(self):
+        from src.summarization import _build_context
+        text = r'\[' + 'x + ' * 600 + r'y\]'
+        passage = dict(source='tex', chunk_id='eq', text=text)
+        for context_limit, passage_limit in ((5000, 500), (500, 5000)):
+            context, included, omitted = _build_context([passage], context_limit, passage_limit)
+            self.assertEqual(context, '')
+            self.assertEqual(included, [])
+            self.assertEqual(omitted, ['eq'])
+        context, included, omitted = _build_context([passage], 5000, 5000)
+        self.assertIn(text, context)
+        self.assertFalse(included[0][1])
+        self.assertFalse(omitted)

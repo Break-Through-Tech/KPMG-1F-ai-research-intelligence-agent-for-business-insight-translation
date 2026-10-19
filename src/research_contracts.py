@@ -44,6 +44,7 @@ class EvidencePassage(_Passage, total=False):
     source_sha256: str
     line_start: int
     line_end: int
+    oversized_math: bool
 
 
 class ResearchClaim(TypedDict):
@@ -189,6 +190,8 @@ def validate_evidence(passages):
                     or location.fragment not in {'', f'page={page}'}):
                 raise ValueError('PDF source_url must match pdf_url and page_number')
         elif source == 'tex':
+            if 'oversized_math' in p and not isinstance(p['oversized_math'], bool):
+                raise ValueError('oversized_math must be boolean')
             if page is not None or p.get('html_url') is not None:
                 raise ValueError('TeX evidence has no HTML or PDF page locator')
             if p['source_url'] != f"https://arxiv.org/src/{p['arxiv_id']}":

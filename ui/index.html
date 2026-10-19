@@ -6,36 +6,49 @@
   <meta name="color-scheme" content="light dark">
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <script src="/vendor/katex/katex.min.js" defer></script>
+  <script src="/math.js" defer></script>
   <script src="/app.js" defer></script>
   <title>Research desk · 1F</title>
 </head>
 <body>
-  <a class="skip" href="#main">Skip to research desk</a>
-  <header class="masthead"><a href="/" class="brand">1F <span>Research intelligence</span></a><span>Local fixture demo · No live execution</span></header>
-  <main id="main">
-    <section class="intro">
-      <h1>Research desk</h1>
-      <p>Inspect the evidence. Understand the limits. Keep the human in the loop.</p>
-    </section>
-    <form id="research-form">
-      <label for="query">Research question</label>
-      <textarea id="query" name="query" rows="2" required maxlength="2000">How should the synthetic agents be evaluated?</textarea>
-      <div class="controls">
-        <div><label for="scenario">Example state</label><select id="scenario" name="scenario">
-          <option value="full">Full draft</option>
-          <option value="partial">Partial · summary only</option>
-          <option value="insufficient">Abstention · insufficient support</option>
-          <option value="empty">No evidence</option>
-          <option value="provider-error">Provider error (simulated)</option>
-        </select></div>
-        <button id="submit" type="submit">Inspect example <span aria-hidden="true">→</span></button>
+  <a class="skip" href="#query">Skip to research question</a>
+  <header class="masthead">
+    <h1>1F <span>/</span> Research desk</h1>
+    <div class="header-tools"><details class="demo-settings"><summary>Demo options</summary><div class="settings-content"><label for="scenario">Example state</label><select id="scenario" name="scenario" form="research-form">
+              <option value="full">Full draft</option>
+              <option value="partial">Partial · summary only</option>
+              <option value="insufficient">Abstention · insufficient support</option>
+              <option value="empty">No evidence</option>
+              <option value="provider-error">Provider error (simulated)</option>
+            </select><p class="meta">Choose a prepared example. No live research runs.</p></div></details></div>
+  </header>
+  <div class="app-shell">
+    <main id="main">
+      <div id="conversation" class="conversation" aria-label="Example conversation" tabindex="-1">
+        <div id="welcome" class="welcome"><h2>Explore a research example.</h2><p>Read an answer. Follow a citation when you need the source.</p></div>
+        <div id="output" aria-busy="false"></div>
       </div>
-      <p class="note">Your question is not executed. Every state uses a fixed synthetic example, not real research or advice.</p>
-    </form>
-    <p id="feedback" role="status" aria-live="polite">Choose a state and inspect an example to begin.</p>
-    <section id="output" aria-label="Research example" aria-busy="false"></section>
-    <noscript>This local interface requires JavaScript. No provider credentials are needed.</noscript>
-  </main>
-  <footer>1F / AI Studio <span>Drafts are unapproved. Source links are example locators, not verified papers.</span></footer>
+      <div class="composer-area">
+        <p id="feedback" class="sr-only" role="status" aria-live="polite">Choose an example state to begin.</p>
+        <form id="research-form">
+          <label for="query" class="sr-only">Research question</label>
+          <textarea id="query" name="query" rows="2" required maxlength="2000" placeholder="Ask a follow-up…" aria-describedby="demo-note">How should the synthetic agents be evaluated?</textarea>
+          <div class="controls">
+            <button id="submit" type="submit">View example<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 19V5m-6 6 6-6 6 6"/></svg></button>
+          </div>
+        </form>
+        <p id="demo-note" class="meta">Synthetic demo · Questions are not executed.</p>
+        <noscript>This local interface requires JavaScript. No provider credentials are needed.</noscript>
+      </div>
+    </main>
+    <dialog id="evidence-panel" aria-labelledby="evidence-heading">
+      <div class="rail-head"><h2 id="evidence-heading" tabindex="-1">Source context</h2><button id="evidence-close" class="quiet icon-button" aria-label="Close source context"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></svg></button></div>
+      <div id="evidence-content"><p class="meta rail-empty">Select a citation in an answer to inspect its supporting passage here.</p></div>
+      <p class="rail-note meta">Synthetic passages. Links are example locators, not verified papers.</p>
+    </dialog>
+  </div>
+  <div id="citation-preview" popover="manual" role="dialog" aria-label="Citation preview"></div>
 </body>
 </html>

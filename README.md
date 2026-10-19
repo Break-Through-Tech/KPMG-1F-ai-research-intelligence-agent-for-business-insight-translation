@@ -69,7 +69,10 @@ To inspect the draft interface in a browser, run `python -m src.research_demo`
 and open `http://127.0.0.1:8765`. This **fixture-only demo needs no installed
 dependencies or keys** and never runs retrieval or generation. See the
 [local interface walkthrough](docs/local-research-interface.md) for full,
-partial, abstention, no-evidence, and simulated provider-error examples.
+partial, abstention, no-evidence, and simulated provider-error examples, plus
+explicit opt-in single-paper Codex synthesis, saved-result replay, citation
+previews, and source-math rendering. Live mode is separate from the fixture API
+and the persistent ingestion/index pipeline.
 
 Run an entirely offline, synthetic end-to-end example (standard library only):
 

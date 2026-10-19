@@ -80,12 +80,14 @@ class DemoHttpTests(unittest.TestCase):
             connection.close()
 
     def test_assets_and_unknown_paths(self):
-        for path in ['/', '/app.js', '/styles.css']:
+        for path in ['/', '/app.js', '/math.js', '/styles.css', '/vendor/katex/katex.min.js',
+                     '/vendor/katex/katex.min.css', '/vendor/katex/fonts/KaTeX_Main-Regular.woff2']:
             status, headers, body = self.call('GET', path)
             self.assertEqual(status, 200)
             self.assertTrue(body)
             self.assertEqual(headers['Cache-Control'], 'no-store')
-        for path in ['/../.env', '/tests/fixtures/research/invalid-v1.json', '/api/live']:
+        for path in ['/../.env', '/tests/fixtures/research/invalid-v1.json', '/api/live',
+                     '/vendor/katex/../../src/research_demo.py', '/vendor/katex/%2e%2e/.env']:
             self.assertEqual(self.call('GET', path)[0], 404)
 
     def test_api_validates_input_and_keeps_demo_error_separate(self):
@@ -99,6 +101,46 @@ class DemoHttpTests(unittest.TestCase):
             self.assertEqual(self.call('POST', '/api/demo', payload,
                                       {'Content-Type': 'application/json'})[0], 400)
         self.assertEqual(self.call('POST', '/api/demo', '{}')[0], 415)
+
+    def test_saved_result_view_is_separate_from_fixture_execution(self):
+        status, _, body = self.call('GET', '/api/saved-result')
+        self.assertEqual(status, 200)
+        self.assertIsNone(json.loads(body))
+        saved = {**load_demo({'query': 'Q'}, 'full'), 'mode': 'saved-real-result'}
+        with patch.object(DemoHandler, 'saved_result', saved):
+            status, _, body = self.call('GET', '/api/saved-result')
+            self.assertEqual(status, 200)
+            self.assertEqual(json.loads(body), saved)
+            status, _, body = self.call('POST', '/api/demo',
+                json.dumps({'query': 'Q', 'scenario': 'full'}),
+                {'Content-Type': 'application/json'})
+            self.assertEqual(json.loads(body)['mode'], 'fixture')
+
+    def test_live_configuration_and_disabled_route(self):
+        status, _, body = self.call('GET', '/api/config')
+        self.assertEqual(json.loads(body), {'live': False})
+        self.assertEqual(self.call('POST', '/api/research', '{}',
+            {'Content-Type': 'application/json'})[0], 503)
+
+    def test_live_route_rejects_cross_site_and_handles_failure_without_leaking(self):
+        def research(request):
+            if request['query'] == 'fail':
+                raise RuntimeError('secret provider details')
+            return {'mode': 'live-synthesis', 'submitted_request': request}
+        with patch.object(DemoHandler, 'research', staticmethod(research)), patch.object(DemoHandler, 'saved_result', None):
+            status, _, body = self.call('POST', '/api/research', '{"query":"Q"}',
+                {'Content-Type': 'application/json'})
+            self.assertEqual(status, 200)
+            self.assertEqual(json.loads(body)['mode'], 'live-synthesis')
+            self.assertEqual(self.call('POST', '/api/research', '{"query":"Q"}',
+                {'Content-Type': 'application/json', 'Origin': 'https://untrusted.example'})[0], 403)
+            status, _, body = self.call('POST', '/api/research', '{"query":"fail"}',
+                {'Content-Type': 'application/json'})
+            self.assertEqual(status, 502)
+            self.assertNotIn(b'secret', body)
+            with DemoHandler.research_lock:
+                self.assertEqual(self.call('POST', '/api/research', '{"query":"Q"}',
+                    {'Content-Type': 'application/json'})[0], 409)
 
 
 if __name__ == '__main__':

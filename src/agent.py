@@ -13,6 +13,8 @@ from src.summarization import prompt_provenance, summarize
 
 def source_location(hit):
     """Retain the actual retrieved source; HTML has sections, not PDF pages."""
+    if hit.get("source") == "tex":
+        return f"{hit['source_url']} ({hit['source_file']}:{hit['line_start']}-{hit['line_end']})"
     if hit.get("source") == "html":
         url = hit.get("source_url") or hit.get("html_url")
         section = " / ".join(str(hit[k]) for k in ("section", "subsection") if hit.get(k))

@@ -1,5 +1,7 @@
 from pathlib import Path
 import tempfile
+import argparse
+import tarfile
 import pandas as pd
 
 from . import config as cfg
@@ -8,12 +10,14 @@ from .download import download_pdfs, download_html, load_html, resolve_pdf_path
 from .html_parser import parse_html_sections
 from .pdf_parser import extract_pages
 from .chunking import chunk_html_sections, chunk_document
+from .tex_source import MAX_ARCHIVE, cache_path, chunk_source, download_sources
 
 
 # Task 4.4: Deduplication & Storage
 def process_and_store(
     metadata_list: list[dict],
     output_path: Path | None = None,
+    *, use_tex: bool = False,
 ) -> pd.DataFrame:
     """Publish only a complete corpus; preserve the previous output on failure."""
     if not metadata_list:
@@ -43,11 +47,23 @@ def process_and_store(
             except Exception as e:
                 print(f"[HTML parse failed] {aid}: {e}")
 
-        # 2) PDF fallback only when HTML produced no usable chunks.
+        # Opt-in TeX fallback: never compile or pretend source lines are PDF pages.
+        if not chunks and use_tex:
+            try:
+                path = cache_path(aid)
+                if path.exists():
+                    with path.open("rb") as stream:
+                        chunks = chunk_source(stream.read(MAX_ARCHIVE + 1), aid, row["title"])
+                    source = "tex"
+            except (OSError, ValueError, EOFError, tarfile.TarError) as error:
+                print(f"[TeX unavailable] {aid}: {error}")
+
+        # PDF fallback only when higher-priority sources produced no chunks.
         if not chunks:
             pdf_path = resolve_pdf_path(aid)
             if pdf_path is None:
-                failures.append(f"{aid}: no usable HTML or local PDF")
+                reason = "no usable HTML or local PDF" if not use_tex else "no usable HTML, TeX, or local PDF"
+                failures.append(f"{aid}: {reason}")
                 continue
             try:
                 pages = extract_pages(str(pdf_path))
@@ -92,10 +108,15 @@ def process_and_store(
 
 
 def main():
+    parser = argparse.ArgumentParser(description="HTML/PDF ingestion with opt-in raw TeX fallback")
+    parser.add_argument('--with-tex', action='store_true', help='Download and use raw TeX between HTML and PDF')
+    args = parser.parse_args()
     metadata = load_metadata()
+    if args.with_tex:
+        download_sources(metadata)
     download_pdfs(metadata)       # fallback source
     download_html(metadata)       # skips cached, remembers 404s
-    process_and_store(metadata)
+    process_and_store(metadata, use_tex=args.with_tex)
 
 
 if __name__ == "__main__":

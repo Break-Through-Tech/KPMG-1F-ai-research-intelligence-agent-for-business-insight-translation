@@ -85,6 +85,11 @@ _MAPPING_FIELDS = (
     "source_url",
     "pdf_url",
     "html_url",
+    "source_file",
+    "source_sha256",
+    "line_start",
+    "line_end",
+    "oversized_math",
     "page_number",
     "section",
     "subsection",
@@ -174,12 +179,18 @@ def _build_context(
     for index, passage in enumerate(passages):
         text = passage["text"]
         truncated = False
+        if passage.get('source') == 'tex' and len(text) > max_passage_chars:
+            omitted = [p['chunk_id'] for p in passages[index:]]
+            break
         if len(text) > max_passage_chars:
             text = _truncate(text, max_passage_chars)
             truncated = True
         block = _render_block(passage, text)
 
         if len(block) > remaining:
+            if passage.get('source') == 'tex':
+                omitted = [p['chunk_id'] for p in passages[index:]]
+                break
             if blocks:
                 omitted = [p["chunk_id"] for p in passages[index:]]
                 break

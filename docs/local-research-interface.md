@@ -86,8 +86,11 @@ python -m src.research_demo --port 8768 \
 ```
 
 The page now executes **Ask paper** questions against the full bounded paper
-context, not canned answers or the persistent vector index. Each question is
-independent; prior conversation is not supplied. The selected model synthesizes
+context, not canned answers or the persistent vector index. The browser sends recent
+successful question/answer pairs to `/api/research`; the server validates and passes
+that history to the synthesis prompt so follow-ups can refer to earlier discussion.
+History is untrusted context, **not evidence**: every new claim still requires
+supporting quotes from the loaded paper. The selected model synthesizes
 findings, explicitly labeled interpretations, and cited scope/limitations.
 Every paragraph requires known evidence IDs and supporting quotes. The server
 checks quote membership against the actual evidence text and rejects the whole answer
@@ -95,6 +98,18 @@ on invalid output. This is **not semantic entailment verification**; the UI says
 so and lets readers inspect each quote alongside the claim and full PDF page.
 All outputs remain pending and unapproved. The most recent accepted result is
 kept in server memory for reloads, not written to the repository or a database.
+
+History is scoped to the browser page, limited to the most recent six complete
+successful turns and 24,000 characters; each retained assistant answer is capped at
+6,000 characters. Oldest pairs are dropped first, and the UI discloses that older
+context may be dropped. Failed requests and fixtures are never added. Reloading
+seeds context from the displayed saved synthesis answer only, not the full earlier
+conversation. No localStorage, cookies, persistent chat sessions, or cross-paper
+memory are added. The live endpoint accepts at most 192 KiB (fixture stays 16 KiB),
+rejects malformed/oversized history before generation, and keeps the 2,000-character
+question limit. Roles are restricted to alternating user/assistant pairs; no system
+or tool messages are accepted. Prompt instructions are a guardrail, not proof that
+model outputs are semantically correct or immune to injection.
 
 The server stays on loopback, checks loopback Host/Origin before all reads and writes, rejects cross-site requests, serializes model
 calls, and exposes no provider credentials. The configured Codex text-only adapter

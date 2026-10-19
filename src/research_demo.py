@@ -8,6 +8,7 @@ from urllib.parse import urlsplit
 import mimetypes
 
 from src.research_contracts import validate_request, validate_result
+from src.paper_conversation import validate_history
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / 'tests' / 'fixtures' / 'research'
@@ -141,8 +142,9 @@ class DemoHandler(BaseHTTPRequestHandler):
             return
         try:
             length = int(self.headers.get('Content-Length', '0'))
-            if not 0 < length <= 16384:
-                raise ValueError('Request must be between 1 and 16384 bytes.')
+            limit = 196608 if self.path == '/api/research' else 16384
+            if not 0 < length <= limit:
+                raise ValueError('Request exceeds the local endpoint limit.')
             payload = json.loads(self.rfile.read(length))
             if not isinstance(payload, dict):
                 raise ValueError('Request must be an object.')
@@ -150,11 +152,14 @@ class DemoHandler(BaseHTTPRequestHandler):
             if not isinstance(scenario, str):
                 raise ValueError('Scenario must be a string.')
             if self.path == '/api/research':
-                request = validate_request({'query': payload.get('query')})
+                request = validate_request({'query': payload.get('query'),
+                    'history': validate_history(payload.get('history', []))})
+                if len(request['query']) > 2000:
+                    raise ValueError('Question exceeds 2000 characters.')
             else:
                 response = load_demo({'query': payload.get('query')}, scenario)
         except (ValueError, TypeError):
-            self.respond(400, {'error': 'Enter a nonempty query and choose a valid demo scenario.'})
+            self.respond(400, {'error': 'Enter a question (up to 2000 characters) and valid bounded conversation history or demo scenario.'})
             return
         if self.path == '/api/research':
             if not self.research_lock.acquire(blocking=False):

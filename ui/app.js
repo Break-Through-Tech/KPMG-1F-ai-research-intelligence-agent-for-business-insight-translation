@@ -16,6 +16,22 @@ let previewTimer;
 let activeDemo = null;
 let savedResult = null;
 let liveSynthesis = false;
+let conversationHistory = [];
+
+function rememberAcceptedTurn(query, demo) {
+  if (!isSynthesis(demo) || !demo.result) return;
+  const summary = demo.result.summary;
+  const content = [...(summary.claims || []).map(claim => claim.text),
+    ...(summary.limitations || [])].join('\n\n').slice(0, 6000);
+  if (!content.trim()) return;
+  conversationHistory.push({role: 'user', content: query.slice(0, 2000)},
+    {role: 'assistant', content});
+  while (conversationHistory.length > 12 ||
+    conversationHistory.reduce((total, message) => total + message.content.length, 0) > 24000) {
+    conversationHistory.splice(0, 2);
+  }
+}
+
 const isSynthesis = demo => demo.mode === 'live-synthesis' || demo.result?.summary.generation_method === 'cited-synthesis-v1';
 const isReal = demo => demo.mode !== 'fixture';
 const runLabel = demo => {
@@ -369,12 +385,14 @@ form.addEventListener('submit', async event => {
   try {
     const response = await fetch(liveSynthesis ? '/api/research' : '/api/demo', {
       method: 'POST', headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({query, scenario: form.elements.scenario.value}),
+      body: JSON.stringify({query, scenario: form.elements.scenario.value,
+        ...(liveSynthesis ? {history: conversationHistory} : {})}),
       signal: AbortSignal.timeout(liveSynthesis ? 330000 : 10000),
     });
     const demo = await response.json();
     if (!response.ok) throw new Error(demo.error || 'Request rejected.');
     renderDemo(demo, number, answer);
+    if (liveSynthesis) rememberAcceptedTurn(query, demo);
     if (demo.result && form.elements.query.value === query) form.elements.query.value = '';
   } catch {
     const message = liveSynthesis ? 'Synthesis unavailable or citation validation failed. No answer was accepted. Your question is unchanged; retry when ready.' : 'Could not load the local example. Check that the demo server is running, then retry. Your question is unchanged.';
@@ -399,13 +417,14 @@ Promise.all(['/api/config', '/api/saved-result'].map(async url => {
   if (liveSynthesis) {
     document.querySelector('.demo-settings').hidden = true;
     document.querySelector('#welcome h2').textContent = 'Ask about this paper.';
-    document.querySelector('#demo-note').textContent = 'Live LLM synthesis · This paper only · Each question is independent.';
+    document.querySelector('#demo-note').textContent = 'Live LLM synthesis · This paper only · Recent successful turns included; older context may be dropped.';
     document.querySelector('.rail-note').textContent = 'Inspect source quotes and the original paper. Citations are not proof of support.';
     submit.firstChild.textContent = 'Ask paper';
     form.elements.query.value = 'What does this paper suggest about AI agents’ ability to improve AI training?';
   }
   if (!demo) return;
   savedResult = demo;
+  if (liveSynthesis) rememberAcceptedTurn(demo.result.request.query, demo);
   if (liveSynthesis) form.elements.query.value = '';
   document.querySelector('.demo-settings').hidden = true;
   document.querySelector('#welcome').hidden = true;

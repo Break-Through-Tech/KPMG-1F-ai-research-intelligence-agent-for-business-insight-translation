@@ -33,8 +33,15 @@ def load_paper(path, *, prefer_html=True):
             # Never silently label PDF extraction as math-preserving HTML.
             source['html_fallback'] = type(error).__name__
     source['format'] = 'pdf-text'
-    raw = subprocess.run(['pdftotext', '-layout', str(path), '-'],
-                         capture_output=True, text=True, check=True, timeout=30).stdout
+    try:
+        raw = subprocess.run(['pdftotext', '-layout', str(path), '-'],
+                             capture_output=True, text=True, check=True, timeout=30).stdout
+    except FileNotFoundError:
+        raise ValueError('PDF fallback requires pdftotext from Poppler. Install Poppler '
+                         '(macOS: brew install poppler; Debian/Ubuntu: apt install poppler-utils) '
+                         'and ensure pdftotext is on PATH, then retry.') from None
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
+        raise ValueError('PDF text extraction failed or timed out; use a readable text PDF.') from None
     passages = []
     for number, page in enumerate(raw.split('\f'), 1):
         text = re.sub(r'\s+', ' ', page).strip()

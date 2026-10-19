@@ -96,10 +96,12 @@ so and lets readers inspect each quote alongside the claim and full PDF page.
 All outputs remain pending and unapproved. The most recent accepted result is
 kept in server memory for reloads, not written to the repository or a database.
 
-The server stays on loopback, rejects cross-site live requests, serializes model
+The server stays on loopback, checks loopback Host/Origin before all reads and writes, rejects cross-site requests, serializes model
 calls, and exposes no provider credentials. The configured Codex text-only adapter
 disables tools/integrations and uses the existing subscription. Live requests may
-take up to five minutes; failures preserve the question for retry. PDFs must have
+take up to five minutes; failures preserve the question for retry. PDF fallback requires the Poppler `pdftotext` executable on PATH
+(macOS: `brew install poppler`; Debian/Ubuntu: `apt install poppler-utils`).
+A missing executable produces an actionable startup error. PDFs must have
 extractable text and fit the 30 MB / 40-page / 120k-character preview limits.
 This local experimental route is not a production deployment or a full RAG index.
 
@@ -140,6 +142,7 @@ it a saved real-paper result, hides the composer and synthetic controls, and
 does not execute new questions. `/api/saved-result` returns that result (or null
 in fixture mode); `/api/demo` remains synthetic and unchanged. Only use this
 option for actual paper evidence, with honest execution provenance and limitations.
+Replay labels use recorded provenance; unknown methods are not called extractive.
 An extractive run is not evidence of LLM generation or persistent-index retrieval.
 The loopback server is still local-only and does not publish the supplied file.
 

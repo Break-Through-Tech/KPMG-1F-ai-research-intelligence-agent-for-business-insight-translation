@@ -18,8 +18,13 @@ let savedResult = null;
 let liveSynthesis = false;
 const isSynthesis = demo => demo.mode === 'live-synthesis' || demo.result?.summary.generation_method === 'cited-synthesis-v1';
 const isReal = demo => demo.mode !== 'fixture';
-const runLabel = demo => isSynthesis(demo) ? 'LLM synthesis · Citation quotes checked · Not independently verified'
-  : 'Real PDF text · Extractive run · Saved result, not live chat.';
+const runLabel = demo => {
+  if (isSynthesis(demo)) return 'LLM synthesis · Citation quotes checked · Not independently verified';
+  const generation = demo.result?.provenance?.generation;
+  return generation?.provider || generation?.prompt_version
+    ? 'Saved research result · Recorded generation provenance in Details · Not independently verified'
+    : 'Saved research result · Generation method unverified · Inspect provenance in Details';
+};
 const STATES = {
   full: ['Full draft', 'Research summary and conditional business implications are available.'],
   partial: ['Partial draft', 'The research summary is available. Business translation abstained.'],
@@ -323,7 +328,7 @@ function renderDemo(demo, number, answer) {
   // Keep desktop context current without opening a mobile drawer over the answer.
   activeDemo = {demo, number};
   if (rail.open) showEvidence(demo, number);
-  feedback.textContent = real ? (isSynthesis(demo) ? 'Synthesized answer ready. Inspect citations to check support.' : 'Real-paper saved result loaded. Extractive run; no live query execution.') : `${label} loaded. Synthetic fixture only.`;
+  feedback.textContent = real ? (isSynthesis(demo) ? 'Synthesized answer ready. Inspect citations to check support.' : 'Saved research result loaded. No live query execution.') : `${label} loaded. Synthetic fixture only.`;
 }
 
 form.elements.query.addEventListener('keydown', event => {

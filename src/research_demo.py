@@ -77,7 +77,17 @@ class DemoHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
+    def local_request(self):
+        hosts = {f'127.0.0.1:{self.server.server_port}',
+                 f'localhost:{self.server.server_port}'}
+        return (self.headers.get('Host') in hosts
+                and self.headers.get('Origin') in {None, *(f'http://{host}' for host in hosts)}
+                and self.headers.get('Sec-Fetch-Site') != 'cross-site')
+
     def do_GET(self):
+        if not self.local_request():
+            self.respond(403, {'error': 'Use the local research page.'})
+            return
         if self.path == '/api/config':
             self.respond(200, {'live': self.research is not None})
             return
@@ -99,17 +109,13 @@ class DemoHandler(BaseHTTPRequestHandler):
         self.respond(200, (ASSETS / name).read_bytes(), kind)
 
     def do_POST(self):
+        if not self.local_request():
+            self.respond(403, {'error': 'Use the local research page.'})
+            return
         if self.path not in {'/api/demo', '/api/research'}:
             self.respond(404, {'error': 'Not found.'})
             return
         if self.path == '/api/research':
-            origin = self.headers.get('Origin')
-            host = f'127.0.0.1:{self.server.server_port}'
-            if (self.headers.get('Host') not in {host, f'localhost:{self.server.server_port}'}
-                    or (origin and origin not in {f'http://{host}', f'http://localhost:{self.server.server_port}'})
-                    or self.headers.get('Sec-Fetch-Site') == 'cross-site'):
-                self.respond(403, {'error': 'Use the local research page.'})
-                return
             if self.research is None:
                 self.respond(503, {'error': 'Live synthesis is not configured.'})
                 return
@@ -162,7 +168,10 @@ def main():
             parser.error('--paper requires --codex-model')
         from src.codex_generation import create_codex_generate
         from src.research_chat import PaperResearch, load_paper
-        passages, source = load_paper(args.paper, prefer_html=not args.pdf_only)
+        try:
+            passages, source = load_paper(args.paper, prefer_html=not args.pdf_only)
+        except (OSError, ValueError) as error:
+            parser.error(str(error))
         generate, metadata = create_codex_generate(model=args.codex_model, binary=args.codex_bin)
         DemoHandler.research = PaperResearch(passages, generate, metadata, source=source)
     if args.result:

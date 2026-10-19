@@ -58,3 +58,11 @@ class PaperHtmlTests(TestCase):
             self.assertEqual(passages[0]['source'], 'pdf')
             self.assertEqual(source['html_fallback'], 'OSError')
             self.assertEqual(source['format'], 'pdf-text')
+
+    def test_missing_poppler_has_actionable_error(self):
+        with TemporaryDirectory() as folder:
+            path = Path(folder) / '2608.20318v1_Test.pdf'
+            path.write_bytes(b'local placeholder')
+            with patch('src.research_chat.subprocess.run', side_effect=FileNotFoundError):
+                with self.assertRaisesRegex(ValueError, 'requires pdftotext from Poppler'):
+                    load_paper(path, prefer_html=False)

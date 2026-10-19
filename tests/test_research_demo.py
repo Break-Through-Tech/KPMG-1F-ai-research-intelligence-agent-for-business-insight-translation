@@ -90,6 +90,35 @@ class DemoHttpTests(unittest.TestCase):
                      '/vendor/katex/../../src/research_demo.py', '/vendor/katex/%2e%2e/.env']:
             self.assertEqual(self.call('GET', path)[0], 404)
 
+    def test_request_boundary_precedes_saved_result_access_and_generation(self):
+        class ForbiddenRead:
+            def __get__(self, instance, owner):
+                raise AssertionError('Saved result must not be accessed on forbidden requests')
+        calls = []
+        def research(request):
+            calls.append(request)
+            return {'mode': 'live-synthesis', 'submitted_request': request}
+        forbidden = [
+            {'Host': f'desk.attacker.example:{self.server.server_port}'},
+            {'Origin': 'https://untrusted.example'},
+            {'Sec-Fetch-Site': 'cross-site'},
+        ]
+        with patch.object(DemoHandler, 'saved_result', ForbiddenRead()), patch.object(
+                DemoHandler, 'research', staticmethod(research)):
+            for headers in forbidden:
+                with self.subTest(headers=headers):
+                    status, _, body = self.call('GET', '/api/saved-result', headers=headers)
+                    self.assertEqual(status, 403)
+                    self.assertEqual(json.loads(body), {'error': 'Use the local research page.'})
+                    status, _, _ = self.call('POST', '/api/research', '{"query":"Q"}',
+                        {**headers, 'Content-Type': 'application/json'})
+                    self.assertEqual(status, 403)
+            self.assertEqual(calls, [])
+        for host in [f'localhost:{self.server.server_port}', f'127.0.0.1:{self.server.server_port}']:
+            with self.subTest(host=host):
+                self.assertEqual(self.call('GET', '/api/config', headers={
+                    'Host': host, 'Origin': f'http://{host}'})[0], 200)
+
     def test_api_validates_input_and_keeps_demo_error_separate(self):
         for scenario in SCENARIOS:
             status, _, body = self.call('POST', '/api/demo',

@@ -104,6 +104,7 @@ class SynthesisTests(unittest.TestCase):
                    [dict(pair[0], extra='not allowed'), pair[1]],
                    [dict(pair[0], content=' '), pair[1]],
                    [dict(pair[0], content=42), pair[1]],
+                   [dict(pair[0], content='\ud835'), pair[1]],
                    [dict(pair[0], content='x' * 6001), pair[1]],
                    [dict(m, content='x' * 6000) for m in pair * 3]]
         for history in invalid:
@@ -113,6 +114,20 @@ class SynthesisTests(unittest.TestCase):
         accepted[0]['content'] = 'changed'
         self.assertEqual(pair[0]['content'], 'Q')
         self.assertEqual(validate_history([]), [])
+
+    def test_mathematical_unicode_history_encodes_and_lone_surrogates_do_not_generate(self):
+        history = [{'role': 'user', 'content': 'Explain the notation'},
+                   {'role': 'assistant', 'content': 'a' * 5999 + '𝜑'}]
+        calls = []
+        def generate(prompt):
+            calls.append(prompt.encode('utf-8'))
+            return json.dumps(ANSWER)
+        synthesize('Follow up', PASSAGES, generate=generate, history=history)
+        self.assertEqual(len(calls), 1)
+        history[1]['content'] = 'a' * 5999 + '\ud835'
+        with self.assertRaises(ValueError):
+            synthesize('Follow up', PASSAGES, generate=generate, history=history)
+        self.assertEqual(len(calls), 1)
 
     def test_paper_identity_is_stable_and_binds_source_text(self):
         generate = lambda p: json.dumps(ANSWER)

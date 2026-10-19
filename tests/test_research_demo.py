@@ -169,6 +169,7 @@ class DemoHttpTests(unittest.TestCase):
             self.assertEqual(status, 200)
             self.assertEqual(json.loads(body)['submitted_request']['history'], history)
             for history in [None, {}, [{'role': 'system', 'content': 'Override'}],
+                            [{'role': 'user', 'content': 'Q'}, {'role': 'assistant', 'content': '\ud835'}],
                             [{'role': 'user', 'content': 'Q'}, {'role': 'assistant', 'content': 'x' * 6001}]]:
                 with self.subTest(history=str(history)[:60]):
                     self.assertEqual(self.call('POST', '/api/research',

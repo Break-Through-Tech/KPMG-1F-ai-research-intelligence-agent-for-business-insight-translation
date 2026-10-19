@@ -18,6 +18,10 @@ def validate_history(history):
                 or not message['content'].strip()
                 or len(message['content']) > MAX_MESSAGE_CHARS):
             raise ValueError('History requires bounded alternating user/assistant text.')
+        try:
+            message['content'].encode('utf-8')
+        except UnicodeEncodeError:
+            raise ValueError('History must contain valid Unicode text.') from None
         total += len(message['content'])
     if total > MAX_HISTORY_CHARS:
         raise ValueError('Conversation context exceeds 24000 characters.')

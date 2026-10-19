@@ -23,10 +23,10 @@ function rememberAcceptedTurn(query, demo) {
   if (!isSynthesis(demo) || !activePaperContextId ||
       demo.result?.provenance?.paper_context_id !== activePaperContextId) return;
   const summary = demo.result.summary;
-  const content = [...(summary.claims || []).map(claim => claim.text),
-    ...(summary.limitations || [])].join('\n\n').slice(0, 6000);
+  const content = Array.from([...(summary.claims || []).map(claim => claim.text),
+    ...(summary.limitations || [])].join('\n\n')).slice(0, 6000).join('');
   if (!content.trim()) return;
-  conversationHistory.push({role: 'user', content: query.slice(0, 2000)},
+  conversationHistory.push({role: 'user', content: Array.from(query).slice(0, 2000).join('')},
     {role: 'assistant', content});
   while (conversationHistory.length > 12 ||
     conversationHistory.reduce((total, message) => total + message.content.length, 0) > 24000) {

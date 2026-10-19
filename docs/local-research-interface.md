@@ -101,7 +101,8 @@ kept in server memory for reloads, not written to the repository or a database.
 
 History is scoped to the browser page, limited to the most recent six complete
 successful turns and 24,000 characters; each retained assistant answer is capped at
-6,000 characters. Oldest pairs are dropped first, and the UI discloses that older
+6,000 complete Unicode characters (never split surrogate pairs). Invalid Unicode
+history is rejected before generation. Oldest pairs are dropped first, and the UI discloses that older
 context may be dropped. Failed requests and fixtures are never added. Reloading
 seeds context from the displayed saved synthesis answer only when its paper-context
 identity matches the active paper, not the full earlier conversation. Mismatched or

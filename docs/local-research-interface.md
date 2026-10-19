@@ -108,7 +108,10 @@ identity matches the active paper, not the full earlier conversation. Mismatched
 unknown saved identities seed no history. The identity hashes the complete bounded
 evidence (text and source metadata), not just a filename. History-bearing HTTP
 requests must also carry that identity, preventing a stale tab from forwarding
-context after the server switches papers. No localStorage, cookies, persistent chat sessions, or cross-paper
+context after the server switches papers. A distinct paper-change response clears
+obsolete browser history and updates the active identity while retaining the typed
+question; the UI explicitly asks the user to select **Ask paper** again for the
+current paper. No model call occurs on that rejected request. No localStorage, cookies, persistent chat sessions, or cross-paper
 memory are added. The live endpoint accepts at most 192 KiB (fixture stays 16 KiB),
 rejects malformed/oversized history before generation, and keeps the 2,000-character
 question limit. Roles are restricted to alternating user/assistant pairs; no system

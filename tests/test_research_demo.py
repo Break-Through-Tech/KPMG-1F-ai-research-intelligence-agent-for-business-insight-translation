@@ -190,11 +190,14 @@ class DemoHttpTests(unittest.TestCase):
         with patch.object(DemoHandler, 'research', staticmethod(research)), patch.object(DemoHandler, 'saved_result', None):
             status, _, body = self.call('GET', '/api/config')
             self.assertEqual(json.loads(body)['paper_context_id'], 'paper-b')
-            for context_id, expected in [(None, 400), ('paper-a', 400), ('paper-b', 200)]:
-                status, _, _ = self.call('POST', '/api/research', json.dumps({
+            for context_id, expected in [(None, 409), ('paper-a', 409), ('paper-b', 200)]:
+                status, _, body = self.call('POST', '/api/research', json.dumps({
                     'query': 'Follow up', 'history': pair, 'paper_context_id': context_id}),
                     {'Content-Type': 'application/json'})
                 self.assertEqual(status, expected)
+                if expected == 409:
+                    self.assertEqual(json.loads(body)['code'], 'paper_changed')
+                    self.assertEqual(json.loads(body)['paper_context_id'], 'paper-b')
             self.assertEqual(len(calls), 1)
 
     def test_live_configuration_and_disabled_route(self):

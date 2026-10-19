@@ -160,7 +160,10 @@ class DemoHandler(BaseHTTPRequestHandler):
                     'history': validate_history(payload.get('history', []))})
                 context_id = getattr(self.research, 'paper_context_id', None)
                 if request['history'] and context_id and payload.get('paper_context_id') != context_id:
-                    raise ValueError('Conversation belongs to a different or unknown paper.')
+                    self.respond(409, {'code': 'paper_changed',
+                        'error': 'The active paper changed; clear previous conversation context and retry.',
+                        'paper_context_id': context_id})
+                    return
                 if len(request['query']) > 2000:
                     raise ValueError('Question exceeds 2000 characters.')
             else:

@@ -384,6 +384,7 @@ form.addEventListener('submit', async event => {
   output.setAttribute('aria-busy', 'true');
   feedback.textContent = loading;
   turn.scrollIntoView({block: 'start'});
+  let contextRecoveryMessage = null;
   try {
     const response = await fetch(liveSynthesis ? '/api/research' : '/api/demo', {
       method: 'POST', headers: {'Content-Type': 'application/json'},
@@ -392,12 +393,19 @@ form.addEventListener('submit', async event => {
       signal: AbortSignal.timeout(liveSynthesis ? 330000 : 10000),
     });
     const demo = await response.json();
-    if (!response.ok) throw new Error(demo.error || 'Request rejected.');
+    if (!response.ok) {
+      if (liveSynthesis && demo.code === 'paper_changed') {
+        conversationHistory = [];
+        activePaperContextId = demo.paper_context_id || null;
+        contextRecoveryMessage = 'The loaded paper changed. Previous conversation context was cleared. Your question is unchanged; select Ask paper again to ask about the current paper.';
+      }
+      throw new Error('Request rejected.');
+    }
     renderDemo(demo, number, answer);
     if (liveSynthesis) rememberAcceptedTurn(query, demo);
     if (demo.result && form.elements.query.value === query) form.elements.query.value = '';
   } catch {
-    const message = liveSynthesis ? 'Synthesis unavailable or citation validation failed. No answer was accepted. Your question is unchanged; retry when ready.' : 'Could not load the local example. Check that the demo server is running, then retry. Your question is unchanged.';
+    const message = contextRecoveryMessage || (liveSynthesis ? 'Synthesis unavailable or citation validation failed. No answer was accepted. Your question is unchanged; retry when ready.' : 'Could not load the local example. Check that the demo server is running, then retry. Your question is unchanged.');
     answer.replaceChildren(element('h2', liveSynthesis ? 'Answer unavailable' : 'Example unavailable'), element('p', message, 'error'));
     feedback.textContent = message;
     feedback.classList.remove('sr-only');

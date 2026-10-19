@@ -55,6 +55,23 @@ def load_demo(request: dict, scenario: str) -> dict:
     return envelope
 
 
+def saved_result_envelope(result):
+    """Preserve validated stage states rather than relabeling replay as success."""
+    validate_result(result)
+    if not result['evidence']:
+        scenario = 'empty'
+    elif result['summary']['status'] == 'insufficient_evidence':
+        scenario = 'insufficient'
+    elif (result.get('business_insight')
+          and result['business_insight']['status'] == 'insufficient_evidence'):
+        scenario = 'partial'
+    else:
+        scenario = 'full'
+    return {'mode': 'saved-real-result', 'scenario': scenario,
+            'submitted_request': result['request'], 'result': result,
+            'error': None, 'fixture_file': None}
+
+
 class DemoHandler(BaseHTTPRequestHandler):
     saved_result = None
     research = None
@@ -176,12 +193,7 @@ def main():
         DemoHandler.research = PaperResearch(passages, generate, metadata, source=source)
     if args.result:
         result = json.loads(args.result.read_text())
-        validate_result(result)
-        DemoHandler.saved_result = {
-            'mode': 'saved-real-result', 'scenario': 'full',
-            'submitted_request': result['request'], 'result': result,
-            'error': None, 'fixture_file': None,
-        }
+        DemoHandler.saved_result = saved_result_envelope(result)
     with ThreadingHTTPServer(('127.0.0.1', args.port), DemoHandler) as server:
         label = 'Paper synthesis' if args.paper else 'Saved-result viewer' if args.result else 'Fixture demo'
         note = 'live LLM synthesis' if args.paper else 'no live execution'

@@ -7,7 +7,7 @@ from http.server import ThreadingHTTPServer
 from unittest.mock import patch
 
 from src.research_contracts import validate_result
-from src.research_demo import DemoHandler, FIXTURES, SCENARIOS, load_demo
+from src.research_demo import saved_result_envelope, DemoHandler, FIXTURES, SCENARIOS, load_demo
 
 
 class DemoAdapterTests(unittest.TestCase):
@@ -130,6 +130,16 @@ class DemoHttpTests(unittest.TestCase):
             self.assertEqual(self.call('POST', '/api/demo', payload,
                                       {'Content-Type': 'application/json'})[0], 400)
         self.assertEqual(self.call('POST', '/api/demo', '{}')[0], 415)
+
+    def test_saved_result_envelope_preserves_all_valid_draft_states(self):
+        for scenario in ['full', 'partial', 'insufficient', 'empty']:
+            with self.subTest(scenario=scenario):
+                result = load_demo({'query': 'Q'}, scenario)['result']
+                envelope = saved_result_envelope(result)
+                self.assertEqual(envelope['scenario'], scenario)
+                self.assertEqual(envelope['result'], result)
+                self.assertEqual(envelope['mode'], 'saved-real-result')
+                self.assertFalse(envelope['result']['approved'])
 
     def test_saved_result_view_is_separate_from_fixture_execution(self):
         status, _, body = self.call('GET', '/api/saved-result')

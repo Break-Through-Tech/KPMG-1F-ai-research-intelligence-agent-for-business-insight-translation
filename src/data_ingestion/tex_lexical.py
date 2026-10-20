@@ -61,18 +61,21 @@ def structural(text):
     return clean, ''.join(chars), spans
 
 
-# Only literal boolean primitives are evaluated. Arbitrary conditions remain
-# visible to the caller's fail-closed validation, not guessed from macro names.
+# Recognized primitives are separate from ordinary if-prefixed macros. Only
+# literal or independently established preamble facts select branches.
 PRIMITIVES = frozenset(('if ifcat ifnum ifdim ifodd ifvmode ifhmode ifmmode ifinner '
                        'ifvoid ifhbox ifvbox ifx ifeof iftrue iffalse ifcase '
                        'ifdefined ifcsname ifincsname').split())
 
 
-def constant_branches(text, custom=()):
+def constant_branches(text, custom=(), *, values=None, defined=()):
     clean, code, _ = structural(text)
+    values = values or {}
     chars = list(clean)
-    stack, cursor = [], 0
+    stack, cursor, consumed = [], 0, 0
     for match in re.finditer(r'\\([a-zA-Z]+)|\\.', code):
+        if match.start() < consumed:
+            continue
         command = match[1]
         active = all(frame[0] is not False for frame in stack)
         if not active:
@@ -82,9 +85,15 @@ def constant_branches(text, custom=()):
         is_control = command in PRIMITIVES or command in custom
         remove = not active
         if is_control:
-            known = command in ('iftrue', 'iffalse')
-            stack.append([command == 'iftrue' if known else None, False])
-            remove = remove or known
+            value = {'iftrue': True, 'iffalse': False}.get(command, values.get(command))
+            if command == 'ifdefined':
+                target = re.match(r'\s*\\([a-zA-Z]+)(?![a-zA-Z])', code[match.end():])
+                if target and target[1] in defined:
+                    value = True
+                    consumed = match.end() + target.end()
+                    chars[match.end():consumed] = blank(clean[match.end():consumed])
+            stack.append([value, False])
+            remove = remove or value is not None
         elif command == 'else':
             if not stack or stack[-1][1]:
                 raise ValueError('Unmatched or duplicate TeX else')

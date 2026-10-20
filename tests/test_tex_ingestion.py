@@ -330,8 +330,73 @@ END
             tex.chunk_source(archive({'main.tex': r'\begin{document}\ifthenelse{X}{\input{a}}{\input{b}}\end{document}',
                                       'a.tex': 'Branch A', 'b.tex': 'Branch B'}), AID)
         raw = r'\newif\ifCameraReview\begin{document}\ifCameraReview A\else B\fi\end{document}'
+        text = ''.join(c['text'] for c in tex.chunk_source(raw.encode(), AID))
+        self.assertNotIn('A', text)
+        self.assertIn('B', text)
+
+    def test_explicit_preamble_flags_follow_include_order_without_emitting_preamble(self):
+        files = {
+            'main.tex': r'''\input{preamble}
+\begin{document}
+\ifReview HIDDEN_REVIEW\else CLEAN_PAPER\fi
+\input{results}
+\end{document}''',
+            'preamble.tex': r'\def\Clean{1}\input{formatting}',
+            'formatting.tex': r'''\newif\ifReview
+\ifdefined\Clean\Reviewfalse\else\Reviewtrue\fi
+\newcommand{\wrapper}[1]{\ifReview review #1\else clean #1\fi}''',
+            'results.tex': r'\ifReview HIDDEN_RESULT\else RESULT_KEPT\fi',
+            # An unreachable file must not supply or overwrite flag state.
+            'unused.tex': r'\Reviewtrue',
+        }
+        chunks = tex.chunk_source(archive(files), AID)
+        text = '\n'.join(c['text'] for c in chunks)
+        self.assertIn('CLEAN_PAPER', text)
+        self.assertIn('RESULT_KEPT', text)
+        self.assertNotIn('HIDDEN', text)
+        self.assertNotIn('wrapper', text)
+        self.assertEqual(chunks[0]['line_start'], 3)
+        self.assertEqual(chunks[-1]['source_file'], 'results.tex')
+        # Definitions after a conditional cannot retroactively decide it.
+        files['preamble.tex'] = r'\input{formatting}\def\Clean{1}'
         with self.assertRaises(ValueError):
-            tex.chunk_source(raw.encode(), AID)
+            tex.chunk_source(archive(files), AID)
+
+    def test_unknown_scoped_and_mutated_state_stays_unresolved(self):
+        cases = [
+            (r'\newif\ifFlag\ifdefined\Unknown\Flagtrue\fi', ''),
+            (r'\newif\ifFlag{\Flagtrue}', ''),
+            (r'\newif\ifFlag\begingroup\Flagtrue\endgroup', ''),
+            (r'\newif\ifFlag\let\Flagtrue\relax\Flagtrue', ''),
+            (r'\newif\ifFlag\def\Flagtrue{}\Flagtrue', ''),
+            (r'\newif\ifFlag\def\outer{\inner}\def\inner{\Flagtrue}\outer', ''),
+            (r'\newif\ifFlag\def\change{\Flagtrue}\change', ''),
+            (r'\newif\ifFlag', r'\Flagtrue'),
+            (r'\newif\ifFlag', r'\def\change{\Flagtrue}'),
+            (r'\newif\ifFlag', r'\let\alias\Flagtrue\alias'),
+        ]
+        for preamble, mutation in cases:
+            with self.subTest(preamble=preamble, mutation=mutation), self.assertRaises(ValueError):
+                files = {'main.tex': preamble + r'\begin{document}\input{child}\ifFlag WRONG\else KEPT\fi\end{document}',
+                         'child.tex': mutation}
+                tex.chunk_source(archive(files), AID)
+        # Positive source facts work, but absence is not proof of undefined.
+        raw = r'\def\Known{1}\begin{document}\ifdefined\Known YES\else NO\fi\end{document}'
+        text = ''.join(c['text'] for c in tex.chunk_source(raw.encode(), AID))
+        self.assertIn('YES', text)
+        self.assertNotIn('Known', text)
+        self.assertNotIn('NO', text)
+        with self.assertRaises(ValueError):
+            tex.chunk_source(raw.replace('ifdefined\\Known', 'ifdefined\\Absent').encode(), AID)
+
+    def test_inactive_flag_setters_and_macro_definitions_do_not_change_state(self):
+        raw = r'''\newif\ifFlag
+\iffalse\Flagtrue\fi
+\newcommand{\unused}[1]{\ifFlag \Flagtrue #1\fi}
+\begin{document}\ifFlag HIDDEN\else KEPT\fi\end{document}'''
+        text = ''.join(c['text'] for c in tex.chunk_source(raw.encode(), AID))
+        self.assertIn('KEPT', text)
+        self.assertNotIn('HIDDEN', text)
 
     def test_larger_asset_bundles_still_have_separate_text_and_expansion_bounds(self):
         paper = r'\begin{document}Paper evidence\end{document}'

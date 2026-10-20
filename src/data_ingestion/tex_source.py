@@ -15,6 +15,7 @@ import requests
 from . import config as cfg
 from .tex_chunking import split_tex
 from .tex_lexical import structural, constant_branches, PRIMITIVES
+from .tex_state import PreambleState
 
 MAX_ARCHIVE = 32 * 1024 * 1024
 MAX_EXPANDED = 128 * 1024 * 1024
@@ -131,6 +132,68 @@ def source_blocks(data):
     if len(roots) != 1:
         raise ValueError("Source needs exactly one document root")
     root_dir = PurePosixPath(roots[0]).parent
+
+    def resolve(reference, name):
+        reference = _name(reference.strip())
+        if not reference.endswith('.tex'):
+            reference += '.tex'
+        candidates = {_name(str(base / reference))
+                      for base in (root_dir, PurePosixPath(name).parent)}
+        available = candidates.intersection(clean)
+        if len(available) != 1:
+            raise ValueError('Missing or ambiguous TeX include')
+        return available.pop()
+
+    state = PreambleState()
+    preamble_visits = 0
+
+    def preamble(name, stack=()):
+        nonlocal preamble_visits
+        preamble_visits += 1
+        if preamble_visits > MAX_FILES or len(stack) >= 32 or name in stack:
+            raise ValueError('Cyclic or excessive preamble includes')
+        text = clean[name]
+        if name == roots[0]:
+            text = text[:syntax[name].index(r'\begin{document}')]
+
+        def include(reference, _state):
+            preamble(resolve(reference, name), (*stack, name))
+
+        state.read(text, include)
+
+    try:
+        preamble(roots[0])
+        state.finalize()
+    except ValueError:
+        # Optional state discovery must not change the existing acceptance of
+        # papers without body conditionals. No partial facts survive failure.
+        state = PreambleState()
+
+    # A frozen preamble snapshot is usable only when the whole reachable body
+    # is free of mutations. Checking a file in isolation would miss a setter in
+    # an include followed by a conditional in its parent or a sibling.
+    pending, checked = [roots[0]], set()
+    mutations = r'\\(?:def|gdef|edef|xdef|let|futurelet|newif|newcommand|renewcommand|providecommand|DeclareRobustCommand|csname|catcode|usepackage|inputencoding)(?![a-zA-Z])'
+    while pending and (state.values or state.defined):
+        name = pending.pop()
+        if name in checked:
+            continue
+        checked.add(name)
+        body = syntax[name]
+        if name == roots[0]:
+            body = body.split(r'\begin{document}', 1)[1].split(r'\end{document}', 1)[0]
+        setters = {n[2:] + suffix for n in state.values for suffix in ('true', 'false')}
+        commands = set(re.findall(r'\\([a-zA-Z]+)', body))
+        if re.search(mutations, body) or commands.intersection(setters | state.mutators):
+            state = PreambleState()
+            break
+        for match in INCLUDE.finditer(body):
+            try:
+                pending.append(resolve(match[1], name))
+            except ValueError:
+                # Inactive missing includes are allowed; traversal below still
+                # rejects active ones after branch filtering.
+                pass
     blocks = []
     visits = 0
     expanded = 0
@@ -152,7 +215,8 @@ def source_blocks(data):
             end = code.find(r'\end{document}', start)
             if end < 0:
                 raise ValueError("Unterminated TeX document")
-        filtered = constant_branches(text[start:end], custom)
+        filtered = constant_branches(text[start:end], custom,
+                                     values=state.values, defined=state.defined)
         # Prefix padding keeps all original file/line offsets stable.
         text = text[:start] + filtered + text[end:]
         code = code[:start] + structural(filtered)[1] + code[end:]
@@ -192,15 +256,7 @@ def source_blocks(data):
 
         for match in INCLUDE.finditer(code, start, end):
             emit(match.start())
-            reference = _name(match[1].strip())
-            if not reference.endswith('.tex'):
-                reference += '.tex'
-            candidates = {_name(str(base / reference))
-                          for base in (root_dir, PurePosixPath(name).parent)}
-            available = candidates.intersection(clean)
-            if len(available) != 1:
-                raise ValueError('Missing or ambiguous TeX include')
-            visit(available.pop(), (*stack, name))
+            visit(resolve(match[1], name), (*stack, name))
             cursor = match.end()
         emit(end)
 

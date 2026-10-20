@@ -29,7 +29,12 @@ branches are blanked without changing character offsets or line numbers. This is
 TeX interpreter: no macro expansion, bibliography processing, package semantics, or
 general conditional evaluation is supplied. Literal `\iftrue`/`\iffalse` branches
 are selected with nesting validated; inactive text and includes are never
-published. Dynamic primitives and `\newif` conditionals remain unsupported.
+published. Direct, source-declared preamble `\newif` booleans (default false,
+explicit true/false setters) and positive `\ifdefined` facts can also select
+branches. Preamble includes are followed in order and macro replacement bodies
+are not executed. Unknown, scoped, aliased or body-mutated flag state remains
+unresolved. A missing source definition is **not** proof that a package/runtime
+symbol is undefined. Package semantics and dynamic arithmetic remain unsupported.
 Ordinary macros beginning with `if` (such as `\ifthenelse`, `\ifdefempty`, or
 `\ifplotsrgb`) remain raw macros, not misclassified primitive conditions.
 `\verb`, `\verb*`, `verbatim`, `Verbatim`, `lstlisting`, and `minted` blocks
@@ -71,9 +76,14 @@ PDF fallback, citation metadata and atomic publication.
 All 25 versioned source bundles in the checked-in sample were downloaded and
 rechecked independently of the production corpus/index. Baseline: 11 parser
 passes / 14 rejections. With lexical/manifest/limit fixes: 22 passes / 3
-rejections. These are parser-acceptance counts, not semantic-fidelity scores.
-The remaining papers still use dynamic conditionals: SEFORA (`\ifdim` in
-PGF graphics), RMSWeb (`\ifdefined` controlling publication sections), and
-Validity-Aware Jailbreak Evaluation (`\ifCameraReview` custom conditionals).
-They deliberately retain HTML/PDF fallback; neither branch is guessed.
+rejections. Ordered explicit-preamble-state support raises this to 23 passes / 2
+rejections: Validity-Aware Jailbreak Evaluation explicitly defines
+`\CameraReviewClean` before including its `\newif\ifCameraReview` setup. The
+selected false branch removes review-only wrappers without dropping their prose.
+All 22 previously accepted normalized body hashes remain unchanged.
+These are parser-acceptance counts, not semantic-fidelity scores. SEFORA still
+requires PGF loop arithmetic (`\ifdim`); RMSWeb still tests `\SUPPLEMENTONLY`,
+whose absence in source is not a positive runtime fact. They deliberately retain
+HTML/PDF fallback; neither branch is guessed. The next capability for these cases
+is package-aware runtime resolution, not treating all unknown flags as false.
 Mandatory TeX-only publication is not enabled by this change.

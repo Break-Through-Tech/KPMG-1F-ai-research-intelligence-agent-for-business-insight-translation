@@ -2,6 +2,7 @@
 
 **Status:** Proposal for team discussion; not a board assignment or commitment.
 **Prepared:** 2026-10-14
+**Status refreshed:** 2026-10-19; proposal remains unmerged and subject to team discussion.
 
 ## Planning premise
 
@@ -13,7 +14,7 @@ The canonical Challenge Project Overview places prompt work in Week 7, evaluatio
 - **Local model/index/CLI E2E:** [PR #101](https://github.com/Break-Through-Tech/KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation/pull/101) contains an opt-in end-to-end path and a real local-model attempt. That was not model-acceptance success: the ten-question capture had zero accepted summaries (four malformed responses, six generation failures); the local-model test is skipped in ordinary offline CI unless enabled.
 - **Bounded baseline evaluation:** [PR #111](https://github.com/Break-Through-Tech/KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation/pull/111) reports predeclared rubric results of Precision@5 0.96 (target 0.70), summary mean 4.60/5, and business mean 4.17/5; it says these clear its scoped advisory gates. The same PR explicitly says no production Gemini/OpenAI/Bedrock call, real-paper retrieval-relevance judgment, or stakeholder review occurred. q03 dialogue-history outcomes, broader q09 risk coverage, and general q10 reliability remain limited; the consulting transfer is conditional. Preserve both the reported scores and their limits; do not call them KPMG acceptance or universal reliability.
 - **Current pipeline:** PRs #108–#111 have merged; #109 added exact-once candidate-ID ranking. The scoped q03/q10 proof is not a substitute for broader benchmark coverage.
-- **Open work:** [#76](https://github.com/Break-Through-Tech/KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation/issues/76) (source-specific shared contracts) and [#81](https://github.com/Break-Through-Tech/KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation/issues/81) (research-review bridge) are Ready; #81 is assigned to Teegawende12, #76 is unassigned. [#106](https://github.com/Break-Through-Tech/KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation/issues/106) remains open for retrieval-quality acceptance.
+- **Delivered foundations:** #76 (shared contracts), #81 (review bridge), and #106 (retrieval-quality acceptance) are closed through merged #115, #113, and #114. #119's fixture-backed UI is delivered through merged #126/#128/#129; its live chat is single-paper only. Open weekly work is #120–125, with indexed multi-paper UI integration tracked separately in #130.
 
 ## Cross-cutting role
 
@@ -35,13 +36,17 @@ Three paired workstreams: Jacqueline/Latifa on the interface; Alesha/Khoi on eva
 | Teegawende (@Teegawende12) | Validate review packets and contract handoffs on the integrated workflow | [#124](https://github.com/Break-Through-Tech/KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation/issues/124) |
 | Jacqueline (@jjjhenriksen) | Research peer-team architectures and bring back useful feature candidates | [#125](https://github.com/Break-Through-Tech/KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation/issues/125) |
 
-Current-state correction (2026-10-17): #76, #81, and #106 are closed, delivered through #115, #113, and #114 respectively. The weekly issues build on those implementations, not a repeat of the historical open-work snapshot or Week 7 tasks below. PRs #116–#118 remain open experiments and are linked in Jacqueline's research issue; no measured production improvement or acceptance is implied.
+Current-state refresh (2026-10-19): #76, #81, #106, and #119 are delivered; the weekly work builds on those implementations. PRs #116–#118 are merged optional development experiments, not production-default promotion or independently judged quality gains. #125 remains open for the broader peer-architecture map and feature shortlist. #120–124 remain open for flow/usability, evaluation, grounded outputs, and review validation.
+
+**Next integration slice:** [#130](https://github.com/Break-Through-Tech/KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation/issues/130) connects the UI to persistent-index retrieval, multi-paper research synthesis, conditional business implications, and a pending-review result. It reuses existing contracts, preserves execution provenance, and keeps fixture/single-paper/indexed modes distinct. No owner or deadline is assigned by filing it; no hosting/authentication or review-decision UI is included.
+
+The assignment table above records the 2026-10-17 allocation, not a claim that every listed issue is still open. The week-by-week lanes below remain a planning proposal; delivered foundations must not be reimplemented.
 
 ## Six parallel lanes
 
 ### 1. UI/UX interface
 
-**Owner:** seek a volunteer; repo history does not establish a UI owner. Start from fixed JSON fixtures; do not wait for evaluation or #76.
+**Current weekly pairing:** Jacqueline delivered #119; Latifa owns the separate #120 flow/usability increment. The fixture UI is merged; #130 tracks indexed integration without assigning a six-week UI owner.
 
 - **Week 7:** Map the user flow and wireframe query → evidence/source inspection → research result → business implications/limitations → review-pending state.
 - **Week 8:** Build a thin local or clickable prototype. Include full, partial, abstention, insufficient-evidence, and provider-error states.
@@ -89,9 +94,9 @@ Current-state correction (2026-10-17): #76, #81, and #106 are closed, delivered 
 
 ### 5. Shared contracts, citations, and corpus reliability
 
-**Owner candidate:** Khoi, based on HTML/Chroma citation validation in #102; #76 is currently unassigned, so confirm capacity before assignment.
+**Current weekly scope:** Khoi owns #122 retrieval diagnosis and contract failure cases, with Teegawende supporting shared boundaries in #124. #76 is closed through #115; no new six-week ownership is inferred.
 
-- **Week 7:** Complete #76’s concrete gaps: positive 1-based PDF pages; valid HTML page/heading links; versioned request/result shapes; fixtures for normal, empty, insufficient, and invalid-citation cases.
+- **Week 7:** Build on the #76/#115 contracts already delivered: positive 1-based PDF pages; valid HTML page/heading links; versioned request/result shapes; normal, empty, insufficient, and invalid-citation fixtures. Diagnose new consumer gaps rather than repeating implementation.
 - **Week 8:** Add offline tests for malformed/unknown IDs, duplicate ranking entries, missing source metadata, and provider failure. Keep fail-closed behavior.
 - **Weeks 9–10:** Serve as contract owner for UI, retrieval, and generation adapters; prefer additive schema changes and coordinate any breaking changes.
 - **Week 11:** Run failure injection through the integrated local workflow; verify errors remain inspectable and no bad output is accepted.
@@ -101,9 +106,9 @@ Current-state correction (2026-10-17): #76, #81, and #106 are closed, delivered 
 
 ### 6. Review workflow and human handoff
 
-**Owner:** Teegawende12 is assigned to #81; confirm current capacity and keep the scope separate from evaluation scoring.
+**Current weekly owner:** Teegawende12 owns #124 review-packet and handoff validation. #81 is closed through #113; keep remaining review integration separate from evaluation scoring.
 
-- **Week 7:** Reconfirm #81’s scope and fixed input/result shape; start from fixtures, not a dependency on live generation.
+- **Week 7:** Validate the existing #81/#113 review bridge and fixed input/result shape through #124; start from fixtures, not a dependency on live generation.
 - **Week 8:** Build the research-review packet from source passages, claims, business implications, limitations, and pending status.
 - **Weeks 9–10:** Add explicit approve/revise/reject recording bound to the full result fingerprint; separate regulatory-source IDs from research chunk IDs; invalidate stale decisions after edits.
 - **Week 11:** Exercise pending, revise, reject, stale, and conflicting cases in the integrated UI/pipeline.
@@ -132,14 +137,14 @@ Current-state correction (2026-10-17): #76, #81, and #106 are closed, delivered 
 
 ## Ownership discussion
 
-1. Find a UI volunteer; pair with a pipeline consumer for the Week 9 adapter.
+1. Preserve the delivered #119 UI and separate #120 usability work; agree ownership for #130 indexed integration rather than assigning it by implication.
 2. Ask Alesha whether she can lead evaluation and identify an independent reviewer.
 3. Find a retrieval/ranking owner; Jacqueline remains cross-cutting rather than assigned to this lane.
-4. Confirm Jooheon for the evidence-grounded output lane and Khoi for #76 consumer/contract work.
-5. Keep Teegawende12 on assigned #81 unless she requests a change.
+4. Build on Jooheon’s #123 grounded-output audit and Khoi’s #122 diagnosis/contract cases; #76 itself is already closed.
+5. Keep Teegawende12’s #124 review-validation allocation distinct from the delivered #81 bridge.
 6. Nominate an integration coordinator for the Week 11 E2E and Week 12 package; no availability is assumed.
 
-This proposal does not create issues, move board cards, or assign teammates.
+This proposal does not authorize board moves or new six-week assignments. The separately authorized weekly issues and #130 follow-up are tracked above; this status refresh does not approve or merge the proposal.
 
 ## References
 

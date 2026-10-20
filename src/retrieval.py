@@ -72,6 +72,18 @@ def citation_metadata(row):
         if not html_url:
             raise ValueError("HTML chunks require html_url")
         metadata.update(html_url=html_url, source_url=html_url)
+    elif source == "tex_figure":
+        for field in ('source_url', 'source_sha256', 'asset_file', 'asset_sha256',
+                      'extraction_method', 'evidence_scope'):
+            metadata[field] = _source_text(row, field)
+        page = row.get('asset_page_number')
+        if page is None or pd.isna(page) or isinstance(page, bool) or int(page) != page:
+            raise ValueError('Figure assets require an integer asset page')
+        metadata['asset_page_number'] = int(page)
+        # Validate this new source kind with the shared contract before storage.
+        from src.research_contracts import validate_evidence
+        validate_evidence([{**metadata, 'chunk_id': str(row.get('chunk_id', 'asset')),
+                            'text': str(row.get('text', 'asset')), 'page_number': None}])
     elif source == "tex":
         url = f"https://arxiv.org/src/{metadata['arxiv_id']}"
         if _source_text(row, "source_url") != url:

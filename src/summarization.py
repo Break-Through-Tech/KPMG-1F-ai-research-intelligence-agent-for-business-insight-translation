@@ -85,6 +85,11 @@ _MAPPING_FIELDS = (
     "source_url",
     "pdf_url",
     "html_url",
+    "asset_file",
+    "asset_sha256",
+    "asset_page_number",
+    "extraction_method",
+    "evidence_scope",
     "source_file",
     "source_sha256",
     "line_start",
@@ -152,6 +157,9 @@ def _metadata_line(passage: Mapping[str, Any]) -> str:
     where = " > ".join(str(passage[k]) for k in ("section", "subsection") if passage.get(k))
     if where:
         parts.append(f"section: {where}")
+    if passage.get('source') == 'tex_figure':
+        parts.append(f"bundled asset: {passage['asset_file']}, asset page: {passage['asset_page_number']}")
+        parts.append('whole asset text, NOT rendered paper figure/page; may include cropped-out content')
     page = passage.get("page_number")
     if isinstance(page, int) and not isinstance(page, bool) and page > 0:
         parts.append(f"page: {page}")  # HTML passages have page_number=None

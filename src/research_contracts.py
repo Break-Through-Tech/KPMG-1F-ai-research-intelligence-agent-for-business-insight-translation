@@ -30,7 +30,7 @@ class _Passage(TypedDict):
     arxiv_id: str | None
     title: str
     pdf_url: str | None
-    source: Literal['html', 'pdf', 'tex', 'synthetic']
+    source: Literal['html', 'pdf', 'tex', 'tex_figure', 'synthetic']
     source_url: str | None
     page_number: int | None
 
@@ -44,6 +44,11 @@ class EvidencePassage(_Passage, total=False):
     source_sha256: str
     line_start: int
     line_end: int
+    asset_file: str
+    asset_sha256: str
+    asset_page_number: int
+    extraction_method: str
+    evidence_scope: str
     oversized_math: bool
 
 
@@ -162,8 +167,8 @@ def validate_evidence(passages):
         if not _text(p.get('title')) or 'page_number' not in p:
             raise ValueError('Evidence requires title and explicit page_number')
         source = p.get('source')
-        if not isinstance(source, str) or source not in {'pdf', 'html', 'tex', 'synthetic'}:
-            raise ValueError('Evidence source must be pdf, html, tex, or synthetic')
+        if not isinstance(source, str) or source not in {'pdf', 'html', 'tex', 'tex_figure', 'synthetic'}:
+            raise ValueError('Evidence source must be pdf, html, tex, tex_figure, or synthetic')
         distance = p.get('distance')
         if distance is not None and (isinstance(distance, bool)
                 or not isinstance(distance, (int, float)) or not math.isfinite(distance)):
@@ -189,6 +194,22 @@ def validate_evidence(passages):
             if (location._replace(fragment='') != pdf
                     or location.fragment not in {'', f'page={page}'}):
                 raise ValueError('PDF source_url must match pdf_url and page_number')
+        elif source == 'tex_figure':
+            if page is not None or p.get('html_url') is not None:
+                raise ValueError('Figure assets are not paper PDF pages or HTML')
+            if p['source_url'] != f"https://arxiv.org/src/{p['arxiv_id']}":
+                raise ValueError('Figure asset URL must identify the source archive')
+            for key in ('source_sha256', 'asset_sha256'):
+                if not isinstance(p.get(key), str) or not re.fullmatch(r'[0-9a-f]{64}', p[key]):
+                    raise ValueError('Figure assets require archive and asset SHA256')
+            if not _text(p.get('asset_file')):
+                raise ValueError('Figure assets require an archive filename')
+            number = p.get('asset_page_number')
+            if isinstance(number, bool) or not isinstance(number, int) or number < 1:
+                raise ValueError('Figure assets require a positive asset_page_number')
+            if (p.get('extraction_method') != 'pdf_text' or
+                    p.get('evidence_scope') != 'whole_bundled_asset_not_rendered_figure'):
+                raise ValueError('Figure evidence requires explicit extraction method and whole-asset scope')
         elif source == 'tex':
             if 'oversized_math' in p and not isinstance(p['oversized_math'], bool):
                 raise ValueError('oversized_math must be boolean')

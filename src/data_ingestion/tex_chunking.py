@@ -1,5 +1,6 @@
 """Soft-size TeX chunks whose boundaries never bisect recognized math spans."""
 import re
+from .tex_lexical import structural
 
 ENVIRONMENTS = r'equation\*?|align\*?|alignat\*?|flalign\*?|gather\*?|multline\*?|eqnarray\*?|displaymath|math'
 OPEN = re.compile(r'\\begin\s*\{(' + ENVIRONMENTS + r')\}|\\\[|\\\(|\${1,2}')
@@ -15,6 +16,9 @@ def _active(text, position):
 
 def math_spans(text):
     """Recognize explicit delimiters/environments, not macro-generated math."""
+    _, text, literals = structural(text)
+    if any(end - start > MAX_MATH for start, end in literals):
+        raise ValueError('TeX literal exceeds atomic-span limit')
     spans, cursor = [], 0
     while match := OPEN.search(text, cursor):
         cursor = match.end()
@@ -40,7 +44,7 @@ def math_spans(text):
             raise ValueError('TeX math exceeds atomic-span limit')
         spans.append((match.start(), end.end()))
         cursor = end.end()
-    return spans
+    return sorted(spans + literals)
 
 
 def split_tex(text, chunk_size=1800, overlap=250):

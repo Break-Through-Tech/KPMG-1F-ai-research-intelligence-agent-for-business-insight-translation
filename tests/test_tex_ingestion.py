@@ -71,8 +71,7 @@ class TexIngestionTests(unittest.TestCase):
             {'main.tex': ROOT, 'sections/results.tex': r'\input{../main}'},
             {'main.tex': ROOT.replace(r'\input{sections/results}', r'\input missing')},
             {'main.tex': ROOT.replace(r'\end{document}', '')},
-            {'main.tex': ROOT.replace(r'\input{sections/results}', r'\iffalse hidden\fi')},
-            {'main.tex': ROOT.replace(r'\input{sections/results}', r'\begin{verbatim}x\end{verbatim}')},
+            {'main.tex': ROOT.replace(r'\input{sections/results}', r'\ifnum 1=2 hidden\fi')},
         ]
         for files in cases:
             with self.subTest(files=list(files)), self.assertRaises(ValueError):
@@ -258,3 +257,89 @@ class TexIngestionTests(unittest.TestCase):
         self.assertIn(text, context)
         self.assertFalse(included[0][1])
         self.assertFalse(omitted)
+
+    def test_manifest_selects_paper_not_bundled_template_or_revision(self):
+        import json
+        paper = ROOT.replace(r'\input{sections/results}', 'Actual paper evidence.')
+        manifest = json.dumps({'sources': [dict(usage='toplevel', filename='arxiv.tex')]})
+        data = archive({'arxiv.tex': paper, 'main.tex': paper.replace('Actual', 'Template'),
+                        'old.tex': paper, '00README.json': manifest})
+        chunks = tex.chunk_source(data, AID)
+        self.assertEqual({c['source_file'] for c in chunks}, {'arxiv.tex'})
+        for value in (None, {'sources': [{'usage': 'toplevel'}]},
+                      {'sources': [dict(usage='toplevel', filename='../bad.tex')]},
+                      {'sources': [dict(usage='toplevel', filename='missing.tex')]},
+                      {'sources': [dict(usage='toplevel', filename='arxiv.tex'),
+                                   dict(usage='toplevel', filename='main.tex')]},
+                      {'sources': 'invalid'}):
+            with self.subTest(manifest=value), self.assertRaises(ValueError):
+                tex.source_blocks(archive({'arxiv.tex': paper, '00README.json': json.dumps(value)}))
+
+    def test_literals_are_opaque_atomic_and_keep_percent_and_line_locators(self):
+        literals = [r'\verb|50% $unmatched \input{missing} \fi|',
+                    r'\verb*+\begin{document}+',
+                    '\\begin{verbatim}\n50% $unmatched \\input{missing}\n\\end{verbatim}',
+                    '\\begin{lstlisting}\nx = "$" # 50%\n\\end{lstlisting}',
+                    '\\begin{minted}{python}\nx = "$" # 50%\n\\end{minted}']
+        for literal in literals:
+            body = '\\begin{document}\n' + literal + '\nAFTER\n\\end{document}'
+            chunks = tex.chunk_source(body.encode(), AID)
+            self.assertTrue(any(literal in c['text'] for c in chunks))
+            for c in chunks:
+                lines = body.splitlines()[c['line_start']-1:c['line_end']]
+                self.assertIn(c['text'], '\n'.join(lines))
+        from src.data_ingestion.tex_chunking import split_tex
+        with self.assertRaisesRegex(ValueError, 'literal exceeds'):
+            list(split_tex(r'\begin{verbatim}' + 'x' * 33000 + r'\end{verbatim}'))
+        literal = '\\begin{verbatim}\n' + 'x%$\\input{missing} ' * 150 + '\n\\end{verbatim}'
+        pieces = list(split_tex('Before.\n' + literal + '\nAfter.'))
+        self.assertTrue(any(literal in p['text'] and p['oversized_math'] for p in pieces))
+        for malformed in (r'\verb|unclosed', r'\begin{verbatim}unclosed'):
+            with self.assertRaises(ValueError):
+                tex.chunk_source(('\\begin{document}' + malformed + '\\end{document}').encode(), AID)
+
+    def test_comments_and_constant_branches_do_not_publish_hidden_text(self):
+        body = r'''\begin{document}
+START
+\begin{comment}
+\begin{document}\input{missing} $unmatched
+\end{comment}
+\iffalse HIDDEN \input{missing} \iftrue NESTED\else STILL_HIDDEN\fi
+\else KEPT\fi
+\iftrue TRUE\else FALSE\fi
+% OMITTED
+END
+\end{document}'''
+        chunks = tex.chunk_source(body.encode(), AID)
+        text = '\n'.join(c['text'] for c in chunks)
+        for hidden in ('HIDDEN', 'NESTED', 'FALSE', 'OMITTED', 'missing', 'unmatched'):
+            self.assertNotIn(hidden, text)
+        for kept in ('START', 'KEPT', 'TRUE', 'END'):
+            self.assertIn(kept, text)
+        self.assertEqual(body.count('\n'), tex._uncomment(body).count('\n'))
+        for bad in (r'\iffalse x', r'\fi', r'\iftrue x\else y\else z\fi',
+                    r'\ifdefined\foo x\else y\fi', r'\ifnum1=1 x\fi',
+                    r'\unless\iftrue HIDDEN\else KEPT\fi'):
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                tex.chunk_source(('\\begin{document}' + bad + '\\end{document}').encode(), AID)
+
+    def test_macro_names_are_not_primitive_conditions_and_custom_conditions_fail_closed(self):
+        raw = r'\begin{document}\ifplotsrgb{A}{B}\ifdefempty{X}{}{Y}\end{document}'
+        self.assertIn(r'\ifplotsrgb', tex.chunk_source(raw.encode(), AID)[0]['text'])
+        with self.assertRaisesRegex(ValueError, 'Conditional macro includes'):
+            tex.chunk_source(archive({'main.tex': r'\begin{document}\ifthenelse{X}{\input{a}}{\input{b}}\end{document}',
+                                      'a.tex': 'Branch A', 'b.tex': 'Branch B'}), AID)
+        raw = r'\newif\ifCameraReview\begin{document}\ifCameraReview A\else B\fi\end{document}'
+        with self.assertRaises(ValueError):
+            tex.chunk_source(raw.encode(), AID)
+
+    def test_larger_asset_bundles_still_have_separate_text_and_expansion_bounds(self):
+        paper = r'\begin{document}Paper evidence\end{document}'
+        data = archive({'main.tex': paper, 'image.bin': 'x' * 1000})
+        self.assertTrue(tex.chunk_source(data, AID))
+        with patch.object(tex, 'MAX_TEX', 10), self.assertRaises(ValueError):
+            tex.read_source(data)
+        with patch.object(tex, 'MAX_EXPANDED', 100), self.assertRaises(ValueError):
+            tex.read_source(data)
+        with patch.object(tex, 'MAX_TEX', 10), self.assertRaises(ValueError):
+            tex.read_source(gzip.compress(paper.encode()))

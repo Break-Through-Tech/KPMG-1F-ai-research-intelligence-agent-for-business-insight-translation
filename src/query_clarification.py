@@ -33,9 +33,9 @@ SCHEMA = _object({
 })
 
 
-def _bounded_text(value):
-    if not isinstance(value, str) or not value.strip() or len(value) > 6000:
-        raise ValueError('Question/answer must contain 1–6000 characters.')
+def _bounded_text(value, max_length=6000):
+    if not isinstance(value, str) or not value.strip() or len(value) > max_length:
+        raise ValueError(f'Text must contain 1–{max_length} characters.')
     value.encode('utf-8')
     return value
 
@@ -76,7 +76,7 @@ def validate_decision(value, *, phase, passages):
 def clarification_with_generation(*, phase, query, history, passages, generate):
     """Prompted baseline, replaceable by a trained adapter with this same contract."""
     history = validate_history(history)
-    _bounded_text(query)
+    _bounded_text(query, max_length=60000)
     validate_evidence(passages)
     prompt = (
         'Decide whether this research question genuinely needs clarification. '
@@ -161,7 +161,7 @@ class ClarifyingResearch:
         query = original['query']
         if turns:
             query += '\nUser clarification exchanges (intent only):\n' + json.dumps(turns)
-        _bounded_text(query)
+        _bounded_text(query, max_length=60000)
         decisions = []
         passages = []
         for phase in ('pre', 'post'):
@@ -174,7 +174,9 @@ class ClarifyingResearch:
             if decision['decision'] == 'clarify':
                 if len(turns) >= 3:
                     raise ValueError('Clarification limit reached; start a new session.')
-                pending_turns = turns + [{'question': decision['question'], 'answer': None}]
+                pending_turns = turns + [{'question': decision['question'],
+                    'options': [{'text': option['text']} for option in decision['options']],
+                    'phase': phase, 'answer': None}]
                 self._pending = deepcopy((original, pending_turns))
                 return {'status': 'clarification_required', 'phase': phase,
                         'original_request': deepcopy(original), 'clarification': decision,

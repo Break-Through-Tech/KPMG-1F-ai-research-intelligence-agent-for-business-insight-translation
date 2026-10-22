@@ -71,6 +71,30 @@ class ClarificationTests(unittest.TestCase):
         self.assertEqual(self.retrieve.call_count, 2)
         self.summary.assert_called_once()
 
+    def test_ordinal_resume_retains_ordered_choices_and_provenance(self):
+        decision = clarify()
+        decision['options'] = [{'text': name, 'support': []} for name in ('Granite', 'GPT-OSS')]
+        session = self.make_session([decision, proceed('GPT-OSS limits'), proceed('GPT-OSS limits')])
+        self.ask(session, 'What are its limits?')
+        decision['options'].reverse()  # Caller mutation cannot reorder stored choices.
+        result = session.resume('the second option', context_id='corpus-config-A')['result']
+        query = self.gate.call_args_list[1].kwargs['query']
+        self.assertLess(query.index('Granite'), query.index('GPT-OSS'))
+        turn = result['provenance']['clarification']['turns'][0]
+        self.assertEqual([o['text'] for o in turn['options']], ['Granite', 'GPT-OSS'])
+        self.assertEqual(turn['phase'], 'pre')
+        self.assertEqual(turn['answer'], 'the second option')
+        self.retrieve.assert_called_once_with('GPT-OSS limits', 5)
+        self.assertFalse(result['approved'])
+
+    def test_maximum_option_text_can_resume_with_bounded_internal_context(self):
+        decision = clarify()
+        decision['options'] = [{'text': str(i) + 'x' * 1199, 'support': []} for i in range(6)]
+        session = self.make_session([decision, proceed('chosen method'), proceed('chosen method')])
+        self.ask(session)
+        session.resume('the second option', context_id='corpus-config-A')
+        self.assertGreater(len(self.gate.call_args_list[1].kwargs['query']), 6000)
+
     def test_context_resolved_followup_passes_history_not_as_evidence(self):
         session = self.make_session()
         self.ask(session, 'Explain Granite')

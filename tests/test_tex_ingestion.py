@@ -383,6 +383,26 @@ END
                 tex.chunk_source(archive({'main.tex': r'\begin{document}' + body +
                     r'\end{document}', **extra}), AID)
 
+    def test_uninspected_include_and_unbraced_macro_arguments_fall_back(self):
+        for preamble, condition, extra in (
+            (r'{\input{flags}}', r'\iftrue', {'flags.tex': r'\global\let\iftrue\iffalse'}),
+            (r'\newif\ifFlag\newcommand{\ignore}[1]{}\ignore\Flagtrue', r'\ifFlag', {}),
+        ):
+            with self.subTest(preamble=preamble), self.assertRaises(ValueError):
+                tex.chunk_source(archive({'main.tex': preamble + r'\begin{document}' + condition +
+                    r' WRONG\else RIGHT\fi\end{document}', **extra}), AID)
+
+    def test_deeply_nested_manifest_is_a_fallback_compatible_rejection(self):
+        manifest = '{"sources": [{"filename":"main.tex","usage":"toplevel"}],"extra":' + '[' * 20000 + '0' + ']' * 20000 + '}'
+        with self.assertRaisesRegex(ValueError, 'nested source manifest'):
+            tex.chunk_source(archive({'main.tex': r'\begin{document}Plain\end{document}', '00README.json': manifest}), AID)
+
+    def test_explicit_flag_test_in_preamble_is_not_an_opaque_macro_call(self):
+        source = r'\newif\ifFlag\Flagtrue\ifFlag\Flagfalse\fi' + r'\begin{document}\ifFlag WRONG\else RIGHT\fi\end{document}'
+        result = tex.chunk_source(archive({'main.tex': source}), AID)
+        self.assertIn('RIGHT', str(result))
+        self.assertNotIn('WRONG', str(result))
+
     def test_indirect_preamble_file_mutations_require_fallback(self):
         for preamble in (
             r'\let\RuntimeFlag\relax\newif\ifFlag\ifdefined\RuntimeFlag\input{flags}\fi',

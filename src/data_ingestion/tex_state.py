@@ -42,7 +42,7 @@ class PreambleState:
             if expanded == self.mutators:
                 break
             self.mutators = expanded
-        if self.calls.intersection(self.mutators):
+        if self.calls.intersection(self.mutators | self.defined):
             self.unsupported = True
             self.defined.clear()
             self.values.clear()
@@ -73,7 +73,9 @@ class PreambleState:
                 continue
             token, command = match[0], match[1]
             active = all(value is True for value, _ in stack)
-            if command and all(value is not False for value, _ in stack):
+            if (command and command not in PRIMITIVES and command not in self.values
+                    and command not in self.tainted
+                    and all(value is not False for value, _ in stack)):
                 self.calls.add(command)
             if command in ('begingroup', 'bgroup', 'endgroup', 'egroup'):
                 depth += 1 if command in ('begingroup', 'bgroup') else -1
@@ -90,6 +92,7 @@ class PreambleState:
                         raise ValueError('Unsupported preamble include syntax')
                     include(arg[1], self)
                 elif active or any(v is None for v, _ in stack):
+                    self.unsupported = True
                     # Unknown branches and groups may load state-mutating files.
                     # Includes in a group could mutate flags with global assigns.
                     self.defined.clear()

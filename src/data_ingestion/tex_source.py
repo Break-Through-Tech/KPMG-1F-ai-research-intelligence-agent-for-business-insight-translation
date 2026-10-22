@@ -82,7 +82,10 @@ def read_source(data, *, with_manifest=False):
                 if name == '00README.json':
                     if manifest is not None or member.size > 1024 * 1024:
                         raise ValueError('Duplicate or oversized source manifest')
-                    manifest = json.loads(archive.extractfile(member).read())
+                    try:
+                        manifest = json.loads(archive.extractfile(member).read())
+                    except RecursionError:
+                        raise ValueError('Excessively nested source manifest') from None
                     if not isinstance(manifest, dict):
                         raise ValueError('Invalid source manifest')
                     continue

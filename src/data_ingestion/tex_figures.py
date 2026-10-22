@@ -34,7 +34,7 @@ def extract_figure_text(data, aid, title=''):
     root_dir = PurePosixPath(root).parent
     names, _ = asset_members(data)
     # Only literal root-preamble graphicspath declarations are understood.
-    preamble = literal_preamble(files[root])
+    preamble, preamble_macros = literal_preamble(files[root], with_macros=True)
     paths = []
     declarations = list(re.finditer(r'\\graphicspath\s*\{((?:\s*\{[^{}]*\}\s*)*)\}', preamble))
     if declarations:
@@ -42,7 +42,9 @@ def extract_figure_text(data, aid, title=''):
     # A body mutation can affect a later reference in a different include block.
     # This literal-only reader must not reuse a frozen preamble path in that case.
     mutation = re.compile(r'\\(?:graphicspath|if[a-zA-Z]+|def|gdef|edef|xdef|let|newcommand|renewcommand|providecommand|DeclareRobustCommand)(?![a-zA-Z])')
-    uncertain = any(mutation.search(structural(text)[1]) for _, _, text in blocks)
+    uncertain = any(mutation.search(structural(text)[1]) or
+                    preamble_macros.intersection(re.findall(r'\\([a-zA-Z]+)', structural(text)[1]))
+                    for _, _, text in blocks)
     coverage = []
     for filename, first_line, text in blocks:
         code = structural(text)[1]

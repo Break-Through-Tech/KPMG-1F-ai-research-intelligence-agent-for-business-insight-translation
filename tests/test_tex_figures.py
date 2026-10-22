@@ -72,6 +72,18 @@ class FigureTextTests(unittest.TestCase):
         self.assertIn('ACTIVE', result['chunks'][0]['text'])
         self.assertNotIn('INACTIVE', str(result))
 
+    def test_uncalled_preamble_macro_does_not_select_its_graphicspath(self):
+        source = paper(r'\includegraphics{sample.pdf}',
+            r'\graphicspath{{live/}}\newcommand{\unused}{\graphicspath{{unused/}}}')
+        data = bundle({'main.tex': source, 'live/sample.pdf': pdf('ACTIVE'),
+                       'unused/sample.pdf': pdf('INACTIVE')})
+        result = figures.extract_figure_text(data, AID)
+        self.assertEqual(result['coverage'][0]['asset_file'], 'live/sample.pdf')
+        with self.assertRaisesRegex(ValueError, 'Unresolved preamble'):
+            figures.extract_figure_text(bundle({'main.tex': source.replace(r'\begin{document}',
+                r'\unused\begin{document}'), 'live/sample.pdf': pdf('ACTIVE'),
+                'unused/sample.pdf': pdf('INACTIVE')}), AID)
+
     def test_unknown_preamble_path_state_requires_fallback(self):
         source = paper(r'\includegraphics{sample.pdf}',
                        r'\ifdefined\RuntimeFlag\graphicspath{{live/}}\fi')

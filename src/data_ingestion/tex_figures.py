@@ -10,7 +10,7 @@ import re
 import pymupdf
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-from .tex_assets import asset_members
+from .tex_assets import asset_members, literal_preamble
 from .tex_lexical import structural
 from .tex_source import _name, read_source, source_blocks, source_url
 
@@ -34,7 +34,7 @@ def extract_figure_text(data, aid, title=''):
     root_dir = PurePosixPath(root).parent
     names, _ = asset_members(data)
     # Only literal root-preamble graphicspath declarations are understood.
-    preamble = structural(files[root])[1].split(r'\begin{document}', 1)[0]
+    preamble = literal_preamble(files[root])
     paths = []
     declarations = list(re.finditer(r'\\graphicspath\s*\{((?:\s*\{[^{}]*\}\s*)*)\}', preamble))
     if declarations:

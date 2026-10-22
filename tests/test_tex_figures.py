@@ -62,6 +62,23 @@ class FigureTextTests(unittest.TestCase):
         self.assertIn('Prompt starts at LS Apartment', result['chunks'][0]['text'])
         self.assertNotIn('Prompt starts', str(chunk_source(data, AID)))
 
+    def test_inactive_preamble_graphicspath_never_selects_unused_asset(self):
+        source = paper(r'\includegraphics{sample.pdf}',
+                       r'\graphicspath{{live/}}\iffalse\graphicspath{{unused/}}\fi')
+        data = bundle({'main.tex': source, 'live/sample.pdf': pdf('ACTIVE'),
+                       'unused/sample.pdf': pdf('INACTIVE')})
+        result = figures.extract_figure_text(data, AID)
+        self.assertEqual(result['coverage'][0]['asset_file'], 'live/sample.pdf')
+        self.assertIn('ACTIVE', result['chunks'][0]['text'])
+        self.assertNotIn('INACTIVE', str(result))
+
+    def test_unknown_preamble_path_state_requires_fallback(self):
+        source = paper(r'\includegraphics{sample.pdf}',
+                       r'\ifdefined\RuntimeFlag\graphicspath{{live/}}\fi')
+        with self.assertRaisesRegex(ValueError, 'Unresolved preamble'):
+            figures.extract_figure_text(bundle({'main.tex': source,
+                'live/sample.pdf': pdf('UNPROVEN')}), AID)
+
     def test_active_references_graphicspath_and_explicit_gaps(self):
         source = paper(r'''\iffalse\includegraphics{hidden.pdf}\fi
 % \includegraphics{comment.pdf}

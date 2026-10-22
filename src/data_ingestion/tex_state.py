@@ -69,7 +69,7 @@ class PreambleState:
                 continue
             token, command = match[0], match[1]
             active = all(value is True for value, _ in stack)
-            if active and depth == 0 and command:
+            if command and all(value is not False for value, _ in stack):
                 self.calls.add(command)
             if command in ('begingroup', 'bgroup', 'endgroup', 'egroup'):
                 depth += 1 if command in ('begingroup', 'bgroup') else -1
@@ -182,8 +182,12 @@ class PreambleState:
                     source = re.match(r'\s*=?\s*\\(?:[a-zA-Z@]+|.)', code[target.end():])
                     if source and (active or any(v is None for v, _ in stack)):
                         alias = re.search(r'\\([a-zA-Z]+)', source[0])
-                        if alias and re.fullmatch(r'[a-zA-Z]+(?:true|false)', alias[1]):
-                            self.invalidate(alias[1])
+                        if alias:
+                            self.dependencies[target[1]] = {alias[1]}
+                            if alias[1] in {'input', 'include', 'csname', 'let', 'futurelet'}:
+                                self.mutators.add(target[1])
+                            if re.fullmatch(r'[a-zA-Z]+(?:true|false)', alias[1]):
+                                self.invalidate(alias[1])
                     cursor = target.end() + (source.end() if source else 0)
             elif command in self.mutators or command in ('csname', 'unless', 'catcode', 'usepackage', 'documentclass'):
                 if active or any(v is None for v, _ in stack):

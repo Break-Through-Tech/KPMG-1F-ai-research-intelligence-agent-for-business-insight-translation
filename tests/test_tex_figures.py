@@ -113,6 +113,16 @@ class FigureTextTests(unittest.TestCase):
                 self.assertEqual(result['chunks'], [])
                 self.assertEqual(result['coverage'][0]['status'], 'unsupported_source_semantics')
 
+    def test_dynamic_body_path_changes_cannot_publish_stale_text(self):
+        for body, extra in ((r'\csname graphicspath\endcsname{{other/}}\includegraphics{sample.pdf}', {}),
+                            (r'\input{paths}\includegraphics{sample.pdf}',
+                             {'paths.tex': r'\csname graphicspath\endcsname{{other/}}'})):
+            with self.subTest(body=body):
+                result = figures.extract_figure_text(bundle({'main.tex': paper(body, r'\graphicspath{{live/}}'),
+                    'live/sample.pdf': pdf('STALE'), 'other/sample.pdf': pdf('CURRENT'), **extra}), AID)
+                self.assertEqual(result['chunks'], [])
+                self.assertEqual(result['coverage'][0]['status'], 'unsupported_source_semantics')
+
     def test_unknown_preamble_path_state_requires_fallback(self):
         source = paper(r'\includegraphics{sample.pdf}',
                        r'\ifdefined\RuntimeFlag\graphicspath{{live/}}\fi')

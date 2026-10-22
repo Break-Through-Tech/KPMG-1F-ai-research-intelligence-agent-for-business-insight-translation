@@ -11,6 +11,8 @@ COMMAND = re.compile(r'\\([a-zA-Z]+)|\\.|[{}]')
 TARGET = re.compile(r'\s*\\([a-zA-Z]+)(?![a-zA-Z])')
 DEFINITIONS = {'def', 'gdef', 'edef', 'xdef', 'newcommand', 'renewcommand',
                'providecommand', 'DeclareRobustCommand'}
+STRUCTURAL = PRIMITIVES | DEFINITIONS | {'else', 'fi', 'or', 'unless', 'let', 'futurelet',
+    'newif', 'input', 'include', 'begingroup', 'endgroup', 'bgroup', 'egroup', 'csname', 'catcode'}
 
 
 def group_end(code, start):
@@ -42,13 +44,19 @@ class PreambleState:
             if expanded == self.mutators:
                 break
             self.mutators = expanded
-        if self.calls.intersection(self.mutators | self.defined):
+        opaque = self.mutators | self.defined
+        while True:
+            expanded = opaque | {name for name, refs in self.dependencies.items() if refs.intersection(opaque)}
+            if expanded == opaque:
+                break
+            opaque = expanded
+        if self.calls.intersection(opaque):
             self.unsupported = True
             self.defined.clear()
             self.values.clear()
 
     def invalidate(self, name):
-        if name in PRIMITIVES:
+        if name in STRUCTURAL:
             self.unsupported = True
         self.defined.discard(name)
         self.values.pop(name, None)
@@ -110,7 +118,7 @@ class PreambleState:
                     self.values.clear()
                     continue
                 name = target[1]
-                if name in PRIMITIVES:
+                if name in STRUCTURAL:
                     self.unsupported = True
                 pos = pos + wrapper.end() if wrapper else target.end()
                 # Skip argument counts/defaults as syntax, not replacement
@@ -148,7 +156,7 @@ class PreambleState:
                     raise ValueError('Unsupported newif declaration')
                 cursor = target.end()
                 name = target[1]
-                if name in PRIMITIVES:
+                if name in STRUCTURAL:
                     self.unsupported = True
                 if active and depth == 0:
                     self.values[name] = False
@@ -202,6 +210,8 @@ class PreambleState:
                     cursor = target.end() + (source.end() if source else 0)
             elif command in self.mutators or command in ('csname', 'unless', 'catcode', 'usepackage', 'documentclass'):
                 if active or any(v is None for v, _ in stack):
+                    if command in {'csname', 'catcode', 'unless'}:
+                        self.unsupported = True
                     self.defined.clear()
                     self.values.clear()
         if stack:

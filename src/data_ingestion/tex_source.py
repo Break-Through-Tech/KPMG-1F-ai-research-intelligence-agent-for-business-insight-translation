@@ -165,16 +165,23 @@ def source_blocks(data):
         preamble(roots[0])
         state.finalize()
     except ValueError:
+        if state.unsupported:
+            raise ValueError('Unsupported preamble mutation requires HTML/PDF fallback') from None
         # Optional state discovery must not change the existing acceptance of
         # papers without body conditionals. No partial facts survive failure.
         state = PreambleState()
+    if state.unsupported:
+        raise ValueError('Unsupported preamble mutation requires HTML/PDF fallback')
 
     # A frozen preamble snapshot is usable only when the whole reachable body
     # is free of mutations. Checking a file in isolation would miss a setter in
     # an include followed by a conditional in its parent or a sibling.
     pending, checked = [roots[0]], set()
     mutations = r'\\(?:def|gdef|edef|xdef|let|futurelet|newif|newcommand|renewcommand|providecommand|DeclareRobustCommand|csname|catcode|usepackage|inputencoding)(?![a-zA-Z])'
-    while pending and (state.values or state.defined):
+    body_uncertain = False
+    setters = {n[2:] + suffix for n in state.values for suffix in ('true', 'false')}
+    mutators = set(state.mutators)
+    while pending:
         name = pending.pop()
         if name in checked:
             continue
@@ -182,11 +189,10 @@ def source_blocks(data):
         body = syntax[name]
         if name == roots[0]:
             body = body.split(r'\begin{document}', 1)[1].split(r'\end{document}', 1)[0]
-        setters = {n[2:] + suffix for n in state.values for suffix in ('true', 'false')}
         commands = set(re.findall(r'\\([a-zA-Z]+)', body))
-        if re.search(mutations, body) or commands.intersection(setters | state.mutators):
+        if re.search(mutations, body) or commands.intersection(setters | mutators):
             state = PreambleState()
-            break
+            body_uncertain = True
         for match in INCLUDE.finditer(body):
             try:
                 pending.append(resolve(match[1], name))
@@ -215,6 +221,9 @@ def source_blocks(data):
             end = code.find(r'\end{document}', start)
             if end < 0:
                 raise ValueError("Unterminated TeX document")
+        controls = set(re.findall(r'\\([a-zA-Z]+)', code[start:end]))
+        if body_uncertain and controls.intersection(PRIMITIVES | custom):
+            raise ValueError('Body mutation makes conditional selection unsafe')
         filtered = constant_branches(text[start:end], custom,
                                      values=state.values, defined=state.defined)
         # Prefix padding keeps all original file/line offsets stable.

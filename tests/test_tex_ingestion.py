@@ -362,6 +362,27 @@ END
         with self.assertRaises(ValueError):
             tex.chunk_source(archive(files), AID)
 
+    def test_dynamic_macro_and_primitive_reassignment_require_fallback(self):
+        for preamble, condition in (
+            (r'\newif\ifFlag\def\enable{\csname Flagtrue\endcsname}\enable', r'\ifFlag'),
+            (r'\let\iftrue\iffalse', r'\iftrue'),
+            (r'\def\iftrue{\iffalse}', r'\iftrue'),
+            (r'\def\change{\let\iftrue\iffalse}\change', r'\iftrue'),
+        ):
+            with self.subTest(preamble=preamble), self.assertRaises(ValueError):
+                tex.chunk_source(archive({'main.tex': preamble + r'\begin{document}' + condition +
+                    r' YES\else NO\fi\end{document}'}), AID)
+
+    def test_body_mutation_cannot_change_literal_primitive_selection(self):
+        for body, extra in (
+            (r'\let\iftrue\iffalse\iftrue WRONG\else RIGHT\fi', {}),
+            (r'\input{mutate}\iftrue WRONG\else RIGHT\fi',
+             {'mutate.tex': r'\let\iftrue\iffalse'}),
+        ):
+            with self.subTest(body=body), self.assertRaises(ValueError):
+                tex.chunk_source(archive({'main.tex': r'\begin{document}' + body +
+                    r'\end{document}', **extra}), AID)
+
     def test_indirect_preamble_file_mutations_require_fallback(self):
         for preamble in (
             r'\let\RuntimeFlag\relax\newif\ifFlag\ifdefined\RuntimeFlag\input{flags}\fi',

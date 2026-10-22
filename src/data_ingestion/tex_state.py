@@ -74,7 +74,7 @@ class PreambleState:
             token, command = match[0], match[1]
             active = all(value is True for value, _ in stack)
             if (command and command not in PRIMITIVES and command not in self.values
-                    and command not in self.tainted
+                    and not (command in self.tainted and command.startswith('if'))
                     and all(value is not False for value, _ in stack)):
                 self.calls.add(command)
             if command in ('begingroup', 'bgroup', 'endgroup', 'egroup'):

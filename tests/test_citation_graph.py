@@ -64,6 +64,20 @@ class CitationGraphTests(unittest.TestCase):
                 self.assertEqual(cited[0]['citation_sites'][0]['line'], 4)
                 self.assertEqual(len(graph.expansion_candidates(result)['candidates']), 1)
 
+    def test_multicitation_groups_keep_all_keys_and_optional_arguments(self):
+        for command in ('cites', 'parencites', 'textcites'):
+            with self.subTest(command=command):
+                result = graph.build_graph([document(body='\\' + command + '[see]{llama}[p.2]{unused}' + r'\bibliography{refs}')])
+                cited = [e for e in result['edges'] if e['type'] == 'cites']
+                self.assertEqual({e['citation_key'] for e in cited}, {'llama', 'unused'})
+                self.assertEqual(len(graph.expansion_candidates(result)['candidates']), 2)
+
+    def test_entry_shaped_field_text_does_not_corrupt_bibliography_line(self):
+        bib = '@misc{guide, note={Example: @article{llama, title={Example}}}}\n' + BIB
+        result = graph.build_graph([document(bib=bib)])
+        cited = next(e for e in result['edges'] if e['type'] == 'cites')
+        self.assertEqual(cited['bibliography_line'], 2)
+
     def test_unknown_preamble_bibliography_requires_fallback(self):
         source = paper(r'\cite{llama}', r'\ifdefined\RuntimeFlag\addbibresource{refs.bib}\fi')
         with self.assertRaisesRegex(ValueError, 'Unresolved preamble'):

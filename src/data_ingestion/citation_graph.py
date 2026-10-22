@@ -23,9 +23,57 @@ MAX_PAPERS = 100
 MAX_GRAPH_BYTES = 100 * 1024 * 1024
 MAX_SITES = 20000
 ARXIV = r'(?:\d{4}\.\d{4,5}|[a-z-]+(?:\.[A-Z]{2})?/\d{7})(?:v\d+)?'
-CITE = re.compile(r'\\((?:[Cc]ite[a-zA-Z]*|[Tt]extcite|[Pp]arencite|[Aa]utocite|[Ff]ootcite|[Ss]martcite|[Ss]upercite|nocite))\*?(?:\s*\[[^\]]*\])*\s*\{([^{}]+)\}')
+CITE = re.compile(r'\\((?:[Cc]ite[a-zA-Z]*|[Tt]extcites?|[Pp]arencites?|[Aa]utocites?|[Ff]ootcites?|[Ss]martcites?|[Ss]upercites?|nocite))\*?(?:\s*\[[^\]]*\])*\s*\{([^{}]+)\}')
 DECLARATION = re.compile(r'\\(?:bibliography|addbibresource)(?:\s*\[[^\]]*\])?\s*\{([^{}]+)\}')
 BIBITEM = re.compile(r'\\bibitem(?:\s*\[[^\]]*\])?\s*\{([^{}]+)\}')
+
+
+MULTICITES = {'cites', 'textcites', 'parencites', 'autocites', 'footcites', 'smartcites', 'supercites'}
+NEXT_CITE_GROUP = re.compile(r'(?:\s*\[[^\]]*\])*\s*\{([^{}]+)\}')
+
+
+def citation_sites(code):
+    for match in CITE.finditer(code):
+        yield match[1], match[2], match.start()
+        if match[1].lower() in MULTICITES:
+            cursor = match.end()
+            while group := NEXT_CITE_GROUP.match(code, cursor):
+                yield match[1], group[1], match.start()
+                cursor = group.end()
+
+
+def entry_locations(text):
+    """Locate top-level entries, never entry-shaped text inside field values."""
+    locations = defaultdict(list)
+    opener = re.compile(r'@([a-zA-Z]+)\s*([({])')
+    cursor = 0
+    while match := opener.search(text, cursor):
+        start, index = match.start(), match.end()
+        header = re.match(r'\s*([^,\s]+)\s*,', text[index:])
+        if header and match[1].lower() not in {'comment', 'string', 'preamble'}:
+            locations[header[1]].append(start)
+        brace_depth, quote, escaped = (1 if match[2] == '{' else 0), False, False
+        while index < len(text):
+            char = text[index]
+            index += 1
+            if escaped:
+                escaped = False
+                continue
+            if char == '\\':
+                escaped = True
+            elif char == '"' and brace_depth == (1 if match[2] == '{' else 0):
+                quote = not quote
+            elif not quote:
+                if char == '{':
+                    brace_depth += 1
+                elif char == '}':
+                    brace_depth -= 1
+                    if match[2] == '{' and brace_depth == 0:
+                        break
+                elif char == ')' and match[2] == '(' and brace_depth == 0:
+                    break
+        cursor = index
+    return locations
 
 
 def base_id(aid):
@@ -63,9 +111,7 @@ def _bib_entries(name, text):
     if any(re.search(r'@\s*[a-zA-Z]+\s*[({]', c) for c in database.comments):
         raise ValueError('Unparsed bibliography entry syntax')
     entries = []
-    locations = defaultdict(list)
-    for match in re.finditer(r'@\w+\s*[({]\s*([^,\s]+)\s*,', text):
-        locations[match[1]].append(match.start())
+    locations = entry_locations(text)
     occurrences = Counter()
     for entry in database.entries:
         key = entry['ID']
@@ -126,13 +172,13 @@ def bibliography(data):
     declarations = [(root, preamble)]
     for name, line, text in blocks:
         code = structural(text)[1]
-        for match in CITE.finditer(code):
-            for key in match[2].split(','):
+        for command, keys, position in citation_sites(code):
+            for key in keys.split(','):
                 key = key.strip()
                 if not key:
                     continue
-                sites[key].append(dict(source_file=name, line=line + text[:match.start()].count('\n'),
-                                       command=match[1]))
+                sites[key].append(dict(source_file=name, line=line + text[:position].count('\n'),
+                                       command=command))
                 site_count += 1
                 if site_count > MAX_SITES:
                     raise ValueError('Citation site limit exceeded')

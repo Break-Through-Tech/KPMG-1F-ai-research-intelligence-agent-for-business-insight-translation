@@ -60,8 +60,11 @@ resolved query drives retrieval and synthesis; post-check cannot silently rewrit
 it after retrieval. Reviewers should inspect intent rewrites as well as findings.
 
 Resume reruns both checks and retrieval, rather than reusing stale passages. Up to
-three clarification exchanges are allowed; combined question/clarification input
-is bounded to 6000 characters. After a limit error, create a new session with an
+three clarification exchanges are allowed. Each original question and answer is
+bounded to 6000 characters; the internal intent input (including ordered option
+text) is bounded to 60000 characters and serialized without ASCII expansion.
+Resolved queries remain bounded to 6000 characters and are stored before optional
+exchange detail in completed history. After a limit error, create a new session with an
 explicit question. Retryable failures preserve the pending clarification. Starting
 a fresh session also abandons pending state. Caller must not render old answers
 as results of failed operations.

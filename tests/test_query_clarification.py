@@ -90,10 +90,21 @@ class ClarificationTests(unittest.TestCase):
     def test_maximum_option_text_can_resume_with_bounded_internal_context(self):
         decision = clarify()
         decision['options'] = [{'text': str(i) + 'x' * 1199, 'support': []} for i in range(6)]
-        session = self.make_session([decision, proceed('chosen method'), proceed('chosen method')])
+        session = self.make_session([decision, proceed('chosen method'), proceed('chosen method'),
+                                     proceed('deployment cost'), proceed('deployment cost')])
         self.ask(session)
         session.resume('the second option', context_id='corpus-config-A')
         self.assertGreater(len(self.gate.call_args_list[1].kwargs['query']), 6000)
+        self.ask(session, 'What about its deployment cost?')
+        self.assertTrue(self.gate.call_args_list[3].kwargs['history'][0]['content'].startswith('chosen method'))
+
+    def test_unicode_option_and_answer_limits_resume_without_ascii_expansion(self):
+        decision = clarify()
+        decision['options'] = [{'text': '漢' * 1200, 'support': []} for _ in range(6)]
+        session = self.make_session([decision, proceed('chosen method'), proceed('chosen method')])
+        self.ask(session)
+        session.resume('語' * 6000, context_id='corpus-config-A')
+        self.assertLess(len(self.gate.call_args_list[1].kwargs['query']), 60000)
 
     def test_context_resolved_followup_passes_history_not_as_evidence(self):
         session = self.make_session()

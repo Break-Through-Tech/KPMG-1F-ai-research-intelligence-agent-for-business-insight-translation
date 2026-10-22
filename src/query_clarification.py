@@ -160,7 +160,7 @@ class ClarifyingResearch:
         history = validate_history(self._history)
         query = original['query']
         if turns:
-            query += '\nUser clarification exchanges (intent only):\n' + json.dumps(turns)
+            query += '\nUser clarification exchanges (intent only):\n' + json.dumps(turns, ensure_ascii=False)
         _bounded_text(query, max_length=60000)
         decisions = []
         passages = []
@@ -202,8 +202,10 @@ class ClarifyingResearch:
             translate_fn=self._translate, provenance=provenance)
         # Retain bounded complete turns. Full findings remain in the result, not history.
         answer = json.dumps(result['summary'], ensure_ascii=True)[:6000]
-        updated = history + [{'role': 'user', 'content': original['query'] +
-                    (('\nClarification: ' + json.dumps(turns)) if turns else '')},
+        # Put resolved intent first so optional exchange detail cannot evict it.
+        updated = history + [{'role': 'user', 'content': query +
+                    (('\nOriginal question: ' + original['query']) if query != original['query'] else '') +
+                    (('\nClarification: ' + json.dumps(turns, ensure_ascii=False)) if turns else '')},
                    {'role': 'assistant', 'content': answer}]
         updated[-2]['content'] = updated[-2]['content'][:6000]
         while len(updated) > 12 or sum(len(m['content']) for m in updated) > 24000:

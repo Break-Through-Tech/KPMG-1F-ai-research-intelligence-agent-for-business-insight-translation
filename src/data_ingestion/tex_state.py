@@ -33,6 +33,7 @@ class PreambleState:
         self.mutators = set()
         self.dependencies = {}
         self.calls = set()
+        self.unsupported = False
 
     def finalize(self):
         while True:
@@ -42,10 +43,13 @@ class PreambleState:
                 break
             self.mutators = expanded
         if self.calls.intersection(self.mutators):
+            self.unsupported = True
             self.defined.clear()
             self.values.clear()
 
     def invalidate(self, name):
+        if name in PRIMITIVES:
+            self.unsupported = True
         self.defined.discard(name)
         self.values.pop(name, None)
         self.tainted.add(name)
@@ -103,6 +107,8 @@ class PreambleState:
                     self.values.clear()
                     continue
                 name = target[1]
+                if name in PRIMITIVES:
+                    self.unsupported = True
                 pos = pos + wrapper.end() if wrapper else target.end()
                 # Skip argument counts/defaults as syntax, not replacement
                 # text. Unsupported nested defaults invalidate discovery.
@@ -119,7 +125,7 @@ class PreambleState:
                 cursor = group_end(code, opening)
                 replacement = code[opening:cursor]
                 self.dependencies[name] = set(re.findall(r'\\([a-zA-Z]+)', replacement))
-                if re.search(r'\\(?:input|include|newif|let|def|gdef|edef|xdef|[A-Za-z]+true|[A-Za-z]+false)(?![A-Za-z])', replacement):
+                if re.search(r'\\(?:csname|catcode|unless|usepackage|documentclass|futurelet|input|include|newif|let|def|gdef|edef|xdef|newcommand|renewcommand|providecommand|DeclareRobustCommand|[A-Za-z]+true|[A-Za-z]+false)(?![A-Za-z])', replacement):
                     self.mutators.add(name)
                 # No effects from definitions, inactive branches, or arguments.
                 if active and depth == 0 and command in ('def', 'gdef', 'newcommand', 'renewcommand', 'DeclareRobustCommand'):
@@ -139,6 +145,8 @@ class PreambleState:
                     raise ValueError('Unsupported newif declaration')
                 cursor = target.end()
                 name = target[1]
+                if name in PRIMITIVES:
+                    self.unsupported = True
                 if active and depth == 0:
                     self.values[name] = False
                     self.defined.add(name)

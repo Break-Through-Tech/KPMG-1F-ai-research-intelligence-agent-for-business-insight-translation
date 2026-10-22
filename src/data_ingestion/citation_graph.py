@@ -14,7 +14,7 @@ import tempfile
 import bibtexparser
 from bibtexparser.bparser import BibTexParser
 
-from .tex_assets import asset_members
+from .tex_assets import asset_members, literal_preamble
 from .tex_lexical import structural
 from .tex_source import MAX_ARCHIVE, _name, read_source, source_blocks, source_url
 
@@ -23,7 +23,7 @@ MAX_PAPERS = 100
 MAX_GRAPH_BYTES = 100 * 1024 * 1024
 MAX_SITES = 20000
 ARXIV = r'(?:\d{4}\.\d{4,5}|[a-z-]+(?:\.[A-Z]{2})?/\d{7})(?:v\d+)?'
-CITE = re.compile(r'\\((?:[Cc]ite[a-zA-Z]*|nocite))\*?(?:\s*\[[^\]]*\])*\s*\{([^{}]+)\}')
+CITE = re.compile(r'\\((?:[Cc]ite[a-zA-Z]*|[Tt]extcite|[Pp]arencite|[Aa]utocite|[Ff]ootcite|[Ss]martcite|[Ss]upercite|nocite))\*?(?:\s*\[[^\]]*\])*\s*\{([^{}]+)\}')
 DECLARATION = re.compile(r'\\(?:bibliography|addbibresource)(?:\s*\[[^\]]*\])?\s*\{([^{}]+)\}')
 BIBITEM = re.compile(r'\\bibitem(?:\s*\[[^\]]*\])?\s*\{([^{}]+)\}')
 
@@ -122,7 +122,7 @@ def bibliography(data):
     site_count = 0
     # BibLaTeX commonly declares resources before begin{document}. These
     # declarations are inspected separately; preamble citations are not edges.
-    preamble = structural(files[root])[1].split(r'\begin{document}', 1)[0]
+    preamble = literal_preamble(files[root])
     declarations = [(root, preamble)]
     for name, line, text in blocks:
         code = structural(text)[1]

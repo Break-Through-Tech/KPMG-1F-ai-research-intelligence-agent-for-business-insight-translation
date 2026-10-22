@@ -49,6 +49,26 @@ class CitationGraphTests(unittest.TestCase):
             'title': 'Comparison with arXiv:2401.00001'}), [])
         json.dumps(result, allow_nan=False)
 
+    def test_biblatex_citation_forms_and_inactive_resource(self):
+        for command in ('textcite', 'parencite', 'autocite', 'Textcite'):
+            with self.subTest(command=command):
+                source = paper('\\' + command + '{llama}',
+                    r'\iffalse\addbibresource{old.bib}\fi' + '\n' + r'\addbibresource{refs.bib}')
+                doc = dict(arxiv_id=AID, source_bytes=bundle({'main.tex': source,
+                    'refs.bib': BIB, 'old.bib': BIB}))
+                result = graph.build_graph([doc])
+                cited = [e for e in result['edges'] if e['type'] == 'cites']
+                self.assertEqual(len(cited), 1)
+                self.assertEqual(cited[0]['bibliography_file'], 'refs.bib')
+                self.assertEqual(cited[0]['citation_sites'][0]['command'], command)
+                self.assertEqual(cited[0]['citation_sites'][0]['line'], 4)
+                self.assertEqual(len(graph.expansion_candidates(result)['candidates']), 1)
+
+    def test_unknown_preamble_bibliography_requires_fallback(self):
+        source = paper(r'\cite{llama}', r'\ifdefined\RuntimeFlag\addbibresource{refs.bib}\fi')
+        with self.assertRaisesRegex(ValueError, 'Unresolved preamble'):
+            graph.build_graph([dict(arxiv_id=AID, source_bytes=bundle({'main.tex': source, 'refs.bib': BIB}))])
+
     def test_comments_literals_branches_and_case_mismatch(self):
         doc = document(body=r'''% \cite{hidden}
 \verb|\cite{literal}|

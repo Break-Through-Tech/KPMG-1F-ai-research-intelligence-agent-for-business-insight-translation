@@ -173,6 +173,24 @@ def _inline_entries(name, text, first_line=1, format='inline_bibitem'):
     return result
 
 
+def inline_block_entries(blocks):
+    """Carry inline entries across ordered includes; retain opener provenance."""
+    parts, origins, line = [], [], 1
+    for filename, first_line, text in blocks:
+        origins.append((line, line + text.count('\n'), filename, first_line))
+        parts.append(text)
+        line += text.count('\n') + 1
+    entries = _inline_entries('', '\n'.join(parts))
+    cursor = 0
+    for entry in entries:
+        while cursor + 1 < len(origins) and entry['line'] > origins[cursor][1]:
+            cursor += 1
+        start, _, filename, first_line = origins[cursor]
+        entry['source_file'] = filename
+        entry['line'] = first_line + entry['line'] - start
+    return entries
+
+
 def bibliography(data):
     """Resolve declared .bib paths; root-matched BBL fallback stays provisional."""
     blocks = source_blocks(data)
@@ -204,7 +222,7 @@ def bibliography(data):
                 if site_count > MAX_SITES:
                     raise ValueError('Citation site limit exceeded')
         declarations.append((name, code))
-        entries.extend(_inline_entries(name, text, line))
+    entries.extend(inline_block_entries(blocks))
     for name, code in declarations:
         for match in DECLARATION.finditer(code):
             for reference in match[1].split(','):

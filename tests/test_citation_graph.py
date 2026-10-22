@@ -167,6 +167,20 @@ class CitationGraphTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 graph.expansion_candidates({}, limit)
 
+    def test_inline_entry_continues_across_includes_and_keeps_origin(self):
+        source = paper(r'\cite{k}\begin{thebibliography}{9}\bibitem{k} arXiv:2407.21783 \input{extra}\end{thebibliography}')
+        result = graph.build_graph([dict(arxiv_id=AID, source_bytes=bundle({'main.tex': source,
+            'extra.tex': 'arXiv:2401.00001'}))])
+        edge = result['edges'][0]
+        self.assertEqual(edge['identity_status'], 'unresolved_or_provisional')
+        self.assertEqual(edge['bibliography_file'], 'main.tex')
+        self.assertEqual(graph.expansion_candidates(result)['candidates'], [])
+        source = paper(r'\cite{k}\input{refs}')
+        result = graph.build_graph([dict(arxiv_id=AID, source_bytes=bundle({'main.tex': source,
+            'refs.tex': '\n' + r'\begin{thebibliography}{9}\bibitem{k} arXiv:2407.21783.\end{thebibliography}'}))])
+        self.assertEqual(result['edges'][0]['bibliography_file'], 'refs.tex')
+        self.assertEqual(result['edges'][0]['bibliography_line'], 2)
+
     def test_cli_keeps_arxiv_identity_before_sentence_punctuation(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

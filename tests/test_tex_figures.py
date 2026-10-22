@@ -84,6 +84,25 @@ class FigureTextTests(unittest.TestCase):
                 r'\unused\begin{document}'), 'live/sample.pdf': pdf('ACTIVE'),
                 'unused/sample.pdf': pdf('INACTIVE')}), AID)
 
+    def test_scoped_preamble_paths_require_fallback(self):
+        for scoped in (r'{\graphicspath{{unused/}}}',
+                       r'\begingroup\graphicspath{{unused/}}\endgroup'):
+            with self.subTest(scoped=scoped), self.assertRaisesRegex(ValueError, 'Scoped preamble'):
+                source = paper(r'\includegraphics{sample.pdf}', r'\graphicspath{{live/}}' + scoped)
+                figures.extract_figure_text(bundle({'main.tex': source,
+                    'live/sample.pdf': pdf('ACTIVE'), 'unused/sample.pdf': pdf('INACTIVE')}), AID)
+
+    def test_body_path_mutations_across_blocks_never_publish_frozen_asset(self):
+        for body, extra in ((r'\graphicspath{{other/}}\includegraphics{sample.pdf}', {}),
+                            (r'\input{paths}\includegraphics{sample.pdf}',
+                             {'paths.tex': r'\graphicspath{{other/}}'})):
+            with self.subTest(body=body):
+                data = bundle({'main.tex': paper(body, r'\graphicspath{{live/}}'),
+                    'live/sample.pdf': pdf('STALE'), 'other/sample.pdf': pdf('CURRENT'), **extra})
+                result = figures.extract_figure_text(data, AID)
+                self.assertEqual(result['chunks'], [])
+                self.assertEqual(result['coverage'][0]['status'], 'unsupported_source_semantics')
+
     def test_unknown_preamble_path_state_requires_fallback(self):
         source = paper(r'\includegraphics{sample.pdf}',
                        r'\ifdefined\RuntimeFlag\graphicspath{{live/}}\fi')

@@ -83,4 +83,17 @@ def literal_preamble(text):
     controls = set(re.findall(r'\\([a-zA-Z]+)', code))
     if controls.intersection(PRIMITIVES | flags | macros | {'unless', 'let', 'futurelet', 'input', 'include', 'csname'}):
         raise ValueError('Unresolved preamble asset declarations require fallback')
+    depth = 0
+    for token in re.finditer(r'\\([a-zA-Z]+)|\\.|[{}]', code):
+        command = token[1]
+        if command in {'graphicspath', 'bibliography', 'addbibresource'} and depth:
+            raise ValueError('Scoped preamble asset declarations require fallback')
+        if token[0] == '{' or command in {'begingroup', 'bgroup'}:
+            depth += 1
+        elif token[0] == '}' or command in {'endgroup', 'egroup'}:
+            depth -= 1
+            if depth < 0:
+                raise ValueError('Unmatched preamble asset scope')
+    if depth:
+        raise ValueError('Unterminated preamble asset scope')
     return code

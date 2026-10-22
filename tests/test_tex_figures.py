@@ -103,6 +103,16 @@ class FigureTextTests(unittest.TestCase):
                 self.assertEqual(result['chunks'], [])
                 self.assertEqual(result['coverage'][0]['status'], 'unsupported_source_semantics')
 
+    def test_body_macro_call_cannot_publish_a_stale_asset_path(self):
+        for body, extra in ((r'\switch\includegraphics{sample.pdf}', {}),
+                            (r'\input{paths}\includegraphics{sample.pdf}', {'paths.tex': r'\switch'})):
+            with self.subTest(body=body):
+                source = paper(body, r'\graphicspath{{live/}}\newcommand{\switch}{\graphicspath{{other/}}}')
+                result = figures.extract_figure_text(bundle({'main.tex': source,
+                    'live/sample.pdf': pdf('STALE'), 'other/sample.pdf': pdf('CURRENT'), **extra}), AID)
+                self.assertEqual(result['chunks'], [])
+                self.assertEqual(result['coverage'][0]['status'], 'unsupported_source_semantics')
+
     def test_unknown_preamble_path_state_requires_fallback(self):
         source = paper(r'\includegraphics{sample.pdf}',
                        r'\ifdefined\RuntimeFlag\graphicspath{{live/}}\fi')

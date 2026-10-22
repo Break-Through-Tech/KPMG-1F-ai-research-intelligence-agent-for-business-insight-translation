@@ -43,7 +43,7 @@ def asset_members(data, selected=()):
     return names, payloads
 
 
-def literal_preamble(text):
+def literal_preamble(text, *, with_macros=False):
     """Filter literal branches; unresolved conditionals cannot select assets.
 
     No custom flags, packages, includes or macro bodies are executed here.
@@ -96,4 +96,4 @@ def literal_preamble(text):
                 raise ValueError('Unmatched preamble asset scope')
     if depth:
         raise ValueError('Unterminated preamble asset scope')
-    return code
+    return (code, macros) if with_macros else code

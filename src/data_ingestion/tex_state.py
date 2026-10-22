@@ -85,7 +85,8 @@ class PreambleState:
                     if arg is None:
                         raise ValueError('Unsupported preamble include syntax')
                     include(arg[1], self)
-                elif active:
+                elif active or any(v is None for v, _ in stack):
+                    # Unknown branches and groups may load state-mutating files.
                     # Includes in a group could mutate flags with global assigns.
                     self.defined.clear()
                     self.values.clear()
@@ -118,7 +119,7 @@ class PreambleState:
                 cursor = group_end(code, opening)
                 replacement = code[opening:cursor]
                 self.dependencies[name] = set(re.findall(r'\\([a-zA-Z]+)', replacement))
-                if re.search(r'\\(?:newif|let|def|gdef|edef|xdef|[A-Za-z]+true|[A-Za-z]+false)(?![A-Za-z])', replacement):
+                if re.search(r'\\(?:input|include|newif|let|def|gdef|edef|xdef|[A-Za-z]+true|[A-Za-z]+false)(?![A-Za-z])', replacement):
                     self.mutators.add(name)
                 # No effects from definitions, inactive branches, or arguments.
                 if active and depth == 0 and command in ('def', 'gdef', 'newcommand', 'renewcommand', 'DeclareRobustCommand'):

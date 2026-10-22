@@ -362,6 +362,17 @@ END
         with self.assertRaises(ValueError):
             tex.chunk_source(archive(files), AID)
 
+    def test_indirect_preamble_file_mutations_require_fallback(self):
+        for preamble in (
+            r'\let\RuntimeFlag\relax\newif\ifFlag\ifdefined\RuntimeFlag\input{flags}\fi',
+            r'\newif\ifFlag\def\enable{\input{flags}}\enable',
+            r'\newif\ifFlag\def\outer{\inner}\def\inner{\include{flags}}\outer',
+        ):
+            with self.subTest(preamble=preamble), self.assertRaises(ValueError):
+                data = archive({'main.tex': preamble + r'\begin{document}\ifFlag YES\else NO\fi\end{document}',
+                               'flags.tex': r'\Flagtrue'})
+                tex.chunk_source(data, AID)
+
     def test_unknown_scoped_and_mutated_state_stays_unresolved(self):
         cases = [
             (r'\newif\ifFlag\ifdefined\Unknown\Flagtrue\fi', ''),

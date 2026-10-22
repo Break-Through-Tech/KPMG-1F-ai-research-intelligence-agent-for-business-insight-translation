@@ -13,6 +13,7 @@ import tempfile
 
 import bibtexparser
 from bibtexparser.bparser import BibTexParser
+from bibtexparser.bibdatabase import BibDataString, BibDataStringExpression
 
 from .tex_assets import asset_members, literal_preamble
 from .tex_lexical import structural
@@ -23,7 +24,7 @@ MAX_PAPERS = 100
 MAX_GRAPH_BYTES = 100 * 1024 * 1024
 MAX_SITES = 20000
 ARXIV = r'(?:\d{4}\.\d{4,5}|[a-z-]+(?:\.[A-Z]{2})?/\d{7})(?:v\d+)?'
-CITE = re.compile(r'\\((?:[Cc]ite[a-zA-Z]*|[Tt]extcites?|[Pp]arencites?|[Aa]utocites?|[Ff]ootcites?|[Ss]martcites?|[Ss]upercites?|nocite))\*?(?:\s*\[[^\]]*\])*\s*\{([^{}]+)\}')
+CITE = re.compile(r'\\((?:[Cc]ite[a-zA-Z]*|[Tt]extcites?|[Pp]arencites?|[Aa]utocites?|[Ff]ootcites?|[Ss]martcites?|[Ss]upercites?|nocite))\*?(?:\s*\([^)]*\))*(?:\s*\[[^\]]*\])*\s*\{([^{}]+)\}')
 DECLARATION = re.compile(r'\\(?:bibliography|addbibresource)(?:\s*\[[^\]]*\])?\s*\{([^{}]+)\}')
 BIBITEM = re.compile(r'\\bibitem(?:\s*\[[^\]]*\])?\s*\{([^{}]+)\}')
 
@@ -99,6 +100,26 @@ def arxiv_identifiers(fields):
     return sorted(found)
 
 
+def bounded_string(value, database, seen=(), budget=None):
+    """Resolve only bounded acyclic string expressions, never recursive get_value."""
+    budget = [0, 0] if budget is None else budget
+    budget[0] += 1
+    if len(seen) > 32 or budget[0] > 10000:
+        raise ValueError('Bibliography string expansion limit')
+    if isinstance(value, str):
+        budget[1] += len(value)
+        if budget[1] > 1024 * 1024:
+            raise ValueError('Bibliography string byte limit')
+        return value
+    if isinstance(value, BibDataString):
+        if value.name in seen:
+            raise ValueError('Cyclic bibliography string')
+        return bounded_string(database.strings[value.name], database, (*seen, value.name), budget)
+    if isinstance(value, BibDataStringExpression):
+        return ''.join(bounded_string(part, database, seen, budget) for part in value.expr)
+    raise ValueError('Unsupported bibliography string expression')
+
+
 def _bib_entries(name, text):
     strings = re.findall(r'@string\s*[({]\s*([\w-]+)\s*=', text, re.I)
     duplicates = sorted(k for k, count in Counter(v.lower() for v in strings).items() if count > 1)
@@ -124,8 +145,8 @@ def _bib_entries(name, text):
                     fields[field] = str(value)
                     continue
                 try:
-                    value = value.get_value()
-                except (KeyError, AttributeError):
+                    value = bounded_string(value, database)
+                except (KeyError, AttributeError, ValueError):
                     unresolved.append(field)
                     value = str(value)
             fields[field] = value

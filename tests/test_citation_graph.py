@@ -65,12 +65,25 @@ class CitationGraphTests(unittest.TestCase):
                 self.assertEqual(len(graph.expansion_candidates(result)['candidates']), 1)
 
     def test_multicitation_groups_keep_all_keys_and_optional_arguments(self):
-        for command in ('cites', 'parencites', 'textcites'):
+        for command in ('cites', 'parencites', 'textcites', 'parencites(see)()'):
             with self.subTest(command=command):
                 result = graph.build_graph([document(body='\\' + command + '[see]{llama}[p.2]{unused}' + r'\bibliography{refs}')])
                 cited = [e for e in result['edges'] if e['type'] == 'cites']
                 self.assertEqual({e['citation_key'] for e in cited}, {'llama', 'unused'})
                 self.assertEqual(len(graph.expansion_candidates(result)['candidates']), 2)
+
+    def test_cyclic_and_excessive_string_expressions_stay_inspectable(self):
+        cases = [
+            '@string{a=b} @string{b=a} @article{llama,journal=a,eprint={2407.21783}}',
+            '@string{a0={x}} ' + ' '.join('@string{a%d=a%d}' % (i, i-1) for i in range(1, 40))
+                + ' @article{llama,journal=a39,eprint={2407.21783}}',
+        ]
+        for bib in cases:
+            with self.subTest(bib=bib):
+                entries = graph._bib_entries('refs.bib', bib)
+                self.assertEqual(entries[0]['unresolved_string_fields'], ['journal'])
+                result = graph.build_graph([document(bib=bib)])
+                self.assertEqual(graph.expansion_candidates(result)['candidates'], [])
 
     def test_entry_shaped_field_text_does_not_corrupt_bibliography_line(self):
         bib = '@misc{guide, note={Example: @article{llama, title={Example}}}}\n' + BIB

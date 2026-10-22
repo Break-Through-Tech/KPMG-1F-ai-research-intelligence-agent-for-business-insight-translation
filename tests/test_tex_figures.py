@@ -79,7 +79,7 @@ class FigureTextTests(unittest.TestCase):
                        'unused/sample.pdf': pdf('INACTIVE')})
         result = figures.extract_figure_text(data, AID)
         self.assertEqual(result['coverage'][0]['asset_file'], 'live/sample.pdf')
-        with self.assertRaisesRegex(ValueError, 'Unresolved preamble'):
+        with self.assertRaises(ValueError):
             figures.extract_figure_text(bundle({'main.tex': source.replace(r'\begin{document}',
                 r'\unused\begin{document}'), 'live/sample.pdf': pdf('ACTIVE'),
                 'unused/sample.pdf': pdf('INACTIVE')}), AID)

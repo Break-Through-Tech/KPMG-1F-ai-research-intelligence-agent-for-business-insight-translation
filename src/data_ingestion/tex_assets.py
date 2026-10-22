@@ -5,6 +5,7 @@ import re
 import tarfile
 
 from .tex_lexical import PRIMITIVES, blank, constant_branches, structural
+from .tex_state import DEFINITIONS, TARGET, group_end
 from .tex_source import MAX_EXPANDED, _name, read_source
 
 MAX_ASSET = 16 * 1024 * 1024
@@ -49,11 +50,37 @@ def literal_preamble(text):
     Keep original offsets so declarations retain their source locations.
     """
     code = structural(text)[1].split(r'\begin{document}', 1)[0]
+    # Macro replacement text is not an executed declaration. Hide definitions,
+    # then reject calls whose effects this literal-only reader cannot evaluate.
+    macros, cursor, chars = set(), 0, list(code)
+    for match in re.finditer(r'\\([a-zA-Z]+)', code):
+        if match.start() < cursor or match[1] not in DEFINITIONS:
+            continue
+        pos = match.end()
+        wrapper = re.match(r'\s*\{\s*\\([a-zA-Z]+)\s*\}', code[pos:])
+        target = wrapper or TARGET.match(code, pos)
+        if target is None:
+            raise ValueError('Unsupported preamble macro declaration')
+        macros.add(target[1])
+        pos = pos + wrapper.end() if wrapper else target.end()
+        if match[1] not in ('def', 'gdef', 'edef', 'xdef'):
+            pos += len(code[pos:]) - len(code[pos:].lstrip())
+            while pos < len(code) and code[pos] == '[':
+                option = re.match(r'\[[^\[\]]*\]\s*', code[pos:])
+                if option is None:
+                    raise ValueError('Unsupported preamble macro default')
+                pos += option.end()
+        opening = code.find('{', pos)
+        if opening < 0:
+            raise ValueError('Unsupported preamble macro body')
+        cursor = group_end(code, opening)
+        chars[match.start():cursor] = blank(code[match.start():cursor])
+    code = ''.join(chars)
     flags = set(re.findall(r'\\newif\s*\\(if[a-zA-Z]+)', code))
     # A declaration target is not a conditional invocation.
     code = re.sub(r'\\newif\s*\\if[a-zA-Z]+', lambda m: blank(m[0]), code)
     code = constant_branches(code, custom=flags)
     controls = set(re.findall(r'\\([a-zA-Z]+)', code))
-    if controls.intersection(PRIMITIVES | flags) or 'unless' in controls:
+    if controls.intersection(PRIMITIVES | flags | macros | {'unless', 'let', 'futurelet', 'input', 'include', 'csname'}):
         raise ValueError('Unresolved preamble asset declarations require fallback')
     return code

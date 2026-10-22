@@ -382,6 +382,8 @@ END
             (r'\newif\ifFlag\def\Flagtrue{}\Flagtrue', ''),
             (r'\newif\ifFlag\def\outer{\inner}\def\inner{\Flagtrue}\outer', ''),
             (r'\newif\ifFlag\def\change{\Flagtrue}\change', ''),
+            (r'\newif\ifFlag\def\enable{\Flagtrue}\let\run\enable\run', ''),
+            (r'\newif\ifFlag\def\inner{\global\Flagtrue}\def\outer{\inner}{\outer}', ''),
             (r'\newif\ifFlag', r'\Flagtrue'),
             (r'\newif\ifFlag', r'\def\change{\Flagtrue}'),
             (r'\newif\ifFlag', r'\let\alias\Flagtrue\alias'),

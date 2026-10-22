@@ -168,11 +168,9 @@ def source_blocks(data):
         preamble(roots[0])
         state.finalize()
     except ValueError:
-        if state.unsupported:
-            raise ValueError('Unsupported preamble mutation requires HTML/PDF fallback') from None
-        # Optional state discovery must not change the existing acceptance of
-        # papers without body conditionals. No partial facts survive failure.
-        state = PreambleState()
+        # Failed analysis is uncertainty, never permission to restore primitive
+        # assumptions after an uninspected dynamic preamble effect.
+        raise ValueError('Unresolved preamble analysis requires HTML/PDF fallback') from None
     if state.unsupported:
         raise ValueError('Unsupported preamble mutation requires HTML/PDF fallback')
 

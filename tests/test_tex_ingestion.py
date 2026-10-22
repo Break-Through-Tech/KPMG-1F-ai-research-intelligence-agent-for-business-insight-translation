@@ -403,6 +403,15 @@ END
         self.assertIn('RIGHT', str(result))
         self.assertNotIn('WRONG', str(result))
 
+    def test_opaque_aliases_dynamic_discovery_and_control_redefinitions_fall_back(self):
+        for preamble, body in (
+            (r'\newif\ifFlag\def\ignore#1{}\let\run\ignore\run\Flagtrue', r'\ifFlag WRONG\else RIGHT\fi'),
+            (r'\csname let\endcsname\iftrue\iffalse', r'\iftrue WRONG\else RIGHT\fi'),
+            (r'\let\else\relax', r'\iftrue FIRST\else SECOND\fi'),
+        ):
+            with self.subTest(preamble=preamble), self.assertRaises(ValueError):
+                tex.chunk_source(archive({'main.tex': preamble + r'\begin{document}' + body + r'\end{document}'}), AID)
+
     def test_indirect_preamble_file_mutations_require_fallback(self):
         for preamble in (
             r'\let\RuntimeFlag\relax\newif\ifFlag\ifdefined\RuntimeFlag\input{flags}\fi',

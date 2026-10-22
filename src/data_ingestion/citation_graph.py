@@ -92,7 +92,7 @@ def arxiv_identifiers(fields):
         if field.lower() not in {'url', 'doi', 'eprint', 'note', 'howpublished', 'raw'}:
             continue
         found.update(re.findall(r'(?:https?://(?:www\.)?arxiv\.org/(?:abs|pdf)/|arxiv\s*:\s*|10\.48550/arxiv\.)('
-                                + ARXIV + r')(?:\.pdf)?(?![\w.])', value, re.I))
+                                + ARXIV + r')(?:\.pdf)?(?!\w|\.\d)', value, re.I))
     eprint = fields.get('eprint', '').strip()
     prefix = fields.get('archiveprefix', fields.get('eprinttype', '')).lower()
     if prefix in ('', 'arxiv') and re.fullmatch(ARXIV, eprint):

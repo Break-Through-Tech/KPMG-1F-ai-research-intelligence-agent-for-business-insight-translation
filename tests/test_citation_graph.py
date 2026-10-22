@@ -167,6 +167,20 @@ class CitationGraphTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 graph.expansion_candidates({}, limit)
 
+    def test_cli_keeps_arxiv_identity_before_sentence_punctuation(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / 'source.tex'
+            source.write_text(paper(r'\cite{k}\begin{thebibliography}{9}\bibitem{k} Example. arXiv:2407.21783.\end{thebibliography}'))
+            output = root / 'graph.json'
+            result = subprocess.run([sys.executable, '-m', 'src.data_ingestion.citation_graph',
+                '--source', f'{AID}={source}', '--output', str(output)], capture_output=True, text=True, timeout=60)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            data = json.loads(output.read_text())
+            self.assertEqual(data['edges'][0]['target'], 'arxiv:2407.21783')
+            self.assertEqual(data['expansion_candidates']['candidates'][0]['arxiv_id'], '2407.21783')
+            self.assertEqual(graph.arxiv_identifiers({'raw': 'arXiv:2407.21783.123'}), [])
+
     def test_cli_offline_atomic_output_and_failure_preserves_previous(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

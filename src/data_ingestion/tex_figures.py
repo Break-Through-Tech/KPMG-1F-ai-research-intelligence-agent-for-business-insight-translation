@@ -39,11 +39,14 @@ def extract_figure_text(data, aid, title=''):
     declarations = list(re.finditer(r'\\graphicspath\s*\{((?:\s*\{[^{}]*\}\s*)*)\}', preamble))
     if declarations:
         paths = re.findall(r'\{([^{}]*)\}', declarations[-1][1])
+    # A body mutation can affect a later reference in a different include block.
+    # This literal-only reader must not reuse a frozen preamble path in that case.
+    mutation = re.compile(r'\\(?:graphicspath|if[a-zA-Z]+|def|gdef|edef|xdef|let|newcommand|renewcommand|providecommand|DeclareRobustCommand)(?![a-zA-Z])')
+    uncertain = any(mutation.search(structural(text)[1]) for _, _, text in blocks)
     coverage = []
     for filename, first_line, text in blocks:
         code = structural(text)[1]
         matches = list(GRAPHIC.finditer(code))
-        uncertain = re.search(r'\\(?:if[a-zA-Z]+|def|gdef|edef|xdef|let|newcommand|renewcommand|providecommand|DeclareRobustCommand)(?![a-zA-Z])', code)
         # Unknown argument syntax is reported instead of silently ignored.
         stripped = GRAPHIC.sub(lambda m: ' ' * len(m[0]), code)
         for m in re.finditer(r'\\includegraphics(?![a-zA-Z])', stripped):

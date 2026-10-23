@@ -412,6 +412,16 @@ END
             with self.subTest(preamble=preamble), self.assertRaises(ValueError):
                 tex.chunk_source(archive({'main.tex': preamble + r'\begin{document}' + body + r'\end{document}'}), AID)
 
+    def test_all_macro_declarations_and_aliases_preserve_argument_uncertainty(self):
+        for declaration in (r'\edef\ignore#1{}', r'\xdef\ignore#1{}',
+                            r'\providecommand{\ignore}[1]{}'):
+            for call in (r'\ignore', r'\let\run\ignore\run',
+                         r'\let\run\ignore\let\again\run\again'):
+                with self.subTest(declaration=declaration, call=call), self.assertRaises(ValueError):
+                    source = (r'\newif\ifFlag' + declaration + call + r'\Flagtrue'
+                              r'\begin{document}\ifFlag WRONG\else RIGHT\fi\end{document}')
+                    tex.chunk_source(archive({'main.tex': source}), AID)
+
     def test_indirect_preamble_file_mutations_require_fallback(self):
         for preamble in (
             r'\let\RuntimeFlag\relax\newif\ifFlag\ifdefined\RuntimeFlag\input{flags}\fi',

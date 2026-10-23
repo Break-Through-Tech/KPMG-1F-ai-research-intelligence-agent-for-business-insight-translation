@@ -11,6 +11,11 @@ COMMAND = re.compile(r'\\([a-zA-Z]+)|\\.|[{}]')
 TARGET = re.compile(r'\s*\\([a-zA-Z]+)(?![a-zA-Z])')
 DEFINITIONS = {'def', 'gdef', 'edef', 'xdef', 'newcommand', 'renewcommand',
                'providecommand', 'DeclareRobustCommand'}
+# Replacement bodies for these declaration families are not parsed here.
+UNSUPPORTED_DEFINITIONS = {'newenvironment', 'renewenvironment'} | {
+    prefix + expandable + 'Document' + kind
+    for prefix in ('New', 'Renew', 'Provide', 'Declare')
+    for expandable in ('', 'Expandable') for kind in ('Command', 'Environment')}
 STRUCTURAL = PRIMITIVES | DEFINITIONS | {'else', 'fi', 'or', 'unless', 'let', 'futurelet',
     'newif', 'input', 'include', 'begingroup', 'endgroup', 'bgroup', 'egroup', 'csname', 'catcode'}
 
@@ -84,6 +89,8 @@ class PreambleState:
                 continue
             token, command = match[0], match[1]
             active = all(value is True for value, _ in stack)
+            if command in UNSUPPORTED_DEFINITIONS and all(value is not False for value, _ in stack):
+                self.unsupported = True
             if (command and command not in PRIMITIVES and command not in self.values
                     and not (command in self.tainted and command.startswith('if'))
                     and all(value is not False for value, _ in stack)):

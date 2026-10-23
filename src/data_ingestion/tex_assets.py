@@ -5,7 +5,7 @@ import re
 import tarfile
 
 from .tex_lexical import PRIMITIVES, blank, constant_branches, structural
-from .tex_state import DEFINITIONS, TARGET, group_end
+from .tex_state import DEFINITIONS, TARGET, UNSUPPORTED_DEFINITIONS, group_end
 from .tex_source import MAX_EXPANDED, _name, read_source
 
 MAX_ASSET = 16 * 1024 * 1024
@@ -81,8 +81,8 @@ def literal_preamble(text, *, with_macros=False):
     code = re.sub(r'\\newif\s*\\if[a-zA-Z]+', lambda m: blank(m[0]), code)
     code = constant_branches(code, custom=flags)
     controls = set(re.findall(r'\\([a-zA-Z]+)', code))
-    if controls.intersection(PRIMITIVES | flags | macros | {'unless', 'let', 'futurelet', 'input', 'include', 'csname',
-                                                          'newenvironment', 'renewenvironment'}):
+    if controls.intersection(PRIMITIVES | flags | macros | UNSUPPORTED_DEFINITIONS |
+                            {'unless', 'let', 'futurelet', 'input', 'include', 'csname'}):
         raise ValueError('Unresolved preamble asset declarations require fallback')
     depth = 0
     for token in re.finditer(r'\\([a-zA-Z]+)|\\.|[{}]', code):

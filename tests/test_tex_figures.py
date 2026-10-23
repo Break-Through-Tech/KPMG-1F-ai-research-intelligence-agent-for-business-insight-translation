@@ -159,6 +159,24 @@ class FigureTextTests(unittest.TestCase):
             self.assertEqual(result['chunks'], [])
             self.assertEqual(result['coverage'][0]['status'], 'unsupported_source_semantics')
 
+    def test_unexecuted_environment_definitions_never_publish_figure_text(self):
+        for command in ('newenvironment', 'renewenvironment'):
+            definition = '\\' + command + r'{unused}{\includegraphics{hidden.pdf}}{}'
+            for included in (False, True):
+                with self.subTest(command=command, included=included):
+                    files = {'main.tex': paper(r'\input{child}' if included else definition),
+                             'hidden.pdf': pdf('UNUSED EVIDENCE')}
+                    if included:
+                        files['child.tex'] = definition
+                    result = figures.extract_figure_text(bundle(files), AID)
+                    self.assertEqual(result['chunks'], [])
+                    self.assertEqual(result['coverage'][0]['status'], 'unsupported_source_semantics')
+            with self.subTest(command=command, location='preamble'), self.assertRaises(ValueError):
+                figures.extract_figure_text(bundle({'main.tex': paper(
+                    r'\includegraphics{sample.pdf}', '\\' + command +
+                    r'{unused}{\graphicspath{{unused/}}}{}'),
+                    'unused/sample.pdf': pdf('UNUSED EVIDENCE')}), AID)
+
     def test_ambiguous_unsafe_corrupt_and_limits(self):
         source = paper(r'\includegraphics{fig}')
         result = figures.extract_figure_text(bundle({'main.tex': source,

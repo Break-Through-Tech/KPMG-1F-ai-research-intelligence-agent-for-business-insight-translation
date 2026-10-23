@@ -81,7 +81,8 @@ def literal_preamble(text, *, with_macros=False):
     code = re.sub(r'\\newif\s*\\if[a-zA-Z]+', lambda m: blank(m[0]), code)
     code = constant_branches(code, custom=flags)
     controls = set(re.findall(r'\\([a-zA-Z]+)', code))
-    if controls.intersection(PRIMITIVES | flags | macros | {'unless', 'let', 'futurelet', 'input', 'include', 'csname'}):
+    if controls.intersection(PRIMITIVES | flags | macros | {'unless', 'let', 'futurelet', 'input', 'include', 'csname',
+                                                          'newenvironment', 'renewenvironment'}):
         raise ValueError('Unresolved preamble asset declarations require fallback')
     depth = 0
     for token in re.finditer(r'\\([a-zA-Z]+)|\\.|[{}]', code):

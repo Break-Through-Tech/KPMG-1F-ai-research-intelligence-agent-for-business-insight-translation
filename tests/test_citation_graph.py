@@ -181,6 +181,18 @@ class CitationGraphTests(unittest.TestCase):
         self.assertEqual(result['edges'][0]['bibliography_file'], 'refs.tex')
         self.assertEqual(result['edges'][0]['bibliography_line'], 2)
 
+    def test_bibliography_terminator_whitespace_excludes_following_prose(self):
+        for separator in (' ', '\n', '\n  '):
+            with self.subTest(separator=separator):
+                source = paper(r'\cite{k}\begin{thebibliography}{9}\bibitem{k} Book title.' +
+                    '\\end' + separator + r'{thebibliography} See arXiv:2407.21783.')
+                result = graph.build_graph([dict(arxiv_id=AID, source_bytes=source.encode())])
+                edge = result['edges'][0]
+                self.assertEqual(edge['fields']['raw'], 'Book title.')
+                self.assertEqual(edge['identity_status'], 'unresolved_or_provisional')
+                self.assertEqual(edge['arxiv_ids'], [])
+                self.assertEqual(graph.expansion_candidates(result)['candidates'], [])
+
     def test_cli_keeps_arxiv_identity_before_sentence_punctuation(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

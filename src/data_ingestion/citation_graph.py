@@ -164,9 +164,9 @@ def _inline_entries(name, text, first_line=1, format='inline_bibitem'):
     result = []
     for index, match in enumerate(matches):
         end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
-        stop = code.find(r'\end{thebibliography}', match.end(), end)
-        if stop >= 0:
-            end = stop
+        stop = re.search(r'\\end\s*\{thebibliography\}', code[match.end():end])
+        if stop is not None:
+            end = match.end() + stop.start()
         result.append(dict(key=match[1], fields={'raw': text[match.end():end].strip()},
                            source_file=name, line=first_line + text[:match.start()].count('\n'),
                            format=format, unresolved_string_fields=[]))

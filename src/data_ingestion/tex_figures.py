@@ -13,6 +13,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from .tex_assets import asset_members, literal_preamble
 from .tex_lexical import structural
 from .tex_source import _name, read_source, source_blocks, source_url
+from .tex_state import UNSUPPORTED_DEFINITIONS
 
 MAX_FIGURES = 128
 MAX_PAGES = 32
@@ -43,7 +44,8 @@ def extract_figure_text(data, aid, title=''):
     # This literal-only reader must not reuse a frozen preamble path in that case.
     mutation = re.compile(r'\\(?:csname|catcode|futurelet|unless|inputencoding|usepackage|documentclass|directlua|scantokens|DeclareGraphicsRule|DeclareGraphicsExtensions|graphicspath|if[a-zA-Z]+|def|gdef|edef|xdef|let|newcommand|renewcommand|providecommand|DeclareRobustCommand|newenvironment|renewenvironment)(?![a-zA-Z])')
     uncertain = any(mutation.search(structural(text)[1]) or
-                    preamble_macros.intersection(re.findall(r'\\([a-zA-Z]+)', structural(text)[1]))
+                    (preamble_macros | UNSUPPORTED_DEFINITIONS).intersection(
+                        re.findall(r'\\([a-zA-Z]+)', structural(text)[1]))
                     for _, _, text in blocks)
     coverage = []
     for filename, first_line, text in blocks:

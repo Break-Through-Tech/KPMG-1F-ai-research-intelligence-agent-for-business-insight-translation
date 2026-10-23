@@ -177,6 +177,22 @@ class FigureTextTests(unittest.TestCase):
                     r'{unused}{\graphicspath{{unused/}}}{}'),
                     'unused/sample.pdf': pdf('UNUSED EVIDENCE')}), AID)
 
+    def test_document_command_and_environment_declarations_never_publish_unused_assets(self):
+        for prefix in ('New', 'Renew', 'Provide', 'Declare'):
+            for kind in ('Command', 'Environment'):
+                target = r'{\unused}' if kind == 'Command' else '{unused}'
+                definition = ('\\' + prefix + 'Document' + kind + target +
+                              r'{}{\includegraphics{hidden.pdf}}' + ('{}' if kind == 'Environment' else ''))
+                for included in (False, True):
+                    with self.subTest(prefix=prefix, kind=kind, included=included):
+                        files = {'main.tex': paper(r'\input{child}' if included else definition),
+                                 'hidden.pdf': pdf('UNUSED EVIDENCE')}
+                        if included:
+                            files['child.tex'] = definition
+                        result = figures.extract_figure_text(bundle(files), AID)
+                        self.assertEqual(result['chunks'], [])
+                        self.assertEqual(result['coverage'][0]['status'], 'unsupported_source_semantics')
+
     def test_ambiguous_unsafe_corrupt_and_limits(self):
         source = paper(r'\includegraphics{fig}')
         result = figures.extract_figure_text(bundle({'main.tex': source,

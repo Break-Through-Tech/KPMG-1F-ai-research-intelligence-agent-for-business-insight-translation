@@ -30,6 +30,9 @@ def group_end(code, start):
 class PreambleState:
     def __init__(self):
         self.defined = set()
+        # Declaration/call uncertainty is independent of positive definition
+        # facts: edef, xdef and providecommand can also consume following tokens.
+        self.macros = set()
         self.values = {}
         self.tainted = set()
         self.mutators = set()
@@ -44,7 +47,7 @@ class PreambleState:
             if expanded == self.mutators:
                 break
             self.mutators = expanded
-        opaque = self.mutators | self.defined
+        opaque = self.mutators | self.defined | self.macros
         while True:
             expanded = opaque | {name for name, refs in self.dependencies.items() if refs.intersection(opaque)}
             if expanded == opaque:
@@ -118,6 +121,7 @@ class PreambleState:
                     self.values.clear()
                     continue
                 name = target[1]
+                self.macros.add(name)
                 if name in STRUCTURAL:
                     self.unsupported = True
                 pos = pos + wrapper.end() if wrapper else target.end()

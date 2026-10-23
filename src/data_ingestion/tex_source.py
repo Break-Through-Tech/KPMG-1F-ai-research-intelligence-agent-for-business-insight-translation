@@ -15,7 +15,7 @@ import requests
 from . import config as cfg
 from .tex_chunking import split_tex
 from .tex_lexical import structural, constant_branches, PRIMITIVES
-from .tex_state import PreambleState
+from .tex_state import PreambleState, UNSUPPORTED_DEFINITIONS
 
 MAX_ARCHIVE = 32 * 1024 * 1024
 MAX_EXPANDED = 128 * 1024 * 1024
@@ -181,7 +181,9 @@ def source_blocks(data):
     mutations = r'\\(?:def|gdef|edef|xdef|let|futurelet|newif|newcommand|renewcommand|providecommand|DeclareRobustCommand|csname|catcode|usepackage|inputencoding)(?![a-zA-Z])'
     body_uncertain = False
     setters = {n[2:] + suffix for n in state.values for suffix in ('true', 'false')}
-    mutators = set(state.mutators)
+    # Opaque macro calls and aliases can consume structural tokens (including
+    # else/fi) without mutating a flag. They invalidate branch selection too.
+    mutators = state.mutators | state.macros | set(state.dependencies)
     while pending:
         name = pending.pop()
         if name in checked:
@@ -190,8 +192,10 @@ def source_blocks(data):
         body = syntax[name]
         if name == roots[0]:
             body = body.split(r'\begin{document}', 1)[1].split(r'\end{document}', 1)[0]
-        commands = set(re.findall(r'\\([a-zA-Z]+)', body))
-        if re.search(mutations, body) or commands.intersection(setters | mutators):
+        # An ifdefined operand is inspected by TeX, not invoked as a macro.
+        inspection = re.sub(r'(\\ifdefined)\s*\\[a-zA-Z]+(?![a-zA-Z])', lambda m: m[1], body)
+        commands = set(re.findall(r'\\([a-zA-Z]+)', inspection))
+        if re.search(mutations, inspection) or commands.intersection(setters | mutators | UNSUPPORTED_DEFINITIONS):
             state = PreambleState()
             body_uncertain = True
         for match in INCLUDE.finditer(body):

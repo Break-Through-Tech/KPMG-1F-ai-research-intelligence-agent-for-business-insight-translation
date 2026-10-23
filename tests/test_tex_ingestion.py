@@ -422,6 +422,27 @@ END
                               r'\begin{document}\ifFlag WRONG\else RIGHT\fi\end{document}')
                     tex.chunk_source(archive({'main.tex': source}), AID)
 
+    def test_body_opaque_calls_cannot_consume_conditional_delimiters(self):
+        for declaration in (r'\def\ignore#1{}', r'\edef\ignore#1{}',
+                            r'\providecommand{\ignore}[1]{}',
+                            r'\def\eat#1{}\let\ignore\eat'):
+            for body, extra in ((r'\iftrue\ignore\else RIGHT\fi', {}),
+                                (r'\iftrue\input{child}\else RIGHT\fi',
+                                 {'child.tex': r'\ignore'})):
+                with self.subTest(declaration=declaration, body=body), self.assertRaises(ValueError):
+                    tex.chunk_source(archive({'main.tex': declaration + r'\begin{document}' +
+                        body + r'\end{document}', **extra}), AID)
+
+    def test_unparsed_declaration_families_cannot_establish_branch_state(self):
+        for declaration in (r'\newenvironment{unused}{\Flagtrue}{}',
+                            r'\NewDocumentCommand{\unused}{}{\Flagtrue}',
+                            r'\NewDocumentEnvironment{unused}{}{\Flagtrue}{}'):
+            for preamble, body in ((r'\newif\ifFlag' + declaration, r'\ifFlag WRONG\else RIGHT\fi'),
+                                   ('', declaration + r'\iftrue FIRST\else SECOND\fi')):
+                with self.subTest(declaration=declaration, preamble=preamble), self.assertRaises(ValueError):
+                    tex.chunk_source(archive({'main.tex': preamble + r'\begin{document}' + body +
+                        r'\end{document}'}), AID)
+
     def test_indirect_preamble_file_mutations_require_fallback(self):
         for preamble in (
             r'\let\RuntimeFlag\relax\newif\ifFlag\ifdefined\RuntimeFlag\input{flags}\fi',

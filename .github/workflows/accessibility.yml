@@ -7,6 +7,10 @@ on:
       - 'src/research_demo.py'
       - 'src/research_contracts.py'
       - 'src/paper_conversation.py'
+      - 'src/paper_html.py'
+      - 'src/paper_reader.py'
+      - 'tests/source_reader_fixture.py'
+      - 'tests/test_paper_reader.py'
       - 'tests/fixtures/research/**'
       - 'tests/browser/**'
       - '.github/workflows/accessibility.yml'
@@ -32,6 +36,8 @@ jobs:
           node-version: '24'
           cache: npm
           cache-dependency-path: tests/browser/package-lock.json
+      # Parser-produced synthetic source fixture; no model/index dependencies.
+      - run: python -m pip install beautifulsoup4 jsonschema
       - run: npm ci --ignore-scripts
       - run: npx playwright install --with-deps chromium
       - run: npm test

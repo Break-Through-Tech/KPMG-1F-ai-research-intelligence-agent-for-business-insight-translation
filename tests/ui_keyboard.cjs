@@ -246,3 +246,34 @@ test('narrow preview focus is visible, in viewport, and actions retain usable ta
   await page.keyboard.press('Escape');
   await focused(page, '.citation');
 });
+
+test('citation preview survives focus/programmatic scrolling but deliberate user scrolling dismisses it', async t => {
+  const page = await setup(t, 320);
+  await preview(page, 'Space');
+  // Focus and layout may queue scrolling after activation. Exercise an actual
+  // scroll rather than a synthetic event, and let its rendering frame finish.
+  await page.evaluate(async () => {
+    const scroller = document.querySelector('#conversation');
+    await new Promise(requestAnimationFrame);
+    scroller.scrollTop += scroller.scrollTop > 20 ? -20 : 20;
+    await new Promise(requestAnimationFrame);
+    await new Promise(requestAnimationFrame);
+  });
+  assert.equal(await page.locator('#citation-preview').evaluate(n => n.matches(':popover-open')), true);
+  await focused(page, '.quote-close');
+  const box = await page.locator('.quote-close').boundingBox();
+  assert.ok(box && box.x >= 0 && box.y >= 0 && box.x + box.width <= 320 && box.y + box.height <= 900);
+  await screenshot(page, 'programmatic-scroll-preview');
+
+  // A real wheel gesture in the conversation still dismisses the preview.
+  const conversationBox = await page.locator('#conversation').boundingBox();
+  await page.mouse.move(conversationBox.x + conversationBox.width - 20, conversationBox.y + 20);
+  await page.mouse.wheel(0, 150);
+  await page.waitForFunction(() => !document.querySelector('#citation-preview').matches(':popover-open'));
+  await focused(page, '.citation');
+
+  await preview(page);
+  await page.keyboard.press('PageDown');
+  assert.equal(await page.locator('#citation-preview').evaluate(n => n.matches(':popover-open')), false);
+  await focused(page, '.citation');
+});

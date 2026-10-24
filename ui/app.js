@@ -295,7 +295,12 @@ function showQuote(item, demo, number, index, trigger) {
   actions.append(more);
   quotePreview.replaceChildren(head, excerpts, element('p', `${passage.title} · ${location}`, 'meta quote-source'), actions);
   quotePreview.showPopover();
-  const rect = trigger.getBoundingClientRect();
+  positionQuotePreview();
+}
+
+function positionQuotePreview() {
+  if (!previewTrigger || !quotePreview.matches(':popover-open')) return;
+  const rect = previewTrigger.getBoundingClientRect();
   const box = quotePreview.getBoundingClientRect();
   quotePreview.style.left = `${Math.max(12, Math.min(rect.left, innerWidth - box.width - 12))}px`;
   const top = rect.bottom + 8 + box.height <= innerHeight - 12 ? rect.bottom + 8 : rect.top - box.height - 8;
@@ -330,7 +335,18 @@ document.addEventListener('keydown', event => {
 document.addEventListener('pointerdown', event => {
   if (!quotePreview.contains(event.target) && event.target !== previewTrigger) closePreview();
 });
-conversation.addEventListener('scroll', closePreview);
+// Scroll events do not identify their cause: focusing a citation can queue a
+// browser scroll after its preview opens. Keep that preview anchored instead
+// of dismissing it and stealing focus. Explicit reading-scroll gestures still
+// dismiss it; pointerdown outside the preview also covers scrollbar dragging.
+conversation.addEventListener('scroll', positionQuotePreview);
+conversation.addEventListener('wheel', closePreview, {passive: true});
+conversation.addEventListener('touchmove', closePreview, {passive: true});
+document.addEventListener('keydown', event => {
+  if (event.defaultPrevented || event.target.closest('input, textarea, select, [contenteditable]')) return;
+  if ((conversation.contains(event.target) || quotePreview.contains(event.target)) &&
+      ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End'].includes(event.key)) closePreview();
+});
 window.addEventListener('resize', closePreview);
 
 function citedParagraph(item, demo, number) {
@@ -353,14 +369,14 @@ function citedParagraph(item, demo, number) {
     citation.addEventListener('keydown', event => {
       if (event.key === 'Tab' && !event.shiftKey && previewTrigger === citation) {
         event.preventDefault();
-        quotePreview.querySelector('button, a').focus();
+        quotePreview.querySelector('button, a').focus({preventScroll: true});
       }
     });
     // Native buttons activate with Enter, Space, pointer or touch. Opening the
     // original URL is a separate, explicitly named link inside the preview.
     citation.addEventListener('click', () => {
       showQuote(item, demo, number, index, citation);
-      quotePreview.querySelector('button').focus();
+      quotePreview.querySelector('button').focus({preventScroll: true});
     });
     paragraph.append(document.createTextNode(' '), citation);
   }

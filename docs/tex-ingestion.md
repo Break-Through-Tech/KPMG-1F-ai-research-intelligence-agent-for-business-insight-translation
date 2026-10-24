@@ -107,6 +107,13 @@ exhaustive discovery of custom graphics macros. Partial-text pages can still
 contain undetected raster text; `text_extracted` means text was recovered, not
 that the figure is complete.
 
+Lookup uses the root document directory and declared graphics paths, not an
+implicit directory belonging to an included source file. Graphics inside braced
+arguments/groups are not proven executable; grouping is tracked across input
+blocks and disables figure publication for that document. This conservatively
+suppresses some valid grouped graphics too. Uninspected preamble graphics rules
+and extension declarations require fallback rather than guessing a default PDF.
+
 Evidence source `tex_figure` has a source-archive URL and SHA-256, `asset_file`,
 `asset_sha256`, and a positive **asset** `asset_page_number`. `page_number` stays
 null: an asset page is never a rendered paper page. `extraction_method=pdf_text`

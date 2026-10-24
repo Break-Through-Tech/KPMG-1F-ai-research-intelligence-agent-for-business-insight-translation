@@ -49,6 +49,37 @@ async function desk(width, fn, {supported = true, retry = false, open = false} =
   } finally { await context.close(); }
 }
 const idle = page => page.waitForFunction(() => document.querySelector('#output').getAttribute('aria-busy') === 'false');
+test('desktop rail fills viewport below header and scrolls independently', async () => {
+  await desk(1440, async page => {
+    const assertRailBounds = async () => {
+      const bounds = await page.evaluate(() => ({
+        top: document.querySelector('#evidence-panel').getBoundingClientRect().top,
+        bottom: document.querySelector('#evidence-panel').getBoundingClientRect().bottom,
+        headerBottom: document.querySelector('.masthead').getBoundingClientRect().bottom,
+        viewport: innerHeight,
+      }));
+      assert.ok(Math.abs(bounds.top - bounds.headerBottom) <= 1, JSON.stringify(bounds));
+      assert.ok(Math.abs(bounds.bottom - bounds.viewport) <= 1, JSON.stringify(bounds));
+    };
+    await assertRailBounds();
+    await page.setViewportSize({width: 1440, height: 600});
+    await assertRailBounds();
+    await page.getByText('Reading preferences', {exact: true}).click();
+    await assertRailBounds();
+    await page.getByText('Reading preferences', {exact: true}).click();
+    await page.locator('#evidence-content').evaluate(n => {
+      const original = n.innerHTML;
+      n.innerHTML = original.repeat(6);
+    });
+    const before = await page.locator('.conversation').evaluate(n => n.scrollTop);
+    await page.locator('#evidence-panel').hover();
+    await page.mouse.wheel(0, 450);
+    await page.waitForFunction(() => document.querySelector('#evidence-panel').scrollTop > 0);
+    assert.equal(await page.locator('.conversation').evaluate(n => n.scrollTop), before);
+    assert.equal(await page.evaluate(() => window.scrollY), 0);
+    await assertRailBounds();
+  });
+});
 for (const width of [1440, 390, 320]) {
   test(`B+C card, support rail, keyboard selection and resume at ${width}px`, async () => {
     await desk(width, async (page, requests) => {

@@ -3,6 +3,8 @@
 This does not reconstruct structure or describe figures. Citation checks continue
 using the existing canonical passage text, independently of this reading view.
 """
+import re
+
 from bs4 import Comment, NavigableString
 
 HTML_TAGS = set('p div span h1 h2 h3 h4 h5 h6 ul ol li dl dt dd blockquote em strong b i sub sup br table caption thead tbody tfoot tr th td figure figcaption'.split())
@@ -53,6 +55,11 @@ def retain_reader(nodes, source_sha256):
                 if node.has_attr(key):
                     attrs[key] = str(node[key])
         if tag in MATH_TAGS:
+            if node.has_attr('linethickness'):
+                thickness = str(node['linethickness'])
+                if tag != 'mfrac' or not re.fullmatch(r'(?:thin|medium|thick|(?:\d+(?:\.\d+)?|\.\d+)(?:em|ex|px|in|cm|mm|pt|pc|%)?)', thickness):
+                    raise ValueError('Unsupported MathML fraction thickness; use the retained citation-check text or original source.')
+                attrs['linethickness'] = thickness
             for key in ('display', 'mathvariant', 'stretchy', 'fence', 'separator', 'accent', 'accentunder', 'columnalign', 'rowalign', 'columnspan', 'rowspan', 'encoding'):
                 if node.has_attr(key):
                     attrs[key] = str(node[key])
@@ -67,8 +74,8 @@ def retain_reader(nodes, source_sha256):
 
     try:
         retained = [child for node in nodes for child in convert(node)]
-    except ValueError:
+    except ValueError as error:
         retained = []
-        limitations.add('Structured reading view exceeded the preview limit; use the retained citation-check text or original source.')
+        limitations.add(str(error))
     return {'version': 1, 'provenance': 'source-html', 'source_sha256': source_sha256,
             'nodes': retained, 'limitations': sorted(limitations)}

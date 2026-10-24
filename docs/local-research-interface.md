@@ -224,6 +224,9 @@ per rendered view; no table headers or figure descriptions are inferred.
 Captions and image descriptions are distinctly labeled as source-supplied. A
 caption is **not** presented as a complete figure description. Native MathML
 is preserved where supplied, not replaced with generated descriptions.
+Fraction `linethickness` retains validated source values, including barless
+binomials. Unsupported thickness values reject the whole passage's structured
+view with an extraction limitation, preserving canonical text/TeX as fallback.
 
 Both retention and rendering are allowlisted and bounded. No source scripts,
 images, URLs, styles, event handlers or arbitrary HTML are inserted. MathML

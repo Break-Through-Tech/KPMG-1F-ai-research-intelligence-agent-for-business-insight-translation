@@ -82,7 +82,10 @@ def parse_paper_html(raw, aid, title):
                          'reader': {
                              'version': 1, 'provenance': 'source-html',
                              'source_sha256': source_hash,
-                             'nodes': [node for reader in reader_groups[(anchor, name)] for node in reader['nodes']],
+                             # A rejected block must not disappear from an otherwise
+                             # preferred structured view of this whole passage.
+                             'nodes': ([node for reader in reader_groups[(anchor, name)] for node in reader['nodes']]
+                                       if all(reader['nodes'] for reader in reader_groups[(anchor, name)]) else []),
                              'limitations': sorted({item for reader in reader_groups[(anchor, name)] for item in reader['limitations']}),
                          }})
     if not passages or len(passages) > 80 or sum(len(p['text']) for p in passages) > 120_000:

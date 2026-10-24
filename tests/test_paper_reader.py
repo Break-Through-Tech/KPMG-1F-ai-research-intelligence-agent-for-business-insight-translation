@@ -9,10 +9,11 @@ from src.paper_reader import retain_reader
 from src.research_chat import synthesize
 
 
-STRUCTURED_HTML = b'''<article class="ltx_document"><section id="S1"><h2>Results</h2>
+STRUCTURED_HTML = rb'''<article class="ltx_document"><section id="S1"><h2>Results</h2>
 <div class="ltx_para"><h3>Measured result</h3><p>The measured result improves accuracy in this bounded experiment.</p>
 <ul><li>First constraint</li><li>Second constraint</li></ul><ol start=3><li value=4>Numbered constraint</li></ol>
-<math display="block"><mfrac><mi>x</mi><mn>2</mn></mfrac></math></div>
+<math display="block"><mfrac><mi>x</mi><mn>2</mn></mfrac></math>
+<math alttext="\binom{n}{k}"><mfrac linethickness="0"><mi>n</mi><mi>k</mi></mfrac></math></div>
 <table><caption>Source measurements</caption><thead><tr><th id="model" scope="col">Model</th>
 <th id="score" scope="col">Score</th></tr></thead><tbody><tr><th id="base" scope="row">Base</th>
 <td headers="base score">12</td></tr></tbody></table>
@@ -30,6 +31,19 @@ def flatten(nodes):
 
 
 class PaperReaderTests(TestCase):
+    def test_binomial_bar_thickness_survives_source_retention(self):
+        passages, _ = parse_paper_html(STRUCTURED_HTML, '2608.20318v1', 'Test')
+        fractions = [node for node in flatten(passages[0]['reader']['nodes']) if node['tag'] == 'mfrac']
+        self.assertEqual(fractions[1]['attrs']['linethickness'], '0')
+        self.assertIn(r'\binom{n}{k}', passages[0]['text'])
+
+    def test_rejected_fraction_thickness_falls_back_for_the_whole_passage(self):
+        raw = STRUCTURED_HTML.replace(b'linethickness="0"', b'linethickness="url(remote)"')
+        passages, _ = parse_paper_html(raw, '2608.20318v1', 'Test')
+        self.assertEqual(passages[0]['reader']['nodes'], [])
+        self.assertIn(r'\binom{n}{k}', passages[0]['text'])
+        self.assertTrue(any('Unsupported MathML fraction thickness' in item for item in passages[0]['reader']['limitations']))
+
     def test_retains_source_math_lists_headers_captions_and_provenance(self):
         passages, source = parse_paper_html(STRUCTURED_HTML, '2608.20318v1', 'Structured test')
         self.assertEqual(len(passages), 1)

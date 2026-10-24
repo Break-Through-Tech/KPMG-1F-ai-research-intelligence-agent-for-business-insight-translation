@@ -56,6 +56,10 @@ function structuredSource(reader) {
     }
     if (math) {
       // No style, URL, event, href, annotation-xml or arbitrary namespace attrs.
+      if (Object.hasOwn(attrs, 'linethickness')) {
+        if (tag !== 'mfrac' || typeof attrs.linethickness !== 'string' || !/^(?:thin|medium|thick|(?:\d+(?:\.\d+)?|\.\d+)(?:em|ex|px|in|cm|mm|pt|pc|%)?)$/.test(attrs.linethickness)) throw new Error('Unsupported fraction thickness');
+        node.setAttribute('linethickness', attrs.linethickness);
+      }
       for (const key of ['display', 'mathvariant', 'stretchy', 'fence', 'separator', 'accent', 'accentunder', 'columnalign', 'rowalign', 'columnspan', 'rowspan', 'encoding']) {
         if (typeof attrs[key] === 'string' && attrs[key].length < 100) node.setAttribute(key, attrs[key]);
       }

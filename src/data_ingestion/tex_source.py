@@ -227,6 +227,8 @@ def source_blocks(data):
             if end < 0:
                 raise ValueError("Unterminated TeX document")
         controls = set(re.findall(r'\\([a-zA-Z]+)', code[start:end]))
+        if 'endinput' in controls:
+            raise ValueError('Uninspected body input termination requires HTML/PDF fallback')
         if body_uncertain and controls.intersection(PRIMITIVES | custom):
             raise ValueError('Body mutation makes conditional selection unsafe')
         filtered = constant_branches(text[start:end], custom,

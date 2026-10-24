@@ -68,9 +68,11 @@ def parse_paper_html(raw, aid, title):
         heading = section.find(re.compile(r'^h[1-6]$')) if section else None
         name = heading.get_text(' ', strip=True) if heading else 'Section heading not supplied'
         text = re.sub(r'\s+', ' ', node.get_text(' ', strip=True)).strip()
+        # Reader-only descriptions/limitations belong to an existing section's
+        # reading view even when this block adds no canonical quote-check text.
+        reader_groups.setdefault((anchor, name), []).append(reader)
         if text:
             groups.setdefault((anchor, name), []).append(text)
-            reader_groups.setdefault((anchor, name), []).append(reader)
     passages = []
     for (anchor, name), texts in groups.items():
         url = f'https://arxiv.org/html/{aid}' + (f'#{quote(anchor, safe=".")}' if anchor else '')

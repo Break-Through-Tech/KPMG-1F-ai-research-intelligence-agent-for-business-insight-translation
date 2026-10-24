@@ -137,6 +137,27 @@ class FigureTextTests(unittest.TestCase):
             figures.extract_figure_text(bundle({'main.tex': source,
                 'fig.alt': pdf('ACTIVE'), 'fig.pdf': pdf('UNUSED EVIDENCE')}), AID)
 
+    def test_included_file_directory_is_not_an_implicit_graphics_path(self):
+        files = {'main.tex': paper(r'\input{sections/body}'),
+                 'sections/body.tex': r'\includegraphics{figure.pdf}',
+                 'sections/figure.pdf': pdf('UNUSED EVIDENCE')}
+        result = figures.extract_figure_text(bundle(files), AID)
+        self.assertEqual(result['chunks'], [])
+        self.assertEqual(result['coverage'][0]['status'], 'missing_or_ambiguous')
+        result = figures.extract_figure_text(bundle({**files, 'figure.pdf': pdf('ROOT FIGURE')}), AID)
+        self.assertEqual(result['coverage'][0]['asset_file'], 'figure.pdf')
+        self.assertIn('ROOT FIGURE', result['chunks'][0]['text'])
+        self.assertNotIn('UNUSED EVIDENCE', str(result))
+
+    def test_graphics_inside_uninspected_arguments_cannot_publish_assets(self):
+        for body, extra in ((r'\url{https://example.test/\includegraphics{hidden.pdf}}', {}),
+                            (r'{\input{child}}', {'child.tex': r'\includegraphics{hidden.pdf}'})):
+            with self.subTest(body=body):
+                result = figures.extract_figure_text(bundle({'main.tex': paper(body),
+                    'hidden.pdf': pdf('UNUSED EVIDENCE'), **extra}), AID)
+                self.assertEqual(result['chunks'], [])
+                self.assertEqual(result['coverage'][0]['status'], 'unsupported_source_semantics')
+
     def test_active_references_graphicspath_and_explicit_gaps(self):
         source = paper(r'''\iffalse\includegraphics{hidden.pdf}\fi
 % \includegraphics{comment.pdf}

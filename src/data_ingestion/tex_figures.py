@@ -52,6 +52,22 @@ def extract_figure_text(data, aid, title=''):
                     (preamble_macros | UNSUPPORTED_DEFINITIONS).intersection(
                         re.findall(r'\\([a-zA-Z]+)', structural(text)[1]))
                     for _, _, text in blocks)
+    # Argument/group contents are not proven executable. Carry grouping across
+    # include blocks so a URL, stored argument or parent group cannot expose an
+    # apparently top-level command in its child. This may suppress valid grouped
+    # figures too; that limitation is preferable to unexecuted asset evidence.
+    depth = 0
+    for _, _, text in blocks:
+        for token in re.finditer(r'\\[a-zA-Z]+|\\.|[{}]', structural(text)[1]):
+            if token[0] == r'\includegraphics' and depth:
+                uncertain = True
+            elif token[0] == '{':
+                depth += 1
+            elif token[0] == '}':
+                depth -= 1
+                if depth < 0:
+                    uncertain = True
+    uncertain = uncertain or depth != 0
     coverage = []
     for filename, first_line, text in blocks:
         code = structural(text)[1]
@@ -75,7 +91,7 @@ def extract_figure_text(data, aid, title=''):
                 reference = _name(match[1].strip())
                 if any(c in reference for c in ('\\', '#', '$')) or not reference:
                     raise ValueError('Dynamic figure reference')
-                bases = {root_dir, PurePosixPath(filename).parent}
+                bases = {root_dir}
                 bases.update(root_dir / _name(v) for v in paths)
                 candidates = set()
                 for base in bases:

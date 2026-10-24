@@ -215,9 +215,8 @@ class FigureTextTests(unittest.TestCase):
                              'hidden.pdf': pdf('UNUSED EVIDENCE')}
                     if included:
                         files['child.tex'] = quoted
-                    result = figures.extract_figure_text(bundle(files), AID)
-                    self.assertEqual(result['chunks'], [])
-                    self.assertEqual(result['coverage'][0]['status'], 'unsupported_source_semantics')
+                    with self.assertRaises(ValueError):
+                        figures.extract_figure_text(bundle(files), AID)
 
     def test_terminated_child_requires_fallback_before_figure_publication(self):
         data = bundle({'main.tex': paper(r'\input{child}' + '\n' + r'\includegraphics{visible.pdf}'),
@@ -242,20 +241,29 @@ class FigureTextTests(unittest.TestCase):
                          'hidden.pdf': pdf('UNUSED EVIDENCE')}
                 if included:
                     files['child.tex'] = body
-                result = figures.extract_figure_text(bundle(files), AID)
-                self.assertEqual(result['chunks'], [])
-                self.assertEqual(result['coverage'][0]['status'], 'unsupported_source_semantics')
+                with self.assertRaises(ValueError):
+                    figures.extract_figure_text(bundle(files), AID)
+
+    def test_named_token_register_allocations_require_fallback(self):
+        for allocation in (r'\newtoks\stash', r'\toksdef\stash=0'):
+            for included in (False, True):
+                with self.subTest(allocation=allocation, included=included):
+                    body = r'\stash={\includegraphics{hidden.pdf}}'
+                    files = {'main.tex': paper(r'\input{child}' if included else body, allocation),
+                             'hidden.pdf': pdf('UNUSED EVIDENCE')}
+                    if included:
+                        files['child.tex'] = body
+                    with self.assertRaises(ValueError):
+                        figures.extract_figure_text(bundle(files), AID)
 
     def test_included_document_termination_disables_all_figure_publication(self):
         for ending in (r'\end{document}', r'\end {document}'):
             with self.subTest(ending=ending):
-                result = figures.extract_figure_text(bundle({
-                    'main.tex': paper(r'\input{child}\includegraphics{parent.pdf}'),
-                    'child.tex': ending + r'\includegraphics{hidden.pdf}',
-                    'hidden.pdf': pdf('UNUSED EVIDENCE'), 'parent.pdf': pdf('UNREACHABLE PARENT')}), AID)
-                self.assertEqual(result['chunks'], [])
-                self.assertEqual([e['status'] for e in result['coverage']],
-                                 ['unsupported_source_semantics', 'unsupported_source_semantics'])
+                with self.assertRaisesRegex(ValueError, 'input termination'):
+                    figures.extract_figure_text(bundle({
+                        'main.tex': paper(r'\input{child}\includegraphics{parent.pdf}'),
+                        'child.tex': ending + r'\includegraphics{hidden.pdf}',
+                        'hidden.pdf': pdf('UNUSED EVIDENCE'), 'parent.pdf': pdf('UNREACHABLE PARENT')}), AID)
 
     def test_ambiguous_unsafe_corrupt_and_limits(self):
         source = paper(r'\includegraphics{fig}')

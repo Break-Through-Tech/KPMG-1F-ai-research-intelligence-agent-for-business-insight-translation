@@ -277,6 +277,9 @@ class TexIngestionTests(unittest.TestCase):
 
     def test_literals_are_opaque_atomic_and_keep_percent_and_line_locators(self):
         literals = [r'\verb|50% $unmatched \input{missing} \fi|',
+                    r'\url|\includegraphics{hidden.pdf}\iftrue LEFT\else RIGHT\fi|',
+                    r'\path{\input{missing}\iftrue LEFT\else RIGHT\fi}',
+                    r'\nolinkurl+\begin{document}\input{missing}+',
                     r'\verb*+\begin{document}+',
                     '\\begin{verbatim}\n50% $unmatched \\input{missing}\n\\end{verbatim}',
                     '\\begin{lstlisting}\nx = "$" # 50%\n\\end{lstlisting}',
@@ -430,6 +433,47 @@ class TexIngestionTests(unittest.TestCase):
                          patch.object(pipeline, 'extract_pages', return_value=pages):
                         result = pipeline.process_and_store([ROW], root / 'out.parquet', use_tex=True)
                         self.assertEqual(set(result.source), {'pdf'})
+
+    def test_uninspected_calls_and_character_conversion_cannot_select_flags(self):
+        cases = ((r'\newif\ifFlag\RequirePackage{flagsetter}', False),
+                 (r'\newif\ifFlag\AtEndDocument\Flagtrue', True),
+                 (r'\newif\ifFlag\Flagtrue ^^5cFlagfalse', True),
+                 (r'\newif\ifFlag\label\Flagtrue', True))
+        for preamble, wrong_when_true in cases:
+            for included in (False, True):
+                with self.subTest(preamble=preamble, included=included):
+                    body = (r'\ifFlag WRONG\else RIGHT\fi' if wrong_when_true else
+                            r'\ifFlag RIGHT\else WRONG\fi')
+                    files = {'main.tex': r'\documentclass{article}' +
+                             (r'\input{preamble}' if included else preamble) +
+                             r'\begin{document}' + body + r'\end{document}',
+                             'flagsetter.sty': r'\ProvidesPackage{flagsetter}\Flagtrue'}
+                    if included:
+                        files['preamble.tex'] = preamble
+                    data = archive(files)
+                    with self.assertRaises(ValueError):
+                        tex.chunk_source(data, AID)
+                    with tempfile.TemporaryDirectory() as directory:
+                        root = Path(directory)
+                        (root / f'{AID}.source').write_bytes(data)
+                        output = root / 'out.parquet'
+                        output.write_bytes(b'previous corpus')
+                        with patch.object(config, 'TEX_DIR', root), \
+                             patch.object(pipeline, 'load_html', return_value=None), \
+                             patch.object(pipeline, 'resolve_pdf_path', return_value=None):
+                            with self.assertRaises(RuntimeError):
+                                pipeline.process_and_store([ROW], output, use_tex=True)
+                            self.assertEqual(output.read_bytes(), b'previous corpus')
+                        pages = [{'page': 2, 'text': 'Valid PDF fallback evidence. ' * 30}]
+                        with patch.object(config, 'TEX_DIR', root), \
+                             patch.object(pipeline, 'load_html', return_value=None), \
+                             patch.object(pipeline, 'resolve_pdf_path', return_value=root / 'paper.pdf'), \
+                             patch.object(pipeline, 'extract_pages', return_value=pages):
+                            result = pipeline.process_and_store([ROW], output, use_tex=True)
+                            self.assertEqual(set(result.source), {'pdf'})
+                            self.assertNotIn('WRONG', ''.join(result.text))
+        with self.assertRaises(ValueError):
+            tex.chunk_source(archive({'main.tex': r'\begin{document}\unknown\iftrue LEFT\else RIGHT\fi\end{document}'}), AID)
 
     def test_comments_and_constant_branches_do_not_publish_hidden_text(self):
         body = r'''\begin{document}

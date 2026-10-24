@@ -34,9 +34,15 @@ explicit true/false setters) and positive `\ifdefined` facts can also select
 branches. Preamble includes are followed in order and macro replacement bodies
 are not executed. Unknown, scoped, aliased or body-mutated flag state remains
 unresolved. A missing source definition is **not** proof that a package/runtime
-symbol is undefined. Package semantics and dynamic arithmetic remain unsupported.
+symbol is undefined. Package semantics and dynamic arithmetic remain unsupported. Uninspected preamble
+calls (including package loaders and deferred hooks) prevent conditional selection;
+their following tokens are not proof of an executed setter. Unknown body calls
+also prevent branch selection. TeX `^^` character conversion is rejected before
+lexical analysis, including inside included files. These conservative guards can
+reduce compatibility; they do not implement TeX execution.
 Ordinary macros beginning with `if` (such as `\ifthenelse`, `\ifdefempty`, or
 `\ifplotsrgb`) remain raw macros, not misclassified primitive conditions.
+`\url`, `\path`, `\nolinkurl` (braced or delimiter operands),
 `\verb`, `\verb*`, `verbatim`, `Verbatim`, `lstlisting`, and `minted` blocks
 are preserved as opaque, atomic source spans: percent signs, dollar signs, and
 include-like examples inside them are not interpreted. `comment` environments
@@ -81,7 +87,9 @@ rejections: Validity-Aware Jailbreak Evaluation explicitly defines
 `\CameraReviewClean` before including its `\newif\ifCameraReview` setup. The
 selected false branch removes review-only wrappers without dropping their prose.
 All 22 previously accepted normalized body hashes remain unchanged.
-These are parser-acceptance counts, not semantic-fidelity scores. SEFORA still
+These are historical parser-acceptance counts, not current-head coverage or
+semantic-fidelity scores. Later conservative lexical/execution guards can reject
+previously accepted documents; no final-head corpus rerun is claimed. SEFORA still
 requires PGF loop arithmetic (`\ifdim`); RMSWeb still tests `\SUPPLEMENTONLY`,
 whose absence in source is not a positive runtime fact. They deliberately retain
 HTML/PDF fallback; neither branch is guessed. The next capability for these cases

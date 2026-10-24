@@ -113,7 +113,11 @@ class DemoHandler(BaseHTTPRequestHandler):
         if self.path == '/api/config':
             config = {'live': self.research is not None}
             if getattr(self.research, 'mode', None) == 'indexed':
-                config.update(self.research.config())
+                try:
+                    config.update(self.research.config())
+                except ValueError:
+                    self.respond(503, {'error': 'Research session capacity reached. Wait for idle sessions to expire or restart the host.'})
+                    return
             context_id = getattr(self.research, 'paper_context_id', None)
             if context_id:
                 config['paper_context_id'] = context_id
@@ -196,7 +200,7 @@ class DemoHandler(BaseHTTPRequestHandler):
                 if response.get('result') and getattr(self.research, 'mode', None) != 'indexed':
                     type(self).saved_result = {**response, 'mode': 'saved-real-result'}
             except IndexedContextError:
-                self.respond(409, {'code': 'indexed_context_changed', 'error': 'Indexed context changed or request is invalid. Reload after restarting with the active index; no answer accepted.'})
+                self.respond(409, {'code': 'indexed_context_changed', 'error': 'Research context changed or conversation expired. Start a new conversation; restart/reload if the index changed. No answer accepted.'})
                 return
             except Exception:
                 self.respond(502, {'error': 'Synthesis failed or its citations did not validate. No answer was accepted. Retry your question.'})
@@ -217,10 +221,13 @@ def main():
     parser.add_argument('--index', type=Path, help='Query an existing Chroma persistent index; never builds/downloads one.')
     parser.add_argument('--collection', default='arxiv_papers')
     parser.add_argument('--top-k', type=int, default=5)
+    parser.add_argument('--clarification', action='store_true', help='Enable tab-scoped clarification and bounded server-owned intent history; requires --index.')
     parser.add_argument('--configured-provider', action='store_true', help='Explicitly use the existing RESEARCH_PROVIDER configuration for indexed mode.')
     args = parser.parse_args()
     if sum(bool(x) for x in (args.paper, args.index, args.result)) > 1:
         parser.error('--paper, --index and --result are mutually exclusive')
+    if args.clarification and not args.index:
+        parser.error('--clarification requires --index')
     if args.index:
         if bool(args.codex_model) == bool(args.configured_provider):
             parser.error('--index requires exactly one of --codex-model or --configured-provider')
@@ -234,7 +241,11 @@ def main():
                 from src.generation import create_generate
                 generate, metadata = create_generate()
             import sys
-            DemoHandler.research = IndexedResearch(retrieve=retrieve, identity=identity,
+            adapter = IndexedResearch
+            if args.clarification:
+                from src.indexed_clarification import ClarifyingIndexedResearch
+                adapter = ClarifyingIndexedResearch
+            DemoHandler.research = adapter(retrieve=retrieve, identity=identity,
                 generate=generate, metadata=metadata, index_path=index_path, top_k=args.top_k,
                 code_revision=code_revision(), command=sys.argv)
         except Exception:

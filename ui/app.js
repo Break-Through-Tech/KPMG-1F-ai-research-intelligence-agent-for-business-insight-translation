@@ -19,6 +19,10 @@ let savedResult = null;
 let liveSynthesis = false;
 let indexedMode = false;
 let indexedContextId = null;
+let clarificationEnabled = false;
+let researchConversationId = null;
+let clarificationPending = false;
+let activeClarificationTurn = null;
 let conversationHistory = [];
 let activePaperContextId = null;
 let requestPending = false;
@@ -478,11 +482,85 @@ function renderDraft(demo, number, answer) {
   answer.append(detailGroup);
 }
 
+function setClarificationPending(pending) {
+  clarificationPending = pending;
+  if (!pending) activeClarificationTurn = null;
+  if (!clarificationEnabled) return;
+  queryInput.setAttribute('aria-label', pending ? 'Clarification answer' : 'Research question');
+  queryInput.placeholder = pending ? 'Answer the clarification question…' : 'Enter a research question…';
+  form.elements.industry.disabled = pending;
+  submit.firstChild.textContent = pending ? 'Send clarification' : 'Search research';
+}
+
+function renderClarification(demo, number, answer) {
+  activeClarificationTurn = number;
+  const heading = answerHeading(number);
+  heading.textContent = `Clarification for question ${number}`;
+  answer.replaceChildren(heading, element('p', 'Clarification needed · No research answer produced', 'meta'),
+    element('p', `Original question: ${demo.submitted_request.query}`),
+    element('h3', demo.clarification.question));
+  const token = researchConversationId;
+  for (const option of demo.clarification.options) {
+    const choice = element('button', `Use: ${option.text}`, 'quiet clarification-option');
+    choice.type = 'button';
+    choice.dataset.clarificationTurn = number;
+    choice.addEventListener('click', () => {
+      if (requestPending || !clarificationPending || activeClarificationTurn !== number || token !== researchConversationId) return;
+      queryInput.value = option.text;
+      queryInput.focus();
+      feedback.textContent = 'Clarification choice copied. Review or edit it, then send.';
+    });
+    answer.append(choice);
+    if (option.support.length) {
+      const evidence = disclosure(`Source support for: ${option.text}`);
+      evidence.append(element('p', 'Exact quote membership checked; interpretation not independently verified.', 'meta'));
+      for (const support of option.support) {
+        const passage = demo.clarification_evidence.find(p => p.chunk_id === support.chunk_id);
+        evidence.append(element('blockquote', support.quote));
+        if (passage) {
+          evidence.append(element('p', `${passage.title} · ${citationSourceContext(passage)}`, 'meta'));
+          if (passage.source_url) {
+            const link = element('a', 'Open supporting source');
+            link.href = passage.source_url; link.target = '_blank'; link.rel = 'noopener noreferrer';
+            evidence.append(link);
+          }
+        }
+      }
+      answer.append(evidence);
+    }
+  }
+  answer.append(element('p', 'Type an answer below, use an editable choice, or start a new research conversation.'));
+  markAnswerReady(answer);
+  feedback.textContent = `Clarification needed: ${demo.clarification.question} No research answer produced.`;
+}
+
+document.querySelector('#new-research-conversation').addEventListener('click', async () => {
+  if (requestPending) return;
+  setQuestionBusy(true);
+  try {
+    const response = await fetch('/api/config', {signal: AbortSignal.timeout(10000)});
+    if (!response.ok) throw new Error('Session unavailable');
+    const config = await response.json();
+    if (!config.clarification || !config.conversation_id) throw new Error('Session unavailable');
+    researchConversationId = config.conversation_id;
+    indexedContextId = config.context_id;
+    setClarificationPending(false);
+    queryInput.value = '';
+    queryInput.focus();
+    suggestions.hidden = true;
+    document.querySelector('#suggestion-note').hidden = true;
+    resetEvidence('New research conversation. Previous answers remain visible but are not conversation context.');
+    feedback.textContent = 'New research conversation. Previous answers and pending clarification will not be used as context.';
+  } catch {
+    feedback.textContent = 'Could not start a new conversation. Current question and session are unchanged; retry when ready.';
+  } finally { setQuestionBusy(false); }
+});
+
 function renderDemo(demo, number, answer) {
   const [label, explanation] = STATES[demo.scenario];
   const head = element('div', undefined, 'answer-head');
   head.append(answerHeading(number));
-  if (demo.mode === 'indexed') head.append(element('p', 'Indexed research · Independent query', 'meta'));
+  if (demo.mode === 'indexed') head.append(element('p', demo.history_policy === 'server_owned_bounded_intent_only' ? 'Indexed research · Bounded conversation' : 'Indexed research · Independent query', 'meta'));
   if (demo.scenario !== 'full') head.append(element('p', label, 'meta'));
   if (demo.result) head.append(element('p', 'Draft · Not approved', 'meta'));
   answer.replaceChildren(head);
@@ -548,7 +626,7 @@ queryInput.addEventListener('keydown', event => {
 
 function updateSuggestions(query) {
   suggestions.replaceChildren();
-  const contextual = liveSynthesis && activePaperContextId && conversationHistory.length > 0;
+  const contextual = clarificationEnabled || (liveSynthesis && activePaperContextId && conversationHistory.length > 0);
   const prompts = contextual
     ? [['Explain that term', 'Explain the term [enter term] from the previous answer.'],
        ['Show the supporting evidence', 'Show the supporting evidence for the previous answer.']]
@@ -571,7 +649,7 @@ function updateSuggestions(query) {
   const note = document.querySelector('#suggestion-note');
   note.hidden = false;
   note.textContent = contextual
-    ? 'Suggestions fill the composer; review and send. Recent successful turns are included in this paper mode.'
+    ? (clarificationEnabled ? 'Suggestions fill the composer; review and send. Bounded server-owned history resolves intent, never supplies evidence.' : 'Suggestions fill the composer; review and send. Recent successful turns are included in this paper mode.')
     : 'Suggestions fill the composer; review and send. Include all needed context. Demo questions are not executed; independent modes do not use previous answers.';
 }
 
@@ -581,8 +659,9 @@ function setQuestionBusy(busy) {
   submit.disabled = !appReady;
   if (busy) submit.setAttribute('aria-disabled', 'true');
   else submit.removeAttribute('aria-disabled');
-  document.querySelectorAll('.retry-question, #question-suggestions button').forEach(button => {
-    button.disabled = busy || !appReady;
+  document.querySelectorAll('.retry-question, #question-suggestions button, .clarification-option, #new-research-conversation').forEach(button => {
+    button.disabled = busy || !appReady || (button.classList.contains('clarification-option') &&
+      Number(button.dataset.clarificationTurn) !== activeClarificationTurn);
   });
   output.setAttribute('aria-busy', String(busy));
 }
@@ -596,6 +675,10 @@ function offerRetry(answer, query, scenario, context) {
     form.elements.scenario.value = scenario;
     queryInput.focus();
     retry.remove();
+    if (clarificationEnabled && context?.conversation_id !== researchConversationId) {
+      feedback.textContent = 'This failed request belongs to an earlier research conversation. Your text is restored; review before sending in the new conversation.';
+      return;
+    }
     if (!indexedMode && context && context.paper_context_id !== activePaperContextId) {
       feedback.textContent = 'The paper changed since this question failed. Original question restored; review it before sending about the current paper. Previous context will not be sent.';
       return;
@@ -614,7 +697,8 @@ form.addEventListener('submit', async event => {
   if (savedResult && !liveSynthesis) return;
   const query = form.elements.query.value;
   const scenario = form.elements.scenario.value;
-  let submissionContext = indexedMode ? {context_id: indexedContextId, industry: form.elements.industry.value} : liveSynthesis ? (retryContext || {
+  let submissionContext = indexedMode ? (retryContext || {context_id: indexedContextId, industry: form.elements.industry.value,
+    ...(clarificationEnabled ? {conversation_id: researchConversationId, action: clarificationPending ? 'resume' : 'ask'} : {})}) : liveSynthesis ? (retryContext || {
     history: conversationHistory.map(message => ({...message})),
     paper_context_id: activePaperContextId,
   }) : null;
@@ -627,8 +711,8 @@ form.addEventListener('submit', async event => {
   }
   feedback.classList.remove('sr-only');
   const number = ++turnNumber;
-  const loading = indexedMode ? 'Searching the research index and synthesizing supported findings…' : liveSynthesis ? 'Reading the paper and synthesizing an answer…' : 'Loading local example…';
-  const {turn, answer} = createTurn(query, number, liveSynthesis ? 'Your question' : 'Your question · Not executed', loading);
+  const loading = indexedMode ? (clarificationEnabled ? 'Checking your question and researching its evidence…' : 'Searching the research index and synthesizing supported findings…') : liveSynthesis ? 'Reading the paper and synthesizing an answer…' : 'Loading local example…';
+  const {turn, answer} = createTurn(query, number, clarificationPending ? 'Your clarification answer' : liveSynthesis ? 'Your question' : 'Your question · Not executed', loading);
   document.querySelector('#welcome').hidden = true;
   output.append(turn);
   resetEvidence('Loading a new example. No current evidence to inspect.');
@@ -642,7 +726,7 @@ form.addEventListener('submit', async event => {
       method: 'POST', headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({query, scenario,
         ...(submissionContext || {})}),
-      signal: AbortSignal.timeout(liveSynthesis ? 330000 : 10000),
+      signal: AbortSignal.timeout(indexedMode ? 1260000 : liveSynthesis ? 330000 : 10000),
     });
     const demo = await response.json();
     if (!response.ok) {
@@ -655,6 +739,13 @@ form.addEventListener('submit', async event => {
       if (indexedMode) contextRecoveryMessage = demo.error || 'Indexed research failed. No answer was accepted.';
       throw new Error('Request rejected.');
     }
+    if (demo.scenario === 'clarification') {
+      setClarificationPending(true);
+      renderClarification(demo, number, answer);
+      if (form.elements.query.value === query) form.elements.query.value = '';
+      return;
+    }
+    if (demo.result && clarificationEnabled) setClarificationPending(false);
     renderDemo(demo, number, answer);
     if (liveSynthesis) rememberAcceptedTurn(query, demo);
     if (demo.error) offerRetry(answer, query, scenario, submissionContext);
@@ -691,6 +782,10 @@ function loadQuestionEntry() {
   activePaperContextId = config.paper_context_id || null;
   indexedMode = config.mode === 'indexed';
   indexedContextId = config.context_id || null;
+  clarificationEnabled = config.clarification === true;
+  researchConversationId = config.conversation_id || null;
+  setClarificationPending(false);
+  document.querySelector('#new-research-conversation').hidden = !clarificationEnabled;
   if (liveSynthesis) {
     document.querySelector('.demo-settings').hidden = true;
     document.querySelector('#welcome h2').textContent = 'Ask about this paper.';
@@ -706,6 +801,7 @@ function loadQuestionEntry() {
     document.querySelector('#welcome h2').textContent = 'Ask across your research index.';
     document.querySelector('#welcome p').textContent = 'Inspect supported findings and their sources. Add industry context for conditional business implications.';
     document.querySelector('#demo-note').textContent = `Persistent research index · ${config.index.count} passages · Independent questions; previous answers are not context.`;
+    if (clarificationEnabled) document.querySelector('#demo-note').textContent = 'Persistent research index · Clarification enabled · Recent successful turns are intent context, never evidence. New conversation clears context.';
     submit.firstChild.textContent = 'Search research';
     feedback.textContent = 'Ready to search the research index.';
     if (untouchedQuestion) queryInput.value = '';

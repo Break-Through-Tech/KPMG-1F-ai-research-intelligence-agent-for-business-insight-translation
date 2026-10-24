@@ -1,4 +1,4 @@
-# Opt-in query clarification (draft backend)
+# Opt-in query clarification (backend and local UI)
 
 Inspired by [A Small Model Asks Better](https://arxiv.org/html/2610.28686v1)
 and [ClariEdge](https://huggingface.co/datasets/ibm-research/ClariEdge). This
@@ -96,5 +96,56 @@ draft. Next: independently label BTT held-out cases; compare configured baseline
 against a small LoRA using separate training data; assess option grounding and
 final-answer quality with human/source review, alongside latency and abstention.
 
-This is backend groundwork related to #130, not completion of its persistent-index
-UI, corpus identity, real-index walkthrough, browser proof, or stakeholder criteria.
+The standalone backend does not provide index identity or an HTTP/UI host. The
+opt-in host below supplies those integration seams, with separate proof limits;
+neither component establishes stakeholder acceptance or model semantic quality.
+
+## Indexed research desk integration (stacked on #155)
+
+The optional host is now wired with `--index ... --clarification`, using the same
+explicit `--codex-model`/`--codex-bin` or `--configured-provider` routes documented
+in `docs/local-research-interface.md`. Defaults do not change: indexed mode without
+this flag keeps independent questions; single-paper and fixture modes are unchanged.
+
+```sh
+python -m src.research_demo --index /absolute/path/to/data/chroma_db \
+  --clarification --codex-model YOUR_CONFIGURED_MODEL \
+  --codex-bin /absolute/path/to/compatible/codex
+```
+
+Each tab's configuration request creates an opaque conversation token. State stays
+in the local Python host: no client-supplied history, cookie, persistent session
+store, or browser local-storage transcript. Completed turns are bounded by the
+existing `ClarifyingResearch` contract. Index/config/provider identity is checked
+before work, after research, and after optional business translation. The host
+serializes generation; a short separate lock guards session allocation and expiry.
+Sessions expire after 30 idle minutes, maximum 32 retained sessions. Running sessions
+are not expired/evicted. Capacity exhaustion is explicit, not silent eviction of
+someone else's pending question. Restarting loses all sessions.
+
+The UI renders a clarification question with **no completed draft**. Optional choices
+copy editable text into the composer; they do not auto-submit. Post-retrieval choices
+retain their exact support quotes, chunk identity, and original source links in
+expandable source support. Open-ended clarification works without choices. Send an
+answer to resume the original request with its original industry context and fresh
+retrieval. While pending, the composer is labelled “Clarification answer”; change
+of industry is disabled until completion or a new conversation. Up to three exchanges
+are permitted by the backend; after its limit, start a new research conversation.
+
+“New research conversation” creates clean server-owned intent state. Previous answers
+remain on screen but are not supplied to the new session. Old pending choices and
+failed-request retry controls cannot submit into a different conversation. Provider
+failure keeps pending state retryable and shows a failed stage; it is not relabeled
+as insufficient evidence. Expired/mismatched sessions prompt new-conversation/reload.
+The UI allows up to 21 minutes for the configured sequential clarification/synthesis/
+business calls; it does not switch providers or bypass a running request lock.
+
+### Proof boundaries
+
+Session/HTTP tests and Chrome desktop/mobile checks use deterministic synthetic
+**development** adapters: pending/no-draft, editable and open-ended choices, source
+support, resume, provider failure/retry, tab isolation, clean sessions, expiry/capacity,
+and stale index rejection. These do not establish semantic decision accuracy,
+trained-model performance, real-provider latency, or stakeholder acceptance.
+The real-provider execution blocker documented in #155 still applies. No auth or
+user config was changed to bypass the adapter's isolation requirements.

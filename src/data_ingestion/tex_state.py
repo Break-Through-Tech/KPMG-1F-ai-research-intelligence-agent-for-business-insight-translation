@@ -89,6 +89,8 @@ class PreambleState:
                 continue
             token, command = match[0], match[1]
             active = all(value is True for value, _ in stack)
+            if command == 'endinput' and all(value is not False for value, _ in stack):
+                raise ValueError('Uninspected preamble input termination')
             if command in UNSUPPORTED_DEFINITIONS and all(value is not False for value, _ in stack):
                 self.unsupported = True
             if (command and command not in PRIMITIVES and command not in self.values
@@ -124,9 +126,7 @@ class PreambleState:
                 wrapper = re.match(r'\s*\{\s*\\([a-zA-Z]+)\s*\}', code[pos:])
                 target = wrapper or TARGET.match(code, pos)
                 if target is None:
-                    self.defined.clear()
-                    self.values.clear()
-                    continue
+                    raise ValueError('Unsupported preamble macro target')
                 name = target[1]
                 self.macros.add(name)
                 if name in STRUCTURAL:

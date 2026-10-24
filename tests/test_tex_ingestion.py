@@ -397,6 +397,17 @@ class TexIngestionTests(unittest.TestCase):
                     with self.assertRaises(ValueError):
                         tex.chunk_source(archive(files), AID)
 
+    def test_redeclared_tainted_flags_remain_unresolved(self):
+        preamble = r'\newif\ifFlag{\Flagtrue}\newif\ifFlag\Flagtrue'
+        for included in (False, True):
+            with self.subTest(included=included):
+                files = {'main.tex': (r'\input{preamble}' if included else preamble) +
+                         r'\begin{document}\ifFlag RIGHT\else WRONG\fi\end{document}'}
+                if included:
+                    files['preamble.tex'] = preamble
+                with self.assertRaises(ValueError):
+                    tex.chunk_source(archive(files), AID)
+
     def test_comments_and_constant_branches_do_not_publish_hidden_text(self):
         body = r'''\begin{document}
 START

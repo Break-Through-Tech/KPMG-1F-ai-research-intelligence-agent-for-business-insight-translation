@@ -334,6 +334,7 @@ function renderDemo(demo, number, answer) {
   if (demo.result) {
     if (demo.scenario !== 'full') answer.append(element('p', explanation));
     renderDraft(demo, number, answer);
+    answer.append(AnswerExport.controls(demo, number));
   } else answer.append(element('p', demo.error.message, 'error'));
   const real = isReal(demo);
   const raw = disclosure(real ? 'Run details & result JSON' : 'Run details & demo JSON');

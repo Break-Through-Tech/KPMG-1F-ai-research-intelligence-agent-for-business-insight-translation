@@ -118,6 +118,7 @@ class DemoHandler(BaseHTTPRequestHandler):
             return
         assets = {'/': ('index.html', 'text/html'),
                   '/app.js': ('app.js', 'text/javascript'),
+                  '/answer-export.js': ('answer-export.js', 'text/javascript'),
                   '/math.js': ('math.js', 'text/javascript'),
                   '/styles.css': ('styles.css', 'text/css')}
         asset = assets.get(urlsplit(self.path).path)

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../../ui/read-aloud.css">
+<title>Read-aloud isolated fixture · #144</title>
+<style>
+  :root { color-scheme: light dark; font: 1rem/1.5 system-ui, sans-serif; }
+  body { max-width: 48rem; margin: 2rem auto; padding: 1rem; }
+  blockquote { margin-inline: 0; padding-inline-start: 1rem; border-inline-start: 2px solid currentColor; }
+</style>
+<h1>Optional read-aloud · isolated fixture</h1>
+<p>Not connected to the research workflow. Core #137/#138 integration and manual VoiceOver checks are outstanding.</p>
+<article>
+  <h2>Example result · Draft, not approved</h2>
+  <p>This synthetic finding is not a business recommendation. <a href="#source">Citation [1]</a></p>
+  <h3>Limitations</h3>
+  <p>Fixture only. Source verification and independent review are pending.</p>
+</article>
+<section id="source">
+  <h2>Source passage · Synthetic example, page 1</h2>
+  <blockquote>The synthetic agent was evaluated in a controlled test environment.</blockquote>
+  <p>This is a synthetic passage, not a verified paper.</p>
+</section>
+<div id="reader"></div>
+<script type="module">
+  import {mountReadAloud} from '../../ui/read-aloud.mjs';
+  const items = [
+    {id: 'result:fixture', label: 'Example result · Draft, not approved', text: 'Example result. Draft, not approved. This synthetic finding is not a business recommendation. Citation 1. Limitations: Fixture only. Source verification and independent review are pending.'},
+    {id: 'passage:fixture:1', label: 'Source passage 1 · Synthetic example, page 1', text: 'Source passage 1. Synthetic example, page 1. The synthetic agent was evaluated in a controlled test environment. This is a synthetic passage, not a verified paper.'},
+  ];
+  const reader = mountReadAloud(document.querySelector('#reader'));
+  reader.setItems(items);
+</script>
+</html>

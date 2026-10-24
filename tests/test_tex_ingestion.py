@@ -477,6 +477,62 @@ class TexIngestionTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             tex.chunk_source(archive({'main.tex': r'\begin{document}\unknown\iftrue LEFT\else RIGHT\fi\end{document}'}), AID)
 
+    def test_redefined_literal_controls_cannot_hide_flag_mutations(self):
+        for name in ('url', 'path', 'nolinkurl', 'verb', 'begin', 'end'):
+            for declaration in (r'\newcommand{\NAME}[1]{\Flagtrue}',
+                                '\\renewcommand% target comment\n{\\NAME}[1]{\\Flagtrue}',
+                                r'\def\NAME#1{\Flagtrue}', r'\let\NAME\Flagtrue'):
+                declared = declaration.replace('NAME', name)
+                for included in (False, True):
+                    for location in ('preamble', 'body'):
+                        with self.subTest(name=name, declaration=declaration, included=included, location=location):
+                            called = declared + '\\' + name + '{x}'
+                            preamble = r'\newif\ifFlag'
+                            if location == 'preamble':
+                                preamble += r'\input{child}' if included else called
+                                body = r'\ifFlag RIGHT\else WRONG\fi'
+                            else:
+                                body = (r'\input{child}' if included else called) + r'\ifFlag RIGHT\else WRONG\fi'
+                            files = {'main.tex': preamble + r'\begin{document}' + body + r'\end{document}'}
+                            if included:
+                                files['child.tex'] = called
+                            with self.assertRaises(ValueError):
+                                tex.chunk_source(archive(files), AID)
+        # Declaration-looking examples inside a genuine literal remain inert.
+        source = r'\begin{document}\verb|\newcommand{\url}[1]{\Flagtrue}|\end{document}'
+        self.assertIn(r'\newcommand', tex.chunk_source(source.encode(), AID)[0]['text'])
+
+    def test_file_writing_environments_require_fallback(self):
+        for environment in ('filecontents', 'filecontents*'):
+            for included in (False, True):
+                with self.subTest(environment=environment, included=included):
+                    body = ('\\begin{' + environment + '}{child.tex}\nWRITTEN NOT EXECUTED\n' +
+                            '\\end{' + environment + '}')
+                    files = {'main.tex': r'\begin{document}' +
+                             (r'\input{part}' if included else body) + r'\end{document}'}
+                    if included:
+                        files['part.tex'] = body
+                    data = archive(files)
+                    with self.assertRaises(ValueError):
+                        tex.chunk_source(data, AID)
+                    with tempfile.TemporaryDirectory() as directory:
+                        root = Path(directory)
+                        (root / f'{AID}.source').write_bytes(data)
+                        output = root / 'out.parquet'
+                        output.write_bytes(b'previous corpus')
+                        with patch.object(config, 'TEX_DIR', root), \
+                             patch.object(pipeline, 'load_html', return_value=None), \
+                             patch.object(pipeline, 'resolve_pdf_path', return_value=None):
+                            with self.assertRaises(RuntimeError):
+                                pipeline.process_and_store([ROW], output, use_tex=True)
+                            self.assertEqual(output.read_bytes(), b'previous corpus')
+                        with patch.object(config, 'TEX_DIR', root), \
+                             patch.object(pipeline, 'load_html', return_value=None), \
+                             patch.object(pipeline, 'resolve_pdf_path', return_value=root / 'paper.pdf'), \
+                             patch.object(pipeline, 'extract_pages', return_value=[{'page':2, 'text':'PDF fallback. ' * 40}]):
+                            result = pipeline.process_and_store([ROW], output, use_tex=True)
+                            self.assertEqual(set(result.source), {'pdf'})
+
     def test_comments_and_constant_branches_do_not_publish_hidden_text(self):
         body = r'''\begin{document}
 START

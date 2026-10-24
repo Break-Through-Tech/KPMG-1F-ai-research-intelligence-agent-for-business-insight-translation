@@ -16,6 +16,20 @@ OPAQUE_TOKENS = re.compile(
     r'|\\[a-zA-Z]*@')
 
 
+# Literal masking is sound only while these controls keep their standard role.
+LITERAL_CONTROLS = frozenset(('url path nolinkurl verb begin end verbatim Verbatim '
+    'lstlisting minted comment endverbatim endVerbatim endlstlisting endminted endcomment').split())
+DECLARATION = re.compile(r'(?:def|gdef|edef|xdef|let|futurelet|newcommand|renewcommand|'
+    r'providecommand|DeclareRobustCommand|newenvironment|renewenvironment|'
+    r'(?:New|Renew|Provide|Declare)(?:Expandable)?Document(?:Command|Environment))$')
+# Comments can separate a declaration and its target without changing TeX tokens.
+DECLARATION_SPACE = r'(?:\s|%[^\n]*(?:\n|$))*'
+LITERAL_TARGET = re.compile(DECLARATION_SPACE + r'(?:\{' + DECLARATION_SPACE + r')?'
+    r'\\([a-zA-Z]+)(?![a-zA-Z])')
+ENVIRONMENT_TARGET = re.compile(DECLARATION_SPACE + r'\{' + DECLARATION_SPACE +
+    r'(verbatim\*?|Verbatim\*?|lstlisting|minted|comment)' + DECLARATION_SPACE + r'\}')
+
+
 def blank(text):
     """Keep byte-independent character offsets and original line numbers."""
     return ''.join('\n' if char == '\n' else ' ' for char in text)
@@ -34,6 +48,12 @@ def scan(text):
             if end < 0:
                 end = len(text)
             parts.append(blank(text[start:end]))
+        elif DECLARATION.fullmatch(token[1:].rstrip('*')):
+            target = LITERAL_TARGET.match(text, end)
+            environment = ENVIRONMENT_TARGET.match(text, end) if 'environment' in token.lower() else None
+            if (target and target[1] in LITERAL_CONTROLS) or environment:
+                raise ValueError('Redefined TeX literal controls require HTML/PDF fallback')
+            parts.append(token)
         elif token.rstrip('*') in (r'\url', r'\path', r'\nolinkurl'):
             position = end
             while position < len(text) and text[position].isspace():
@@ -66,6 +86,8 @@ def scan(text):
             end = close + 1
             parts.append(text[start:end])
             spans.append((start, end))
+        elif token == r'\begin' and re.match(r'\s*\{filecontents\*?\}', text[end:]):
+            raise ValueError('File-writing TeX environments require HTML/PDF fallback')
         elif token == r'\begin' and (environment := LITERAL.match(text, end)):
             name = environment[1]
             close = re.search(r'\\end\s*\{' + re.escape(name) + r'\}', text[environment.end():])

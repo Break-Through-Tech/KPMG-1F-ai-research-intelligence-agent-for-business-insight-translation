@@ -5,7 +5,7 @@ Absence from this table NEVER means undefined in TeX's runtime.
 """
 import re
 
-from .tex_lexical import OPAQUE_TOKENS, PRIMITIVES, structural
+from .tex_lexical import LITERAL_CONTROLS, OPAQUE_TOKENS, PRIMITIVES, structural
 
 COMMAND = re.compile(r'\\([a-zA-Z]+)|\\.|[{}]')
 TARGET = re.compile(r'\s*\\([a-zA-Z]+)(?![a-zA-Z])')
@@ -16,7 +16,7 @@ UNSUPPORTED_DEFINITIONS = {'newenvironment', 'renewenvironment'} | {
     prefix + expandable + 'Document' + kind
     for prefix in ('New', 'Renew', 'Provide', 'Declare')
     for expandable in ('', 'Expandable') for kind in ('Command', 'Environment')}
-STRUCTURAL = PRIMITIVES | DEFINITIONS | {'else', 'fi', 'or', 'unless', 'let', 'futurelet',
+STRUCTURAL = PRIMITIVES | DEFINITIONS | LITERAL_CONTROLS | {'else', 'fi', 'or', 'unless', 'let', 'futurelet',
     'newif', 'input', 'include', 'begingroup', 'endgroup', 'bgroup', 'egroup', 'csname', 'catcode'}
 
 

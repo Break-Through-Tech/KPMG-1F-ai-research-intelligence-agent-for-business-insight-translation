@@ -20,9 +20,12 @@ button { cursor: pointer; border: 1px solid transparent; border-radius: 8px; }
 button:hover { filter: brightness(.94); }
 button:active { transform: translateY(1px); }
 button:disabled { opacity: .6; cursor: wait; }
+button[aria-disabled="true"] { opacity: .6; cursor: wait; }
+#jump-latest:disabled { cursor: default; }
+.answer h2[tabindex="-1"] { scroll-margin-top: 16px; }
 button svg { width: 20px; height: 20px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 a { color: var(--primary); text-underline-offset: .2em; overflow-wrap: anywhere; }
-:focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; }
+:focus-visible { scroll-margin: 12px; outline: 2px solid var(--primary); outline-offset: 4px; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .skip { position: fixed; top: -100px; left: 16px; z-index: 5; background: var(--background); padding: 12px; }
 .skip:focus { top: 8px; }
@@ -105,7 +108,7 @@ select { background: var(--background); border: 1px solid var(--border); border-
 .passage { border-top: 1px solid var(--border); padding-top: 24px; }
 .passage h3 { margin: 0 0 12px; font-size: 1.125rem; line-height: 1.45; }
 blockquote { border-left: 2px solid #aab5c5; margin: 0 0 28px; padding: 0 0 0 16px; }
-.source-link { font-size: 0.875rem; display: inline-block; margin-bottom: 16px; }
+.source-link { min-height: 44px; display: inline-flex; align-items: center; font-size: 0.875rem; margin-bottom: 16px; }
 .source-details p { margin-bottom: 12px; }
 .rail-note { padding-top: 20px; margin: 24px 0 0; border-top: 1px solid var(--border); }
 .rail-empty { margin-top: 32px; }
@@ -164,3 +167,14 @@ blockquote { border-left: 2px solid #aab5c5; margin: 0 0 28px; padding: 0 0 0 16
   .controls { width: 100%; }
 }
 [hidden] { display: none !important; }
+
+/* Question entry preferences and fill-only suggestions (#140). */
+.entry-options, .question-suggestions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 8px; }
+.entry-options select { min-height: 44px; max-width: 100%; }
+.question-suggestions button, .retry-question { min-height: 44px; white-space: normal; text-align: left; }
+#entry-hint, #suggestion-note { margin: 8px 0; }
+/* #141: native radio grouping wraps without changing other reading controls. */
+.explanation-view { min-width: 0; margin: 0 0 12px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; }
+.explanation-view legend { padding: 0 4px; font-size: 0.875rem; }
+.explanation-view label { display: inline-flex; gap: 8px; align-items: center; min-height: 44px; margin-right: 16px; cursor: pointer; }
+.explanation-view input { accent-color: var(--primary); flex-shrink: 0; }

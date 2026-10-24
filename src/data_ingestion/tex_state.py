@@ -248,6 +248,10 @@ class PreambleState:
                 if active or any(v is None for v, _ in stack):
                     if command in {'csname', 'catcode', 'unless'}:
                         self.unsupported = True
+                    if command in {'usepackage', 'documentclass'}:
+                        # Loaded code can install deferred hooks. A later newif
+                        # declaration must not restore trust in an uninspected runtime.
+                        self.uninspected = True
                     self.defined.clear()
                     self.values.clear()
         if stack:

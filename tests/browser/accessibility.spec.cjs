@@ -66,6 +66,12 @@ async function choose(page, state = 'full', query = 'Accessibility fixture quest
 }
 
 async function scan(page, info, label) {
+  // Axe retains a manual-review result for hidden popup IDREFs. Independently
+  // check actual DOM references without suppressing that scanner result.
+  const brokenPopupRefs = await page.locator('.citation').evaluateAll(nodes => nodes
+    .filter(node => !document.getElementById(node.getAttribute('aria-controls')))
+    .map(node => node.getAttribute('aria-controls')));
+  expect(brokenPopupRefs).toEqual([]);
   // Test-only same-origin response: keep the product's CSP enabled and unchanged.
   if (!await page.evaluate(() => Boolean(window.axe))) {
     await page.route('**/__a11y/axe.js', route => route.fulfill({
@@ -224,6 +230,9 @@ for (const width of [1280, 390]) {
     await expect(panel.locator('.source-exact-quote')).toHaveText(fixture.result.summary.claims[0].support[0].quote);
     await expect(panel.getByRole('columnheader')).toHaveCount(3);
     await expect(panel.locator('math mfrac[linethickness="0"]')).toHaveCount(1);
+    await expect(panel.locator('.source-reading figure')).toHaveCount(2);
+    await expect(panel.locator('.source-reading figure').first().locator('figcaption')).toHaveCount(0);
+    await expect(panel.getByText(/Source-supplied image description: Two/)).toHaveCount(1);
     expect(await panel.locator('td').first().evaluate(cell => cell.headers.split(' ')
       .every(id => document.getElementById(id)?.tagName === 'TH'))).toBe(true);
     await scan(page, info, 'structured-source');

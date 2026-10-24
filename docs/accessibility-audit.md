@@ -28,14 +28,16 @@ From `tests/browser`:
 npm ci --ignore-scripts
 npx playwright install chromium
 # Python 3.10+ is required; CI uses 3.12. Point PYTHON at a suitable interpreter if needed.
+python3 -m pip install beautifulsoup4 jsonschema
 PYTHON=python3 npm test
 ```
 
 Each worker starts and tears down an ephemeral loopback fixture server (`--port 0`).
 The browser does not attach to an existing port or enable synthesis. The scanner
 is injected via a test-only same-origin route; product CSP stays enabled.
-The lockfile pins browser/scanner dependencies. No Python dependencies beyond
-the standard library are required for these fixture checks.
+The lockfile pins browser/scanner dependencies. The original baseline needed
+only the Python standard library; integrated parser-produced source checks also
+use the project's Beautiful Soup and jsonschema dependencies. They call no model.
 
 `tests/browser/artifacts/report.json` retains exact HEAD/dirty flag, OS/browser/tool
 versions, axe results (including **incomplete** nodes), screenshots and layout
@@ -82,7 +84,38 @@ not by relaxing product policy. The initial long-content probe raced focus-trigg
 scroll/preview dismissal; final probe scrolls before focus and does not scan the
 transient preview. Auto-scroll preview persistence therefore remains untested.
 
-## Manual and integrated gates — NOT PERFORMED
+## Controlled integrated fixture follow-up — 2026-10-23
+
+The executable suite now follows the integrated citation activation/name,
+Ctrl+Enter composer submission, numbered failure/retry and shared answer-status
+contracts. It preserves the original baseline above rather than relabeling it
+as a current run. No scanner rules or incomplete results are suppressed.
+
+- **28 cases and 32 WCAG-tagged scans pass**, with zero reported violations.
+  Coverage adds the plain-language fixture, parser-produced MathML/table/header
+  groups at desktop/mobile widths, and persistent high-contrast preferences at
+  320px with 200% text. Duplicate submission and native keyboard retry are checked.
+- The mobile Tab walkthrough independently exposed the reading-preferences
+  document-scroll preview defect. Its fix belongs to #139/#148, not this harness.
+  A strengthened sibling regression verifies that the actual reading scroller
+  moves. After repair, Escape returns focus without reopening the preview.
+- A named generic source-list div was fixed with an explicit group role in
+  #142/#151, removing four scanner-incomplete naming results. The remaining
+  **23 incomplete rule results** are retained: 22 hidden-popup IDREF checks and
+  one partially obscured MathML contrast check. Actual citation IDREF existence
+  is independently asserted; that does not prove spoken behavior or conformance.
+- The integrated input is the feature stack through structured-reader head
+  `3e292f9e33b7dca6f14c641060b6ec6b11f2917a`; each raw run records its actual
+  checkout HEAD and dirty flag. A feature-stack run is not a claim that its
+  unmerged dependencies are already on main.
+- Selected-result export and real read-aloud enablement are not exercised by
+  this audit's application path. Export remains a separate gated PR; read-aloud
+  is isolated preparation only. Real indexed execution is still separate.
+
+These are Chromium/fixture/viewport/media-proxy results, not the actual manual
+and live-workflow gates below. Original baseline findings remain historical.
+
+## Manual and remaining integrated gates — NOT PERFORMED
 
 Do not mark these complete from Playwright key events, screenshots, scanner output,
 source inspection, or a media-query/viewport proxy. There has been **no actual

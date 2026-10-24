@@ -82,7 +82,8 @@ def literal_preamble(text, *, with_macros=False):
     code = constant_branches(code, custom=flags)
     controls = set(re.findall(r'\\([a-zA-Z]+)', code))
     if controls.intersection(PRIMITIVES | flags | macros | UNSUPPORTED_DEFINITIONS |
-                            {'unless', 'let', 'futurelet', 'input', 'include', 'csname'}):
+                            {'unless', 'let', 'futurelet', 'input', 'include', 'csname',
+                             'DeclareGraphicsExtensions', 'DeclareGraphicsRule'}):
         raise ValueError('Unresolved preamble asset declarations require fallback')
     depth = 0
     for token in re.finditer(r'\\([a-zA-Z]+)|\\.|[{}]', code):

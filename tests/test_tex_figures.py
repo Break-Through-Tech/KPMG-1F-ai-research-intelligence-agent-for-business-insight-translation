@@ -130,6 +130,13 @@ class FigureTextTests(unittest.TestCase):
             figures.extract_figure_text(bundle({'main.tex': source,
                 'live/sample.pdf': pdf('UNPROVEN')}), AID)
 
+    def test_preamble_graphics_rules_cannot_select_unused_default_extension(self):
+        source = paper(r'\includegraphics{fig}',
+                       r'\DeclareGraphicsExtensions{.alt}\DeclareGraphicsRule{.alt}{pdf}{.alt}{}')
+        with self.assertRaises(ValueError):
+            figures.extract_figure_text(bundle({'main.tex': source,
+                'fig.alt': pdf('ACTIVE'), 'fig.pdf': pdf('UNUSED EVIDENCE')}), AID)
+
     def test_active_references_graphicspath_and_explicit_gaps(self):
         source = paper(r'''\iffalse\includegraphics{hidden.pdf}\fi
 % \includegraphics{comment.pdf}

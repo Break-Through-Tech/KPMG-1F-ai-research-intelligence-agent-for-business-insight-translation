@@ -135,7 +135,7 @@ test('desktop panel is nonmodal, choices activate natively, Escape restores init
   await page.keyboard.press('Space');
   await focused(page, '.source-choice:last-child');
   assert.equal(await page.locator('.source-choice:last-child').getAttribute('aria-pressed'), 'true');
-  assert.match(await page.locator('.passage').innerText(), /Passage 2/);
+  assert.equal(await page.locator('.passage .source-metadata dd').last().textContent(), 'synthetic-pdf-2');
   assert.match(await page.locator('.source-link').getAttribute('href'), /#page=2$/);
   await screenshot(page, 'desktop-source-context');
   await page.locator('#query').focus(); // desktop background remains reachable

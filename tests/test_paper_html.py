@@ -66,3 +66,21 @@ class PaperHtmlTests(TestCase):
             with patch('src.research_chat.subprocess.run', side_effect=FileNotFoundError):
                 with self.assertRaisesRegex(ValueError, 'requires pdftotext from Poppler'):
                     load_paper(path, prefer_html=False)
+
+    def test_missing_html_dependency_still_falls_back_to_pdf(self):
+        import builtins
+        original_import = builtins.__import__
+        def without_bs4(name, *args, **kwargs):
+            if name == 'bs4':
+                raise ImportError('Optional HTML parser unavailable')
+            return original_import(name, *args, **kwargs)
+        with TemporaryDirectory() as folder:
+            path = Path(folder) / '2608.20318v1_Test.pdf'
+            path.write_bytes(b'local placeholder')
+            with patch('builtins.__import__', side_effect=without_bs4), patch(
+                    'src.paper_html.fetch_arxiv_html', return_value=HTML), patch(
+                    'src.research_chat.subprocess.run') as run:
+                run.return_value.stdout = 'Actual retained PDF text.\f'
+                passages, source = load_paper(path)
+            self.assertEqual(passages[0]['source'], 'pdf')
+            self.assertEqual(source['html_fallback'], 'ImportError')

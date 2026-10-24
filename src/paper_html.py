@@ -27,14 +27,23 @@ def fetch_arxiv_html(aid):
 
 def parse_paper_html(raw, aid, title):
     from bs4 import BeautifulSoup
+    from src.paper_reader import retain_reader
     if len(raw) > MAX_HTML_BYTES:
         raise ValueError('arXiv HTML exceeds the 5 MB preview limit.')
+    source_hash = sha256(raw).hexdigest()
     soup = BeautifulSoup(raw, 'html.parser')
     article = soup.select_one('article.ltx_document')
     if article is None:
         raise ValueError('No arXiv article found in HTML.')
     for node in article.select('script, style, nav, .ltx_bibliography'):
         node.decompose()
+    # Snapshot source structure before the canonical TeX conversion below.
+    # Match by selected-block position, retaining the existing quote text exactly.
+    selector = '.ltx_abstract, .ltx_para, .ltx_equation, .ltx_equationgroup, figure, table, ul, ol, dl'
+    original_blocks = article.select(selector)
+    selected_original = {id(node) for node in original_blocks}
+    readers = [retain_reader([node], source_hash) for node in original_blocks
+               if not any(id(parent) in selected_original for parent in node.parents)]
     for math in article.find_all('math'):
         annotation = math.find('annotation', attrs={'encoding': 'application/x-tex'})
         tex = math.get('alttext') or (annotation.get_text() if annotation else '')
@@ -44,17 +53,24 @@ def parse_paper_html(raw, aid, title):
             continue
         left, right = (r'\[', r'\]') if math.get('display') == 'block' else (r'\(', r'\)')
         math.replace_with(f' {left}{tex}{right} ')
-    blocks = article.select('.ltx_abstract, .ltx_para, .ltx_equation, .ltx_equationgroup, figure')
+    blocks = article.select(selector)
     selected = {id(node) for node in blocks}
     groups = {}
+    reader_index = 0
+    reader_groups = {}
     for node in blocks:
         if any(id(parent) in selected for parent in node.parents):
             continue
+        reader = readers[reader_index]
+        reader_index += 1
         section = node.find_parent('section')
         anchor = section.get('id', '') if section else node.get('id', '')
         heading = section.find(re.compile(r'^h[1-6]$')) if section else None
-        name = heading.get_text(' ', strip=True) if heading else 'Abstract / introduction'
+        name = heading.get_text(' ', strip=True) if heading else 'Section heading not supplied'
         text = re.sub(r'\s+', ' ', node.get_text(' ', strip=True)).strip()
+        # Reader-only descriptions/limitations belong to an existing section's
+        # reading view even when this block adds no canonical quote-check text.
+        reader_groups.setdefault((anchor, name), []).append(reader)
         if text:
             groups.setdefault((anchor, name), []).append(text)
     passages = []
@@ -64,9 +80,18 @@ def parse_paper_html(raw, aid, title):
                          'text': ' '.join(texts), 'arxiv_id': aid, 'title': title,
                          'pdf_url': f'https://arxiv.org/pdf/{aid}', 'source': 'html',
                          'html_url': url, 'source_url': url, 'page_number': None,
-                         'section': name})
+                         'section': name,
+                         'reader': {
+                             'version': 1, 'provenance': 'source-html',
+                             'source_sha256': source_hash,
+                             # A rejected block must not disappear from an otherwise
+                             # preferred structured view of this whole passage.
+                             'nodes': ([node for reader in reader_groups[(anchor, name)] for node in reader['nodes']]
+                                       if all(reader['nodes'] for reader in reader_groups[(anchor, name)]) else []),
+                             'limitations': sorted({item for reader in reader_groups[(anchor, name)] for item in reader['limitations']}),
+                         }})
     if not passages or len(passages) > 80 or sum(len(p['text']) for p in passages) > 120_000:
         raise ValueError('HTML must fit the 80-section / 120k-character preview limit.')
     validate_evidence(passages)
     return passages, {'format': 'arxiv-html-with-tex', 'url': f'https://arxiv.org/html/{aid}',
-                      'sha256': sha256(raw).hexdigest()}
+                      'sha256': source_hash}

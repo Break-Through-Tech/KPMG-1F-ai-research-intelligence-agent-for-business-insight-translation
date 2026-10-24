@@ -122,6 +122,7 @@ class DemoHandler(BaseHTTPRequestHandler):
         assets = {'/': ('index.html', 'text/html'),
                   '/app.js': ('app.js', 'text/javascript'),
                   '/math.js': ('math.js', 'text/javascript'),
+                  '/source-reader.js': ('source-reader.js', 'text/javascript'),
                   '/styles.css': ('styles.css', 'text/css'),
                   '/reading-preferences.js': ('reading-preferences.js', 'text/javascript'),
                   '/reading-preferences.css': ('reading-preferences.css', 'text/css')}

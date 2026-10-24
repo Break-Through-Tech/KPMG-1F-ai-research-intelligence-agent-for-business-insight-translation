@@ -48,7 +48,11 @@ Ordinary macros beginning with `if` (such as `\ifthenelse`, `\ifdefempty`, or
 `\verb`, `\verb*`, `verbatim`, `Verbatim`, `lstlisting`, and `minted` blocks
 are preserved as opaque, atomic source spans: percent signs, dollar signs, and
 include-like examples inside them are not interpreted. `comment` environments
-are omitted. Malformed/oversized literals fail closed. This is lexical handling,
+are omitted. Malformed/oversized literals fail closed. `filecontents` and `filecontents*`
+environments reject the bundle: writing generated source files is not simulated,
+and archived versions must not be substituted for files that TeX would overwrite. Declarations/aliases that redefine literal controls or literal environments reject
+the bundle before their calls can be hidden. Declaration-looking text inside a
+genuine literal is still inert. This is lexical handling,
 not execution or interpretation of the examples.
 Macro-generated/conditional includes and documents requiring other encodings are unsupported. TeX with these constructs should use
 the HTML/PDF route. As with any source, ingestion does not certify semantic

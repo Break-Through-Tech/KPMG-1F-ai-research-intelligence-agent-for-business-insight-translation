@@ -179,7 +179,7 @@ def source_blocks(data):
     # an include followed by a conditional in its parent or a sibling.
     pending, checked = [roots[0]], set()
     mutations = r'\\(?:def|gdef|edef|xdef|let|futurelet|newif|newcommand|renewcommand|providecommand|DeclareRobustCommand|csname|catcode|usepackage|inputencoding)(?![a-zA-Z])'
-    body_uncertain = False
+    body_uncertain = state.uninspected
     setters = {n[2:] + suffix for n in state.values for suffix in ('true', 'false')}
     # Opaque macro calls and aliases can consume structural tokens (including
     # else/fi) without mutating a flag. They invalidate branch selection too.
@@ -195,6 +195,13 @@ def source_blocks(data):
         # An ifdefined operand is inspected by TeX, not invoked as a macro.
         inspection = re.sub(r'(\\ifdefined)\s*\\[a-zA-Z]+(?![a-zA-Z])', lambda m: m[1], body)
         commands = set(re.findall(r'\\([a-zA-Z]+)', inspection))
+        # Unknown body controls can consume or defer delimiter tokens too. Only
+        # the explicitly understood traversal/conditional syntax selects branches.
+        if commands - (PRIMITIVES | custom | setters | {'input', 'include', 'else', 'or', 'fi'}):
+            body_uncertain = True
+        symbols = set(re.findall(r'\\[^a-zA-Z]', inspection))
+        if symbols - {r'\%', r'\$', r'\#', r'\&', r'\_', r'\{', r'\}', r'\\'}:
+            body_uncertain = True
         if re.search(mutations, inspection) or commands.intersection(setters | mutators | UNSUPPORTED_DEFINITIONS):
             state = PreambleState()
             body_uncertain = True

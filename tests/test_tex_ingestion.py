@@ -443,6 +443,18 @@ END
                     tex.chunk_source(archive({'main.tex': preamble + r'\begin{document}' + body +
                         r'\end{document}'}), AID)
 
+    def test_unparsed_starred_declarations_and_preamble_termination_fall_back(self):
+        for declaration in (r'\newcommand*{\ignore}[1]{}',
+                            r'\providecommand*{\ignore}[1]{}',
+                            r'\DeclareRobustCommand*{\ignore}[1]{}'):
+            with self.subTest(declaration=declaration), self.assertRaises(ValueError):
+                tex.chunk_source(archive({'main.tex': declaration +
+                    r'\begin{document}\iftrue\ignore\else RIGHT\fi\end{document}'}), AID)
+        with self.assertRaises(ValueError):
+            tex.chunk_source(archive({'main.tex': r'\newif\ifFlag\input{flags}'
+                r'\begin{document}\ifFlag WRONG\else RIGHT\fi\end{document}',
+                'flags.tex': '\\endinput\n' + r'\Flagtrue'}), AID)
+
     def test_indirect_preamble_file_mutations_require_fallback(self):
         for preamble in (
             r'\let\RuntimeFlag\relax\newif\ifFlag\ifdefined\RuntimeFlag\input{flags}\fi',

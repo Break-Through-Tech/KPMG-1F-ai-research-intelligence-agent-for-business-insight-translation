@@ -117,15 +117,27 @@ class CitationGraphTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'Unresolved preamble'):
             graph.build_graph([dict(arxiv_id=AID, source_bytes=bundle({'main.tex': source, 'refs.bib': BIB}))])
 
-    def test_comments_literals_branches_and_case_mismatch(self):
+    def test_comments_literals_and_case_mismatch(self):
         doc = document(body=r'''% \cite{hidden}
 \verb|\cite{literal}|
-\iffalse\cite{inactive}\fi
+\url|\cite{inactive}|
 \cite{Llama,missing}\nocite{*}\bibliography{refs}''')
         result = graph.build_graph([doc])
         self.assertEqual(result['papers'][0]['unresolved_keys'], ['Llama', 'missing'])
         self.assertFalse(any(e['type'] == 'cites' for e in result['edges']))
         self.assertEqual(graph.expansion_candidates(result)['candidates'], [])
+
+    def test_uninspected_citation_calls_with_branches_fail_closed(self):
+        # Parent traversal deliberately narrows compatibility rather than
+        # guessing whether package macros consume conditional delimiters.
+        for included in (False, True):
+            with self.subTest(included=included):
+                body = r'\iffalse\cite{inactive}\fi\cite{llama}\bibliography{refs}'
+                files = {'main.tex': paper(r'\input{child}' if included else body), 'refs.bib': BIB}
+                if included:
+                    files['child.tex'] = body
+                with self.assertRaises(ValueError):
+                    graph.build_graph([dict(arxiv_id=AID, source_bytes=bundle(files))])
 
     def test_duplicates_conflicting_identity_strings_and_no_title_guess(self):
         bib = '''@article{dup,title={One},eprint={2407.21783}}

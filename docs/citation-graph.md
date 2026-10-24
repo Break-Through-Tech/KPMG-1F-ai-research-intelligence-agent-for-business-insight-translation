@@ -66,3 +66,12 @@ No archive content is compiled, executed or extracted to disk. Generated corpus
 JSON, downloaded papers and local verification receipts do not belong in tracked
 diffs. No production ingestion or source-certification claim follows from this
 syntax-level graph.
+
+### Conservative conditional boundary (2026-10-23)
+
+Citation discovery uses the shared non-executing source traversal. Unknown
+macro calls mixed with conditional selection, including citation commands
+inside literal conditions, now reject the bundle instead of guessing branch
+execution. URL/path examples are opaque, including delimiter-form operands.
+Literal citation/bibliography declarations without unresolved execution still
+produce source-located graph hints; no package semantics or truth claim is added.

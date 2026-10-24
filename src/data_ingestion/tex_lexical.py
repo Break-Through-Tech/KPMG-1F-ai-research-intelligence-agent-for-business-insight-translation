@@ -3,6 +3,9 @@ import re
 
 TOKEN = re.compile(r'\\[a-zA-Z]+\*?|\\.|%')
 LITERAL = re.compile(r'\s*\{(verbatim\*?|Verbatim\*?|lstlisting|minted|comment)\}')
+# These primitives consume or store tokens without executing their apparent
+# conditional delimiters. Their expansion/assignment semantics are not modeled.
+OPAQUE_TOKENS = re.compile(r'\\(?:string|detokenize|noexpand|meaning|unexpanded|toks|toksdef|newtoks)(?![a-zA-Z])')
 
 
 def blank(text):
@@ -70,6 +73,8 @@ PRIMITIVES = frozenset(('if ifcat ifnum ifdim ifodd ifvmode ifhmode ifmmode ifin
 
 def constant_branches(text, custom=(), *, values=None, defined=()):
     clean, code, _ = structural(text)
+    if OPAQUE_TOKENS.search(code):
+        raise ValueError('Uninspected token quoting/storage requires HTML/PDF fallback')
     values = values or {}
     chars = list(clean)
     stack, cursor, consumed = [], 0, 0

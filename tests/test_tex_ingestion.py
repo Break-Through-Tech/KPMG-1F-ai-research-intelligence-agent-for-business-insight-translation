@@ -320,6 +320,9 @@ class TexIngestionTests(unittest.TestCase):
         data = archive(files)
         with self.assertRaisesRegex(ValueError, 'input termination'):
             tex.chunk_source(data, AID)
+        with self.assertRaisesRegex(ValueError, 'input termination'):
+            tex.chunk_source(archive({**files, 'child.tex':
+                'VISIBLE\n\\end{document}\n\\iftrue HIDDEN\\fi'}), AID)
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             (root / f'{AID}.source').write_bytes(data)
@@ -339,6 +342,41 @@ class TexIngestionTests(unittest.TestCase):
                 result = pipeline.process_and_store([ROW], output, use_tex=True)
                 self.assertEqual(set(result.source), {'pdf'})
                 self.assertNotIn('HIDDEN', ''.join(result.text))
+
+    def test_quoted_conditionals_require_fallback_in_body_includes_and_preamble(self):
+        for quoted in (r'\detokenize{\iftrue LEFT\else RIGHT\fi}',
+                       r'\unexpanded{\iftrue LEFT\else RIGHT\fi}',
+                       r'\toks0={\iftrue LEFT\else RIGHT\fi}',
+                       r'\iftrue\string\else RIGHT\fi',
+                       r'\iftrue\noexpand\else RIGHT\fi',
+                       r'\iftrue\meaning\else RIGHT\fi'):
+            for included in (False, True):
+                with self.subTest(quoted=quoted, included=included):
+                    files = {'main.tex': r'\begin{document}' +
+                             (r'\input{child}' if included else quoted) + r'\end{document}'}
+                    if included:
+                        files['child.tex'] = quoted
+                    with self.assertRaises(ValueError):
+                        tex.chunk_source(archive(files), AID)
+            for included in (False, True):
+                with self.subTest(quoted=quoted, preamble_include=included):
+                    files = {'main.tex': (r'\input{preamble}' if included else quoted) +
+                             r'\newif\ifReview\begin{document}\ifReview LEFT\else RIGHT\fi\end{document}'}
+                    if included:
+                        files['preamble.tex'] = quoted
+                    with self.assertRaises(ValueError):
+                        tex.chunk_source(archive(files), AID)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            data = archive({'main.tex': r'\begin{document}\detokenize{\iftrue LEFT\else RIGHT\fi}\end{document}'})
+            (root / f'{AID}.source').write_bytes(data)
+            pages = [{'page': 2, 'text': 'Valid PDF fallback evidence. ' * 30}]
+            with patch.object(config, 'TEX_DIR', root), \
+                 patch.object(pipeline, 'load_html', return_value=None), \
+                 patch.object(pipeline, 'resolve_pdf_path', return_value=root / 'paper.pdf'), \
+                 patch.object(pipeline, 'extract_pages', return_value=pages):
+                result = pipeline.process_and_store([ROW], root / 'out.parquet', use_tex=True)
+                self.assertEqual(set(result.source), {'pdf'})
 
     def test_comments_and_constant_branches_do_not_publish_hidden_text(self):
         body = r'''\begin{document}

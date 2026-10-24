@@ -5,7 +5,7 @@ Absence from this table NEVER means undefined in TeX's runtime.
 """
 import re
 
-from .tex_lexical import PRIMITIVES, structural
+from .tex_lexical import OPAQUE_TOKENS, PRIMITIVES, structural
 
 COMMAND = re.compile(r'\\([a-zA-Z]+)|\\.|[{}]')
 TARGET = re.compile(r'\s*\\([a-zA-Z]+)(?![a-zA-Z])')
@@ -83,6 +83,8 @@ class PreambleState:
         unsupported mutations invalidate facts instead of inventing global state.
         """
         _, code, _ = structural(text)
+        if OPAQUE_TOKENS.search(code):
+            raise ValueError('Uninspected preamble token quoting/storage')
         stack, cursor, depth = [], 0, 0
         for match in COMMAND.finditer(code):
             if match.start() < cursor:

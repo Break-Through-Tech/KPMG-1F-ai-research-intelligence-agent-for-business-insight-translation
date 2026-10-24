@@ -32,6 +32,26 @@ def flatten(nodes):
 
 
 class PaperReaderTests(TestCase):
+    def test_image_only_reader_blocks_survive_without_becoming_quote_text(self):
+        paragraph = b'<div class="ltx_para">Evidence text.</div>'
+        figure = b'<figure><img alt="Trend rises"></figure>'
+        for blocks in (figure + paragraph, paragraph + figure):
+            with self.subTest(blocks=blocks):
+                raw = b'<article class="ltx_document"><section id="S1">' + blocks + b'</section></article>'
+                passages, _ = parse_paper_html(raw, '2608.20318v1', 'Test')
+                self.assertEqual(passages[0]['text'], 'Evidence text.')
+                reader = passages[0]['reader']
+                self.assertIn('Source-supplied image description: Trend rises', str(reader['nodes']))
+                tags = [node['tag'] for node in reader['nodes']]
+                self.assertEqual(tags, ['figure', 'div'] if blocks.startswith(figure) else ['div', 'figure'])
+                self.assertTrue(reader['limitations'])
+
+    def test_image_only_missing_description_limitation_survives(self):
+        raw = b'<article class="ltx_document"><section id="S1"><div class="ltx_para">Evidence text.</div><figure><img src="missing"></figure></section></article>'
+        passages, _ = parse_paper_html(raw, '2608.20318v1', 'Test')
+        self.assertEqual(passages[0]['text'], 'Evidence text.')
+        self.assertTrue(any('No source-supplied image description' in item for item in passages[0]['reader']['limitations']))
+
     def test_column_group_structure_survives_with_grouped_headers(self):
         passages, _ = parse_paper_html(STRUCTURED_HTML, '2608.20318v1', 'Test')
         nodes = list(flatten(passages[0]['reader']['nodes']))

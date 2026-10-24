@@ -47,9 +47,21 @@ The `Fixture accessibility regression` workflow uploads these artifacts even on
 failure, retaining them for 14 days; download before expiration for a lasting run record.
 The PR's Evidence section identifies the final tested head and CI run.
 
-For an exact historical rerun, use a separate checkout of the pinned product
-commit and copy this PR's `tests/browser` directory into it; do not switch a
-shared checkout. Record both the product SHA and harness SHA when doing so.
+For an exact historical rerun, use a separate checkout of product commit
+`ffb3027ee1b39a434903b9b1883907d55e52a633` with the **baseline-compatible harness**
+from commit `4d242d39c42da7e6dd56bfbdd5056a04b6f164f9`. Copy only that revision's
+`tests/browser` directory into the separate product checkout (for example, via
+`git archive 4d242d39c42da7e6dd56bfbdd5056a04b6f164f9 tests/browser`). Do not
+copy the current integrated suite onto the baseline product or switch a shared
+checkout. Record both SHAs in the run record: the product SHA identifies the
+app under test, not the harness. The baseline harness needs only the Python
+standard library; the current suite additionally needs the parser dependencies
+and `tests.source_reader_fixture` from its matching integrated product revision.
+
+For a current integrated run, use this PR's suite and product files together
+at the tested head listed in the Evidence section. Current tests require the
+plain-language controls, reading preferences, and parser fixture absent from
+the historical baseline. These are two distinct reproducible experiments.
 
 ## Automated baseline results and findings
 

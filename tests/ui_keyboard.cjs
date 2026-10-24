@@ -252,13 +252,18 @@ test('citation preview survives focus/programmatic scrolling but deliberate user
   await preview(page, 'Space');
   // Focus and layout may queue scrolling after activation. Exercise an actual
   // scroll rather than a synthetic event, and let its rendering frame finish.
-  await page.evaluate(async () => {
-    const scroller = document.querySelector('#conversation');
+  const scroll = await page.evaluate(async () => {
+    const conversation = document.querySelector('#conversation');
+    const scroller = getComputedStyle(conversation).overflowY !== 'visible' &&
+      conversation.scrollHeight > conversation.clientHeight ? conversation : document.scrollingElement;
     await new Promise(requestAnimationFrame);
-    scroller.scrollTop += scroller.scrollTop > 20 ? -20 : 20;
+    const before = scroller.scrollTop;
+    scroller.scrollTop += before > 20 ? -20 : 20;
     await new Promise(requestAnimationFrame);
     await new Promise(requestAnimationFrame);
+    return {before, after: scroller.scrollTop};
   });
+  assert.notEqual(scroll.after, scroll.before, 'the actual reading scroller moved');
   assert.equal(await page.locator('#citation-preview').evaluate(n => n.matches(':popover-open')), true);
   await focused(page, '.quote-close');
   const box = await page.locator('.quote-close').boundingBox();
@@ -267,7 +272,7 @@ test('citation preview survives focus/programmatic scrolling but deliberate user
 
   // A real wheel gesture in the conversation still dismisses the preview.
   const conversationBox = await page.locator('#conversation').boundingBox();
-  await page.mouse.move(conversationBox.x + conversationBox.width - 20, conversationBox.y + 20);
+  await page.mouse.move(conversationBox.x + conversationBox.width - 20, Math.max(20, conversationBox.y + 20));
   await page.mouse.wheel(0, 150);
   await page.waitForFunction(() => !document.querySelector('#citation-preview').matches(':popover-open'));
   await focused(page, '.citation');

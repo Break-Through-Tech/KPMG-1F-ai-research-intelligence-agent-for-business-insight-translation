@@ -52,5 +52,20 @@
       persist(true);
     });
     sync();
+    // Keep a usable reading pane when enlarged controls exhaust desktop height.
+    // Measure controls, not the pane, so changing layout cannot oscillate.
+    const header = document.querySelector('.masthead');
+    const composer = document.querySelector('.composer-area');
+    const tools = document.querySelector('#conversation-tools');
+    const reflow = () => {
+      const controls = [header, composer, tools].reduce((height, node) =>
+        height + (node?.getBoundingClientRect().height || 0), 0);
+      const minimumReadingHeight = 12 * parseFloat(getComputedStyle(document.documentElement).fontSize) + 56;
+      document.body.classList.toggle('reading-document-flow', controls + minimumReadingHeight > innerHeight);
+    };
+    const observer = new ResizeObserver(reflow);
+    [header, composer, tools].filter(Boolean).forEach(node => observer.observe(node));
+    window.addEventListener('resize', reflow);
+    reflow();
   });
 })();

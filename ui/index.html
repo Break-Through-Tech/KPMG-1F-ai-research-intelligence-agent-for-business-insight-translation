@@ -45,6 +45,10 @@
   </header>
   <div class="app-shell">
     <main id="main">
+      <div id="conversation-tools" class="conversation-tools" hidden>
+        <span class="meta">Research conversation</span>
+        <button id="new-research-conversation" type="button" class="quiet" aria-label="New research conversation"><span aria-hidden="true">+</span> New conversation</button>
+      </div>
       <div id="conversation" class="conversation" role="region" aria-label="Research conversation" tabindex="-1">
         <div id="welcome" class="welcome"><h2>Explore a research example.</h2><p>Read an answer. Follow a citation when you need the source.</p></div>
         <div id="output" aria-busy="false"></div>
@@ -65,7 +69,6 @@
             <button id="submit" type="submit">View example<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 19V5m-6 6 6-6 6 6"/></svg></button>
           </div>
         </form>
-        <button id="new-research-conversation" type="button" class="quiet" hidden>New research conversation</button>
         <div id="entry-options" class="entry-options">
           <label for="enter-behavior">Enter key</label>
           <select id="enter-behavior"><option value="newline">Inserts newline</option><option value="send">Sends question</option></select>

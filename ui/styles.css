@@ -38,6 +38,9 @@ h1 span { color: var(--muted); margin: 0 6px; font-weight: 400; }
 .quiet:hover { background: var(--bubble); }
 .app-shell { display: flex; height: calc(100dvh - 64px); }
 main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.conversation-tools { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px 12px; flex-shrink: 0; width: 100%; max-width: 832px; padding: 8px 36px 0; margin: 0 auto; }
+.conversation-tools .quiet { color: var(--muted); }
+.conversation-tools .quiet:hover { color: var(--text); }
 .conversation { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 28px 36px; scrollbar-gutter: stable; }
 #output, .welcome { max-width: 760px; margin: 0 auto; }
 .welcome { padding-top: clamp(24px, 15vh, 160px); }
@@ -119,6 +122,7 @@ blockquote { border-left: 2px solid #aab5c5; margin: 0 0 28px; padding: 0 0 0 16
   .demo-label { display: none; }
   .conversation { padding: 24px 20px; }
   .composer-area { padding: 0 12px 12px; }
+  .conversation-tools { padding: 8px 16px 0; }
   #evidence-panel { position: fixed; inset: 0 0 0 auto; width: min(420px, 100%); height: 100dvh; margin: 0 0 0 auto; }
   .answer-head { gap: 6px; }
   .answer-head .meta { width: 100%; }
@@ -202,13 +206,13 @@ blockquote { border-left: 2px solid #aab5c5; margin: 0 0 28px; padding: 0 0 0 16
 #indexed-options input { font: inherit; color: inherit; background: var(--background); border: 1px solid var(--border); border-radius: 4px; padding: 8px; width: 100%; min-height: 44px; }
 #indexed-options .meta { margin-block: 4px; }
 
-/* OpenClaw-style question dock: a single focused decision replaces the composer. */
-.question-panel { display: grid; gap: 12px; max-height: min(58dvh, 36rem); overflow-y: auto; padding: 16px; border: 1px solid var(--border); border-radius: 16px; background: var(--surface); }
+/* B+C: an in-conversation decision card with a separate supporting-evidence rail. */
+.question-panel { display: grid; gap: 16px; padding: 24px; border: 1px solid var(--border); border-radius: 16px; background: var(--surface); }
 .question-panel-heading { display: flex; align-items: flex-start; gap: 16px; }
 .question-panel-heading h2 { flex: 1; margin: 0; font-size: 1rem; font-weight: 600; }
 .question-panel-heading .meta { white-space: nowrap; }
 .question-options { display: grid; gap: 4px; min-width: 0; border: 0; margin: 0; padding: 0; }
-.question-option { display: flex; align-items: center; gap: 12px; min-height: 48px; border: 1px solid transparent; border-radius: 8px; padding: 8px 12px; color: var(--text); cursor: pointer; font-weight: 400; }
+.question-option { display: flex; align-items: center; gap: 12px; min-height: 48px; border: 1px solid var(--border); background: var(--background); border-radius: 8px; padding: 8px 12px; color: var(--text); cursor: pointer; font-weight: 400; }
 .question-option:hover { background: var(--bubble); }
 .question-option:has(:checked) { background: var(--selected); border-color: var(--primary); }
 .question-option:has(:focus-visible) { outline: 2px solid var(--primary); outline-offset: 2px; }
@@ -216,7 +220,7 @@ blockquote { border-left: 2px solid #aab5c5; margin: 0 0 28px; padding: 0 0 0 16
 .question-option input { margin: 0; accent-color: var(--primary); flex-shrink: 0; }
 .question-option span:not(.question-option-number) { flex: 1; overflow-wrap: anywhere; min-width: 0; }
 .question-option-number { color: var(--muted); font-variant-numeric: tabular-nums; }
-.question-free-label { color: var(--muted); font-weight: 400; }
+.question-free-label { margin-top: 8px; color: var(--muted); font-weight: 400; }
 .question-free-text { min-height: 48px; padding: 12px; border: 1px solid var(--border); background: var(--background); border-radius: 8px; }
 .question-panel-footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
 .question-panel-footer .meta { font-size: .875rem; }
@@ -232,3 +236,18 @@ blockquote { border-left: 2px solid #aab5c5; margin: 0 0 28px; padding: 0 0 0 16
 .awaiting-clarification > #demo-note,
 .awaiting-clarification > #jump-latest { display: none !important; }
 @media (forced-colors: active) { .question-option:has(:checked) { border-color: Highlight; } }
+
+.clarification-intro { max-width: 62ch; color: var(--muted); }
+#evidence-panel.clarification-evidence { flex-basis: 390px; width: 390px; padding: 24px; }
+.clarification-evidence h3 { font-size: 1rem; margin: 24px 0 12px; }
+.clarification-evidence blockquote { font-size: 1rem; margin-inline: 0; padding-left: 16px; border-left: 2px solid var(--border); }
+.clarification-evidence a { display: inline-flex; min-height: 44px; align-items: center; font-size: .875rem; }
+@media (max-width: 800px) {
+  /* Clarification support stays non-modal so the answer card remains usable. */
+  .showing-clarification-evidence .app-shell { display: block; height: auto; }
+  .showing-clarification-evidence main { min-height: calc(100dvh - 64px); }
+  .showing-clarification-evidence .conversation { overflow: visible; }
+  #evidence-panel.clarification-evidence { position: relative; inset: auto; width: 100%; height: auto; max-height: none; border-left: 0; border-top: 1px solid var(--border); }
+  .question-panel-footer { gap: 12px; }
+  .question-panel-footer .meta { flex-basis: 100%; }
+}

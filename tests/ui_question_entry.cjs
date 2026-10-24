@@ -24,13 +24,13 @@ async function desk(fn, {live = false, saved = null, storageBlocked = false} = {
   await page.route('**/api/saved-result', r => r.fulfill({json: saved}));
   try {
     await page.goto(base);
-    await page.waitForFunction(() => !document.querySelector('#submit').disabled || document.querySelector('#research-form').hidden);
+    await page.waitForFunction(() => (!document.querySelector('#submit').disabled && document.querySelector('#submit').getAttribute('aria-disabled') !== 'true') || document.querySelector('#research-form').hidden);
     assert.equal(await page.title(), 'Research desk · 1F');
     await fn(page);
     assert.deepEqual(errors, []);
   } finally { await context.close(); }
 }
-async function ready(page) { await page.waitForFunction(() => !document.querySelector('#submit').disabled); }
+async function ready(page) { await page.waitForFunction(() => (!document.querySelector('#submit').disabled && document.querySelector('#submit').getAttribute('aria-disabled') !== 'true')); }
 function envelope(request, live = false) {
   const result = structuredClone(fixture);
   if (live) result.provenance = {paper_context_id: 'paper-A'};
@@ -99,7 +99,7 @@ test('HTTP failure preserves original plus concurrent draft; keyboard retry rest
     assert.equal(await input.inputValue(), 'Original question');
     await input.fill('Unsent edit');
     const retry = page.getByRole('button', {name: 'Retry original question'}); await retry.focus(); await page.keyboard.press('Enter');
-    await page.waitForFunction(() => document.querySelector('#submit').disabled);
+    await page.waitForFunction(() => document.querySelector('#submit').getAttribute('aria-disabled') === 'true');
     assert.equal(await input.evaluate(e => e === document.activeElement), true);
     assert.equal(await input.inputValue(), 'Original question');
     await input.press('Control+Enter'); await page.locator('#research-form').evaluate(e => e.dispatchEvent(new Event('submit', {cancelable: true})));
@@ -181,7 +181,7 @@ test('paper_changed clears stale context and retry uses new identity with no pre
     });
     const input = page.getByRole('textbox'); await input.fill('First'); await input.press('Control+Enter'); await ready(page);
     await input.fill('Second'); await input.press('Control+Enter'); await ready(page);
-    assert.match(await page.locator('#feedback').innerText(), /paper changed/);
+    assert.match(await page.locator('#feedback').innerText(), /paper changed/i);
     assert.equal(await input.inputValue(), 'Second');
     await page.getByRole('button', {name: 'Retry original question'}).click(); await ready(page);
     assert.equal(requests[2].paper_context_id, 'paper-B'); assert.deepEqual(requests[2].history, []);
@@ -238,6 +238,8 @@ test('320px keyboard entry and error retry remain reachable without horizontal o
     await page.route('**/api/demo', r => r.fulfill({status: 503, json: {error: 'Unavailable'}}));
     const input = page.getByRole('textbox'); await input.fill('Small screen question'); await input.press('Control+Enter'); await ready(page);
     await input.press('Shift+Tab');
+    assert.equal(await page.getByRole('button', {name: 'Jump to latest answer'}).evaluate(e => e === document.activeElement), true);
+    await page.keyboard.press('Shift+Tab');
     assert.equal(await page.getByRole('button', {name: 'Retry original question'}).evaluate(e => e === document.activeElement), true);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), true);
   });

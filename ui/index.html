@@ -18,6 +18,7 @@
     <h1>1F <span>/</span> Research desk</h1>
     <div class="header-tools"><details class="demo-settings"><summary>Demo options</summary><div class="settings-content"><label for="scenario">Example state</label><select id="scenario" name="scenario" form="research-form">
               <option value="full">Full draft</option>
+              <option value="plain-language">Plain-language · supported definition fixture</option>
               <option value="partial">Partial · summary only</option>
               <option value="insufficient">Abstention · insufficient support</option>
               <option value="empty">No evidence</option>
@@ -26,12 +27,13 @@
   </header>
   <div class="app-shell">
     <main id="main">
-      <div id="conversation" class="conversation" aria-label="Example conversation" tabindex="-1">
+      <div id="conversation" class="conversation" role="region" aria-label="Research conversation" tabindex="-1">
         <div id="welcome" class="welcome"><h2>Explore a research example.</h2><p>Read an answer. Follow a citation when you need the source.</p></div>
         <div id="output" aria-busy="false"></div>
       </div>
       <div class="composer-area">
-        <p id="feedback" class="sr-only" role="status" aria-live="polite">Choose an example state to begin.</p>
+        <button id="jump-latest" type="button" class="quiet" disabled>Jump to latest answer</button>
+        <p id="feedback" class="sr-only" role="status" aria-atomic="true">Choose an example state to begin.</p>
         <form id="research-form">
           <label for="query" class="sr-only">Research question</label>
           <textarea id="query" name="query" rows="2" required maxlength="2000" placeholder="Enter a research question…" aria-describedby="demo-note entry-hint">How should the synthetic agents be evaluated?</textarea>

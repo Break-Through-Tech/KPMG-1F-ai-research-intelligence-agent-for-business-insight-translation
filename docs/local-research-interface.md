@@ -28,17 +28,19 @@ The server binds only to `127.0.0.1`; it is a development server, not a deployme
    Ctrl+Enter or Command+Enter sends; Shift+Enter always adds a newline. The conversation labels your
    question **not executed**, and keeps the original fixture question under **Details → Run details & demo JSON**.
    Changing the input does not change or substantiate the example's answer.
-2. Hover or focus an inline **[1]** or **[2]** citation to preview that claim's
-   **Cited quote**, paper title, and PDF page. Click the citation to open the
-   original paper at the cited location in a new tab. On touch, tap previews the
-   quote; **Open paper** inside the preview opens the source. Tab enters preview
-   controls; Escape dismisses it. Quotes remain inspectable without leaving the answer.
+2. Hover an inline **[1]** or **[2]** citation for a preview, or Tab to its
+   **Inspect citation** button and press Enter/Space. Activation inspects; it does
+   not navigate. Focus moves to **Close cited quote**. Tab proceeds through the
+   separate **Open original paper** link and **Inspect source context** button.
+   The original-paper link opens the cited location in a new tab. On touch,
+   tapping the citation also inspects; opening the paper remains a separate action.
    If an extractive/fixture item has no stored quote, the preview is honestly
-   labeled **Source passage** instead.
-   **More context** opens the optional **Source context** rail with the full
-   passage, page browser, and source metadata, without repeating answer claims.
-   On mobile this is a full-height dialog; closing it or pressing Escape returns
-   focus to the citation. There is no persistent header Evidence control.
+   labeled **Source passage** instead of **Cited quote**.
+   **Inspect source context** opens the optional **Source context** rail with
+   the full passage, page browser, and source metadata. On mobile (800 CSS px
+   or narrower) this is a modal full-height dialog. On desktop it is nonmodal.
+   Close or Escape returns focus to the initiating citation. There is no
+   persistent header Evidence control.
 3. Inspect **Business implications** and the suggested action. Expand
    **Details → Assumptions, risks & limitations** for secondary detail; assumptions remain
    explicitly distinct from research findings. **Inspect evidence** inside that
@@ -208,3 +210,75 @@ packages. Browser checks exercise all five states, citation navigation, literal
 query rendering, no automatic external requests, connection-failure recovery, and
 responsive layout. These establish UI/contract behavior, not semantic research
 quality, real-source correctness, human approval, or model/provider compatibility.
+
+## Keyboard-only citation walkthrough (#137)
+
+Run the fixture server above; no provider or live paper is needed. Use a current
+browser supporting native `dialog` and Popover APIs. This procedure is reproducible
+manual QA, not a claim that assistive-technology acceptance has been performed.
+
+1. Tab to **Skip to research question**, press Enter, then Enter in the composer
+   to load the default full draft. Fixture, not-executed, and not-approved labels
+   must remain visible.
+2. Shift+Tab from the composer through **Details** to the last inline citation
+   (or Tab forward from the top). Press Enter or Space on **Inspect citation**.
+   The quote preview opens and focus moves to **Close cited quote**. It must not
+   open another browser tab. Hover is an additional route, never required.
+3. Tab through **Open original paper** → **Inspect source context**. Shift+Tab
+   reverses that order. Shift+Tab from Close returns to the citation and dismisses
+   the preview. Tab beyond the last preview action dismisses and continues to the
+   next control after the citation. Escape or Close returns to the citation.
+4. Activate **Open original paper** with Enter to open its original HTML fragment
+   or PDF `#page=N` URL in a new tab. Link activation follows native link behavior
+   (Enter, not Space). Fixture example.com URLs are locator examples, not verified
+   or necessarily resolving papers.
+5. Activate **Inspect source context**. Focus lands on **Source context**; Tab
+   reaches Close, source choices in document order, original-source link, and
+   **Source details**. Enter/Space select a source choice without moving focus.
+   In synthesized answers, expand **Browse paper pages** to reach source choices.
+6. Above 800 CSS px, Tab can leave the panel for the rest of the page. At 800px
+   or narrower, Tab/Shift+Tab wrap within the modal; the background is inert.
+   Resize while the panel is open in both directions: preserve the current
+   panel control; when narrowing with focus outside, move it into the panel.
+   Close/Escape restores the citation, including after a viewport change.
+7. Submit another fixture question while the desktop panel is open. Its content
+   clears during loading and updates to the new turn without removing focus
+   from a surviving panel heading/control. Historical citations still reopen
+   their own turn. If an initiating element is removed by rerendering, dismissal
+   falls back to the question, or the conversation when the form is hidden.
+8. Select **Abstention** or **No evidence** under Demo options, submit, and expand
+   **Details → Assumptions, risks & limitations → Inspect evidence**. Escape must
+   return to this initiating button even when there are no source choices.
+
+### Focused browser regressions
+
+`tests/ui_keyboard.cjs` runs an isolated ephemeral-port Python fixture server and
+Chromium. It requires Python 3.10+ and Playwright (optional QA tooling, not a
+production dependency). For example, install into an external QA directory:
+
+```bash
+npm install --prefix /tmp/kpmg-ui-qa playwright@1.64.1
+NODE_PATH=/tmp/kpmg-ui-qa/node_modules PYTHON=python3.12 node --test tests/ui_keyboard.cjs
+```
+
+If Chromium is not already installed, use that Playwright installation's browser
+installer. Set `UI_QA_ARTIFACTS=/tmp/kpmg-137-qa` to save desktop, mobile and narrow
+preview screenshots outside the repository. The test itself picks a free loopback
+port and stops its server/browser when done. Default `PYTHON` is `python3`; choose
+an executable >=3.10 explicitly if macOS's system Python is older.
+
+Citation inspect and source-context actions include the source title and PDF page
+(or section / explicit no-page fallback) in their accessible names. Original-source
+links also announce that they open a new tab.
+
+Coverage includes contextual accessible names, activation without navigation, separate original-source URL
+navigation (intercepted fixture, not live source verification), forward/reverse
+preview exit, Escape/Close restoration, native source-choice activation, mobile
+Tab containment, desktop nonmodality, open-panel breakpoint changes, removed
+initiators/result replacement, historical turns, abstention/empty evidence, and
+320px preview target/focus bounds. Runtime and console errors fail the checks.
+Fixture browser checks do not prove live/model support, semantic entailment,
+source certification, WCAG conformance, VoiceOver behavior, manual zoom acceptance,
+Safari/Firefox behavior, or stakeholder acceptance. #138 owns broader screen-reader
+structure, #142 owns structured evidence rendering, and #145 owns the integrated
+manual accessibility audit; integrate and rerun these interaction checks together.

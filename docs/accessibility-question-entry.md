@@ -36,6 +36,14 @@ memory, indexed execution, or a research-quality claim. Parent: #136.
 
 ## Mode boundaries and integration handoff
 
+The integrated composer retains the shared answer-navigation busy contract:
+the submit button stays focused and uses `aria-disabled` during a request,
+while one request guard prevents duplicate sends. Retry/suggestion controls
+remain disabled while busy. Failure results retain numbered answer headings,
+the explicit latest-answer jump, and concise status announcements. Browser
+regressions use Ctrl+Enter when they intend submission; plain Enter still
+inserts a newline by default.
+
 The `/api/demo` and `/api/research` payload contracts and server are unchanged.
 Existing bounded successful-turn history and `paper_changed` recovery remain in
 place. Retry after a paper change uses the server's new identity and cleared

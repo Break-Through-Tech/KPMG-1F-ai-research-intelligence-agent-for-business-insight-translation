@@ -349,18 +349,101 @@ function renderDemo(demo, number, answer) {
   feedback.textContent = real ? (isSynthesis(demo) ? 'Synthesized answer ready. Inspect citations to check support.' : 'Saved research result loaded. No live query execution.') : `${label} loaded. Synthetic fixture only.`;
 }
 
-form.elements.query.addEventListener('keydown', event => {
-  if (event.key === 'Enter' && !event.shiftKey && !event.isComposing) {
+const queryInput = form.elements.query;
+const initialQuestion = queryInput.value;
+const enterBehavior = document.querySelector('#enter-behavior');
+const entryHint = document.querySelector('#entry-hint');
+const suggestions = document.querySelector('#question-suggestions');
+let composing = false;
+let compositionEndedAt = -Infinity;
+let appReady = false;
+const preferenceKey = 'research-desk.enter-behavior.v1';
+try {
+  if (localStorage.getItem(preferenceKey) === 'send') enterBehavior.value = 'send';
+} catch {
+  document.querySelector('#preference-note').textContent = 'Preference storage unavailable; applies to this tab only.';
+}
+function updateEntryHint() {
+  entryHint.textContent = `Enter ${enterBehavior.value === 'send' ? 'sends a question' : 'inserts a newline'}. Ctrl+Enter or Command+Enter sends. Shift+Enter always inserts a newline.`;
+}
+updateEntryHint();
+enterBehavior.addEventListener('change', () => {
+  updateEntryHint();
+  try { localStorage.setItem(preferenceKey, enterBehavior.value); }
+  catch { document.querySelector('#preference-note').textContent = 'Preference storage unavailable; applies to this tab only.'; }
+});
+queryInput.addEventListener('compositionstart', () => { composing = true; });
+queryInput.addEventListener('compositionend', () => {
+  composing = false;
+  compositionEndedAt = performance.now();
+});
+queryInput.addEventListener('keydown', event => {
+  // Safari can report isComposing=false on the Enter that commits an IME candidate.
+  if (event.key !== 'Enter' || event.shiftKey || event.repeat || event.isComposing ||
+      composing || event.keyCode === 229 || performance.now() - compositionEndedAt < 100) return;
+  if (event.ctrlKey || event.metaKey || (enterBehavior.value === 'send' && !event.altKey)) {
     event.preventDefault();
     if (!submit.disabled) form.requestSubmit();
   }
 });
 
+function updateSuggestions(query) {
+  suggestions.replaceChildren();
+  const contextual = liveSynthesis && activePaperContextId && conversationHistory.length > 0;
+  const prompts = contextual
+    ? [['Explain that term', 'Explain the term [enter term] from the previous answer.'],
+       ['Show the supporting evidence', 'Show the supporting evidence for the previous answer.']]
+    : [['Explain a term', 'Explain the term [enter term] in this paper.'],
+       ['Show supporting evidence', `Show the supporting evidence for this question: ${query}`]];
+  for (const [label, text] of prompts) {
+    const button = element('button', label, 'quiet');
+    button.type = 'button';
+    button.addEventListener('click', () => {
+      if (submit.disabled) return;
+      queryInput.value = Array.from(text).slice(0, 2000).join('');
+      queryInput.focus();
+      const start = queryInput.value.indexOf('[enter term]');
+      if (start >= 0) queryInput.setSelectionRange(start, start + 12);
+      feedback.textContent = 'Suggestion added. Edit the question, then send when ready.';
+    });
+    suggestions.append(button);
+  }
+  suggestions.hidden = false;
+  const note = document.querySelector('#suggestion-note');
+  note.hidden = false;
+  note.textContent = contextual
+    ? 'Suggestions fill the composer; review and send. Recent successful turns are included in this paper mode.'
+    : 'Suggestions fill the composer; review and send. Include all needed context. Demo questions are not executed; independent modes do not use previous answers.';
+}
+
+function setQuestionBusy(busy) {
+  submit.disabled = busy || !appReady;
+  document.querySelectorAll('.retry-question, #question-suggestions button').forEach(button => {
+    button.disabled = busy || !appReady;
+  });
+  output.setAttribute('aria-busy', String(busy));
+}
+
+function offerRetry(answer, query, scenario) {
+  const retry = element('button', 'Retry original question', 'quiet retry-question');
+  retry.type = 'button';
+  retry.addEventListener('click', () => {
+    if (submit.disabled) return;
+    queryInput.value = query;
+    form.elements.scenario.value = scenario;
+    queryInput.focus();
+    retry.remove();
+    form.requestSubmit();
+  });
+  answer.append(retry);
+}
+
 form.addEventListener('submit', async event => {
   event.preventDefault();
-  if (submit.disabled) return;
+  if (submit.disabled || composing) return;
   if (savedResult && !liveSynthesis) return;
   const query = form.elements.query.value;
+  const scenario = form.elements.scenario.value;
   document.querySelector('.demo-settings').open = false;
   if (!query.trim()) {
     feedback.textContent = 'Enter a nonempty research question.';
@@ -368,7 +451,7 @@ form.addEventListener('submit', async event => {
     form.elements.query.focus();
     return;
   }
-  feedback.classList.add('sr-only');
+  feedback.classList.remove('sr-only');
   const number = ++turnNumber;
   const turn = element('section', undefined, 'turn');
   turn.setAttribute('aria-label', `Example ${number}`);
@@ -380,15 +463,16 @@ form.addEventListener('submit', async event => {
   document.querySelector('#welcome').hidden = true;
   output.append(turn);
   resetEvidence('Loading a new example. No current evidence to inspect.');
-  submit.disabled = true;
-  output.setAttribute('aria-busy', 'true');
+  setQuestionBusy(true);
+  suggestions.hidden = true;
+  document.querySelector('#suggestion-note').hidden = true;
   feedback.textContent = loading;
   turn.scrollIntoView({block: 'start'});
   let contextRecoveryMessage = null;
   try {
     const response = await fetch(liveSynthesis ? '/api/research' : '/api/demo', {
       method: 'POST', headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({query, scenario: form.elements.scenario.value,
+      body: JSON.stringify({query, scenario,
         ...(liveSynthesis ? {history: conversationHistory, paper_context_id: activePaperContextId} : {})}),
       signal: AbortSignal.timeout(liveSynthesis ? 330000 : 10000),
     });
@@ -403,26 +487,35 @@ form.addEventListener('submit', async event => {
     }
     renderDemo(demo, number, answer);
     if (liveSynthesis) rememberAcceptedTurn(query, demo);
+    if (demo.error) offerRetry(answer, query, scenario);
+    if (demo.result) updateSuggestions(query);
     if (demo.result && form.elements.query.value === query) form.elements.query.value = '';
   } catch {
     const message = contextRecoveryMessage || (liveSynthesis ? 'Synthesis unavailable or citation validation failed. No answer was accepted. Your question is unchanged; retry when ready.' : 'Could not load the local example. Check that the demo server is running, then retry. Your question is unchanged.');
     answer.replaceChildren(element('h2', liveSynthesis ? 'Answer unavailable' : 'Example unavailable'), element('p', message, 'error'));
+    offerRetry(answer, query, scenario);
     feedback.textContent = message;
     feedback.classList.remove('sr-only');
     resetEvidence('The latest example did not load. Retry to inspect its evidence.');
   } finally {
-    submit.disabled = false;
-    output.setAttribute('aria-busy', 'false');
+    setQuestionBusy(false);
   }
 });
 
 // Evidence opens only when requested.
 submit.disabled = true;
-Promise.all(['/api/config', '/api/saved-result'].map(async url => {
-  const response = await fetch(url);
+function loadQuestionEntry() {
+  setQuestionBusy(true);
+  feedback.classList.remove('sr-only');
+  feedback.textContent = 'Checking question entry configuration…';
+  return Promise.all(['/api/config', '/api/saved-result'].map(async url => {
+  const response = await fetch(url, {signal: AbortSignal.timeout(10000)});
   if (!response.ok) throw new Error('App configuration unavailable');
   return response.json();
 })).then(([config, demo]) => {
+  const untouchedQuestion = queryInput.value === initialQuestion;
+  appReady = true;
+  feedback.textContent = config.live ? 'Ready to ask about this paper.' : 'Ready. Synthetic demo; questions are not executed.';
   liveSynthesis = config.live;
   activePaperContextId = config.paper_context_id || null;
   if (liveSynthesis) {
@@ -431,16 +524,23 @@ Promise.all(['/api/config', '/api/saved-result'].map(async url => {
     document.querySelector('#demo-note').textContent = 'Live LLM synthesis · This paper only · Recent successful turns included; older context may be dropped.';
     document.querySelector('.rail-note').textContent = 'Inspect source quotes and the original paper. Citations are not proof of support.';
     submit.firstChild.textContent = 'Ask paper';
-    form.elements.query.value = 'What does this paper suggest about AI agents’ ability to improve AI training?';
+    if (untouchedQuestion) {
+      queryInput.value = 'What does this paper suggest about AI agents’ ability to improve AI training?';
+    }
   }
   if (!demo) return;
   savedResult = demo;
   if (liveSynthesis) rememberAcceptedTurn(demo.result.request.query, demo);
-  if (liveSynthesis) form.elements.query.value = '';
+  // Loading/retrying configuration must not discard a question typed while waiting.
+  if (liveSynthesis && untouchedQuestion) queryInput.value = '';
   document.querySelector('.demo-settings').hidden = true;
   document.querySelector('#welcome').hidden = true;
   form.hidden = !liveSynthesis;
-  if (!liveSynthesis) document.querySelector('#demo-note').textContent = runLabel(demo);
+  if (!liveSynthesis) {
+    document.querySelector('#demo-note').textContent = runLabel(demo);
+    document.querySelector('#entry-options').hidden = true;
+    entryHint.hidden = true;
+  }
   document.querySelector('.rail-note').textContent = 'Source passages from the paper. Open the original section or cited PDF page.';
   const turn = element('section', undefined, 'turn');
   turn.append(element('p', demo.result.request.query, 'user-bubble'));
@@ -449,5 +549,17 @@ Promise.all(['/api/config', '/api/saved-result'].map(async url => {
   output.append(turn);
   renderDemo(demo, ++turnNumber, answer);
 }).catch(() => {
-  feedback.textContent = 'Saved-result check unavailable. Only synthetic examples are available.';
-}).finally(() => { submit.disabled = false; });
+  appReady = false;
+  feedback.textContent = 'Question entry unavailable: configuration or saved-result check failed. Your question is unchanged. ';
+  feedback.classList.remove('sr-only');
+  const retry = element('button', 'Retry loading question entry', 'quiet');
+  retry.type = 'button';
+  retry.addEventListener('click', () => {
+    retry.disabled = true;
+    feedback.firstChild.textContent = 'Retrying question entry configuration… ';
+    loadQuestionEntry().then(() => { if (appReady) queryInput.focus(); });
+  });
+  feedback.append(retry);
+}).finally(() => { setQuestionBusy(false); });
+}
+loadQuestionEntry();

@@ -164,3 +164,9 @@ blockquote { border-left: 2px solid #aab5c5; margin: 0 0 28px; padding: 0 0 0 16
   .controls { width: 100%; }
 }
 [hidden] { display: none !important; }
+
+/* Question entry preferences and fill-only suggestions (#140). */
+.entry-options, .question-suggestions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 8px; }
+.entry-options select { min-height: 44px; max-width: 100%; }
+.question-suggestions button, .retry-question { min-height: 44px; white-space: normal; text-align: left; }
+#entry-hint, #suggestion-note { margin: 8px 0; }

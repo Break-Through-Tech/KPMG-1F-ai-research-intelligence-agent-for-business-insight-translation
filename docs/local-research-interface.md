@@ -24,7 +24,8 @@ The server binds only to `127.0.0.1`; it is a development server, not a deployme
 ## Walkthrough: normal path
 
 1. Use the bottom composer. Choose **View example** (the default is **Full draft**; other states
-   are under **Demo options**). Enter submits; Shift+Enter adds a newline. The conversation labels your
+   are under **Demo options**). Enter inserts a newline by default; choose **Enter key → Sends question** to change it.
+   Ctrl+Enter or Command+Enter sends; Shift+Enter always adds a newline. The conversation labels your
    question **not executed**, and keeps the original fixture question under **Details → Run details & demo JSON**.
    Changing the input does not change or substantiate the example's answer.
 2. Hover or focus an inline **[1]** or **[2]** citation to preview that claim's
@@ -70,8 +71,11 @@ Previously loaded turns remain available as labeled history, never as the new re
 
 For a local connection failure, stop the Python server and submit again. The
 inline status explains that the local example could not load; the question stays
-intact. Restart the server and retry. The button becomes usable again after a
+intact. Restart the server and choose **Retry original question**. The button becomes usable again after a
 failure (requests time out after ten seconds).
+
+See [Question entry and recovery](accessibility-question-entry.md) for persistent
+keyboard preferences, editable fill-only suggestions, retry behavior, and scoped QA.
 
 ## Adapter boundary
 

@@ -1,6 +1,6 @@
 # Accessibility baseline and integrated audit (#145)
 
-Target: WCAG 2.2 AA. **This is a partial baseline, not a conformance claim.**
+Target: WCAG 2.2 AA. **This is a partial baseline and controlled integrated-fixture audit, not a conformance claim.**
 Parent: [#136](https://github.com/Break-Through-Tech/KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation/issues/136).
 The feature PRs #146–153 were open at baseline time; none is assumed implemented.
 This work does not close #145 or replace #120's interaction/stakeholder acceptance.
@@ -105,7 +105,7 @@ as a current run. No scanner rules or incomplete results are suppressed.
   one partially obscured MathML contrast check. Actual citation IDREF existence
   is independently asserted; that does not prove spoken behavior or conformance.
 - The integrated input is the feature stack through structured-reader head
-  `3e292f9e33b7dca6f14c641060b6ec6b11f2917a`; each raw run records its actual
+  `73c3fe42203e9fdbbef010416382ce8de08838c2`; each raw run records its actual
   checkout HEAD and dirty flag. A feature-stack run is not a claim that its
   unmerged dependencies are already on main.
 - Selected-result export and real read-aloud enablement are not exercised by

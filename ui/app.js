@@ -905,7 +905,7 @@ function loadQuestionEntry() {
   clarificationEnabled = config.clarification === true;
   researchConversationId = config.conversation_id || null;
   setClarificationPending(false);
-  document.querySelector('#new-research-conversation').hidden = !clarificationEnabled;
+  document.querySelector('#conversation-tools').hidden = !clarificationEnabled;
   if (liveSynthesis) {
     document.querySelector('.demo-settings').hidden = true;
     document.querySelector('#welcome h2').textContent = 'Ask about this paper.';

@@ -1,0 +1,26 @@
+name: Optional read-aloud controller
+on:
+  pull_request:
+    paths:
+      - 'tests/fixtures/read-aloud.html'
+      - 'ui/read-aloud.*'
+      - 'tests/ui/read_aloud*'
+      - '.github/workflows/read-aloud.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'tests/fixtures/read-aloud.html'
+      - 'ui/read-aloud.*'
+      - 'tests/ui/read_aloud*'
+      - '.github/workflows/read-aloud.yml'
+permissions:
+  contents: read
+jobs:
+  controller:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/ui/read_aloud.test.mjs

@@ -24,20 +24,23 @@ The server binds only to `127.0.0.1`; it is a development server, not a deployme
 ## Walkthrough: normal path
 
 1. Use the bottom composer. Choose **View example** (the default is **Full draft**; other states
-   are under **Demo options**). Enter submits; Shift+Enter adds a newline. The conversation labels your
+   are under **Demo options**). Enter inserts a newline by default; choose **Enter key → Sends question** to change it.
+   Ctrl+Enter or Command+Enter sends; Shift+Enter always adds a newline. The conversation labels your
    question **not executed**, and keeps the original fixture question under **Details → Run details & demo JSON**.
    Changing the input does not change or substantiate the example's answer.
-2. Hover or focus an inline **[1]** or **[2]** citation to preview that claim's
-   **Cited quote**, paper title, and PDF page. Click the citation to open the
-   original paper at the cited location in a new tab. On touch, tap previews the
-   quote; **Open paper** inside the preview opens the source. Tab enters preview
-   controls; Escape dismisses it. Quotes remain inspectable without leaving the answer.
+2. Hover an inline **[1]** or **[2]** citation for a preview, or Tab to its
+   **Inspect citation** button and press Enter/Space. Activation inspects; it does
+   not navigate. Focus moves to **Close cited quote**. Tab proceeds through the
+   separate **Open original paper** link and **Inspect source context** button.
+   The original-paper link opens the cited location in a new tab. On touch,
+   tapping the citation also inspects; opening the paper remains a separate action.
    If an extractive/fixture item has no stored quote, the preview is honestly
-   labeled **Source passage** instead.
-   **More context** opens the optional **Source context** rail with the full
-   passage, page browser, and source metadata, without repeating answer claims.
-   On mobile this is a full-height dialog; closing it or pressing Escape returns
-   focus to the citation. There is no persistent header Evidence control.
+   labeled **Source passage** instead of **Cited quote**.
+   **Inspect source context** opens the optional **Source context** rail with
+   the full passage, page browser, source metadata, and originating claim/quote association. On mobile (800 CSS px
+   or narrower) this is a modal full-height dialog. On desktop it is nonmodal.
+   Close or Escape returns focus to the initiating citation. There is no
+   persistent header Evidence control.
 3. Inspect **Business implications** and the suggested action. Expand
    **Details → Assumptions, risks & limitations** for secondary detail; assumptions remain
    explicitly distinct from research findings. **Inspect evidence** inside that
@@ -45,7 +48,7 @@ The server binds only to `127.0.0.1`; it is a development server, not a deployme
 4. Inspect the source links: HTML preserves `#results` with no PDF page; PDF
    preserves `#page=2`. These are example.com locator fixtures, not verified or
    necessarily resolving papers. Their URLs are not fetched by the demo. Distances
-   appear under **Source details** and are labeled **Not confidence**. No fabricated
+   appear beside the passage and are labeled **Not confidence**. No fabricated
    relevance scores appear.
 5. **Human review** remains pending and **Not approved**. There is no approval
    button. Expand **Details → Run details & demo JSON** to inspect the untouched v1 draft and
@@ -70,8 +73,11 @@ Previously loaded turns remain available as labeled history, never as the new re
 
 For a local connection failure, stop the Python server and submit again. The
 inline status explains that the local example could not load; the question stays
-intact. Restart the server and retry. The button becomes usable again after a
+intact. Restart the server and choose **Retry original question**. The button becomes usable again after a
 failure (requests time out after ten seconds).
+
+See [Question entry and recovery](accessibility-question-entry.md) for persistent
+keyboard preferences, editable fill-only suggestions, retry behavior, and scoped QA.
 
 ## Adapter boundary
 
@@ -204,3 +210,162 @@ packages. Browser checks exercise all five states, citation navigation, literal
 query rendering, no automatic external requests, connection-failure recovery, and
 responsive layout. These establish UI/contract behavior, not semantic research
 quality, real-source correctness, human approval, or model/provider compatibility.
+
+## Structured source reader (#142)
+
+**Inspect source context** retains the exact originating claim and its stored supporting
+quotes, even while browsing other passages. A passage not quoted for that claim
+is explicitly labeled. **Return to answer** closes the source panel and returns
+to its originating control through the existing panel focus hook (#137).
+Paper title, source identity, explicit version when supplied, section, PDF page,
+passage ID and original-source link accompany the passage; missing values are
+labeled. Retrieval distance remains **not confidence**. Pending review/approval
+and source/quote checks are unchanged.
+
+Fresh single-paper arXiv HTML extraction now retains an optional `reader` v1
+semantic tree **before** the existing canonical text/TeX conversion. It carries
+`provenance=source-html` and the raw HTML SHA-256, with source headings, lists,
+MathML, table header IDs/scopes/spans and supplied figure text. IDs are remapped
+per rendered view; no table headers or figure descriptions are inferred.
+Captions and image descriptions are distinctly labeled as source-supplied. A
+caption is **not** presented as a complete figure description. Native MathML
+is preserved where supplied, not replaced with generated descriptions.
+Fraction `linethickness` retains validated source values, including barless
+binomials. Unsupported thickness values reject the whole passage's structured
+view with an extraction limitation, preserving canonical text/TeX as fallback.
+Other unsupported MathML attributes (for example enclosure notation or explicit
+fence delimiters) also reject the whole structured passage instead of silently
+changing source notation. Table spans retain valid native values, including
+`rowspan="0"` for the remaining row group; unsupported spans fail closed.
+Column groups and columns retain bounded span attributes, preserving the
+structure associated with source `scope="colgroup"` headers.
+
+Both retention and rendering are allowlisted and bounded. No source scripts,
+images, URLs, styles, event handlers or arbitrary HTML are inserted. MathML
+uses its native namespace; tables remain real tables inside keyboard-focusable
+horizontal scroll regions. Reader headings are normalized below the source
+section heading (levels 5–6; deeper source nesting is flattened at level 6).
+The browser falls back to text when a retained tree is unsupported/over-budget.
+The separately available **Citation-check text** remains the canonical quote
+membership basis, not the reader tree; reader metadata is excluded from the
+single-paper generation prompt. Quote membership does not establish entailment,
+source fidelity, or human approval.
+
+### Extraction and integration boundaries
+
+- Existing saved results, PDF-text fallback, TeX/indexed ingestion and evidence
+  without `reader` remain readable as retained text/explicit TeX, with a visible
+  structure/figure-description limitation. This patch does not retrofit their
+  ingestion or recover lost tables, headings, math or image descriptions.
+- Table relationships are retained only as supplied. Missing headers/scopes and
+  unsupported markup are reported; there is no inferred semantic repair.
+- Source images are not fetched. Source captions/alt text may themselves be
+  incomplete. HTML has no fabricated PDF page mapping.
+- Reader-specific styling inherits the existing reading surface; #139 owns
+  persistent typography/reflow preferences. #137 owns general keyboard/panel
+  behavior. Their final combined changes still need integration testing.
+- #130's indexed multi-paper integration remains separate. No corpus/model run
+  or stakeholder approval is implied by this fixture-backed change.
+
+### Reproduce focused verification
+
+Use the repository's Python 3.12 test environment with BeautifulSoup/jsonschema/
+pytest and an existing Playwright installation (no new browser dependency is
+required by the application):
+
+```bash
+python -m pytest tests/test_paper_reader.py tests/test_paper_html.py \
+  tests/test_research_demo.py tests/test_research_chat.py tests/test_research_contracts.py
+python -m tests.source_reader_fixture > /tmp/source-reader-fixture.json
+python -m src.research_demo --port 9142
+# In a second terminal, from the same checkout:
+RESEARCH_URL=http://127.0.0.1:9142 node tests/source_reader_browser.cjs
+# Optional: PLAYWRIGHT_MODULE=/absolute/path/to/playwright
+# Optional: READER_FIXTURE_JSON=/tmp/source-reader-fixture.json SCREENSHOT_DIR=/tmp
+```
+
+The browser regression intercepts **only** `/api/demo` with the explicitly
+synthetic structured fixture; the normal page, scripts, styles and config are
+served by the real loopback application. It checks 1280/640/320px viewports,
+claim/quote retention, passage switching, missing metadata, return focus,
+MathML, table header ID associations, inert rendering, long passage retention,
+console errors, and document/panel overflow. This proves a deterministic fixture
+flow, not a live paper or provider result.
+
+Manual acceptance still required: VoiceOver/Safari math and table navigation,
+native browser 200%/400% zoom, integrated #137/#139 preferences/focus behavior,
+and source-fidelity review on representative real papers. CSS 200% zoom
+emulation and DOM/keyboard checks are supplementary, **not** those manual gates
+or a WCAG conformance claim. #145 owns the combined manual audit.
+
+## Keyboard-only citation walkthrough (#137)
+
+Run the fixture server above; no provider or live paper is needed. Use a current
+browser supporting native `dialog` and Popover APIs. This procedure is reproducible
+manual QA, not a claim that assistive-technology acceptance has been performed.
+
+1. Tab to **Skip to research question**, press Enter, then Ctrl+Enter in the composer
+   to load the default full draft. Fixture, not-executed, and not-approved labels
+   must remain visible.
+2. Shift+Tab from the composer through **Details** to the last inline citation
+   (or Tab forward from the top). Press Enter or Space on **Inspect citation**.
+   The quote preview opens and focus moves to **Close cited quote**. It must not
+   open another browser tab. Hover is an additional route, never required.
+3. Tab through **Open original paper** → **Inspect source context**. Shift+Tab
+   reverses that order. Shift+Tab from Close returns to the citation and dismisses
+   the preview. Tab beyond the last preview action dismisses and continues to the
+   next control after the citation. Escape or Close returns to the citation.
+4. Activate **Open original paper** with Enter to open its original HTML fragment
+   or PDF `#page=N` URL in a new tab. Link activation follows native link behavior
+   (Enter, not Space). Fixture example.com URLs are locator examples, not verified
+   or necessarily resolving papers.
+5. Activate **Inspect source context**. Focus lands on **Source context**; Tab
+   reaches Close, source choices in document order, original-source link, and
+   **Source details**. Enter/Space select a source choice without moving focus.
+   In synthesized answers, expand **Browse paper pages** to reach source choices.
+6. Above 800 CSS px, Tab can leave the panel for the rest of the page. At 800px
+   or narrower, Tab/Shift+Tab wrap within the modal; the background is inert.
+   Resize while the panel is open in both directions: preserve the current
+   panel control; when narrowing with focus outside, move it into the panel.
+   Close/Escape restores the citation, including after a viewport change.
+7. Submit another fixture question while the desktop panel is open. Its content
+   clears during loading and updates to the new turn without removing focus
+   from a surviving panel heading/control. Historical citations still reopen
+   their own turn. If an initiating element is removed by rerendering, dismissal
+   falls back to the question, or the conversation when the form is hidden.
+8. Select **Abstention** or **No evidence** under Demo options, submit, and expand
+   **Details → Assumptions, risks & limitations → Inspect evidence**. Escape must
+   return to this initiating button even when there are no source choices.
+
+### Focused browser regressions
+
+`tests/ui_keyboard.cjs` runs an isolated ephemeral-port Python fixture server and
+Chromium. It requires Python 3.10+ and Playwright (optional QA tooling, not a
+production dependency). For example, install into an external QA directory:
+
+```bash
+npm install --prefix /tmp/kpmg-ui-qa playwright@1.64.1
+NODE_PATH=/tmp/kpmg-ui-qa/node_modules PYTHON=python3.12 node --test tests/ui_keyboard.cjs
+```
+
+If Chromium is not already installed, use that Playwright installation's browser
+installer. Set `UI_QA_ARTIFACTS=/tmp/kpmg-137-qa` to save desktop, mobile and narrow
+preview screenshots outside the repository. The test itself picks a free loopback
+port and stops its server/browser when done. Default `PYTHON` is `python3`; choose
+an executable >=3.10 explicitly if macOS's system Python is older.
+
+Citation inspect and source-context actions include the source title and PDF page
+(or section / explicit no-page fallback) in their accessible names. Original-source
+links also announce that they open a new tab.
+
+Coverage includes contextual accessible names, activation without navigation, separate original-source URL
+navigation (intercepted fixture, not live source verification), forward/reverse
+preview exit, Escape/Close restoration, native source-choice activation, mobile
+Tab containment, desktop nonmodality, open-panel breakpoint changes, removed
+initiators/result replacement, historical turns, abstention/empty evidence, and
+320px preview target/focus bounds. Runtime and console errors fail the checks.
+Fixture browser checks do not prove live/model support, semantic entailment,
+source certification, WCAG conformance, VoiceOver behavior, manual zoom acceptance,
+Safari/Firefox behavior, or stakeholder acceptance. #138 owns broader screen-reader
+structure, #142 owns structured evidence rendering, and #145 owns the integrated
+manual accessibility audit; integrate and rerun these interaction checks together.

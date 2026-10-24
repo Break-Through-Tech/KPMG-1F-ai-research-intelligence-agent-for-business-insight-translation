@@ -6,9 +6,12 @@
   <meta name="color-scheme" content="light dark">
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/reading-preferences.css">
+  <script src="/reading-preferences.js"></script>
   <link rel="stylesheet" href="/vendor/katex/katex.min.css">
   <script src="/vendor/katex/katex.min.js" defer></script>
   <script src="/math.js" defer></script>
+  <script src="/source-reader.js" defer></script>
   <script src="/app.js" defer></script>
   <title>Research desk · 1F</title>
 </head>
@@ -16,8 +19,23 @@
   <a class="skip" href="#query">Skip to research question</a>
   <header class="masthead">
     <h1>1F <span>/</span> Research desk</h1>
-    <div class="header-tools"><details class="demo-settings"><summary>Demo options</summary><div class="settings-content"><label for="scenario">Example state</label><select id="scenario" name="scenario" form="research-form">
+    <div class="header-tools">
+      <details class="reading-settings">
+        <summary>Reading preferences</summary>
+        <div class="reading-settings-content">
+          <label for="reading-theme">Theme</label>
+          <select id="reading-theme"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option><option value="contrast-light">High contrast light</option><option value="contrast-dark">High contrast dark</option></select>
+          <label for="reading-size">Text size</label>
+          <select id="reading-size"><option value="100">100% (default)</option><option value="125">125%</option><option value="150">150%</option><option value="200">200%</option></select>
+          <label for="reading-spacing">Line spacing</label>
+          <select id="reading-spacing"><option value="standard">Standard</option><option value="relaxed">Relaxed</option><option value="wide">Wide</option></select>
+          <button id="reading-reset" class="quiet" type="button">Reset reading preferences</button>
+          <p class="meta">Stored only in this browser when available. Reset follows your system theme.</p>
+          <p id="reading-storage-status" class="meta" role="status"></p>
+        </div>
+      </details><details class="demo-settings"><summary>Demo options</summary><div class="settings-content"><label for="scenario">Example state</label><select id="scenario" name="scenario" form="research-form">
               <option value="full">Full draft</option>
+              <option value="plain-language">Plain-language · supported definition fixture</option>
               <option value="partial">Partial · summary only</option>
               <option value="insufficient">Abstention · insufficient support</option>
               <option value="empty">No evidence</option>
@@ -26,19 +44,28 @@
   </header>
   <div class="app-shell">
     <main id="main">
-      <div id="conversation" class="conversation" aria-label="Example conversation" tabindex="-1">
+      <div id="conversation" class="conversation" role="region" aria-label="Research conversation" tabindex="-1">
         <div id="welcome" class="welcome"><h2>Explore a research example.</h2><p>Read an answer. Follow a citation when you need the source.</p></div>
         <div id="output" aria-busy="false"></div>
       </div>
       <div class="composer-area">
-        <p id="feedback" class="sr-only" role="status" aria-live="polite">Choose an example state to begin.</p>
+        <button id="jump-latest" type="button" class="quiet" disabled>Jump to latest answer</button>
+        <p id="feedback" class="sr-only" role="status" aria-atomic="true">Choose an example state to begin.</p>
         <form id="research-form">
           <label for="query" class="sr-only">Research question</label>
-          <textarea id="query" name="query" rows="2" required maxlength="2000" placeholder="Ask a follow-up…" aria-describedby="demo-note">How should the synthetic agents be evaluated?</textarea>
+          <textarea id="query" name="query" rows="2" required maxlength="2000" placeholder="Enter a research question…" aria-describedby="demo-note entry-hint">How should the synthetic agents be evaluated?</textarea>
           <div class="controls">
             <button id="submit" type="submit">View example<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 19V5m-6 6 6-6 6 6"/></svg></button>
           </div>
         </form>
+        <div id="entry-options" class="entry-options">
+          <label for="enter-behavior">Enter key</label>
+          <select id="enter-behavior"><option value="newline">Inserts newline</option><option value="send">Sends question</option></select>
+          <span id="preference-note" class="meta"></span>
+        </div>
+        <p id="entry-hint" class="meta">Enter inserts a newline. Ctrl+Enter or Command+Enter sends. Shift+Enter always inserts a newline.</p>
+        <div id="question-suggestions" class="question-suggestions" role="group" aria-label="Editable question suggestions" hidden></div>
+        <p id="suggestion-note" class="meta" hidden></p>
         <p id="demo-note" class="meta">Synthetic demo · Questions are not executed.</p>
         <noscript>This local interface requires JavaScript. No provider credentials are needed.</noscript>
       </div>

@@ -111,3 +111,10 @@ python3.12 -S -m unittest tests.test_research_contracts -v
 These checks need no provider key, embedding weights, Chroma index, downloads, or
 network. They establish structure and failure behavior, not real model/corpus
 quality or stakeholder acceptance.
+
+### Optional plain-language presentation envelope
+
+The #141 presentation adapter adds no fields to ResearchResult v1. Its separate,
+exact-result-bound UI envelope, failure states, fixture examples and semantic
+review limitations are specified in [plain-language-view.md](plain-language-view.md).
+Original approval never implies approval of a rewritten presentation.

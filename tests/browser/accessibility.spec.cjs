@@ -83,7 +83,7 @@ async function scan(page, info, label) {
 for (const theme of ['light', 'dark']) {
   test.describe(theme, () => {
     test.use({colorScheme: theme});
-    for (const state of ['full', 'partial', 'insufficient', 'empty', 'provider-error']) {
+    for (const state of ['full', 'plain-language', 'partial', 'insufficient', 'empty', 'provider-error']) {
       test(`${state}: rendered state and WCAG-tagged scan`, async ({page}, info) => {
         const turn = await choose(page, state);
         if (state === 'provider-error') {
@@ -91,7 +91,7 @@ for (const theme of ['light', 'dark']) {
           await expect(turn).not.toContainText('Draft · Not approved');
         } else {
           await expect(turn).toContainText('Draft · Not approved');
-          await expect(turn.locator('.citation')).toHaveCount({full: 3, partial: 2, insufficient: 0, empty: 0}[state]);
+          await expect(turn.locator('.citation')).toHaveCount({full: 3, 'plain-language': 4, partial: 2, insufficient: 0, empty: 0}[state]);
         }
         if (['partial', 'insufficient', 'empty'].includes(state))
           await expect(turn).toContainText('No supported business recommendations.');
@@ -109,14 +109,18 @@ for (const theme of ['light', 'dark']) {
     }
 
     test('loading: busy state then completed draft', async ({page}, info) => {
-      let release;
+      let release, requests = 0;
       const gate = new Promise(resolve => { release = resolve; });
-      await page.route('**/api/demo', async route => { await gate; await route.continue(); });
+      await page.route('**/api/demo', async route => { requests++; await gate; await route.continue(); });
       try {
         await page.getByRole('button', {name: 'View example'}).click();
         await expect(page.locator('#output')).toHaveAttribute('aria-busy', 'true');
         await expect(page.locator('#submit')).toBeDisabled();
-        await expect(page.getByRole('status')).toContainText('Loading local example');
+        await expect(page.locator('#feedback')).toContainText('Loading local example');
+        await expect(page.locator('#submit')).toBeFocused();
+        await page.locator('#research-form').evaluate(form => form.requestSubmit());
+        await expect(page.locator('.turn')).toHaveCount(1);
+        expect(requests).toBe(1);
         await scan(page, info, 'loading');
       } finally { release(); }
       await expect(page.locator('#output')).toHaveAttribute('aria-busy', 'false');
@@ -129,17 +133,19 @@ for (const theme of ['light', 'dark']) {
       await page.route('**/api/demo', route => route.fulfill({status: 503,
         contentType: 'application/json', body: JSON.stringify({error: 'Injected offline failure'})}));
       const failed = await choose(page, 'full', query);
-      await expect(failed).toContainText('Example unavailable');
+      await expect(failed.getByRole('heading', {name: 'Answer 2', exact: true})).toBeVisible();
+      await expect(failed).toContainText('Could not load the local example');
       await expect(failed.locator('.citation')).toHaveCount(0);
       await expect(page.getByRole('textbox')).toHaveValue(query);
-      await expect(page.getByRole('status')).toContainText('retry');
+      await expect(page.locator('#feedback')).toContainText('retry');
       await scan(page, info, 'transport-failure');
       await page.unroute('**/api/demo');
-      await page.getByRole('textbox').focus();
+      await failed.getByRole('button', {name: 'Retry original question'}).focus();
       await page.keyboard.press('Enter');
       await expect(page.locator('.turn')).toHaveCount(3);
       await expect(page.locator('.turn').last()).toContainText('Draft · Not approved');
       await expect(page.getByRole('textbox')).toHaveValue('');
+      await expect(page.getByRole('textbox')).toBeFocused();
     });
 
     test('long content: source, preview, and draft stay inspectable', async ({page}, info) => {
@@ -156,11 +162,11 @@ for (const theme of ['light', 'dark']) {
       const citation = page.locator('.citation').first();
       await citation.scrollIntoViewIfNeeded();
       await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-      await citation.focus();
+      await citation.press('Enter');
       await expect(page.getByRole('dialog', {name: 'Citation preview'})).toBeVisible();
-      await page.getByRole('button', {name: 'More context', exact: true}).click();
+      await page.getByRole('button', {name: /^Inspect source context,/}).click();
       await expect(page.getByRole('dialog', {name: 'Source context'})).toBeVisible();
-      await expect(page.locator('.passage blockquote')).toContainText('Long synthetic passage');
+      await expect(page.locator('.passage .source-reading')).toContainText('Long synthetic passage');
       await scan(page, info, 'long-panel');
       await info.attach(`${theme}-long-panel`, {body: await page.screenshot(), contentType: 'image/png'});
     });
@@ -175,7 +181,7 @@ for (const width of [1280, 390]) {
     await expect(page.locator('.skip')).toBeFocused();
     await page.keyboard.press('Enter');
     await expect(page.getByRole('textbox')).toBeFocused();
-    await page.keyboard.press('Enter');
+    await page.keyboard.press('Control+Enter');
     await expect(page.locator('.citation').first()).toBeVisible();
     let reached = false;
     for (let i = 0; i < 30; i++) {
@@ -184,12 +190,12 @@ for (const width of [1280, 390]) {
       if (reached) break;
     }
     expect(reached, 'First citation reachable by Tab').toBe(true);
+    await page.keyboard.press('Enter');
     await expect(page.getByRole('dialog', {name: 'Citation preview'})).toBeVisible();
-    await page.keyboard.press('Tab');
     await expect(page.getByRole('button', {name: 'Close cited quote'})).toBeFocused();
     await page.keyboard.press('Tab'); // Original paper link (do not leave fixture page).
     await page.keyboard.press('Tab');
-    await expect(page.getByRole('button', {name: 'More context', exact: true})).toBeFocused();
+    await expect(page.getByRole('button', {name: /^Inspect source context,/})).toBeFocused();
     await page.keyboard.press('Enter');
     await expect(page.locator('#evidence-heading')).toBeFocused();
     await scan(page, info, 'keyboard-panel');
@@ -197,9 +203,50 @@ for (const width of [1280, 390]) {
     await page.keyboard.press('Escape');
     await expect(page.locator('#evidence-panel')).not.toBeVisible();
     await expect(page.locator('.citation').first()).toBeFocused();
+    await expect(page.locator('#citation-preview')).not.toBeVisible();
     await info.attach('dismissal-observation', {body: JSON.stringify({
       previewReopenedOnFocusReturn: await page.locator('#citation-preview').evaluate(node => node.matches(':popover-open')),
     }), contentType: 'application/json'});
+  });
+}
+
+for (const width of [1280, 390]) {
+  test(`integrated structured source relationships (${width}px)`, async ({page}, info) => {
+    await page.setViewportSize({width, height: 900});
+    // Producer/parser fixture, not invented DOM or a fetched real paper.
+    const fixture = JSON.parse(execFileSync(process.env.PYTHON || 'python3',
+      ['-m', 'tests.source_reader_fixture'], {cwd: root}).toString());
+    await page.route('**/api/demo', route => route.fulfill({json: fixture}));
+    await choose(page);
+    await page.locator('.citation').first().press('Enter');
+    await page.getByRole('button', {name: /^Inspect source context,/}).click();
+    const panel = page.locator('#evidence-panel');
+    await expect(panel.locator('.source-exact-quote')).toHaveText(fixture.result.summary.claims[0].support[0].quote);
+    await expect(panel.getByRole('columnheader')).toHaveCount(3);
+    await expect(panel.locator('math mfrac[linethickness="0"]')).toHaveCount(1);
+    expect(await panel.locator('td').first().evaluate(cell => cell.headers.split(' ')
+      .every(id => document.getElementById(id)?.tagName === 'TH'))).toBe(true);
+    await scan(page, info, 'structured-source');
+    await info.attach(`structured-${width}`, {body: await page.screenshot(), contentType: 'image/png'});
+    await panel.getByRole('button', {name: 'Return to answer'}).first().press('Enter');
+    await expect(page.locator('.citation').first()).toBeFocused();
+  });
+}
+
+for (const theme of ['contrast-light', 'contrast-dark']) {
+  test(`integrated reading preferences: ${theme}`, async ({page}, info) => {
+    await page.setViewportSize({width: 320, height: 900});
+    await page.getByText('Reading preferences', {exact: true}).click();
+    await page.getByLabel('Theme', {exact: true}).selectOption(theme);
+    await page.getByLabel('Text size', {exact: true}).selectOption('200');
+    await page.getByLabel('Line spacing', {exact: true}).selectOption('wide');
+    await page.reload();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
+    await expect(page.locator('html')).toHaveAttribute('data-reading-size', '200');
+    await choose(page);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await scan(page, info, `preferences-${theme}`);
+    await info.attach(theme, {body: await page.screenshot(), contentType: 'image/png'});
   });
 }
 

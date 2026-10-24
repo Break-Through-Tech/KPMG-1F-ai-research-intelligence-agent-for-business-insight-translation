@@ -83,7 +83,7 @@ async function main() {
     // Transport failure keeps the question and offers the same explicit jump.
     await page.route('**/api/demo', route => route.abort());
     await page.locator('#query').fill('Keep this question');
-    await page.locator('#query').press('Enter');
+    await page.locator('#query').press('Control+Enter');
     await page.waitForFunction(number => document.querySelector('#feedback').textContent.startsWith(`Answer ${number} failed.`), failedAnswer);
     assert.equal(await page.locator('#query').inputValue(), 'Keep this question');
     assert.equal(await page.evaluate(() => document.activeElement.id), 'query');
@@ -119,13 +119,13 @@ async function main() {
     // Exercise the live submission path with a fixture response, without a model.
     await page.route('**/api/research', route => route.fulfill({json: fixture}));
     await page.locator('#query').fill('Synthetic live follow-up');
-    await page.locator('#query').press('Enter');
+    await page.locator('#query').press('Control+Enter');
     await page.waitForFunction(() => document.querySelector('#feedback').textContent === 'Answer 2 ready. Draft, not approved.');
     assert.equal(await page.evaluate(() => document.activeElement.id), 'query');
     await page.unroute('**/api/research');
     await page.route('**/api/research', route => route.fulfill({status: 409, json: {code: 'paper_changed', paper_context_id: 'fixture-new-paper'}}));
     await page.locator('#query').fill('Question retained after paper change');
-    await page.locator('#query').press('Enter');
+    await page.locator('#query').press('Control+Enter');
     await page.waitForFunction(() => document.querySelector('#feedback').textContent.startsWith('Paper changed.'));
     assert.equal(await page.locator('#query').inputValue(), 'Question retained after paper change');
     assert.equal(await page.evaluate(() => document.activeElement.id), 'query');

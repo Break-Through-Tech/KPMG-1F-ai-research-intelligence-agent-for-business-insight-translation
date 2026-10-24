@@ -36,11 +36,19 @@
         <p id="feedback" class="sr-only" role="status" aria-atomic="true">Choose an example state to begin.</p>
         <form id="research-form">
           <label for="query" class="sr-only">Research question</label>
-          <textarea id="query" name="query" rows="2" required maxlength="2000" placeholder="Ask a follow-up…" aria-describedby="demo-note">How should the synthetic agents be evaluated?</textarea>
+          <textarea id="query" name="query" rows="2" required maxlength="2000" placeholder="Enter a research question…" aria-describedby="demo-note entry-hint">How should the synthetic agents be evaluated?</textarea>
           <div class="controls">
             <button id="submit" type="submit">View example<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 19V5m-6 6 6-6 6 6"/></svg></button>
           </div>
         </form>
+        <div id="entry-options" class="entry-options">
+          <label for="enter-behavior">Enter key</label>
+          <select id="enter-behavior"><option value="newline">Inserts newline</option><option value="send">Sends question</option></select>
+          <span id="preference-note" class="meta"></span>
+        </div>
+        <p id="entry-hint" class="meta">Enter inserts a newline. Ctrl+Enter or Command+Enter sends. Shift+Enter always inserts a newline.</p>
+        <div id="question-suggestions" class="question-suggestions" role="group" aria-label="Editable question suggestions" hidden></div>
+        <p id="suggestion-note" class="meta" hidden></p>
         <p id="demo-note" class="meta">Synthetic demo · Questions are not executed.</p>
         <noscript>This local interface requires JavaScript. No provider credentials are needed.</noscript>
       </div>

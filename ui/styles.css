@@ -168,6 +168,11 @@ blockquote { border-left: 2px solid #aab5c5; margin: 0 0 28px; padding: 0 0 0 16
 }
 [hidden] { display: none !important; }
 
+/* Question entry preferences and fill-only suggestions (#140). */
+.entry-options, .question-suggestions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 8px; }
+.entry-options select { min-height: 44px; max-width: 100%; }
+.question-suggestions button, .retry-question { min-height: 44px; white-space: normal; text-align: left; }
+#entry-hint, #suggestion-note { margin: 8px 0; }
 /* #141: native radio grouping wraps without changing other reading controls. */
 .explanation-view { min-width: 0; margin: 0 0 12px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; }
 .explanation-view legend { padding: 0 4px; font-size: 14px; }

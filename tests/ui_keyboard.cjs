@@ -32,7 +32,7 @@ async function setup(t, width = 1280) {
   assert.equal(await page.title(), 'Research desk · 1F');
   assert.equal(new URL(page.url()).origin, url);
   await page.locator('#query').focus();
-  await page.keyboard.press('Enter');
+  await page.keyboard.press('Control+Enter');
   await page.locator('.citation').first().waitFor();
   assert.match(await page.locator('#output').innerText(), /Draft · Not approved/);
   return page;
@@ -201,7 +201,7 @@ test('result replacement and loading retain surviving panel focus; removed initi
 test('historical citation still opens its own evidence after a new turn', async t => {
   const page = await setup(t);
   await page.locator('#query').fill('Another fixture question');
-  await page.locator('#query').press('Enter');
+  await page.locator('#query').press('Control+Enter');
   await page.waitForFunction(() => document.querySelectorAll('.citation').length === 6);
   await panel(page);
   assert.match(await page.locator('#evidence-content').innerText(), /Example 1/);
@@ -214,7 +214,7 @@ test('abstention and empty evidence remain inspectable through Details', async t
     await page.keyboard.press('Enter');
     await page.selectOption('#scenario', scenario);
     await page.locator('#query').fill('Fixture state');
-    await page.locator('#query').press('Enter');
+    await page.locator('#query').press('Control+Enter');
     const answer = page.locator('.answer').last();
     await answer.locator('.detail-group > details > summary').waitFor();
     await answer.locator('.detail-group > details > summary').focus();

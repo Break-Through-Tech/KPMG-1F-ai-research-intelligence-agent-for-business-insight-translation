@@ -76,6 +76,18 @@ reflow. Optional artifacts include HTML/Markdown for all four states and desktop
 narrow screenshots. These are **synthetic fixture** checks, not real model or
 human acceptance evidence.
 
+For the integrated structured reader, generate the parser-produced synthetic
+fixture and check actual script loading order and standalone HTML/Markdown:
+
+```sh
+python -m tests.source_reader_fixture > /tmp/export-reader-fixture.json
+node scripts/check_export_reader_integration.cjs /tmp/export-reader-fixture.json
+```
+
+This checks grouped table/header references, barless MathML, figures and source
+caveats, exact quote/canonical text, pending status, local citation jumps, inert
+markup and 320px artifact reflow. It does not perform screen-reader inspection.
+
 ### Remaining manual/integration acceptance
 
 - [ ] Screen-reader inspection of standalone supported, partial and abstaining

@@ -195,6 +195,7 @@ function showEvidence(demo, number, selected = 0, trigger = null, claim = null) 
   const evidence = demo.result?.evidence ?? [];
   railContent.replaceChildren(element('p', isReal(demo) ? 'Real-paper evidence' : `Example ${number} · ${STATES[demo.scenario][0]}`, 'meta'));
   const choices = element('div', undefined, 'source-list');
+  choices.setAttribute('role', 'group');
   choices.setAttribute('aria-label', 'Source passages');
   const passageView = element('article', undefined, 'passage');
   function selectPassage(index) {

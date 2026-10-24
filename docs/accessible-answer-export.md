@@ -119,3 +119,7 @@ acceptance, semantic support, source certification, or stakeholder acceptance.
   failure, aligned membership normalization with Python (including Unicode
   whitespace), and retained original quote/passage text in HTML and Markdown.
   The new browser regression failed before and passed after the correction.
+- The next review identified an abstention with cited limitations losing other
+  retrieved context and its insufficient-context label. A failing-before/passing-
+  after browser regression now covers this synthesis-shaped abstention. Evidence
+  selection uses the summary's abstention status rather than absence of citations.

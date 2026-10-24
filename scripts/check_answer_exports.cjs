@@ -63,6 +63,16 @@ const {chromium} = require('playwright');
         check(JSON.stringify(demo) === original, 'Export must not mutate review packet');
       }
       const demo = structuredClone(demos.full);
+      const citedAbstention = structuredClone(demos.insufficient);
+      const context = citedAbstention.result.evidence[0];
+      citedAbstention.result.summary.limitation_support = [{text:'Evidence cannot answer the question.',
+        chunk_ids:[context.chunk_id], support:[{chunk_id:context.chunk_id, quote:context.text}]}];
+      citedAbstention.result.evidence[1].text += ' ADDITIONAL ABSTENTION CONTEXT';
+      for (const format of ['html', 'md']) {
+        const output = AnswerExport.build(citedAbstention, format);
+        check(output.includes('ADDITIONAL ABSTENTION CONTEXT'), 'Retain abstention context beyond cited limitations');
+        check(output.includes('Retrieved context only'), 'Label abstention even with cited limitations');
+      }
       const normalized = structuredClone(demo);
       const normalizedPassage = normalized.result.evidence[0];
       normalizedPassage.text = 'The mean score was 0.166 across the evaluated systems.';

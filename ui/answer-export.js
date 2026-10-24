@@ -118,8 +118,9 @@
     add('p', LIMITATION);
     add('h2', 'Source evidence');
     // For abstentions, retain retrieved passages explicitly as insufficient context.
-    const selectedEvidence = evidence.filter(passage => referenced.has(passage.chunk_id) || !referenced.size);
-    if (!referenced.size && evidence.length) add('p', 'Retrieved context only: these passages do not establish an answer.');
+    const abstaining = result.summary.status === 'insufficient_evidence';
+    const selectedEvidence = evidence.filter(passage => referenced.has(passage.chunk_id) || abstaining || !referenced.size);
+    if ((abstaining || !referenced.size) && evidence.length) add('p', 'Retrieved context only: these passages do not establish an answer.');
     if (!selectedEvidence.length) add('p', 'No evidence retained.');
     selectedEvidence.forEach(passage => {
       const {number} = byId.get(passage.chunk_id);

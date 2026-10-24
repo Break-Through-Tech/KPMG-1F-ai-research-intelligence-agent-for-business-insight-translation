@@ -119,7 +119,9 @@ class DemoHandler(BaseHTTPRequestHandler):
         assets = {'/': ('index.html', 'text/html'),
                   '/app.js': ('app.js', 'text/javascript'),
                   '/math.js': ('math.js', 'text/javascript'),
-                  '/styles.css': ('styles.css', 'text/css')}
+                  '/styles.css': ('styles.css', 'text/css'),
+                  '/reading-preferences.js': ('reading-preferences.js', 'text/javascript'),
+                  '/reading-preferences.css': ('reading-preferences.css', 'text/css')}
         asset = assets.get(urlsplit(self.path).path)
         # Fixed inventory, not arbitrary file serving (including encoded traversal).
         if asset is None:

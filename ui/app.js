@@ -238,6 +238,7 @@ document.addEventListener('pointerdown', event => {
 });
 conversation.addEventListener('scroll', closePreview);
 window.addEventListener('resize', closePreview);
+window.addEventListener('scroll', closePreview, {passive: true});
 
 function citedParagraph(item, demo, number) {
   const paragraph = element('p', item.text);

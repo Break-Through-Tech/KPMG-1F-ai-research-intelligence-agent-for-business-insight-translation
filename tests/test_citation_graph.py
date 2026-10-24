@@ -72,6 +72,19 @@ class CitationGraphTests(unittest.TestCase):
                 self.assertEqual({e['citation_key'] for e in cited}, {'llama', 'unused'})
                 self.assertEqual(len(graph.expansion_candidates(result)['candidates']), 2)
 
+    def test_citation_formatting_commands_are_not_citation_sites(self):
+        for command in ('citestyle', 'CiteStyle', 'citetracker', 'citename'):
+            with self.subTest(command=command):
+                result = graph.build_graph([document(body='\\' + command + r'{nature}\bibliography{refs}',
+                    bib='@article{nature,eprint={2407.21783}}')])
+                self.assertEqual(result['papers'][0]['unresolved_keys'], [])
+                self.assertTrue(all(edge['type'] == 'bibliography_only' for edge in result['edges']))
+                self.assertEqual(graph.expansion_candidates(result)['candidates'], [])
+        for command in ('cite', 'Citep', 'citet', 'citeauthor', 'citeyearpar'):
+            with self.subTest(citation=command):
+                result = graph.build_graph([document(body='\\' + command + r'{llama}\bibliography{refs}')])
+                self.assertEqual(len([e for e in result['edges'] if e['type'] == 'cites']), 1)
+
     def test_cyclic_and_excessive_string_expressions_stay_inspectable(self):
         cases = [
             '@string{a=b} @string{b=a} @article{llama,journal=a,eprint={2407.21783}}',

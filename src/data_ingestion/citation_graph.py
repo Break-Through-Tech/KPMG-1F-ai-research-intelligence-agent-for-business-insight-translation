@@ -24,7 +24,7 @@ MAX_PAPERS = 100
 MAX_GRAPH_BYTES = 100 * 1024 * 1024
 MAX_SITES = 20000
 ARXIV = r'(?:\d{4}\.\d{4,5}|[a-z-]+(?:\.[A-Z]{2})?/\d{7})(?:v\d+)?'
-CITE = re.compile(r'\\((?:[Cc]ite[a-zA-Z]*|[Tt]extcites?|[Pp]arencites?|[Aa]utocites?|[Ff]ootcites?|[Ss]martcites?|[Ss]upercites?|nocite))\*?(?:\s*\([^)]*\))*(?:\s*\[[^\]]*\])*\s*\{([^{}]+)\}')
+CITE = re.compile(r'\\((?:[Cc]ite(?:[pt]|alt|alp|author|year(?:par)?|title|date|url|num|s)?|[Tt]extcites?|[Pp]arencites?|[Aa]utocites?|[Ff]ootcites?|[Ss]martcites?|[Ss]upercites?|nocite))\*?(?:\s*\([^)]*\))*(?:\s*\[[^\]]*\])*\s*\{([^{}]+)\}')
 DECLARATION = re.compile(r'\\(?:bibliography|addbibresource)(?:\s*\[[^\]]*\])?\s*\{([^{}]+)\}')
 BIBITEM = re.compile(r'\\bibitem(?:\s*\[[^\]]*\])?\s*\{([^{}]+)\}')
 

@@ -100,3 +100,16 @@ acceptance, semantic support, source certification, or stakeholder acceptance.
 - Screenshots and exported artifacts were inspected under
   `/tmp/kpmg143-export-qa` (local, not committed, hosted, or publicly shared).
 - No manual screen-reader, Safari, browser-zoom or live model acceptance claimed.
+
+### Local review follow-up (2026-10-23)
+
+- Repeated full Python suite: **376 passed, 1 skipped, 365 subtests passed**.
+- Fixed a reproduced omission: source extraction limitations now survive HTML
+  and Markdown export even when the optional structured reader is unavailable
+  or declines the structure. The browser regression failed before and passed
+  after the fix; the existing selection/download checks still pass.
+- Supplemental browser contract check with #142's reader at `aa2ff04` preserved
+  one semantic table, its header associations, one MathML formula, two figure
+  containers, canonical passage text, exact support quote and extraction gaps.
+  This explicitly injected-reader fixture check does **not** establish merged
+  script ordering, final dependency integration, or screen-reader acceptance.

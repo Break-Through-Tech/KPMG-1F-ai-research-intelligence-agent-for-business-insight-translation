@@ -63,6 +63,17 @@ const {chromium} = require('playwright');
         check(JSON.stringify(demo) === original, 'Export must not mutate review packet');
       }
       const demo = structuredClone(demos.full);
+      // Extraction gaps remain relevant even when the optional reader is absent,
+      // unsupported, or declines to render retained structure.
+      const fallback = structuredClone(demo);
+      fallback.result.evidence.forEach(passage => {
+        passage.reader = {version:999, nodes:[], limitations:['SOURCE EXTRACTION GAP MUST SURVIVE']};
+      });
+      for (const format of ['html', 'md']) {
+        const output = AnswerExport.build(fallback, format);
+        check(output.includes('SOURCE EXTRACTION GAP MUST SURVIVE'), 'Retain extraction gaps without rendered structure');
+        check(output.replace(/\\-/g, '-').includes('Only citation-check text is included'), 'Explain structure fallback');
+      }
       const passage = demo.result.evidence[0];
       passage.text += ' Exact quote: <script>alert(1)</script> \\(x^2\\).';
       demo.result.summary.claims[0].support = [{chunk_id:passage.chunk_id, quote:passage.text}];

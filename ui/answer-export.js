@@ -133,8 +133,9 @@
           add('p', 'Source-supplied structure, not generated interpretation or extraction certification. Markdown readers may not support the following HTML tables or MathML.');
           const section = doc.createElement('section'); section.append(structured); main.append(section);
           markdown.push(section.outerHTML + '\n');
-          items('Source extraction limitations', passage.reader.limitations);
         } else add('p', 'Retained structure could not be rendered by this export. Only citation-check text is included; table relationships, figure descriptions and source MathML are unavailable here.');
+        // Extraction caveats are source metadata, independent of renderer success.
+        items('Source extraction limitations', passage.reader.limitations);
       }
       const url = safeURL(passage.source_url);
       if (url) {

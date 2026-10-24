@@ -27,7 +27,7 @@ const screenshotDirectory = process.env.SCREENSHOT_DIR || os.tmpdir();
     assert.equal(await panel.locator('.source-exact-quote').innerText(), 'The measured result improves accuracy in this bounded experiment.');
     assert(await panel.getByText('Fixture claim about the bounded experiment.',{exact:true}).isVisible());
     assert.equal(await panel.locator('table th[scope="col"]').count(),2);
-    const headerId=await panel.locator('td').getAttribute('headers');
+    const headerId=await panel.locator('td').first().getAttribute('headers');
     assert(headerId.split(' ').every(id=>id.startsWith('source-reader-')));
     assert(await page.evaluate(()=>[...document.querySelector('td').headers.split(' ')].every(id=>document.getElementById(id)?.tagName==='TH')));
     assert.equal(await panel.locator('math mfrac').count(),2);
@@ -35,6 +35,11 @@ const screenshotDirectory = process.env.SCREENSHOT_DIR || os.tmpdir();
     assert.equal(await panel.locator('math').first().evaluate(node=>node.namespaceURI),'http://www.w3.org/1998/Math/MathML');
     assert.equal(await panel.getByRole('columnheader').count(),2);
     assert.equal(await panel.getByRole('rowheader').count(),1);
+    assert.equal(await panel.getByRole('rowheader').evaluate(node=>node.rowSpan),0);
+    assert(await panel.locator('table').evaluate(table=>{
+      const cells=table.querySelectorAll('td');
+      return cells.length===2 && cells[0].getBoundingClientRect().left===cells[1].getBoundingClientRect().left;
+    }));
     assert.equal(await panel.locator('ol[start="3"] li[value="4"]').count(),1);
     const wideMath = panel.locator('.source-inline-math').filter({has: page.locator('mtable')});
     await wideMath.scrollIntoViewIfNeeded();
@@ -77,6 +82,10 @@ const screenshotDirectory = process.env.SCREENSHOT_DIR || os.tmpdir();
       const safe=root.querySelector('p').attributes.length===0 && root.querySelector('img')===null;
       const invalidMath={version:1,provenance:'source-html',nodes:[{tag:'math',children:[{tag:'mfrac',attrs:{linethickness:'url(remote)'},children:[]}]}]};
       if (structuredSource(invalidMath)!==null) return false;
+      for (const [tag,attrs] of [['menclose',{notation:'updiagonalstrike'}],['mfenced',{open:'[',close:']',separators:';'}]]) {
+        invalidMath.nodes[0].children=[{tag,attrs,children:[{tag:'mi',children:['x']}]}];
+        if (structuredSource(invalidMath)!==null) return false;
+      }
       reader.nodes.push({tag:'script',children:['bad()']});
       return safe && structuredSource(reader)===null;
     });

@@ -227,6 +227,10 @@ is preserved where supplied, not replaced with generated descriptions.
 Fraction `linethickness` retains validated source values, including barless
 binomials. Unsupported thickness values reject the whole passage's structured
 view with an extraction limitation, preserving canonical text/TeX as fallback.
+Other unsupported MathML attributes (for example enclosure notation or explicit
+fence delimiters) also reject the whole structured passage instead of silently
+changing source notation. Table spans retain valid native values, including
+`rowspan="0"` for the remaining row group; unsupported spans fail closed.
 
 Both retention and rendering are allowlisted and bounded. No source scripts,
 images, URLs, styles, event handlers or arbitrary HTML are inserted. MathML

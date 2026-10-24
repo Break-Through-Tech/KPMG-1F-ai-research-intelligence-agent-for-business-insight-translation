@@ -15,8 +15,8 @@ STRUCTURED_HTML = rb'''<article class="ltx_document"><section id="S1"><h2>Result
 <math display="block"><mfrac><mi>x</mi><mn>2</mn></mfrac></math>
 <math alttext="\binom{n}{k}"><mfrac linethickness="0"><mi>n</mi><mi>k</mi></mfrac></math></div>
 <table><caption>Source measurements</caption><thead><tr><th id="model" scope="col">Model</th>
-<th id="score" scope="col">Score</th></tr></thead><tbody><tr><th id="base" scope="row">Base</th>
-<td headers="base score">12</td></tr></tbody></table>
+<th id="score" scope="col">Score</th></tr></thead><tbody><tr><th id="base" scope="row" rowspan="0">Base</th>
+<td headers="base score">12</td></tr><tr><td headers="base score">13</td></tr></tbody></table>
 <figure><img src="https://invalid.example/never-fetch" alt="Two source-labeled bars" onerror="bad()">
 <figcaption>Accuracy by model.</figcaption></figure>
 <figure><img src="missing"><figcaption>Caption only.</figcaption></figure>
@@ -31,11 +31,27 @@ def flatten(nodes):
 
 
 class PaperReaderTests(TestCase):
+    def test_unknown_math_semantics_rejects_the_whole_passage_reader(self):
+        for expression in [b'<menclose notation="updiagonalstrike"><mi>x</mi></menclose>',
+                           b'<mfenced open="[" close="]" separators=";"><mi>x</mi><mi>y</mi></mfenced>']:
+            with self.subTest(expression=expression):
+                raw = STRUCTURED_HTML.replace(b'<mi>x</mi>', expression, 1)
+                passages, _ = parse_paper_html(raw, '2608.20318v1', 'Test')
+                self.assertEqual(passages[0]['reader']['nodes'], [])
+                self.assertIn('The measured result improves accuracy', passages[0]['text'])
+                self.assertTrue(any('Unsupported MathML attributes' in item for item in passages[0]['reader']['limitations']))
+
     def test_binomial_bar_thickness_survives_source_retention(self):
         passages, _ = parse_paper_html(STRUCTURED_HTML, '2608.20318v1', 'Test')
         fractions = [node for node in flatten(passages[0]['reader']['nodes']) if node['tag'] == 'mfrac']
         self.assertEqual(fractions[1]['attrs']['linethickness'], '0')
         self.assertIn(r'\binom{n}{k}', passages[0]['text'])
+
+    def test_unsupported_math_elements_are_not_flattened_into_a_different_expression(self):
+        raw = STRUCTURED_HTML.replace(b'<mi>x</mi>', b'<maction><mi>x</mi><mi>y</mi></maction>', 1)
+        passages, _ = parse_paper_html(raw, '2608.20318v1', 'Test')
+        self.assertEqual(passages[0]['reader']['nodes'], [])
+        self.assertTrue(any('Unsupported MathML structure' in item for item in passages[0]['reader']['limitations']))
 
     def test_rejected_fraction_thickness_falls_back_for_the_whole_passage(self):
         raw = STRUCTURED_HTML.replace(b'linethickness="0"', b'linethickness="url(remote)"')
@@ -68,7 +84,7 @@ class PaperReaderTests(TestCase):
         self.assertTrue(any('caption alone' in gap for gap in reader['limitations']))
 
     def test_scripts_urls_and_attributes_are_not_retained_as_executable_markup(self):
-        soup = BeautifulSoup('<div class="ltx_para" onclick="bad()"><script>bad()</script><iframe src="remote"></iframe><a href="javascript:bad()">Readable link text</a><math href="bad"><mi style="color:red">x</mi></math><!-- hidden --></div>', 'html.parser')
+        soup = BeautifulSoup('<div class="ltx_para" style="color:red" onclick="bad()"><script>bad()</script><iframe src="remote"></iframe><a href="javascript:bad()">Readable link text</a><math href="bad"><mi onclick="bad()">x</mi></math><!-- hidden --></div>', 'html.parser')
         reader = retain_reader([soup.div], 'a' * 64)
         nodes = list(flatten(reader['nodes']))
         self.assertNotIn('script', {node['tag'] for node in nodes})

@@ -1,6 +1,8 @@
 /* Source structure is untrusted data. Rebuild only inert semantic elements. */
 const READER_HTML_TAGS = new Set('p div span ul ol li dl dt dd blockquote em strong b i sub sup br table caption thead tbody tfoot tr th td figure figcaption'.split(' '));
 const READER_MATH_TAGS = new Set('math semantics annotation mrow mi mn mo mtext mspace ms mfrac msqrt mroot msub msup msubsup munder mover munderover mmultiscripts mprescripts none mtable mtr mtd menclose mphantom mpadded mstyle mfenced'.split(' '));
+const READER_MATH_ATTRS = new Set('display mathvariant stretchy fence separator accent accentunder columnalign rowalign columnspan rowspan encoding linethickness'.split(' '));
+const READER_MATH_METADATA = new Set('class id alttext xmlns href xlink:href'.split(' '));
 let sourceReaderNumber = 0;
 
 function readerElement(tag, text, className) {
@@ -47,7 +49,11 @@ function structuredSource(reader) {
       if (typeof attrs.headers === 'string') node.setAttribute('headers', attrs.headers.trim().split(/\s+/).map(localId).join(' '));
       if (['row', 'col', 'rowgroup', 'colgroup'].includes(attrs.scope)) node.setAttribute('scope', attrs.scope);
       for (const key of ['rowspan', 'colspan']) {
-        if (/^[1-9]\d{0,2}$/.test(attrs[key])) node.setAttribute(key, attrs[key]);
+        if (Object.hasOwn(attrs, key)) {
+          const value = attrs[key];
+          if (typeof value !== 'string' || !/^\d{1,5}$/.test(value) || Number(value) > (key === 'rowspan' ? 65534 : 1000) || (key === 'colspan' && Number(value) === 0)) throw new Error('Unsupported table span');
+          node.setAttribute(key, value);
+        }
       }
     }
     if (tag === 'ol' && Object.hasOwn(attrs, 'reversed')) node.setAttribute('reversed', '');
@@ -56,12 +62,16 @@ function structuredSource(reader) {
     }
     if (math) {
       // No style, URL, event, href, annotation-xml or arbitrary namespace attrs.
+      if (Object.keys(attrs).some(key => !READER_MATH_ATTRS.has(key) && !READER_MATH_METADATA.has(key) && !key.startsWith('on') && !key.startsWith('data-'))) throw new Error('Unsupported math attributes');
       if (Object.hasOwn(attrs, 'linethickness')) {
         if (tag !== 'mfrac' || typeof attrs.linethickness !== 'string' || !/^(?:thin|medium|thick|(?:\d+(?:\.\d+)?|\.\d+)(?:em|ex|px|in|cm|mm|pt|pc|%)?)$/.test(attrs.linethickness)) throw new Error('Unsupported fraction thickness');
         node.setAttribute('linethickness', attrs.linethickness);
       }
-      for (const key of ['display', 'mathvariant', 'stretchy', 'fence', 'separator', 'accent', 'accentunder', 'columnalign', 'rowalign', 'columnspan', 'rowspan', 'encoding']) {
-        if (typeof attrs[key] === 'string' && attrs[key].length < 100) node.setAttribute(key, attrs[key]);
+      for (const key of READER_MATH_ATTRS) {
+        if (key !== 'linethickness' && Object.hasOwn(attrs, key)) {
+          if (typeof attrs[key] !== 'string' || attrs[key].length >= 100) throw new Error('Unsupported math attributes');
+          node.setAttribute(key, attrs[key]);
+        }
       }
     }
     for (const child of item.children) node.append(build(child, depth + 1, inMath || math));

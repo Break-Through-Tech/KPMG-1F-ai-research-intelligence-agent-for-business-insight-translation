@@ -121,7 +121,9 @@ function renderSourcePassage(target, passage, {claim = null, isFixture = false, 
   ]) metadata.append(readerElement('dt', label), readerElement('dd', value));
   const url = (() => { try { return new URL(passage.source_url); } catch { return null; } })();
   if (url && ['https:', 'http:'].includes(url.protocol)) {
-    const link = add('a', isFixture ? 'Open example source' : 'Open original source', 'source-link');
+    const link = add('a', isFixture ? 'Open example source' : 'Open original paper', 'source-link');
+    const location = passage.page_number != null ? `PDF page ${passage.page_number}` : (passage.section || 'No PDF page');
+    link.setAttribute('aria-label', `${link.textContent}, ${passage.title || 'Paper title not supplied'}, ${location}, opens in a new tab`);
     link.href = url.href;
     link.target = '_blank';
     link.rel = 'noopener noreferrer';

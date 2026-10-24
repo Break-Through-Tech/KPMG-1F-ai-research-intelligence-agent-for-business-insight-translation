@@ -42,7 +42,11 @@ def extract_figure_text(data, aid, title=''):
         paths = re.findall(r'\{([^{}]*)\}', declarations[-1][1])
     # A body mutation can affect a later reference in a different include block.
     # This literal-only reader must not reuse a frozen preamble path in that case.
-    mutation = re.compile(r'\\(?:csname|catcode|futurelet|unless|inputencoding|usepackage|documentclass|directlua|scantokens|DeclareGraphicsRule|DeclareGraphicsExtensions|graphicspath|[iI]f[a-zA-Z]+|def|gdef|edef|xdef|let|newcommand|renewcommand|providecommand|DeclareRobustCommand|newenvironment|renewenvironment)(?![a-zA-Z])')
+    # Quoting primitives can expose unexecuted command operands. Input
+    # termination can hide references in later blocks, including nested inputs.
+    # Until those execution semantics are modeled, reject figure publication
+    # across the reachable body rather than selecting an apparently live asset.
+    mutation = re.compile(r'\\(?:string|detokenize|noexpand|meaning|endinput|csname|catcode|futurelet|unless|inputencoding|usepackage|documentclass|directlua|scantokens|DeclareGraphicsRule|DeclareGraphicsExtensions|graphicspath|[iI]f[a-zA-Z]+|def|gdef|edef|xdef|let|newcommand|renewcommand|providecommand|DeclareRobustCommand|newenvironment|renewenvironment)(?![a-zA-Z])')
     uncertain = any(mutation.search(structural(text)[1]) or
                     (preamble_macros | UNSUPPORTED_DEFINITIONS).intersection(
                         re.findall(r'\\([a-zA-Z]+)', structural(text)[1]))

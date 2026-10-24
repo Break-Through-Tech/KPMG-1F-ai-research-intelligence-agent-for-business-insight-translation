@@ -156,6 +156,31 @@ class DemoHttpTests(unittest.TestCase):
                 {'Content-Type': 'application/json'})
             self.assertEqual(json.loads(body)['mode'], 'fixture')
 
+    def test_indexed_endpoint_uses_submitted_query_and_rejects_stale_context(self):
+        from tests.test_indexed_research import adapter
+        research = adapter()
+        with patch.object(DemoHandler, 'research', research), patch.object(DemoHandler, 'saved_result', None):
+            status, _, body = self.call('GET', '/api/config')
+            config = json.loads(body)
+            self.assertEqual(config['mode'], 'indexed')
+            self.assertEqual(config['history_policy'], 'independent_queries')
+            for context_id, expected in [('stale', 409), (research.context_id, 200)]:
+                status, _, body = self.call('POST', '/api/research', json.dumps({
+                    'query': 'My indexed question', 'context_id': context_id}),
+                    {'Content-Type': 'application/json'})
+                self.assertEqual(status, expected)
+                if status == 200:
+                    envelope = json.loads(body)
+                    self.assertEqual(envelope['result']['request']['query'], 'My indexed question')
+                    self.assertEqual(envelope['mode'], 'indexed')
+            # Indexed answers are tab-owned, not replayed to another browser.
+            self.assertIsNone(DemoHandler.saved_result)
+            status, _, body = self.call('POST', '/api/research', json.dumps({
+                'query': 'Q', 'context_id': research.context_id,
+                'history': [{'role': 'assistant', 'content': 'untrusted'}]}),
+                {'Content-Type': 'application/json'})
+            self.assertEqual(status, 400)
+
     def test_live_history_roundtrip_and_rejection_before_generation(self):
         calls = []
         def research(request):

@@ -159,7 +159,7 @@ def store_embeddings(df, embeddings):
     return collection
 
 
-def search(query, top_k=5, *, client=None, model=None):
+def search(query, top_k=5, *, client=None, model=None, collection_name=COLLECTION_NAME):
     """Return ranked passages with their paper and page citation fields."""
     if not isinstance(query, str) or not query.strip():
         raise ValueError("Query must be non-empty text")
@@ -167,7 +167,7 @@ def search(query, top_k=5, *, client=None, model=None):
         raise ValueError("top_k must be a positive integer")
 
     client = client or chromadb.PersistentClient(path=str(CHROMA_DIR))
-    collection = client.get_collection(name=COLLECTION_NAME)
+    collection = client.get_collection(name=collection_name)
     if (collection.metadata or {}).get("embedding_model") != EMBEDDING_MODEL:
         raise ValueError("Index model is unknown or different; rerun indexing first")
     count = collection.count()

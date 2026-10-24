@@ -196,3 +196,8 @@ blockquote { border-left: 2px solid #aab5c5; margin: 0 0 28px; padding: 0 0 0 16
 .explanation-view legend { padding: 0 4px; font-size: 0.875rem; }
 .explanation-view label { display: inline-flex; gap: 8px; align-items: center; min-height: 44px; margin-right: 16px; cursor: pointer; }
 .explanation-view input { accent-color: var(--primary); flex-shrink: 0; }
+
+#indexed-options { margin-block: 12px; }
+#indexed-options label { display: block; font-size: .875rem; font-weight: 600; margin-bottom: 4px; }
+#indexed-options input { font: inherit; color: inherit; background: var(--background); border: 1px solid var(--border); border-radius: 4px; padding: 8px; width: 100%; min-height: 44px; }
+#indexed-options .meta { margin-block: 4px; }

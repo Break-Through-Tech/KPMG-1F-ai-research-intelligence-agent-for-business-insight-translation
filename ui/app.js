@@ -17,6 +17,8 @@ let previewTimer;
 let activeDemo = null;
 let savedResult = null;
 let liveSynthesis = false;
+let indexedMode = false;
+let indexedContextId = null;
 let conversationHistory = [];
 let activePaperContextId = null;
 let requestPending = false;
@@ -58,10 +60,12 @@ function readyAnnouncement(demo, number) {
   const outcome = {
     'plain-language': 'ready. Draft, not approved.',
     full: 'ready. Draft, not approved.',
-    partial: 'ready. Partial draft; business translation abstained. Not approved.',
+    partial: 'ready. Partial draft; business translation is unavailable. Not approved.',
+    'summary-only': 'ready. Research summary; business translation not requested. Not approved.',
     insufficient: 'abstained: insufficient support.',
     empty: 'unavailable: no evidence retrieved.',
     'provider-error': 'failed: simulated provider error.',
+    'execution-error': 'failed: research execution error.',
   }[demo.scenario];
   const mode = !isReal(demo) ? ' Synthetic example.' : (!isSynthesis(demo) ? ' Saved result; no live query.' : '');
   return `Answer ${number} ${outcome}${mode}`;
@@ -82,7 +86,7 @@ function rememberAcceptedTurn(query, demo) {
   }
 }
 
-const isSynthesis = demo => demo.mode === 'live-synthesis' || demo.result?.summary.generation_method === 'cited-synthesis-v1';
+const isSynthesis = demo => demo.mode === 'indexed' || demo.mode === 'live-synthesis' || demo.result?.summary.generation_method === 'cited-synthesis-v1';
 const isReal = demo => demo.mode !== 'fixture';
 const runLabel = demo => {
   if (isSynthesis(demo)) return 'LLM synthesis · Citation quotes checked · Not independently verified';
@@ -94,9 +98,11 @@ const runLabel = demo => {
 const STATES = {
   'plain-language': ['Full draft · definition fixture', 'Synthetic example with explicit term support.'],
   full: ['Full draft', 'Research summary and conditional business implications are available.'],
-  partial: ['Partial draft', 'The research summary is available. Business translation abstained.'],
+  partial: ['Partial draft', 'The research summary is available. Business translation is unavailable; inspect stage details.'],
+  'summary-only': ['Research summary', 'Business translation was not requested. Add industry context to request it.'],
   insufficient: ['Abstention · insufficient support', 'Passages are available, but do not support an answer.'],
   empty: ['No evidence', 'No passages were retrieved. Generation was skipped.'],
+  'execution-error': ['Research execution failed', 'No draft was accepted. Inspect the failed stage and retry.'],
   'provider-error': ['Provider error · simulated', 'No draft was produced. Choose another example state to continue.'],
 };
 
@@ -406,6 +412,7 @@ function renderDraft(demo, number, answer) {
   if (!insight && !isSynthesis(demo)) narrative.append(element('p', 'Business translation was not requested.'));
   if (insight) {
     narrative.append(element('p', 'Conditional interpretations for business use—not findings validated by the study.', 'meta'));
+    narrative.append(element('p', `Industry context: ${insight.industry}`, 'meta'));
     if (!insight.implications.length) narrative.append(element('p', 'No supported business recommendations.'));
     for (const implication of insight.implications) {
       narrative.append(citedParagraph(implication, demo, number), element('p', `Suggested action: ${implication.suggested_action}`));
@@ -475,6 +482,7 @@ function renderDemo(demo, number, answer) {
   const [label, explanation] = STATES[demo.scenario];
   const head = element('div', undefined, 'answer-head');
   head.append(answerHeading(number));
+  if (demo.mode === 'indexed') head.append(element('p', 'Indexed research · Independent query', 'meta'));
   if (demo.scenario !== 'full') head.append(element('p', label, 'meta'));
   if (demo.result) head.append(element('p', 'Draft · Not approved', 'meta'));
   answer.replaceChildren(head);
@@ -483,6 +491,7 @@ function renderDemo(demo, number, answer) {
     renderDraft(demo, number, answer);
     answer.append(AnswerExport.controls(demo, number));
   } else answer.append(element('p', demo.error.message, 'error'));
+  if (demo.result && demo.error) answer.append(element('p', `${demo.error.stage}: ${demo.error.message}`, 'error'));
   const real = isReal(demo);
   const raw = disclosure(real ? 'Run details & result JSON' : 'Run details & demo JSON');
   if (demo.result) raw.append(element('p', `${real ? 'Executed query' : 'Fixed example'}: ${demo.result.request.query}`));
@@ -587,10 +596,11 @@ function offerRetry(answer, query, scenario, context) {
     form.elements.scenario.value = scenario;
     queryInput.focus();
     retry.remove();
-    if (context && context.paper_context_id !== activePaperContextId) {
+    if (!indexedMode && context && context.paper_context_id !== activePaperContextId) {
       feedback.textContent = 'The paper changed since this question failed. Original question restored; review it before sending about the current paper. Previous context will not be sent.';
       return;
     }
+    if (indexedMode && context) form.elements.industry.value = context.industry || '';
     retryContext = context;
     try { form.requestSubmit(); }
     finally { retryContext = null; }
@@ -604,7 +614,7 @@ form.addEventListener('submit', async event => {
   if (savedResult && !liveSynthesis) return;
   const query = form.elements.query.value;
   const scenario = form.elements.scenario.value;
-  let submissionContext = liveSynthesis ? (retryContext || {
+  let submissionContext = indexedMode ? {context_id: indexedContextId, industry: form.elements.industry.value} : liveSynthesis ? (retryContext || {
     history: conversationHistory.map(message => ({...message})),
     paper_context_id: activePaperContextId,
   }) : null;
@@ -617,7 +627,7 @@ form.addEventListener('submit', async event => {
   }
   feedback.classList.remove('sr-only');
   const number = ++turnNumber;
-  const loading = liveSynthesis ? 'Reading the paper and synthesizing an answer…' : 'Loading local example…';
+  const loading = indexedMode ? 'Searching the research index and synthesizing supported findings…' : liveSynthesis ? 'Reading the paper and synthesizing an answer…' : 'Loading local example…';
   const {turn, answer} = createTurn(query, number, liveSynthesis ? 'Your question' : 'Your question · Not executed', loading);
   document.querySelector('#welcome').hidden = true;
   output.append(turn);
@@ -642,6 +652,7 @@ form.addEventListener('submit', async event => {
         submissionContext = {history: [], paper_context_id: activePaperContextId};
         contextRecoveryMessage = 'The loaded paper changed. Previous conversation context was cleared. Your question is unchanged; select Ask paper again to ask about the current paper.';
       }
+      if (indexedMode) contextRecoveryMessage = demo.error || 'Indexed research failed. No answer was accepted.';
       throw new Error('Request rejected.');
     }
     renderDemo(demo, number, answer);
@@ -654,7 +665,7 @@ form.addEventListener('submit', async event => {
     answer.replaceChildren(answerHeading(number), element('p', message, 'error'));
     offerRetry(answer, query, scenario, submissionContext);
     markAnswerReady(answer);
-    feedback.textContent = contextRecoveryMessage ? 'Paper changed. Context cleared; submit your question again.' : `Answer ${number} failed. Your question is unchanged; retry when ready.`;
+    feedback.textContent = contextRecoveryMessage && !indexedMode ? 'Paper changed. Context cleared; submit your question again.' : `Answer ${number} failed. Your question is unchanged; retry when ready.`;
     feedback.classList.remove('sr-only');
     resetEvidence('The latest example did not load. Retry to inspect its evidence.');
   } finally {
@@ -678,6 +689,8 @@ function loadQuestionEntry() {
   feedback.textContent = config.live ? 'Ready to ask about this paper.' : 'Ready. Synthetic demo; questions are not executed.';
   liveSynthesis = config.live;
   activePaperContextId = config.paper_context_id || null;
+  indexedMode = config.mode === 'indexed';
+  indexedContextId = config.context_id || null;
   if (liveSynthesis) {
     document.querySelector('.demo-settings').hidden = true;
     document.querySelector('#welcome h2').textContent = 'Ask about this paper.';
@@ -687,6 +700,15 @@ function loadQuestionEntry() {
     if (untouchedQuestion) {
       queryInput.value = 'What does this paper suggest about AI agents’ ability to improve AI training?';
     }
+  }
+  if (indexedMode) {
+    document.querySelector('#indexed-options').hidden = false;
+    document.querySelector('#welcome h2').textContent = 'Ask across your research index.';
+    document.querySelector('#welcome p').textContent = 'Inspect supported findings and their sources. Add industry context for conditional business implications.';
+    document.querySelector('#demo-note').textContent = `Persistent research index · ${config.index.count} passages · Independent questions; previous answers are not context.`;
+    submit.firstChild.textContent = 'Search research';
+    feedback.textContent = 'Ready to search the research index.';
+    if (untouchedQuestion) queryInput.value = '';
   }
   if (!demo) return;
   savedResult = demo;

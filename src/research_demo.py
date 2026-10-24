@@ -1,4 +1,4 @@
-"""Loopback UI: offline fixtures, saved results, or explicit single-paper synthesis."""
+"""Loopback UI: offline fixtures, saved results, or explicit single-paper or persistent-index synthesis."""
 import argparse
 import json
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -9,6 +9,7 @@ import mimetypes
 
 from src.research_contracts import validate_request, validate_result
 from src.paper_conversation import validate_history
+from src.indexed_research import IndexedContextError
 from src.plain_language import fixture_view, plain_language_view
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -111,6 +112,8 @@ class DemoHandler(BaseHTTPRequestHandler):
             return
         if self.path == '/api/config':
             config = {'live': self.research is not None}
+            if getattr(self.research, 'mode', None) == 'indexed':
+                config.update(self.research.config())
             context_id = getattr(self.research, 'paper_context_id', None)
             if context_id:
                 config['paper_context_id'] = context_id
@@ -163,10 +166,11 @@ class DemoHandler(BaseHTTPRequestHandler):
             if not isinstance(scenario, str):
                 raise ValueError('Scenario must be a string.')
             if self.path == '/api/research':
-                request = validate_request({'query': payload.get('query'),
-                    'history': validate_history(payload.get('history', []))})
+                request = (self.research.prepare_request(payload) if getattr(self.research, 'mode', None) == 'indexed' else
+                    validate_request({'query': payload.get('query'),
+                    'history': validate_history(payload.get('history', []))}))
                 context_id = getattr(self.research, 'paper_context_id', None)
-                if request['history'] and context_id and payload.get('paper_context_id') != context_id:
+                if request.get('history') and context_id and payload.get('paper_context_id') != context_id:
                     self.respond(409, {'code': 'paper_changed',
                         'error': 'The active paper changed; clear previous conversation context and retry.',
                         'paper_context_id': context_id})
@@ -183,10 +187,17 @@ class DemoHandler(BaseHTTPRequestHandler):
                 self.respond(409, {'error': 'A synthesis is already running. Please wait, then retry.'})
                 return
             try:
-                response = self.research(request)
+                if getattr(self.research, 'mode', None) == 'indexed':
+                    response = self.research.execute(payload)
+                else:
+                    response = self.research(request)
                 if response.get('result'):
                     response['plain_language'] = plain_language_view(response['result'])
-                type(self).saved_result = {**response, 'mode': 'saved-real-result'}
+                if response.get('result') and getattr(self.research, 'mode', None) != 'indexed':
+                    type(self).saved_result = {**response, 'mode': 'saved-real-result'}
+            except IndexedContextError:
+                self.respond(409, {'code': 'indexed_context_changed', 'error': 'Indexed context changed or request is invalid. Reload after restarting with the active index; no answer accepted.'})
+                return
             except Exception:
                 self.respond(502, {'error': 'Synthesis failed or its citations did not validate. No answer was accepted. Retry your question.'})
                 return
@@ -203,7 +214,31 @@ def main():
     parser.add_argument('--pdf-only', action='store_true', help='Skip arXiv HTML lookup; use PDF text without math recovery.')
     parser.add_argument('--codex-model', help='Explicit model for the existing ChatGPT login; no API key.')
     parser.add_argument('--codex-bin', help='Path to the installed Codex CLI.')
+    parser.add_argument('--index', type=Path, help='Query an existing Chroma persistent index; never builds/downloads one.')
+    parser.add_argument('--collection', default='arxiv_papers')
+    parser.add_argument('--top-k', type=int, default=5)
+    parser.add_argument('--configured-provider', action='store_true', help='Explicitly use the existing RESEARCH_PROVIDER configuration for indexed mode.')
     args = parser.parse_args()
+    if sum(bool(x) for x in (args.paper, args.index, args.result)) > 1:
+        parser.error('--paper, --index and --result are mutually exclusive')
+    if args.index:
+        if bool(args.codex_model) == bool(args.configured_provider):
+            parser.error('--index requires exactly one of --codex-model or --configured-provider')
+        from src.indexed_research import IndexedResearch, open_index, code_revision
+        try:
+            retrieve, identity, index_path = open_index(args.index, args.collection)
+            if args.codex_model:
+                from src.codex_generation import create_codex_generate
+                generate, metadata = create_codex_generate(model=args.codex_model, binary=args.codex_bin)
+            else:
+                from src.generation import create_generate
+                generate, metadata = create_generate()
+            import sys
+            DemoHandler.research = IndexedResearch(retrieve=retrieve, identity=identity,
+                generate=generate, metadata=metadata, index_path=index_path, top_k=args.top_k,
+                code_revision=code_revision(), command=sys.argv)
+        except Exception:
+            parser.error('Indexed startup failed. Check existing index/collection, cached encoder, explicit provider and model. No fallback, rebuild or download was attempted.')
     if args.paper:
         if not args.codex_model:
             parser.error('--paper requires --codex-model')
@@ -219,8 +254,8 @@ def main():
         result = json.loads(args.result.read_text())
         DemoHandler.saved_result = saved_result_envelope(result)
     with ThreadingHTTPServer(('127.0.0.1', args.port), DemoHandler) as server:
-        label = 'Paper synthesis' if args.paper else 'Saved-result viewer' if args.result else 'Fixture demo'
-        note = 'live LLM synthesis' if args.paper else 'no live execution'
+        label = 'Indexed research' if args.index else 'Paper synthesis' if args.paper else 'Saved-result viewer' if args.result else 'Fixture demo'
+        note = 'live indexed synthesis' if args.index else 'live LLM synthesis' if args.paper else 'no live execution'
         print(f'{label}: http://127.0.0.1:{server.server_port} ({note})', flush=True)
         try:
             server.serve_forever()

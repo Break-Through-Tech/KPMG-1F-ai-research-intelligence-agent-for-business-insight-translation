@@ -217,7 +217,7 @@ def main():
     parser.add_argument('--paper', type=Path, help='Enable live synthesis over one local arXiv PDF.')
     parser.add_argument('--pdf-only', action='store_true', help='Skip arXiv HTML lookup; use PDF text without math recovery.')
     parser.add_argument('--codex-model', help='Explicit model for the existing ChatGPT login; no API key.')
-    parser.add_argument('--codex-bin', help='Path to the installed Codex CLI.')
+    parser.add_argument('--codex-bin', help='Compatible installed Codex CLI; defaults to RESEARCH_CODEX_BIN, then PATH.')
     parser.add_argument('--index', type=Path, help='Query an existing Chroma persistent index; never builds/downloads one.')
     parser.add_argument('--collection', default='arxiv_papers')
     parser.add_argument('--top-k', type=int, default=5)
@@ -249,7 +249,7 @@ def main():
                 generate=generate, metadata=metadata, index_path=index_path, top_k=args.top_k,
                 code_revision=code_revision(), command=sys.argv)
         except Exception:
-            parser.error('Indexed startup failed. Check existing index/collection, cached encoder, explicit provider and model. No fallback, rebuild or download was attempted.')
+            parser.error('Indexed startup failed. Check existing index/collection, cached encoder, explicit provider and model. For Codex, select a compatible CLI with --codex-bin or RESEARCH_CODEX_BIN. No fallback, rebuild or download was attempted.')
     if args.paper:
         if not args.codex_model:
             parser.error('--paper requires --codex-model')

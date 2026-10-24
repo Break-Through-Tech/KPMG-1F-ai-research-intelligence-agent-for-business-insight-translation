@@ -159,5 +159,11 @@ Session/HTTP tests and Chrome desktop/mobile checks use deterministic synthetic
 support, resume, provider failure/retry, tab isolation, clean sessions, expiry/capacity,
 and stale index rejection. These do not establish semantic decision accuracy,
 trained-model performance, real-provider latency, or stakeholder acceptance.
-The real-provider execution blocker documented in #155 still applies. No auth or
-user config was changed to bypass the adapter's isolation requirements.
+A separate real-provider development walkthrough on 2026-10-24 used an existing
+877-record index and ChatGPT subscription login with a compatible explicitly
+selected Codex CLI. A vague query returned a clarification, and its answer resumed
+to a cited research summary. Multi-paper synthesis/business translation and
+out-of-corpus abstention also passed over the real HTTP host. This closes the
+CLI execution gap, not semantic evaluation or stakeholder acceptance. No auth or
+user config was changed and no isolation requirement was removed. See
+`docs/local-research-interface.md` for CLI selection and proof limits.

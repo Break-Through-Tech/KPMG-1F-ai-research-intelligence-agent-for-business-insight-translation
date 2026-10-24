@@ -193,6 +193,17 @@ class FigureTextTests(unittest.TestCase):
                         self.assertEqual(result['chunks'], [])
                         self.assertEqual(result['coverage'][0]['status'], 'unsupported_source_semantics')
 
+    def test_uppercase_conditionals_never_publish_unresolved_branch_assets(self):
+        for body, extra in ((r'\IfFileExists{absent.txt}{\includegraphics{hidden.pdf}}{}', {}),
+                            (r'\input{child}', {'child.tex':
+                             r'\IfFileExists{absent.txt}{\includegraphics{hidden.pdf}}{}'}),
+                            (r'\IfBooleanTF{\flag}{\includegraphics{hidden.pdf}}{}', {})):
+            with self.subTest(body=body):
+                result = figures.extract_figure_text(bundle({'main.tex': paper(body),
+                    'hidden.pdf': pdf('UNUSED EVIDENCE'), **extra}), AID)
+                self.assertEqual(result['chunks'], [])
+                self.assertEqual(result['coverage'][0]['status'], 'unsupported_source_semantics')
+
     def test_ambiguous_unsafe_corrupt_and_limits(self):
         source = paper(r'\includegraphics{fig}')
         result = figures.extract_figure_text(bundle({'main.tex': source,

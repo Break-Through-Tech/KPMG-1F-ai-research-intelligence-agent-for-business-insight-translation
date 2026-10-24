@@ -23,6 +23,8 @@ def blank(text):
 
 def scan(text):
     """Return comment-blanked source and opaque literal spans; never interpret code."""
+    if '^^' in text:
+        raise ValueError('TeX character conversion requires HTML/PDF fallback')
     parts, spans, cursor = [], [], 0
     while match := TOKEN.search(text, cursor):
         parts.append(text[cursor:match.start()])
@@ -32,6 +34,29 @@ def scan(text):
             if end < 0:
                 end = len(text)
             parts.append(blank(text[start:end]))
+        elif token.rstrip('*') in (r'\url', r'\path', r'\nolinkurl'):
+            position = end
+            while position < len(text) and text[position].isspace():
+                position += 1
+            if position < len(text) and text[position] == '{':
+                depth = 0
+                for brace in re.finditer(r'\\.|[{}]', text[position:]):
+                    depth += (brace[0] == '{') - (brace[0] == '}')
+                    if depth == 0:
+                        end = position + brace.end()
+                        break
+                if depth:
+                    raise ValueError('Unterminated TeX URL literal')
+            elif position < len(text) and text[position] not in '\\}':
+                close = text.find(text[position], position + 1)
+                if close < 0 or '\n' in text[position:close]:
+                    raise ValueError('Unterminated TeX URL delimiter')
+                end = close + 1
+            if end > match.end():
+                parts.append(text[start:end])
+                spans.append((start, end))
+            else:
+                parts.append(token)
         elif token in (r'\verb', r'\verb*'):
             if end == len(text) or text[end].isspace() or text[end].isalpha():
                 raise ValueError('Invalid TeX verb delimiter')

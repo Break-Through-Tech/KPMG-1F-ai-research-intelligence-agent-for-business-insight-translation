@@ -44,6 +44,7 @@ class PreambleState:
         self.dependencies = {}
         self.calls = set()
         self.unsupported = False
+        self.uninspected = False
 
     def finalize(self):
         while True:
@@ -91,6 +92,10 @@ class PreambleState:
                 continue
             token, command = match[0], match[1]
             active = all(value is True for value, _ in stack)
+            if (command is None and token.startswith('\\') and
+                    all(value is not False for value, _ in stack) and
+                    token not in {r'\%', r'\$', r'\#', r'\&', r'\_', r'\{', r'\}', r'\\'}):
+                self.uninspected = True
             if command == 'endinput' and all(value is not False for value, _ in stack):
                 raise ValueError('Uninspected preamble input termination')
             if command in UNSUPPORTED_DEFINITIONS and all(value is not False for value, _ in stack):
@@ -99,6 +104,13 @@ class PreambleState:
                     and not (command in self.tainted and command.startswith('if'))
                     and all(value is not False for value, _ in stack)):
                 self.calls.add(command)
+                known = (DEFINITIONS | UNSUPPORTED_DEFINITIONS |
+                         {'newif', 'input', 'include', 'let', 'futurelet', 'csname',
+                          'unless', 'catcode', 'usepackage', 'documentclass',
+                          'else', 'fi', 'or', 'begingroup', 'endgroup', 'bgroup', 'egroup'})
+                setter = re.fullmatch(r'([a-zA-Z]+)(true|false)', command)
+                if command not in known and not (setter and 'if' + setter[1] in self.defined):
+                    self.uninspected = True
             if command in ('begingroup', 'bgroup', 'endgroup', 'egroup'):
                 depth += 1 if command in ('begingroup', 'bgroup') else -1
                 if depth < 0:
@@ -181,6 +193,8 @@ class PreambleState:
                     self.tainted.add(name)
                 continue
             if command in PRIMITIVES or command in self.values or (command in self.tainted and command.startswith('if')):
+                if self.uninspected:
+                    raise ValueError('Uninspected preamble call prevents conditional selection')
                 value = {'iftrue': True, 'iffalse': False}.get(command, self.values.get(command))
                 if command == 'ifdefined':
                     target = TARGET.match(code, match.end())
@@ -234,6 +248,10 @@ class PreambleState:
                 if active or any(v is None for v, _ in stack):
                     if command in {'csname', 'catcode', 'unless'}:
                         self.unsupported = True
+                    if command in {'usepackage', 'documentclass'}:
+                        # Loaded code can install deferred hooks. A later newif
+                        # declaration must not restore trust in an uninspected runtime.
+                        self.uninspected = True
                     self.defined.clear()
                     self.values.clear()
         if stack:

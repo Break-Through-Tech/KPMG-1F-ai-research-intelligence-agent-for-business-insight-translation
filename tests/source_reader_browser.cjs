@@ -24,6 +24,7 @@ const screenshotDirectory = process.env.SCREENSHOT_DIR || os.tmpdir();
     await page.getByRole('button',{name:/^Inspect source context,/}).click();
     const panel = page.locator('#evidence-panel');
     await panel.waitFor({state:'visible'});
+    assert.equal(await panel.getByRole('group', {name:'Source passages', exact:true}).count(), 1);
     assert.equal(await panel.locator('.source-exact-quote').innerText(), 'The measured result improves accuracy in this bounded experiment.');
     assert(await panel.getByText('Fixture claim about the bounded experiment.',{exact:true}).isVisible());
     assert.equal(await panel.locator('table th[scope="col"]').count(),2);

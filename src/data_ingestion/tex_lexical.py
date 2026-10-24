@@ -10,7 +10,8 @@ OPAQUE_TOKENS = re.compile(
     r'\\(?:string|detokenize|noexpand|meaning|unexpanded|toks|'
     r'(?:math)?chardef|countdef|dimendef|skipdef|muskipdef|toksdef|'
     r'new(?:count|dimen|skip|muskip|toks|box|read|write|insert|fam|language|marks|counter|length|boolean)|'
-    r'font|read|readline|afterassignment|aftergroup|'
+    r'expandafter|expanded|romannumeral|scantokens|the|numexpr|dimexpr|glueexpr|muexpr|'
+    r'lowercase|uppercase|endlinechar|font|read|readline|afterassignment|aftergroup|'
     r'makeatletter|makeatother|ExplSyntaxOn|ExplSyntaxOff|globaldefs|every[a-zA-Z]+)(?![a-zA-Z])'
     r'|\\[a-zA-Z]*@')
 

@@ -408,6 +408,29 @@ class TexIngestionTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     tex.chunk_source(archive(files), AID)
 
+    def test_expansion_order_requires_fallback_before_preamble_branch_selection(self):
+        preamble = (r'\newif\ifFlag\newif\ifResult\Flagtrue'
+                    r'\expandafter\Flagfalse\ifFlag\Resulttrue\fi')
+        for included in (False, True):
+            with self.subTest(included=included):
+                files = {'main.tex': (r'\input{preamble}' if included else preamble) +
+                         r'\begin{document}\ifResult RIGHT\else WRONG\fi\end{document}'}
+                if included:
+                    files['preamble.tex'] = preamble
+                data = archive(files)
+                with self.assertRaises(ValueError):
+                    tex.chunk_source(data, AID)
+                with tempfile.TemporaryDirectory() as directory:
+                    root = Path(directory)
+                    (root / f'{AID}.source').write_bytes(data)
+                    pages = [{'page': 2, 'text': 'Valid PDF fallback evidence. ' * 30}]
+                    with patch.object(config, 'TEX_DIR', root), \
+                         patch.object(pipeline, 'load_html', return_value=None), \
+                         patch.object(pipeline, 'resolve_pdf_path', return_value=root / 'paper.pdf'), \
+                         patch.object(pipeline, 'extract_pages', return_value=pages):
+                        result = pipeline.process_and_store([ROW], root / 'out.parquet', use_tex=True)
+                        self.assertEqual(set(result.source), {'pdf'})
+
     def test_comments_and_constant_branches_do_not_publish_hidden_text(self):
         body = r'''\begin{document}
 START

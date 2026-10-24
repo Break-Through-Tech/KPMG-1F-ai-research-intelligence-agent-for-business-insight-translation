@@ -71,8 +71,7 @@ class TexIngestionTests(unittest.TestCase):
             {'main.tex': ROOT, 'sections/results.tex': r'\input{../main}'},
             {'main.tex': ROOT.replace(r'\input{sections/results}', r'\input missing')},
             {'main.tex': ROOT.replace(r'\end{document}', '')},
-            {'main.tex': ROOT.replace(r'\input{sections/results}', r'\iffalse hidden\fi')},
-            {'main.tex': ROOT.replace(r'\input{sections/results}', r'\begin{verbatim}x\end{verbatim}')},
+            {'main.tex': ROOT.replace(r'\input{sections/results}', r'\ifnum 1=2 hidden\fi')},
         ]
         for files in cases:
             with self.subTest(files=list(files)), self.assertRaises(ValueError):
@@ -258,3 +257,495 @@ class TexIngestionTests(unittest.TestCase):
         self.assertIn(text, context)
         self.assertFalse(included[0][1])
         self.assertFalse(omitted)
+
+    def test_manifest_selects_paper_not_bundled_template_or_revision(self):
+        import json
+        paper = ROOT.replace(r'\input{sections/results}', 'Actual paper evidence.')
+        manifest = json.dumps({'sources': [dict(usage='toplevel', filename='arxiv.tex')]})
+        data = archive({'arxiv.tex': paper, 'main.tex': paper.replace('Actual', 'Template'),
+                        'old.tex': paper, '00README.json': manifest})
+        chunks = tex.chunk_source(data, AID)
+        self.assertEqual({c['source_file'] for c in chunks}, {'arxiv.tex'})
+        for value in (None, {'sources': [{'usage': 'toplevel'}]},
+                      {'sources': [dict(usage='toplevel', filename='../bad.tex')]},
+                      {'sources': [dict(usage='toplevel', filename='missing.tex')]},
+                      {'sources': [dict(usage='toplevel', filename='arxiv.tex'),
+                                   dict(usage='toplevel', filename='main.tex')]},
+                      {'sources': 'invalid'}):
+            with self.subTest(manifest=value), self.assertRaises(ValueError):
+                tex.source_blocks(archive({'arxiv.tex': paper, '00README.json': json.dumps(value)}))
+
+    def test_literals_are_opaque_atomic_and_keep_percent_and_line_locators(self):
+        literals = [r'\verb|50% $unmatched \input{missing} \fi|',
+                    r'\url|\includegraphics{hidden.pdf}\iftrue LEFT\else RIGHT\fi|',
+                    r'\path{\input{missing}\iftrue LEFT\else RIGHT\fi}',
+                    r'\nolinkurl+\begin{document}\input{missing}+',
+                    r'\verb*+\begin{document}+',
+                    '\\begin{verbatim}\n50% $unmatched \\input{missing}\n\\end{verbatim}',
+                    '\\begin{lstlisting}\nx = "$" # 50%\n\\end{lstlisting}',
+                    '\\begin{minted}{python}\nx = "$" # 50%\n\\end{minted}']
+        for literal in literals:
+            body = '\\begin{document}\n' + literal + '\nAFTER\n\\end{document}'
+            chunks = tex.chunk_source(body.encode(), AID)
+            self.assertTrue(any(literal in c['text'] for c in chunks))
+            for c in chunks:
+                lines = body.splitlines()[c['line_start']-1:c['line_end']]
+                self.assertIn(c['text'], '\n'.join(lines))
+        from src.data_ingestion.tex_chunking import split_tex
+        with self.assertRaisesRegex(ValueError, 'literal exceeds'):
+            list(split_tex(r'\begin{verbatim}' + 'x' * 33000 + r'\end{verbatim}'))
+        literal = '\\begin{verbatim}\n' + 'x%$\\input{missing} ' * 150 + '\n\\end{verbatim}'
+        pieces = list(split_tex('Before.\n' + literal + '\nAfter.'))
+        self.assertTrue(any(literal in p['text'] and p['oversized_math'] for p in pieces))
+        for malformed in (r'\verb|unclosed', r'\begin{verbatim}unclosed'):
+            with self.assertRaises(ValueError):
+                tex.chunk_source(('\\begin{document}' + malformed + '\\end{document}').encode(), AID)
+
+    def test_uninspected_alias_sources_cannot_consume_conditional_delimiters(self):
+        for command in ('let', 'futurelet'):
+            for target in (r'\@gobble', r'\!'):
+                for chain in ('', r'\let\next\ignore'):
+                    for included in (False, True):
+                        with self.subTest(command=command, target=target, chain=chain, included=included):
+                            preamble = (r'\documentclass{article}\makeatletter' + '\\' + command +
+                                        r'\ignore' + target + chain + r'\makeatother')
+                            body = r'\iftrue' + (r'\next' if chain else r'\ignore') + r'\else RIGHT\fi'
+                            files = {'main.tex': preamble + r'\begin{document}' +
+                                     (r'\input{child}' if included else body) + r'\end{document}'}
+                            if included:
+                                files['child.tex'] = body
+                            with self.assertRaises(ValueError):
+                                tex.chunk_source(archive(files), AID)
+
+    def test_body_input_termination_requires_pdf_fallback_and_preserves_output(self):
+        files = {'main.tex': r'\begin{document}\input{child}\end{document}',
+                 'child.tex': 'VISIBLE\n\\endinput\n\\iftrue HIDDEN\\fi'}
+        data = archive(files)
+        with self.assertRaisesRegex(ValueError, 'input termination'):
+            tex.chunk_source(data, AID)
+        with self.assertRaisesRegex(ValueError, 'input termination'):
+            tex.chunk_source(archive({**files, 'child.tex':
+                'VISIBLE\n\\end{document}\n\\iftrue HIDDEN\\fi'}), AID)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / f'{AID}.source').write_bytes(data)
+            output = root / 'out.parquet'
+            output.write_bytes(b'previous corpus')
+            with patch.object(config, 'TEX_DIR', root), \
+                 patch.object(pipeline, 'load_html', return_value=None), \
+                 patch.object(pipeline, 'resolve_pdf_path', return_value=None):
+                with self.assertRaises(RuntimeError):
+                    pipeline.process_and_store([ROW], output, use_tex=True)
+                self.assertEqual(output.read_bytes(), b'previous corpus')
+            pages = [{'page': 2, 'text': 'Valid PDF fallback evidence. ' * 30}]
+            with patch.object(config, 'TEX_DIR', root), \
+                 patch.object(pipeline, 'load_html', return_value=None), \
+                 patch.object(pipeline, 'resolve_pdf_path', return_value=root / 'paper.pdf'), \
+                 patch.object(pipeline, 'extract_pages', return_value=pages):
+                result = pipeline.process_and_store([ROW], output, use_tex=True)
+                self.assertEqual(set(result.source), {'pdf'})
+                self.assertNotIn('HIDDEN', ''.join(result.text))
+
+    def test_quoted_conditionals_require_fallback_in_body_includes_and_preamble(self):
+        for quoted in (r'\detokenize{\iftrue LEFT\else RIGHT\fi}',
+                       r'\unexpanded{\iftrue LEFT\else RIGHT\fi}',
+                       r'\toks0={\iftrue LEFT\else RIGHT\fi}',
+                       r'\iftrue\string\else RIGHT\fi',
+                       r'\iftrue\noexpand\else RIGHT\fi',
+                       r'\iftrue\meaning\else RIGHT\fi'):
+            for included in (False, True):
+                with self.subTest(quoted=quoted, included=included):
+                    files = {'main.tex': r'\begin{document}' +
+                             (r'\input{child}' if included else quoted) + r'\end{document}'}
+                    if included:
+                        files['child.tex'] = quoted
+                    with self.assertRaises(ValueError):
+                        tex.chunk_source(archive(files), AID)
+            for included in (False, True):
+                with self.subTest(quoted=quoted, preamble_include=included):
+                    files = {'main.tex': (r'\input{preamble}' if included else quoted) +
+                             r'\newif\ifReview\begin{document}\ifReview LEFT\else RIGHT\fi\end{document}'}
+                    if included:
+                        files['preamble.tex'] = quoted
+                    with self.assertRaises(ValueError):
+                        tex.chunk_source(archive(files), AID)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            data = archive({'main.tex': r'\begin{document}\detokenize{\iftrue LEFT\else RIGHT\fi}\end{document}'})
+            (root / f'{AID}.source').write_bytes(data)
+            pages = [{'page': 2, 'text': 'Valid PDF fallback evidence. ' * 30}]
+            with patch.object(config, 'TEX_DIR', root), \
+                 patch.object(pipeline, 'load_html', return_value=None), \
+                 patch.object(pipeline, 'resolve_pdf_path', return_value=root / 'paper.pdf'), \
+                 patch.object(pipeline, 'extract_pages', return_value=pages):
+                result = pipeline.process_and_store([ROW], root / 'out.parquet', use_tex=True)
+                self.assertEqual(set(result.source), {'pdf'})
+
+    def test_register_and_catcode_controls_cannot_establish_conditional_state(self):
+        preambles = [r'\newif\ifFlag\countdef\Flagtrue=0\Flagtrue=1',
+                     r'\newif\ifFlag\font\Flagtrue=cmr10\Flagtrue',
+                     r'\newif\ifFlag\chardef\Flagtrue=1',
+                     r'\newif\ifFlag\newcount\Flagtrue\Flagtrue=1',
+                     r'\makeatletter\newif\ifFlag@clean\Flag@cleantrue',
+                     r'\newif\ifFlag@clean\Flag@cleantrue']
+        for preamble in preambles:
+            for included in (False, True):
+                with self.subTest(preamble=preamble, included=included):
+                    flag = 'Flag@clean' if '@clean' in preamble else 'Flag'
+                    files = {'main.tex': (r'\input{preamble}' if included else preamble) +
+                             r'\begin{document}\if' + flag + r' WRONG\else RIGHT\fi\end{document}'}
+                    if included:
+                        files['preamble.tex'] = preamble
+                    with self.assertRaises(ValueError):
+                        tex.chunk_source(archive(files), AID)
+
+    def test_redeclared_tainted_flags_remain_unresolved(self):
+        preamble = r'\newif\ifFlag{\Flagtrue}\newif\ifFlag\Flagtrue'
+        for included in (False, True):
+            with self.subTest(included=included):
+                files = {'main.tex': (r'\input{preamble}' if included else preamble) +
+                         r'\begin{document}\ifFlag RIGHT\else WRONG\fi\end{document}'}
+                if included:
+                    files['preamble.tex'] = preamble
+                with self.assertRaises(ValueError):
+                    tex.chunk_source(archive(files), AID)
+
+    def test_expansion_order_requires_fallback_before_preamble_branch_selection(self):
+        preamble = (r'\newif\ifFlag\newif\ifResult\Flagtrue'
+                    r'\expandafter\Flagfalse\ifFlag\Resulttrue\fi')
+        for included in (False, True):
+            with self.subTest(included=included):
+                files = {'main.tex': (r'\input{preamble}' if included else preamble) +
+                         r'\begin{document}\ifResult RIGHT\else WRONG\fi\end{document}'}
+                if included:
+                    files['preamble.tex'] = preamble
+                data = archive(files)
+                with self.assertRaises(ValueError):
+                    tex.chunk_source(data, AID)
+                with tempfile.TemporaryDirectory() as directory:
+                    root = Path(directory)
+                    (root / f'{AID}.source').write_bytes(data)
+                    pages = [{'page': 2, 'text': 'Valid PDF fallback evidence. ' * 30}]
+                    with patch.object(config, 'TEX_DIR', root), \
+                         patch.object(pipeline, 'load_html', return_value=None), \
+                         patch.object(pipeline, 'resolve_pdf_path', return_value=root / 'paper.pdf'), \
+                         patch.object(pipeline, 'extract_pages', return_value=pages):
+                        result = pipeline.process_and_store([ROW], root / 'out.parquet', use_tex=True)
+                        self.assertEqual(set(result.source), {'pdf'})
+
+    def test_uninspected_calls_and_character_conversion_cannot_select_flags(self):
+        cases = ((r'\newif\ifFlag\RequirePackage{flagsetter}', False),
+                 (r'\usepackage{flagsetter}\newif\ifFlag', False),
+                 (r'\documentclass{flagclass}\newif\ifFlag', False),
+                 (r'\newif\ifFlag\AtEndDocument\Flagtrue', True),
+                 (r'\newif\ifFlag\Flagtrue ^^5cFlagfalse', True),
+                 (r'\newif\ifFlag\label\Flagtrue', True))
+        for preamble, wrong_when_true in cases:
+            for included in (False, True):
+                with self.subTest(preamble=preamble, included=included):
+                    body = (r'\ifFlag WRONG\else RIGHT\fi' if wrong_when_true else
+                            r'\ifFlag RIGHT\else WRONG\fi')
+                    files = {'main.tex': r'\documentclass{article}' +
+                             (r'\input{preamble}' if included else preamble) +
+                             r'\begin{document}' + body + r'\end{document}',
+                             'flagsetter.sty': r'\ProvidesPackage{flagsetter}\AtBeginDocument{\Flagtrue}',
+                             'flagclass.cls': r'\LoadClass{article}\AtBeginDocument{\Flagtrue}'}
+                    if included:
+                        files['preamble.tex'] = preamble
+                    data = archive(files)
+                    with self.assertRaises(ValueError):
+                        tex.chunk_source(data, AID)
+                    with tempfile.TemporaryDirectory() as directory:
+                        root = Path(directory)
+                        (root / f'{AID}.source').write_bytes(data)
+                        output = root / 'out.parquet'
+                        output.write_bytes(b'previous corpus')
+                        with patch.object(config, 'TEX_DIR', root), \
+                             patch.object(pipeline, 'load_html', return_value=None), \
+                             patch.object(pipeline, 'resolve_pdf_path', return_value=None):
+                            with self.assertRaises(RuntimeError):
+                                pipeline.process_and_store([ROW], output, use_tex=True)
+                            self.assertEqual(output.read_bytes(), b'previous corpus')
+                        pages = [{'page': 2, 'text': 'Valid PDF fallback evidence. ' * 30}]
+                        with patch.object(config, 'TEX_DIR', root), \
+                             patch.object(pipeline, 'load_html', return_value=None), \
+                             patch.object(pipeline, 'resolve_pdf_path', return_value=root / 'paper.pdf'), \
+                             patch.object(pipeline, 'extract_pages', return_value=pages):
+                            result = pipeline.process_and_store([ROW], output, use_tex=True)
+                            self.assertEqual(set(result.source), {'pdf'})
+                            self.assertNotIn('WRONG', ''.join(result.text))
+        with self.assertRaises(ValueError):
+            tex.chunk_source(archive({'main.tex': r'\begin{document}\unknown\iftrue LEFT\else RIGHT\fi\end{document}'}), AID)
+
+    def test_redefined_literal_controls_cannot_hide_flag_mutations(self):
+        for name in ('url', 'path', 'nolinkurl', 'verb', 'begin', 'end'):
+            for declaration in (r'\newcommand{\NAME}[1]{\Flagtrue}',
+                                '\\renewcommand% target comment\n{\\NAME}[1]{\\Flagtrue}',
+                                r'\def\NAME#1{\Flagtrue}', r'\let\NAME\Flagtrue'):
+                declared = declaration.replace('NAME', name)
+                for included in (False, True):
+                    for location in ('preamble', 'body'):
+                        with self.subTest(name=name, declaration=declaration, included=included, location=location):
+                            called = declared + '\\' + name + '{x}'
+                            preamble = r'\newif\ifFlag'
+                            if location == 'preamble':
+                                preamble += r'\input{child}' if included else called
+                                body = r'\ifFlag RIGHT\else WRONG\fi'
+                            else:
+                                body = (r'\input{child}' if included else called) + r'\ifFlag RIGHT\else WRONG\fi'
+                            files = {'main.tex': preamble + r'\begin{document}' + body + r'\end{document}'}
+                            if included:
+                                files['child.tex'] = called
+                            with self.assertRaises(ValueError):
+                                tex.chunk_source(archive(files), AID)
+        # Declaration-looking examples inside a genuine literal remain inert.
+        source = r'\begin{document}\verb|\newcommand{\url}[1]{\Flagtrue}|\end{document}'
+        self.assertIn(r'\newcommand', tex.chunk_source(source.encode(), AID)[0]['text'])
+
+    def test_file_writing_environments_require_fallback(self):
+        for environment in ('filecontents', 'filecontents*'):
+            for included in (False, True):
+                with self.subTest(environment=environment, included=included):
+                    body = ('\\begin{' + environment + '}{child.tex}\nWRITTEN NOT EXECUTED\n' +
+                            '\\end{' + environment + '}')
+                    files = {'main.tex': r'\begin{document}' +
+                             (r'\input{part}' if included else body) + r'\end{document}'}
+                    if included:
+                        files['part.tex'] = body
+                    data = archive(files)
+                    with self.assertRaises(ValueError):
+                        tex.chunk_source(data, AID)
+                    with tempfile.TemporaryDirectory() as directory:
+                        root = Path(directory)
+                        (root / f'{AID}.source').write_bytes(data)
+                        output = root / 'out.parquet'
+                        output.write_bytes(b'previous corpus')
+                        with patch.object(config, 'TEX_DIR', root), \
+                             patch.object(pipeline, 'load_html', return_value=None), \
+                             patch.object(pipeline, 'resolve_pdf_path', return_value=None):
+                            with self.assertRaises(RuntimeError):
+                                pipeline.process_and_store([ROW], output, use_tex=True)
+                            self.assertEqual(output.read_bytes(), b'previous corpus')
+                        with patch.object(config, 'TEX_DIR', root), \
+                             patch.object(pipeline, 'load_html', return_value=None), \
+                             patch.object(pipeline, 'resolve_pdf_path', return_value=root / 'paper.pdf'), \
+                             patch.object(pipeline, 'extract_pages', return_value=[{'page':2, 'text':'PDF fallback. ' * 40}]):
+                            result = pipeline.process_and_store([ROW], output, use_tex=True)
+                            self.assertEqual(set(result.source), {'pdf'})
+
+    def test_comments_and_constant_branches_do_not_publish_hidden_text(self):
+        body = r'''\begin{document}
+START
+\begin{comment}
+\begin{document}\input{missing} $unmatched
+\end{comment}
+\iffalse HIDDEN \input{missing} \iftrue NESTED\else STILL_HIDDEN\fi
+\else KEPT\fi
+\iftrue TRUE\else FALSE\fi
+% OMITTED
+END
+\end{document}'''
+        chunks = tex.chunk_source(body.encode(), AID)
+        text = '\n'.join(c['text'] for c in chunks)
+        for hidden in ('HIDDEN', 'NESTED', 'FALSE', 'OMITTED', 'missing', 'unmatched'):
+            self.assertNotIn(hidden, text)
+        for kept in ('START', 'KEPT', 'TRUE', 'END'):
+            self.assertIn(kept, text)
+        self.assertEqual(body.count('\n'), tex._uncomment(body).count('\n'))
+        for bad in (r'\iffalse x', r'\fi', r'\iftrue x\else y\else z\fi',
+                    r'\ifdefined\foo x\else y\fi', r'\ifnum1=1 x\fi',
+                    r'\unless\iftrue HIDDEN\else KEPT\fi'):
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                tex.chunk_source(('\\begin{document}' + bad + '\\end{document}').encode(), AID)
+
+    def test_macro_names_are_not_primitive_conditions_and_custom_conditions_fail_closed(self):
+        raw = r'\begin{document}\ifplotsrgb{A}{B}\ifdefempty{X}{}{Y}\end{document}'
+        self.assertIn(r'\ifplotsrgb', tex.chunk_source(raw.encode(), AID)[0]['text'])
+        with self.assertRaisesRegex(ValueError, 'Conditional macro includes'):
+            tex.chunk_source(archive({'main.tex': r'\begin{document}\ifthenelse{X}{\input{a}}{\input{b}}\end{document}',
+                                      'a.tex': 'Branch A', 'b.tex': 'Branch B'}), AID)
+        raw = r'\newif\ifCameraReview\begin{document}\ifCameraReview A\else B\fi\end{document}'
+        text = ''.join(c['text'] for c in tex.chunk_source(raw.encode(), AID))
+        self.assertNotIn('A', text)
+        self.assertIn('B', text)
+
+    def test_explicit_preamble_flags_follow_include_order_without_emitting_preamble(self):
+        files = {
+            'main.tex': r'''\input{preamble}
+\begin{document}
+\ifReview HIDDEN_REVIEW\else CLEAN_PAPER\fi
+\input{results}
+\end{document}''',
+            'preamble.tex': r'\def\Clean{1}\input{formatting}',
+            'formatting.tex': r'''\newif\ifReview
+\ifdefined\Clean\Reviewfalse\else\Reviewtrue\fi
+\newcommand{\wrapper}[1]{\ifReview review #1\else clean #1\fi}''',
+            'results.tex': r'\ifReview HIDDEN_RESULT\else RESULT_KEPT\fi',
+            # An unreachable file must not supply or overwrite flag state.
+            'unused.tex': r'\Reviewtrue',
+        }
+        chunks = tex.chunk_source(archive(files), AID)
+        text = '\n'.join(c['text'] for c in chunks)
+        self.assertIn('CLEAN_PAPER', text)
+        self.assertIn('RESULT_KEPT', text)
+        self.assertNotIn('HIDDEN', text)
+        self.assertNotIn('wrapper', text)
+        self.assertEqual(chunks[0]['line_start'], 3)
+        self.assertEqual(chunks[-1]['source_file'], 'results.tex')
+        # Definitions after a conditional cannot retroactively decide it.
+        files['preamble.tex'] = r'\input{formatting}\def\Clean{1}'
+        with self.assertRaises(ValueError):
+            tex.chunk_source(archive(files), AID)
+
+    def test_dynamic_macro_and_primitive_reassignment_require_fallback(self):
+        for preamble, condition in (
+            (r'\newif\ifFlag\def\enable{\csname Flagtrue\endcsname}\enable', r'\ifFlag'),
+            (r'\let\iftrue\iffalse', r'\iftrue'),
+            (r'\def\iftrue{\iffalse}', r'\iftrue'),
+            (r'\def\change{\let\iftrue\iffalse}\change', r'\iftrue'),
+        ):
+            with self.subTest(preamble=preamble), self.assertRaises(ValueError):
+                tex.chunk_source(archive({'main.tex': preamble + r'\begin{document}' + condition +
+                    r' YES\else NO\fi\end{document}'}), AID)
+
+    def test_body_mutation_cannot_change_literal_primitive_selection(self):
+        for body, extra in (
+            (r'\let\iftrue\iffalse\iftrue WRONG\else RIGHT\fi', {}),
+            (r'\input{mutate}\iftrue WRONG\else RIGHT\fi',
+             {'mutate.tex': r'\let\iftrue\iffalse'}),
+        ):
+            with self.subTest(body=body), self.assertRaises(ValueError):
+                tex.chunk_source(archive({'main.tex': r'\begin{document}' + body +
+                    r'\end{document}', **extra}), AID)
+
+    def test_uninspected_include_and_unbraced_macro_arguments_fall_back(self):
+        for preamble, condition, extra in (
+            (r'{\input{flags}}', r'\iftrue', {'flags.tex': r'\global\let\iftrue\iffalse'}),
+            (r'\newif\ifFlag\newcommand{\ignore}[1]{}\ignore\Flagtrue', r'\ifFlag', {}),
+        ):
+            with self.subTest(preamble=preamble), self.assertRaises(ValueError):
+                tex.chunk_source(archive({'main.tex': preamble + r'\begin{document}' + condition +
+                    r' WRONG\else RIGHT\fi\end{document}', **extra}), AID)
+
+    def test_deeply_nested_manifest_is_a_fallback_compatible_rejection(self):
+        manifest = '{"sources": [{"filename":"main.tex","usage":"toplevel"}],"extra":' + '[' * 20000 + '0' + ']' * 20000 + '}'
+        with self.assertRaisesRegex(ValueError, 'nested source manifest'):
+            tex.chunk_source(archive({'main.tex': r'\begin{document}Plain\end{document}', '00README.json': manifest}), AID)
+
+    def test_explicit_flag_test_in_preamble_is_not_an_opaque_macro_call(self):
+        source = r'\newif\ifFlag\Flagtrue\ifFlag\Flagfalse\fi' + r'\begin{document}\ifFlag WRONG\else RIGHT\fi\end{document}'
+        result = tex.chunk_source(archive({'main.tex': source}), AID)
+        self.assertIn('RIGHT', str(result))
+        self.assertNotIn('WRONG', str(result))
+
+    def test_opaque_aliases_dynamic_discovery_and_control_redefinitions_fall_back(self):
+        for preamble, body in (
+            (r'\newif\ifFlag\def\ignore#1{}\let\run\ignore\run\Flagtrue', r'\ifFlag WRONG\else RIGHT\fi'),
+            (r'\csname let\endcsname\iftrue\iffalse', r'\iftrue WRONG\else RIGHT\fi'),
+            (r'\let\else\relax', r'\iftrue FIRST\else SECOND\fi'),
+        ):
+            with self.subTest(preamble=preamble), self.assertRaises(ValueError):
+                tex.chunk_source(archive({'main.tex': preamble + r'\begin{document}' + body + r'\end{document}'}), AID)
+
+    def test_all_macro_declarations_and_aliases_preserve_argument_uncertainty(self):
+        for declaration in (r'\edef\ignore#1{}', r'\xdef\ignore#1{}',
+                            r'\providecommand{\ignore}[1]{}'):
+            for call in (r'\ignore', r'\let\run\ignore\run',
+                         r'\let\run\ignore\let\again\run\again'):
+                with self.subTest(declaration=declaration, call=call), self.assertRaises(ValueError):
+                    source = (r'\newif\ifFlag' + declaration + call + r'\Flagtrue'
+                              r'\begin{document}\ifFlag WRONG\else RIGHT\fi\end{document}')
+                    tex.chunk_source(archive({'main.tex': source}), AID)
+
+    def test_body_opaque_calls_cannot_consume_conditional_delimiters(self):
+        for declaration in (r'\def\ignore#1{}', r'\edef\ignore#1{}',
+                            r'\providecommand{\ignore}[1]{}',
+                            r'\def\eat#1{}\let\ignore\eat'):
+            for body, extra in ((r'\iftrue\ignore\else RIGHT\fi', {}),
+                                (r'\iftrue\input{child}\else RIGHT\fi',
+                                 {'child.tex': r'\ignore'})):
+                with self.subTest(declaration=declaration, body=body), self.assertRaises(ValueError):
+                    tex.chunk_source(archive({'main.tex': declaration + r'\begin{document}' +
+                        body + r'\end{document}', **extra}), AID)
+
+    def test_unparsed_declaration_families_cannot_establish_branch_state(self):
+        for declaration in (r'\newenvironment{unused}{\Flagtrue}{}',
+                            r'\NewDocumentCommand{\unused}{}{\Flagtrue}',
+                            r'\NewDocumentEnvironment{unused}{}{\Flagtrue}{}'):
+            for preamble, body in ((r'\newif\ifFlag' + declaration, r'\ifFlag WRONG\else RIGHT\fi'),
+                                   ('', declaration + r'\iftrue FIRST\else SECOND\fi')):
+                with self.subTest(declaration=declaration, preamble=preamble), self.assertRaises(ValueError):
+                    tex.chunk_source(archive({'main.tex': preamble + r'\begin{document}' + body +
+                        r'\end{document}'}), AID)
+
+    def test_unparsed_starred_declarations_and_preamble_termination_fall_back(self):
+        for declaration in (r'\newcommand*{\ignore}[1]{}',
+                            r'\providecommand*{\ignore}[1]{}',
+                            r'\DeclareRobustCommand*{\ignore}[1]{}'):
+            with self.subTest(declaration=declaration), self.assertRaises(ValueError):
+                tex.chunk_source(archive({'main.tex': declaration +
+                    r'\begin{document}\iftrue\ignore\else RIGHT\fi\end{document}'}), AID)
+        with self.assertRaises(ValueError):
+            tex.chunk_source(archive({'main.tex': r'\newif\ifFlag\input{flags}'
+                r'\begin{document}\ifFlag WRONG\else RIGHT\fi\end{document}',
+                'flags.tex': '\\endinput\n' + r'\Flagtrue'}), AID)
+
+    def test_indirect_preamble_file_mutations_require_fallback(self):
+        for preamble in (
+            r'\let\RuntimeFlag\relax\newif\ifFlag\ifdefined\RuntimeFlag\input{flags}\fi',
+            r'\newif\ifFlag\def\enable{\input{flags}}\enable',
+            r'\newif\ifFlag\def\outer{\inner}\def\inner{\include{flags}}\outer',
+        ):
+            with self.subTest(preamble=preamble), self.assertRaises(ValueError):
+                data = archive({'main.tex': preamble + r'\begin{document}\ifFlag YES\else NO\fi\end{document}',
+                               'flags.tex': r'\Flagtrue'})
+                tex.chunk_source(data, AID)
+
+    def test_unknown_scoped_and_mutated_state_stays_unresolved(self):
+        cases = [
+            (r'\newif\ifFlag\ifdefined\Unknown\Flagtrue\fi', ''),
+            (r'\newif\ifFlag{\Flagtrue}', ''),
+            (r'\newif\ifFlag\begingroup\Flagtrue\endgroup', ''),
+            (r'\newif\ifFlag\let\Flagtrue\relax\Flagtrue', ''),
+            (r'\newif\ifFlag\def\Flagtrue{}\Flagtrue', ''),
+            (r'\newif\ifFlag\def\outer{\inner}\def\inner{\Flagtrue}\outer', ''),
+            (r'\newif\ifFlag\def\change{\Flagtrue}\change', ''),
+            (r'\newif\ifFlag\def\enable{\Flagtrue}\let\run\enable\run', ''),
+            (r'\newif\ifFlag\def\inner{\global\Flagtrue}\def\outer{\inner}{\outer}', ''),
+            (r'\newif\ifFlag', r'\Flagtrue'),
+            (r'\newif\ifFlag', r'\def\change{\Flagtrue}'),
+            (r'\newif\ifFlag', r'\let\alias\Flagtrue\alias'),
+        ]
+        for preamble, mutation in cases:
+            with self.subTest(preamble=preamble, mutation=mutation), self.assertRaises(ValueError):
+                files = {'main.tex': preamble + r'\begin{document}\input{child}\ifFlag WRONG\else KEPT\fi\end{document}',
+                         'child.tex': mutation}
+                tex.chunk_source(archive(files), AID)
+        # Positive source facts work, but absence is not proof of undefined.
+        raw = r'\def\Known{1}\begin{document}\ifdefined\Known YES\else NO\fi\end{document}'
+        text = ''.join(c['text'] for c in tex.chunk_source(raw.encode(), AID))
+        self.assertIn('YES', text)
+        self.assertNotIn('Known', text)
+        self.assertNotIn('NO', text)
+        with self.assertRaises(ValueError):
+            tex.chunk_source(raw.replace('ifdefined\\Known', 'ifdefined\\Absent').encode(), AID)
+
+    def test_inactive_flag_setters_and_macro_definitions_do_not_change_state(self):
+        raw = r'''\newif\ifFlag
+\iffalse\Flagtrue\fi
+\newcommand{\unused}[1]{\ifFlag \Flagtrue #1\fi}
+\begin{document}\ifFlag HIDDEN\else KEPT\fi\end{document}'''
+        text = ''.join(c['text'] for c in tex.chunk_source(raw.encode(), AID))
+        self.assertIn('KEPT', text)
+        self.assertNotIn('HIDDEN', text)
+
+    def test_larger_asset_bundles_still_have_separate_text_and_expansion_bounds(self):
+        paper = r'\begin{document}Paper evidence\end{document}'
+        data = archive({'main.tex': paper, 'image.bin': 'x' * 1000})
+        self.assertTrue(tex.chunk_source(data, AID))
+        with patch.object(tex, 'MAX_TEX', 10), self.assertRaises(ValueError):
+            tex.read_source(data)
+        with patch.object(tex, 'MAX_EXPANDED', 100), self.assertRaises(ValueError):
+            tex.read_source(data)
+        with patch.object(tex, 'MAX_TEX', 10), self.assertRaises(ValueError):
+            tex.read_source(gzip.compress(paper.encode()))

@@ -2,6 +2,7 @@
 import gzip
 import hashlib
 import io
+import json
 from pathlib import Path, PurePosixPath
 import re
 import tarfile
@@ -13,9 +14,12 @@ import requests
 
 from . import config as cfg
 from .tex_chunking import split_tex
+from .tex_lexical import structural, constant_branches, PRIMITIVES
+from .tex_state import PreambleState, UNSUPPORTED_DEFINITIONS
 
-MAX_ARCHIVE = 16 * 1024 * 1024
-MAX_EXPANDED = 32 * 1024 * 1024
+MAX_ARCHIVE = 32 * 1024 * 1024
+MAX_EXPANDED = 128 * 1024 * 1024
+MAX_TEX = 32 * 1024 * 1024
 MAX_MEMBERS = 2048
 MAX_FILES = 128
 ID = re.compile(r"(?:\d{4}\.\d{4,5}|[a-z-]+(?:\.[A-Z]{2})?/\d{7})(?:v\d+)?\Z")
@@ -40,7 +44,7 @@ def _name(name):
     return str(path)
 
 
-def read_source(data):
+def read_source(data, *, with_manifest=False):
     """Read tar[.gz], gzip-single-TeX, or single TeX; never extract to disk."""
     if not data or len(data) > MAX_ARCHIVE:
         raise ValueError("Empty or oversized source archive")
@@ -53,10 +57,14 @@ def read_source(data):
         if len(data) > MAX_EXPANDED:
             raise ValueError("Expanded source exceeds limit")
     files = {}
+    manifest = None
+    tex_bytes = 0
     total = 0
     try:
         archive = tarfile.open(fileobj=io.BytesIO(data), mode='r:')
     except tarfile.ReadError:
+        if len(data) > MAX_TEX:
+            raise ValueError('TeX text exceeds limit')
         files['main.tex'] = data
     else:
         with archive:
@@ -71,29 +79,139 @@ def read_source(data):
                 total += member.size
                 if total > MAX_EXPANDED:
                     raise ValueError("Expanded source exceeds limit")
+                if name == '00README.json':
+                    if manifest is not None or member.size > 1024 * 1024:
+                        raise ValueError('Duplicate or oversized source manifest')
+                    try:
+                        manifest = json.loads(archive.extractfile(member).read())
+                    except RecursionError:
+                        raise ValueError('Excessively nested source manifest') from None
+                    if not isinstance(manifest, dict):
+                        raise ValueError('Invalid source manifest')
+                    continue
                 if not name.endswith('.tex'):
                     continue
+                tex_bytes += member.size
+                if tex_bytes > MAX_TEX:
+                    raise ValueError('TeX text exceeds limit')
                 if name in files or len(files) >= MAX_FILES:
                     raise ValueError("Duplicate or excessive TeX files")
                 files[name] = archive.extractfile(member).read()
     decoded = {name: value.decode('utf-8-sig') for name, value in files.items()}
     if not decoded:
         raise ValueError("Source contains no TeX files")
-    return decoded
+    return (decoded, manifest) if with_manifest else decoded
 
 
 def _uncomment(text):
-    # A percent preceded by an odd run of backslashes is escaped.
-    return re.sub(r"(?<!\\)((?:\\\\)*)%[^\n]*", r"\1", text)
+    return structural(text)[0]
 
 
 def source_blocks(data):
-    files = read_source(data)
-    clean = {name: _uncomment(text) for name, text in files.items()}
-    roots = [name for name, text in clean.items() if r'\begin{document}' in text]
+    files, manifest = read_source(data, with_manifest=True)
+    # Discover custom conditionals without evaluating macro definitions. Branch
+    # filtering happens on document bodies, not on preamble macro declarations.
+    scanned = {name: structural(text) for name, text in files.items()}
+    custom = set(re.findall(r'\\newif\s*\\(if[a-zA-Z]+)',
+                            '\n'.join(item[1] for item in scanned.values())))
+    clean = {name: item[0] for name, item in scanned.items()}
+    syntax = {name: item[1] for name, item in scanned.items()}
+    roots = [name for name, text in syntax.items() if r'\begin{document}' in text]
+    if manifest is not None:
+        if not isinstance(manifest, dict) or not isinstance(manifest.get('sources'), list):
+            raise ValueError('Invalid source manifest')
+        declared = []
+        for entry in manifest['sources']:
+            if not isinstance(entry, dict):
+                raise ValueError('Invalid source manifest entry')
+            if entry.get('usage') == 'toplevel':
+                if not isinstance(entry.get('filename'), str):
+                    raise ValueError('Invalid declared document root')
+                declared.append(_name(entry['filename']))
+        if declared:
+            if len(declared) != 1 or declared[0] not in roots:
+                raise ValueError('Missing or ambiguous declared document root')
+            roots = declared
     if len(roots) != 1:
         raise ValueError("Source needs exactly one document root")
     root_dir = PurePosixPath(roots[0]).parent
+
+    def resolve(reference, name):
+        reference = _name(reference.strip())
+        if not reference.endswith('.tex'):
+            reference += '.tex'
+        candidates = {_name(str(base / reference))
+                      for base in (root_dir, PurePosixPath(name).parent)}
+        available = candidates.intersection(clean)
+        if len(available) != 1:
+            raise ValueError('Missing or ambiguous TeX include')
+        return available.pop()
+
+    state = PreambleState()
+    preamble_visits = 0
+
+    def preamble(name, stack=()):
+        nonlocal preamble_visits
+        preamble_visits += 1
+        if preamble_visits > MAX_FILES or len(stack) >= 32 or name in stack:
+            raise ValueError('Cyclic or excessive preamble includes')
+        text = clean[name]
+        if name == roots[0]:
+            text = text[:syntax[name].index(r'\begin{document}')]
+
+        def include(reference, _state):
+            preamble(resolve(reference, name), (*stack, name))
+
+        state.read(text, include)
+
+    try:
+        preamble(roots[0])
+        state.finalize()
+    except ValueError:
+        # Failed analysis is uncertainty, never permission to restore primitive
+        # assumptions after an uninspected dynamic preamble effect.
+        raise ValueError('Unresolved preamble analysis requires HTML/PDF fallback') from None
+    if state.unsupported:
+        raise ValueError('Unsupported preamble mutation requires HTML/PDF fallback')
+
+    # A frozen preamble snapshot is usable only when the whole reachable body
+    # is free of mutations. Checking a file in isolation would miss a setter in
+    # an include followed by a conditional in its parent or a sibling.
+    pending, checked = [roots[0]], set()
+    mutations = r'\\(?:def|gdef|edef|xdef|let|futurelet|newif|newcommand|renewcommand|providecommand|DeclareRobustCommand|csname|catcode|usepackage|inputencoding)(?![a-zA-Z])'
+    body_uncertain = state.uninspected
+    setters = {n[2:] + suffix for n in state.values for suffix in ('true', 'false')}
+    # Opaque macro calls and aliases can consume structural tokens (including
+    # else/fi) without mutating a flag. They invalidate branch selection too.
+    mutators = state.mutators | state.macros | set(state.dependencies)
+    while pending:
+        name = pending.pop()
+        if name in checked:
+            continue
+        checked.add(name)
+        body = syntax[name]
+        if name == roots[0]:
+            body = body.split(r'\begin{document}', 1)[1].split(r'\end{document}', 1)[0]
+        # An ifdefined operand is inspected by TeX, not invoked as a macro.
+        inspection = re.sub(r'(\\ifdefined)\s*\\[a-zA-Z]+(?![a-zA-Z])', lambda m: m[1], body)
+        commands = set(re.findall(r'\\([a-zA-Z]+)', inspection))
+        # Unknown body controls can consume or defer delimiter tokens too. Only
+        # the explicitly understood traversal/conditional syntax selects branches.
+        if commands - (PRIMITIVES | custom | setters | {'input', 'include', 'else', 'or', 'fi'}):
+            body_uncertain = True
+        symbols = set(re.findall(r'\\[^a-zA-Z]', inspection))
+        if symbols - {r'\%', r'\$', r'\#', r'\&', r'\_', r'\{', r'\}', r'\\'}:
+            body_uncertain = True
+        if re.search(mutations, inspection) or commands.intersection(setters | mutators | UNSUPPORTED_DEFINITIONS):
+            state = PreambleState()
+            body_uncertain = True
+        for match in INCLUDE.finditer(body):
+            try:
+                pending.append(resolve(match[1], name))
+            except ValueError:
+                # Inactive missing includes are allowed; traversal below still
+                # rejects active ones after branch filtering.
+                pass
     blocks = []
     visits = 0
     expanded = 0
@@ -106,18 +224,46 @@ def source_blocks(data):
         if name not in clean:
             raise ValueError("Missing TeX include")
         text = clean[name]
-        if re.search(r'\\includeonly(?![a-zA-Z])', text):
+        code = syntax[name]
+        if re.search(r'\\includeonly(?![a-zA-Z])', code):
             raise ValueError('Selective TeX includes require HTML/PDF fallback')
         start, end = 0, len(text)
         if root:
-            start = text.index(r'\begin{document}') + len(r'\begin{document}')
-            end = text.find(r'\end{document}', start)
+            start = code.index(r'\begin{document}') + len(r'\begin{document}')
+            end = code.find(r'\end{document}', start)
             if end < 0:
                 raise ValueError("Unterminated TeX document")
-        if re.search(r'\\(?:(?:if[a-zA-Z]*|else|fi|verb|includeonly)(?![a-zA-Z])|begin\s*\{(?:verbatim|comment)\})', text[start:end]):
-            raise ValueError("Conditional/verbatim TeX requires HTML/PDF fallback")
+        controls = set(re.findall(r'\\([a-zA-Z]+)', code[start:end]))
+        if 'endinput' in controls or re.search(r'\\end\s*\{\s*document\s*\}', code[start:end]):
+            raise ValueError('Uninspected body input termination requires HTML/PDF fallback')
+        if body_uncertain and controls.intersection(PRIMITIVES | custom):
+            raise ValueError('Body mutation makes conditional selection unsafe')
+        filtered = constant_branches(text[start:end], custom,
+                                     values=state.values, defined=state.defined)
+        # Prefix padding keeps all original file/line offsets stable.
+        text = text[:start] + filtered + text[end:]
+        code = code[:start] + structural(filtered)[1] + code[end:]
+        commands = set(re.findall(r'\\([a-zA-Z]+)|\\.', code[start:end]))
+        if commands.intersection(PRIMITIVES | custom | {'else', 'or', 'fi'}):
+            raise ValueError("Unresolved conditional TeX requires HTML/PDF fallback")
+        # Raw conditional macros can be retained, but expanding an include
+        # inside their arguments would concatenate mutually exclusive branches.
+        for macro in re.finditer(r'\\if[a-zA-Z]+', code[start:end]):
+            position = start + macro.end()
+            while position < end:
+                while position < end and code[position].isspace():
+                    position += 1
+                if position == end or code[position] != '{':
+                    break
+                depth, stop = 1, position + 1
+                while stop < end and depth:
+                    depth += (code[stop] == '{') - (code[stop] == '}')
+                    stop += 1
+                if depth or re.search(r'\\(?:input|include)(?![a-zA-Z])', code[position:stop]):
+                    raise ValueError('Conditional macro includes require HTML/PDF fallback')
+                position = stop
         # Unsupported input syntax must not silently publish a partial paper.
-        body = text[start:end]
+        body = code[start:end]
         if re.search(r'\\(?:input|include)(?![a-zA-Z])', INCLUDE.sub('', body)):
             raise ValueError("Unsupported TeX include syntax")
         cursor = start
@@ -131,17 +277,9 @@ def source_blocks(data):
             if value.strip():
                 blocks.append((name, text.count('\n', 0, cursor) + 1, value))
 
-        for match in INCLUDE.finditer(text, start, end):
+        for match in INCLUDE.finditer(code, start, end):
             emit(match.start())
-            reference = _name(match[1].strip())
-            if not reference.endswith('.tex'):
-                reference += '.tex'
-            candidates = {_name(str(base / reference))
-                          for base in (root_dir, PurePosixPath(name).parent)}
-            available = candidates.intersection(clean)
-            if len(available) != 1:
-                raise ValueError('Missing or ambiguous TeX include')
-            visit(available.pop(), (*stack, name))
+            visit(resolve(match[1], name), (*stack, name))
             cursor = match.end()
         emit(end)
 

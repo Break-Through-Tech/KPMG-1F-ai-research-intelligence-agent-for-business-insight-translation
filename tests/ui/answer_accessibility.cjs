@@ -18,7 +18,7 @@ async function main() {
     await page.goto(base);
     assert.equal(await page.title(), 'Research desk · 1F');
     await page.waitForFunction(() => !document.querySelector('#submit').disabled);
-    assert.equal(await page.getByRole('status').count(), 1);
+    assert.equal(await page.locator('#feedback[role="status"]').count(), 1);
     assert.equal(await page.getByRole('button', {name: 'Jump to latest answer'}).isDisabled(), true);
 
     // Hold each response while the user continues reading the previous answer.
@@ -61,7 +61,7 @@ async function main() {
       release();
       await page.waitForFunction(() => document.querySelector('#output').getAttribute('aria-busy') === 'false');
       assert.deepEqual(await page.evaluate(() => ({focus: document.activeElement.id, scroll: document.querySelector('#conversation').scrollTop})), before);
-      assert.equal(await page.getByRole('status').textContent(), `Answer ${index + 1} ${outcome} Synthetic example.`);
+      assert.equal(await page.locator('#feedback[role="status"]').textContent(), `Answer ${index + 1} ${outcome} Synthetic example.`);
       assert.equal(await page.getByRole('region', {name: `Question ${index + 1}`, exact: true}).count(), 1);
       assert.equal(await page.getByRole('article', {name: `Answer ${index + 1}`, exact: true}).count(), 1);
       assert.equal(await page.locator('#output [aria-live], #output [role="status"], #output [role="log"]').count(), 0);
@@ -96,7 +96,7 @@ async function main() {
     await page.reload();
     await page.getByRole('heading', {name: 'Answer 1', exact: true}).waitFor();
     assert.equal(await page.getByRole('region', {name: 'Question 1', exact: true}).count(), 1);
-    assert.match(await page.getByRole('status').textContent(), /Saved result; no live query/);
+    assert.match(await page.locator('#feedback[role="status"]').textContent(), /Saved result; no live query/);
     assert.notEqual(await page.evaluate(() => document.activeElement.id), 'answer-1');
     assert.equal(await page.locator('#output [aria-busy="true"]').count(), 0);
 
@@ -110,7 +110,7 @@ async function main() {
     assert.equal(await page.getByRole('heading', {name: 'Interpretation', exact: true}).count(), 1);
     assert.equal(await page.getByRole('heading', {name: 'Research findings', exact: true}).count(), 1);
     assert.equal(await page.getByRole('button', {name: 'Ask paper', exact: true}).count(), 1);
-    assert.equal(await page.getByRole('status').textContent(), 'Answer 1 ready. Draft, not approved.');
+    assert.equal(await page.locator('#feedback[role="status"]').textContent(), 'Answer 1 ready. Draft, not approved.');
     await page.locator('.detail-group > details > summary').click();
     await page.getByText('Assumptions, risks & limitations', {exact: true}).click();
     assert.equal(await page.getByRole('heading', {name: 'Review status', exact: true}).count(), 1);

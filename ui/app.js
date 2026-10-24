@@ -341,14 +341,18 @@ document.addEventListener('pointerdown', event => {
 // of dismissing it and stealing focus. Explicit reading-scroll gestures still
 // dismiss it; pointerdown outside the preview also covers scrollbar dragging.
 conversation.addEventListener('scroll', positionQuotePreview);
-conversation.addEventListener('wheel', closePreview, {passive: true});
-conversation.addEventListener('touchmove', closePreview, {passive: true});
+const dismissForReadingGesture = event => {
+  if (!quotePreview.contains(event.target)) closePreview();
+};
+window.addEventListener('wheel', dismissForReadingGesture, {passive: true});
+window.addEventListener('touchmove', dismissForReadingGesture, {passive: true});
 document.addEventListener('keydown', event => {
   if (event.defaultPrevented || event.target.closest('input, textarea, select, [contenteditable]')) return;
   if ((conversation.contains(event.target) || quotePreview.contains(event.target)) &&
       ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End'].includes(event.key)) closePreview();
 });
 window.addEventListener('resize', closePreview);
+window.addEventListener('scroll', positionQuotePreview, {passive: true});
 
 function citedParagraph(item, demo, number) {
   const paragraph = element('p', item.text);

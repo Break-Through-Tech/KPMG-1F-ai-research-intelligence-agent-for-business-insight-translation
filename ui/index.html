@@ -6,6 +6,8 @@
   <meta name="color-scheme" content="light dark">
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/reading-preferences.css">
+  <script src="/reading-preferences.js"></script>
   <link rel="stylesheet" href="/vendor/katex/katex.min.css">
   <script src="/vendor/katex/katex.min.js" defer></script>
   <script src="/math.js" defer></script>
@@ -16,7 +18,21 @@
   <a class="skip" href="#query">Skip to research question</a>
   <header class="masthead">
     <h1>1F <span>/</span> Research desk</h1>
-    <div class="header-tools"><details class="demo-settings"><summary>Demo options</summary><div class="settings-content"><label for="scenario">Example state</label><select id="scenario" name="scenario" form="research-form">
+    <div class="header-tools">
+      <details class="reading-settings">
+        <summary>Reading preferences</summary>
+        <div class="reading-settings-content">
+          <label for="reading-theme">Theme</label>
+          <select id="reading-theme"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option><option value="contrast-light">High contrast light</option><option value="contrast-dark">High contrast dark</option></select>
+          <label for="reading-size">Text size</label>
+          <select id="reading-size"><option value="100">100% (default)</option><option value="125">125%</option><option value="150">150%</option><option value="200">200%</option></select>
+          <label for="reading-spacing">Line spacing</label>
+          <select id="reading-spacing"><option value="standard">Standard</option><option value="relaxed">Relaxed</option><option value="wide">Wide</option></select>
+          <button id="reading-reset" class="quiet" type="button">Reset reading preferences</button>
+          <p class="meta">Stored only in this browser when available. Reset follows your system theme.</p>
+          <p id="reading-storage-status" class="meta" role="status"></p>
+        </div>
+      </details><details class="demo-settings"><summary>Demo options</summary><div class="settings-content"><label for="scenario">Example state</label><select id="scenario" name="scenario" form="research-form">
               <option value="full">Full draft</option>
               <option value="plain-language">Plain-language · supported definition fixture</option>
               <option value="partial">Partial · summary only</option>

@@ -46,8 +46,9 @@ def extract_figure_text(data, aid, title=''):
     # termination can hide references in later blocks, including nested inputs.
     # Until those execution semantics are modeled, reject figure publication
     # across the reachable body rather than selecting an apparently live asset.
-    mutation = re.compile(r'\\(?:string|detokenize|noexpand|meaning|endinput|csname|catcode|futurelet|unless|inputencoding|usepackage|documentclass|directlua|scantokens|DeclareGraphicsRule|DeclareGraphicsExtensions|graphicspath|[iI]f[a-zA-Z]+|def|gdef|edef|xdef|let|newcommand|renewcommand|providecommand|DeclareRobustCommand|newenvironment|renewenvironment)(?![a-zA-Z])')
+    mutation = re.compile(r'\\(?:toks|toksdef|newtoks|string|detokenize|noexpand|meaning|endinput|csname|catcode|futurelet|unless|inputencoding|usepackage|documentclass|directlua|scantokens|DeclareGraphicsRule|DeclareGraphicsExtensions|graphicspath|[iI]f[a-zA-Z]+|def|gdef|edef|xdef|let|newcommand|renewcommand|providecommand|DeclareRobustCommand|newenvironment|renewenvironment)(?![a-zA-Z])')
     uncertain = any(mutation.search(structural(text)[1]) or
+                    re.search(r'\\end\s*\{\s*document\s*\}', structural(text)[1]) or
                     (preamble_macros | UNSUPPORTED_DEFINITIONS).intersection(
                         re.findall(r'\\([a-zA-Z]+)', structural(text)[1]))
                     for _, _, text in blocks)

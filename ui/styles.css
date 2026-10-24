@@ -164,3 +164,22 @@ blockquote { border-left: 2px solid #aab5c5; margin: 0 0 28px; padding: 0 0 0 16
   .controls { width: 100%; }
 }
 [hidden] { display: none !important; }
+
+/* Structured evidence only; global reading preferences belong to #139. */
+.passage { min-width: 0; overflow-wrap: anywhere; }
+.passage h4 { font-size: 1rem; line-height: 1.5; margin: 1.5em 0 .75em; }
+.passage h5 { font-size: 1rem; line-height: 1.5; margin: 1em 0 .5em; }
+.source-metadata { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: .75em 1em; margin: 1em 0; }
+.source-metadata dt { font-size: .875rem; color: var(--muted); }
+.source-metadata dd { margin: 0; }
+.source-return { text-align: left; color: var(--primary); margin-bottom: 1em; }
+.source-reading { line-height: inherit; white-space: normal; }
+.source-reading figure { margin: 1em 0; }
+.source-reading figcaption { font-size: .875rem; margin: .75em 0; }
+.source-scroll { max-width: 100%; overflow-x: auto; margin: 1em 0; padding: .25em; }
+.source-inline-math { display: inline-block; max-width: 100%; overflow-x: auto; vertical-align: middle; }
+.source-scroll table { border-collapse: collapse; min-width: 100%; }
+.source-scroll th, .source-scroll td { border: 1px solid var(--border); padding: .5em; text-align: left; vertical-align: top; }
+.source-scroll caption { text-align: left; margin-bottom: .5em; }
+.source-check-text blockquote { font-size: 1rem; }
+.source-exact-quote { white-space: pre-wrap; }

@@ -103,8 +103,8 @@ function resetEvidence(message) {
   railContent.replaceChildren(element('p', message, 'meta rail-empty'));
 }
 
-function showEvidence(demo, number, selected = 0, trigger = null) {
-  activeDemo = {demo, number, selected};
+function showEvidence(demo, number, selected = 0, trigger = null, claim = null) {
+  activeDemo = {demo, number, selected, claim};
   const evidence = demo.result?.evidence ?? [];
   railContent.replaceChildren(element('p', isReal(demo) ? 'Real-paper evidence' : `Example ${number} · ${STATES[demo.scenario][0]}`, 'meta'));
   const choices = element('div', undefined, 'source-list');
@@ -114,20 +114,9 @@ function showEvidence(demo, number, selected = 0, trigger = null) {
     activeDemo.selected = index;
     const passage = evidence[index];
     choices.querySelectorAll('button').forEach((button, position) => button.setAttribute('aria-pressed', String(position === index)));
-    passageView.replaceChildren(element('h3', passage.title), element('p', `Passage ${index + 1}`, 'meta'), element('blockquote', passage.text));
-    if (passage.source_url) {
-      const link = element('a', isReal(demo) ? 'Open original paper' : 'Open example source', 'source-link');
-      link.href = passage.source_url;
-      link.target = '_blank';
-      link.rel = 'noopener noreferrer';
-      passageView.append(link);
-    } else passageView.append(element('p', 'Synthetic passage · No source URL', 'meta'));
-    const details = disclosure('Source details');
-    details.className = 'source-details';
-    details.append(element('p', `${passage.source.toUpperCase()} · ${passage.page_number === null ? 'No PDF page' : `PDF page ${passage.page_number}`}${passage.section ? ` · ${passage.section}` : ''}`));
-    if (passage.distance !== undefined && passage.distance !== null) details.append(element('p', `Retrieval distance: ${passage.distance} · Not confidence`));
-    details.append(element('p', passage.chunk_id));
-    passageView.append(details);
+    renderSourcePassage(passageView, passage, {
+      claim, isFixture: !isReal(demo), onReturn: () => setRailOpen(false),
+    });
   }
   evidence.forEach((passage, index) => {
     const location = passage.source === 'pdf' ? `page ${passage.page_number}` : (passage.section || 'No PDF page');
@@ -196,7 +185,7 @@ function showQuote(item, demo, number, index, trigger) {
   more.type = 'button';
   more.addEventListener('click', () => {
     closePreview();
-    showEvidence(demo, number, index, trigger);
+    showEvidence(demo, number, index, trigger, item);
   });
   actions.append(more);
   quotePreview.replaceChildren(head, excerpts, element('p', `${passage.title} · ${location}`, 'meta quote-source'), actions);

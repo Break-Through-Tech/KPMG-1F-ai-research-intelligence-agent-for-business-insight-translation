@@ -1,0 +1,101 @@
+"""Source reading retention is separate from citation support and approval."""
+from hashlib import sha256
+from unittest import TestCase
+
+from bs4 import BeautifulSoup
+
+from src.paper_html import parse_paper_html
+from src.paper_reader import retain_reader
+from src.research_chat import synthesize
+
+
+STRUCTURED_HTML = b'''<article class="ltx_document"><section id="S1"><h2>Results</h2>
+<div class="ltx_para"><h3>Measured result</h3><p>The measured result improves accuracy in this bounded experiment.</p>
+<ul><li>First constraint</li><li>Second constraint</li></ul><ol start=3><li value=4>Numbered constraint</li></ol>
+<math display="block"><mfrac><mi>x</mi><mn>2</mn></mfrac></math></div>
+<table><caption>Source measurements</caption><thead><tr><th id="model" scope="col">Model</th>
+<th id="score" scope="col">Score</th></tr></thead><tbody><tr><th id="base" scope="row">Base</th>
+<td headers="base score">12</td></tr></tbody></table>
+<figure><img src="https://invalid.example/never-fetch" alt="Two source-labeled bars" onerror="bad()">
+<figcaption>Accuracy by model.</figcaption></figure>
+<figure><img src="missing"><figcaption>Caption only.</figcaption></figure>
+</section></article>'''
+
+
+def flatten(nodes):
+    for node in nodes:
+        if isinstance(node, dict):
+            yield node
+            yield from flatten(node['children'])
+
+
+class PaperReaderTests(TestCase):
+    def test_retains_source_math_lists_headers_captions_and_provenance(self):
+        passages, source = parse_paper_html(STRUCTURED_HTML, '2608.20318v1', 'Structured test')
+        self.assertEqual(len(passages), 1)
+        passage = passages[0]
+        reader = passage['reader']
+        self.assertEqual(reader['source_sha256'], sha256(STRUCTURED_HTML).hexdigest())
+        self.assertEqual(reader['source_sha256'], source['sha256'])
+        self.assertEqual(reader['provenance'], 'source-html')
+        nodes = list(flatten(reader['nodes']))
+        self.assertTrue({'h3', 'ul', 'li', 'math', 'mfrac', 'table', 'caption', 'th', 'td', 'figcaption'} <= {node['tag'] for node in nodes})
+        cell = next(node for node in nodes if node['tag'] == 'td')
+        self.assertEqual(cell['attrs']['headers'], 'base score')
+        self.assertEqual(next(node for node in nodes if node['tag'] == 'ol')['attrs']['start'], '3')
+        self.assertEqual(next(node for node in nodes if node['tag'] == 'th')['attrs']['scope'], 'col')
+        self.assertIn('The measured result improves accuracy in this bounded experiment.', passage['text'])
+        self.assertEqual(passage['text'].count('Source measurements'), 1)
+        rendered_data = str(reader)
+        self.assertIn('Source-supplied image description: Two source-labeled bars', rendered_data)
+        self.assertIn('Source-supplied caption:', rendered_data)
+        self.assertNotIn('never-fetch', rendered_data)
+        self.assertNotIn('onerror', rendered_data)
+        self.assertTrue(any('caption alone' in gap for gap in reader['limitations']))
+
+    def test_scripts_urls_and_attributes_are_not_retained_as_executable_markup(self):
+        soup = BeautifulSoup('<div class="ltx_para" onclick="bad()"><script>bad()</script><iframe src="remote"></iframe><a href="javascript:bad()">Readable link text</a><math href="bad"><mi style="color:red">x</mi></math><!-- hidden --></div>', 'html.parser')
+        reader = retain_reader([soup.div], 'a' * 64)
+        nodes = list(flatten(reader['nodes']))
+        self.assertNotIn('script', {node['tag'] for node in nodes})
+        self.assertNotIn('iframe', {node['tag'] for node in nodes})
+        self.assertIn('Readable link text', str(reader))
+        self.assertNotIn('bad()', str(reader))
+        self.assertNotIn('color:red', str(reader))
+        self.assertNotIn('hidden', str(reader))
+
+    def test_unknown_table_relationships_are_not_invented(self):
+        soup = BeautifulSoup('<table><tr><td>Unlabeled value</td></tr></table>', 'html.parser')
+        reader = retain_reader([soup.table], 'a' * 64)
+        self.assertTrue(any('No row or column headers' in gap for gap in reader['limitations']))
+        self.assertNotIn('th', {node['tag'] for node in flatten(reader['nodes'])})
+
+    def test_reader_depth_limit_falls_back_without_losing_canonical_quote_text(self):
+        raw = b'<article class="ltx_document"><div class="ltx_para">' + b'<div>' * 60 + b'Retained canonical evidence.' + b'</div>' * 60 + b'</div></article>'
+        passages, _ = parse_paper_html(raw, '2608.20318v1', 'Test')
+        self.assertEqual(passages[0]['text'], 'Retained canonical evidence.')
+        self.assertEqual(passages[0]['reader']['nodes'], [])
+        self.assertTrue(passages[0]['reader']['limitations'])
+
+    def test_reader_data_cannot_substitute_for_exact_quote_membership(self):
+        import json
+        passages, _ = parse_paper_html(STRUCTURED_HTML, '2608.20318v1', 'Test')
+        claim = {'text': 'Test claim', 'kind': 'finding', 'support': [{
+            'chunk_id': passages[0]['chunk_id'], 'quote': 'Two source-labeled bars'}]}
+        # Image alt is source-owned reader context, but is NOT in canonical text.
+        with self.assertRaisesRegex(ValueError, 'absent from its cited passage'):
+            synthesize('Q', passages, generate=lambda _: json.dumps({'status': 'ok', 'claims': [claim], 'limitations': []}))
+
+    def test_reader_metadata_is_not_additional_generation_evidence(self):
+        import json
+        passages, _ = parse_paper_html(STRUCTURED_HTML, '2608.20318v1', 'Test')
+        prompts = []
+        def generate(prompt):
+            prompts.append(prompt)
+            return json.dumps({'status': 'insufficient_evidence', 'claims': [], 'limitations': [{
+                'text': 'The evidence is bounded.', 'support': [{
+                    'chunk_id': passages[0]['chunk_id'],
+                    'quote': 'The measured result improves accuracy in this bounded experiment.'}]}]})
+        synthesize('Q', passages, generate=generate)
+        self.assertNotIn('"reader":', prompts[0])
+        self.assertNotIn('Two source-labeled bars', prompts[0])

@@ -169,6 +169,8 @@ class PreambleState:
                     raise ValueError('Unsupported newif declaration')
                 cursor = target.end()
                 name = target[1]
+                if name in self.tainted:
+                    raise ValueError('Tainted conditional redeclaration requires fallback')
                 if name in STRUCTURAL:
                     self.unsupported = True
                 if active and depth == 0:

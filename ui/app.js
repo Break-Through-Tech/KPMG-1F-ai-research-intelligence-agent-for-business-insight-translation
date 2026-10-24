@@ -75,6 +75,13 @@ function list(parent, title, items) {
   parent.append(ul);
 }
 
+function focusInitiator(trigger) {
+  // Old turns normally survive; fall back safely if a future renderer removes one.
+  const fallback = form.elements.query.getClientRects().length ? form.elements.query : conversation;
+  const target = trigger?.isConnected && !trigger.disabled && trigger.getClientRects().length ? trigger : fallback;
+  target.focus();
+}
+
 function setRailOpen(open, trigger = null) {
   if (open && !rail.open) {
     returnFocus = trigger;
@@ -82,28 +89,59 @@ function setRailOpen(open, trigger = null) {
     else rail.show();
   } else if (!open && rail.open) {
     rail.close();
-    returnFocus?.focus();
+    focusInitiator(returnFocus);
   }
 }
 
 document.querySelector('#evidence-close').addEventListener('click', () => setRailOpen(false));
+// Native modal inertness blocks background content; wrap Tab explicitly so the
+// browser chrome is not an intermediate focus stop at either edge.
+rail.addEventListener('keydown', event => {
+  if (event.key !== 'Tab' || !rail.matches(':modal')) return;
+  const controls = [...rail.querySelectorAll('button, a[href], summary, [tabindex="0"]')]
+    .filter(node => !node.disabled && node.tabIndex >= 0 && node.getClientRects().length);
+  const first = controls[0];
+  const last = controls[controls.length - 1];
+  if (event.shiftKey && (document.activeElement === first || document.activeElement === railHeading)) {
+    event.preventDefault();
+    last?.focus();
+  } else if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first?.focus();
+  }
+});
 rail.addEventListener('cancel', event => {
   event.preventDefault();
   setRailOpen(false);
 });
 mobile.addEventListener('change', () => {
   if (!rail.open) return;
+  const focused = document.activeElement;
+  const initiator = returnFocus;
   rail.close();
-  setRailOpen(true, returnFocus);
+  setRailOpen(true, initiator);
+  // showModal makes the background inert; never restore focus outside it.
+  if (rail.contains(focused)) focused.focus();
+  else if (mobile.matches) railHeading.focus();
+  else if (focused instanceof HTMLElement) focused.focus();
 });
 
 function resetEvidence(message) {
   closePreview();
   activeDemo = null;
+  const focusWasInContent = railContent.contains(document.activeElement);
   railContent.replaceChildren(element('p', message, 'meta rail-empty'));
+  if (focusWasInContent) railHeading.focus();
+}
+
+function citationSourceContext(passage) {
+  const location = passage.page_number != null ? `PDF page ${passage.page_number}` : (passage.section || 'No PDF page');
+  return `${passage.title}, ${location}`;
 }
 
 function showEvidence(demo, number, selected = 0, trigger = null) {
+  closePreview();
+  const focusWasInContent = railContent.contains(document.activeElement);
   activeDemo = {demo, number, selected};
   const evidence = demo.result?.evidence ?? [];
   railContent.replaceChildren(element('p', isReal(demo) ? 'Real-paper evidence' : `Example ${number} · ${STATES[demo.scenario][0]}`, 'meta'));
@@ -117,6 +155,7 @@ function showEvidence(demo, number, selected = 0, trigger = null) {
     passageView.replaceChildren(element('h3', passage.title), element('p', `Passage ${index + 1}`, 'meta'), element('blockquote', passage.text));
     if (passage.source_url) {
       const link = element('a', isReal(demo) ? 'Open original paper' : 'Open example source', 'source-link');
+      link.setAttribute('aria-label', `${link.textContent.replace(' ↗', '')}, ${citationSourceContext(passage)}, opens in a new tab`);
       link.href = passage.source_url;
       link.target = '_blank';
       link.rel = 'noopener noreferrer';
@@ -150,14 +189,18 @@ function showEvidence(demo, number, selected = 0, trigger = null) {
   if (trigger) {
     returnFocus = trigger;
     railHeading.focus();
-  }
+  } else if (focusWasInContent) railHeading.focus();
 }
 
 function closePreview() {
   clearTimeout(previewTimer);
+  const trigger = previewTrigger;
+  const focusedInside = quotePreview.contains(document.activeElement);
   if (quotePreview.matches(':popover-open')) quotePreview.hidePopover();
-  previewTrigger?.removeAttribute('aria-details');
+  trigger?.removeAttribute('aria-details');
+  trigger?.setAttribute('aria-expanded', 'false');
   previewTrigger = null;
+  if (focusedInside) focusInitiator(trigger);
 }
 
 function deferClosePreview() {
@@ -173,27 +216,30 @@ function showQuote(item, demo, number, index, trigger) {
   closePreview();
   previewTrigger = trigger;
   trigger.setAttribute('aria-details', 'citation-preview');
+  trigger.setAttribute('aria-expanded', 'true');
   const passage = demo.result.evidence[index];
   const quotes = [...new Set((item.support || []).filter(support => support.chunk_id === passage.chunk_id).map(support => support.quote))];
   const head = element('div', undefined, 'quote-head');
   const close = element('button', '×', 'quiet quote-close');
   close.type = 'button';
   close.setAttribute('aria-label', 'Close cited quote');
-  close.addEventListener('click', () => { closePreview(); trigger.focus({preventScroll: true}); closePreview(); });
+  close.addEventListener('click', () => { closePreview(); focusInitiator(trigger); });
   head.append(element('p', quotes.length ? 'Cited quote' : 'Source passage', 'quote-label'), close);
   const excerpts = element('div', undefined, 'quote-excerpts');
   for (const quote of quotes.length ? quotes : [passage.text]) excerpts.append(element('blockquote', quote));
   const location = passage.page_number != null ? `PDF page ${passage.page_number}` : (passage.section || 'No PDF page');
   const actions = element('div', undefined, 'quote-actions');
   if (passage.source_url) {
-    const link = element('a', 'Open paper ↗');
+    const link = element('a', 'Open original paper ↗');
+    link.setAttribute('aria-label', `Open original paper, ${citationSourceContext(passage)}, opens in a new tab`);
     link.href = passage.source_url;
     link.target = '_blank';
     link.rel = 'noopener noreferrer';
     actions.append(link);
   }
-  const more = element('button', 'More context', 'quiet');
+  const more = element('button', 'Inspect source context', 'quiet');
   more.type = 'button';
+  more.setAttribute('aria-label', `Inspect source context, ${citationSourceContext(passage)}`);
   more.addEventListener('click', () => {
     closePreview();
     showEvidence(demo, number, index, trigger);
@@ -245,20 +291,16 @@ function citedParagraph(item, demo, number) {
     const index = demo.result.evidence.findIndex(passage => passage.chunk_id === id);
     if (index < 0) throw new Error('Unknown citation');
     const passage = demo.result.evidence[index];
-    const citation = element(passage.source_url ? 'a' : 'button', `[${index + 1}]`, 'citation');
-    if (passage.source_url) {
-      citation.href = passage.source_url;
-      citation.target = '_blank';
-      citation.rel = 'noopener noreferrer';
-    } else citation.type = 'button';
+    const citation = element('button', `[${index + 1}]`, 'citation');
+    citation.type = 'button';
     citation.dataset.turn = number;
     citation.dataset.passage = index;
-    citation.setAttribute('aria-label', `Citation ${index + 1}${passage.page_number != null ? `, PDF page ${passage.page_number}` : ''}. ${passage.source_url ? 'Cited quote and original paper.' : 'Source passage preview.'}`);
-    let pointerType = null;
-    citation.addEventListener('pointerdown', event => { pointerType = event.pointerType; });
+    citation.setAttribute('aria-label', `Inspect citation ${index + 1}, ${citationSourceContext(passage)}`);
+    citation.setAttribute('aria-haspopup', 'dialog');
+    citation.setAttribute('aria-controls', 'citation-preview');
+    citation.setAttribute('aria-expanded', 'false');
     citation.addEventListener('pointerenter', event => { if (event.pointerType !== 'touch') showQuote(item, demo, number, index, citation); });
     citation.addEventListener('pointerleave', deferClosePreview);
-    citation.addEventListener('focus', () => showQuote(item, demo, number, index, citation));
     citation.addEventListener('blur', deferClosePreview);
     citation.addEventListener('keydown', event => {
       if (event.key === 'Tab' && !event.shiftKey && previewTrigger === citation) {
@@ -266,12 +308,11 @@ function citedParagraph(item, demo, number) {
         quotePreview.querySelector('button, a').focus();
       }
     });
-    citation.addEventListener('click', event => {
-      if ((pointerType === 'touch' && event.detail !== 0) || !passage.source_url) {
-        event.preventDefault();
-        showQuote(item, demo, number, index, citation);
-      }
-      pointerType = null;
+    // Native buttons activate with Enter, Space, pointer or touch. Opening the
+    // original URL is a separate, explicitly named link inside the preview.
+    citation.addEventListener('click', () => {
+      showQuote(item, demo, number, index, citation);
+      quotePreview.querySelector('button').focus();
     });
     paragraph.append(document.createTextNode(' '), citation);
   }

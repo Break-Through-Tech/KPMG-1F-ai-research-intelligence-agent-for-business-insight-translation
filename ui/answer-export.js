@@ -30,7 +30,7 @@
     doc.head.append(meta);
     const charset = doc.createElement('meta'); charset.setAttribute('charset', 'utf-8'); doc.head.prepend(charset);
     const style = doc.createElement('style');
-    style.textContent = 'body{font:1rem/1.6 system-ui,sans-serif;color:#18242c;background:#fff;margin:0;padding:1rem}main{max-width:72ch;margin:auto}p,li,blockquote{white-space:pre-wrap;overflow-wrap:anywhere}blockquote{margin:1rem 0;padding-left:1rem;border-left:3px solid #526675}a{color:#005a86}a:focus-visible{outline:3px solid #005a86;outline-offset:3px}math{max-width:100%;overflow-x:auto}table{border-collapse:collapse}th,td{border:1px solid;padding:.5rem}pre{white-space:pre-wrap;overflow-wrap:anywhere}';
+    style.textContent = 'body{font:1rem/1.6 system-ui,sans-serif;color:#18242c;background:#fff;margin:0;padding:1rem}main{max-width:72ch;margin:auto}p,li,blockquote{white-space:pre-wrap;overflow-wrap:anywhere}blockquote{margin:1rem 0;padding-left:1rem;border-left:3px solid #526675}a{color:#005a86}a:focus-visible{outline:3px solid #005a86;outline-offset:3px}math{max-width:100%;overflow-x:auto}.source-scroll{max-width:100%;box-sizing:border-box;overflow-x:auto;margin:1em 0;padding:.25em}.source-inline-math{display:inline-block;max-width:100%;overflow-x:auto;vertical-align:middle}.source-scroll:focus-visible,.source-inline-math:focus-visible{outline:3px solid #005a86;outline-offset:2px}table{border-collapse:collapse}th,td{border:1px solid;padding:.5rem}pre{white-space:pre-wrap;overflow-wrap:anywhere}';
     // Serialize this trusted stylesheet only; attaching it would invoke the host CSP.
     const main = doc.createElement('main'); doc.body.append(main);
     const markdown = [];

@@ -135,3 +135,12 @@ acceptance, semantic support, source certification, or stakeholder acceptance.
   retrieved context and its insufficient-context label. A failing-before/passing-
   after browser regression now covers this synthesis-shaped abstention. Evidence
   selection uses the summary's abstention status rather than absence of citations.
+
+### Wide retained structures (2026-10-23)
+
+Standalone HTML includes the structured reader's local scrolling regions for
+wide tables, display formulas and inline MathML. They retain keyboard focus and
+visible focus outlines; a wide table scrolls locally instead of expanding the
+320px document. The browser regression uses twelve eight-digit measurement
+columns and checks keyboard scrolling, cell retention and desktop/mobile reflow.
+This is controlled rendering evidence, not a screen-reader walkthrough.

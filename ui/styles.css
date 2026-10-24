@@ -20,6 +20,9 @@ button { cursor: pointer; border: 1px solid transparent; border-radius: 8px; }
 button:hover { filter: brightness(.94); }
 button:active { transform: translateY(1px); }
 button:disabled { opacity: .6; cursor: wait; }
+button[aria-disabled="true"] { opacity: .6; cursor: wait; }
+#jump-latest:disabled { cursor: default; }
+.answer h2[tabindex="-1"] { scroll-margin-top: 16px; }
 button svg { width: 20px; height: 20px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 a { color: var(--primary); text-underline-offset: .2em; overflow-wrap: anywhere; }
 :focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; }

@@ -4,6 +4,7 @@ const output = document.querySelector('#output');
 const conversation = document.querySelector('#conversation');
 const feedback = document.querySelector('#feedback');
 const submit = document.querySelector('#submit');
+const jumpLatest = document.querySelector('#jump-latest');
 const rail = document.querySelector('#evidence-panel');
 const railContent = document.querySelector('#evidence-content');
 const railHeading = document.querySelector('#evidence-heading');
@@ -18,6 +19,52 @@ let savedResult = null;
 let liveSynthesis = false;
 let conversationHistory = [];
 let activePaperContextId = null;
+let requestPending = false;
+let latestAnswer = null;
+
+// Only an explicit navigation action moves reading focus to a new answer.
+jumpLatest.addEventListener('click', () => {
+  latestAnswer?.focus({preventScroll: true});
+  latestAnswer?.scrollIntoView({block: 'start'});
+});
+
+function answerHeading(number) {
+  const heading = element('h2', `Answer ${number}`);
+  heading.id = `answer-${number}`;
+  heading.tabIndex = -1;
+  return heading;
+}
+
+function createTurn(query, number, questionLabel, loading) {
+  const turn = element('section', undefined, 'turn');
+  const question = element('h2', `Question ${number}`, 'meta');
+  question.id = `question-${number}`;
+  turn.setAttribute('aria-labelledby', question.id);
+  const user = element('div', undefined, 'user-message');
+  user.append(question, element('p', questionLabel, 'meta'), element('p', query, 'user-bubble'));
+  const answer = element('article', undefined, 'answer');
+  answer.setAttribute('aria-labelledby', `answer-${number}`);
+  answer.append(answerHeading(number), element('p', loading));
+  turn.append(user, answer);
+  return {turn, answer};
+}
+
+function markAnswerReady(answer) {
+  latestAnswer = answer.querySelector('h2');
+  jumpLatest.disabled = false;
+}
+
+function readyAnnouncement(demo, number) {
+  const outcome = {
+    full: 'ready. Draft, not approved.',
+    partial: 'ready. Partial draft; business translation abstained. Not approved.',
+    insufficient: 'abstained: insufficient support.',
+    empty: 'unavailable: no evidence retrieved.',
+    'provider-error': 'failed: simulated provider error.',
+  }[demo.scenario];
+  const mode = !isReal(demo) ? ' Synthetic example.' : (!isSynthesis(demo) ? ' Saved result; no live query.' : '');
+  return `Answer ${number} ${outcome}${mode}`;
+}
 
 function rememberAcceptedTurn(query, demo) {
   if (!isSynthesis(demo) || !activePaperContextId ||
@@ -281,6 +328,7 @@ function citedParagraph(item, demo, number) {
 function renderDraft(demo, number, answer) {
   const result = demo.result;
   const narrative = element('div', undefined, 'answer-text');
+  narrative.append(element('h3', 'Research findings'));
   if (!result.summary.claims.length) narrative.append(element('p', 'No supported research claims.'));
   for (const claim of result.summary.claims.filter(claim => claim.kind !== 'interpretation')) narrative.append(citedParagraph(claim, demo, number));
   const interpretations = result.summary.claims.filter(claim => claim.kind === 'interpretation');
@@ -299,6 +347,7 @@ function renderDraft(demo, number, answer) {
   if (insight || !isSynthesis(demo)) narrative.append(element('h3', 'Business implications'));
   if (!insight && !isSynthesis(demo)) narrative.append(element('p', 'Business translation was not requested.'));
   if (insight) {
+    narrative.append(element('p', 'Conditional interpretations for business use—not findings validated by the study.', 'meta'));
     if (!insight.implications.length) narrative.append(element('p', 'No supported business recommendations.'));
     for (const implication of insight.implications) {
       narrative.append(citedParagraph(implication, demo, number), element('p', `Suggested action: ${implication.suggested_action}`));
@@ -314,7 +363,7 @@ function renderDraft(demo, number, answer) {
     list(limits, 'Risks', insight.risks);
     list(limits, 'Business limitations', insight.limitations);
   }
-  limits.append(element('p', 'No reviewer has approved this draft. This demo cannot record or grant approval.'));
+  limits.append(element('h3', 'Review status'), element('p', 'No reviewer has approved this draft. This demo cannot record or grant approval.'));
   const evidenceButton = element('button', `Inspect evidence (${result.evidence.length})`, 'quiet');
   evidenceButton.type = 'button';
   evidenceButton.addEventListener('click', () => showEvidence(demo, number, 0, evidenceButton));
@@ -328,7 +377,8 @@ function renderDraft(demo, number, answer) {
 function renderDemo(demo, number, answer) {
   const [label, explanation] = STATES[demo.scenario];
   const head = element('div', undefined, 'answer-head');
-  head.append(element('h2', demo.scenario === 'full' ? 'Answer' : label));
+  head.append(answerHeading(number));
+  if (demo.scenario !== 'full') head.append(element('p', label, 'meta'));
   if (demo.result) head.append(element('p', 'Draft · Not approved', 'meta'));
   answer.replaceChildren(head);
   if (demo.result) {
@@ -346,19 +396,20 @@ function renderDemo(demo, number, answer) {
   // Keep desktop context current without opening a mobile drawer over the answer.
   activeDemo = {demo, number};
   if (rail.open) showEvidence(demo, number);
-  feedback.textContent = real ? (isSynthesis(demo) ? 'Synthesized answer ready. Inspect citations to check support.' : 'Saved research result loaded. No live query execution.') : `${label} loaded. Synthetic fixture only.`;
+  markAnswerReady(answer);
+  feedback.textContent = readyAnnouncement(demo, number);
 }
 
 form.elements.query.addEventListener('keydown', event => {
   if (event.key === 'Enter' && !event.shiftKey && !event.isComposing) {
     event.preventDefault();
-    if (!submit.disabled) form.requestSubmit();
+    if (!submit.disabled && !requestPending) form.requestSubmit();
   }
 });
 
 form.addEventListener('submit', async event => {
   event.preventDefault();
-  if (submit.disabled) return;
+  if (submit.disabled || requestPending) return;
   if (savedResult && !liveSynthesis) return;
   const query = form.elements.query.value;
   document.querySelector('.demo-settings').open = false;
@@ -370,20 +421,16 @@ form.addEventListener('submit', async event => {
   }
   feedback.classList.add('sr-only');
   const number = ++turnNumber;
-  const turn = element('section', undefined, 'turn');
-  turn.setAttribute('aria-label', `Example ${number}`);
-  const user = element('div', undefined, 'user-message');
-  user.append(element('p', liveSynthesis ? 'Your question' : 'Your question · Not executed', 'meta'), element('p', query, 'user-bubble'));
   const loading = liveSynthesis ? 'Reading the paper and synthesizing an answer…' : 'Loading local example…';
-  const answer = element('div', loading, 'answer');
-  turn.append(user, answer);
+  const {turn, answer} = createTurn(query, number, liveSynthesis ? 'Your question' : 'Your question · Not executed', loading);
   document.querySelector('#welcome').hidden = true;
   output.append(turn);
   resetEvidence('Loading a new example. No current evidence to inspect.');
-  submit.disabled = true;
+  requestPending = true;
+  // Native disabling can discard focus on the button during a request.
+  submit.setAttribute('aria-disabled', 'true');
   output.setAttribute('aria-busy', 'true');
   feedback.textContent = loading;
-  turn.scrollIntoView({block: 'start'});
   let contextRecoveryMessage = null;
   try {
     const response = await fetch(liveSynthesis ? '/api/research' : '/api/demo', {
@@ -406,12 +453,14 @@ form.addEventListener('submit', async event => {
     if (demo.result && form.elements.query.value === query) form.elements.query.value = '';
   } catch {
     const message = contextRecoveryMessage || (liveSynthesis ? 'Synthesis unavailable or citation validation failed. No answer was accepted. Your question is unchanged; retry when ready.' : 'Could not load the local example. Check that the demo server is running, then retry. Your question is unchanged.');
-    answer.replaceChildren(element('h2', liveSynthesis ? 'Answer unavailable' : 'Example unavailable'), element('p', message, 'error'));
-    feedback.textContent = message;
+    answer.replaceChildren(answerHeading(number), element('p', message, 'error'));
+    markAnswerReady(answer);
+    feedback.textContent = contextRecoveryMessage ? 'Paper changed. Context cleared; submit your question again.' : `Answer ${number} failed. Your question is unchanged; retry when ready.`;
     feedback.classList.remove('sr-only');
     resetEvidence('The latest example did not load. Retry to inspect its evidence.');
   } finally {
-    submit.disabled = false;
+    requestPending = false;
+    submit.removeAttribute('aria-disabled');
     output.setAttribute('aria-busy', 'false');
   }
 });
@@ -442,12 +491,10 @@ Promise.all(['/api/config', '/api/saved-result'].map(async url => {
   form.hidden = !liveSynthesis;
   if (!liveSynthesis) document.querySelector('#demo-note').textContent = runLabel(demo);
   document.querySelector('.rail-note').textContent = 'Source passages from the paper. Open the original section or cited PDF page.';
-  const turn = element('section', undefined, 'turn');
-  turn.append(element('p', demo.result.request.query, 'user-bubble'));
-  const answer = element('div', undefined, 'answer');
-  turn.append(answer);
+  const number = ++turnNumber;
+  const {turn, answer} = createTurn(demo.result.request.query, number, 'Executed query · Saved result', 'Loading saved result…');
   output.append(turn);
-  renderDemo(demo, ++turnNumber, answer);
+  renderDemo(demo, number, answer);
 }).catch(() => {
   feedback.textContent = 'Saved-result check unavailable. Only synthetic examples are available.';
 }).finally(() => { submit.disabled = false; });

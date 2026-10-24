@@ -25,6 +25,7 @@ let clarificationPending = false;
 let activeClarificationTurn = null;
 const clarificationPanel = document.querySelector('#clarification-panel');
 let clarificationSummary = null;
+let clarificationSupport = null;
 let conversationHistory = [];
 let activePaperContextId = null;
 let requestPending = false;
@@ -144,9 +145,10 @@ function focusInitiator(trigger) {
 }
 
 function setRailOpen(open, trigger = null) {
+  document.body.classList.toggle('showing-clarification-evidence', open && rail.classList.contains('clarification-evidence'));
   if (open && !rail.open) {
     returnFocus = trigger;
-    if (mobile.matches) rail.showModal();
+    if (mobile.matches && !rail.classList.contains('clarification-evidence')) rail.showModal();
     else rail.show();
   } else if (!open && rail.open) {
     rail.close();
@@ -183,12 +185,17 @@ mobile.addEventListener('change', () => {
   setRailOpen(true, initiator);
   // showModal makes the background inert; never restore focus outside it.
   if (rail.contains(focused)) focused.focus();
-  else if (mobile.matches) railHeading.focus();
+  else if (rail.matches(':modal')) railHeading.focus();
   else if (focused instanceof HTMLElement) focused.focus();
 });
 
 function resetEvidence(message) {
   closePreview();
+  if (rail.classList.contains('clarification-evidence') && rail.open) rail.close();
+  rail.classList.remove('clarification-evidence');
+  document.body.classList.remove('showing-clarification-evidence');
+  document.querySelector('.rail-note').textContent = 'Inspect source quotes and the original paper. Citations are not proof of support.';
+  railHeading.textContent = 'Source context';
   activeDemo = null;
   const focusWasInContent = railContent.contains(document.activeElement);
   railContent.replaceChildren(element('p', message, 'meta rail-empty'));
@@ -202,6 +209,11 @@ function citationSourceContext(passage) {
 
 function showEvidence(demo, number, selected = 0, trigger = null, claim = null) {
   closePreview();
+  if (rail.classList.contains('clarification-evidence') && rail.open) rail.close();
+  rail.classList.remove('clarification-evidence');
+  document.body.classList.remove('showing-clarification-evidence');
+  document.querySelector('.rail-note').textContent = 'Inspect source quotes and the original paper. Citations are not proof of support.';
+  railHeading.textContent = 'Source context';
   const focusWasInContent = railContent.contains(document.activeElement);
   activeDemo = {demo, number, selected, claim};
   const evidence = demo.result?.evidence ?? [];
@@ -487,8 +499,13 @@ function renderDraft(demo, number, answer) {
 function archiveClarification(status) {
   if (!clarificationSummary) return;
   clarificationSummary.textContent = `${clarificationSummary.dataset.question} · ${status}`;
-  const support = clarificationPanel.querySelector('details');
-  if (support) { support.open = false; clarificationSummary.after(support); }
+  clarificationSummary.classList.remove('sr-only');
+  clarificationSummary.parentElement.querySelector('.clarification-intro')?.remove();
+  if (clarificationSupport) {
+    clarificationSupport.open = false;
+    clarificationSummary.after(clarificationSupport);
+    clarificationSupport = null;
+  }
   clarificationSummary = null;
 }
 
@@ -514,7 +531,7 @@ function renderClarification(demo, number, answer) {
   const heading = answerHeading(number);
   heading.textContent = 'Clarification';
   heading.className = 'sr-only';
-  clarificationSummary = element('p', 'Waiting for your reply below.', 'meta');
+  clarificationSummary = element('p', 'Waiting for your reply below.', 'meta sr-only');
   clarificationSummary.dataset.question = demo.clarification.question;
   answer.replaceChildren(heading, clarificationSummary);
   const token = researchConversationId;
@@ -574,6 +591,8 @@ function renderClarification(demo, number, answer) {
   };
   const footer = element('div', undefined, 'question-panel-footer');
   footer.append(element('span', 'Ctrl / ⌘ + Enter to submit', 'meta'), send);
+  // Keep the decision in the conversation rather than pinning it over the composer.
+  answer.append(element('p', 'Choose a direction, or answer in your own words.', 'clarification-intro'), clarificationPanel);
   clarificationPanel.replaceChildren(topline);
   if (demo.clarification.options.length) clarificationPanel.append(options);
   clarificationPanel.append(freeLabel, free);
@@ -596,7 +615,24 @@ function renderClarification(demo, number, answer) {
         }
       }
     }
-    clarificationPanel.append(evidence);
+    clarificationSupport = evidence;
+    const inspect = element('button', 'Why these options?', 'quiet');
+    inspect.type = 'button';
+    const showSupport = () => {
+      if (!current()) return;
+      closePreview();
+      activeDemo = null;
+      if (rail.matches(':modal')) rail.close();
+      rail.classList.add('clarification-evidence');
+      document.body.classList.add('showing-clarification-evidence');
+      railHeading.textContent = 'Why these options?';
+      railContent.replaceChildren(...Array.from(evidence.children).slice(1).map(node => node.cloneNode(true)));
+      document.querySelector('.rail-note').textContent = 'Source quotes explain these options; they do not independently verify the interpretations.';
+      setRailOpen(true, inspect);
+    };
+    inspect.addEventListener('click', () => { showSupport(); railHeading.focus(); });
+    clarificationPanel.append(inspect);
+    showSupport();
   }
   clarificationPanel.append(footer);
   clarificationPanel.hidden = false;

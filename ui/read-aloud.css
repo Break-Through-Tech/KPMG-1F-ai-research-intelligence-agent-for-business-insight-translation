@@ -1,0 +1,9 @@
+/* Scoped to the optional component; no research-page overrides. */
+.read-aloud { margin: 1.5rem 0; padding: 1rem; min-inline-size: 0; border: 1px solid currentColor; border-radius: .5rem; }
+.read-aloud legend { font-weight: 600; }
+.read-aloud p { max-inline-size: 65ch; line-height: 1.5; overflow-wrap: anywhere; }
+.read-aloud label { display: block; margin-block: 1rem .25rem; }
+.read-aloud select { max-inline-size: 100%; min-block-size: 2.75rem; font: inherit; }
+.read-aloud-controls { display: flex; flex-wrap: wrap; gap: .5rem; }
+.read-aloud button { min-block-size: 2.75rem; padding: .5rem 1rem; font: inherit; }
+.read-aloud :is(button, select):focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }

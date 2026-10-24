@@ -1,0 +1,84 @@
+{
+  "schema_version": "1.0",
+  "request": {
+    "query": "How should the synthetic agents be evaluated?",
+    "top_k": 5,
+    "industry": "banking",
+    "jurisdiction": "US"
+  },
+  "evidence": [
+    {
+      "chunk_id": "synthetic-html-1",
+      "text": "Synthetic agents need task-specific evaluation. Task-specific evaluation means testing an agent on the particular task it is intended to perform.",
+      "distance": 0.25,
+      "arxiv_id": "synthetic",
+      "title": "Synthetic fixture, not a paper",
+      "pdf_url": "https://example.com/fixture.pdf",
+      "source": "html",
+      "source_url": "https://example.com/fixture#results",
+      "page_number": null,
+      "html_url": "https://example.com/fixture#results",
+      "section": "results"
+    },
+    {
+      "chunk_id": "synthetic-pdf-2",
+      "text": "Synthetic evidence requires human checks.",
+      "distance": 0.5,
+      "arxiv_id": "synthetic",
+      "title": "Synthetic fixture, not a paper",
+      "pdf_url": "https://example.com/fixture.pdf",
+      "source": "pdf",
+      "source_url": "https://example.com/fixture.pdf#page=2",
+      "page_number": 2
+    }
+  ],
+  "summary": {
+    "status": "ok",
+    "query": "How should the synthetic agents be evaluated?",
+    "claims": [
+      {
+        "text": "Synthetic agents need task-specific evaluation.",
+        "chunk_ids": [
+          "synthetic-html-1"
+        ]
+      },
+      {
+        "text": "Synthetic evidence requires human checks.",
+        "chunk_ids": [
+          "synthetic-pdf-2"
+        ]
+      }
+    ],
+    "limitations": [
+      "Synthetic fixture only; no real corpus or model was evaluated."
+    ]
+  },
+  "business_insight": {
+    "status": "ok",
+    "industry": "banking",
+    "implications": [
+      {
+        "text": "Consider a task-specific evaluation pilot.",
+        "chunk_ids": [
+          "synthetic-html-1"
+        ],
+        "suggested_action": "Design a bounded pilot.",
+        "assumptions": [
+          "Synthetic example; not verified industry advice."
+        ]
+      }
+    ],
+    "risks": [
+      "Human source verification required."
+    ],
+    "limitations": [
+      "Fixture-only translation."
+    ]
+  },
+  "human_review": {
+    "status": "pending",
+    "reviewer": null,
+    "notes": null
+  },
+  "approved": false
+}

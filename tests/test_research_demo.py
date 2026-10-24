@@ -80,7 +80,8 @@ class DemoHttpTests(unittest.TestCase):
             connection.close()
 
     def test_assets_and_unknown_paths(self):
-        for path in ['/', '/app.js', '/math.js', '/answer-export.js', '/styles.css', '/vendor/katex/katex.min.js',
+        for path in ['/', '/app.js', '/math.js', '/source-reader.js', '/answer-export.js', '/styles.css',
+                     '/reading-preferences.js', '/reading-preferences.css', '/vendor/katex/katex.min.js',
                      '/vendor/katex/katex.min.css', '/vendor/katex/fonts/KaTeX_Main-Regular.woff2']:
             status, headers, body = self.call('GET', path)
             self.assertEqual(status, 200)

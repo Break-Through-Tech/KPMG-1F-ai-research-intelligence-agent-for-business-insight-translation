@@ -1,0 +1,88 @@
+/* Shared typography contract: inherit root rem sizing and --reading-line-height.
+   Evidence renderers should use the existing semantic color tokens. */
+:root { --reading-line-height: 1.65; --control-border: #6f7d91; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --control-border: #8291a7; }
+}
+:root[data-reading-size="125"] { font-size: 125%; }
+:root[data-reading-size="150"] { font-size: 150%; }
+:root[data-reading-size="200"] { font-size: 200%; }
+:root[data-reading-spacing="relaxed"] { --reading-line-height: 1.85; }
+:root[data-reading-spacing="wide"] { --reading-line-height: 2; }
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --control-border: #8291a7;
+  --background: #111419; --surface: #171b22; --bubble: #232934;
+  --text: #edf1f7; --muted: #a7b3c6; --border: #343d4b;
+  --primary: #9bbaff; --on-primary: #172033; --selected: #24334f;
+  --warning: #edc181; --danger: #ffa5ab;
+}
+/* Explicit high-contrast palettes override system theme without changing it.
+   Keep semantic tokens shared with citation and evidence renderers. */
+:root[data-theme="contrast-light"] {
+  color-scheme: light;
+  --background: #fff; --surface: #f2f2f2; --bubble: #ededed;
+  --text: #111; --muted: #333; --border: #555;
+  --control-border: #555; --primary: #003a8c; --on-primary: #fff;
+  --selected: #e2eaff; --warning: #663700; --danger: #8b0000;
+  --overlay: #0009;
+}
+:root[data-theme="contrast-dark"] {
+  color-scheme: dark;
+  --background: #000; --surface: #121212; --bubble: #1c1c1c;
+  --text: #fff; --muted: #ddd; --border: #bbb;
+  --control-border: #bbb; --primary: #ffdd55; --on-primary: #000;
+  --selected: #242424; --warning: #ffdd99; --danger: #ffb8b8;
+  --overlay: #000c;
+}
+:root:is([data-theme="contrast-light"], [data-theme="contrast-dark"]) {
+  /* Borders, underlines and weight retain state cues without color alone. */
+  button { border-color: var(--control-border); }
+  button:hover { filter: none; text-decoration: underline; }
+  button:disabled { opacity: 1; border-style: dashed; }
+  blockquote { border-color: var(--border); }
+  .source-choice[aria-pressed="true"] { border-color: var(--primary); border-width: 2px; font-weight: 700; }
+  .citation { text-decoration: underline; }
+  :focus-visible { outline-width: 3px; }
+}
+select, #research-form { border-color: var(--control-border); }
+body, textarea, .meta, #citation-preview { line-height: var(--reading-line-height); }
+/* Natural document flow keeps all content reachable at low viewport heights. */
+.masthead { height: auto; min-height: 64px; flex-wrap: wrap; padding-top: 8px; padding-bottom: 8px; }
+.header-tools { flex-wrap: wrap; min-width: 0; }
+.app-shell { height: auto; min-height: calc(100dvh - 80px); align-items: flex-start; }
+main { align-self: stretch; }
+.conversation { overflow: visible; flex: 1; }
+#evidence-panel { position: sticky; top: 0; height: auto; max-height: 100dvh; flex-basis: min(360px, 40%); min-width: 0; }
+.skip { top: 0; transform: translateY(-150%); }
+.skip:focus { top: 8px; transform: none; }
+.reading-settings { min-width: 0; }
+.reading-settings > summary { padding: 8px; }
+/* Expanded controls stay in flow, not in a clipped fixed-height popover. */
+.reading-settings-content { max-width: 22rem; padding: 12px; border: 1px solid var(--border); border-radius: 8px; }
+.reading-settings-content select { display: block; width: 100%; margin: 8px 0 16px; }
+.reading-settings-content button { border-color: var(--control-border); margin-bottom: 12px; }
+.reading-settings-content p { margin-bottom: 8px; }
+button, summary, h1, h2, h3, .source-choice, .source-details, .rail-note { overflow-wrap: anywhere; }
+button, select, textarea, .source-choice { min-width: 0; max-width: 100%; }
+#submit { white-space: normal; }
+.quote-head, .quote-actions, .rail-head { flex-wrap: wrap; }
+.quote-close, .icon-button { flex-shrink: 0; }
+#citation-preview, #evidence-panel { overflow-wrap: anywhere; }
+.paper-math:not(.math-display) { display: inline-block; overflow-x: auto; vertical-align: middle; }
+.reading-settings-content button { text-align: left; }
+@media (max-width: 800px) {
+  .header-tools { width: 100%; align-items: flex-start; }
+  .header-tools > details { flex: 1 1 100%; }
+  .settings-content { position: static; width: 100%; }
+  .reading-settings-content { max-width: none; }
+  #evidence-panel { position: fixed; max-height: 100dvh; height: 100dvh; padding: 16px; }
+  .conversation { padding: 24px 16px; }
+}
+@media (forced-colors: active) {
+  :root { --border: CanvasText; --primary: LinkText; --control-border: ButtonText; }
+  button, select, textarea { border: 1px solid ButtonText; }
+  .citation[aria-details], .source-choice[aria-pressed="true"] { outline: 2px solid Highlight; }
+  :focus-visible { outline: 2px solid Highlight; }
+}

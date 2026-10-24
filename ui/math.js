@@ -9,6 +9,9 @@ function renderPaperMath(node, text) {
     const displayMode = match[2] === undefined;
     const target = document.createElement('span');
     target.className = displayMode ? 'paper-math math-display' : 'paper-math';
+    target.tabIndex = 0;
+    target.setAttribute('role', 'region');
+    target.setAttribute('aria-label', 'Formula, scroll horizontally if needed');
     try {
       if (!window.katex || tex.length > 12000) throw new Error('Math unavailable');
       katex.render(tex, target, {

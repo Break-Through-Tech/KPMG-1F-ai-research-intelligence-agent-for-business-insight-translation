@@ -106,7 +106,10 @@ def synthesize(query, passages, *, generate, history=None):
         'No human approval, no outside facts, no citation markers in text; the UI renders citations. '
         'Return only JSON matching the supplied schema.\n' +
         json.dumps({'question': query, 'conversation_history': history,
-                    'paper_passages': passages}, ensure_ascii=False))
+                    # Reader structure is presentation metadata, not extra model evidence.
+                    'paper_passages': [{key: value for key, value in passage.items()
+                                        if key != 'reader'} for passage in passages]},
+                   ensure_ascii=False))
     raw = (generate(prompt, response_schema=schema)
            if getattr(generate, 'supports_response_schema', False) is True else generate(prompt))
     answer = json.loads(raw)

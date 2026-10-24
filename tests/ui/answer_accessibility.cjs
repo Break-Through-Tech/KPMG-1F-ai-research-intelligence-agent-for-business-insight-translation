@@ -34,6 +34,7 @@ async function main() {
       ['insufficient', 'abstained: insufficient support.'],
       ['empty', 'unavailable: no evidence retrieved.'],
       ['provider-error', 'failed: simulated provider error.'],
+      ['plain-language', 'ready. Draft, not approved.'],
     ];
     let fixture;
     for (const [index, [scenario, outcome]] of cases.entries()) {
@@ -77,14 +78,16 @@ async function main() {
       assert.match(messages[index * 2 + 1], new RegExp(`^Answer ${index + 1} `));
     }
 
+    const failedAnswer = cases.length + 1;
+
     // Transport failure keeps the question and offers the same explicit jump.
     await page.route('**/api/demo', route => route.abort());
     await page.locator('#query').fill('Keep this question');
     await page.locator('#query').press('Enter');
-    await page.waitForFunction(() => document.querySelector('#feedback').textContent.startsWith('Answer 6 failed.'));
+    await page.waitForFunction(number => document.querySelector('#feedback').textContent.startsWith(`Answer ${number} failed.`), failedAnswer);
     assert.equal(await page.locator('#query').inputValue(), 'Keep this question');
     assert.equal(await page.evaluate(() => document.activeElement.id), 'query');
-    assert.equal(await page.getByRole('heading', {name: 'Answer 6', exact: true}).count(), 1);
+    assert.equal(await page.getByRole('heading', {name: `Answer ${failedAnswer}`, exact: true}).count(), 1);
     await page.unroute('**/api/demo');
 
     // Saved-result bootstrap follows the same question/answer semantics.

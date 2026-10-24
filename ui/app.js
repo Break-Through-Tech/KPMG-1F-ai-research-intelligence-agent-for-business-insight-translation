@@ -56,6 +56,7 @@ function markAnswerReady(answer) {
 
 function readyAnnouncement(demo, number) {
   const outcome = {
+    'plain-language': 'ready. Draft, not approved.',
     full: 'ready. Draft, not approved.',
     partial: 'ready. Partial draft; business translation abstained. Not approved.',
     insufficient: 'abstained: insufficient support.',

@@ -3,9 +3,16 @@ import re
 
 TOKEN = re.compile(r'\\[a-zA-Z]+\*?|\\.|%')
 LITERAL = re.compile(r'\s*\{(verbatim\*?|Verbatim\*?|lstlisting|minted|comment)\}')
-# These primitives consume or store tokens without executing their apparent
-# conditional delimiters. Their expansion/assignment semantics are not modeled.
-OPAQUE_TOKENS = re.compile(r'\\(?:string|detokenize|noexpand|meaning|unexpanded|toks|toksdef|newtoks)(?![a-zA-Z])')
+# Token consumers, register declarations and catcode-dependent control names
+# cannot establish literal branch facts without execution semantics. Reject the
+# whole unsupported family instead of treating a truncated name as a flag.
+OPAQUE_TOKENS = re.compile(
+    r'\\(?:string|detokenize|noexpand|meaning|unexpanded|toks|'
+    r'(?:math)?chardef|countdef|dimendef|skipdef|muskipdef|toksdef|'
+    r'new(?:count|dimen|skip|muskip|toks|box|read|write|insert|fam|language|marks|counter|length|boolean)|'
+    r'font|read|readline|afterassignment|aftergroup|'
+    r'makeatletter|makeatother|ExplSyntaxOn|ExplSyntaxOff|globaldefs|every[a-zA-Z]+)(?![a-zA-Z])'
+    r'|\\[a-zA-Z]*@')
 
 
 def blank(text):

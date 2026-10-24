@@ -378,6 +378,25 @@ class TexIngestionTests(unittest.TestCase):
                 result = pipeline.process_and_store([ROW], root / 'out.parquet', use_tex=True)
                 self.assertEqual(set(result.source), {'pdf'})
 
+    def test_register_and_catcode_controls_cannot_establish_conditional_state(self):
+        preambles = [r'\newif\ifFlag\countdef\Flagtrue=0\Flagtrue=1',
+                     r'\newif\ifFlag\font\Flagtrue=cmr10\Flagtrue',
+                     r'\newif\ifFlag\chardef\Flagtrue=1',
+                     r'\newif\ifFlag\newcount\Flagtrue\Flagtrue=1',
+                     r'\makeatletter\newif\ifFlag@clean\Flag@cleantrue',
+                     r'\newif\ifFlag@clean\Flag@cleantrue']
+        for preamble in preambles:
+            for included in (False, True):
+                with self.subTest(preamble=preamble, included=included):
+                    flag = 'Flag@clean' if '@clean' in preamble else 'Flag'
+                    files = {'main.tex': r'\documentclass{article}' +
+                             (r'\input{preamble}' if included else preamble) +
+                             r'\begin{document}\if' + flag + r' WRONG\else RIGHT\fi\end{document}'}
+                    if included:
+                        files['preamble.tex'] = preamble
+                    with self.assertRaises(ValueError):
+                        tex.chunk_source(archive(files), AID)
+
     def test_comments_and_constant_branches_do_not_publish_hidden_text(self):
         body = r'''\begin{document}
 START

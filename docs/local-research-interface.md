@@ -369,3 +369,71 @@ source certification, WCAG conformance, VoiceOver behavior, manual zoom acceptan
 Safari/Firefox behavior, or stakeholder acceptance. #138 owns broader screen-reader
 structure, #142 owns structured evidence rendering, and #145 owns the integrated
 manual accessibility audit; integrate and rerun these interaction checks together.
+
+## Persistent-index research (#130)
+
+Use **an existing compatible Chroma index** and a locally cached
+`all-MiniLM-L6-v2` encoder. This command never downloads/rebuilds a corpus or
+promotes experimental retrieval. The adapter calls the existing dense
+`src.retrieval.search`; no hybrid/reranking defaults change.
+
+```sh
+python -m src.research_demo --index /absolute/path/to/data/chroma_db \
+  --collection arxiv_papers --top-k 5 --codex-model YOUR_CONFIGURED_MODEL \
+  --codex-bin /absolute/path/to/compatible/codex
+# Alternatively, explicitly select the existing environment-configured provider:
+python -m src.research_demo --index /absolute/path/to/data/chroma_db --configured-provider
+```
+
+Open the printed loopback address. Submit a research question; add industry or
+business context only when requesting conditional implications. Each indexed query
+is **independent**: previous answers are neither intent context nor evidence.
+Fixture mode, saved-result replay, and `--paper` remain separate, mutually exclusive
+startup modes. No silent fallback occurs. Configured providers retain their usual
+billing; this feature does not provision a service or change credentials.
+
+The view distinguishes research-only summary, complete draft, translation
+abstention/partial, insufficient support, empty retrieval, and execution errors.
+A translation failure retains the supported summary and an explicit failed-stage
+message; it is not relabeled evidence absence. Inspect citations, exact supporting
+summary quotes, source pages/sections, transfer assumptions, risks and limitations.
+Business implications use the existing chunk-ID contract, **not exact-quote or
+semantic entailment certification**. All outputs remain pending/unapproved.
+The result JSON in Run details includes the complete result and review fingerprint,
+compatible with the existing `src.research_review` packet workflow. HTML/Markdown
+exports remain available. Indexed results are not placed in a global replay slot.
+
+### Run identity and reproducibility
+
+Run details retain code revision, startup arguments, explicit provider/model,
+collection name/count/model metadata, retrieval settings, stage statuses, and a
+SHA-256 of the **actual indexed IDs/text/source metadata**. This is not a hash of
+`chunks.parquet`, source certification, or a digest of embedding bytes. Keep the
+index immutable while serving; stop/restart the host after index/embedding/config
+changes. Record snapshot/corpus version externally when needed. Record identity
+is rechecked before/after research; changed source records reject stale context.
+There is no transaction/revision lock against concurrent index writers.
+
+### Verification and handoff (2026-10-24)
+
+- Focused adapter/HTTP tests cover multi-paper citations, industry translation,
+  summary-only, empty evidence, abstention, false-premise/out-of-corpus fixtures,
+  provider/retrieval/quote failures, translation failure, and stale context.
+- Browser checks use injected **synthetic development adapters**, not held-out
+  evaluation or evidence of model answer quality. Keep those claims separate.
+- A real existing index was opened without reindexing: 877 passages,
+  `arxiv_papers`, indexed-record digest
+  `41c71d4bbbdc5aa40a75d03f43691439a36be11ee256dd32ff48969faf3be260`.
+  Query `How should AI agents be evaluated?`, top-k 5 returned versioned papers
+  `2608.00339v1`, `2605.00276v1`, `2604.00319v1`, `2604.00324v1` with PDF-page
+  locators. This proves retrieval wiring, **not supported cross-paper synthesis**.
+- Live provider walkthrough is blocked here: installed Codex 0.144.2 rejects the
+  user's current config and does not support the isolation flags required by
+  `src.codex_generation`. No config/auth changes or weaker isolation were used.
+  Run the commands above with a compatible explicitly configured adapter before
+  claiming a complete real-provider walkthrough. No stakeholder acceptance claimed.
+- Handoff to #120: visible flow/citation usability; #121: independently labeled
+  source-backed answers; #122: retrieved chunk/rank/locator diagnostics; #123:
+  summary/business/transfer audit; #124: pending result/review fingerprint. Those
+  assignments are not closed by this integration. Use a new predeclared held-out
+  set; the injected test cases are development-only.

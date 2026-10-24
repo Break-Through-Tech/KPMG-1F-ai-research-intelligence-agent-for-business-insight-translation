@@ -263,7 +263,11 @@ preview screenshots outside the repository. The test itself picks a free loopbac
 port and stops its server/browser when done. Default `PYTHON` is `python3`; choose
 an executable >=3.10 explicitly if macOS's system Python is older.
 
-Coverage includes activation without navigation, separate original-source URL
+Citation inspect and source-context actions include the source title and PDF page
+(or section / explicit no-page fallback) in their accessible names. Original-source
+links also announce that they open a new tab.
+
+Coverage includes contextual accessible names, activation without navigation, separate original-source URL
 navigation (intercepted fixture, not live source verification), forward/reverse
 preview exit, Escape/Close restoration, native source-choice activation, mobile
 Tab containment, desktop nonmodality, open-panel breakpoint changes, removed

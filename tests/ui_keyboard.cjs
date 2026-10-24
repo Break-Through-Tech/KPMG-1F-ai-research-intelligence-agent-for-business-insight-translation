@@ -59,6 +59,30 @@ async function screenshot(page, name) {
   await page.screenshot({path: path.join(process.env.UI_QA_ARTIFACTS, name + '.png')});
 }
 
+test('citation actions expose source title and PDF page or section in accessible names', async t => {
+  const page = await setup(t);
+  await panel(page);
+  const demo = await page.evaluate(() => structuredClone(activeDemo.demo));
+  for (const location of [{page_number: 7, section: null, label: 'PDF page 7'},
+    {page_number: null, section: 'Methods', label: 'Methods'},
+    {page_number: null, section: null, label: 'No PDF page'}]) {
+    await page.evaluate(({demo, location}) => {
+      const passage = demo.result.evidence[0];
+      Object.assign(passage, location, {title: 'Context-specific research paper'});
+      const item = {text: 'Accessible citation fixture', chunk_ids: [passage.chunk_id], support: []};
+      document.querySelector('.answer').replaceChildren(citedParagraph(item, demo, 1));
+    }, {demo, location});
+    const context = `Context-specific research paper, ${location.label}`;
+    const citation = page.getByRole('button', {name: `Inspect citation 1, ${context}`, exact: true});
+    await citation.focus();
+    await citation.press('Enter');
+    assert.equal(await page.getByRole('link', {name: `Open original paper, ${context}, opens in a new tab`, exact: true}).count(), 1);
+    await page.getByRole('button', {name: `Inspect source context, ${context}`, exact: true}).click();
+    assert.equal(await page.getByRole('link', {name: `Open example source, ${context}, opens in a new tab`, exact: true}).count(), 1);
+    await page.keyboard.press('Escape');
+  }
+});
+
 test('Enter/Space inspect, Tab/Shift+Tab leave preview, Escape and Close return focus', async t => {
   const page = await setup(t);
   for (const key of ['Enter', 'Space']) {

@@ -134,6 +134,11 @@ function resetEvidence(message) {
   if (focusWasInContent) railHeading.focus();
 }
 
+function citationSourceContext(passage) {
+  const location = passage.page_number != null ? `PDF page ${passage.page_number}` : (passage.section || 'No PDF page');
+  return `${passage.title}, ${location}`;
+}
+
 function showEvidence(demo, number, selected = 0, trigger = null) {
   closePreview();
   const focusWasInContent = railContent.contains(document.activeElement);
@@ -150,6 +155,7 @@ function showEvidence(demo, number, selected = 0, trigger = null) {
     passageView.replaceChildren(element('h3', passage.title), element('p', `Passage ${index + 1}`, 'meta'), element('blockquote', passage.text));
     if (passage.source_url) {
       const link = element('a', isReal(demo) ? 'Open original paper' : 'Open example source', 'source-link');
+      link.setAttribute('aria-label', `${link.textContent.replace(' ↗', '')}, ${citationSourceContext(passage)}, opens in a new tab`);
       link.href = passage.source_url;
       link.target = '_blank';
       link.rel = 'noopener noreferrer';
@@ -225,6 +231,7 @@ function showQuote(item, demo, number, index, trigger) {
   const actions = element('div', undefined, 'quote-actions');
   if (passage.source_url) {
     const link = element('a', 'Open original paper ↗');
+    link.setAttribute('aria-label', `Open original paper, ${citationSourceContext(passage)}, opens in a new tab`);
     link.href = passage.source_url;
     link.target = '_blank';
     link.rel = 'noopener noreferrer';
@@ -232,6 +239,7 @@ function showQuote(item, demo, number, index, trigger) {
   }
   const more = element('button', 'Inspect source context', 'quiet');
   more.type = 'button';
+  more.setAttribute('aria-label', `Inspect source context, ${citationSourceContext(passage)}`);
   more.addEventListener('click', () => {
     closePreview();
     showEvidence(demo, number, index, trigger);
@@ -287,7 +295,7 @@ function citedParagraph(item, demo, number) {
     citation.type = 'button';
     citation.dataset.turn = number;
     citation.dataset.passage = index;
-    citation.setAttribute('aria-label', `Inspect citation ${index + 1}${passage.page_number != null ? `, PDF page ${passage.page_number}` : ''}`);
+    citation.setAttribute('aria-label', `Inspect citation ${index + 1}, ${citationSourceContext(passage)}`);
     citation.setAttribute('aria-haspopup', 'dialog');
     citation.setAttribute('aria-controls', 'citation-preview');
     citation.setAttribute('aria-expanded', 'false');

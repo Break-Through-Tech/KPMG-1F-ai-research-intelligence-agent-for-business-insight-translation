@@ -60,3 +60,26 @@ test('blocked reads and failed writes/removals leave changes and reset usable in
     app.reset(); assert.equal(app.root.theme, 'system'); assert.equal(app.root.readingSize, '100');
   }
 });
+
+
+test('both high-contrast choices survive reload, unavailable storage and reset', () => {
+  for (const theme of ['contrast-light', 'contrast-dark']) {
+    const app = boot();
+    app.change('theme', theme);
+    app.change('size', '200');
+    const reloaded = boot(app.values.get('1f.reading-preferences.v1'));
+    assert.equal(reloaded.root.theme, theme);
+    assert.equal(reloaded.nodes['#reading-theme'].value, theme);
+    assert.equal(reloaded.root.readingSize, '200');
+    reloaded.reset();
+    assert.equal(reloaded.root.theme, 'system');
+    for (const failure of ['read', 'write']) {
+      const blocked = boot(undefined, failure);
+      blocked.change('theme', theme);
+      assert.equal(blocked.root.theme, theme);
+      assert.match(blocked.nodes['#reading-storage-status'].textContent, /storage is unavailable/);
+      blocked.reset();
+      assert.equal(blocked.root.theme, 'system');
+    }
+  }
+});

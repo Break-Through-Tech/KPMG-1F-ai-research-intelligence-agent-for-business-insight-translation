@@ -2,7 +2,7 @@
 (() => {
   const key = '1f.reading-preferences.v1';
   const defaults = {theme: 'system', size: '100', spacing: 'standard'};
-  const choices = {theme: ['system', 'light', 'dark'], size: ['100', '125', '150', '200'],
+  const choices = {theme: ['system', 'light', 'dark', 'contrast-light', 'contrast-dark'], size: ['100', '125', '150', '200'],
     spacing: ['standard', 'relaxed', 'wide']};
   let preferences = {...defaults};
   let storageUnavailable = false;

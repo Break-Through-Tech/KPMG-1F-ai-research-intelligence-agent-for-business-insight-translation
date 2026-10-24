@@ -18,6 +18,34 @@
   --primary: #9bbaff; --on-primary: #172033; --selected: #24334f;
   --warning: #edc181; --danger: #ffa5ab;
 }
+/* Explicit high-contrast palettes override system theme without changing it.
+   Keep semantic tokens shared with citation and evidence renderers. */
+:root[data-theme="contrast-light"] {
+  color-scheme: light;
+  --background: #fff; --surface: #f2f2f2; --bubble: #ededed;
+  --text: #111; --muted: #333; --border: #555;
+  --control-border: #555; --primary: #003a8c; --on-primary: #fff;
+  --selected: #e2eaff; --warning: #663700; --danger: #8b0000;
+  --overlay: #0009;
+}
+:root[data-theme="contrast-dark"] {
+  color-scheme: dark;
+  --background: #000; --surface: #121212; --bubble: #1c1c1c;
+  --text: #fff; --muted: #ddd; --border: #bbb;
+  --control-border: #bbb; --primary: #ffdd55; --on-primary: #000;
+  --selected: #242424; --warning: #ffdd99; --danger: #ffb8b8;
+  --overlay: #000c;
+}
+:root:is([data-theme="contrast-light"], [data-theme="contrast-dark"]) {
+  /* Borders, underlines and weight retain state cues without color alone. */
+  button { border-color: var(--control-border); }
+  button:hover { filter: none; text-decoration: underline; }
+  button:disabled { opacity: 1; border-style: dashed; }
+  blockquote { border-color: var(--border); }
+  .source-choice[aria-pressed="true"] { border-color: var(--primary); border-width: 2px; font-weight: 700; }
+  .citation { text-decoration: underline; }
+  :focus-visible { outline-width: 3px; }
+}
 select, #research-form { border-color: var(--control-border); }
 body, textarea, .meta, #citation-preview { line-height: var(--reading-line-height); }
 /* Natural document flow keeps all content reachable at low viewport heights. */

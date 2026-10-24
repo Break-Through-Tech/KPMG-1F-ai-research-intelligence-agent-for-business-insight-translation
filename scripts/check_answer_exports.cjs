@@ -63,6 +63,19 @@ const {chromium} = require('playwright');
         check(JSON.stringify(demo) === original, 'Export must not mutate review packet');
       }
       const demo = structuredClone(demos.full);
+      const normalized = structuredClone(demo);
+      const normalizedPassage = normalized.result.evidence[0];
+      normalizedPassage.text = 'The mean score was 0.166 across the evaluated systems.';
+      const originalQuote = 'The mean\n score was 0.166';
+      normalized.result.summary.claims[0].support = [{chunk_id:normalizedPassage.chunk_id, quote:originalQuote}];
+      for (const format of ['html', 'md']) {
+        const output = AnswerExport.build(normalized, format);
+        if (format === 'html') {
+          const doc = new DOMParser().parseFromString(output.replace(/<style>[\s\S]*?<\/style>/g, ''), 'text/html');
+          check([...doc.querySelectorAll('blockquote')].some(node => node.textContent === originalQuote), 'Retain original normalized-match quote');
+          check([...doc.querySelectorAll('blockquote')].some(node => node.textContent === normalizedPassage.text), 'Retain canonical passage');
+        } else check(output.includes('The mean\n>  score was 0\\.166'), 'Retain original Markdown quote whitespace');
+      }
       // Extraction gaps remain relevant even when the optional reader is absent,
       // unsupported, or declines to render retained structure.
       const fallback = structuredClone(demo);

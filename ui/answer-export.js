@@ -11,6 +11,11 @@
   // Escape Markdown syntax AND raw HTML; source text must never become markup.
   const mdText = value => String(value ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;')
     .replace(/>/g, '&gt;').replace(/([\\`*_{}\[\]()#+.!|~-])/g, '\\$1');
+  // Match Python re.sub(r'\s+', ' ', text).strip() in research_chat.synthesize.
+  // Membership normalization must not alter the quote or passage we serialize.
+  const quoteMembershipText = value => value
+    .replace(/[\u0009-\u000d\u001c-\u0020\u0085\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000]+/g, ' ')
+    .replace(/^ | $/g, '');
 
   function build(demo, format) {
     const result = demo.result;
@@ -73,7 +78,8 @@
       }
       for (const support of item.support || []) {
         const entry = byId.get(support.chunk_id);
-        if (!entry || !item.chunk_ids.includes(support.chunk_id) || !entry.passage.text.includes(support.quote) || !support.quote) {
+        if (!entry || !item.chunk_ids.includes(support.chunk_id) || !quoteMembershipText(support.quote) ||
+            !quoteMembershipText(entry.passage.text).includes(quoteMembershipText(support.quote))) {
           throw new Error('An exact quote no longer matches its associated source.');
         }
         add('p', `Exact source quote for ${label.toLowerCase()} ${index + 1}, citation ${entry.number}:`);

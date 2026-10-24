@@ -24,8 +24,9 @@ identified as fixed examples rather than the user's unexecuted input.
 
 ## Fidelity and review boundaries
 
-- Claim-specific supporting quotes are checked literally against their associated
-  passage and citation IDs at export time. Missing citations or invalid quotes
+- Claim-specific supporting quotes are checked against their associated passage
+  and citation IDs using the synthesis contract's whitespace-normalized membership
+  check. Original quote and passage text are preserved. Missing citations or invalid quotes
   stop export. This is **not** a test of semantic entailment or source truth.
 - Text is never interpreted as source HTML. URLs are restricted to HTTP(S).
 - HTML is self-contained: language, main landmark, meaningful heading hierarchy,
@@ -113,3 +114,8 @@ acceptance, semantic support, source certification, or stakeholder acceptance.
   containers, canonical passage text, exact support quote and extraction gaps.
   This explicitly injected-reader fixture check does **not** establish merged
   script ordering, final dependency integration, or screen-reader acceptance.
+- The second actual local ClawSweeper review identified export rejection of
+  whitespace-normalized quotes already accepted by synthesis. Reproduced that
+  failure, aligned membership normalization with Python (including Unicode
+  whitespace), and retained original quote/passage text in HTML and Markdown.
+  The new browser regression failed before and passed after the correction.

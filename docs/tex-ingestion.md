@@ -36,6 +36,8 @@ are not executed. Unknown, scoped, aliased or body-mutated flag state remains
 unresolved. A missing source definition is **not** proof that a package/runtime
 symbol is undefined. Package semantics and dynamic arithmetic remain unsupported. Uninspected preamble
 calls (including package loaders and deferred hooks) prevent conditional selection;
+class/package loading remains uncertain even after a later flag declaration, because
+loaded code can install deferred hooks.
 their following tokens are not proof of an executed setter. Unknown body calls
 also prevent branch selection. TeX `^^` character conversion is rejected before
 lexical analysis, including inside included files. These conservative guards can

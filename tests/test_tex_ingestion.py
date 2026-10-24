@@ -392,8 +392,7 @@ class TexIngestionTests(unittest.TestCase):
             for included in (False, True):
                 with self.subTest(preamble=preamble, included=included):
                     flag = 'Flag@clean' if '@clean' in preamble else 'Flag'
-                    files = {'main.tex': r'\documentclass{article}' +
-                             (r'\input{preamble}' if included else preamble) +
+                    files = {'main.tex': (r'\input{preamble}' if included else preamble) +
                              r'\begin{document}\if' + flag + r' WRONG\else RIGHT\fi\end{document}'}
                     if included:
                         files['preamble.tex'] = preamble
@@ -436,6 +435,8 @@ class TexIngestionTests(unittest.TestCase):
 
     def test_uninspected_calls_and_character_conversion_cannot_select_flags(self):
         cases = ((r'\newif\ifFlag\RequirePackage{flagsetter}', False),
+                 (r'\usepackage{flagsetter}\newif\ifFlag', False),
+                 (r'\documentclass{flagclass}\newif\ifFlag', False),
                  (r'\newif\ifFlag\AtEndDocument\Flagtrue', True),
                  (r'\newif\ifFlag\Flagtrue ^^5cFlagfalse', True),
                  (r'\newif\ifFlag\label\Flagtrue', True))
@@ -447,7 +448,8 @@ class TexIngestionTests(unittest.TestCase):
                     files = {'main.tex': r'\documentclass{article}' +
                              (r'\input{preamble}' if included else preamble) +
                              r'\begin{document}' + body + r'\end{document}',
-                             'flagsetter.sty': r'\ProvidesPackage{flagsetter}\Flagtrue'}
+                             'flagsetter.sty': r'\ProvidesPackage{flagsetter}\AtBeginDocument{\Flagtrue}',
+                             'flagclass.cls': r'\LoadClass{article}\AtBeginDocument{\Flagtrue}'}
                     if included:
                         files['preamble.tex'] = preamble
                     data = archive(files)

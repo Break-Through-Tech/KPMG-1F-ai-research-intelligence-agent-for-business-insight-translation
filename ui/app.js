@@ -23,6 +23,8 @@ let clarificationEnabled = false;
 let researchConversationId = null;
 let clarificationPending = false;
 let activeClarificationTurn = null;
+const clarificationPanel = document.querySelector('#clarification-panel');
+let clarificationSummary = null;
 let conversationHistory = [];
 let activePaperContextId = null;
 let requestPending = false;
@@ -482,38 +484,105 @@ function renderDraft(demo, number, answer) {
   answer.append(detailGroup);
 }
 
-function setClarificationPending(pending) {
+function archiveClarification(status) {
+  if (!clarificationSummary) return;
+  clarificationSummary.textContent = `${clarificationSummary.dataset.question} · ${status}`;
+  const support = clarificationPanel.querySelector('details');
+  if (support) { support.open = false; clarificationSummary.after(support); }
+  clarificationSummary = null;
+}
+
+function setClarificationPending(pending, status = 'Closed') {
   clarificationPending = pending;
-  if (!pending) activeClarificationTurn = null;
+  if (!pending) {
+    activeClarificationTurn = null;
+    archiveClarification(status);
+    clarificationPanel.hidden = true;
+    clarificationPanel.replaceChildren();
+  }
   if (!clarificationEnabled) return;
-  queryInput.setAttribute('aria-label', pending ? 'Clarification answer' : 'Research question');
-  queryInput.placeholder = pending ? 'Answer the clarification question…' : 'Enter a research question…';
+  document.querySelector('.composer-area').classList.toggle('awaiting-clarification', pending);
+  queryInput.setAttribute('aria-label', 'Research question');
+  queryInput.placeholder = 'Enter a research question…';
   form.elements.industry.disabled = pending;
   submit.firstChild.textContent = pending ? 'Send clarification' : 'Search research';
 }
 
 function renderClarification(demo, number, answer) {
+  archiveClarification('Answered');
   activeClarificationTurn = number;
   const heading = answerHeading(number);
-  heading.textContent = `Clarification for question ${number}`;
-  answer.replaceChildren(heading, element('p', 'Clarification needed · No research answer produced', 'meta'),
-    element('p', `Original question: ${demo.submitted_request.query}`),
-    element('h3', demo.clarification.question));
+  heading.textContent = 'Clarification';
+  heading.className = 'sr-only';
+  clarificationSummary = element('p', 'Waiting for your reply below.', 'meta');
+  clarificationSummary.dataset.question = demo.clarification.question;
+  answer.replaceChildren(heading, clarificationSummary);
   const token = researchConversationId;
-  for (const option of demo.clarification.options) {
-    const choice = element('button', `Use: ${option.text}`, 'quiet clarification-option');
-    choice.type = 'button';
-    choice.dataset.clarificationTurn = number;
-    choice.addEventListener('click', () => {
-      if (requestPending || !clarificationPending || activeClarificationTurn !== number || token !== researchConversationId) return;
+  const current = () => clarificationPending && activeClarificationTurn === number && token === researchConversationId;
+  const prompt = element('h2', demo.clarification.question);
+  prompt.id = 'clarification-prompt';
+  const topline = element('div', undefined, 'question-panel-heading');
+  topline.append(prompt, element('span', '1 / 1', 'meta'));
+  const options = element('fieldset', undefined, 'question-options');
+  const legend = element('legend', 'Choose an answer', 'sr-only');
+  options.append(legend);
+  const freeLabel = element('label', demo.clarification.options.length ? 'Other' : 'Your answer', 'question-free-label');
+  const free = element('textarea', undefined, 'question-free-text');
+  free.id = 'clarification-answer';
+  free.rows = 1;
+  free.maxLength = 2000;
+  free.setAttribute('aria-label', 'Clarification answer');
+  free.placeholder = demo.clarification.options.length ? 'Type your own answer…' : 'Type your answer…';
+  freeLabel.htmlFor = free.id;
+  const send = element('button', 'Submit answer', 'question-submit');
+  send.type = 'button';
+  send.disabled = true;
+  send.addEventListener('click', () => {
+    if (!current() || requestPending || !queryInput.value.trim()) return;
+    form.requestSubmit();
+  });
+  for (const [index, option] of demo.clarification.options.entries()) {
+    const label = element('label', undefined, 'question-option');
+    const choice = element('input');
+    choice.type = 'radio';
+    choice.name = `clarification-${number}`;
+    choice.value = option.text;
+    choice.addEventListener('change', () => {
+      if (!current() || requestPending) return;
+      free.value = '';
       queryInput.value = option.text;
-      queryInput.focus();
-      feedback.textContent = 'Clarification choice copied. Review or edit it, then send.';
+      send.disabled = false;
     });
-    answer.append(choice);
-    if (option.support.length) {
-      const evidence = disclosure(`Source support for: ${option.text}`);
-      evidence.append(element('p', 'Exact quote membership checked; interpretation not independently verified.', 'meta'));
+    label.append(choice, element('span', option.text), element('span', String(index + 1), 'question-option-number'));
+    options.append(label);
+  }
+  free.addEventListener('input', () => {
+    if (!current() || requestPending) return;
+    options.querySelectorAll('input').forEach(input => { input.checked = false; });
+    queryInput.value = free.value;
+    send.disabled = !free.value.trim();
+  });
+  clarificationPanel.onkeydown = event => {
+    if (event.isComposing || requestPending || !current()) return;
+    if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+      event.preventDefault();
+      send.click();
+    } else if (event.target !== free && !event.ctrlKey && !event.metaKey && !event.altKey && /^[1-9]$/.test(event.key)) {
+      const choice = options.querySelectorAll('input')[Number(event.key) - 1];
+      if (choice) { event.preventDefault(); choice.click(); choice.focus(); }
+    }
+  };
+  const footer = element('div', undefined, 'question-panel-footer');
+  footer.append(element('span', 'Ctrl / ⌘ + Enter to submit', 'meta'), send);
+  clarificationPanel.replaceChildren(topline);
+  if (demo.clarification.options.length) clarificationPanel.append(options);
+  clarificationPanel.append(freeLabel, free);
+  const supported = demo.clarification.options.filter(option => option.support.length);
+  if (supported.length) {
+    const evidence = disclosure('Why these options?');
+    evidence.append(element('p', 'Exact source quotes; interpretations not independently verified.', 'meta'));
+    for (const option of supported) {
+      evidence.append(element('h3', option.text));
       for (const support of option.support) {
         const passage = demo.clarification_evidence.find(p => p.chunk_id === support.chunk_id);
         evidence.append(element('blockquote', support.quote));
@@ -526,12 +595,18 @@ function renderClarification(demo, number, answer) {
           }
         }
       }
-      answer.append(evidence);
     }
+    clarificationPanel.append(evidence);
   }
-  answer.append(element('p', 'Type an answer below, use an editable choice, or start a new research conversation.'));
+  clarificationPanel.append(footer);
+  clarificationPanel.hidden = false;
   markAnswerReady(answer);
-  feedback.textContent = `Clarification needed: ${demo.clarification.question} No research answer produced.`;
+  feedback.textContent = `Reply needed: ${demo.clarification.question}`;
+  feedback.classList.add('sr-only');
+  // Keep the question reachable in the existing document-flow reading layout.
+  clarificationPanel.scrollIntoView({block: 'nearest'});
+  // Move from the now-hidden composer to the corresponding question, not a transcript answer.
+  (options.querySelector('input') || free).focus({preventScroll: true});
 }
 
 document.querySelector('#new-research-conversation').addEventListener('click', async () => {
@@ -659,10 +734,15 @@ function setQuestionBusy(busy) {
   submit.disabled = !appReady;
   if (busy) submit.setAttribute('aria-disabled', 'true');
   else submit.removeAttribute('aria-disabled');
-  document.querySelectorAll('.retry-question, #question-suggestions button, .clarification-option, #new-research-conversation').forEach(button => {
-    button.disabled = busy || !appReady || (button.classList.contains('clarification-option') &&
-      Number(button.dataset.clarificationTurn) !== activeClarificationTurn);
+  document.querySelectorAll('.retry-question, #question-suggestions button, #new-research-conversation').forEach(button => {
+    button.disabled = busy || !appReady;
   });
+  clarificationPanel.querySelectorAll('input, textarea').forEach(control => { control.disabled = busy; });
+  const questionSubmit = clarificationPanel.querySelector('.question-submit');
+  if (questionSubmit) {
+    questionSubmit.disabled = busy || !queryInput.value.trim();
+    questionSubmit.textContent = busy ? 'Submitting…' : 'Submit answer';
+  }
   output.setAttribute('aria-busy', String(busy));
 }
 
@@ -745,7 +825,11 @@ form.addEventListener('submit', async event => {
       if (form.elements.query.value === query) form.elements.query.value = '';
       return;
     }
-    if (demo.result && clarificationEnabled) setClarificationPending(false);
+    if (demo.result && clarificationEnabled) {
+      const wasPending = clarificationPending;
+      setClarificationPending(false, 'Answered');
+      if (wasPending) queryInput.focus({preventScroll: true});
+    }
     renderDemo(demo, number, answer);
     if (liveSynthesis) rememberAcceptedTurn(query, demo);
     if (demo.error) offerRetry(answer, query, scenario, submissionContext);

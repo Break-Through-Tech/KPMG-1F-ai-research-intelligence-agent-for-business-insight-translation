@@ -123,14 +123,25 @@ Sessions expire after 30 idle minutes, maximum 32 retained sessions. Running ses
 are not expired/evicted. Capacity exhaustion is explicit, not silent eviction of
 someone else's pending question. Restarting loses all sessions.
 
-The UI renders a clarification question with **no completed draft**. Optional choices
-copy editable text into the composer; they do not auto-submit. Post-retrieval choices
-retain their exact support quotes, chunk identity, and original source links in
-expandable source support. Open-ended clarification works without choices. Send an
-answer to resume the original request with its original industry context and fresh
-retrieval. While pending, the composer is labelled “Clarification answer”; change
-of industry is disabled until completion or a new conversation. Up to three exchanges
-are permitted by the backend; after its limit, start a new research conversation.
+The UI renders a clarification question with **no completed draft**, using a compact
+question dock adapted from OpenClaw's `chat-question-panel.tsx` and
+`chat-question-answer-controls.tsx` (visual/interaction pattern only; no OpenClaw
+runtime dependency). The dock replaces the normal composer while pending: one
+question, native radio choices, an optional own-answer field, and **Submit answer**.
+Selecting a choice does not submit. Typing an own answer clears the selection;
+Ctrl/Command+Enter submits, native radio arrow keys navigate, and number keys outside
+the text field select the corresponding option. Nothing is selected by default.
+Post-retrieval support quotes, chunk identity and source links stay available under
+one collapsed **Why these options?** disclosure. The conversation keeps a short
+pending marker rather than duplicating the form. When closed, the question and
+collapsed source support remain in the transcript for later inspection.
+
+Submitting resumes the original request with its original industry context and
+fresh retrieval. Industry controls, entry preferences and research-only hints are
+hidden while answering; industry is disabled until completion or a new conversation.
+Failed submissions keep the answer editable and retryable. Completion restores the
+normal research composer and its focus. Up to three exchanges are permitted by the
+backend; after its limit, start a new research conversation.
 
 “New research conversation” creates clean server-owned intent state. Previous answers
 remain on screen but are not supplied to the new session. Old pending choices and

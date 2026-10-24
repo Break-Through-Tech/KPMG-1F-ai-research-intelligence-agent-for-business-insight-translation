@@ -53,6 +53,8 @@ const screenshotDirectory = process.env.SCREENSHOT_DIR || os.tmpdir();
     assert(await wideMath.evaluate(node => node.scrollLeft > 0));
     assert.equal(await panel.locator('.source-reading ul li').count(),2);
     assert.equal(await panel.locator('.source-reading img, .source-reading script, .source-reading iframe').count(),0);
+    assert.equal(await panel.locator('.source-reading figure').count(), 2);
+    assert.equal(await panel.locator('.source-reading figure').first().locator('figcaption').count(), 0);
     assert(await panel.getByText(/Source-supplied image description: Two/).count());
     assert((await panel.innerText()).includes('caption alone may omit visual information'));
     assert((await panel.innerText()).includes('END OF LONG PASSAGE.'));

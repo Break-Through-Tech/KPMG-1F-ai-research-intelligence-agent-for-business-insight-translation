@@ -11,7 +11,9 @@ from tests.test_paper_reader import STRUCTURED_HTML
 
 
 def reader_fixture():
-    raw = STRUCTURED_HTML.replace(b'</section>', b'<div class="ltx_para">' +
+    # The alt-only figure has no canonical text; its separate reading description
+    # must survive alongside the section's actual quote-check evidence.
+    raw = STRUCTURED_HTML.replace(b'<figcaption>Accuracy by model.</figcaption>', b'').replace(b'</section>', b'<div class="ltx_para">' +
         b'Long passage retained without truncation. ' * 180 +
         b'END OF LONG PASSAGE.</div><div class="ltx_para">Inline formula: <math><mtable><mtr>' +
         b'<mtd><mn>12345</mn></mtd>' * 30 + b'</mtr></mtable></math></div></section>')

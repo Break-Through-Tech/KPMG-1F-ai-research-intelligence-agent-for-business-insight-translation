@@ -1,6 +1,7 @@
 from pathlib import Path
 import tempfile
 import argparse
+import json
 import tarfile
 import pandas as pd
 
@@ -10,6 +11,7 @@ from .download import download_pdfs, download_html, load_html, resolve_pdf_path
 from .html_parser import parse_html_sections
 from .pdf_parser import extract_pages
 from .chunking import chunk_html_sections, chunk_document
+from .tex_figures import extract_figure_text
 from .tex_source import MAX_ARCHIVE, cache_path, chunk_source, download_sources
 
 
@@ -17,9 +19,11 @@ from .tex_source import MAX_ARCHIVE, cache_path, chunk_source, download_sources
 def process_and_store(
     metadata_list: list[dict],
     output_path: Path | None = None,
-    *, use_tex: bool = False,
+    *, use_tex: bool = False, use_tex_figures: bool = False,
 ) -> pd.DataFrame:
     """Publish only a complete corpus; preserve the previous output on failure."""
+    if use_tex_figures and not use_tex:
+        raise ValueError('Figure extraction requires use_tex=True')
     if not metadata_list:
         raise ValueError("No papers selected for ingestion")
     output_path = Path(output_path) if output_path is not None else cfg.PROCESSED_DIR / "chunks.parquet"
@@ -53,9 +57,16 @@ def process_and_store(
                 path = cache_path(aid)
                 if path.exists():
                     with path.open("rb") as stream:
-                        chunks = chunk_source(stream.read(MAX_ARCHIVE + 1), aid, row["title"])
+                        data = stream.read(MAX_ARCHIVE + 1)
+                        chunks = chunk_source(data, aid, row["title"])
+                    if use_tex_figures:
+                        figures = extract_figure_text(data, aid, row["title"])
+                        chunks.extend(figures["chunks"])
+                        for chunk in chunks:
+                            chunk["figure_coverage"] = json.dumps(figures["coverage"], sort_keys=True)
                     source = "tex"
             except (OSError, ValueError, EOFError, tarfile.TarError) as error:
+                chunks = []
                 print(f"[TeX unavailable] {aid}: {error}")
 
         # PDF fallback only when higher-priority sources produced no chunks.
@@ -79,7 +90,7 @@ def process_and_store(
         print(f"[{source}] {aid}: {len(chunks)} chunks")
         for c in chunks:
             c.update({
-                "source": source,
+                "source": c.get("source", source),
                 "title": row["title"],
                 "categories": row["categories"],
                 "authors": row["authors"],
@@ -110,13 +121,17 @@ def process_and_store(
 def main():
     parser = argparse.ArgumentParser(description="HTML/PDF ingestion with opt-in raw TeX fallback")
     parser.add_argument('--with-tex', action='store_true', help='Download and use raw TeX between HTML and PDF')
+    parser.add_argument('--with-tex-figures', action='store_true',
+                        help='Add bundled figure-PDF text and coverage records (requires --with-tex)')
     args = parser.parse_args()
+    if args.with_tex_figures and not args.with_tex:
+        parser.error('--with-tex-figures requires --with-tex')
     metadata = load_metadata()
     if args.with_tex:
         download_sources(metadata)
     download_pdfs(metadata)       # fallback source
     download_html(metadata)       # skips cached, remembers 404s
-    process_and_store(metadata, use_tex=args.with_tex)
+    process_and_store(metadata, use_tex=args.with_tex, use_tex_figures=args.with_tex_figures)
 
 
 if __name__ == "__main__":

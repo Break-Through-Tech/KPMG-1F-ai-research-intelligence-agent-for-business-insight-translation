@@ -101,3 +101,59 @@ whose absence in source is not a positive runtime fact. They deliberately retain
 HTML/PDF fallback; neither branch is guessed. The next capability for these cases
 is package-aware runtime resolution, not treating all unknown flags as false.
 Mandatory TeX-only publication is not enabled by this change.
+
+## Optional figure-PDF text complement
+
+Use `--with-tex --with-tex-figures`, or `process_and_store(..., use_tex=True,
+use_tex_figures=True)`, to add text from explicitly referenced bundled PDF
+assets when TeX wins source selection. Default HTML/PDF and plain `--with-tex`
+behavior are unchanged. No TeX execution, OCR, remote fetch, image interpretation,
+or automatic graph expansion occurs.
+
+The extractor scans reachable, branch-filtered `\includegraphics` syntax, literal paths and
+literal root-preamble `\graphicspath` directories. Missing/ambiguous paths,
+unsupported syntax or source blocks with unresolved macro/branch semantics,
+raster/EPS figures, empty PDF pages and extraction failures
+remain explicit in the JSON `figure_coverage` column. Duplicate references share
+asset chunks but retain separate source call sites in coverage. Asset text does
+not imply complete figure semantics, correct reading order, chart values or
+exhaustive discovery of custom graphics macros. Partial-text pages can still
+contain undetected raster text; `text_extracted` means text was recovered, not
+that the figure is complete.
+
+Lookup uses the root document directory and declared graphics paths, not an
+implicit directory belonging to an included source file. Graphics inside braced
+arguments/groups are not proven executable; grouping is tracked across input
+blocks and disables figure publication for that document. This conservatively
+suppresses some valid grouped graphics too. Uninspected preamble graphics rules
+and extension declarations require fallback rather than guessing a default PDF.
+
+Evidence source `tex_figure` has a source-archive URL and SHA-256, `asset_file`,
+`asset_sha256`, and a positive **asset** `asset_page_number`. `page_number` stays
+null: an asset page is never a rendered paper page. `extraction_method=pdf_text`
+and `evidence_scope=whole_bundled_asset_not_rendered_figure` survive storage,
+retrieval and summary citation mapping. The whole asset is extracted: options
+such as `page`, `trim` or `clip` may exclude some asset content from the rendered
+paper, so this layer must never be described as exactly what the figure displays.
+Source-call line locators belong to coverage, not to the extracted PDF text.
+
+Limits: 128 recognized references, 16 MiB per selected asset, 32 MiB selected
+assets total, 32 pages per PDF, and 1 MiB aggregate extracted text per paper, on
+top of the existing source-archive limits. Failed PDF extraction contributes no
+partial chunks for that asset. Archive validation or asset-byte-limit failures
+trigger the existing paper PDF fallback rather than publishing a partial layer.
+Keep `figure_coverage` with ingestion artifacts: vector metadata retains asset
+provenance, not the full paper coverage report. This feature does not establish
+TeX-only completeness or authorize production ingestion/index replacement.
+
+### Conservative figure-literal boundary (2026-10-23)
+
+Braced and delimiter-form `\url`, `\path`, and `\nolinkurl` operands (including
+starred spelling) are opaque: embedded graphics tokens are examples, not asset
+references. This applies in direct bodies and included files; independent
+top-level literal figure references still recover their assets. Unknown calls
+combined with conditionals now require HTML/PDF fallback, including a preamble
+`\graphicspath` followed by a conditional or a body mixing graphics macros
+and literal conditions. Earlier constant-branch figure acceptance is historical,
+not a supported final-head execution guarantee. No package/macro execution is
+introduced.

@@ -13,6 +13,9 @@ from src.summarization import prompt_provenance, summarize
 
 def source_location(hit):
     """Retain the actual retrieved source; HTML has sections, not PDF pages."""
+    if hit.get("source") == "tex_figure":
+        return (f"{hit['source_url']} (bundled asset {hit['asset_file']}, "
+                f"asset p.{hit['asset_page_number']}; not a paper page; whole asset)")
     if hit.get("source") == "tex":
         return f"{hit['source_url']} ({hit['source_file']}:{hit['line_start']}-{hit['line_end']})"
     if hit.get("source") == "html":

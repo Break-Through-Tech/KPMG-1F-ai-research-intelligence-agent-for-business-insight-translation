@@ -23,6 +23,7 @@ requests
 # Development tools
 ipykernel
 beautifulsoup4
+bibtexparser==1.4.3
 
 #Testing 
 pytest

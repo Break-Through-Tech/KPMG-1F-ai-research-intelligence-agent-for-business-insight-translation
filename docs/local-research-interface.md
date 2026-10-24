@@ -231,6 +231,8 @@ Other unsupported MathML attributes (for example enclosure notation or explicit
 fence delimiters) also reject the whole structured passage instead of silently
 changing source notation. Table spans retain valid native values, including
 `rowspan="0"` for the remaining row group; unsupported spans fail closed.
+Column groups and columns retain bounded span attributes, preserving the
+structure associated with source `scope="colgroup"` headers.
 
 Both retention and rendering are allowlisted and bounded. No source scripts,
 images, URLs, styles, event handlers or arbitrary HTML are inserted. MathML

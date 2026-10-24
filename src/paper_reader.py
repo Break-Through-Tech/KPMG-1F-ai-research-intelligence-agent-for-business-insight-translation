@@ -7,7 +7,7 @@ import re
 
 from bs4 import Comment, NavigableString
 
-HTML_TAGS = set('p div span h1 h2 h3 h4 h5 h6 ul ol li dl dt dd blockquote em strong b i sub sup br table caption thead tbody tfoot tr th td figure figcaption'.split())
+HTML_TAGS = set('p div span h1 h2 h3 h4 h5 h6 ul ol li dl dt dd blockquote em strong b i sub sup br table caption colgroup col thead tbody tfoot tr th td figure figcaption'.split())
 MATH_TAGS = set('math semantics annotation mrow mi mn mo mtext mspace ms mfrac msqrt mroot msub msup msubsup munder mover munderover mmultiscripts mprescripts none mtable mtr mtd menclose mphantom mpadded mstyle mfenced'.split())
 DROP_TAGS = set('script style iframe object embed template noscript nav form input button audio video svg'.split())
 MATH_ATTRS = set('display mathvariant stretchy fence separator accent accentunder columnalign rowalign columnspan rowspan encoding linethickness'.split())
@@ -44,6 +44,11 @@ def retain_reader(nodes, source_sha256):
             limitations.add('Unsupported source markup is shown as text where possible; not all source structure is retained.')
             return children
         attrs = {}
+        if tag in {'colgroup', 'col'} and node.has_attr('span'):
+            span = str(node['span'])
+            if not re.fullmatch(r'\d{1,5}', span) or not 1 <= int(span) <= 1000:
+                raise ValueError('Unsupported source column span; use the retained citation-check text or original source.')
+            attrs['span'] = span
         # Table IDs are remapped into a reader-local namespace by the browser.
         if tag in {'th', 'td'}:
             for key in ('id', 'headers', 'scope', 'colspan', 'rowspan'):

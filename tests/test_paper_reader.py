@@ -14,9 +14,10 @@ STRUCTURED_HTML = rb'''<article class="ltx_document"><section id="S1"><h2>Result
 <ul><li>First constraint</li><li>Second constraint</li></ul><ol start=3><li value=4>Numbered constraint</li></ol>
 <math display="block"><mfrac><mi>x</mi><mn>2</mn></mfrac></math>
 <math alttext="\binom{n}{k}"><mfrac linethickness="0"><mi>n</mi><mi>k</mi></mfrac></math></div>
-<table><caption>Source measurements</caption><thead><tr><th id="model" scope="col">Model</th>
+<table><caption>Source measurements</caption><colgroup span="2"></colgroup><thead>
+<tr><th id="results" colspan="2" scope="colgroup">Results</th></tr><tr><th id="model" scope="col">Model</th>
 <th id="score" scope="col">Score</th></tr></thead><tbody><tr><th id="base" scope="row" rowspan="0">Base</th>
-<td headers="base score">12</td></tr><tr><td headers="base score">13</td></tr></tbody></table>
+<td headers="base score results">12</td></tr><tr><td headers="base score results">13</td></tr></tbody></table>
 <figure><img src="https://invalid.example/never-fetch" alt="Two source-labeled bars" onerror="bad()">
 <figcaption>Accuracy by model.</figcaption></figure>
 <figure><img src="missing"><figcaption>Caption only.</figcaption></figure>
@@ -31,6 +32,15 @@ def flatten(nodes):
 
 
 class PaperReaderTests(TestCase):
+    def test_column_group_structure_survives_with_grouped_headers(self):
+        passages, _ = parse_paper_html(STRUCTURED_HTML, '2608.20318v1', 'Test')
+        nodes = list(flatten(passages[0]['reader']['nodes']))
+        self.assertEqual(next(node for node in nodes if node['tag'] == 'colgroup')['attrs']['span'], '2')
+        self.assertEqual(next(node for node in nodes if node['tag'] == 'th')['attrs']['scope'], 'colgroup')
+        nested = STRUCTURED_HTML.replace(b'<colgroup span="2"></colgroup>', b'<colgroup><col span="2"></colgroup>')
+        passages, _ = parse_paper_html(nested, '2608.20318v1', 'Test')
+        self.assertEqual(next(node for node in flatten(passages[0]['reader']['nodes']) if node['tag'] == 'col')['attrs']['span'], '2')
+
     def test_unknown_math_semantics_rejects_the_whole_passage_reader(self):
         for expression in [b'<menclose notation="updiagonalstrike"><mi>x</mi></menclose>',
                            b'<mfenced open="[" close="]" separators=";"><mi>x</mi><mi>y</mi></mfenced>']:
@@ -71,9 +81,9 @@ class PaperReaderTests(TestCase):
         nodes = list(flatten(reader['nodes']))
         self.assertTrue({'h3', 'ul', 'li', 'math', 'mfrac', 'table', 'caption', 'th', 'td', 'figcaption'} <= {node['tag'] for node in nodes})
         cell = next(node for node in nodes if node['tag'] == 'td')
-        self.assertEqual(cell['attrs']['headers'], 'base score')
+        self.assertEqual(cell['attrs']['headers'], 'base score results')
         self.assertEqual(next(node for node in nodes if node['tag'] == 'ol')['attrs']['start'], '3')
-        self.assertEqual(next(node for node in nodes if node['tag'] == 'th')['attrs']['scope'], 'col')
+        self.assertEqual(next(node for node in nodes if node['tag'] == 'th' and node['attrs'].get('id') == 'score')['attrs']['scope'], 'col')
         self.assertIn('The measured result improves accuracy in this bounded experiment.', passage['text'])
         self.assertEqual(passage['text'].count('Source measurements'), 1)
         rendered_data = str(reader)

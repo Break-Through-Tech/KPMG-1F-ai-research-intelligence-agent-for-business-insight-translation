@@ -1,5 +1,5 @@
 /* Source structure is untrusted data. Rebuild only inert semantic elements. */
-const READER_HTML_TAGS = new Set('p div span ul ol li dl dt dd blockquote em strong b i sub sup br table caption thead tbody tfoot tr th td figure figcaption'.split(' '));
+const READER_HTML_TAGS = new Set('p div span ul ol li dl dt dd blockquote em strong b i sub sup br table caption colgroup col thead tbody tfoot tr th td figure figcaption'.split(' '));
 const READER_MATH_TAGS = new Set('math semantics annotation mrow mi mn mo mtext mspace ms mfrac msqrt mroot msub msup msubsup munder mover munderover mmultiscripts mprescripts none mtable mtr mtd menclose mphantom mpadded mstyle mfenced'.split(' '));
 const READER_MATH_ATTRS = new Set('display mathvariant stretchy fence separator accent accentunder columnalign rowalign columnspan rowspan encoding linethickness'.split(' '));
 const READER_MATH_METADATA = new Set('class id alttext xmlns href xlink:href'.split(' '));
@@ -44,6 +44,11 @@ function structuredSource(reader) {
     const node = math ? document.createElementNS('http://www.w3.org/1998/Math/MathML', tag)
       : document.createElement(heading ? `h${Math.min(6, 5 + Number(tag[1]) - headingBase)}` : tag);
     const attrs = item.attrs || {};
+    if ((tag === 'colgroup' || tag === 'col') && Object.hasOwn(attrs, 'span')) {
+      const span = attrs.span;
+      if (typeof span !== 'string' || !/^\d{1,5}$/.test(span) || Number(span) < 1 || Number(span) > 1000) throw new Error('Unsupported column span');
+      node.setAttribute('span', span);
+    }
     if (tag === 'th' || tag === 'td') {
       if (typeof attrs.id === 'string') node.id = localId(attrs.id);
       if (typeof attrs.headers === 'string') node.setAttribute('headers', attrs.headers.trim().split(/\s+/).map(localId).join(' '));

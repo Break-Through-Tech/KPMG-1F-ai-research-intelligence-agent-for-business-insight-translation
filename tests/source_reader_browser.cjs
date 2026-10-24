@@ -33,7 +33,9 @@ const screenshotDirectory = process.env.SCREENSHOT_DIR || os.tmpdir();
     assert.equal(await panel.locator('math mfrac').count(),2);
     assert.equal(await panel.locator('math mfrac[linethickness="0"]').count(),1);
     assert.equal(await panel.locator('math').first().evaluate(node=>node.namespaceURI),'http://www.w3.org/1998/Math/MathML');
-    assert.equal(await panel.getByRole('columnheader').count(),2);
+    assert.equal(await panel.getByRole('columnheader').count(),3);
+    assert.equal(await panel.locator('table > colgroup[span="2"]').count(),1);
+    assert.equal(await panel.locator('th[scope="colgroup"][colspan="2"]').innerText(),'Results');
     assert.equal(await panel.getByRole('rowheader').count(),1);
     assert.equal(await panel.getByRole('rowheader').evaluate(node=>node.rowSpan),0);
     assert(await panel.locator('table').evaluate(table=>{

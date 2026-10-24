@@ -69,6 +69,7 @@ export class ReadAloud {
   stop(message = 'Stopped.') {
     ++this.token;
     clearTimeout(this.timer);
+    this.pendingNext = null;
     const owned = this.synth && owners.get(this.synth) === this;
     // Invalidate callbacks before cancel(), which may synchronously fire onerror.
     if (owned) {
@@ -128,6 +129,10 @@ export class ReadAloud {
           if (token !== this.token || this.utterance !== utterance) return;
           clearTimeout(this.timer);
           this.utterance = null;
+          if (this.state === 'paused') {
+            this.pendingNext = next;
+            return;
+          }
           next();
         };
         utterance.onerror = () => {
@@ -158,6 +163,12 @@ export class ReadAloud {
   }
   resume() {
     if (this.state !== 'paused') return;
+    if (this.pendingNext) {
+      const next = this.pendingNext;
+      this.pendingNext = null;
+      next();
+      return;
+    }
     try {
       this.synth.resume();
       if (!this.utterance?.started) {

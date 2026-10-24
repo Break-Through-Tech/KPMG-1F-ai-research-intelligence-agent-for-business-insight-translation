@@ -119,7 +119,7 @@ order use actual browser keyboard events.
 
 | Check | Observed result / boundary |
 | --- | --- |
-| Controller | 10 Node tests pass: no autoplay; selected text/rate; pause/resume/end; no overlap; revisions/removal; stale callbacks; chunking; unsupported/remote-only voices; late voices; errors/timeouts; teardown |
+| Controller | 11 Node tests pass: no autoplay; selected text/rate; pause/resume/end; no overlap; revisions/removal; stale callbacks; paused chunk handoff/deferred cancellation; chunking; unsupported/remote-only voices; late voices; errors/timeouts; teardown |
 | Browser | Chrome 155.0.8059.86 headless via existing Playwright; Browser plugin not available; installed Chrome used because Playwright's bundled browser binary was absent |
 | Identity/content/overlay/console | Correct fixture title, meaningful original text/citation, no framework overlay, no captured console warnings/errors |
 | Interaction | Tab through citation/text/speed/Play, Enter Play, Space Pause, Enter Resume, Enter Stop; same Pause/Resume element retains focus |

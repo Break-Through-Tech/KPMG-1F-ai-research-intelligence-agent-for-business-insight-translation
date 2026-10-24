@@ -79,6 +79,32 @@ test('long passages progress one chunk at a time, retaining all characters', () 
   assert.ok(speechChunks(text).every(chunk => Array.from(chunk).length <= 200));
   reader.destroy();
 });
+test('paused chunk handoff waits for explicit Resume and deferred speech is cancellable', () => {
+  for (const cancel of ['stop', 'replace', 'destroy']) {
+    const {reader, synth} = setup();
+    reader.setItems([{id: 'long', label: 'Long source', text: 'Evidence. '.repeat(60)}]);
+    reader.play(); const first = synth.spoken[0]; first.onstart(); reader.pause();
+    const resumes = synth.resumes;
+    first.onend(); first.onend(); first.onstart();
+    assert.equal(reader.state, 'paused');
+    assert.equal(synth.spoken.length, 1);
+    assert.equal(synth.resumes, resumes);
+    reader.resume();
+    assert.equal(synth.spoken.length, 2);
+    assert.equal(synth.resumes, resumes + 1);
+    while (reader.state !== 'idle') {
+      const u = synth.spoken.at(-1); u.onstart(); u.onend();
+    }
+    assert.equal(reader.message, 'Finished.');
+    reader.play(); const u = synth.spoken.at(-1); u.onstart(); reader.pause(); u.onend();
+    const count = synth.spoken.length;
+    if (cancel === 'replace') reader.setItems([]);
+    else reader[cancel]();
+    reader.resume(); u.onend();
+    assert.equal(synth.spoken.length, count);
+    reader.destroy();
+  }
+});
 test('unsupported engine, empty voices, remote-only voices and thrown playback fail gracefully', () => {
   const unsupported = new ReadAloud({synth: {}, Utterance: null}); unsupported.setItems(items); unsupported.play();
   assert.equal(unsupported.state, 'error'); unsupported.destroy();

@@ -139,3 +139,15 @@ trigger the existing paper PDF fallback rather than publishing a partial layer.
 Keep `figure_coverage` with ingestion artifacts: vector metadata retains asset
 provenance, not the full paper coverage report. This feature does not establish
 TeX-only completeness or authorize production ingestion/index replacement.
+
+### Conservative figure-literal boundary (2026-10-23)
+
+Braced and delimiter-form `\url`, `\path`, and `\nolinkurl` operands (including
+starred spelling) are opaque: embedded graphics tokens are examples, not asset
+references. This applies in direct bodies and included files; independent
+top-level literal figure references still recover their assets. Unknown calls
+combined with conditionals now require HTML/PDF fallback, including a preamble
+`\graphicspath` followed by a conditional or a body mixing graphics macros
+and literal conditions. Earlier constant-branch figure acceptance is historical,
+not a supported final-head execution guarantee. No package/macro execution is
+introduced.

@@ -62,12 +62,17 @@ class FigureTextTests(unittest.TestCase):
         self.assertIn('Prompt starts at LS Apartment', result['chunks'][0]['text'])
         self.assertNotIn('Prompt starts', str(chunk_source(data, AID)))
 
-    def test_inactive_preamble_graphicspath_never_selects_unused_asset(self):
+    def test_uninspected_preamble_path_call_with_condition_requires_fallback(self):
         source = paper(r'\includegraphics{sample.pdf}',
                        r'\graphicspath{{live/}}\iffalse\graphicspath{{unused/}}\fi')
         data = bundle({'main.tex': source, 'live/sample.pdf': pdf('ACTIVE'),
                        'unused/sample.pdf': pdf('INACTIVE')})
-        result = figures.extract_figure_text(data, AID)
+        with self.assertRaises(ValueError):
+            figures.extract_figure_text(data, AID)
+        # A literal path without conditional execution is still supported.
+        files = {'main.tex': paper(r'\includegraphics{sample.pdf}', r'\graphicspath{{live/}}'),
+                 'live/sample.pdf': pdf('ACTIVE'), 'unused/sample.pdf': pdf('INACTIVE')}
+        result = figures.extract_figure_text(bundle(files), AID)
         self.assertEqual(result['coverage'][0]['asset_file'], 'live/sample.pdf')
         self.assertIn('ACTIVE', result['chunks'][0]['text'])
         self.assertNotIn('INACTIVE', str(result))
@@ -149,18 +154,37 @@ class FigureTextTests(unittest.TestCase):
         self.assertIn('ROOT FIGURE', result['chunks'][0]['text'])
         self.assertNotIn('UNUSED EVIDENCE', str(result))
 
+    def test_url_literals_cannot_publish_graphics_operands(self):
+        for literal in (r'\url|\includegraphics{hidden.pdf}|',
+                        r'\url*|\includegraphics{hidden.pdf}|',
+                        r'\path+\includegraphics{hidden.pdf}+',
+                        r'\nolinkurl{\includegraphics{hidden.pdf}}',
+                        r'\url{https://example.test/\includegraphics{hidden.pdf}}'):
+            for included in (False, True):
+                with self.subTest(literal=literal, included=included):
+                    body = (r'\input{child}' if included else literal)
+                    files = {'main.tex': paper(body + '\n' + r'\includegraphics{visible.pdf}',
+                                              r'\usepackage{url}'),
+                             'hidden.pdf': pdf('UNUSED EVIDENCE'),
+                             'visible.pdf': pdf('VISIBLE EVIDENCE')}
+                    if included:
+                        files['child.tex'] = literal
+                    result = figures.extract_figure_text(bundle(files), AID)
+                    self.assertEqual(len(result['coverage']), 1)
+                    self.assertEqual(result['coverage'][0]['asset_file'], 'visible.pdf')
+                    self.assertEqual(len(result['chunks']), 1)
+                    self.assertIn('VISIBLE EVIDENCE', result['chunks'][0]['text'])
+                    self.assertNotIn('UNUSED EVIDENCE', str(result))
+
     def test_graphics_inside_uninspected_arguments_cannot_publish_assets(self):
-        for body, extra in ((r'\url{https://example.test/\includegraphics{hidden.pdf}}', {}),
-                            (r'{\input{child}}', {'child.tex': r'\includegraphics{hidden.pdf}'})):
-            with self.subTest(body=body):
-                result = figures.extract_figure_text(bundle({'main.tex': paper(body),
-                    'hidden.pdf': pdf('UNUSED EVIDENCE'), **extra}), AID)
-                self.assertEqual(result['chunks'], [])
-                self.assertEqual(result['coverage'][0]['status'], 'unsupported_source_semantics')
+        result = figures.extract_figure_text(bundle({'main.tex': paper(r'{\input{child}}'),
+            'child.tex': r'\includegraphics{hidden.pdf}',
+            'hidden.pdf': pdf('UNUSED EVIDENCE')}), AID)
+        self.assertEqual(result['chunks'], [])
+        self.assertEqual(result['coverage'][0]['status'], 'unsupported_source_semantics')
 
     def test_active_references_graphicspath_and_explicit_gaps(self):
-        source = paper(r'''\iffalse\includegraphics{hidden.pdf}\fi
-% \includegraphics{comment.pdf}
+        source = paper(r'''% \includegraphics{comment.pdf}
 \verb|\includegraphics{literal.pdf}|
 \includegraphics{visible}
 \includegraphics{raster.png}
@@ -178,6 +202,16 @@ class FigureTextTests(unittest.TestCase):
         self.assertEqual(statuses, {'text_extracted', 'needs_visual_extraction',
                                    'missing_or_ambiguous', 'unsupported_reference', 'unsupported_syntax'})
         self.assertNotIn('HIDDEN', str(result))
+
+    def test_graphics_calls_with_constant_conditions_require_fallback(self):
+        # The source parser cannot inspect arbitrary macro argument consumption.
+        # Do not recover unused assets by guessing execution through a condition.
+        data = bundle({'main.tex': paper(r'\iffalse\includegraphics{hidden.pdf}\fi' +
+                                        r'\includegraphics{visible.pdf}'),
+                       'hidden.pdf': pdf('UNUSED EVIDENCE'),
+                       'visible.pdf': pdf('VISIBLE EVIDENCE')})
+        with self.assertRaises(ValueError):
+            figures.extract_figure_text(data, AID)
 
     def test_unexecuted_macros_and_unknown_branch_arguments_are_not_figure_evidence(self):
         for body in (r'\newcommand{\unused}{\includegraphics{fig.pdf}}',

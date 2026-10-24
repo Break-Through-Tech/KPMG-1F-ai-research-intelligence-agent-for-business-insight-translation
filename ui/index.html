@@ -45,6 +45,10 @@
   </header>
   <div class="app-shell">
     <main id="main">
+      <div id="conversation-tools" class="conversation-tools" hidden>
+        <span class="meta">Research conversation</span>
+        <button id="new-research-conversation" type="button" class="quiet" aria-label="New research conversation"><span aria-hidden="true">+</span> New conversation</button>
+      </div>
       <div id="conversation" class="conversation" role="region" aria-label="Research conversation" tabindex="-1">
         <div id="welcome" class="welcome"><h2>Explore a research example.</h2><p>Read an answer. Follow a citation when you need the source.</p></div>
         <div id="output" aria-busy="false"></div>
@@ -57,6 +61,7 @@
             <input id="industry" name="industry" form="research-form" type="text" maxlength="300" placeholder="e.g. financial-services research team">
             <p class="meta">Leave blank for research only. Business implications require explicit context and remain unapproved.</p>
           </div>
+        <section id="clarification-panel" class="question-panel" aria-labelledby="clarification-prompt" hidden></section>
         <form id="research-form">
           <label for="query" class="sr-only">Research question</label>
           <textarea id="query" name="query" rows="2" required maxlength="2000" placeholder="Enter a research question…" aria-describedby="demo-note entry-hint">How should the synthetic agents be evaluated?</textarea>

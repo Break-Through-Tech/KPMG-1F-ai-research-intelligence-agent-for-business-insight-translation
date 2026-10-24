@@ -55,6 +55,20 @@ body, textarea, .meta, #citation-preview { line-height: var(--reading-line-heigh
 main { align-self: stretch; }
 .conversation { overflow: visible; flex: 1; }
 #evidence-panel { position: sticky; top: 0; height: auto; max-height: 100dvh; flex-basis: min(360px, 40%); min-width: 0; }
+/* Desktop panes fill the space below the actual (possibly wrapped) header.
+   Keep mobile support in document flow, and scroll each desktop pane separately. */
+@media (min-width: 801px) {
+  body { height: 100dvh; display: flex; flex-direction: column; }
+  .masthead { flex-shrink: 0; }
+  .app-shell { flex: 1; min-height: 0; align-items: stretch; }
+  main { min-height: 0; }
+  .conversation { overflow-y: auto; }
+  #evidence-panel { position: relative; height: 100%; max-height: none; }
+  body.reading-document-flow { height: auto; min-height: 100dvh; }
+  .reading-document-flow .app-shell { flex: none; min-height: 0; align-items: flex-start; }
+  .reading-document-flow .conversation { overflow: visible; min-height: 12rem; }
+  .reading-document-flow #evidence-panel { position: sticky; top: 0; height: auto; max-height: 100dvh; }
+}
 .skip { top: 0; transform: translateY(-150%); }
 .skip:focus { top: 8px; transform: none; }
 .reading-settings { min-width: 0; }

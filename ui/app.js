@@ -145,9 +145,10 @@ function focusInitiator(trigger) {
 }
 
 function setRailOpen(open, trigger = null) {
+  if (open && trigger) returnFocus = trigger;
   document.body.classList.toggle('showing-clarification-evidence', open && rail.classList.contains('clarification-evidence'));
   if (open && !rail.open) {
-    returnFocus = trigger;
+    returnFocus = trigger || returnFocus;
     if (mobile.matches && !rail.classList.contains('clarification-evidence')) rail.showModal();
     else rail.show();
   } else if (!open && rail.open) {

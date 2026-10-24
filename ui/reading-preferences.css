@@ -64,6 +64,10 @@ main { align-self: stretch; }
   main { min-height: 0; }
   .conversation { overflow-y: auto; }
   #evidence-panel { position: relative; height: 100%; max-height: none; }
+  body.reading-document-flow { height: auto; min-height: 100dvh; }
+  .reading-document-flow .app-shell { flex: none; min-height: 0; align-items: flex-start; }
+  .reading-document-flow .conversation { overflow: visible; min-height: 12rem; }
+  .reading-document-flow #evidence-panel { position: sticky; top: 0; height: auto; max-height: 100dvh; }
 }
 .skip { top: 0; transform: translateY(-150%); }
 .skip:focus { top: 8px; transform: none; }

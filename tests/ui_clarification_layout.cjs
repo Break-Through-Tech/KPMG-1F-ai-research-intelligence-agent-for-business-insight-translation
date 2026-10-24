@@ -65,7 +65,8 @@ test('desktop rail fills viewport below header and scrolls independently', async
     await page.setViewportSize({width: 1440, height: 600});
     await assertRailBounds();
     await page.getByText('Reading preferences', {exact: true}).click();
-    await assertRailBounds();
+    // When controls exhaust the viewport, document flow takes precedence.
+    if (!await page.locator('body').evaluate(n => n.classList.contains('reading-document-flow'))) await assertRailBounds();
     await page.getByText('Reading preferences', {exact: true}).click();
     await page.locator('#evidence-content').evaluate(n => {
       const original = n.innerHTML;
@@ -78,6 +79,41 @@ test('desktop rail fills viewport below header and scrolls independently', async
     assert.equal(await page.locator('.conversation').evaluate(n => n.scrollTop), before);
     assert.equal(await page.evaluate(() => window.scrollY), 0);
     await assertRailBounds();
+  });
+});
+test('enlarged desktop text with expanded preferences keeps completed answers readable', async () => {
+  await desk(1440, async page => {
+    await page.getByRole('radio').first().check();
+    await page.getByRole('button', {name: 'Submit answer', exact: true}).click();
+    await idle(page);
+    await page.setViewportSize({width: 1440, height: 600});
+    await page.getByText('Reading preferences', {exact: true}).click();
+    await page.locator('#reading-size').selectOption('200');
+    await page.waitForFunction(() => document.querySelector('body').classList.contains('reading-document-flow'));
+    const answer = page.locator('.answer-text').first();
+    await answer.scrollIntoViewIfNeeded();
+    assert.ok(await answer.isVisible());
+    const pane = await page.locator('.conversation').evaluate(n => ({height: n.clientHeight, content: n.scrollHeight, overflow: getComputedStyle(n).overflowY}));
+    assert.ok(pane.height >= 384, JSON.stringify(pane));
+    assert.equal(pane.overflow, 'visible');
+    await page.getByRole('textbox', {name: 'Research question', exact: true}).scrollIntoViewIfNeeded();
+    assert.ok(await page.getByRole('textbox', {name: 'Research question', exact: true}).isVisible());
+    if (process.env.QA_SCREENSHOT_DIR) await page.screenshot({path: `${process.env.QA_SCREENSHOT_DIR}/desktop-200-preferences.png`, fullPage: true});
+  });
+});
+test('repurposed open citation rail returns focus to the current clarification', async () => {
+  await desk(1440, async page => {
+    await page.getByRole('radio').first().check();
+    await page.getByRole('button', {name: 'Submit answer', exact: true}).click();
+    await idle(page);
+    await page.locator('.citation').first().click();
+    await page.getByRole('button', {name: /^Inspect source context,/}).click();
+    assert.equal(await page.locator('#evidence-panel').evaluate(n => n.open), true);
+    await page.getByRole('textbox', {name: 'Research question', exact: true}).fill('Another question needing clarification');
+    await page.getByRole('button', {name: 'Search research', exact: true}).click();
+    await page.getByRole('heading', {name: prompt}).waitFor();
+    await page.getByRole('button', {name: 'Close source context', exact: true}).click();
+    assert.equal(await page.getByRole('button', {name: 'Why these options?', exact: true}).evaluate(n => document.activeElement === n), true);
   });
 });
 for (const width of [1440, 390, 320]) {

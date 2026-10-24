@@ -56,6 +56,7 @@ function markAnswerReady(answer) {
 
 function readyAnnouncement(demo, number) {
   const outcome = {
+    'plain-language': 'ready. Draft, not approved.',
     full: 'ready. Draft, not approved.',
     partial: 'ready. Partial draft; business translation abstained. Not approved.',
     insufficient: 'abstained: insufficient support.',
@@ -91,6 +92,7 @@ const runLabel = demo => {
     : 'Saved research result · Generation method unverified · Inspect provenance in Details';
 };
 const STATES = {
+  'plain-language': ['Full draft · definition fixture', 'Synthetic example with explicit term support.'],
   full: ['Full draft', 'Research summary and conditional business implications are available.'],
   partial: ['Partial draft', 'The research summary is available. Business translation abstained.'],
   insufficient: ['Abstention · insufficient support', 'Passages are available, but do not support an answer.'],
@@ -294,7 +296,12 @@ function showQuote(item, demo, number, index, trigger) {
   actions.append(more);
   quotePreview.replaceChildren(head, excerpts, element('p', `${passage.title} · ${location}`, 'meta quote-source'), actions);
   quotePreview.showPopover();
-  const rect = trigger.getBoundingClientRect();
+  positionQuotePreview();
+}
+
+function positionQuotePreview() {
+  if (!previewTrigger || !quotePreview.matches(':popover-open')) return;
+  const rect = previewTrigger.getBoundingClientRect();
   const box = quotePreview.getBoundingClientRect();
   quotePreview.style.left = `${Math.max(12, Math.min(rect.left, innerWidth - box.width - 12))}px`;
   const top = rect.bottom + 8 + box.height <= innerHeight - 12 ? rect.bottom + 8 : rect.top - box.height - 8;
@@ -329,7 +336,18 @@ document.addEventListener('keydown', event => {
 document.addEventListener('pointerdown', event => {
   if (!quotePreview.contains(event.target) && event.target !== previewTrigger) closePreview();
 });
-conversation.addEventListener('scroll', closePreview);
+// Scroll events do not identify their cause: focusing a citation can queue a
+// browser scroll after its preview opens. Keep that preview anchored instead
+// of dismissing it and stealing focus. Explicit reading-scroll gestures still
+// dismiss it; pointerdown outside the preview also covers scrollbar dragging.
+conversation.addEventListener('scroll', positionQuotePreview);
+conversation.addEventListener('wheel', closePreview, {passive: true});
+conversation.addEventListener('touchmove', closePreview, {passive: true});
+document.addEventListener('keydown', event => {
+  if (event.defaultPrevented || event.target.closest('input, textarea, select, [contenteditable]')) return;
+  if ((conversation.contains(event.target) || quotePreview.contains(event.target)) &&
+      ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End'].includes(event.key)) closePreview();
+});
 window.addEventListener('resize', closePreview);
 
 function citedParagraph(item, demo, number) {
@@ -352,14 +370,14 @@ function citedParagraph(item, demo, number) {
     citation.addEventListener('keydown', event => {
       if (event.key === 'Tab' && !event.shiftKey && previewTrigger === citation) {
         event.preventDefault();
-        quotePreview.querySelector('button, a').focus();
+        quotePreview.querySelector('button, a').focus({preventScroll: true});
       }
     });
     // Native buttons activate with Enter, Space, pointer or touch. Opening the
     // original URL is a separate, explicitly named link inside the preview.
     citation.addEventListener('click', () => {
       showQuote(item, demo, number, index, citation);
-      quotePreview.querySelector('button').focus();
+      quotePreview.querySelector('button').focus({preventScroll: true});
     });
     paragraph.append(document.createTextNode(' '), citation);
   }
@@ -371,7 +389,13 @@ function renderDraft(demo, number, answer) {
   const narrative = element('div', undefined, 'answer-text');
   narrative.append(element('h3', 'Research findings'));
   if (!result.summary.claims.length) narrative.append(element('p', 'No supported research claims.'));
-  for (const claim of result.summary.claims.filter(claim => claim.kind !== 'interpretation')) narrative.append(citedParagraph(claim, demo, number));
+  const claimNodes = [];
+  for (const [index, claim] of result.summary.claims.entries()) {
+    if (claim.kind === 'interpretation') continue;
+    const node = citedParagraph(claim, demo, number);
+    narrative.append(node);
+    claimNodes.push({index, claim, node});
+  }
   const interpretations = result.summary.claims.filter(claim => claim.kind === 'interpretation');
   if (interpretations.length) {
     narrative.append(element('h3', 'Interpretation'), element('p', 'Inferences from the evidence—not findings validated by the study.', 'meta'));
@@ -394,7 +418,46 @@ function renderDraft(demo, number, answer) {
       narrative.append(citedParagraph(implication, demo, number), element('p', `Suggested action: ${implication.suggested_action}`));
     }
   }
-  answer.append(narrative);
+  const view = demo.plain_language;
+  const viewControls = element('fieldset', undefined, 'explanation-view');
+  viewControls.append(element('legend', 'Research explanation view'));
+  const technical = element('input');
+  technical.type = 'radio'; technical.name = `view-${number}`; technical.value = 'technical'; technical.checked = true;
+  const plain = element('input');
+  plain.type = 'radio'; plain.name = technical.name; plain.value = 'plain';
+  const technicalLabel = element('label', 'Technical / original ');
+  technicalLabel.prepend(technical);
+  const plainLabel = element('label', 'Plain language ');
+  plainLabel.prepend(plain);
+  viewControls.append(technicalLabel, plainLabel);
+  const viewNote = element('p', '', 'meta');
+  const definitions = disclosure('Technical term definitions');
+  if (view?.status === 'available') {
+    viewNote.textContent = `${view.fixture ? 'Synthetic fixture demonstration. ' : ''}Meaning and uncertainty review pending. Only research findings are rewritten; interpretations, business actions, assumptions, limitations and source passages stay unchanged.`;
+    for (const definition of view.definitions) {
+      const term = disclosure(definition.term);
+      if (definition.status === 'supported') term.append(citedParagraph(definition, demo, number));
+      else term.append(element('p', `Definition unavailable: ${definition.reason}`));
+      definitions.append(term);
+    }
+    if (!view.definitions.length) definitions.append(element('p', 'No supported term definitions supplied.'));
+  } else {
+    viewNote.textContent = view?.reason || 'Plain-language generation is unavailable. The original answer is retained.';
+    definitions.append(element('p', 'Definitions unavailable: no validated supporting material supplied.'));
+  }
+  function selectView() {
+    closePreview();
+    for (const entry of claimNodes) {
+      const rewrite = plain.checked && view?.status === 'available' ? view.claims[entry.index] : null;
+      const node = citedParagraph(rewrite ? {...entry.claim, text: rewrite.text, support: rewrite.support} : entry.claim, demo, number);
+      entry.node.replaceWith(node); entry.node = node;
+    }
+    viewNote.setAttribute('role', 'status');
+    if (plain.checked && view?.status !== 'available') viewNote.textContent = view?.reason || 'Plain-language generation is unavailable. The original answer is retained.';
+  }
+  technical.addEventListener('change', selectView);
+  plain.addEventListener('change', selectView);
+  answer.append(viewControls, viewNote, narrative, definitions);
   const detailGroup = element('div', undefined, 'detail-group');
   const limits = disclosure('Assumptions, risks & limitations');
   list(limits, 'Summary limitations', result.summary.limitations);

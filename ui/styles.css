@@ -167,3 +167,9 @@ blockquote { border-left: 2px solid #aab5c5; margin: 0 0 28px; padding: 0 0 0 16
   .controls { width: 100%; }
 }
 [hidden] { display: none !important; }
+
+/* #141: native radio grouping wraps without changing other reading controls. */
+.explanation-view { min-width: 0; margin: 0 0 12px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; }
+.explanation-view legend { padding: 0 4px; font-size: 14px; }
+.explanation-view label { display: inline-flex; gap: 8px; align-items: center; min-height: 44px; margin-right: 16px; cursor: pointer; }
+.explanation-view input { accent-color: var(--primary); flex-shrink: 0; }

@@ -9,6 +9,7 @@ import mimetypes
 
 from src.research_contracts import validate_request, validate_result
 from src.paper_conversation import validate_history
+from src.plain_language import fixture_view, plain_language_view
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / 'tests' / 'fixtures' / 'research'
@@ -21,6 +22,7 @@ VENDOR_ASSETS = {
 }
 SCENARIOS = {
     'full': 'normal-v1.json',
+    'plain-language': 'plain-language-v1.json',
     'partial': 'normal-v1.json',
     'insufficient': 'insufficient-v1.json',
     'empty': 'empty-v1.json',
@@ -53,6 +55,7 @@ def load_demo(request: dict, scenario: str) -> dict:
         )
     validate_result(result)
     envelope['result'] = result
+    envelope['plain_language'] = fixture_view(result)
     return envelope
 
 
@@ -70,7 +73,7 @@ def saved_result_envelope(result):
         scenario = 'full'
     return {'mode': 'saved-real-result', 'scenario': scenario,
             'submitted_request': result['request'], 'result': result,
-            'error': None, 'fixture_file': None}
+            'error': None, 'fixture_file': None, 'plain_language': plain_language_view(result)}
 
 
 class DemoHandler(BaseHTTPRequestHandler):
@@ -177,6 +180,8 @@ class DemoHandler(BaseHTTPRequestHandler):
                 return
             try:
                 response = self.research(request)
+                if response.get('result'):
+                    response['plain_language'] = plain_language_view(response['result'])
                 type(self).saved_result = {**response, 'mode': 'saved-real-result'}
             except Exception:
                 self.respond(502, {'error': 'Synthesis failed or its citations did not validate. No answer was accepted. Retry your question.'})

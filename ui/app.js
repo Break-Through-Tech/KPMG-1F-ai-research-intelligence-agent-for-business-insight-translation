@@ -44,6 +44,7 @@ const runLabel = demo => {
     : 'Saved research result · Generation method unverified · Inspect provenance in Details';
 };
 const STATES = {
+  'plain-language': ['Full draft · definition fixture', 'Synthetic example with explicit term support.'],
   full: ['Full draft', 'Research summary and conditional business implications are available.'],
   partial: ['Partial draft', 'The research summary is available. Business translation abstained.'],
   insufficient: ['Abstention · insufficient support', 'Passages are available, but do not support an answer.'],
@@ -282,7 +283,13 @@ function renderDraft(demo, number, answer) {
   const result = demo.result;
   const narrative = element('div', undefined, 'answer-text');
   if (!result.summary.claims.length) narrative.append(element('p', 'No supported research claims.'));
-  for (const claim of result.summary.claims.filter(claim => claim.kind !== 'interpretation')) narrative.append(citedParagraph(claim, demo, number));
+  const claimNodes = [];
+  for (const [index, claim] of result.summary.claims.entries()) {
+    if (claim.kind === 'interpretation') continue;
+    const node = citedParagraph(claim, demo, number);
+    narrative.append(node);
+    claimNodes.push({index, claim, node});
+  }
   const interpretations = result.summary.claims.filter(claim => claim.kind === 'interpretation');
   if (interpretations.length) {
     narrative.append(element('h3', 'Interpretation'), element('p', 'Inferences from the evidence—not findings validated by the study.', 'meta'));
@@ -304,7 +311,46 @@ function renderDraft(demo, number, answer) {
       narrative.append(citedParagraph(implication, demo, number), element('p', `Suggested action: ${implication.suggested_action}`));
     }
   }
-  answer.append(narrative);
+  const view = demo.plain_language;
+  const viewControls = element('fieldset', undefined, 'explanation-view');
+  viewControls.append(element('legend', 'Research explanation view'));
+  const technical = element('input');
+  technical.type = 'radio'; technical.name = `view-${number}`; technical.value = 'technical'; technical.checked = true;
+  const plain = element('input');
+  plain.type = 'radio'; plain.name = technical.name; plain.value = 'plain';
+  const technicalLabel = element('label', 'Technical / original ');
+  technicalLabel.prepend(technical);
+  const plainLabel = element('label', 'Plain language ');
+  plainLabel.prepend(plain);
+  viewControls.append(technicalLabel, plainLabel);
+  const viewNote = element('p', '', 'meta');
+  const definitions = disclosure('Technical term definitions');
+  if (view?.status === 'available') {
+    viewNote.textContent = `${view.fixture ? 'Synthetic fixture demonstration. ' : ''}Meaning and uncertainty review pending. Only research findings are rewritten; interpretations, business actions, assumptions, limitations and source passages stay unchanged.`;
+    for (const definition of view.definitions) {
+      const term = disclosure(definition.term);
+      if (definition.status === 'supported') term.append(citedParagraph(definition, demo, number));
+      else term.append(element('p', `Definition unavailable: ${definition.reason}`));
+      definitions.append(term);
+    }
+    if (!view.definitions.length) definitions.append(element('p', 'No supported term definitions supplied.'));
+  } else {
+    viewNote.textContent = view?.reason || 'Plain-language generation is unavailable. The original answer is retained.';
+    definitions.append(element('p', 'Definitions unavailable: no validated supporting material supplied.'));
+  }
+  function selectView() {
+    closePreview();
+    for (const entry of claimNodes) {
+      const rewrite = plain.checked && view?.status === 'available' ? view.claims[entry.index] : null;
+      const node = citedParagraph(rewrite ? {...entry.claim, text: rewrite.text, support: rewrite.support} : entry.claim, demo, number);
+      entry.node.replaceWith(node); entry.node = node;
+    }
+    viewNote.setAttribute('role', 'status');
+    if (plain.checked && view?.status !== 'available') viewNote.textContent = view?.reason || 'Plain-language generation is unavailable. The original answer is retained.';
+  }
+  technical.addEventListener('change', selectView);
+  plain.addEventListener('change', selectView);
+  answer.append(viewControls, viewNote, narrative, definitions);
   const detailGroup = element('div', undefined, 'detail-group');
   const limits = disclosure('Assumptions, risks & limitations');
   list(limits, 'Summary limitations', result.summary.limitations);

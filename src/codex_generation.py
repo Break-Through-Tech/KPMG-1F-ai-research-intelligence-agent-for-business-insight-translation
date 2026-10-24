@@ -22,10 +22,12 @@ DISABLED_FEATURES = ('shell_tool', 'unified_exec', 'code_mode', 'code_mode_host'
                      'apps', 'plugins', 'hooks', 'multi_agent', 'multi_agent_v2',
                      'browser_use', 'computer_use', 'view_image', 'memories',
                      'shell_snapshot', 'workspace_dependencies', 'skill_search')
+REQUIRED_EXEC_FLAGS = ('--ignore-user-config', '--strict-config', '--ephemeral',
+                       '--skip-git-repo-check', '--sandbox', '--json', '--output-schema')
 
 def create_codex_generate(*, model, binary=None, effort='medium', timeout=300,
                           receipts=None):
-    binary = binary or shutil.which('codex')
+    binary = binary or os.environ.get('RESEARCH_CODEX_BIN') or shutil.which('codex')
     if not binary or not Path(binary).is_file():
         raise PipelineError('Codex CLI unavailable; specify its installed binary.')
     if not isinstance(model, str) or not model.strip():
@@ -37,6 +39,16 @@ def create_codex_generate(*, model, binary=None, effort='medium', timeout=300,
     env = {k: v for k, v in os.environ.items() if k in {
         'HOME', 'PATH', 'USER', 'LOGNAME', 'TMPDIR', 'CODEX_HOME',
         'SYSTEMROOT', 'APPDATA', 'LOCALAPPDATA'}}
+    # Probe the explicitly selected executable without reading user config or
+    # sending evidence to a model. Never silently drop an isolation flag or try
+    # another binary/provider when an old CLI is selected.
+    try:
+        help_result = subprocess.run([str(binary), 'exec', '--help'], env=env,
+                                     capture_output=True, text=True, timeout=15)
+    except (OSError, subprocess.TimeoutExpired):
+        raise PipelineError('Codex CLI compatibility check failed; select a compatible --codex-bin.') from None
+    if help_result.returncode or any(flag not in help_result.stdout for flag in REQUIRED_EXEC_FLAGS):
+        raise PipelineError('Codex CLI lacks required text-only isolation options. Select a compatible --codex-bin or RESEARCH_CODEX_BIN; no fallback occurred.')
     try:
         login = subprocess.run([str(binary), 'login', 'status'], env=env,
                                capture_output=True, text=True, timeout=15)

@@ -427,13 +427,38 @@ There is no transaction/revision lock against concurrent index writers.
   Query `How should AI agents be evaluated?`, top-k 5 returned versioned papers
   `2608.00339v1`, `2605.00276v1`, `2604.00319v1`, `2604.00324v1` with PDF-page
   locators. This proves retrieval wiring, **not supported cross-paper synthesis**.
-- Live provider walkthrough is blocked here: installed Codex 0.144.2 rejects the
-  user's current config and does not support the isolation flags required by
-  `src.codex_generation`. No config/auth changes or weaker isolation were used.
-  Run the commands above with a compatible explicitly configured adapter before
-  claiming a complete real-provider walkthrough. No stakeholder acceptance claimed.
+- The earlier Codex 0.144.2 compatibility blocker is resolved by explicitly
+  selecting a compatible installed CLI, without modifying user config or auth.
+  On 2026-10-24, Codex 0.163.0-alpha.11.2 with existing ChatGPT subscription
+  login and explicit `gpt-6.1-sol` passed isolated structured JSON generation.
+  A real loopback HTTP run over the existing 877-record index then passed:
+  multi-paper summary plus professional-services business translation (`full`),
+  out-of-corpus propulsion abstention (`insufficient`), and a vague question
+  followed by clarification/resume to a cited summary (`summary-only`).
+  These are development walkthroughs, not held-out semantic evaluation,
+  source certification, stakeholder acceptance, or deployment. Results remain
+  pending/unapproved; exact-quote membership is not entailment certification.
 - Handoff to #120: visible flow/citation usability; #121: independently labeled
   source-backed answers; #122: retrieved chunk/rank/locator diagnostics; #123:
   summary/business/transfer audit; #124: pending result/review fingerprint. Those
   assignments are not closed by this integration. Use a new predeclared held-out
   set; the injected test cases are development-only.
+
+### Select a compatible subscription CLI
+
+Pass `--codex-bin /absolute/path/to/codex`, or set `RESEARCH_CODEX_BIN` to that
+same executable. Explicit `--codex-bin` wins, then the environment setting,
+then `codex` on PATH. There is no silent alternate-binary/provider fallback.
+The adapter checks `exec --help` for required isolation/output options before
+checking existing ChatGPT login. An incompatible CLI fails before research
+prompts are sent. Actual generation still uses strict config, an empty scratch
+working directory, read-only sandbox, disabled execution/integration features,
+ephemeral sessions, schema validation and tool-event rejection.
+Help preflight checks advertised options, not every runtime capability; generation
+continues to fail closed if the selected model or flags are rejected.
+
+Confirm the selected executable with `codex --version`, `codex exec --help`,
+and `codex login status`. Do not remove isolation flags, copy credentials,
+change global configuration, or switch to API-key billing to make an old CLI work.
+Official references: [CLI options](https://learn.chatgpt.com/docs/developer-commands#codex-exec)
+and [subscription authentication](https://learn.chatgpt.com/docs/auth).

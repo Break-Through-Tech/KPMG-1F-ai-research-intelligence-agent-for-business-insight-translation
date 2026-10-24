@@ -298,6 +298,48 @@ class TexIngestionTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 tex.chunk_source(('\\begin{document}' + malformed + '\\end{document}').encode(), AID)
 
+    def test_uninspected_alias_sources_cannot_consume_conditional_delimiters(self):
+        for command in ('let', 'futurelet'):
+            for target in (r'\@gobble', r'\!'):
+                for chain in ('', r'\let\next\ignore'):
+                    for included in (False, True):
+                        with self.subTest(command=command, target=target, chain=chain, included=included):
+                            preamble = (r'\documentclass{article}\makeatletter' + '\\' + command +
+                                        r'\ignore' + target + chain + r'\makeatother')
+                            body = r'\iftrue' + (r'\next' if chain else r'\ignore') + r'\else RIGHT\fi'
+                            files = {'main.tex': preamble + r'\begin{document}' +
+                                     (r'\input{child}' if included else body) + r'\end{document}'}
+                            if included:
+                                files['child.tex'] = body
+                            with self.assertRaises(ValueError):
+                                tex.chunk_source(archive(files), AID)
+
+    def test_body_input_termination_requires_pdf_fallback_and_preserves_output(self):
+        files = {'main.tex': r'\begin{document}\input{child}\end{document}',
+                 'child.tex': 'VISIBLE\n\\endinput\n\\iftrue HIDDEN\\fi'}
+        data = archive(files)
+        with self.assertRaisesRegex(ValueError, 'input termination'):
+            tex.chunk_source(data, AID)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / f'{AID}.source').write_bytes(data)
+            output = root / 'out.parquet'
+            output.write_bytes(b'previous corpus')
+            with patch.object(config, 'TEX_DIR', root), \
+                 patch.object(pipeline, 'load_html', return_value=None), \
+                 patch.object(pipeline, 'resolve_pdf_path', return_value=None):
+                with self.assertRaises(RuntimeError):
+                    pipeline.process_and_store([ROW], output, use_tex=True)
+                self.assertEqual(output.read_bytes(), b'previous corpus')
+            pages = [{'page': 2, 'text': 'Valid PDF fallback evidence. ' * 30}]
+            with patch.object(config, 'TEX_DIR', root), \
+                 patch.object(pipeline, 'load_html', return_value=None), \
+                 patch.object(pipeline, 'resolve_pdf_path', return_value=root / 'paper.pdf'), \
+                 patch.object(pipeline, 'extract_pages', return_value=pages):
+                result = pipeline.process_and_store([ROW], output, use_tex=True)
+                self.assertEqual(set(result.source), {'pdf'})
+                self.assertNotIn('HIDDEN', ''.join(result.text))
+
     def test_comments_and_constant_branches_do_not_publish_hidden_text(self):
         body = r'''\begin{document}
 START

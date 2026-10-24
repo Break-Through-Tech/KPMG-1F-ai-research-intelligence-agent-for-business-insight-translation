@@ -209,6 +209,11 @@ class PreambleState:
                 if target:
                     if active or any(v is None for v, _ in stack):
                         self.invalidate(target[1])
+                        # An alias can consume following delimiters even when
+                        # its source is a package/@ control or character token
+                        # that this reader cannot inspect. Preserve opacity
+                        # independently of source-name/dependency discovery.
+                        self.macros.add(target[1])
                     source = re.match(r'\s*=?\s*\\(?:[a-zA-Z@]+|.)', code[target.end():])
                     if source and (active or any(v is None for v, _ in stack)):
                         alias = re.search(r'\\([a-zA-Z]+)', source[0])
@@ -219,6 +224,8 @@ class PreambleState:
                             if re.fullmatch(r'[a-zA-Z]+(?:true|false)', alias[1]):
                                 self.invalidate(alias[1])
                     cursor = target.end() + (source.end() if source else 0)
+                elif active or any(v is None for v, _ in stack):
+                    raise ValueError('Uninspected preamble alias target')
             elif command in self.mutators or command in ('csname', 'unless', 'catcode', 'usepackage', 'documentclass'):
                 if active or any(v is None for v, _ in stack):
                     if command in {'csname', 'catcode', 'unless'}:

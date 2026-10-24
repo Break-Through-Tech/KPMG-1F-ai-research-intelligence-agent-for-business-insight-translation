@@ -23,6 +23,14 @@ def document(aid=AID, body=r'\citep[see][p.2]{llama}\nocite{unused}\bibliography
 
 
 class CitationGraphTests(unittest.TestCase):
+    def test_included_document_termination_cannot_create_unreachable_citation_hints(self):
+        for ending in (r'\end{document}', r'\end {document}', '\\endinput\n'):
+            with self.subTest(ending=ending):
+                data = bundle({'main.tex': paper(r'\bibliography{refs}\input{child}\cite{llama}'),
+                               'child.tex': ending + r'\cite{llama}', 'refs.bib': BIB})
+                with self.assertRaisesRegex(ValueError, 'input termination'):
+                    graph.build_graph([dict(arxiv_id=AID, source_bytes=data)])
+
     def test_exact_metadata_identity_and_citation_provenance(self):
         first = document()
         second = document('2601.00002v1')

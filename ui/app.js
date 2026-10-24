@@ -357,6 +357,7 @@ const suggestions = document.querySelector('#question-suggestions');
 let composing = false;
 let compositionEndedAt = -Infinity;
 let appReady = false;
+let retryContext = null;
 const preferenceKey = 'research-desk.enter-behavior.v1';
 try {
   if (localStorage.getItem(preferenceKey) === 'send') enterBehavior.value = 'send';
@@ -424,7 +425,7 @@ function setQuestionBusy(busy) {
   output.setAttribute('aria-busy', String(busy));
 }
 
-function offerRetry(answer, query, scenario) {
+function offerRetry(answer, query, scenario, context) {
   const retry = element('button', 'Retry original question', 'quiet retry-question');
   retry.type = 'button';
   retry.addEventListener('click', () => {
@@ -433,7 +434,13 @@ function offerRetry(answer, query, scenario) {
     form.elements.scenario.value = scenario;
     queryInput.focus();
     retry.remove();
-    form.requestSubmit();
+    if (context && context.paper_context_id !== activePaperContextId) {
+      feedback.textContent = 'The paper changed since this question failed. Original question restored; review it before sending about the current paper. Previous context will not be sent.';
+      return;
+    }
+    retryContext = context;
+    try { form.requestSubmit(); }
+    finally { retryContext = null; }
   });
   answer.append(retry);
 }
@@ -444,6 +451,10 @@ form.addEventListener('submit', async event => {
   if (savedResult && !liveSynthesis) return;
   const query = form.elements.query.value;
   const scenario = form.elements.scenario.value;
+  let submissionContext = liveSynthesis ? (retryContext || {
+    history: conversationHistory.map(message => ({...message})),
+    paper_context_id: activePaperContextId,
+  }) : null;
   document.querySelector('.demo-settings').open = false;
   if (!query.trim()) {
     feedback.textContent = 'Enter a nonempty research question.';
@@ -473,7 +484,7 @@ form.addEventListener('submit', async event => {
     const response = await fetch(liveSynthesis ? '/api/research' : '/api/demo', {
       method: 'POST', headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({query, scenario,
-        ...(liveSynthesis ? {history: conversationHistory, paper_context_id: activePaperContextId} : {})}),
+        ...(submissionContext || {})}),
       signal: AbortSignal.timeout(liveSynthesis ? 330000 : 10000),
     });
     const demo = await response.json();
@@ -481,19 +492,20 @@ form.addEventListener('submit', async event => {
       if (liveSynthesis && demo.code === 'paper_changed') {
         conversationHistory = [];
         activePaperContextId = demo.paper_context_id || null;
+        submissionContext = {history: [], paper_context_id: activePaperContextId};
         contextRecoveryMessage = 'The loaded paper changed. Previous conversation context was cleared. Your question is unchanged; select Ask paper again to ask about the current paper.';
       }
       throw new Error('Request rejected.');
     }
     renderDemo(demo, number, answer);
     if (liveSynthesis) rememberAcceptedTurn(query, demo);
-    if (demo.error) offerRetry(answer, query, scenario);
+    if (demo.error) offerRetry(answer, query, scenario, submissionContext);
     if (demo.result) updateSuggestions(query);
     if (demo.result && form.elements.query.value === query) form.elements.query.value = '';
   } catch {
     const message = contextRecoveryMessage || (liveSynthesis ? 'Synthesis unavailable or citation validation failed. No answer was accepted. Your question is unchanged; retry when ready.' : 'Could not load the local example. Check that the demo server is running, then retry. Your question is unchanged.');
     answer.replaceChildren(element('h2', liveSynthesis ? 'Answer unavailable' : 'Example unavailable'), element('p', message, 'error'));
-    offerRetry(answer, query, scenario);
+    offerRetry(answer, query, scenario, submissionContext);
     feedback.textContent = message;
     feedback.classList.remove('sr-only');
     resetEvidence('The latest example did not load. Retry to inspect its evidence.');

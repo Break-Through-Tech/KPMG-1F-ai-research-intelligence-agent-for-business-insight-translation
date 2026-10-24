@@ -26,8 +26,10 @@ memory, indexed execution, or a research-quality claim. Parent: #136.
 - Busy/loading and failure status is visible and exposed by the existing polite
   status region. A failed turn retains its original question and adds **Retry
   original question**. This deliberately restores that turn's exact question and
-  scenario, focuses the composer, and sends once. Editing while a request is busy
-  is allowed; completion does not erase a different draft typed meanwhile.
+  scenario and original same-paper history, focuses the composer, and sends once.
+  An older retry whose paper identity is now stale only restores the question;
+  a visible notice requires review and a separate send, without cross-paper history.
+  Editing while a request is busy is allowed; completion does not erase a different draft typed meanwhile.
 - Configuration/saved-result check failures disable sending, do not silently
   switch to fixture execution, and offer **Retry loading question entry** without
   reloading the page or discarding the draft. Successful retry focuses entry.
@@ -79,10 +81,11 @@ causes a browser network diagnostic; runtime JavaScript errors are checked separ
 
 - 41 existing Python adapter/contract/single-paper tests passed (with jsonschema
   supplied in an isolated uv environment). Syntax and whitespace checks passed.
-- 12 Chrome browser regressions passed: newline/send preferences and persistence,
+- 13 Chrome browser regressions passed: newline/send preferences and persistence,
   both alternate send shortcuts, composition/legacy/commit-Enter event guards,
   fill-only editable suggestions, HTTP/network/simulated-provider failures,
-  retry focus/original payload, duplicate request blocking, draft retention while
+  retry focus/original payload and original history after intervening answers,
+  stale cross-paper retry review, duplicate request blocking, draft retention while
   busy, storage denial, configuration retries, paper-identity recovery,
   read-only replay, and 320px keyboard retry reachability/no horizontal overflow.
 - Visual inspection: 1440×1000 desktop and 375×900 mobile fixture success and

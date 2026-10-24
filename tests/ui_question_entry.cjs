@@ -138,6 +138,39 @@ test('contextual suggestions only in bound live paper mode, with existing succes
   }, {live: true});
 });
 
+test('delayed contextual retry retains original history and refuses stale cross-paper context', async () => {
+  await desk(async page => {
+    const requests = [];
+    await page.route('**/api/research', async r => {
+      const body = r.request().postDataJSON(); requests.push(body);
+      if (requests.length === 2 || requests.length === 4) {
+        await r.fulfill({status: 503, json: {error: 'Unavailable'}});
+      } else if (requests.length === 5) {
+        await r.fulfill({status: 409, json: {code: 'paper_changed', paper_context_id: 'paper-B'}});
+      } else await r.fulfill({json: envelope(body, true)});
+    });
+    const input = page.getByRole('textbox');
+    async function ask(text) { await input.fill(text); await input.press('Control+Enter'); await ready(page); }
+    await ask('Answer A');
+    await ask('Show the supporting evidence for the previous answer.');
+    const original = structuredClone(requests[1]);
+    await ask('Answer B');
+    assert.equal(requests[2].history.length, 2);
+    await page.getByRole('button', {name: 'Retry original question'}).click(); await ready(page);
+    assert.deepEqual(requests[3], original);
+    await ask('Change paper');
+    const count = requests.length;
+    await page.getByRole('button', {name: 'Retry original question'}).first().click();
+    assert.equal(requests.length, count);
+    assert.equal(await input.inputValue(), original.query);
+    assert.equal(await input.evaluate(e => e === document.activeElement), true);
+    assert.match(await page.locator('#feedback').innerText(), /paper changed.*review/i);
+    await input.press('Control+Enter'); await ready(page);
+    assert.equal(requests.at(-1).paper_context_id, 'paper-B');
+    assert.deepEqual(requests.at(-1).history, []);
+  }, {live: true});
+});
+
 test('paper_changed clears stale context and retry uses new identity with no previous turns', async () => {
   await desk(async page => {
     let requests = [];

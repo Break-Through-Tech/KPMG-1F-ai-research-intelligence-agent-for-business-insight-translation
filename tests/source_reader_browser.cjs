@@ -24,7 +24,8 @@ const screenshotDirectory = process.env.SCREENSHOT_DIR || os.tmpdir();
     await page.getByRole('button',{name:/^Inspect source context,/}).click();
     const panel = page.locator('#evidence-panel');
     await panel.waitFor({state:'visible'});
-    assert.equal(await panel.getByRole('group', {name:'Source passages', exact:true}).count(), 1);
+    // Synthesis places the group in a collapsed page-browser disclosure.
+    assert.equal(await panel.locator('.source-list[role="group"][aria-label="Source passages"]').count(), 1);
     assert.equal(await panel.locator('.source-exact-quote').innerText(), 'The measured result improves accuracy in this bounded experiment.');
     assert(await panel.getByText('Fixture claim about the bounded experiment.',{exact:true}).isVisible());
     assert.equal(await panel.locator('table th[scope="col"]').count(),2);
@@ -74,6 +75,7 @@ const screenshotDirectory = process.env.SCREENSHOT_DIR || os.tmpdir();
     await page.locator('.citation').first().press('Enter');
     await page.getByRole('button',{name:/^Inspect source context,/}).click();
     await panel.getByText('Browse paper pages (2)',{exact:true}).click();
+    assert.equal(await panel.getByRole('group', {name:'Source passages', exact:true}).count(), 1);
     await panel.locator('.source-choice').nth(1).click();
     assert(await panel.getByText('Fixture claim about the bounded experiment.',{exact:true}).isVisible());
     assert(await panel.getByText(/No exact supporting quote was supplied/).isVisible());

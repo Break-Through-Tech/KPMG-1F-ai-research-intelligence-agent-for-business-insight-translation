@@ -783,11 +783,19 @@ function setQuestionBusy(busy) {
   output.setAttribute('aria-busy', String(busy));
 }
 
-function offerRetry(answer, query, scenario, context) {
+function offerRetry(answer, query, scenario, context, pendingTurn = null) {
   const retry = element('button', 'Retry original question', 'quiet retry-question');
   retry.type = 'button';
   retry.addEventListener('click', () => {
     if (submit.disabled || requestPending) return;
+    if (clarificationEnabled && (
+      (context?.action === 'resume' && (!clarificationPending || pendingTurn !== activeClarificationTurn || context.conversation_id !== researchConversationId)) ||
+      (context?.action !== 'resume' && clarificationPending))) {
+      retry.remove();
+      feedback.textContent = 'This retry no longer owns the active clarification. Answer the current question or start a new conversation.';
+      feedback.classList.remove('sr-only');
+      return;
+    }
     queryInput.value = query;
     form.elements.scenario.value = scenario;
     queryInput.focus();
@@ -814,6 +822,7 @@ form.addEventListener('submit', async event => {
   if (savedResult && !liveSynthesis) return;
   const query = form.elements.query.value;
   const scenario = form.elements.scenario.value;
+  const pendingTurn = clarificationPending ? activeClarificationTurn : null;
   let submissionContext = indexedMode ? (retryContext || {context_id: indexedContextId, industry: form.elements.industry.value,
     ...(clarificationEnabled ? {conversation_id: researchConversationId, action: clarificationPending ? 'resume' : 'ask'} : {})}) : liveSynthesis ? (retryContext || {
     history: conversationHistory.map(message => ({...message})),
@@ -869,13 +878,21 @@ form.addEventListener('submit', async event => {
     }
     renderDemo(demo, number, answer);
     if (liveSynthesis) rememberAcceptedTurn(query, demo);
-    if (demo.error) offerRetry(answer, query, scenario, submissionContext);
+    if (demo.error) {
+      // A result means the pending resume has been consumed, even when the
+      // later business stage fails. Recover using the original research input.
+      const completed = clarificationEnabled && demo.result;
+      const retryQuery = completed ? demo.submitted_request.query : query;
+      const context = completed ? {...submissionContext, action: 'ask',
+        industry: demo.submitted_request.industry || ''} : submissionContext;
+      offerRetry(answer, retryQuery, scenario, context, pendingTurn);
+    }
     if (demo.result) updateSuggestions(query);
     if (demo.result && form.elements.query.value === query) form.elements.query.value = '';
   } catch {
     const message = contextRecoveryMessage || (liveSynthesis ? 'Synthesis unavailable or citation validation failed. No answer was accepted. Your question is unchanged; retry when ready.' : 'Could not load the local example. Check that the demo server is running, then retry. Your question is unchanged.');
     answer.replaceChildren(answerHeading(number), element('p', message, 'error'));
-    offerRetry(answer, query, scenario, submissionContext);
+    offerRetry(answer, query, scenario, submissionContext, pendingTurn);
     markAnswerReady(answer);
     feedback.textContent = contextRecoveryMessage && !indexedMode ? 'Paper changed. Context cleared; submit your question again.' : `Answer ${number} failed. Your question is unchanged; retry when ready.`;
     feedback.classList.remove('sr-only');

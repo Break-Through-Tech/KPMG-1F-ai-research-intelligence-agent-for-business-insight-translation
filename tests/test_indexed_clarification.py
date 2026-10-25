@@ -67,6 +67,23 @@ class SessionTests(unittest.TestCase):
         c = research.config()
         self.assertEqual(research.execute(self.payload(research, c, 'What are its limitations?'))['scenario'], 'clarification')
 
+    def test_business_failure_after_resume_recovers_with_original_request(self):
+        research = adapter()
+        config = research.config()
+        original = self.payload(research, config, 'What are its limitations?', industry='banking')
+        research.execute(original)
+        with patch('src.indexed_research.translate', side_effect=RuntimeError('Injected business failure')):
+            partial = research.execute(self.payload(research, config, 'Paper 1', action='resume'))
+        self.assertEqual(partial['scenario'], 'partial')
+        self.assertEqual(partial['result']['summary']['status'], 'ok')
+        self.assertEqual(partial['submitted_request']['query'], original['query'])
+        with self.assertRaises(IndexedContextError):
+            research.execute(self.payload(research, config, 'Paper 1', action='resume'))
+        recovered = research.execute({**original, 'action': 'ask'})
+        self.assertEqual(recovered['scenario'], 'full')
+        self.assertEqual(recovered['result']['business_insight']['industry'], 'banking')
+        self.assertEqual(partial['result']['summary']['status'], 'ok')
+
     def test_unknown_expired_and_wrong_context_rejected(self):
         now = [0]
         research = adapter(clock=lambda: now[0], ttl=30)

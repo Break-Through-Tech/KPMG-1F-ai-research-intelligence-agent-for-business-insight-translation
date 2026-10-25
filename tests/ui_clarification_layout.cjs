@@ -18,7 +18,7 @@ const options = [
 let browser;
 before(async () => { browser = await chromium.launch({headless: true}); });
 after(async () => { await browser?.close(); });
-async function desk(width, fn, {supported = true, retry = false, open = false} = {}) {
+async function desk(width, fn, {supported = true, retry = false, open = false, businessFailure = false} = {}) {
   const context = await browser.newContext({viewport: {width, height: 1000}, colorScheme: process.env.QA_COLOR_SCHEME || 'dark'});
   const page = await context.newPage();
   const errors = [], requests = [];
@@ -31,6 +31,9 @@ async function desk(width, fn, {supported = true, retry = false, open = false} =
     const request = r.request().postDataJSON(); requests.push(request);
     if (request.action === 'resume') {
       if (retry && attempts++ === 0) return r.fulfill({json: {mode: 'indexed', scenario: 'provider-error', result: null, error: {stage: 'research', message: 'Injected failure'}, submitted_request: request}});
+      if (businessFailure) return r.fulfill({json: {mode: 'indexed', scenario: 'partial',
+        submitted_request: {query: 'How should the synthetic agents be evaluated?', industry: 'banking'},
+        result: {...fixture, business_insight: undefined}, error: {stage: 'business', message: 'Injected business failure'}}});
       return r.fulfill({json: {mode: 'fixture', scenario: 'full', submitted_request: request, result: fixture, error: null}});
     }
     return r.fulfill({json: {mode: 'indexed', scenario: 'clarification', result: null, error: null, submitted_request: request,
@@ -40,6 +43,7 @@ async function desk(width, fn, {supported = true, retry = false, open = false} =
     await page.goto(base);
     assert.equal(await page.title(), 'Research desk · 1F');
     await page.waitForFunction(() => !document.querySelector('#submit').disabled);
+    if (businessFailure) await page.locator('[name="industry"]').fill('banking');
     await page.getByRole('textbox', {name: 'Research question', exact: true}).fill('How should the synthetic agents be evaluated?');
     await page.getByRole('button', {name: 'Search research', exact: true}).click();
     await page.getByRole('heading', {name: prompt}).waitFor();
@@ -164,6 +168,40 @@ test('own answer clears choice, survives a provider failure, and retries the sam
     await page.getByRole('button', {name: 'Retry original question'}).click(); await idle(page);
     assert.deepEqual(requests.at(-1), requests.at(-2));
     assert.equal(await page.locator('#clarification-panel').isVisible(), false);
+  }, {retry: true});
+});
+test('business failure after resume retries the original research, preserving the summary and industry', async () => {
+  await desk(1440, async (page, requests) => {
+    await page.getByRole('radio').first().check();
+    await page.getByRole('button', {name: 'Submit answer', exact: true}).click(); await idle(page);
+    assert.equal(requests.at(-1).action, 'resume');
+    assert.equal(await page.locator('#clarification-panel').isVisible(), false);
+    assert.ok(await page.locator('.answer-text').count());
+    await page.getByRole('button', {name: 'Retry original question'}).click(); await idle(page);
+    assert.equal(requests.at(-1).action, 'ask');
+    assert.equal(requests.at(-1).query, 'How should the synthetic agents be evaluated?');
+    assert.equal(requests.at(-1).industry, 'banking');
+    assert.ok(await page.locator('.answer-text').count());
+  }, {businessFailure: true});
+});
+test('an old failed-resume retry cannot change or answer a newer pending question', async () => {
+  await desk(390, async (page, requests) => {
+    const free = page.getByRole('textbox', {name: 'Clarification answer', exact: true});
+    await free.fill('Old answer');
+    await page.getByRole('button', {name: 'Submit answer', exact: true}).click(); await idle(page);
+    const oldRetry = page.getByRole('button', {name: 'Retry original question'});
+    await free.fill('Corrected answer');
+    await page.getByRole('button', {name: 'Submit answer', exact: true}).click(); await idle(page);
+    await page.getByRole('textbox', {name: 'Research question', exact: true}).fill('Another ambiguous question');
+    await page.getByRole('button', {name: 'Search research', exact: true}).click(); await idle(page);
+    await free.fill('New answer in progress');
+    const count = requests.length;
+    await oldRetry.click(); await idle(page);
+    assert.equal(requests.length, count);
+    assert.equal(await free.inputValue(), 'New answer in progress');
+    assert.equal(await page.locator('#query').inputValue(), 'New answer in progress');
+    await page.getByRole('button', {name: 'Submit answer', exact: true}).click(); await idle(page);
+    assert.equal(requests.at(-1).query, 'New answer in progress');
   }, {retry: true});
 });
 test('new conversation archives support and discards old pending controls', async () => {

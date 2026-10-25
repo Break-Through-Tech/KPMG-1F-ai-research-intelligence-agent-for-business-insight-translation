@@ -642,7 +642,8 @@ form.addEventListener('submit', async event => {
       method: 'POST', headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({query, scenario,
         ...(submissionContext || {})}),
-      signal: AbortSignal.timeout(liveSynthesis ? 330000 : 10000),
+      // Indexed synthesis and business translation have separate provider budgets.
+      signal: AbortSignal.timeout(indexedMode ? 1260000 : liveSynthesis ? 330000 : 10000),
     });
     const demo = await response.json();
     if (!response.ok) {

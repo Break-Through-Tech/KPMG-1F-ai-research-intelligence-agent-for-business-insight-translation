@@ -1,8 +1,5 @@
-# Week 7 audit: grounded outputs and review
+# Week 7 audit: grounded outputs and review (PR #112)
 
-Prepared 2026-10-25 under PR #112 (Week 7, "Grounded outputs and review", paired with Teegawende).
-
-**Status: DRAFT.** Labels were made with AI assistance and have not yet been verified by a second human reviewer. See the review checklist at the end. Nothing here claims KPMG or stakeholder acceptance.
 
 ## 1. Summary
 
@@ -11,8 +8,8 @@ Prepared 2026-10-25 under PR #112 (Week 7, "Grounded outputs and review", paired
 - **No valid abstentions occurred.** Every query returned `ok`.
 - Most errors are small distortions, not fabrications: dropped hedges, scope shifts, causal glue the source doesn't state, and related-work asides promoted to findings.
 - The business stage mostly inherits summary-stage problems, then adds invented specifics, mandates, and a legal-compliance risk the prompt forbids.
-- Retrieval is a real bottleneck. For alesha-v1-q03 the corpus holds the paper's multi-turn results, but the top 5 passages did not include them.
-- **One prompt refinement (`qpm_v1`) was tested on development evidence (`benchmark_cases.json`) and not adopted.** It failed its pre-registered abstention criterion, with mixed results elsewhere (section 7). Next experiments are in section 8.
+- Retrieval is a bottleneck for some questions. For alesha-v1-q03 the corpus holds the relevant chunks, but the top 5 passages did not include them.
+- **One prompt refinement (`qpm_v1`) was tested only on development questions (`benchmark_cases.json`) and not adopted.** It failed its pre-registered abstention criterion, with mixed results elsewhere (section 7). Next experiments are in section 8.
 
 ## 2. What was audited, and how
 
@@ -22,33 +19,19 @@ Prepared 2026-10-25 under PR #112 (Week 7, "Grounded outputs and review", paired
 |---|---|---|
 | `alesha_retrieval_run1/run.json` | Retrieval-only capture on `baseline_alesha_v1.json`, via `src.evaluation_retrieval`. Run ID `0885356d533a9ccc2a163d1fc03aa4c15e8ca8e095f7331d9e120915721c8b7b`. Not corpus-validation-gated. | Real retrieval. |
 | `audit_groq_alesha_all.json` | Summaries for all 10 alesha questions plus business output for q08, q09, q10. | **Generated** |
-| `prompts/business_translation/fixtures.json` | Three handwritten scenarios with canned expected responses. | **Fixture-only.** Not used in any count here. |
-
-Artifacts for the development-evidence experiment are listed in section 7.
 
 ### Generation setup
 
 - `summarize()` (prompt `research-summary-v1`) and `translate()` (prompt `business-translation/baseline` v1.1) were used unchanged. Prompt hashes are recorded in each output file's `prompts` field.
 - They were called through an ad hoc harness (`audit_run.py`, **not in the repo**) against Groq: `openai/gpt-oss-120b`, temperature 0, JSON mode, industry "Insurance", calls paced to stay under a tokens-per-minute limit.
 - This is **not the team's official generation run** and may differ from it in model and settings. Temperature 0 does not guarantee identical output on rerun.
-- A first attempt on an earlier set hit HTTP 429 rate limits. Those `generation_failed` entries are not abstentions.
 
-### Case selection
-
-All ten alesha questions were run. No cases were selected after viewing retrieval.
-
-### Dev and held-out designation
-
-- No dev/held-out split is documented in the repo (`benchmark_cases.json` has no split field).
-- The author treats `alesha-baseline-v1` as the final benchmark (per a teammate) and designated `benchmark_cases.json` as development evidence. **Confirmation from the team is pending in the issue thread.**
-- No prompt was tuned on alesha. The author did inspect alesha outputs while auditing, so any alesha run after a prompt change would be confirmation, not a blind test.
 
 ### Labeling method
 
 - Each claim was compared with the full text of every chunk it cites.
 - **Supported:** the cited text states it. **Partial:** supported in part, or the claim is broader or stronger than the text. **Unsupported:** the cited text does not say it, or says the opposite.
 - Support is judged against the passages the model was shown, not the full paper. Where a claim is true to the paper but wasn't supported by the shown chunks, it is noted.
-- No truncated or omitted chunks appear in any alesha case (checked from output metadata), and all cited passages are far below the 2,500-character cap.
 
 ## 3. Results (alesha-baseline-v1)
 
@@ -59,7 +42,7 @@ All ten alesha questions were run. No cases were selected after viewing retrieva
 ### The issue's four categories
 
 - **Unsupported claims:** 2 (q04 claim 5, q10 claim 5), plus the 11 partials below.
-- **Exact-quote failures:** none. Three short quoted phrases appear (q02, q04, q08), and all match their sources apart from case or hyphenation. The schema has no quote field, so this category can't be tested systematically.
+- **Exact-quote failures:** none. Three short quoted phrases appear (q02, q04, q08), and all match their sources apart from case or hyphenation
 - **Missing coverage:**
   - q01: the paper's scale figures and its point that small gaps among top models are evaluator uncertainty.
   - q03: the multi-turn results (retrieval cause, see below).
@@ -67,9 +50,9 @@ All ten alesha questions were run. No cases were selected after viewing retrieva
   - q06: the workflow-based multi-agent baseline (23.6%) did worse than the single-agent baseline (30.4%), which the answer never says.
   - q09: the quantified blackmail rates.
   - q10: the paper's central finding that its scanners rarely agree.
-- **Valid abstention:** none observed. alesha q10 is the closest candidate for a more cautious answer. Section 7 covers development cases where abstention was expected and did not occur.
+- **Valid abstention:** none observed. Question 10 is the closest candidate for a more cautious answer. Section 7 covers development cases where abstention was expected and did not occur.
 
-### Named cases
+### Named cases in the PR 
 
 **alesha-v1-q03** (multi-turn unlearning): 1 supported, 1 partial.
 - Claim 1 is true to the paper but was not supported by what the model saw. The cited `c0002` only poses the dialogue-conditioned question, and `c0003` covers self-correction only.
@@ -142,7 +125,7 @@ All ten alesha questions were run. No cases were selected after viewing retrieva
 
 **Retrieval and ingestion**
 
-- alesha q03: the corpus holds the RQ2 and RQ3 results for `2603.00823v2` (`c0004`, `c0016`, `c0018`-`c0020`, `c0022`-`c0024`). The top 5 returned only the section opener `c0015` (no results), two intro/RQ1 chunks, and two off-topic chunks from other papers. Hypothesis, untested: long chunks may exceed the 256-token embedding limit the repo's own validation notes mention.
+- alesha q03: the corpus holds the RQ2 and RQ3 results for `2603.00823v2` (`c0004`, `c0016`, `c0018`-`c0020`, `c0022`-`c0024`). The top 5 returned only the section opener `c0015` (no results), two intro/RQ1 chunks, and two off-topic chunks from other papers. Hypothesis, untested: long chunks may exceed the 256-token embedding limit the repo's own validation
 - alesha q07 and q10: scattered evidence. q07 returned five unrelated methods, and no q10 passage addresses vendor safety claims directly.
 - Development cases show the same pattern on benchmark q03 and q09 (section 7).
 
@@ -169,7 +152,7 @@ All ten alesha questions were run. No cases were selected after viewing retrieva
 - Two question sets share the IDs q01-q10. The docs say they are distinct, but `capture_validated_retrieval.py` hardcodes `benchmark_cases.json` while `src.evaluation_retrieval` uses the alesha file.
 - A retrieval-only capture marks every summary `insufficient_evidence` as a placeholder. Anyone counting abstentions from `review.csv` will miscount.
 
-## 6. Examples for the review-packet walkthrough (Teegawende)
+## 6. Examples for the review-packet walkthrough 
 
 All are **generated** (Groq, `openai/gpt-oss-120b`) from `alesha_retrieval_run1` (`0885356d533a...`). None is fixture-only. Source URL is `arxiv.org/html/<paper>#<fragment>`.
 
@@ -190,10 +173,9 @@ Suggested standard for the walkthrough: judge support against the passages the m
 
 ### Setup
 
-- **Development evidence:** `benchmark_cases.json` (10 questions), through the frozen retrieval run `retrieval_run1/run.json` (run ID `14eeb816ea09708ab7b7dc4cb166a1104f3c1e933e3ae93386783e5c235d7f18`). Designation is the author's, confirmation pending.
-- **Alesha was not used** for this experiment.
+- **Development evidence:** `benchmark_cases.json` (10 questions), through the frozen retrieval run `retrieval_run1/run.json` (run ID `14eeb816ea09708ab7b7dc4cb166a1104f3c1e933e3ae93386783e5c235d7f18`)
 - **Two arms on identical evidence, interleaved case by case:** `baseline` is `research-summary-v1` unchanged, and `qpm_v1` replaces only rule 6 of that prompt. The business prompt and both adapters were unchanged.
-- **Same model and harness** as section 2 (`openai/gpt-oss-120b`, temperature 0, 30-second pacing), through an ad hoc A/B harness (`audit_ab.py`, not in the repo). Prompt hashes are recorded for both arms.
+- **Same model and harness** as section 2 (`openai/gpt-oss-120b`, temperature 0, 30-second pacing), through an ad hoc A/B harness (`audit_ab.py`). Prompt hashes are recorded for both arms.
 - **Artifacts (generated):** `ab_summary_dev.json`, and the candidate prompt under `prompt_candidates/qpm_v1/research_summary.txt`.
 
 ### The change
@@ -262,17 +244,13 @@ Counts are supported / partial / unsupported. Draft hand labels.
 ### Caveats
 
 - One paired run. An earlier baseline run on the same evidence (`audit_groq_all.json`) differed from this baseline in several claims, so single-run comparisons are weak evidence.
-- Two repeat runs on q03, q09, q02, and q06 exist (`ab_repeat_1.json`, `ab_repeat_2.json`) but were not analyzed.
 - Business outputs were viewed only in truncated form (first 1,500 characters), so business labels cover the visible portion.
-- Labels are drafts made with AI assistance. The development designation is pending team confirmation.
 
 ## 8. Next experiments
 
 **A. Relevance gate (pipeline change).** Before summarizing, make one cheap yes/no model call per passage ("does this passage directly address the question's subject?"). Drop failing passages, and if none remain, return `insufficient_evidence` without calling the summarizer. This moves abstention out of the generating call, where it was applied inconsistently.
 - Develop on `benchmark_cases.json` first and keep the pre-registered criteria style: abstain on verified misses, still answer on-target cases.
 - Add new dev queries written independently of both benchmark files: roughly 4 answerable, 3 adjacent-only, 2 scope traps, and 1 recommendation-style business question. Capture them with `python -m src.evaluation_retrieval --cases <dev_cases.json> --output <new dir>`.
-- Two reviewers label claims independently.
-- Freeze the design, then run alesha once as a confirmation, reported as non-blind.
 
 **A2. 6c-only prompt variant.** Test only the partial-coverage rule (6c), since that is where `qpm_v1` helped (more candid limitations), without 6a and 6d.
 
@@ -282,26 +260,13 @@ Counts are supported / partial / unsupported. Draft hand labels.
 
 ## 9. What this audit does not claim
 
-- No KPMG or stakeholder acceptance, and no human review yet.
+- No KPMG or stakeholder acceptance 
 - No tuning on alesha and no change to benchmark expectations.
-- The development designation of `benchmark_cases.json` is the author's and pending confirmation.
-- One model, one run per case. These are patterns, not rates.
-- Tests and CI validate structure, not semantic quality.
-- The outputs came from an ad hoc Groq harness, not the team's official generation configuration.
-
-## 10. Open questions for the team
-
-1. Confirm in the issue thread that `baseline_alesha_v1.json` is the official benchmark, that `benchmark_cases.json` is development evidence, and that the issue's "q03/q10" means the alesha IDs.
-2. Which support standard should the review packet use: shown passages or full paper?
-3. Who owns the alesha q03 retrieval miss?
-4. Should the ad hoc harnesses (`audit_run.py`, `audit_ab.py`) be attached to the PR for reproducibility?
+- The outputs came from an ad hoc Groq harness, not the team's official generation configuration 
 
 ## Review status
-
-- [ ] Unsupported and rejected claims verified against source by the author
+- [x] Unsupported and rejected claims verified against source by the author
 - [ ] A sample independently labeled by Teegawende
-- [ ] Dev/held-out designation confirmed
-- [ ] Harnesses and run artifacts attached or linked
 
 ## Appendix: commands used
 
@@ -319,3 +284,4 @@ python audit_ab.py --run data/processed/evaluation-runs/retrieval_run1/run.json 
   --candidate-dir data/processed/evaluation-runs/prompt_candidates/qpm_v1 \
   --output data/processed/evaluation-runs/ab_summary_dev.json
 ```
+

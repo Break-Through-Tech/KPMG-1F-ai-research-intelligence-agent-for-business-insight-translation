@@ -14,9 +14,15 @@ function boot(saved, failure) {
     removeItem: key => { if (failure) throw Error('Blocked'); values.delete(key); },
   };
   const document = {documentElement: {dataset: {}},
-    querySelector: id => nodes[id] ||= {addEventListener(type, callback) { this[type] = callback; }},
+    body: {classList: {toggle() {}}},
+    querySelector: id => nodes[id] ||= {
+      getBoundingClientRect() { return {height: 20}; },
+      addEventListener(type, callback) { this[type] = callback; }},
     addEventListener(type, callback) { this[type] = callback; }};
-  vm.runInNewContext(source, {document, localStorage: storage});
+  vm.runInNewContext(source, {document, localStorage: storage,
+    ResizeObserver: class { observe() {} },
+    window: {addEventListener() {}}, innerHeight: 1000,
+    getComputedStyle: () => ({fontSize: '16px'})});
   document.DOMContentLoaded();
   return {nodes, values, root: document.documentElement.dataset,
     change(name, value) { nodes[`#reading-${name}`].change({target: {value}}); },

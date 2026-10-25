@@ -181,6 +181,31 @@ class DemoHttpTests(unittest.TestCase):
                 {'Content-Type': 'application/json'})
             self.assertEqual(status, 400)
 
+    def test_clarification_http_conversations_are_tab_scoped(self):
+        from tests.test_indexed_clarification import adapter
+        research = adapter()
+        with patch.object(DemoHandler, 'research', research), patch.object(DemoHandler, 'saved_result', None):
+            def config():
+                return json.loads(self.call('GET', '/api/config')[2])
+            a, b = config(), config()
+            self.assertNotEqual(a['conversation_id'], b['conversation_id'])
+            self.assertTrue(a['clarification'])
+            def post(c, query, action='ask'):
+                status, _, body = self.call('POST', '/api/research', json.dumps({
+                    'query': query, 'action': action, 'context_id': c['context_id'],
+                    'conversation_id': c['conversation_id']}), {'Content-Type': 'application/json'})
+                return status, json.loads(body)
+            status, response = post(a, 'What are its limitations?')
+            self.assertEqual(status, 200)
+            self.assertEqual(response['scenario'], 'clarification')
+            self.assertIsNone(response['result'])
+            self.assertEqual(post(b, 'Paper 1', 'resume')[0], 409)
+            status, response = post(a, 'Paper 1', 'resume')
+            self.assertEqual(status, 200)
+            self.assertIsNotNone(response['result'])
+            self.assertEqual(response['submitted_request']['query'], 'What are its limitations?')
+            self.assertIsNone(DemoHandler.saved_result)
+
     def test_live_history_roundtrip_and_rejection_before_generation(self):
         calls = []
         def research(request):

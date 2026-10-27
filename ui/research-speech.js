@@ -43,7 +43,7 @@
       ...value.summary.limitations.filter(text => !(value.summary.limitation_support || []).some(item => item.text === text)),
       ...(business ? ['Conditional business interpretations, not study findings.', `Industry: ${business.industry}.`,
         `Business translation: ${business.status}.`, ...business.implications.flatMap(i => [citation(i), `Suggested action: ${i.suggested_action}`, 'Transfer assumptions.', ...i.assumptions]),
-        'Risks.', ...business.risks, 'Business limitations.', ...business.limitations] : ['Business translation not requested.']),
+        'Risks.', ...business.risks, 'Business limitations.', ...business.limitations] : [demo.error ? `Business translation unavailable. ${demo.error.stage || 'Execution'}: ${demo.error.message}` : 'Business translation not requested.']),
       'Audio reads original retained text. Plain-language rewrites and source support have not been independently approved.',
     ].join('\n')};
   }

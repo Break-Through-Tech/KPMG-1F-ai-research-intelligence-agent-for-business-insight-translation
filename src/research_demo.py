@@ -10,7 +10,7 @@ import mimetypes
 from src.research_contracts import validate_request, validate_result
 from src.paper_conversation import validate_history
 from src.indexed_research import IndexedContextError
-from src.plain_language import fixture_view, plain_language_view
+from src.plain_language import fixture_view, plain_language_view, generate_view
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / 'tests' / 'fixtures' / 'research'
@@ -80,6 +80,8 @@ def saved_result_envelope(result):
 class DemoHandler(BaseHTTPRequestHandler):
     saved_result = None
     research = None
+    presentation_generate = None
+    presentation_metadata = None
     research_lock = Lock()
     def log_message(self, format, *args):
         """Do not log user queries or request payloads."""
@@ -199,7 +201,7 @@ class DemoHandler(BaseHTTPRequestHandler):
                 else:
                     response = self.research(request)
                 if response.get('result'):
-                    response['plain_language'] = plain_language_view(response['result'])
+                    response['plain_language'] = generate_view(response['result'], generate=type(self).presentation_generate, metadata=type(self).presentation_metadata)
                 if response.get('result') and getattr(self.research, 'mode', None) != 'indexed':
                     type(self).saved_result = {**response, 'mode': 'saved-real-result'}
             except IndexedContextError:
@@ -226,7 +228,13 @@ def main():
     parser.add_argument('--top-k', type=int, default=5)
     parser.add_argument('--clarification', action='store_true', help='Enable tab-scoped clarification and bounded server-owned intent history; requires --index.')
     parser.add_argument('--configured-provider', action='store_true', help='Explicitly use the existing RESEARCH_PROVIDER configuration for indexed mode.')
+    parser.add_argument('--plain-language', action='store_true', help='Generate pending plain-language presentations with the explicitly selected existing provider, including saved-result replay.')
+    parser.add_argument('--presentation', type=Path, help='Replay a retained plain-language presentation bound to --result; no provider call.')
     args = parser.parse_args()
+    if args.presentation and (not args.result or args.plain_language):
+        parser.error('--presentation requires --result and cannot be combined with --plain-language')
+    if args.plain_language and not (args.index or args.paper or args.result):
+        parser.error('--plain-language requires --index, --paper or --result')
     if sum(bool(x) for x in (args.paper, args.index, args.result)) > 1:
         parser.error('--paper, --index and --result are mutually exclusive')
     if args.clarification and not args.index:
@@ -264,9 +272,21 @@ def main():
             parser.error(str(error))
         generate, metadata = create_codex_generate(model=args.codex_model, binary=args.codex_bin)
         DemoHandler.research = PaperResearch(passages, generate, metadata, source=source)
+    if args.plain_language:
+        if args.result:
+            if not args.codex_model:
+                parser.error('--result --plain-language requires --codex-model (existing subscription; no API-key fallback)')
+            from src.codex_generation import create_codex_generate
+            generate, metadata = create_codex_generate(model=args.codex_model, binary=args.codex_bin)
+        DemoHandler.presentation_generate = staticmethod(generate)
+        DemoHandler.presentation_metadata = metadata
     if args.result:
         result = json.loads(args.result.read_text())
         DemoHandler.saved_result = saved_result_envelope(result)
+        if args.plain_language:
+            DemoHandler.saved_result['plain_language'] = generate_view(result, generate=generate, metadata=metadata)
+        elif args.presentation:
+            DemoHandler.saved_result['plain_language'] = plain_language_view(result, json.loads(args.presentation.read_text()))
     with ThreadingHTTPServer(('127.0.0.1', args.port), DemoHandler) as server:
         label = 'Indexed research' if args.index else 'Paper synthesis' if args.paper else 'Saved-result viewer' if args.result else 'Fixture demo'
         note = 'live indexed synthesis' if args.index else 'live LLM synthesis' if args.paper else 'no live execution'

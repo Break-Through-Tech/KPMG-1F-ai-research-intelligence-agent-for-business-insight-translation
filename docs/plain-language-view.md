@@ -9,12 +9,47 @@ radio group (arrow keys switch); expand **Technical term definitions** with
 Enter/Space. Citations retain the original source links, quote previews and
 source-context inspection. Full draft remains the default fixture.
 
-This is an optional summary-presentation layer, not another execution mode.
-Fixture, saved-result and live single-paper modes remain distinct. Live and saved
-results explicitly report unavailable plain-language generation; no provider is
-called for simplification, no automatic fallback to fixture content occurs, and
-no unavailable generation is relabeled as an abstention. Indexed integration
-under #130 is outstanding.
+## Configured generation — 2026-10-27
+
+This remains an optional summary-presentation layer, not a new research mode.
+Add `--plain-language` to explicitly opt into an additional generation request
+using the **same selected generator** as live indexed/single-paper research:
+
+```sh
+python -m src.research_demo --index /path/to/existing-index --codex-model YOUR_CONFIGURED_MODEL --plain-language
+python -m src.research_demo --paper /path/to/versioned_paper.pdf --codex-model YOUR_CONFIGURED_MODEL --plain-language
+python -m src.research_demo --result /path/to/pending-result.json --codex-model YOUR_CONFIGURED_MODEL --plain-language
+```
+
+For saved replay, select the existing subscription model/binary explicitly;
+no new research query, API-key fallback, or fixture substitution occurs.
+For indexed mode `--configured-provider` also reuses the configured generator.
+Without the flag, real modes remain explicitly unavailable for simplification.
+The original validated ResearchResult is never modified. Malformed/oversized,
+unquoted, citation-changing or failed generation produces a presentation failure
+with the entire original retained. Interpretation text must remain unchanged;
+UI renders only finding rewrites. Abstention/empty results skip the provider and
+retain no claims/definitions. Business assumptions, risks and coverage limitations
+remain original and inspectable in both views. Available means structurally
+validated, not independently verified or approved.
+
+The generation prompt asks for preserved negation, uncertainty, disagreement and
+numerical bounds and only source-supported definitions. Literal quote checks
+cannot establish meaning preservation; semantic review stays pending. Provider,
+model, prompt version and prompt/response hashes are recorded separately in the
+presentation, not in the original result fingerprint. No automatic retry/fallback.
+
+Retain an inspectable side-by-side development packet without altering input:
+
+```sh
+python -m scripts.plain_language_examples --result /path/to/pending-result.json --codex-model YOUR_CONFIGURED_MODEL --out /tmp/presentation-example.json
+```
+
+This executes the selected subscription provider. Retain source identity/locators
+and exact quotes, and inspect supported, partial and abstention examples against
+the cited text separately from browser tests. The command never grants semantic
+approval or treats a development case as held-out evaluation. Existing synthetic
+examples below remain labeled synthetic.
 
 ## Additive envelope contract v1
 
@@ -84,14 +119,14 @@ Semantic review remains pending in the adapter and UI.
 
 - **#123:** use `plain_language_view` only after producing the validated original;
   submit exact claims/quotes and explicit unavailable definitions. Preserve
-  modality, negation and disagreement. No generation route is added here.
+  modality, negation and disagreement. Configured generation now uses `generate_view` after original validation.
 - **#124:** review the original result and presentation separately. The sibling
   envelope is not part of the original approval fingerprint; **do not interpret
   original approval as approval of the rewrite**. Bind any future presentation
   review to `result_identity` plus the candidate content. This UI cannot approve.
 - **#130:** add a validated candidate to the UI envelope only after configured
   provider execution; retain unavailable/failed states. Never call `fixture_view`
-  for live or replay results. Current server deliberately marks these unavailable.
+  for live or replay results. The opt-in route above supplies a validated pending presentation; disabled configuration remains unavailable.
 - **#145:** integrate these checks with the sibling accessibility changes; no
   manual VoiceOver, Safari, browser-zoom, WCAG conformance or stakeholder acceptance
   is claimed by #141.
@@ -116,3 +151,11 @@ Semantic review remains pending in the adapter and UI.
 - Local QA scripts `/tmp/kpmg141-qa.js`, `/tmp/kpmg141-fallback-qa.js`; screenshots
   `/tmp/kpmg141-desktop.png`, `/tmp/kpmg141-mobile.png`. These temporary artifacts
   are not committed; the reproducible manual flow and fixture pairs are above.
+
+### Offline replay of a retained presentation
+
+To inspect an already-generated candidate without another provider call, save its
+`plain_language` object and run `--result original.json --presentation candidate.json`.
+The candidate is revalidated against the full result identity and literal quotes;
+stale/malformed candidates show a failed presentation while retaining the original.
+`--presentation` cannot be combined with live modes or `--plain-language`.

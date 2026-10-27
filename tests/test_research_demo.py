@@ -79,6 +79,30 @@ class DemoHttpTests(unittest.TestCase):
         finally:
             connection.close()
 
+    def test_http_presentation_uses_selected_generator_and_retains_original_on_failure(self):
+        with patch.object(DemoHandler, 'saved_result', None):
+            from src.plain_language import fixture_view
+            original = load_demo({'query': 'Q'}, 'full')['result']
+            response = {'mode': 'live-synthesis', 'scenario': 'full', 'result': original}
+            candidate = fixture_view(original)
+            generate = lambda _: json.dumps({key: candidate[key] for key in ['claims', 'definitions']})
+            # No definitions in this result need a provider-only extra field.
+            candidate['definitions'] = []
+            with patch.object(DemoHandler, 'research', staticmethod(lambda req: dict(response))), patch.object(
+                    DemoHandler, 'presentation_generate', staticmethod(generate)):
+                status, _, body = self.call('POST', '/api/research', '{"query":"Q"}', {'Content-Type': 'application/json'})
+                envelope = json.loads(body)
+                self.assertEqual(status, 200)
+                self.assertEqual(envelope['plain_language']['status'], 'available')
+                self.assertEqual(envelope['result'], original)
+            with patch.object(DemoHandler, 'research', staticmethod(lambda req: dict(response))), patch.object(
+                    DemoHandler, 'presentation_generate', staticmethod(lambda _: 'invalid')):
+                status, _, body = self.call('POST', '/api/research', '{"query":"Q"}', {'Content-Type': 'application/json'})
+                envelope = json.loads(body)
+                self.assertEqual(status, 200)
+                self.assertEqual(envelope['plain_language']['status'], 'failed')
+                self.assertEqual(envelope['result'], original)
+
     def test_assets_and_unknown_paths(self):
         for path in ['/', '/app.js', '/math.js', '/source-reader.js', '/answer-export.js', '/styles.css',
                      '/reading-preferences.js', '/reading-preferences.css', '/vendor/katex/katex.min.js',

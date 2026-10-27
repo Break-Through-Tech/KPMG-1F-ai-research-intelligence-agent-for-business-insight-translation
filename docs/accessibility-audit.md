@@ -152,3 +152,77 @@ result, finding ID/criterion, fix SHA/retest outcome, and explicitly untested ca
 Keep #145 open until integrated and actual manual evidence is recorded or scope is
 explicitly resolved by the owner. CI green, a draft PR, or scanner silence does not
 close any of these gates.
+
+## Integrated follow-through — 2026-10-27
+
+Product integration base: `c8338bb` (the #161 → #162 → #163 stack, refreshed over
+main including merged #160). Audit additions were uncommitted during the initial
+run and do not change application code. This is a new observation, not a rewrite
+of the historical baseline above. #138 and #130 are now closed; their former
+open/dependency statements describe the historical baseline only.
+
+### Automated and source-backed results
+
+- **41 browser checks passed**: the integrated light/dark outcome scans,
+  keyboard citation/source return, structured math/table navigation, preferences,
+  narrow reflow, 200% text size, spacing and reduced motion; actual-page speech
+  lifecycle and presentation deadlines; native 200%/400% tab zoom; and six
+  desktop/mobile source-backed saved-result walkthroughs.
+- Browser plugin unavailable; repository Playwright 1.64.1 / axe 4.14.0 and
+  Chromium 156.0.8078.4 used. Desktop 1280×900 and mobile 390×900; native tab zoom
+  starts at 1280×1000. No page errors in the exercised interaction paths.
+- Native zoom uses an isolated temporary Manifest V3 extension and Chromium's
+  `chrome.tabs.setZoom/getZoom`: 2× and approximately 4×, unchanged outer window,
+  halved/quartered layout width and doubled/quadrupled DPR. Floating-point zoom
+  measurements use a tight numeric tolerance. No CSS zoom, viewport substitution,
+  page-scale or deviceScaleFactor claim. Native 400% gives a 320-CSS-pixel layout.
+  Source table jump focus, dialog dismissal/focus return and document/panel
+  overflow assertions passed. Source table horizontal scrolling remains local.
+- Source-backed replay: existing subscription provider generated supported,
+  partial-coverage and abstention outputs from the first three pages of the
+  version-pinned AI4AI-Bench PDF. Real saved results and identity-bound generated
+  presentations were served by the actual replay endpoint, toggled between
+  original/plain views, and source citation/quote inspection checked at 1280/390.
+  No new provider/index query is performed by replay tests. Development cases,
+  not held-out or independent semantic evaluation.
+- #163's two pinned HTML inspections expose actual structure/fallback counts and
+  source SHA-256. Against current main, structured passages improve from 17 to
+  28 of 29 (AI4AI-Bench) and 10 to 39 of 42 (Pandora). Canonical passage text,
+  chunk IDs and source URLs are unchanged. Counts are not fidelity certification.
+
+### Native speech diagnostic — separate from mocked browser tests
+
+Native installed Chrome **156.0.8078.48**, headed isolated profile, macOS 26.6.2,
+synthetic fixture only. The real Web Speech API reported 180 local voices.
+Answer/source playback emitted native start events; keyboard pause/resume/stop
+and source dismissal cleared the actual speaking/pending queue. An `interrupted`
+event follows explicit cancellation as expected. No JavaScript page errors.
+No mock engine was substituted. This verifies browser/OS engine callbacks and
+queue state, **not a recorded or independently heard audible result**. VoiceOver
+coexistence was not exercised; no new VoiceOver acceptance claim.
+
+Reproduce against an owned synthetic loopback server (visible Chrome may speak):
+
+```sh
+RESEARCH_URL=http://127.0.0.1:8765 AUDIT_OUTPUT=/tmp/native-speech node tests/browser/native-speech.manual.cjs
+```
+
+For source-backed replay, explicitly select retained development packets:
+
+```sh
+RESEARCH_EXAMPLES_DIR=/path/to/retained/examples PYTHON=python3 npm test
+```
+
+Packets must provide `{supported,partial,abstention}-{original,presentation}.json`;
+without the explicit directory those six cases skip. Fixture/native-zoom tests
+continue to run in CI without private sources, index downloads or model calls.
+
+### Remaining acceptance gates
+
+- VoiceOver/Safari math/table navigation and speech coexistence need actual
+  native assistive-technology observation. Prior owner acceptance of #138 and
+  exports does not certify these new flows.
+- No independent meaning/uncertainty approval, full-corpus extraction fidelity,
+  platform-wide audit, WCAG conformance, deployment or stakeholder sign-off.
+- Persistent-index live-path recheck is tracked separately below; source-backed
+  replay and source inspection are not substitutes for it.

@@ -3,7 +3,7 @@ const {test, expect} = require('@playwright/test');
 const {spawn} = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
-const folder = process.env.RESEARCH_EXAMPLES_DIR;
+const folder = process.env.RESEARCH_EXAMPLES_DIR ? path.resolve(process.env.RESEARCH_EXAMPLES_DIR) : null;
 test.skip(!folder, 'Set RESEARCH_EXAMPLES_DIR to explicitly selected retained development packets. No provider called.');
 for (const label of ['supported', 'partial', 'abstention']) {
   for (const width of [1280, 390]) {

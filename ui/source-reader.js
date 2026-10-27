@@ -3,6 +3,19 @@ const READER_HTML_TAGS = new Set('p div span ul ol li dl dt dd blockquote em str
 const READER_MATH_TAGS = new Set('math semantics annotation mrow mi mn mo mtext mspace ms mfrac msqrt mroot msub msup msubsup munder mover munderover mmultiscripts mprescripts none mtable mtr mtd menclose mphantom mpadded mstyle mfenced'.split(' '));
 const READER_MATH_ATTRS = new Set('display mathvariant stretchy fence separator accent accentunder columnalign rowalign columnspan rowspan encoding linethickness'.split(' '));
 const READER_MATH_METADATA = new Set('class id alttext xmlns href xlink:href'.split(' '));
+const READER_MATH_LENGTHS = new Set('lspace rspace minsize maxsize mathsize width height depth columnspacing rowspacing'.split(' '));
+const READER_MATH_BOOLS = new Set(['displaystyle', 'movablelimits', 'symmetric']);
+for (const key of [...READER_MATH_LENGTHS, ...READER_MATH_BOOLS, 'intent']) READER_MATH_ATTRS.add(key);
+function validReaderMathAttribute(key, value) {
+  if (key === 'intent') return value === ':literal';
+  if (READER_MATH_BOOLS.has(key)) return ['true', 'false'].includes(value);
+  if (READER_MATH_LENGTHS.has(key)) {
+    const parts = ['columnspacing', 'rowspacing'].includes(key) ? value.trim().split(/\s+/) : [value];
+    return parts.length > 0 && parts.length <= 12 && parts.every(part =>
+      /^(?:\d{1,3}(?:\.\d{1,4})?|\.\d{1,4})(?:em|ex|px|pt|pc|in|cm|mm|%)?$/.test(part) && parseFloat(part) <= 100);
+  }
+  return true;
+}
 let sourceReaderNumber = 0;
 
 function readerElement(tag, text, className) {
@@ -74,7 +87,7 @@ function structuredSource(reader) {
       }
       for (const key of READER_MATH_ATTRS) {
         if (key !== 'linethickness' && Object.hasOwn(attrs, key)) {
-          if (typeof attrs[key] !== 'string' || attrs[key].length >= 100) throw new Error('Unsupported math attributes');
+          if (typeof attrs[key] !== 'string' || attrs[key].length >= 100 || !validReaderMathAttribute(key, attrs[key])) throw new Error('Unsupported math attributes');
           node.setAttribute(key, attrs[key]);
         }
       }
@@ -142,6 +155,30 @@ function renderSourcePassage(target, passage, {claim = null, isFixture = false, 
   const structured = structuredSource(passage.reader);
   if (structured) {
     content.append(structured);
+    const structures = [...content.querySelectorAll('.source-scroll, .source-inline-math')];
+    if (structures.length) {
+      const navigation = readerElement('nav');
+      navigation.setAttribute('aria-label', 'Source structure navigation');
+      const links = readerElement('ul');
+      const counts = {table: 0, formula: 0};
+      for (const region of structures) {
+        const table = region.querySelector(':scope > table');
+        const kind = table ? 'table' : 'formula';
+        const caption = table?.querySelector('caption')?.textContent.trim();
+        const label = `Source ${kind} ${++counts[kind]}${caption ? ': ' + caption : ''}`;
+        region.setAttribute('aria-label', `${label}; scroll horizontally if needed`);
+        const item = readerElement('li');
+        const button = readerElement('button', `Go to ${label.toLowerCase()}`, 'quiet');
+        button.type = 'button';
+        button.addEventListener('click', () => {
+          region.focus({preventScroll: true});
+          region.scrollIntoView({block: 'nearest'});
+        });
+        item.append(button); links.append(item);
+      }
+      navigation.append(links); content.before(navigation);
+    }
+
     add('p', 'Structured view retained from source HTML. Not a reconstruction of the PDF or a certification of extraction completeness.', 'meta');
     add('p', `Source HTML SHA-256: ${passage.reader.source_sha256 || 'Not supplied'}`, 'meta');
     const text = add('details', undefined, 'source-check-text');

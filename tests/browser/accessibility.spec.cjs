@@ -230,6 +230,19 @@ for (const width of [1280, 390]) {
     await expect(panel.locator('.source-exact-quote')).toHaveText(fixture.result.summary.claims[0].support[0].quote);
     await expect(panel.getByRole('columnheader')).toHaveCount(3);
     await expect(panel.locator('math mfrac[linethickness="0"]')).toHaveCount(1);
+    const navigation = panel.getByRole('navigation', {name: 'Source structure navigation'});
+    await navigation.getByRole('button', {name: /^Go to source table 1/}).press('Enter');
+    await expect(panel.getByRole('region', {name: /^Source table 1:/})).toBeFocused();
+    await navigation.getByRole('button', {name: 'Go to source formula 1', exact: true}).press('Enter');
+    await expect(panel.getByRole('region', {name: /^Source formula 1;/})).toBeFocused();
+    expect(await page.evaluate(() => {
+      const tree = {version:1, provenance:'source-html', nodes:[{tag:'math', attrs:{intent:':literal', displaystyle:'true'}, children:[{tag:'mspace',attrs:{width:'0.497em'},children:[]}]}]};
+      const fragment = structuredSource(tree);
+      const preserved = fragment.querySelector('math').getAttribute('intent') === ':literal' && fragment.querySelector('mspace').getAttribute('width') === '0.497em';
+      tree.nodes[0].attrs.intent = 'unsupported(x)';
+      return preserved && structuredSource(tree) === null;
+    })).toBe(true);
+
     await expect(panel.locator('.source-reading figure')).toHaveCount(2);
     await expect(panel.locator('.source-reading figure').first().locator('figcaption')).toHaveCount(0);
     await expect(panel.getByText(/Source-supplied image description: Two/)).toHaveCount(1);

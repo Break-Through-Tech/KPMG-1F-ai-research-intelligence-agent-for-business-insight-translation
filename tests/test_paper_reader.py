@@ -159,3 +159,19 @@ class PaperReaderTests(TestCase):
         synthesize('Q', passages, generate=generate)
         self.assertNotIn('"reader":', prompts[0])
         self.assertNotIn('Two source-labeled bars', prompts[0])
+
+    def test_real_arxiv_literal_intent_and_bounded_math_layout_are_retained(self):
+        raw = STRUCTURED_HTML.replace(b'<math display="block">', b'<math display="block" intent=":literal" displaystyle="true"><mstyle mathsize="0.7em"><mspace width="0.497em"/>', 1).replace(b'</math>', b'</mstyle></math>', 1)
+        passages, _ = parse_paper_html(raw, '2608.20318v1', 'Test')
+        nodes = list(flatten(passages[0]['reader']['nodes']))
+        self.assertEqual(next(n for n in nodes if n['tag'] == 'math')['attrs']['intent'], ':literal')
+        self.assertEqual(next(n for n in nodes if n['tag'] == 'mspace')['attrs']['width'], '0.497em')
+        self.assertEqual(next(n for n in nodes if n['tag'] == 'mstyle')['attrs']['mathsize'], '0.7em')
+
+    def test_unknown_intent_and_unsafe_math_layout_fail_closed(self):
+        for attr in ['intent="custom(x)"', 'lspace="url(remote)"', 'mathsize="999em"', 'displaystyle="yes"']:
+            with self.subTest(attr=attr):
+                raw = STRUCTURED_HTML.replace(b'<math display="block">', ('<math display="block" '+attr+'>').encode(), 1)
+                passages, _ = parse_paper_html(raw, '2608.20318v1', 'Test')
+                self.assertEqual(passages[0]['reader']['nodes'], [])
+                self.assertTrue(passages[0]['reader']['limitations'])

@@ -11,7 +11,24 @@ HTML_TAGS = set('p div span h1 h2 h3 h4 h5 h6 ul ol li dl dt dd blockquote em st
 MATH_TAGS = set('math semantics annotation mrow mi mn mo mtext mspace ms mfrac msqrt mroot msub msup msubsup munder mover munderover mmultiscripts mprescripts none mtable mtr mtd menclose mphantom mpadded mstyle mfenced'.split())
 DROP_TAGS = set('script style iframe object embed template noscript nav form input button audio video svg'.split())
 MATH_ATTRS = set('display mathvariant stretchy fence separator accent accentunder columnalign rowalign columnspan rowspan encoding linethickness'.split())
+MATH_LENGTH_ATTRS = set('lspace rspace minsize maxsize mathsize width height depth columnspacing rowspacing'.split())
+MATH_BOOL_ATTRS = {'displaystyle', 'movablelimits', 'symmetric'}
+MATH_ATTRS |= MATH_LENGTH_ATTRS | MATH_BOOL_ATTRS | {'intent'}
 MATH_METADATA = {'class', 'id', 'alttext', 'xmlns', 'href', 'xlink:href'}
+
+
+def valid_math_attribute(key, value):
+    if key == 'intent':
+        return value == ':literal'
+    if key in MATH_BOOL_ATTRS:
+        return value in {'true', 'false'}
+    if key in MATH_LENGTH_ATTRS:
+        # Native MathML lengths only, never CSS, URLs or unbounded magnification.
+        parts = value.split() if key in {'columnspacing', 'rowspacing'} else [value]
+        return 0 < len(parts) <= 12 and all(re.fullmatch(
+            r'(?:\d{1,3}(?:\.\d{1,4})?|\.\d{1,4})(?:em|ex|px|pt|pc|in|cm|mm|%)?', p)
+            and float(re.match(r'[\d.]+', p)[0]) <= 100 for p in parts)
+    return True
 
 
 def retain_reader(nodes, source_sha256):
@@ -75,7 +92,7 @@ def retain_reader(nodes, source_sha256):
             for key in MATH_ATTRS - {'linethickness'}:
                 if node.has_attr(key):
                     value = str(node[key])
-                    if len(value) >= 100:
+                    if len(value) >= 100 or not valid_math_attribute(key, value):
                         raise ValueError('Unsupported MathML attributes; use the retained citation-check text or original source.')
                     attrs[key] = value
         if tag == 'figure':

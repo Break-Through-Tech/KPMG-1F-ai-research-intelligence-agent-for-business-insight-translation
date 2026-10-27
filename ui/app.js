@@ -152,6 +152,7 @@ function setRailOpen(open, trigger = null) {
     if (mobile.matches && !rail.classList.contains('clarification-evidence')) rail.showModal();
     else rail.show();
   } else if (!open && rail.open) {
+    ResearchSpeech.stopAll();
     rail.close();
     focusInitiator(returnFocus);
   }
@@ -162,7 +163,7 @@ document.querySelector('#evidence-close').addEventListener('click', () => setRai
 // browser chrome is not an intermediate focus stop at either edge.
 rail.addEventListener('keydown', event => {
   if (event.key !== 'Tab' || !rail.matches(':modal')) return;
-  const controls = [...rail.querySelectorAll('button, a[href], summary, [tabindex="0"]')]
+  const controls = [...rail.querySelectorAll('button, a[href], summary, select, [tabindex="0"]')]
     .filter(node => !node.disabled && node.tabIndex >= 0 && node.getClientRects().length);
   const first = controls[0];
   const last = controls[controls.length - 1];
@@ -191,6 +192,7 @@ mobile.addEventListener('change', () => {
 });
 
 function resetEvidence(message) {
+  ResearchSpeech.stopAll();
   closePreview();
   if (rail.classList.contains('clarification-evidence') && rail.open) rail.close();
   rail.classList.remove('clarification-evidence');
@@ -224,12 +226,16 @@ function showEvidence(demo, number, selected = 0, trigger = null, claim = null) 
   choices.setAttribute('aria-label', 'Source passages');
   const passageView = element('article', undefined, 'passage');
   function selectPassage(index) {
+    ResearchSpeech.stopAll();
     activeDemo.selected = index;
     const passage = evidence[index];
     choices.querySelectorAll('button').forEach((button, position) => button.setAttribute('aria-pressed', String(position === index)));
     renderSourcePassage(passageView, passage, {
       claim, isFixture: !isReal(demo), onReturn: () => setRailOpen(false),
     });
+    ResearchSpeech.attach(passageView, {id: `source:${number}:${passage.chunk_id}`,
+      label: `Citation ${index + 1} · ${citationSourceContext(passage)}`,
+      text: ResearchSpeech.source(passage, index + 1)});
   }
   evidence.forEach((passage, index) => {
     const location = passage.source === 'pdf' ? `page ${passage.page_number}` : (passage.section || 'No PDF page');
@@ -679,6 +685,7 @@ function renderDemo(demo, number, answer) {
     if (demo.scenario !== 'full') answer.append(element('p', explanation));
     renderDraft(demo, number, answer);
     answer.append(AnswerExport.controls(demo, number));
+    ResearchSpeech.attach(answer, ResearchSpeech.result(demo, number));
   } else answer.append(element('p', demo.error.message, 'error'));
   if (demo.result && demo.error) answer.append(element('p', `${demo.error.stage}: ${demo.error.message}`, 'error'));
   const real = isReal(demo);

@@ -1,4 +1,29 @@
-# Optional read-aloud: isolated preparation for #144
+# Optional read-aloud (#144)
+
+## Application integration — 2026-10-27
+
+The research page now serves/imports the component for each original answer and
+selected source passage in fixture, saved, single-paper and indexed envelopes.
+Controls live inside their answer or source dialog, including the mobile modal.
+Starting a new query, replacing evidence, changing passages and closing source
+context cancel speech; page-hide and component-removal safeguards remain.
+The modal tab scope includes native text/speed selects. No autoplay is added.
+Audio uses explicit result fields, preserving claim kinds, citation numbers/source
+titles, outcome, limitations, transfer assumptions and pending/unapproved status.
+Passage audio reads canonical text, not recovered table/math relationships.
+
+`tests/browser/read-aloud-integration.spec.cjs` exercises the actual served page
+with a mock engine at desktop/mobile widths, keyboard play/pause/resume/stop,
+source selection/dismissal, cancellation on new query and unavailable support.
+Run it through the existing `tests/browser` Playwright configuration.
+Mock-engine/browser results do not establish actual audible speech, installed
+local voices, or VoiceOver coexistence. Those manual gates below remain open.
+
+## Historical isolated-component preparation
+
+The following records describe the original 2026-10-23 increment, not the current
+application integration. Its then-unimplemented integration checklist is retained
+for provenance; it is not a current dependency on the now-merged #137/#138 work.
 
 Parent: #136. This is a **draft, unintegrated component**, not completion of #144,
 #137, #138, screen-reader accessibility, or WCAG conformance. The normal research

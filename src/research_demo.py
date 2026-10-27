@@ -128,6 +128,9 @@ class DemoHandler(BaseHTTPRequestHandler):
             return
         assets = {'/': ('index.html', 'text/html'),
                   '/app.js': ('app.js', 'text/javascript'),
+                  '/research-speech.js': ('research-speech.js', 'text/javascript'),
+                  '/read-aloud.mjs': ('read-aloud.mjs', 'text/javascript'),
+                  '/read-aloud.css': ('read-aloud.css', 'text/css'),
                   '/answer-export.js': ('answer-export.js', 'text/javascript'),
                   '/math.js': ('math.js', 'text/javascript'),
                   '/source-reader.js': ('source-reader.js', 'text/javascript'),

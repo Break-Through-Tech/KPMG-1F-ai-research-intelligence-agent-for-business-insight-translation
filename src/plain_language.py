@@ -21,6 +21,8 @@ def plain_language_view(result, candidate=None):
     if candidate is None:
         return {"status": "unavailable", "reason": "Plain-language generation is not configured. The original answer is retained."}
     try:
+        # Optional metadata must remain safe for the strict HTTP JSON encoder.
+        json.dumps(candidate, allow_nan=False)
         if candidate.get("status") == "failed":
             return {"status": "failed", "reason": "Simplification failed. The original answer is retained."}
         if (candidate["version"] != "1.0" or candidate["status"] != "available"

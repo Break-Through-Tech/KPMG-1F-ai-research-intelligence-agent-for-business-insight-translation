@@ -103,6 +103,26 @@ class DemoHttpTests(unittest.TestCase):
                 self.assertEqual(envelope['plain_language']['status'], 'failed')
                 self.assertEqual(envelope['result'], original)
 
+    def test_nonfinite_optional_replay_metadata_keeps_saved_http_result_usable(self):
+        from pathlib import Path
+        from tempfile import TemporaryDirectory
+        from src.plain_language import fixture_view
+        from src.research_demo import replay_presentation
+        original = load_demo({'query': 'Q'}, 'full')['result']
+        candidate = fixture_view(original)
+        candidate['generation'] = {'elapsed_seconds': float('inf')}
+        with TemporaryDirectory() as folder:
+            path = Path(folder) / 'presentation.json'
+            # Valid JSON numeric syntax which overflows Python's float decoder.
+            path.write_text(json.dumps(candidate).replace('Infinity', '1e999'))
+            saved = saved_result_envelope(original)
+            saved['plain_language'] = replay_presentation(original, path)
+            self.assertEqual(saved['plain_language']['status'], 'failed')
+            with patch.object(DemoHandler, 'saved_result', saved):
+                status, _, body = self.call('GET', '/api/saved-result')
+                self.assertEqual(status, 200)
+                self.assertEqual(json.loads(body)['result'], original)
+
     def test_assets_and_unknown_paths(self):
         for path in ['/', '/app.js', '/math.js', '/source-reader.js', '/answer-export.js', '/styles.css',
                      '/reading-preferences.js', '/reading-preferences.css', '/vendor/katex/katex.min.js',

@@ -385,8 +385,22 @@ python -m src.research_demo --index /absolute/path/to/data/chroma_db \
 python -m src.research_demo --index /absolute/path/to/data/chroma_db --configured-provider
 ```
 
-Open the printed loopback address. Submit a research question; add industry or
-business context only when requesting conditional implications. Each indexed query
+Open the printed loopback address. Use the single question box and **Research**.
+Include business context in the question when requesting conditional implications,
+for example: “What are the business implications of these findings for banking?”
+The indexed UI sends `interpret_context: true`; the backend uses the configured
+generator to extract an explicitly supplied context before retrieval. The extractor
+accepts only a verbatim substring up to 300 characters, or an empty context for
+research-only questions. Malformed/invented context fails before research; retries
+retain the question. This adds one provider call per new UI research question.
+Clarification resumes retain the original context without reinterpreting the answer.
+Legacy API callers may still supply `industry` directly; no extraction occurs unless
+requested. Extraction is a prompted intent classifier, not a certified semantic gate:
+substring validation cannot prove that the model understood business intent.
+
+Enter-key preferences are under **Research options**; the question uses a caret
+and outer composer focus border rather than an inner rectangular outline.
+Buttons and links retain their keyboard focus indicators. Each indexed query
 is **independent**: previous answers are neither intent context nor evidence.
 Fixture mode, saved-result replay, and `--paper` remain separate, mutually exclusive
 startup modes. No silent fallback occurs. Configured providers retain their usual

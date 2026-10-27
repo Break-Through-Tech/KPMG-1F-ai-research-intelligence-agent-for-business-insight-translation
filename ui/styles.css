@@ -92,7 +92,9 @@ form:focus-within { border-color: var(--primary); }
 label { display: block; font-size: 0.875rem; font-weight: 600; color: var(--muted); }
 textarea { width: 100%; display: block; resize: vertical; min-height: 56px; max-height: 160px; border: 0; padding: 6px 0; background: transparent; font-size: 1rem; line-height: 1.5; border-radius: 4px; }
 textarea::placeholder { color: var(--muted); }
-textarea:focus-visible { outline-offset: 0; }
+/* The enclosing composer carries focus; avoid a second box inside it. */
+#query:focus-visible { outline: none; }
+#research-form:focus-within { border-color: var(--primary); }
 .controls { display: flex; gap: 12px; align-items: center; justify-content: flex-end; margin-top: 8px; }
 .scenario-control { min-width: 0; }
 select { background: var(--background); border: 1px solid var(--border); border-radius: 6px; padding: 6px 28px 6px 10px; font-size: 0.875rem; max-width: 100%; }
@@ -145,8 +147,8 @@ blockquote { border-left: 2px solid #aab5c5; margin: 0 0 28px; padding: 0 0 0 16
 
 /* Secondary tools stay available without competing with the answer. */
 .header-tools { gap: 12px; }
-.demo-settings { position: relative; }
-.demo-settings > summary { padding: 8px 12px; list-style: none; min-height: 44px; }
+.demo-settings, .research-settings { position: relative; }
+.demo-settings > summary, .research-settings > summary { padding: 8px 12px; list-style: none; min-height: 44px; }
 .demo-settings > summary::-webkit-details-marker { display: none; }
 .demo-settings > summary::after { content: '⌄'; margin-left: 8px; }
 .settings-content { position: absolute; z-index: 3; top: 48px; right: 0; width: min(300px, calc(100vw - 32px)); padding: 20px; background: var(--background); border: 1px solid var(--border); border-radius: 8px; }
@@ -157,9 +159,12 @@ blockquote { border-left: 2px solid #aab5c5; margin: 0 0 28px; padding: 0 0 0 16
 .answer details details { border: 0; padding-left: 16px; }
 .answer details details:last-child { border-bottom: 0; }
 .detail-group > details { border-bottom: 0 !important; }
-#research-form { display: flex; align-items: flex-end; gap: 16px; padding: 12px; }
-#query { flex: 1; min-width: 0; min-height: 48px; max-height: 120px; padding: 8px; }
-.controls { flex-shrink: 0; margin: 0; }
+#research-form { display: flex; flex-direction: column; align-items: stretch; gap: 0; border-radius: 20px; padding: 18px 20px 14px; background: var(--surface); border-color: var(--border); }
+#query { min-width: 0; min-height: 74px; max-height: 160px; padding: 4px 0 12px; }
+.controls { flex-shrink: 0; width: 100%; margin: 4px 0 0; }
+#submit { border-radius: 24px; padding: 10px 18px; gap: 10px; }
+#submit svg { transform: rotate(90deg); }
+#jump-latest:disabled { display: none; }
 #demo-note { text-align: center; margin-top: 8px; }
 @media (max-width: 420px) {
   .masthead { padding: 0 12px; gap: 8px; }
@@ -251,3 +256,8 @@ blockquote { border-left: 2px solid #aab5c5; margin: 0 0 28px; padding: 0 0 0 16
   .question-panel-footer { gap: 12px; }
   .question-panel-footer .meta { flex-basis: 100%; }
 }
+
+.research-settings > summary { list-style: none; }
+.research-settings > summary::-webkit-details-marker { display: none; }
+.research-settings > summary::after { content: "⌄"; margin-left: 8px; }
+@media (max-width: 600px) { #research-form { padding: 14px; } .research-settings > summary { padding: 8px; } }

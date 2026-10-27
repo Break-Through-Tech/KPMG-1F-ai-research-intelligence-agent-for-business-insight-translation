@@ -34,6 +34,54 @@ class IndexedTests(unittest.TestCase):
     def run_query(self, research, **kwargs):
         return research.execute({'query': 'Compare the studies.', 'context_id': research.context_id, **kwargs})
 
+    def test_single_prompt_extracts_explicit_context_and_translates(self):
+        calls = []
+        def generate(prompt, **kwargs):
+            calls.append(prompt)
+            if prompt.startswith('BUSINESS CONTEXT EXTRACTION'):
+                return json.dumps({'industry': 'banking'})
+            return generator(prompt, **kwargs)
+        response = self.run_query(adapter(generate=generate),
+            query='What are the business implications for banking?', interpret_context=True)
+        self.assertEqual(response['scenario'], 'full')
+        self.assertEqual(response['submitted_request']['industry'], 'banking')
+        self.assertEqual(response['result']['business_insight']['industry'], 'banking')
+        self.assertEqual(len(calls), 3)
+        require_current_review(response['result'])
+
+    def test_single_prompt_research_only_does_not_translate(self):
+        def generate(prompt, **kwargs):
+            if prompt.startswith('BUSINESS CONTEXT EXTRACTION'):
+                return json.dumps({'industry': ''})
+            return generator(prompt, **kwargs)
+        response = self.run_query(adapter(generate=generate),
+            query='Compare studies of banking.', interpret_context=True)
+        self.assertEqual(response['scenario'], 'summary-only')
+        self.assertNotIn('industry', response['submitted_request'])
+
+    def test_context_rejects_invention_extra_fields_duplicates_and_provider_errors(self):
+        for answer in ['{"industry":"healthcare"}', '{"industry":"banking","extra":1}',
+                       '{"industry":"banking","industry":""}', '{"industry":3}', 'not json']:
+            calls = []
+            research = adapter(generate=lambda *a, **k: answer,
+                               retrieve=lambda *a: calls.append(a) or deepcopy(PASSAGES))
+            with self.subTest(answer=answer), self.assertRaisesRegex(ValueError, 'context extraction'):
+                self.run_query(research, query='Apply this to banking.', interpret_context=True)
+            self.assertEqual(calls, [])
+        def fail(*a, **k):
+            raise RuntimeError('SECRET provider payload')
+        with self.assertRaisesRegex(ValueError, 'context extraction') as caught:
+            self.run_query(adapter(generate=fail), interpret_context=True)
+        self.assertNotIn('SECRET', str(caught.exception))
+
+    def test_stale_context_is_rejected_before_context_generation(self):
+        def forbidden(*a, **k):
+            self.fail('Stale context must not call generation')
+        research = adapter(generate=forbidden)
+        with self.assertRaises(ValueError):
+            research.execute({'query': 'Apply this to banking.', 'context_id': 'old',
+                              'interpret_context': True})
+
     def test_two_paper_synthesis_and_business_preserve_sources_and_pending_review(self):
         result = self.run_query(adapter(), industry='banking')
         self.assertEqual(result['scenario'], 'full')

@@ -52,7 +52,6 @@ class ClarifyingIndexedResearch(IndexedResearch):
                 'conversation_id': token, 'session_ttl_seconds': self.ttl}
 
     def execute(self, payload, *, session_id=None):
-        request = self.prepare_request(payload)
         self.check_context(payload.get('context_id'))
         if payload.get('action', 'ask') not in {'ask', 'resume'}:
             raise ValueError('Use ask or resume.')
@@ -67,7 +66,9 @@ class ClarifyingIndexedResearch(IndexedResearch):
             if entry['busy']:
                 raise IndexedContextError('A question is already running in this conversation.')
             entry['busy'] = True
+        request = None
         try:
+            request = self.prepare_request(payload)
             session = entry['research']
             if payload.get('action') == 'resume':
                 response = session.resume(request['query'], context_id=self.context_id)
@@ -95,6 +96,8 @@ class ClarifyingIndexedResearch(IndexedResearch):
                     'message': f'{stage} failed or did not validate. No answer accepted. Retry, or start a new conversation.'},
                 'provenance': {**deepcopy(self.provenance), 'stages': {stage: 'failed'}}}
         except ValueError:
+            if request is None:
+                raise ValueError('Question or business context did not validate. No answer accepted; retry your question.') from None
             raise IndexedContextError('Invalid conversation state; answer the pending clarification or start a new conversation.') from None
         finally:
             with self.session_lock:

@@ -16,7 +16,7 @@ const options = [
   {text: 'Both, with a practical evaluation plan', support: []},
 ];
 let browser;
-before(async () => { browser = await chromium.launch({headless: true}); });
+before(async () => { browser = await chromium.launch({headless: true, channel: process.env.PLAYWRIGHT_CHANNEL}); });
 after(async () => { await browser?.close(); });
 async function desk(width, fn, {supported = true, retry = false, open = false, businessFailure = false} = {}) {
   const context = await browser.newContext({viewport: {width, height: 1000}, colorScheme: process.env.QA_COLOR_SCHEME || 'dark'});
@@ -43,9 +43,8 @@ async function desk(width, fn, {supported = true, retry = false, open = false, b
     await page.goto(base);
     assert.equal(await page.title(), 'Research desk · 1F');
     await page.waitForFunction(() => !document.querySelector('#submit').disabled);
-    if (businessFailure) await page.locator('[name="industry"]').fill('banking');
     await page.getByRole('textbox', {name: 'Research question', exact: true}).fill('How should the synthetic agents be evaluated?');
-    await page.getByRole('button', {name: 'Search research', exact: true}).click();
+    await page.getByRole('button', {name: 'Research', exact: true}).click();
     await page.getByRole('heading', {name: prompt}).waitFor();
     await fn(page, requests);
     assert.deepEqual(errors, []);
@@ -114,7 +113,7 @@ test('repurposed open citation rail returns focus to the current clarification',
     await page.getByRole('button', {name: /^Inspect source context,/}).click();
     assert.equal(await page.locator('#evidence-panel').evaluate(n => n.open), true);
     await page.getByRole('textbox', {name: 'Research question', exact: true}).fill('Another question needing clarification');
-    await page.getByRole('button', {name: 'Search research', exact: true}).click();
+    await page.getByRole('button', {name: 'Research', exact: true}).click();
     await page.getByRole('heading', {name: prompt}).waitFor();
     await page.getByRole('button', {name: 'Close source context', exact: true}).click();
     assert.equal(await page.getByRole('button', {name: 'Why these options?', exact: true}).evaluate(n => document.activeElement === n), true);
@@ -193,7 +192,7 @@ test('an old failed-resume retry cannot change or answer a newer pending questio
     await free.fill('Corrected answer');
     await page.getByRole('button', {name: 'Submit answer', exact: true}).click(); await idle(page);
     await page.getByRole('textbox', {name: 'Research question', exact: true}).fill('Another ambiguous question');
-    await page.getByRole('button', {name: 'Search research', exact: true}).click(); await idle(page);
+    await page.getByRole('button', {name: 'Research', exact: true}).click(); await idle(page);
     await free.fill('New answer in progress');
     const count = requests.length;
     await oldRetry.click(); await idle(page);

@@ -521,9 +521,8 @@ function setClarificationPending(pending, status = 'Closed') {
   if (!clarificationEnabled) return;
   document.querySelector('.composer-area').classList.toggle('awaiting-clarification', pending);
   queryInput.setAttribute('aria-label', 'Research question');
-  queryInput.placeholder = 'Enter a research question…';
-  form.elements.industry.disabled = pending;
-  submit.firstChild.textContent = pending ? 'Send clarification' : 'Search research';
+  queryInput.placeholder = 'What would you like to research?';
+  submit.firstChild.textContent = pending ? 'Send clarification' : 'Research';
 }
 
 function renderClarification(demo, number, answer) {
@@ -808,7 +807,6 @@ function offerRetry(answer, query, scenario, context, pendingTurn = null) {
       feedback.textContent = 'The paper changed since this question failed. Original question restored; review it before sending about the current paper. Previous context will not be sent.';
       return;
     }
-    if (indexedMode && context) form.elements.industry.value = context.industry || '';
     retryContext = context;
     try { form.requestSubmit(); }
     finally { retryContext = null; }
@@ -823,12 +821,13 @@ form.addEventListener('submit', async event => {
   const query = form.elements.query.value;
   const scenario = form.elements.scenario.value;
   const pendingTurn = clarificationPending ? activeClarificationTurn : null;
-  let submissionContext = indexedMode ? (retryContext || {context_id: indexedContextId, industry: form.elements.industry.value,
+  let submissionContext = indexedMode ? (retryContext || {context_id: indexedContextId, interpret_context: true,
     ...(clarificationEnabled ? {conversation_id: researchConversationId, action: clarificationPending ? 'resume' : 'ask'} : {})}) : liveSynthesis ? (retryContext || {
     history: conversationHistory.map(message => ({...message})),
     paper_context_id: activePaperContextId,
   }) : null;
   document.querySelector('.demo-settings').open = false;
+  document.querySelector('.research-settings').open = false;
   if (!query.trim()) {
     feedback.textContent = 'Enter a nonempty research question.';
     feedback.classList.remove('sr-only');
@@ -936,13 +935,14 @@ function loadQuestionEntry() {
     }
   }
   if (indexedMode) {
-    document.querySelector('#indexed-options').hidden = false;
     document.querySelector('#welcome h2').textContent = 'Ask across your research index.';
-    document.querySelector('#welcome p').textContent = 'Inspect supported findings and their sources. Add industry context for conditional business implications.';
+    document.querySelector('#welcome p').textContent = 'Explore findings and follow the evidence.';
     document.querySelector('#demo-note').textContent = `Persistent research index · ${config.index.count} passages · Independent questions; previous answers are not context.`;
     if (clarificationEnabled) document.querySelector('#demo-note').textContent = 'Persistent research index · Clarification enabled · Recent successful turns are intent context, never evidence. New conversation clears context.';
-    submit.firstChild.textContent = 'Search research';
+    submit.firstChild.textContent = 'Research';
     feedback.textContent = 'Ready to search the research index.';
+    feedback.classList.add('sr-only');
+    document.querySelector('#demo-note').classList.add('sr-only');
     if (untouchedQuestion) queryInput.value = '';
   }
   if (!demo) return;

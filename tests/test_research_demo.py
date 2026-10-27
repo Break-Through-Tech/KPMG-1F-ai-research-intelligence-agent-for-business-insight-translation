@@ -322,7 +322,7 @@ class DemoHttpTests(unittest.TestCase):
 
     def test_live_configuration_and_disabled_route(self):
         status, _, body = self.call('GET', '/api/config')
-        self.assertEqual(json.loads(body), {'live': False})
+        self.assertEqual(json.loads(body), {'live': False, 'plain_language': False})
         self.assertEqual(self.call('POST', '/api/research', '{}',
             {'Content-Type': 'application/json'})[0], 503)
 

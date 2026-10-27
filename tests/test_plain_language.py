@@ -108,3 +108,16 @@ class GeneratedPresentationTests(unittest.TestCase):
         candidate = self.response()
         candidate['claims'][0]['support'][0]['quote'] = 'Not in the source'
         self.assertEqual(generate_view(self.result, generate=lambda _: json.dumps(candidate))['status'], 'failed')
+
+
+    def test_damaged_optional_replay_cannot_hide_valid_original(self):
+        from tempfile import TemporaryDirectory
+        from src.research_demo import replay_presentation
+        original = deepcopy(self.result)
+        with TemporaryDirectory() as folder:
+            path = Path(folder) / 'presentation.json'
+            for raw in [b'{', b'\xff', b' ' * 120001]:
+                path.write_bytes(raw)
+                self.assertEqual(replay_presentation(self.result, path)['status'], 'failed')
+            self.assertEqual(replay_presentation(self.result, Path(folder)/'absent.json')['status'], 'failed')
+        self.assertEqual(self.result, original)

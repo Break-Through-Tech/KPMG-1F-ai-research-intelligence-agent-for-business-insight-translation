@@ -18,6 +18,7 @@ let activeDemo = null;
 let savedResult = null;
 let liveSynthesis = false;
 let indexedMode = false;
+let presentationEnabled = false;
 let indexedContextId = null;
 let clarificationEnabled = false;
 let researchConversationId = null;
@@ -859,7 +860,8 @@ form.addEventListener('submit', async event => {
       body: JSON.stringify({query, scenario,
         ...(submissionContext || {})}),
       // Indexed: context, two clarification gates, summary and translation (5 × 300s + 60s).
-      signal: AbortSignal.timeout(indexedMode ? 1560000 : liveSynthesis ? 330000 : 10000),
+      signal: AbortSignal.timeout((indexedMode ? 1560000 : liveSynthesis ? 330000 : 10000) +
+        (liveSynthesis && presentationEnabled ? 300000 : 0)),
     });
     const demo = await response.json();
     if (!response.ok) {
@@ -924,6 +926,7 @@ function loadQuestionEntry() {
   appReady = true;
   feedback.textContent = config.live ? 'Ready to ask about this paper.' : 'Ready. Synthetic demo; questions are not executed.';
   liveSynthesis = config.live;
+  presentationEnabled = config.plain_language === true;
   activePaperContextId = config.paper_context_id || null;
   indexedMode = config.mode === 'indexed';
   indexedContextId = config.context_id || null;

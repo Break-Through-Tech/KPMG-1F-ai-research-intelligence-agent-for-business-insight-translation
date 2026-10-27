@@ -77,6 +77,16 @@ def saved_result_envelope(result):
             'error': None, 'fixture_file': None, 'plain_language': plain_language_view(result)}
 
 
+def replay_presentation(result, path):
+    """A damaged optional presentation must not take down valid result replay."""
+    try:
+        if path.stat().st_size > 120000:
+            raise ValueError('Presentation file exceeds limit')
+        return plain_language_view(result, json.loads(path.read_text()))
+    except (OSError, ValueError, UnicodeError):
+        return plain_language_view(result, {'status': 'failed'})
+
+
 class DemoHandler(BaseHTTPRequestHandler):
     saved_result = None
     research = None
@@ -113,7 +123,8 @@ class DemoHandler(BaseHTTPRequestHandler):
             self.respond(403, {'error': 'Use the local research page.'})
             return
         if self.path == '/api/config':
-            config = {'live': self.research is not None}
+            config = {'live': self.research is not None,
+                      'plain_language': type(self).presentation_generate is not None}
             if getattr(self.research, 'mode', None) == 'indexed':
                 try:
                     config.update(self.research.config())
@@ -286,7 +297,7 @@ def main():
         if args.plain_language:
             DemoHandler.saved_result['plain_language'] = generate_view(result, generate=generate, metadata=metadata)
         elif args.presentation:
-            DemoHandler.saved_result['plain_language'] = plain_language_view(result, json.loads(args.presentation.read_text()))
+            DemoHandler.saved_result['plain_language'] = replay_presentation(result, args.presentation)
     with ThreadingHTTPServer(('127.0.0.1', args.port), DemoHandler) as server:
         label = 'Indexed research' if args.index else 'Paper synthesis' if args.paper else 'Saved-result viewer' if args.result else 'Fixture demo'
         note = 'live indexed synthesis' if args.index else 'live LLM synthesis' if args.paper else 'no live execution'

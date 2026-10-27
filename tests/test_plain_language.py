@@ -116,7 +116,7 @@ class GeneratedPresentationTests(unittest.TestCase):
         original = deepcopy(self.result)
         with TemporaryDirectory() as folder:
             path = Path(folder) / 'presentation.json'
-            for raw in [b'{', b'\xff', b' ' * 120001]:
+            for raw in [b'{', b'\xff', b' ' * 120001, b'[' * 1200 + b'0' + b']' * 1200]:
                 path.write_bytes(raw)
                 self.assertEqual(replay_presentation(self.result, path)['status'], 'failed')
             self.assertEqual(replay_presentation(self.result, Path(folder)/'absent.json')['status'], 'failed')

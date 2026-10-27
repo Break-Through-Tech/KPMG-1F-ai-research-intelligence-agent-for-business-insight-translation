@@ -68,7 +68,7 @@ def plain_language_view(result, candidate=None):
             else:
                 raise ValueError("Unsupported definition status")
         return deepcopy(candidate)
-    except (KeyError, TypeError, ValueError, AttributeError):
+    except (KeyError, TypeError, ValueError, AttributeError, RecursionError):
         return {"status": "failed", "reason": "Simplification contract validation failed. The original answer is retained."}
 
 

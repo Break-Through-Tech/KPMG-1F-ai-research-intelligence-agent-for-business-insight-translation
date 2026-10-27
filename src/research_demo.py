@@ -83,7 +83,7 @@ def replay_presentation(result, path):
         if path.stat().st_size > 120000:
             raise ValueError('Presentation file exceeds limit')
         return plain_language_view(result, json.loads(path.read_text()))
-    except (OSError, ValueError, UnicodeError):
+    except (OSError, ValueError, UnicodeError, RecursionError):
         return plain_language_view(result, {'status': 'failed'})
 
 

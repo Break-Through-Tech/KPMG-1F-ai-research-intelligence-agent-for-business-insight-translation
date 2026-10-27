@@ -476,3 +476,11 @@ and `codex login status`. Do not remove isolation flags, copy credentials,
 change global configuration, or switch to API-key billing to make an old CLI work.
 Official references: [CLI options](https://learn.chatgpt.com/docs/developer-commands#codex-exec)
 and [subscription authentication](https://learn.chatgpt.com/docs/auth).
+
+## Saved work
+
+The desk now initializes a local SQLite library automatically. Use **Saved briefs**
+to search/reopen retained answers, inspect immutable versions, and record exact-version
+reviews. No database server or teammate setup is needed. See [Saved briefs](saved-briefs.md)
+for import/export, archive/restore, revision, storage location, backup and review semantics.
+Use `--no-library` for disposable sessions.

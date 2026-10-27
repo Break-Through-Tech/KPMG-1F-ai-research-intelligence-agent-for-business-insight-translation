@@ -261,3 +261,26 @@ blockquote { border-left: 2px solid #aab5c5; margin: 0 0 28px; padding: 0 0 0 16
 .research-settings > summary::-webkit-details-marker { display: none; }
 .research-settings > summary::after { content: "⌄"; margin-left: 8px; }
 @media (max-width: 600px) { #research-form { padding: 14px; } .research-settings > summary { padding: 8px; } }
+
+/* Saved work uses native disclosure/forms and the desk's existing semantic colors. */
+#brief-library { width: min(720px, calc(100vw - 24px)); max-height: calc(100dvh - 24px); padding: 24px; border: 1px solid var(--border); border-radius: 12px; background: var(--background); color: var(--text); overflow-y: auto; }
+#brief-library::backdrop { background: var(--overlay); }
+.library-heading, .library-pages { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.library-heading h2 { margin: 0; }
+#brief-list { padding: 0; list-style: none; }
+#brief-list li { border-bottom: 1px solid var(--border); padding: 12px 0; overflow-wrap: anywhere; }
+#brief-list button { text-align: left; color: var(--primary); }
+#brief-list p { margin: 4px 12px; }
+.brief-controls { margin-top: 20px; border-top: 1px solid var(--border); }
+.brief-controls > :not(summary) { margin-bottom: 12px; }
+.brief-controls input:not([type=file]), #brief-search { display: block; width: 100%; min-height: 44px; padding: 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--background); color: var(--text); font: inherit; }
+.brief-controls select { width: 100%; }
+.brief-review { margin-top: 16px; }
+.brief-review label { margin-bottom: 12px; }
+.brief-review textarea { border: 1px solid var(--border); padding: 8px; }
+.brief-import { display: block; margin: 12px 0; }
+.brief-import input { display: block; max-width: 100%; min-height: 44px; font: inherit; }
+.brief-archive-filter { display: flex; align-items: center; gap: 8px; min-height: 44px; }
+.brief-archive-filter input { width: 20px; height: 20px; }
+.brief-revision { padding: 8px 12px; background: var(--surface); color: var(--text); font-size: .875rem; max-height: 120px; overflow-y: auto; }
+@media (max-width: 800px) { .header-tools { gap: 8px; flex-wrap: wrap; } #brief-library { padding: 16px; } }

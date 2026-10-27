@@ -75,6 +75,7 @@ function readyAnnouncement(demo, number) {
     'provider-error': 'failed: simulated provider error.',
     'execution-error': 'failed: research execution error.',
   }[demo.scenario];
+  if (demo.library?.replayed) return `Answer ${number} opened from saved version ${demo.library.version.number}. ${BriefLibrary.reviewText(demo)}. No model call.`;
   const mode = !isReal(demo) ? ' Synthetic example.' : (!isSynthesis(demo) ? ' Saved result; no live query.' : '');
   return `Answer ${number} ${outcome}${mode}`;
 }
@@ -97,6 +98,7 @@ function rememberAcceptedTurn(query, demo) {
 const isSynthesis = demo => demo.mode === 'indexed' || demo.mode === 'live-synthesis' || demo.result?.summary.generation_method === 'cited-synthesis-v1';
 const isReal = demo => demo.mode !== 'fixture';
 const runLabel = demo => {
+  if (demo.library?.replayed) return 'Saved snapshot · No new research executed · Original provenance retained';
   if (isSynthesis(demo)) return 'LLM synthesis · Citation quotes checked · Not independently verified';
   const generation = demo.result?.provenance?.generation;
   return generation?.provider || generation?.prompt_version
@@ -493,7 +495,7 @@ function renderDraft(demo, number, answer) {
     list(limits, 'Risks', insight.risks);
     list(limits, 'Business limitations', insight.limitations);
   }
-  limits.append(element('h3', 'Review status'), element('p', 'No reviewer has approved this draft. This demo cannot record or grant approval.'));
+  limits.append(element('h3', 'Review status'), element('p', demo.library ? BriefLibrary.reviewText(demo) : 'No reviewer has approved this draft. This demo cannot record or grant approval.'));
   const evidenceButton = element('button', `Inspect evidence (${result.evidence.length})`, 'quiet');
   evidenceButton.type = 'button';
   evidenceButton.addEventListener('click', () => showEvidence(demo, number, 0, evidenceButton));
@@ -680,12 +682,20 @@ function renderDemo(demo, number, answer) {
   head.append(answerHeading(number));
   if (demo.mode === 'indexed') head.append(element('p', demo.history_policy === 'server_owned_bounded_intent_only' ? 'Indexed research · Bounded conversation' : 'Indexed research · Independent query', 'meta'));
   if (demo.scenario !== 'full') head.append(element('p', label, 'meta'));
-  if (demo.result) head.append(element('p', 'Draft · Not approved', 'meta'));
+  if (demo.result) head.append(element('p', BriefLibrary.reviewText(demo), 'meta'));
+  if (demo.library?.replayed) head.append(element('p', 'Saved snapshot · No new research executed', 'meta'));
   answer.replaceChildren(head);
   if (demo.result) {
     if (demo.scenario !== 'full') answer.append(element('p', explanation));
     renderDraft(demo, number, answer);
     answer.append(AnswerExport.controls(demo, number));
+    const savedControls = BriefLibrary.controls(demo, updated => {
+      ResearchSpeech.stopAll();
+      renderDemo(updated, number, answer);
+      const controls = answer.querySelector('.brief-controls');
+      controls.open = true; controls.querySelector('summary').focus({preventScroll: true});
+    });
+    answer.append(savedControls);
     ResearchSpeech.attach(answer, ResearchSpeech.result(demo, number));
   } else answer.append(element('p', demo.error.message, 'error'));
   if (demo.result && demo.error) answer.append(element('p', `${demo.error.stage}: ${demo.error.message}`, 'error'));
@@ -858,6 +868,7 @@ form.addEventListener('submit', async event => {
     const response = await fetch(liveSynthesis ? '/api/research' : '/api/demo', {
       method: 'POST', headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({query, scenario,
+        ...(BriefLibrary.revision() ? {library_revision: BriefLibrary.revision()} : {}),
         ...(submissionContext || {})}),
       // Indexed: context, two clarification gates, summary and translation (5 × 300s + 60s).
       signal: AbortSignal.timeout((indexedMode ? 1560000 : liveSynthesis ? 330000 : 10000) +
@@ -885,6 +896,7 @@ form.addEventListener('submit', async event => {
       setClarificationPending(false, 'Answered');
       if (wasPending) queryInput.focus({preventScroll: true});
     }
+    if (demo.result) BriefLibrary.finishRevision();
     renderDemo(demo, number, answer);
     if (liveSynthesis) rememberAcceptedTurn(query, demo);
     if (demo.error) {
@@ -926,6 +938,7 @@ function loadQuestionEntry() {
   appReady = true;
   feedback.textContent = config.live ? 'Ready to ask about this paper.' : 'Ready. Synthetic demo; questions are not executed.';
   liveSynthesis = config.live;
+  BriefLibrary.configure(config);
   presentationEnabled = config.plain_language === true;
   activePaperContextId = config.paper_context_id || null;
   indexedMode = config.mode === 'indexed';
@@ -988,3 +1001,16 @@ function loadQuestionEntry() {
 }).finally(() => { setQuestionBusy(false); });
 }
 loadQuestionEntry();
+
+// Replays are display-only: never feed them into live conversation history.
+document.addEventListener('brief-open', event => {
+  const demo = event.detail;
+  const number = ++turnNumber;
+  const {turn, answer} = createTurn(demo.result.request.query, number, 'Saved question · No new research', 'Opening saved snapshot…');
+  document.querySelector('#welcome').hidden = true;
+  output.append(turn);
+  resetEvidence('Select a saved citation to inspect the retained evidence.');
+  renderDemo(demo, number, answer);
+  latestAnswer.focus({preventScroll: true});
+  latestAnswer.scrollIntoView({block: 'start'});
+});

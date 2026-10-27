@@ -13,7 +13,7 @@ for (const label of ['supported', 'partial', 'abstention']) {
       const result = JSON.parse(fs.readFileSync(original));
       const candidate = JSON.parse(fs.readFileSync(presentation));
       expect(candidate.fixture).toBe(false);
-      const server = spawn(process.env.PYTHON || 'python3', ['-m','src.research_demo','--port','0',
+      const server = spawn(process.env.PYTHON || 'python3', ['-m','src.research_demo','--no-library','--port','0',
         '--result',original,'--presentation',presentation], {cwd:path.resolve(__dirname,'../..')});
       try {
         const url = await new Promise((resolve,reject) => {

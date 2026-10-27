@@ -11,7 +11,7 @@ const test = base.extend({
   // A dedicated ephemeral loopback server per worker; never attach to a sibling's port.
   deskURL: [async ({}, use) => {
     const server = spawn(process.env.PYTHON || 'python3',
-      ['-m', 'src.research_demo', '--port', '0'], {cwd: root});
+      ['-m', 'src.research_demo', '--no-library', '--port', '0'], {cwd: root});
     let stderr = '';
     server.stderr.on('data', data => { stderr += data; });
     try {

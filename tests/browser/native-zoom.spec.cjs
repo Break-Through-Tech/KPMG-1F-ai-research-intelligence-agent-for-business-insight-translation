@@ -7,7 +7,7 @@ const path = require('node:path');
 const root = path.resolve(__dirname, '../..');
 let server, url;
 test.beforeAll(async () => {
-  server = spawn(process.env.PYTHON || 'python3', ['-m', 'src.research_demo', '--port', '0'], {cwd:root});
+  server = spawn(process.env.PYTHON || 'python3', ['-m', 'src.research_demo', '--no-library', '--port', '0'], {cwd:root});
   url = await new Promise((resolve, reject) => {
     server.once('exit', code => reject(new Error(`Server exited ${code}`)));
     server.stdout.on('data', data => {const match = String(data).match(/http:\/\/127.0.0.1:\d+/); if (match) resolve(match[0]);});

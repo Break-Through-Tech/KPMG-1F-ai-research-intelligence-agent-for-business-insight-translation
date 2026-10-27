@@ -5,6 +5,7 @@ on:
     paths:
       - 'ui/**'
       - 'src/research_demo.py'
+      - 'src/brief_store.py'
       - 'src/research_contracts.py'
       - 'src/paper_conversation.py'
       - 'src/paper_html.py'

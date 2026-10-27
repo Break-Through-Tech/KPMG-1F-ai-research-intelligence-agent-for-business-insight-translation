@@ -224,5 +224,45 @@ continue to run in CI without private sources, index downloads or model calls.
   exports does not certify these new flows.
 - No independent meaning/uncertainty approval, full-corpus extraction fidelity,
   platform-wide audit, WCAG conformance, deployment or stakeholder sign-off.
-- Persistent-index live-path recheck is tracked separately below; source-backed
-  replay and source inspection are not substitutes for it.
+- Persistent-index live-path recheck is completed separately below; source-backed
+  replay and source inspection were not used as substitutes for it.
+
+### Live persistent-index recheck — completed 2026-10-27
+
+An audit-owned copy of the existing 877-record `arxiv_papers` index was opened
+with the cached `all-MiniLM-L6-v2` encoder, offline hub settings and existing
+subscription-backed `gpt-6.1-sol` route. No corpus rebuild/reindex/download or
+provider fallback. Indexed-record identity:
+`41c71d4bbbdc5aa40a75d03f43691439a36be11ee256dd32ff48969faf3be260`.
+The same digest was observed in the earlier integration; this is a fresh browser
+run against the current implementation, not reuse of that historical result.
+
+- **1280px supported research query:** “How should AI agents be evaluated?”
+  returned `summary-only`, four claims and evidence from `2608.00339v1`,
+  `2605.00276v1`, `2604.00319v1`, `2604.00324v1`. Plain-language generation was
+  available. Citation → source quote → Escape/focus return passed.
+- **390px out-of-corpus query:** nuclear-fusion propulsion efficiency returned
+  `insufficient`, zero claims, available no-claim plain view and pending/unapproved
+  status, despite retrieval returning five passages. No unsupported answer was
+  fabricated for that development question. This is not general abstention accuracy.
+- Both runs used the actual `/api/research` path and browser rendering, retained
+  result/quote/provenance envelopes, had no horizontal document overflow and no
+  JavaScript page errors. They remain development observations, not held-out
+  semantic evaluation, independent approval, or VoiceOver walkthroughs.
+
+Reproduce after explicitly starting your indexed server (may call its provider):
+
+```sh
+RESEARCH_URL=http://127.0.0.1:8765 AUDIT_OUTPUT=/tmp/live-index-audit node tests/browser/live-index.manual.cjs
+```
+
+The full integrated Python suite initially passed **503 tests, 1 skipped** and
+699 subtests. A subsequently added nonfinite-presentation HTTP regression passed
+in the focused suite; final-head totals are recorded in the PR evidence.
+
+Native-zoom screenshots use `chrome.tabs.captureVisibleTab` in the same disposable
+profile: ordinary page screenshot capture mis-framed the surface after tab zoom.
+The capture API requires all-URLs permission in that temporary test extension;
+the isolated profile contains only owned synthetic loopback tabs, no user profile,
+credentials or personal browsing. Captured 200%/400% compositor images were visually
+inspected; focused source table content is legible and locally scrollable.

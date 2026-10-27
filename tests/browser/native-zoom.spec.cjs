@@ -19,7 +19,7 @@ for (const zoom of [2, 4]) {
     const folder = fs.mkdtempSync(path.join(os.tmpdir(), 'research-native-zoom-'));
     const extension = path.join(folder, 'extension'); fs.mkdirSync(extension);
     fs.writeFileSync(path.join(extension, 'manifest.json'), JSON.stringify({manifest_version:3,
-      name:'Isolated research zoom verification',version:'1.0',permissions:['tabs'],background:{service_worker:'background.js'}}));
+      name:'Isolated research zoom verification',version:'1.0',permissions:['tabs'],host_permissions:['<all_urls>'],background:{service_worker:'background.js'}}));
     fs.writeFileSync(path.join(extension, 'background.js'), 'chrome.runtime.onInstalled.addListener(()=>{});');
     let context;
     try {
@@ -59,13 +59,15 @@ for (const zoom of [2, 4]) {
       expect(await panel.evaluate(el => el.scrollWidth <= el.clientWidth)).toBe(true);
       await info.attach('native-zoom', {body:JSON.stringify({commit:execFileSync('git',['rev-parse','HEAD'],{cwd:root}).toString().trim(),
         browser:context.browser()?.version(),mode:'synthetic structured-source fixture; no provider/index/VoiceOver',before,after,api,errors},null,2),contentType:'application/json'});
-      const cdp = await context.newCDPSession(page);
-      const layout = await cdp.send('Page.getLayoutMetrics');
-      const visual = layout.cssVisualViewport;
-      const shot = await cdp.send('Page.captureScreenshot', {format:'png',fromSurface:true,captureBeyondViewport:false,
-        clip:{x:visual.pageX,y:visual.pageY,width:visual.clientWidth,height:visual.clientHeight,scale:1}});
-      await info.attach(`native-${zoom*100}`, {body:Buffer.from(shot.data,'base64'),contentType:'image/png'});
-      await info.attach('native-layout', {body:JSON.stringify(layout),contentType:'application/json'});
+      // Capture the visible compositor surface in this disposable profile. The
+      // capture API requires all-URLs permission; this profile opens only the
+      // owned synthetic loopback fixture and contains no user tabs/credentials.
+      const shot = await worker.evaluate(async origin => {
+        const tab = (await chrome.tabs.query({})).find(t => t.url?.startsWith(origin));
+        if (!tab || !tab.active) throw new Error('Owned fixture tab is not active');
+        return chrome.tabs.captureVisibleTab(tab.windowId, {format:'png'});
+      }, url);
+      await info.attach(`native-${zoom*100}`, {body:Buffer.from(shot.split(',')[1],'base64'),contentType:'image/png'});
       await page.keyboard.press('Escape');
       await expect(panel).not.toBeVisible();
       await expect(citation).toBeFocused();

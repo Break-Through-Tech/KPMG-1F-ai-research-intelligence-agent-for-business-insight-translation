@@ -79,6 +79,50 @@ class DemoHttpTests(unittest.TestCase):
         finally:
             connection.close()
 
+    def test_http_presentation_uses_selected_generator_and_retains_original_on_failure(self):
+        with patch.object(DemoHandler, 'saved_result', None):
+            from src.plain_language import fixture_view
+            original = load_demo({'query': 'Q'}, 'full')['result']
+            response = {'mode': 'live-synthesis', 'scenario': 'full', 'result': original}
+            candidate = fixture_view(original)
+            generate = lambda _: json.dumps({key: candidate[key] for key in ['claims', 'definitions']})
+            # No definitions in this result need a provider-only extra field.
+            candidate['definitions'] = []
+            with patch.object(DemoHandler, 'research', staticmethod(lambda req: dict(response))), patch.object(
+                    DemoHandler, 'presentation_generate', staticmethod(generate)):
+                status, _, body = self.call('POST', '/api/research', '{"query":"Q"}', {'Content-Type': 'application/json'})
+                envelope = json.loads(body)
+                self.assertEqual(status, 200)
+                self.assertEqual(envelope['plain_language']['status'], 'available')
+                self.assertEqual(envelope['result'], original)
+            with patch.object(DemoHandler, 'research', staticmethod(lambda req: dict(response))), patch.object(
+                    DemoHandler, 'presentation_generate', staticmethod(lambda _: 'invalid')):
+                status, _, body = self.call('POST', '/api/research', '{"query":"Q"}', {'Content-Type': 'application/json'})
+                envelope = json.loads(body)
+                self.assertEqual(status, 200)
+                self.assertEqual(envelope['plain_language']['status'], 'failed')
+                self.assertEqual(envelope['result'], original)
+
+    def test_nonfinite_optional_replay_metadata_keeps_saved_http_result_usable(self):
+        from pathlib import Path
+        from tempfile import TemporaryDirectory
+        from src.plain_language import fixture_view
+        from src.research_demo import replay_presentation
+        original = load_demo({'query': 'Q'}, 'full')['result']
+        candidate = fixture_view(original)
+        candidate['generation'] = {'elapsed_seconds': float('inf')}
+        with TemporaryDirectory() as folder:
+            path = Path(folder) / 'presentation.json'
+            # Valid JSON numeric syntax which overflows Python's float decoder.
+            path.write_text(json.dumps(candidate).replace('Infinity', '1e999'))
+            saved = saved_result_envelope(original)
+            saved['plain_language'] = replay_presentation(original, path)
+            self.assertEqual(saved['plain_language']['status'], 'failed')
+            with patch.object(DemoHandler, 'saved_result', saved):
+                status, _, body = self.call('GET', '/api/saved-result')
+                self.assertEqual(status, 200)
+                self.assertEqual(json.loads(body)['result'], original)
+
     def test_assets_and_unknown_paths(self):
         for path in ['/', '/app.js', '/math.js', '/source-reader.js', '/answer-export.js', '/styles.css',
                      '/reading-preferences.js', '/reading-preferences.css', '/vendor/katex/katex.min.js',
@@ -298,7 +342,7 @@ class DemoHttpTests(unittest.TestCase):
 
     def test_live_configuration_and_disabled_route(self):
         status, _, body = self.call('GET', '/api/config')
-        self.assertEqual(json.loads(body), {'live': False})
+        self.assertEqual(json.loads(body), {'live': False, 'plain_language': False})
         self.assertEqual(self.call('POST', '/api/research', '{}',
             {'Content-Type': 'application/json'})[0], 503)
 

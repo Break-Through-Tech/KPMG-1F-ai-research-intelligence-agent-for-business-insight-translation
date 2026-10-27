@@ -34,6 +34,19 @@ class SessionTests(unittest.TestCase):
         return dict(query=query, context_id=research.context_id,
                     conversation_id=config['conversation_id'], **extra)
 
+    def test_prompt_context_survives_clarification_without_reextracting_answer(self):
+        from unittest.mock import patch
+        research = adapter()
+        config = research.config()
+        with patch('src.indexed_research.explicit_business_context', return_value='banking') as extract:
+            response = research.execute(self.payload(research, config, 'What are its limitations?',
+                                        interpret_context=True))
+            self.assertEqual(response['scenario'], 'clarification')
+            response = research.execute(self.payload(research, config, 'Paper 1', action='resume',
+                                        interpret_context=True))
+            self.assertEqual(extract.call_count, 1)
+        self.assertEqual(response['result']['business_insight']['industry'], 'banking')
+
     def test_pending_resume_retains_original_question_industry_and_fresh_retrieval(self):
         calls = []
         research = adapter(retrieve=lambda q, k: calls.append(q) or deepcopy(PASSAGES))

@@ -61,6 +61,7 @@ test('send preference persists across reload; Shift+Enter remains multiline', as
   await desk(async page => {
     let count = 0;
     await page.route('**/api/demo', async r => { count++; await r.fulfill({json: envelope(r.request().postDataJSON())}); });
+    await page.getByText('Research options', {exact: true}).click();
     await page.getByLabel('Enter key').selectOption('send'); await page.reload(); await ready(page);
     assert.equal(await page.getByLabel('Enter key').inputValue(), 'send');
     const input = page.getByRole('textbox'); await input.fill('Persisted'); await input.press('End'); await input.press('Shift+Enter');
@@ -72,6 +73,7 @@ test('IME composition, legacy 229, commit Enter, repeat and dictation input do n
   await desk(async page => {
     let count = 0;
     await page.route('**/api/demo', async r => { count++; await r.fulfill({json: envelope(r.request().postDataJSON())}); });
+    await page.getByText('Research options', {exact: true}).click();
     await page.getByLabel('Enter key').selectOption('send');
     const input = page.getByRole('textbox'); await input.fill('日本語');
     await input.dispatchEvent('compositionstart');
@@ -198,7 +200,8 @@ test('saved replay remains read-only; input controls and suggestions hidden', as
 
 test('storage denial degrades to tab-only preference without disabling entry', async () => {
   await desk(async page => {
-    assert.match(await page.locator('#preference-note').innerText(), /tab only/);
+    assert.match(await page.locator('#preference-note').textContent(), /tab only/);
+    await page.getByText('Research options', {exact: true}).click();
     await page.getByLabel('Enter key').selectOption('send');
     assert.match(await page.locator('#entry-hint').innerText(), /Enter sends/);
   }, {storageBlocked: true});
@@ -242,5 +245,84 @@ test('320px keyboard entry and error retry remain reachable without horizontal o
     await page.keyboard.press('Shift+Tab');
     assert.equal(await page.getByRole('button', {name: 'Retry original question'}).evaluate(e => e === document.activeElement), true);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), true);
+  });
+});
+
+for (const width of [1280, 320]) {
+  test(`single prompt: context travels in question, outer focus and retry remain usable (${width}px)`, async () => {
+    await desk(async page => {
+      await page.setViewportSize({width, height: 900});
+      await page.emulateMedia({colorScheme: 'dark'});
+      await page.route('**/api/config', r => r.fulfill({json: {
+        live: true, mode: 'indexed', context_id: 'index-A', index: {count: 2},
+      }}));
+      await page.reload(); await ready(page);
+      const input = page.getByRole('textbox', {name: 'Research question'});
+      assert.equal(await input.inputValue(), '');
+      assert.equal(await page.locator('#industry').count(), 0);
+      assert.equal(await page.locator('#entry-options').isVisible(), false);
+      await input.focus();
+      const style = await input.evaluate(node => ({
+        outline: getComputedStyle(node).outlineStyle,
+        border: getComputedStyle(node.closest('form')).borderColor,
+        primary: getComputedStyle(node).getPropertyValue('--primary').trim(),
+      }));
+      assert.equal(style.outline, 'none');
+      assert.equal(style.border, 'rgb(155, 186, 255)');
+      await page.screenshot({path: `/tmp/kpmg-composer-${width}.png`, fullPage: true});
+      await page.keyboard.press('Tab');
+      assert.equal(await page.locator('#submit').evaluate(node => node === document.activeElement), true);
+      assert.notEqual(await page.locator('#submit').evaluate(node => getComputedStyle(node).outlineStyle), 'none');
+      let body;
+      await page.route('**/api/research', r => {
+        body = r.request().postDataJSON();
+        return r.fulfill({status: 503, json: {error: 'Injected retryable failure'}});
+      });
+      await input.fill('What are the business implications for banking?');
+      await page.getByRole('button', {name: 'Research', exact: true}).click(); await ready(page);
+      assert.equal(body.query, 'What are the business implications for banking?');
+      assert.equal(body.interpret_context, true);
+      assert.equal('industry' in body, false);
+      assert.equal(await input.inputValue(), body.query);
+      assert.equal(await page.getByRole('button', {name: 'Retry original question'}).isVisible(), true);
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+    });
+  });
+}
+
+
+test('indexed deadline includes the fifth provider budget', async () => {
+  await desk(async page => {
+    await page.route('**/api/config', r => r.fulfill({json: {
+      live: true, mode: 'indexed', context_id: 'index-A', index: {count: 2},
+    }}));
+    await page.reload(); await ready(page);
+    await page.clock.install();
+    // Use clock-controlled timers for the native abort deadline; no real provider wait.
+    await page.evaluate(() => {
+      AbortSignal.timeout = delay => {
+        const controller = new AbortController();
+        setTimeout(() => controller.abort(), delay);
+        return controller.signal;
+      };
+    });
+    let release, started;
+    const gate = new Promise(resolve => { release = resolve; });
+    const requestStarted = new Promise(resolve => { started = resolve; });
+    await page.route('**/api/research', async r => {
+      started(); await gate;
+      await r.fulfill({json: {...envelope(r.request().postDataJSON()), mode: 'indexed'}});
+    });
+    await page.getByRole('textbox').fill('What are the business implications for banking?');
+    await page.getByRole('button', {name: 'Research', exact: true}).click();
+    await requestStarted;
+    try {
+      // Five valid 260-second stages exceed the previous 1,260-second deadline.
+      await page.clock.runFor(1300000);
+      assert.equal(await page.locator('#output').getAttribute('aria-busy'), 'true');
+    } finally { release(); }
+    await ready(page);
+    assert.match(await page.locator('.turn').innerText(), /Draft · Not approved/);
+    assert.equal(await page.getByRole('textbox').inputValue(), '');
   });
 });

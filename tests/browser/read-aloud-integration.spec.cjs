@@ -34,6 +34,15 @@ for (const width of [1280, 390]) {
     const audio = answer.getByRole('group', {name:'Optional read-aloud'});
     await expect(audio.getByRole('button', {name:'Play', exact:true})).toBeEnabled();
     expect(await page.evaluate(() => speechCalls)).toEqual([]);
+    const limitText = await page.evaluate(() => {
+      const demo = structuredClone(activeDemo.demo);
+      demo.result.summary.limitations = ['A source-supported caveat.', 'An additional uncited gap.'];
+      demo.result.summary.limitation_support = [{text:'A source-supported caveat.', chunk_ids:[demo.result.evidence[1].chunk_id]}];
+      return ResearchSpeech.result(demo, 9).text;
+    });
+    expect(limitText).toContain('A source-supported caveat. Citations: 2, Synthetic fixture, not a paper.');
+    expect(limitText.match(/A source-supported caveat/g)).toHaveLength(1);
+    expect(limitText).toContain('An additional uncited gap.');
     await audio.getByRole('button', {name:'Play', exact:true}).press('Enter');
     await expect(audio.getByRole('button', {name:'Pause', exact:true})).toBeEnabled();
     expect(await page.evaluate(() => speechCalls.some(c => c[0] === 'speak' && c[1].includes('Draft. Human review pending. Not approved.')))).toBeTruthy();

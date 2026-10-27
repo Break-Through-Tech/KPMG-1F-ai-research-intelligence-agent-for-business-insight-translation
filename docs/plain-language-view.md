@@ -159,3 +159,38 @@ To inspect an already-generated candidate without another provider call, save it
 The candidate is revalidated against the full result identity and literal quotes;
 stale/malformed candidates show a failed presentation while retaining the original.
 `--presentation` cannot be combined with live modes or `--plain-language`.
+
+## Fine-tuned model runbook handoff
+
+Include this presentation task in the local Qwen specialization runbook, not
+only the UI rollout. Keep extraction/QA/synthesis and plain-language generation
+separately identifiable in training and evaluation. Existing four-task smoke runs
+are not evidence for the new presentation task.
+
+- Prepare reviewed technical/plain pairs from training source families only;
+  keep both views in the same split. Inputs are fixed, validated original results
+  plus exact supplied passages. Generated drafts are not automatically targets.
+- The generator returns **only `claims` and `definitions`** matching `generate_view`'s
+  response schema. The adapter supplies result identity, pending-review state,
+  fixture flag and provenance; do not train a model to invent approval or hashes.
+- Preserve ordered claim/citation mapping, exact support quotes, uncertainty,
+  negation, numerical bounds, conditions, disagreements and coverage gaps. Keep
+  interpretations/business actions/assumptions original. Define terms only from
+  explicit support; otherwise mark unavailable. No invented claims on abstention.
+- Compare untuned 9B, tuned 9B and untuned 27B on **identical original results and
+  evidence**, not separately regenerated summaries. Record exact model/adapter,
+  quantization/chat template, prompt/schema, settings, memory, latency and errors.
+- Review meaning/qualifier retention and readability separately, using supported,
+  partial, qualified/conflicting and unanswerable cases. Count malformed/failed
+  presentations and retain adverse cases. Keep final-test source families held out
+  throughout data/prompt/adapter selection; obtain second/blinded review where
+  feasible. A schema/quote pass or simpler prose is not evidence of preserved meaning.
+- Integrate a selected tuned model only through an explicitly configured generator
+  that supports this schema and failure contract; run presentation/server/browser
+  regressions and source-backed examples before changing a model default. Never
+  silently substitute a hosted provider, retrain, download or start paid compute.
+
+The separate local experiment's runbook/plan now include this task. Its current
+queues/runners still need reviewed fifth-task examples and a contract-aware
+comparison adapter; this PR does not claim to have trained or evaluated a tuned
+model or modify the experiment's existing datasets and recorded runs.

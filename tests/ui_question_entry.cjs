@@ -289,3 +289,40 @@ for (const width of [1280, 320]) {
     });
   });
 }
+
+
+test('indexed deadline includes the fifth provider budget', async () => {
+  await desk(async page => {
+    await page.route('**/api/config', r => r.fulfill({json: {
+      live: true, mode: 'indexed', context_id: 'index-A', index: {count: 2},
+    }}));
+    await page.reload(); await ready(page);
+    await page.clock.install();
+    // Use clock-controlled timers for the native abort deadline; no real provider wait.
+    await page.evaluate(() => {
+      AbortSignal.timeout = delay => {
+        const controller = new AbortController();
+        setTimeout(() => controller.abort(), delay);
+        return controller.signal;
+      };
+    });
+    let release, started;
+    const gate = new Promise(resolve => { release = resolve; });
+    const requestStarted = new Promise(resolve => { started = resolve; });
+    await page.route('**/api/research', async r => {
+      started(); await gate;
+      await r.fulfill({json: {...envelope(r.request().postDataJSON()), mode: 'indexed'}});
+    });
+    await page.getByRole('textbox').fill('What are the business implications for banking?');
+    await page.getByRole('button', {name: 'Research', exact: true}).click();
+    await requestStarted;
+    try {
+      // Five valid 260-second stages exceed the previous 1,260-second deadline.
+      await page.clock.runFor(1300000);
+      assert.equal(await page.locator('#output').getAttribute('aria-busy'), 'true');
+    } finally { release(); }
+    await ready(page);
+    assert.match(await page.locator('.turn').innerText(), /Draft · Not approved/);
+    assert.equal(await page.getByRole('textbox').inputValue(), '');
+  });
+});

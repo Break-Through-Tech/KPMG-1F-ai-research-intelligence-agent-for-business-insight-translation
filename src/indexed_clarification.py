@@ -68,7 +68,7 @@ class ClarifyingIndexedResearch(IndexedResearch):
             entry['busy'] = True
         request = None
         try:
-            request = self.prepare_request(payload)
+            request = self.resolve_context(self.prepare_request(payload), payload)
             session = entry['research']
             if payload.get('action') == 'resume':
                 response = session.resume(request['query'], context_id=self.context_id)

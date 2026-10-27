@@ -145,12 +145,15 @@ class IndexedResearch:
             raise ValueError('Industry must be text up to 300 characters.')
         if industry.strip():
             request['industry'] = industry
-        request = validate_request(request)
         interpret = payload.get('interpret_context', False)
         if not isinstance(interpret, bool):
             raise ValueError('interpret_context must be boolean.')
-        if interpret and 'industry' not in request and payload.get('action') != 'resume':
-            industry = explicit_business_context(query, self.generate)
+        return validate_request(request)
+
+    def resolve_context(self, request, payload):
+        # Called only from execution, never from HTTP prevalidation.
+        if payload.get('interpret_context') and 'industry' not in request and payload.get('action') != 'resume':
+            industry = explicit_business_context(request['query'], self.generate)
             if industry:
                 request['industry'] = industry
         return validate_request(request)
@@ -189,7 +192,7 @@ class IndexedResearch:
 
     def execute(self, payload, *, session_id=None):
         self.check_context(payload.get('context_id'))
-        request = self.prepare_request(payload)
+        request = self.resolve_context(self.prepare_request(payload), payload)
         def retrieve(query, top_k):
             from src.research_contracts import validate_evidence
             try:

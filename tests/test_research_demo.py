@@ -181,6 +181,50 @@ class DemoHttpTests(unittest.TestCase):
                 {'Content-Type': 'application/json'})
             self.assertEqual(status, 400)
 
+    def test_prompt_context_http_extracts_once_only_after_context_and_lock_guards(self):
+        from tests.test_indexed_research import adapter, generator
+        calls = []
+        def generate(prompt, **kwargs):
+            self.assertTrue(DemoHandler.research_lock.locked())
+            calls.append(prompt)
+            if prompt.startswith('BUSINESS CONTEXT EXTRACTION'):
+                return json.dumps({'industry': 'banking'})
+            return generator(prompt, **kwargs)
+        research = adapter(generate=generate)
+        with patch.object(DemoHandler, 'research', research):
+            def post(**extra):
+                return self.call('POST', '/api/research', json.dumps({
+                    'query': 'What are the business implications for banking?',
+                    'interpret_context': True, 'context_id': research.context_id, **extra}),
+                    {'Content-Type': 'application/json'})
+            self.assertEqual(post(context_id='stale')[0], 409)
+            with DemoHandler.research_lock:
+                self.assertEqual(post()[0], 409)
+            self.assertEqual(calls, [])
+            status, _, body = post()
+            self.assertEqual(status, 200)
+            self.assertEqual(json.loads(body)['submitted_request']['industry'], 'banking')
+            self.assertEqual(len(calls), 3)  # One extraction, summary, translation.
+            self.assertEqual(sum(p.startswith('BUSINESS CONTEXT EXTRACTION') for p in calls), 1)
+
+    def test_prompt_context_http_expired_and_busy_sessions_do_not_generate(self):
+        from tests.test_indexed_clarification import adapter
+        now = [0]
+        research = adapter(clock=lambda: now[0], ttl=10,
+                           generate=lambda *a, **k: self.fail('Rejected sessions must not generate'))
+        with patch.object(DemoHandler, 'research', research):
+            config = research.config()
+            def post():
+                return self.call('POST', '/api/research', json.dumps({
+                    'query': 'Apply these findings to banking.', 'interpret_context': True,
+                    'context_id': research.context_id, 'conversation_id': config['conversation_id']}),
+                    {'Content-Type': 'application/json'})
+            research.sessions[config['conversation_id']]['busy'] = True
+            self.assertEqual(post()[0], 409)
+            research.sessions[config['conversation_id']]['busy'] = False
+            now[0] = 11
+            self.assertEqual(post()[0], 409)
+
     def test_clarification_http_conversations_are_tab_scoped(self):
         from tests.test_indexed_clarification import adapter
         research = adapter()

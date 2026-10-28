@@ -1,7 +1,7 @@
 # Research desk: liveness and UI improvements
 
-**Implementation handoff for Alesha · 2026-10-28**  
-**Status:** proposed design, not implemented or accepted.  
+**Implementation handoff for Alesha · 2026-10-28**
+**Status:** proposed design, not implemented or accepted.
 **Source baseline:** `ae8df58d0b7627d107be4b44611aa277facca0cb` (current `main` at inspection).
 
 ## 1. Problem and intended outcome

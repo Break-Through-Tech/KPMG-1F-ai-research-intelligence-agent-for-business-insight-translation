@@ -108,3 +108,76 @@ test('storage warning retains answer and saves without another research request'
   await expect(page.locator('.brief-controls summary')).toHaveText('Saved brief · Version 1');
   expect(requests).toBe(1);
 });
+
+// Provider/session replies are simulated; storage and shipped UI remain real.
+async function indexedSession(page, url) {
+  const seeded = await (await page.request.post(`${url}/api/demo`, {data: {query: 'Seed saved brief'}})).json();
+  let session = 0;
+  await page.route('**/api/config', route => route.fulfill({json: {
+    live: true, library: true, mode: 'indexed', clarification: true,
+    context_id: 'test-index', conversation_id: `session-${++session}`, index: {count: 5},
+  }}));
+  await page.goto(url);
+  await expect(page.locator('#new-research-conversation')).toBeVisible();
+  await page.locator('#library-open').click();
+  await page.getByRole('button', {name: seeded.library.brief.title, exact: true}).click();
+  await page.locator('.brief-controls summary').click();
+  return seeded;
+}
+
+test('revision starts a fresh exchange instead of resuming unrelated clarification', async ({page, desk}) => {
+  const seeded = await indexedSession(page, desk.url);
+  const requests = [];
+  await page.route('**/api/research', async route => {
+    requests.push(route.request().postDataJSON());
+    await route.fulfill({json: {scenario: 'clarification', clarification: {
+      question: 'Which evaluation setting?', options: []}, clarification_evidence: []}});
+  });
+  await page.getByRole('textbox', {name: 'Research question', exact: true}).fill('Unrelated question');
+  await page.locator('#submit').click();
+  await expect(page.locator('#clarification-panel')).toBeVisible();
+  await page.getByRole('button', {name: 'Revise with new research', exact: true}).click();
+  await expect(page.locator('#clarification-panel')).toBeHidden();
+  await expect(page.locator('#brief-revision')).toBeVisible();
+  await page.locator('#submit').click();
+  await expect.poll(() => requests.length).toBe(2);
+  expect(requests[1].action).toBe('ask');
+  expect(requests[1].conversation_id).not.toBe(requests[0].conversation_id);
+  expect(requests[1].library_revision).toEqual({brief_id: seeded.library.brief.id,
+    expected_version: seeded.library.version.id});
+});
+
+test('new research conversation clears a selected revision target', async ({page, desk}) => {
+  await indexedSession(page, desk.url);
+  await page.getByRole('button', {name: 'Revise with new research', exact: true}).click();
+  await expect(page.locator('#brief-revision')).toBeVisible();
+  await page.locator('#new-research-conversation').click();
+  await expect(page.locator('#brief-revision')).toBeHidden();
+  const requests = [];
+  await page.route('**/api/research', async route => {
+    requests.push(route.request().postDataJSON());
+    await route.fulfill({json: {scenario: 'clarification', clarification: {
+      question: 'Which setting?', options: []}, clarification_evidence: []}});
+  });
+  await page.getByRole('textbox', {name: 'Research question', exact: true}).fill('A genuinely new question');
+  await page.locator('#submit').click();
+  await expect.poll(() => requests.length).toBe(1);
+  expect(requests[0]).not.toHaveProperty('library_revision');
+  expect(requests[0].action).toBe('ask');
+});
+
+test('saved business-stage failure retains partial label and recovery guidance', async ({page, desk}) => {
+  const envelope = await (await page.request.post(`${desk.url}/api/demo`, {data: {query: 'Seed'}})).json();
+  delete envelope.result.business_insight;
+  envelope.scenario = 'partial';
+  envelope.error = {stage: 'business', code: 'business_failed', message: 'Business translation failed. Summary retained.'};
+  const imported = await (await page.request.post(`${desk.url}/api/briefs`, {
+    data: {envelope, title: 'Failed business stage'}})).json();
+  expect(imported.scenario).toBe('partial');
+  await page.goto(desk.url);
+  await page.locator('#library-open').click();
+  await page.getByRole('button', {name: 'Failed business stage', exact: true}).click();
+  await expect(page.locator('.answer')).toContainText('Business translation is unavailable');
+  await expect(page.locator('.answer')).toContainText('Business translation failed. Summary retained.');
+  await expect(page.locator('.answer')).not.toContainText('Business translation was not requested');
+});

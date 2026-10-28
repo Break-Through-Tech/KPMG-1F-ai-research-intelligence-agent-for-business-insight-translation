@@ -129,9 +129,7 @@
     if (current) {
       root.append(importControl('Import a new version JSON', {brief_id: brief.id, expected_version: version.id}, onChanged, message));
       if (live) root.append(button('Revise with new research', () => {
-        revision = {brief_id: brief.id, expected_version: version.id};
-        banner.hidden = false; banner.querySelector('span').textContent = `Next accepted answer becomes a new version of “${brief.title}”. This reruns research using the current source configuration.`;
-        const input = document.querySelector('#query'); input.value = demo.result.request.query; input.focus();
+        document.dispatchEvent(new CustomEvent('brief-revise', {detail: demo}));
       }));
       const review = node('form', undefined, 'brief-review');
       const reviewerLabel = node('label', 'Reviewer name');
@@ -157,5 +155,10 @@
   document.querySelector('#brief-revision-cancel').addEventListener('click', () => { revision = null; banner.hidden = true; });
   window.BriefLibrary = {controls, reviewText, configure(config) {
     enabled = config.library === true; live = config.live === true; trigger.hidden = !enabled;
+  }, beginRevision(demo) {
+    const {brief, version} = demo.library;
+    revision = {brief_id: brief.id, expected_version: version.id};
+    banner.hidden = false; banner.querySelector('span').textContent = `Next accepted answer becomes a new version of “${brief.title}”. This starts a fresh exchange using the current source configuration.`;
+    const input = document.querySelector('#query'); input.value = demo.result.request.query; input.focus();
   }, revision: () => revision && {...revision}, finishRevision() { revision = null; banner.hidden = true; }};
 })();

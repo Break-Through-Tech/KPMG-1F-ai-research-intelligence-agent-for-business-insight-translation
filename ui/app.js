@@ -437,7 +437,8 @@ function renderDraft(demo, number, answer) {
   }
   const insight = result.business_insight;
   if (insight || !isSynthesis(demo)) narrative.append(element('h3', 'Business implications'));
-  if (!insight && !isSynthesis(demo)) narrative.append(element('p', 'Business translation was not requested.'));
+  if (!insight && !isSynthesis(demo)) narrative.append(element('p', demo.error?.stage === 'business'
+    ? 'Business translation failed. The supported summary is retained.' : 'Business translation was not requested.'));
   if (insight) {
     narrative.append(element('p', 'Conditional interpretations for business use—not findings validated by the study.', 'meta'));
     narrative.append(element('p', `Industry context: ${insight.industry}`, 'meta'));
@@ -654,8 +655,8 @@ function renderClarification(demo, number, answer) {
   (options.querySelector('input') || free).focus({preventScroll: true});
 }
 
-document.querySelector('#new-research-conversation').addEventListener('click', async () => {
-  if (requestPending) return;
+async function startResearchConversation() {
+  if (requestPending) return false;
   setQuestionBusy(true);
   try {
     const response = await fetch('/api/config', {signal: AbortSignal.timeout(10000)});
@@ -664,16 +665,30 @@ document.querySelector('#new-research-conversation').addEventListener('click', a
     if (!config.clarification || !config.conversation_id) throw new Error('Session unavailable');
     researchConversationId = config.conversation_id;
     indexedContextId = config.context_id;
+    BriefLibrary.finishRevision();
+    retryContext = null;
+    document.querySelectorAll('.retry-question').forEach(button => button.remove());
     setClarificationPending(false);
     queryInput.value = '';
     queryInput.focus();
     suggestions.hidden = true;
     document.querySelector('#suggestion-note').hidden = true;
     resetEvidence('New research conversation. Previous answers remain visible but are not conversation context.');
-    feedback.textContent = 'New research conversation. Previous answers and pending clarification will not be used as context.';
+    feedback.textContent = 'New research conversation. Previous answers, pending clarification and revision target will not be used.';
+    return true;
   } catch {
     feedback.textContent = 'Could not start a new conversation. Current question and session are unchanged; retry when ready.';
+    return false;
   } finally { setQuestionBusy(false); }
+}
+document.querySelector('#new-research-conversation').addEventListener('click', startResearchConversation);
+document.addEventListener('brief-revise', async event => {
+  if (requestPending) return;
+  if (clarificationEnabled && !await startResearchConversation()) return;
+  conversationHistory = [];
+  retryContext = null;
+  document.querySelectorAll('.retry-question').forEach(button => button.remove());
+  BriefLibrary.beginRevision(event.detail);
 });
 
 function renderDemo(demo, number, answer) {
@@ -939,6 +954,7 @@ function loadQuestionEntry() {
   feedback.textContent = config.live ? 'Ready to ask about this paper.' : 'Ready. Synthetic demo; questions are not executed.';
   liveSynthesis = config.live;
   BriefLibrary.configure(config);
+  BriefLibrary.finishRevision();
   presentationEnabled = config.plain_language === true;
   activePaperContextId = config.paper_context_id || null;
   indexedMode = config.mode === 'indexed';

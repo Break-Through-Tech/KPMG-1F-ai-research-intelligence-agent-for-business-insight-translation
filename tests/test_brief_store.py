@@ -3,10 +3,13 @@ from concurrent.futures import ThreadPoolExecutor
 from copy import deepcopy
 from pathlib import Path
 import sqlite3
+import json
+from hashlib import sha256
+from unittest.mock import patch
 from tempfile import TemporaryDirectory
 import unittest
 
-from src.brief_store import BriefStore, BriefConflict
+from src.brief_store import BriefStore, BriefConflict, snapshot
 from src.research_demo import load_demo
 
 
@@ -140,3 +143,32 @@ class BriefStoreTests(unittest.TestCase):
         second = BriefStore(self.path).save(self.envelope, reuse=True)
         self.assertEqual(first['library']['version'], second['library']['version'])
         self.assertEqual(len(self.store.list()), 1)
+
+    def test_business_failure_remains_partial_on_save_and_reopen(self):
+        self.envelope['result'].pop('business_insight')
+        self.envelope['scenario'] = 'partial'
+        self.envelope['error'] = {'stage': 'business', 'code': 'business_failed',
+                                  'message': 'Business translation failed. Summary retained.'}
+        saved = self.store.save(self.envelope)
+        reopened = BriefStore(self.path).load(saved['library']['brief']['id'])
+        self.assertEqual(saved['scenario'], 'partial')
+        self.assertEqual(reopened['scenario'], 'partial')
+        self.assertEqual(reopened['error'], self.envelope['error'])
+        self.assertEqual(reopened['result'], self.envelope['result'])
+
+    def test_legacy_failed_stage_snapshot_reopens_without_changing_its_fingerprint(self):
+        self.envelope['result'].pop('business_insight')
+        self.envelope['error'] = {'stage': 'business', 'code': 'business_failed',
+                                  'message': 'Business translation failed.'}
+        def legacy_snapshot(envelope):
+            value, _, _ = snapshot(envelope)
+            value['scenario'] = 'summary-only'  # pre-fix writer's display label
+            encoded = json.dumps(value, sort_keys=True, ensure_ascii=False, allow_nan=False)
+            return value, encoded, sha256(encoded.encode()).hexdigest()
+        with patch('src.brief_store.snapshot', side_effect=legacy_snapshot):
+            saved = self.store.save(self.envelope)
+        reopened = BriefStore(self.path).load(saved['library']['brief']['id'])
+        self.assertEqual(reopened['scenario'], 'partial')
+        self.assertEqual(reopened['library']['version']['fingerprint'],
+                         saved['library']['version']['fingerprint'])
+        self.assertEqual(reopened['result'], self.envelope['result'])

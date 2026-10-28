@@ -36,7 +36,10 @@ presentation) at startup; identical startup imports are reused instead of duplic
   accepted answer at the selected brief. A visible banner identifies the target
   and offers cancellation. Edit the question to include the requested changes,
   then send it normally. This intentionally reruns retrieval/generation using the
-  *current* configured source, not a replay of the old index. Original snapshots
+  *current* configured source, not a replay of the old index. Selecting a revision
+  starts a fresh research exchange, abandoning unrelated pending clarification;
+  **New research conversation** cancels the revision target. Selection is ignored
+  while a research request is running. Original snapshots
   remain untouched. Review notes are not silently injected into model prompts.
 - Storage failures do not erase a successfully generated answer. An expanded save
   warning offers snapshot export or **Save as separate brief**, with no model

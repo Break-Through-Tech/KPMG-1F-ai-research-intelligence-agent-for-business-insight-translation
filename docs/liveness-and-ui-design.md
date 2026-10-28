@@ -142,6 +142,44 @@ Stages may repeat or be skipped. Emit before/after actual operations, including
 pre-retrieval model calls, and identify each generation purpose. Never force a
 linear “search → model → validate” narrative onto clarification or rewrite paths.
 
+### Paper-aware activity: adapt the agent-status pattern
+
+Use the same interaction pattern as an agent's “Reading…” activity label: a
+short current action, an optional named resource, and an expandable activity
+history. Adapt the pattern to this app's own backend events; importing an
+OpenClaw/Codex UI component or coupling to a personal agent session is not required.
+
+Recommended activity copy follows what this pipeline can actually observe:
+
+| Observed event | Honest activity label |
+| --- | --- |
+| A paper loader starts extracting a named paper | Reading *paper title* |
+| Retrieval returns chunks from several papers | Found 5 passages across 3 papers |
+| Selected evidence is supplied to a synthesis call | Preparing findings from 3 papers |
+| Provider call is pending | Waiting for model response · 3 papers supplied |
+| Quote-membership validation starts | Checking supporting quotes |
+| Business translation starts | Drafting business implications |
+
+Counts above are illustrative; derive actual counts from returned passages and
+distinct canonical paper identities. Never fabricate a paper-by-paper reading
+sequence when all passages were sent together. The text-only Codex adapter has
+tools disabled and buffers JSON events until its subprocess returns; it cannot
+currently report “the model is reading paper X right now.” A source being in the
+prompt is not proof the model attended to it or cited it.
+
+Extend status snapshots with optional `activity_code`, `source_count`, and a
+bounded list of source IDs/titles from actual selected evidence. Treat titles as
+untrusted display text, cap their length, and use text nodes rather than HTML.
+Show up to two titles inline, with **View research activity** revealing remaining
+titles and stage-transition timestamps. Keep full passages in the existing source
+reader, not the liveness payload. Source metadata inherits the run's owner checks.
+
+Only show a per-paper action when a real operation targets that paper. For batch
+synthesis, show a source list under **Sources supplied for this step**, not a
+cycling “Reading…” animation. If future adapters expose documented tool/resource
+events, map allowlisted events into the same activity contract; do not render raw
+model commentary or expose internal reasoning as telemetry.
+
 ## 5. Delivery plan and backend contract
 
 ### Slice A: useful without backend progress

@@ -1,330 +1,111 @@
-# Research desk: liveness and UI improvements
+# Research desk: UI and progress updates
 
-**Implementation handoff for Alesha · 2026-10-28**
-**Status:** proposed design, not implemented or accepted.
-**Source baseline:** `ae8df58d0b7627d107be4b44611aa277facca0cb` (current `main` at inspection).
+**For Alesha · October 28, 2026**
 
-## 1. Problem and intended outcome
+Suggested changes, not yet implemented. Start with the first two sections;
+streaming can come later.
 
-A reader should immediately understand whether a question will run a model,
-whether their submitted request is still being handled, and what they can do
-when it fails. Today the distinction between the live research workflow and
-prepared examples is easy to miss. Long requests show a single loading message,
-which cannot distinguish useful work from a lost connection.
+## 1. Make it clear what the app will do
 
-Design for a quiet research desk: one question composer, one primary action,
-one compact run-status block. Keep evidence inspection and the existing reading
-preferences; do not turn the page into an infrastructure dashboard.
+- Label the current mode: **Live research**, **Prepared example**, or **Saved answer**.
+- Use one question box and one main **Research** button. Keep reading preferences
+  together under **Preferences**.
+- Explain live mode briefly: “Searches indexed papers and generates a draft answer.”
+- In example mode, say clearly that typing a question will not run research.
+- Keep **Draft · Human review pending** on generated answers.
 
-Success means users can answer these questions without opening developer tools:
+## 2. Show what is happening while the user waits
 
-1. Is this live research, a prepared example, or a saved answer?
-2. Did the server accept my question?
-3. What stage has the server actually reported, and when was it last heard from?
-4. Is it waiting for me, still processing, complete, or unable to continue?
-5. Can I recover without losing my question or accidentally starting another run?
-
-## 2. Current behavior and implementation anchors
-
-These observations are source-based, not a browser usability acceptance report.
-
-| Area | Current behavior | Source |
-| --- | --- | --- |
-| Mode detection | `/api/config` reports live/indexed/clarification capabilities; the UI adjusts labels after initialization | `src/research_demo.py`, `ui/app.js` |
-| Request transport | One `POST /api/research` waits for the complete response | `ui/app.js`, `DemoHandler.do_POST` |
-| Busy state | `setQuestionBusy()` guards submissions; answer turn and feedback show a general loading message | `ui/app.js` |
-| Long wait | Indexed request timeout is 1,560,000 ms, plus 300,000 ms when plain-language generation is enabled; this is a browser ceiling, not a promised duration | `ui/app.js` |
-| Concurrency | Threaded HTTP server, with a nonblocking research lock and HTTP 409 while another synthesis holds it | `src/research_demo.py` |
-| Model adapter | Selected Codex CLI runs synchronously via `subprocess.run`; startup checks are not continuous model-health probes | `src/codex_generation.py` |
-| Pipeline | Explicit context interpretation, clarification, retrieval, synthesis, business translation, validation and optional plain-language work can take different paths | `src/indexed_research.py`, `src/indexed_clarification.py`, `src/research_pipeline.py`, `src/plain_language.py` |
-| Reading and evidence | Citation preview/source rail, saved briefs, themes, text size, spacing, plain-language view and read-aloud already exist | `ui/index.html`, supporting UI scripts |
-
-The inspected rehearsal used a local index and cloud-backed `gpt-6.1-sol` via an
-existing ChatGPT login. This is a configuration example, not a value to hardcode.
-Local app hosting does **not** mean local model inference. No new model call is
-required merely to load the page or check status.
-
-## 3. Information hierarchy and proposed layout
+Add a small progress block beside the answer being prepared:
 
 ```text
-1F / Research desk                         Saved briefs   Preferences
-Live research · Local index · Cloud model
-
-[Question and prior answers; citations stay attached to their claims]
-
-Researching your question                         Elapsed 01:24
-Writing supported findings
-Server checked in 2 seconds ago
-
-Research question
-[What would you like to research?                          ]
-                                               [Research]
-Your question runs research automatically. Answers remain drafts.
+Researching your question                    Elapsed 01:24
+Preparing findings from 3 papers
+Last server update: 2 seconds ago
 ```
 
-The running block belongs to its answer turn, not a global toast. Keep it visible
-near the current composer without forcing scroll away from earlier evidence.
-An elapsed timer measures time since submission, never percent complete or ETA.
-When the stage has not been reported, say **“Waiting for a server update”**, not
-“Writing findings.” No timer-driven fake stage progression.
+The backend should report the current step. Suggested labels:
 
-### Mode labels and entry
-
-| Mode | Persistent visible label | Primary action | Supporting explanation |
-| --- | --- | --- | --- |
-| Indexed live | Live research · Local index | Research | Submitting searches indexed sources and runs the configured model automatically. |
-| Single paper live | Live research · Loaded paper | Ask paper | Answers use the loaded paper, not a corpus-wide search. |
-| Fixture | Prepared example · No model run | View example | Your typed question is not executed. |
-| Saved result | Saved answer · No model run | Open saved brief, where available | Opening an answer does not run research. |
-| Configuration unknown | Checking research availability | Disabled until resolved | Do not show a live/ready claim before configuration succeeds. |
-
-Expose model location as “Cloud model,” “Local model,” or “Model location not
-reported,” derived from explicit provider metadata. Put the configured model
-name and run identifier in **Run details**, not the main heading. “Configured”
-must not be relabeled “Model online”: a saved login or startup check cannot prove
-the next request will succeed. Hide fixture controls in live modes.
-
-### Other UI improvements
-
-- Keep a single question field. Use a visible **Research question** label;
-  placeholder text is an example, not the only label.
-- Preserve the single-prompt business-context flow. Use explicitly supplied
-  context; if necessary, ask one focused clarification. Do not invent an industry
-  or add mandatory audience/industry fields to every query.
-- Consolidate reading/research preferences under one predictable disclosure,
-  retaining all existing settings and keyboard shortcut guidance.
-- Separate **Research findings**, **Business implications**, and **Assumptions
-  and limitations**. Do not give generated interpretation the styling of source
-  evidence. Keep “Draft · Human review pending” attached to each result.
-- Keep citation inspection in context and preserve the source rail's existing
-  focus-return behavior. Hide secondary diagnostics under Run details.
-- Show “Answer ready; plain-language version still preparing” if a validated
-  technical result is available before the optional rewrite finishes. A rewrite
-  failure must not erase the validated original or imply meaning-review approval.
-- During work, retain the submitted question and allow drafting the next one;
-  prevent a second submission. Preserve existing retry snapshots rather than
-  retrying whatever happens to be in the composer now.
-
-## 4. Liveness: distinguish three different signals
-
-1. **Browser waiting:** elapsed time and local activity. Proves only that the
-   page is still waiting.
-2. **Server reachable:** a recent status response. Proves the server can answer
-   status requests, not that a model is generating tokens.
-3. **Observed run progress:** a stage change emitted by the executing backend.
-   Proves that boundary was reached, not semantic correctness or future success.
-
-Do not expose “Model thinking” or a green “Model alive” dot based on a heartbeat.
-While a synchronous provider call is pending, show **“Waiting for model response”**
-and separately show server freshness. No token stream or chain-of-thought display
-is needed. Publish only validated final content, never unvalidated partial claims.
-
-### Run states and copy
-
-| State | Visible message | Behavior |
-| --- | --- | --- |
-| Submitting | Sending your question… | No accepted-run claim until receipt. |
-| Accepted | Question received | Assign run identity; prevent duplicate execution. |
-| Context/clarification | Checking your question | Only when emitted by that adapter. |
-| Needs input | One detail needed | Show existing clarification controls; waiting is not a failure. |
-| Retrieval | Searching indexed sources | Use “Reading the loaded paper” on the paper path where appropriate. |
-| Generation | Waiting for model response | Optional sublabel identifies findings, implications or rewrite. |
-| Validation | Checking response format and supporting quotes | Not “Verifying truth”; quote membership is not entailment. |
-| Ready | Draft answer ready | Preserve human-review-pending status. |
-| Partial | Findings ready; business implications unavailable | Retain valid findings and explain the missing section. |
-| Abstention/empty | Not enough supported evidence to answer | Successful terminal outcome; no fake failed-model badge. |
-| Busy rejection | Another request is running | Do not imply this question is queued. |
-| Failed | Research could not finish | Specific safe cause and recovery action; retain question. |
-| Status stale | No recent server update | Overlay on last known state, not a terminal failure. |
-| Unknown run | This run is no longer available | Explain restart/expiry; do not automatically rerun. |
-
-Stages may repeat or be skipped. Emit before/after actual operations, including
-pre-retrieval model calls, and identify each generation purpose. Never force a
-linear “search → model → validate” narrative onto clarification or rewrite paths.
-
-### Paper-aware activity: adapt the agent-status pattern
-
-Use the same interaction pattern as an agent's “Reading…” activity label: a
-short current action, an optional named resource, and an expandable activity
-history. Adapt the pattern to this app's own backend events; importing an
-OpenClaw/Codex UI component or coupling to a personal agent session is not required.
-
-Recommended activity copy follows what this pipeline can actually observe:
-
-| Observed event | Honest activity label |
+| What is happening | Label |
 | --- | --- |
-| A paper loader starts extracting a named paper | Reading *paper title* |
-| Retrieval returns chunks from several papers | Found 5 passages across 3 papers |
-| Selected evidence is supplied to a synthesis call | Preparing findings from 3 papers |
-| Provider call is pending | Waiting for model response · 3 papers supplied |
-| Quote-membership validation starts | Checking supporting quotes |
-| Business translation starts | Drafting business implications |
+| Request accepted | Question received |
+| Looking up evidence | Searching indexed papers |
+| Extracting a particular paper | Reading [paper title] |
+| Retrieved evidence | Found 5 passages across 3 papers |
+| Evidence sent to the model | Preparing findings from 3 papers |
+| Waiting for generation | Waiting for model response |
+| Validating the answer | Checking response format and supporting quotes |
+| Translating findings | Drafting business implications |
+| Finished | Draft answer ready |
 
-Counts above are illustrative; derive actual counts from returned passages and
-distinct canonical paper identities. Never fabricate a paper-by-paper reading
-sequence when all passages were sent together. The text-only Codex adapter has
-tools disabled and buffers JSON events until its subprocess returns; it cannot
-currently report “the model is reading paper X right now.” A source being in the
-prompt is not proof the model attended to it or cited it.
+Use real titles and counts. If several papers go to the model together, show
+**Sources supplied for this step**; do not cycle through titles as if the model
+were reading them one at a time. We cannot observe that.
 
-Extend status snapshots with optional `activity_code`, `source_count`, and a
-bounded list of source IDs/titles from actual selected evidence. Treat titles as
-untrusted display text, cap their length, and use text nodes rather than HTML.
-Show up to two titles inline, with **View research activity** revealing remaining
-titles and stage-transition timestamps. Keep full passages in the existing source
-reader, not the liveness payload. Source metadata inherits the run's owner checks.
+An elapsed timer is useful, but it does not prove the server is working.
+Show the time since the last server response separately. If updates stop, say
+**No recent server update**; do not immediately call the research failed.
+Never invent percentages or advance stages on a timer.
 
-Only show a per-paper action when a real operation targets that paper. For batch
-synthesis, show a source list under **Sources supplied for this step**, not a
-cycling “Reading…” animation. If future adapters expose documented tool/resource
-events, map allowlisted events into the same activity contract; do not render raw
-model commentary or expose internal reasoning as telemetry.
+## 3. Stream the answer as it is written
 
-## 5. Delivery plan and backend contract
+Token streaming would make long waits feel more responsive. Show incoming answer
+text in the answer area, labeled **Drafting · Not yet checked**. Keep progress
+updates visible too: some stages may produce no answer text for a while.
 
-### Slice A: useful without backend progress
+- Stream only user-facing answer text, not internal reasoning, raw JSON,
+  tool logs, or provider errors.
+- Before completion, treat text and citations as provisional. Do not enable
+  saving, exporting, or read-aloud for this unfinished draft.
+- Run the existing format and supporting-quote checks on the complete response.
+  Replace the preview with the validated draft and its working citations.
+  These checks do not establish that every claim is true; human review remains.
+- If generation or validation fails, remove the unchecked preview from the
+  answer area and show a clear failure message. Preserve any separately validated
+  findings if only a later section fails.
+- Do not simulate streaming by slowly revealing an already completed answer.
 
-Ship explicit mode labels, corrected welcome copy, visible pending status,
-elapsed time, preserved input, and specific recovery copy. Label all pending work
-**“Request in progress; stage updates unavailable.”** This slice must not claim
-server heartbeats or observed model progress. Keep the existing POST contract.
+**Implementation note:** the current Codex adapter waits for the whole response
+in `src/codex_generation.py`. Reading its output incrementally is necessary but
+not sufficient: first check whether the selected CLI actually exposes answer-text
+deltas. If it does not, keep stage updates and defer token streaming or choose a
+supported streaming adapter explicitly. Do not promise a typing effect from the
+current integration.
 
-### Slice B: accepted runs with polling (recommended)
+## 4. Keep recovery and reading comfortable
 
-Use a small bounded run registry and background worker, not an additional model
-or a framework migration. Polling is simpler than streaming for this local
-threaded server; it supports reload recovery without rendering partial output.
-Keep the existing synchronous endpoint compatible until its callers migrate.
+- Preserve the question when something fails. Prevent duplicate submissions
+  while a request is running; reconnecting must not silently start another run.
+- Keep findings, business implications, and limitations visually distinct.
+  Preserve existing citation inspection and reading settings.
+- Do not steal focus or force scrolling when status or text changes.
+- Announce stage changes and completion to screen readers, not every token or
+  timer tick. Respect reduced motion; avoid flashing or pulsing indicators.
+- Check the layout on a narrow screen and at 200% browser zoom.
 
-Proposed additive routes (not existing APIs):
+## Suggested build order
 
-- `POST /api/research/runs`: existing validated request fields plus a client
-  submission key. Validate origin, size, context and ownership before accepting.
-  Reserve the existing research slot atomically, then return HTTP 202 and a
-  server-generated opaque `run_id`. A busy rejection returns 409, not “queued.”
-- `GET /api/research/runs/{run_id}`: authorized status snapshot. Poll every two
-  seconds while visible, back off to ten seconds while hidden, and stop on
-  terminal state. Status reads must not acquire the research execution lock.
-- Return terminal results using the existing result envelope and validation
-  rules. Keep the run registry lock short; never hold it around generation or
-  database work. Worker cleanup releases the research slot in `finally`.
+1. **Clear labels and waiting state.** Mostly `ui/index.html`, `ui/app.js`, and
+   `ui/styles.css`. Keep the existing request flow for this first pass.
+2. **Real progress updates.** Have the backend report accepted/running/finished
+   states and actual stages. A small background job plus status polling is a
+   reasonable starting point in `src/research_demo.py`; status reads must stay
+   responsive while generation runs. Restrict updates to the requesting session.
+3. **Streaming.** Once the adapter supports genuine text deltas, add a streaming
+   connection, such as server-sent events. Keep status polling as a recovery path;
+   reconnect to the same run rather than submitting again. Bound retained output
+   and handle disconnects without losing the final result.
 
-Example minimal status payload:
+## Quick check before calling it done
 
-```json
-{
-  "run_id": "opaque-server-generated-id",
-  "state": "running",
-  "stage": "generation",
-  "purpose": "research_findings",
-  "sequence": 4,
-  "elapsed_ms": 84000,
-  "stage_elapsed_ms": 62000,
-  "server_time": "2026-10-28T20:00:00Z"
-}
-```
+- Live, example, and saved modes are unmistakable.
+- A slow request shows honest progress; a lost connection is distinguishable.
+- Paper titles and counts match the evidence actually supplied.
+- Streamed text stays provisional until the full response passes existing checks.
+- Failure preserves the question, and double-click/reconnect does not run it twice.
+- Keyboard navigation, citations, reading settings, and screen-reader
+  announcements still work.
 
-Use monotonic clocks for durations and a monotonically increasing sequence per
-run. Browser freshness is measured since the last successful poll, independently
-of stage age. Ignore late responses for another run or a lower sequence. A status
-snapshot updates liveness even when the stage sequence has not changed.
-
-Keep orchestration status outside research result schemas and fingerprints.
-Propagate a bounded status callback through adapters, including optional rewrite
-work; do not let a status-rendering failure change research approval semantics.
-Use allowlisted stage/error codes, not raw exceptions, prompts, subprocess output,
-credentials, filesystem paths or research text in status metadata.
-
-### Ownership, retries and lifecycle
-
-- Bind run reads and submission keys to the initiating browser session and
-  active context. For modes without the existing conversation session, add an
-  opaque owner capability; a guessed ID or loopback access alone is insufficient.
-  Apply existing Host/Origin protections to every new route.
-- Within a session, the same submission key and same request return the same run;
-  key reuse with changed content is rejected. Reserve keys atomically with the
-  execution slot. A lost POST response can then be retried without another model
-  call. Keys must not be treated as permanent research history.
-- Store only the active run locator/capability in session-scoped browser storage,
-  never credentials. On reload, reattach to the owned run; do not resubmit.
-  If storage is unavailable, work normally but disclose that reload recovery is
-  unavailable. Never attach an old run to a new clarification or revision target.
-- Starting values: mark freshness stale after 15 seconds without a successful
-  poll; retry status checks with bounded backoff. This is **connection unknown**,
-  not **model failed**. Do not start research automatically on reconnection.
-- Cap retained run records at 100 and expire terminal records after 30 minutes.
-  Never evict active work to make room; reject new work if capacity is exhausted.
-  Remove completed in-memory payloads on expiry; saved-brief retention remains
-  governed by its existing separate policy. Restart loses in-memory run state.
-- Keep existing provider timeouts; define an overall run deadline covering all
-  enabled stages before enabling the new route. On deadline, prevent any late
-  completion from overwriting terminal state and clean up worker/subprocess work.
-  Do not assume the current browser timeout cancels backend computation.
-- **No Stop button in the first release.** Closing a tab or aborting fetch does
-  not prove the CLI stopped. Real cancellation needs separate subprocess control,
-  cleanup and race tests. A future “Stop waiting” must explicitly disclose that
-  research may continue; it must not immediately offer a duplicate run.
-
-## 6. Accessibility and responsive behavior
-
-- Reuse semantic controls and existing CSS tokens; do not introduce React or a
-  new design system for a vanilla HTML/CSS/JS improvement.
-- Announce accepted requests, real stage transitions, clarification, completion
-  and errors through a polite status region. Do not announce every heartbeat or
-  elapsed second. Keep a stable focus target; no automatic jump on each update.
-- Keep actionable failure/clarification text outside an `aria-busy` subtree so
-  it can be announced. Preserve existing answer-ready and jump-to-latest behavior.
-- Text and icon accompany color. No flashing or indefinite pulsing; respect
-  reduced motion. A static activity symbol plus changing elapsed time is enough.
-- Wrap status labels at narrow widths; use tabular timer digits and reserve
-  status space to avoid layout jumps. Verify 320 CSS px and real 200% browser
-  zoom without obscuring composer, source controls or focus indicators.
-- Retain all themes, high-contrast variants, text sizing, spacing, read-aloud
-  controls and keyboard submission preferences. Use accessible contrast and
-  comfortable pointer targets; do not rely on hover for explanations.
-
-## 7. Implementation sequence and acceptance checks
-
-| Increment | Primary files | Acceptance evidence |
-| --- | --- | --- |
-| A: truthful UI | `ui/index.html`, `ui/app.js`, `ui/styles.css` | Correct fixture/live/saved/unknown copy; elapsed timer; no invented progress; existing entry/citation behavior preserved. |
-| B: run lifecycle | `src/research_demo.py`, new bounded run-registry module | Atomic slot/key reservation, owner isolation, safe polling, expiry/restart behavior, lock release on all exits, old endpoint compatibility. |
-| C: real stages | Research/clarification/pipeline/provider and presentation adapters | Events match actual execution, including skipped/repeated stages, no-evidence path and optional rewrite failure. |
-| D: recovery and QA | UI plus existing HTTP/browser test suites | Reattach, late-response isolation, stale connection, no duplicate model calls, accessible transitions and responsive checks. |
-
-Use deterministic synthetic adapters for transport/state tests; separately run a
-small live walkthrough for genuine provider wiring. Record exact revision,
-configuration and observed outcomes. Required scenarios:
-
-1. Live supported answer: exactly one accepted execution; observed stages;
-   validated draft with usable citations and pending human review.
-2. Fixture and saved answer: no model invocation, unmistakable labels.
-3. Clarification: input required is visible and announced; resume runs only after
-   reply, with existing conversation/context checks preserved.
-4. Empty evidence and abstention: accurate terminal outcome; stages skipped when
-   work is not performed; no unsupported claims displayed.
-5. Provider/validation failure and partial translation/rewrite failure: specific
-   recoverable message; preserve only sections accepted by existing contracts.
-6. Slow provider with healthy polling, then failed polling: clearly distinguish
-   waiting for model response from lost server contact; never fabricate progress.
-7. Double click, lost acceptance response, reload and another tab: idempotency,
-   ownership and busy behavior prevent duplicate runs or cross-session disclosure.
-8. Server restart, retention expiry, deadline and late result: explicit unknown/
-   terminal state; no automatic rerun and no stale answer inserted as current.
-9. Keyboard-only, reduced motion, high contrast, 320 px and native 200% zoom;
-   manual screen-reader check for stage/error announcements without timer spam.
-
-Automated checks do not establish screen-reader usability, semantic entailment,
-stakeholder acceptance or production readiness. Record those as separate manual
-or unresolved gates. This handoff neither implements the UI nor records Alesha's
-approval, and it does not change source, review or publication status.
-
-## 8. Related repository guidance
-
-- [Local research interface](local-research-interface.md)
-- [Question entry and recovery](accessibility-question-entry.md)
-- [Answer navigation](accessibility-answer-navigation.md)
-- [Query clarification](query-clarification.md)
-- [Plain-language view](plain-language-view.md)
-- [Saved briefs](saved-briefs.md)
-- [Research contracts](research-contracts.md)
+For existing behavior, see [the local interface guide](local-research-interface.md),
+[question recovery](accessibility-question-entry.md), and
+[research contracts](research-contracts.md).

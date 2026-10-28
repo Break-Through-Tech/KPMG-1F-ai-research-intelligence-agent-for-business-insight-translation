@@ -15,6 +15,7 @@
   <script src="/answer-export.js" defer></script>
   <link rel="stylesheet" href="/read-aloud.css">
   <script src="/research-speech.js" defer></script>
+  <script src="/brief-library.js" defer></script>
   <script src="/app.js" defer></script>
   <title>Research desk · 1F</title>
 </head>
@@ -23,6 +24,7 @@
   <header class="masthead">
     <h1>1F <span>/</span> Research desk</h1>
     <div class="header-tools">
+      <button id="library-open" class="quiet" type="button" hidden>Saved briefs</button>
       <details class="reading-settings">
         <summary>Reading preferences</summary>
         <div class="reading-settings-content">
@@ -64,6 +66,7 @@
         <div id="output" aria-busy="false"></div>
       </div>
       <div class="composer-area">
+        <div id="brief-revision" class="brief-revision" hidden><span></span><button id="brief-revision-cancel" type="button" class="quiet">Cancel revision</button></div>
         <button id="jump-latest" type="button" class="quiet" disabled>Jump to latest answer</button>
         <p id="feedback" class="sr-only" role="status" aria-atomic="true">Choose an example state to begin.</p>
         <section id="clarification-panel" class="question-panel" aria-labelledby="clarification-prompt" hidden></section>
@@ -86,6 +89,16 @@
       <p class="rail-note meta">Synthetic passages. Links are example locators, not verified papers.</p>
     </dialog>
   </div>
+  <dialog id="brief-library" aria-labelledby="library-heading">
+    <div class="library-heading"><h2 id="library-heading">Saved briefs</h2><button id="library-close" type="button" class="quiet">Close library</button></div>
+    <p class="meta">Local to this app host. Saved answers retain their evidence; opening one never runs research.</p>
+    <form id="library-search-form"><label for="brief-search">Search titles and original questions</label><input id="brief-search" type="search" maxlength="200"><button type="submit" class="quiet">Search / Refresh</button></form>
+    <label class="brief-archive-filter"><input id="brief-archived" type="checkbox"> Show archived briefs</label>
+    <div id="library-import"></div>
+    <p id="library-status" role="status" aria-atomic="true" class="meta"></p>
+    <ul id="brief-list" aria-label="Saved briefs" aria-busy="false"></ul>
+    <div class="library-pages"><button id="brief-previous" type="button" class="quiet" disabled>Previous briefs</button><button id="brief-next" type="button" class="quiet" disabled>Next briefs</button></div>
+  </dialog>
   <div id="citation-preview" popover="manual" role="dialog" aria-label="Citation preview"></div>
 </body>
 </html>

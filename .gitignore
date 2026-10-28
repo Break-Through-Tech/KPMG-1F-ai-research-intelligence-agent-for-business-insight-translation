@@ -49,3 +49,8 @@ coverage.xml
 *~
 
 /data/tex/
+
+# Local saved research snapshots, reviews, and SQLite sidecars
+/data/briefs/
+*.sqlite3
+*.sqlite3-*

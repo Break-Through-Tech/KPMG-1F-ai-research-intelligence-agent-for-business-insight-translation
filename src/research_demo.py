@@ -4,13 +4,15 @@ import json
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from threading import Lock
-from urllib.parse import urlsplit
+from urllib.parse import urlsplit, parse_qs
+import sqlite3
 import mimetypes
 
 from src.research_contracts import validate_request, validate_result
 from src.paper_conversation import validate_history
 from src.indexed_research import IndexedContextError
 from src.plain_language import fixture_view, plain_language_view, generate_view
+from src.brief_store import BriefStore, BriefConflict
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / 'tests' / 'fixtures' / 'research'
@@ -89,6 +91,7 @@ def replay_presentation(result, path):
 
 class DemoHandler(BaseHTTPRequestHandler):
     saved_result = None
+    library = None
     research = None
     presentation_generate = None
     presentation_metadata = None
@@ -124,7 +127,8 @@ class DemoHandler(BaseHTTPRequestHandler):
             return
         if self.path == '/api/config':
             config = {'live': self.research is not None,
-                      'plain_language': type(self).presentation_generate is not None}
+                      'plain_language': type(self).presentation_generate is not None,
+                      'library': self.library is not None}
             if getattr(self.research, 'mode', None) == 'indexed':
                 try:
                     config.update(self.research.config())
@@ -136,10 +140,14 @@ class DemoHandler(BaseHTTPRequestHandler):
                 config['paper_context_id'] = context_id
             self.respond(200, config)
             return
+        if urlsplit(self.path).path.startswith('/api/briefs'):
+            self.library_request()
+            return
         if self.path == '/api/saved-result':
             self.respond(200, self.saved_result)
             return
         assets = {'/': ('index.html', 'text/html'),
+                  '/brief-library.js': ('brief-library.js', 'text/javascript'),
                   '/app.js': ('app.js', 'text/javascript'),
                   '/research-speech.js': ('research-speech.js', 'text/javascript'),
                   '/read-aloud.mjs': ('read-aloud.mjs', 'text/javascript'),
@@ -164,6 +172,9 @@ class DemoHandler(BaseHTTPRequestHandler):
         if not self.local_request():
             self.respond(403, {'error': 'Use the local research page.'})
             return
+        if urlsplit(self.path).path.startswith('/api/briefs'):
+            self.library_request()
+            return
         if self.path not in {'/api/demo', '/api/research'}:
             self.respond(404, {'error': 'Not found.'})
             return
@@ -182,6 +193,14 @@ class DemoHandler(BaseHTTPRequestHandler):
             payload = json.loads(self.rfile.read(length))
             if not isinstance(payload, dict):
                 raise ValueError('Request must be an object.')
+            revision = payload.get('library_revision')
+            if revision is not None:
+                if (not self.library or not isinstance(revision, dict) or
+                        set(revision) != {'brief_id', 'expected_version'} or
+                        not isinstance(revision.get('brief_id'), str) or
+                        not isinstance(revision.get('expected_version'), str)):
+                    raise ValueError('Invalid revision target.')
+                self.library.check_current(revision['brief_id'], revision['expected_version'])
             scenario = payload.get('scenario', 'full')
             if not isinstance(scenario, str):
                 raise ValueError('Scenario must be a string.')
@@ -199,6 +218,15 @@ class DemoHandler(BaseHTTPRequestHandler):
                     raise ValueError('Question exceeds 2000 characters.')
             else:
                 response = load_demo({'query': payload.get('query')}, scenario)
+        except BriefConflict as error:
+            self.respond(409, {'error': str(error)})
+            return
+        except KeyError:
+            self.respond(404, {'error': 'Brief not found.'})
+            return
+        except sqlite3.Error:
+            self.respond(503, {'error': 'Saved-work storage unavailable. No generation attempted.'})
+            return
         except (ValueError, TypeError):
             self.respond(400, {'error': 'Enter a question (up to 2000 characters) and valid bounded conversation history or demo scenario.'})
             return
@@ -223,12 +251,76 @@ class DemoHandler(BaseHTTPRequestHandler):
                 return
             finally:
                 self.research_lock.release()
+        if self.library and response.get('result'):
+            try:
+                saved = self.library.save(response, **(revision or {}))
+                response['library'] = {**saved['library'], 'replayed': False}
+            except (sqlite3.Error, OSError, ValueError, TypeError, KeyError):
+                # Never discard an accepted answer or encourage a second model call.
+                response['library_error'] = 'Answer retained but not saved. Storage may be unavailable or the revision target changed. Export the snapshot or save it again without regenerating.'
         self.respond(200, response)
+
+    def library_request(self):
+        if self.library is None:
+            self.respond(503, {'error': 'Saved-work library is disabled.'})
+            return
+        parsed = urlsplit(self.path)
+        parts = parsed.path.strip('/').split('/')
+        try:
+            if parts[:2] != ['api', 'briefs'] or len(parts) > 4:
+                raise KeyError('Unknown library route.')
+            if self.command == 'GET':
+                params = parse_qs(parsed.query)
+                if len(parts) == 2:
+                    result = {'briefs': self.library.list(query=params.get('q', [''])[0],
+                        archived=params.get('archived', ['0'])[0] == '1',
+                        offset=int(params.get('offset', ['0'])[0]))}
+                elif len(parts) == 3:
+                    result = self.library.load(parts[2], params.get('version', [None])[0])
+                else:
+                    raise KeyError('Unknown library route.')
+            else:
+                if self.headers.get_content_type() != 'application/json':
+                    self.respond(415, {'error': 'Use application/json.'})
+                    return
+                length = int(self.headers.get('Content-Length', '0'))
+                if not 0 < length <= 8_000_000:
+                    raise ValueError('Snapshot exceeds 8 MB.')
+                payload = json.loads(self.rfile.read(length))
+                if not isinstance(payload, dict):
+                    raise ValueError('Request must be an object.')
+                if len(parts) == 2:
+                    envelope = payload.get('envelope')
+                    if envelope is None:
+                        envelope = saved_result_envelope(payload.get('result'))
+                    result = self.library.save(envelope, brief_id=payload.get('brief_id'),
+                        expected_version=payload.get('expected_version'), title=payload.get('title'),
+                        audience=payload.get('audience', 'original'))
+                elif len(parts) == 3:
+                    result = self.library.update(parts[2], expected_version=payload.get('expected_version'),
+                        title=payload.get('title'), archived=payload.get('archived'))
+                elif parts[3] == 'reviews':
+                    result = self.library.review(parts[2], version_id=payload.get('version_id'),
+                        fingerprint=payload.get('fingerprint'), reviewer=payload.get('reviewer'),
+                        decision=payload.get('decision'), notes=payload.get('notes'))
+                else:
+                    raise KeyError('Unknown library route.')
+            self.respond(200, result)
+        except BriefConflict as error:
+            self.respond(409, {'error': str(error)})
+        except KeyError:
+            self.respond(404, {'error': 'Brief or version not found.'})
+        except (ValueError, TypeError, RecursionError):
+            self.respond(400, {'error': 'Invalid saved-work request. Check the snapshot, title, version and review fields.'})
+        except (sqlite3.Error, OSError):
+            self.respond(503, {'error': 'Saved-work storage unavailable. Your saved data was not replaced.'})
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--port', type=int, default=8765)
+    parser.add_argument('--library', type=Path, default=ROOT / 'data' / 'briefs' / 'library.sqlite3', help='Local saved-work database; initialized automatically, never synchronized through Git.')
+    parser.add_argument('--no-library', action='store_true', help='Disable persistent saved work (useful for disposable fixture runs).')
     parser.add_argument('--result', type=Path, help='Replay a validated pending research result; does not execute queries.')
     parser.add_argument('--paper', type=Path, help='Enable live synthesis over one local arXiv PDF.')
     parser.add_argument('--pdf-only', action='store_true', help='Skip arXiv HTML lookup; use PDF text without math recovery.')
@@ -298,6 +390,13 @@ def main():
             DemoHandler.saved_result['plain_language'] = generate_view(result, generate=generate, metadata=metadata)
         elif args.presentation:
             DemoHandler.saved_result['plain_language'] = replay_presentation(result, args.presentation)
+    if not args.no_library:
+        try:
+            DemoHandler.library = BriefStore(args.library)
+            if DemoHandler.saved_result:
+                DemoHandler.saved_result = DemoHandler.library.save(DemoHandler.saved_result, reuse=True)
+        except (sqlite3.Error, OSError, ValueError):
+            parser.error('Could not open the saved-work library. Check --library or use --no-library; existing data was not replaced.')
     with ThreadingHTTPServer(('127.0.0.1', args.port), DemoHandler) as server:
         label = 'Indexed research' if args.index else 'Paper synthesis' if args.paper else 'Saved-result viewer' if args.result else 'Fixture demo'
         note = 'live indexed synthesis' if args.index else 'live LLM synthesis' if args.paper else 'no live execution'

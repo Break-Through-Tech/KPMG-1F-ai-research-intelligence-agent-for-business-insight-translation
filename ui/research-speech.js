@@ -37,6 +37,7 @@
     return {id: `answer:${number}`, label: `Answer ${number} · Original · Draft, not approved`, text: [
       `Answer ${number}. ${demo.mode === 'fixture' ? 'Synthetic example. Question not executed.' : 'Research result.'}`,
       `Question: ${value.request.query}`, `Outcome: ${demo.scenario}. Draft. Human review pending. Not approved.`,
+      ...(demo.library ? [`Saved version review: ${BriefLibrary.reviewText(demo)}. Original snapshot review fields are unchanged.`] : []),
       'Original research summary.', ...value.summary.claims.map(c => `${c.kind === 'interpretation' ? 'Interpretation, not study finding. ' : ''}${citation(c)}`),
       ...(value.summary.claims.length ? [] : ['No supported research claims.']),
       'Summary limitations.', ...(value.summary.limitation_support || []).map(citation),

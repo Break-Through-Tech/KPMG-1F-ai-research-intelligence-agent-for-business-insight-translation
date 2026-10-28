@@ -13,13 +13,13 @@ function boot(saved, failure) {
     setItem: (key, value) => { if (failure) throw Error('Quota'); values.set(key, value); },
     removeItem: key => { if (failure) throw Error('Blocked'); values.delete(key); },
   };
-  const document = {documentElement: {dataset: {}},
+  const document = {dispatchEvent() {}, documentElement: {dataset: {}},
     body: {classList: {toggle() {}}},
     querySelector: id => nodes[id] ||= {
       getBoundingClientRect() { return {height: 20}; },
       addEventListener(type, callback) { this[type] = callback; }},
     addEventListener(type, callback) { this[type] = callback; }};
-  vm.runInNewContext(source, {document, localStorage: storage,
+  vm.runInNewContext(source, {document, Event: class {}, localStorage: storage,
     ResizeObserver: class { observe() {} },
     window: {addEventListener() {}}, innerHeight: 1000,
     getComputedStyle: () => ({fontSize: '16px'})});
@@ -35,7 +35,7 @@ test('first visit follows system; independent preferences persist and reset remo
   app.values.set('other.feature', 'keep');
   app.change('theme', 'dark'); app.change('size', '200'); app.change('spacing', 'wide');
   const saved = app.values.get('1f.reading-preferences.v1');
-  assert.deepEqual(JSON.parse(saved), {theme: 'dark', size: '200', spacing: 'wide'});
+  assert.deepEqual(JSON.parse(saved), {theme: 'dark', size: '200', spacing: 'wide', explanation: 'technical'});
   assert.equal(boot(saved).root.readingSize, '200');
   app.reset();
   assert.equal(app.root.theme, 'system');

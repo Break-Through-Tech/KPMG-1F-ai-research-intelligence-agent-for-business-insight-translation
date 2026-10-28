@@ -4,9 +4,11 @@
 
 `python3.13 -m src.research_demo --port 9141` starts the loopback fixture UI.
 Choose **Demo options → Plain-language · supported definition fixture**, then
-**View example**. Use the native **Technical / original** and **Plain language**
-radio group (arrow keys switch); expand **Technical term definitions** with
-Enter/Space. Citations retain the original source links, quote previews and
+**View example**. Open **Reading preferences → Explanation style** and choose
+**Technical / original** (the default) or **Plain language**. The choice persists
+in this browser across answers and reloads; **Reset reading preferences** restores
+the original default. Expand **Technical term definitions** with Enter/Space.
+Citations retain the original source links, quote previews and
 source-context inspection. Full draft remains the default fixture.
 
 ## Configured generation — 2026-10-27

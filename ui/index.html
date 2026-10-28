@@ -34,6 +34,11 @@
           <select id="reading-size"><option value="100">100% (default)</option><option value="125">125%</option><option value="150">150%</option><option value="200">200%</option></select>
           <label for="reading-spacing">Line spacing</label>
           <select id="reading-spacing"><option value="standard">Standard</option><option value="relaxed">Relaxed</option><option value="wide">Wide</option></select>
+          <label for="reading-explanation">Explanation style</label>
+          <select id="reading-explanation" aria-describedby="explanation-help"><option value="technical">Technical / original</option><option value="plain">Plain language</option></select>
+          <details id="explanation-help"><summary>About plain-language rewrites</summary>
+            <p class="meta">Rewrites research findings only, when available. Interpretations, business actions, assumptions, limitations and source passages stay unchanged. Rewrites are pending review for preserved meaning and uncertainty. This changes how you read an answer, not the research or its approval status.</p>
+          </details>
           <button id="reading-reset" class="quiet" type="button">Reset reading preferences</button>
           <p class="meta">Stored only in this browser when available. Reset follows your system theme.</p>
           <p id="reading-storage-status" class="meta" role="status"></p>

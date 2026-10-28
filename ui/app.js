@@ -31,6 +31,10 @@ let conversationHistory = [];
 let activePaperContextId = null;
 let requestPending = false;
 let latestAnswer = null;
+const explanationRenderers = new WeakMap();
+document.addEventListener('reading-preferences-change', () => {
+  for (const answer of document.querySelectorAll('.answer')) explanationRenderers.get(answer)?.();
+});
 
 // Only an explicit navigation action moves reading focus to a new answer.
 jumpLatest.addEventListener('click', () => {
@@ -448,17 +452,6 @@ function renderDraft(demo, number, answer) {
     }
   }
   const view = demo.plain_language;
-  const viewControls = element('fieldset', undefined, 'explanation-view');
-  viewControls.append(element('legend', 'Research explanation view'));
-  const technical = element('input');
-  technical.type = 'radio'; technical.name = `view-${number}`; technical.value = 'technical'; technical.checked = true;
-  const plain = element('input');
-  plain.type = 'radio'; plain.name = technical.name; plain.value = 'plain';
-  const technicalLabel = element('label', 'Technical / original ');
-  technicalLabel.prepend(technical);
-  const plainLabel = element('label', 'Plain language ');
-  plainLabel.prepend(plain);
-  viewControls.append(technicalLabel, plainLabel);
   const viewNote = element('p', '', 'meta');
   const definitions = disclosure('Technical term definitions');
   if (view?.status === 'available') {
@@ -477,16 +470,19 @@ function renderDraft(demo, number, answer) {
   function selectView() {
     closePreview();
     for (const entry of claimNodes) {
-      const rewrite = plain.checked && view?.status === 'available' ? view.claims[entry.index] : null;
+      const rewrite = document.documentElement.dataset.readingExplanation === 'plain' && view?.status === 'available' ? view.claims[entry.index] : null;
       const node = citedParagraph(rewrite ? {...entry.claim, text: rewrite.text, support: rewrite.support} : entry.claim, demo, number);
       entry.node.replaceWith(node); entry.node = node;
     }
-    viewNote.setAttribute('role', 'status');
-    if (plain.checked && view?.status !== 'available') viewNote.textContent = view?.reason || 'Plain-language generation is unavailable. The original answer is retained.';
+    const unavailable = document.documentElement.dataset.readingExplanation === 'plain' && view?.status !== 'available';
+    fallback.hidden = !unavailable;
+    fallback.textContent = unavailable ? `Plain language unavailable for this answer. ${view?.reason || 'The original answer is retained.'}` : '';
   }
-  technical.addEventListener('change', selectView);
-  plain.addEventListener('change', selectView);
-  answer.append(viewControls, viewNote, narrative, definitions);
+  const fallback = element('p', '', 'meta');
+  fallback.setAttribute('role', 'status');
+  explanationRenderers.set(answer, selectView);
+  selectView();
+  answer.append(fallback, narrative, definitions);
   const detailGroup = element('div', undefined, 'detail-group');
   const limits = disclosure('Assumptions, risks & limitations');
   list(limits, 'Summary limitations', result.summary.limitations);
@@ -502,7 +498,9 @@ function renderDraft(demo, number, answer) {
   evidenceButton.addEventListener('click', () => showEvidence(demo, number, 0, evidenceButton));
   limits.append(evidenceButton);
   const details = disclosure('Details');
-  details.append(limits);
+  const presentationDetails = disclosure('Plain-language rewrite details');
+  presentationDetails.append(viewNote);
+  details.append(limits, presentationDetails);
   detailGroup.append(details);
   answer.append(detailGroup);
 }

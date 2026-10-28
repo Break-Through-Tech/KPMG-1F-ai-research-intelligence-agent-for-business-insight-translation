@@ -1,9 +1,9 @@
 /* Apply before first paint; storage contains display preferences only, never research. */
 (() => {
   const key = '1f.reading-preferences.v1';
-  const defaults = {theme: 'system', size: '100', spacing: 'standard'};
+  const defaults = {theme: 'system', size: '100', spacing: 'standard', explanation: 'technical'};
   const choices = {theme: ['system', 'light', 'dark', 'contrast-light', 'contrast-dark'], size: ['100', '125', '150', '200'],
-    spacing: ['standard', 'relaxed', 'wide']};
+    spacing: ['standard', 'relaxed', 'wide'], explanation: ['technical', 'plain']};
   let preferences = {...defaults};
   let storageUnavailable = false;
   try {
@@ -18,6 +18,9 @@
     root.dataset.theme = preferences.theme;
     root.dataset.readingSize = preferences.size;
     root.dataset.readingSpacing = preferences.spacing;
+    const explanationChanged = root.dataset.readingExplanation !== preferences.explanation;
+    root.dataset.readingExplanation = preferences.explanation;
+    if (explanationChanged) document.dispatchEvent(new Event('reading-preferences-change'));
   }
   apply();
 

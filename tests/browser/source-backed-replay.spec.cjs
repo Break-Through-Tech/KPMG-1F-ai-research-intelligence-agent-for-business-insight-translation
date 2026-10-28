@@ -26,10 +26,11 @@ for (const label of ['supported', 'partial', 'abstention']) {
         const answer=page.locator('.answer');
         await expect(answer).toContainText('Draft · Not approved');
         await expect(answer).toContainText('Meaning and uncertainty review pending.');
-        await page.getByRole('radio',{name:'Plain language',exact:true}).check();
+        await page.locator('.reading-settings > summary').click();
+    await page.locator('#reading-explanation').selectOption('plain');
         if(candidate.claims.length) await expect(answer.locator('.answer-text')).toContainText(candidate.claims[0].text);
         else await expect(answer).toContainText('No supported research claims.');
-        await page.getByRole('radio',{name:'Technical / original',exact:true}).check();
+        await page.locator('#reading-explanation').selectOption('technical');
         if(result.summary.claims.length) {
           await expect(answer.locator('.answer-text')).toContainText(result.summary.claims[0].text);
           await answer.locator('.citation').first().press('Enter');

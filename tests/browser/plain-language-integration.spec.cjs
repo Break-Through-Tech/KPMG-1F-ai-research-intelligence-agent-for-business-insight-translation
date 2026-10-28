@@ -29,8 +29,19 @@ for (const indexed of [false, true]) {
     await page.locator('#submit').click();
     await expect(page.locator('.answer')).toContainText('Research findings');
     expect(await page.evaluate(() => requestDeadlines)).toContain(indexed ? 1860000 : 630000);
-    await page.getByRole('radio', {name:'Plain language', exact:true}).check();
+    await expect(page.locator('.answer .explanation-view')).toHaveCount(0);
+    await page.locator('.reading-settings > summary').click();
+    await page.locator('#reading-explanation').selectOption('plain');
     await expect(page.locator('.answer-text')).toContainText('Synthetic agents need to be tested for the specific task.');
     await expect(page.locator('.answer')).toContainText('Draft · Not approved');
+    await expect(page.locator('#reading-explanation')).toHaveValue('plain');
+    await page.reload();
+    await expect(page.locator('#reading-explanation')).toHaveValue('plain');
+    await page.getByRole('textbox', {name:'Research question'}).fill('Explain the research');
+    await page.locator('#submit').click();
+    await expect(page.locator('.answer-text')).toContainText('Synthetic agents need to be tested for the specific task.');
+    await page.locator('.reading-settings > summary').click();
+    await page.locator('#reading-reset').click();
+    await expect(page.locator('#reading-explanation')).toHaveValue('technical');
   });
 }

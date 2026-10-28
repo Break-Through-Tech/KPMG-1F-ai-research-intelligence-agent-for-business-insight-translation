@@ -33,7 +33,8 @@ fs.mkdirSync(output,{recursive:true});
    assert(envelope.result,'No accepted result; inspect saved failure, do not reinterpret failure as abstention');
    assert.equal(envelope.result.approved,false);assert.equal(envelope.result.human_review.status,'pending');
    const answer=page.locator('.answer').last();
-   await answer.getByRole('radio',{name:'Plain language',exact:true}).check();
+   await page.locator('.reading-settings > summary').click();
+    await page.locator('#reading-explanation').selectOption('plain');
    assert.equal(envelope.plain_language.status,'available');
    if(envelope.result.summary.claims.length){
     await answer.locator('.citation').first().press('Enter');

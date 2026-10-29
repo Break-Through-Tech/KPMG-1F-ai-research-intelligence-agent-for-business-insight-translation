@@ -4,6 +4,15 @@ from hashlib import sha256
 import json
 from pathlib import Path
 import subprocess
+from time import perf_counter
+
+
+def timed(timings, stage, function, *args, **kwargs):
+    start = perf_counter()
+    try:
+        return function(*args, **kwargs)
+    finally:
+        timings[stage] = round(perf_counter() - start, 4)
 
 from src.research_chat import synthesize
 from src.business_translation import translate, prompt_provenance
@@ -110,11 +119,12 @@ class IndexedResearch:
     mode = 'indexed'
 
     def __init__(self, *, retrieve, identity, generate, metadata, index_path,
-                 top_k=5, code_revision=None, command=None):
+                 top_k=5, code_revision=None, command=None, quality_check=False):
         if isinstance(top_k, bool) or not isinstance(top_k, int) or not 1 <= top_k <= 20:
             raise ValueError('Indexed UI top_k must be between 1 and 20.')
         self.retrieve, self.identity, self.generate = retrieve, identity, generate
         self.top_k = top_k
+        self.quality_check = quality_check
         self.provenance = {'execution': 'persistent_index_ui', 'generation': deepcopy(metadata),
             'index_path': index_path, 'index': identity(), 'code_revision': code_revision,
             'command': command, 'retrieval': {'method': 'existing_dense_search', 'top_k': top_k,
@@ -122,7 +132,10 @@ class IndexedResearch:
             'summary_adapter': 'src.research_chat:synthesize',
             'translation_adapter': 'src.business_translation:translate',
             'context_adapter': 'explicit-business-context-v1',
-            'business_prompt': prompt_provenance(), 'history_policy': 'independent_queries'}
+            'business_prompt': prompt_provenance(compact=quality_check), 'history_policy': 'independent_queries'}
+        if quality_check:
+            from src.answer_quality import provenance
+            self.provenance['answer_quality'] = provenance()
         self.context_id = fingerprint(self.provenance)
 
     def config(self):
@@ -158,10 +171,17 @@ class IndexedResearch:
                 request['industry'] = industry
         return validate_request(request)
 
-    def summary(self, query, passages, *, history=None):
-        return synthesize(query, passages, generate=self.generate, history=history)
+    def summary(self, query, passages, *, history=None, findings_only=False, timings=None):
+        timings = {} if timings is None else timings
+        summary = timed(timings, 'synthesis', synthesize, query, passages, generate=self.generate, history=history,
+                             findings_only=findings_only)
+        if self.quality_check:
+            from src.answer_quality import review_summary
+            summary = timed(timings, 'quality_review', review_summary, query, summary, passages, generate=self.generate)
+        return summary
 
-    def finish(self, result, submitted, *, error=None):
+    def finish(self, result, submitted, *, error=None, timings=None):
+        timings = {} if timings is None else timings
         stages = {'retrieval': 'ok' if result['evidence'] else 'empty',
                   'summary': result['summary']['status'], 'business': 'not_requested'}
         if 'industry' in submitted:
@@ -172,8 +192,15 @@ class IndexedResearch:
                 stages['business'] = 'skipped'
             else:
                 try:
-                    business = translate(result['summary'], result['evidence'],
-                        industry=submitted['industry'], generate=self.generate)
+                    evidence = result['evidence']
+                    business_summary = result['summary']
+                    if self.quality_check:
+                        cited = {cid for claim in result['summary']['claims'] for cid in claim['chunk_ids']}
+                        evidence = [p for p in evidence if p['chunk_id'] in cited]
+                        # Retain rejected drafts for audit, never feed them back as findings.
+                        business_summary = {k: v for k, v in result['summary'].items() if k != 'quality_review'}
+                    business = timed(timings, 'business_translation', translate, business_summary, evidence,
+                        industry=submitted['industry'], generate=self.generate, compact=self.quality_check)
                     validate_business_insight(business,
                         {p['chunk_id'] for p in result['evidence']}, industry=submitted['industry'])
                     result['business_insight'] = business
@@ -191,29 +218,37 @@ class IndexedResearch:
                 'fixture_file': None, 'context_id': self.context_id}
 
     def execute(self, payload, *, session_id=None):
+        start = perf_counter()
+        timings = {}
         self.check_context(payload.get('context_id'))
-        request = self.resolve_context(self.prepare_request(payload), payload)
+        request = timed(timings, 'context', self.resolve_context, self.prepare_request(payload), payload)
         def retrieve(query, top_k):
             from src.research_contracts import validate_evidence
             try:
-                passages = self.retrieve(query, top_k)
+                passages = timed(timings, 'retrieval', self.retrieve, query, top_k)
                 validate_evidence(passages)
                 return passages
             except Exception:
                 raise PipelineError('Retrieval failed or its evidence contract did not validate.') from None
         try:
             result = run_research(request, retrieve=retrieve,
-                summarize_fn=self.summary, provenance=self.provenance)
+                summarize_fn=lambda q, ps: self.summary(q, ps,
+                    findings_only=self.quality_check and 'industry' in request, timings=timings),
+                provenance=self.provenance)
         except Exception as exc:
             stage = 'retrieval' if isinstance(exc, PipelineError) and str(exc).startswith('Retrieval') else 'summary'
             return {'mode': 'indexed', 'scenario': 'execution-error',
                     'submitted_request': request, 'result': None, 'fixture_file': None,
-                    'provenance': {**deepcopy(self.provenance), 'stages': {stage: 'failed'}},
+                    'provenance': {**deepcopy(self.provenance), 'stages': {stage: 'failed'},
+                                   'timings_seconds': {**timings, 'total': round(perf_counter() - start, 4)}},
                     'error': {'stage': stage, 'code': stage + '_failed',
                               'message': f'{stage.capitalize()} failed or its contract did not validate. No answer was accepted. Check configuration and retry.'}}
         self.check_context(payload.get('context_id'))
-        response = self.finish(result, request)
+        response = self.finish(result, request, timings=timings)
         self.check_context(payload.get('context_id'))
+        result['provenance']['timings_seconds'] = {**timings, 'total': round(perf_counter() - start, 4)}
+        result['review_fingerprint'] = content_fingerprint(result)
+        validate_result(result)
         return response
 
 

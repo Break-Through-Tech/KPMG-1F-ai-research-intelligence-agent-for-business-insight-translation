@@ -372,6 +372,11 @@ manual accessibility audit; integrate and rerun these interaction checks togethe
 
 ## Persistent-index research (#130)
 
+For an opt-in development check of claim support/relevance and explicit partial
+coverage, see [Answer-quality check](answer-quality-check.md). Add `--quality-check`
+for independent indexed queries; it adds a model review call and does not replace
+human source verification.
+
 Use **an existing compatible Chroma index** and a locally cached
 `all-MiniLM-L6-v2` encoder. This command never downloads/rebuilds a corpus or
 promotes experimental retrieval. The adapter calls the existing dense

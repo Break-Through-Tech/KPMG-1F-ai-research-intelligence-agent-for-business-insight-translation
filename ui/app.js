@@ -418,6 +418,16 @@ function citedParagraph(item, demo, number) {
 function renderDraft(demo, number, answer) {
   const result = demo.result;
   const narrative = element('div', undefined, 'answer-text');
+    const researchSeconds = result.provenance?.timings_seconds?.total;
+    if (Number.isFinite(researchSeconds)) {
+      narrative.append(element('p', `Research processing time: ${researchSeconds.toFixed(1)} seconds.`, 'meta'));
+    }
+    if (result.summary.answer_lead) {
+      narrative.append(element('p', result.summary.answer_lead));
+    }
+    if (result.summary.quality_review) {
+      narrative.append(element('p', 'Automated support and relevance review applied. Model judgment; not independent human verification.', 'meta'));
+    }
   narrative.append(element('h3', 'Research findings'));
   if (!result.summary.claims.length) narrative.append(element('p', 'No supported research claims.'));
   const claimNodes = [];

@@ -325,11 +325,14 @@ def main():
     parser.add_argument('--paper', type=Path, help='Enable live synthesis over one local arXiv PDF.')
     parser.add_argument('--pdf-only', action='store_true', help='Skip arXiv HTML lookup; use PDF text without math recovery.')
     parser.add_argument('--codex-model', help='Explicit model for the existing ChatGPT login; no API key.')
+    parser.add_argument('--codex-effort', choices=('low', 'medium', 'high', 'xhigh'), default='medium',
+                        help='Explicit subscription reasoning effort; lower effort needs source-quality evaluation.')
     parser.add_argument('--codex-bin', help='Compatible installed Codex CLI; defaults to RESEARCH_CODEX_BIN, then PATH.')
     parser.add_argument('--index', type=Path, help='Query an existing Chroma persistent index; never builds/downloads one.')
     parser.add_argument('--collection', default='arxiv_papers')
     parser.add_argument('--top-k', type=int, default=5)
     parser.add_argument('--clarification', action='store_true', help='Enable tab-scoped clarification and bounded server-owned intent history; requires --index.')
+    parser.add_argument('--quality-check', action='store_true', help='Experimental claim support/relevance review for independent indexed queries; adds one model call, not human verification.')
     parser.add_argument('--configured-provider', action='store_true', help='Explicitly use the existing RESEARCH_PROVIDER configuration for indexed mode.')
     parser.add_argument('--plain-language', action='store_true', help='Generate pending plain-language presentations with the explicitly selected existing provider, including saved-result replay.')
     parser.add_argument('--presentation', type=Path, help='Replay a retained plain-language presentation bound to --result; no provider call.')
@@ -342,6 +345,8 @@ def main():
         parser.error('--paper, --index and --result are mutually exclusive')
     if args.clarification and not args.index:
         parser.error('--clarification requires --index')
+    if args.quality_check and (not args.index or args.clarification):
+        parser.error('--quality-check requires --index and independent queries (no --clarification)')
     if args.index:
         if bool(args.codex_model) == bool(args.configured_provider):
             parser.error('--index requires exactly one of --codex-model or --configured-provider')
@@ -350,7 +355,7 @@ def main():
             retrieve, identity, index_path = open_index(args.index, args.collection)
             if args.codex_model:
                 from src.codex_generation import create_codex_generate
-                generate, metadata = create_codex_generate(model=args.codex_model, binary=args.codex_bin)
+                generate, metadata = create_codex_generate(model=args.codex_model, binary=args.codex_bin, effort=args.codex_effort)
             else:
                 from src.generation import create_generate
                 generate, metadata = create_generate()
@@ -361,7 +366,7 @@ def main():
                 adapter = ClarifyingIndexedResearch
             DemoHandler.research = adapter(retrieve=retrieve, identity=identity,
                 generate=generate, metadata=metadata, index_path=index_path, top_k=args.top_k,
-                code_revision=code_revision(), command=sys.argv)
+                code_revision=code_revision(), command=sys.argv, quality_check=args.quality_check)
         except Exception:
             parser.error('Indexed startup failed. Check existing index/collection, cached encoder, explicit provider and model. For Codex, select a compatible CLI with --codex-bin or RESEARCH_CODEX_BIN. No fallback, rebuild or download was attempted.')
     if args.paper:
@@ -373,14 +378,14 @@ def main():
             passages, source = load_paper(args.paper, prefer_html=not args.pdf_only)
         except (OSError, ValueError) as error:
             parser.error(str(error))
-        generate, metadata = create_codex_generate(model=args.codex_model, binary=args.codex_bin)
+        generate, metadata = create_codex_generate(model=args.codex_model, binary=args.codex_bin, effort=args.codex_effort)
         DemoHandler.research = PaperResearch(passages, generate, metadata, source=source)
     if args.plain_language:
         if args.result:
             if not args.codex_model:
                 parser.error('--result --plain-language requires --codex-model (existing subscription; no API-key fallback)')
             from src.codex_generation import create_codex_generate
-            generate, metadata = create_codex_generate(model=args.codex_model, binary=args.codex_bin)
+            generate, metadata = create_codex_generate(model=args.codex_model, binary=args.codex_bin, effort=args.codex_effort)
         DemoHandler.presentation_generate = staticmethod(generate)
         DemoHandler.presentation_metadata = metadata
     if args.result:

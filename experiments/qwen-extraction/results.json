@@ -1,0 +1,249 @@
+{
+  "scope": "LLM-only real-source extraction development pilot; no final-test evaluation or quality winner",
+  "target_review": {
+    "train": {
+      "passed": 17,
+      "total": 17
+    },
+    "dev": {
+      "passed": 3,
+      "total": 3
+    }
+  },
+  "judge_anchor_agreement": [
+    {
+      "run": "target-judge-v1",
+      "correct": 6,
+      "total": 6,
+      "scope": "synthetic sanity checks, not calibrated TPR/TNR"
+    },
+    {
+      "run": "baseline-judge-v2",
+      "correct": 6,
+      "total": 6,
+      "scope": "synthetic sanity checks, not calibrated TPR/TNR"
+    }
+  ],
+  "models": {
+    "untuned-9b": {
+      "attempts": 6,
+      "families": 3,
+      "pointwise_passes_before_adjudication": 2,
+      "final_verdict_counts": {
+        "uncertain": 2,
+        "fail": 4
+      },
+      "cases_passing_every_repeat": 0,
+      "category_failures_before_adjudication": {
+        "quote_fidelity": 2,
+        "method_relevance": 4
+      },
+      "generation_seconds_total": 38.4567367919808,
+      "generation_seconds_p50": 5.659657458498259,
+      "generation_seconds_p95_linear_interpolation": 8.99706600999707,
+      "generation_seconds_per_confirmed_success": null,
+      "cost_per_success_note": "undefined (zero confirmed successes)",
+      "load_seconds": 3.5211371250043157,
+      "mlx_peak_gib": 5.9499964732676744,
+      "swap_observations": [
+        "total = 2048.00M  used = 1286.25M  free = 761.75M  (encrypted)"
+      ],
+      "outcomes": [
+        {
+          "case_id": "2608.00339v1-extraction",
+          "repeat": 1,
+          "verdict": "uncertain"
+        },
+        {
+          "case_id": "2609.00498v1-extraction",
+          "repeat": 1,
+          "verdict": "fail"
+        },
+        {
+          "case_id": "2608.00339v1-extraction",
+          "repeat": 0,
+          "verdict": "uncertain"
+        },
+        {
+          "case_id": "2606.01494v1-extraction",
+          "repeat": 1,
+          "verdict": "fail"
+        },
+        {
+          "case_id": "2606.01494v1-extraction",
+          "repeat": 0,
+          "verdict": "fail"
+        },
+        {
+          "case_id": "2609.00498v1-extraction",
+          "repeat": 0,
+          "verdict": "fail"
+        }
+      ]
+    },
+    "untuned-27b": {
+      "attempts": 6,
+      "families": 3,
+      "pointwise_passes_before_adjudication": 0,
+      "final_verdict_counts": {
+        "fail": 6
+      },
+      "cases_passing_every_repeat": 0,
+      "category_failures_before_adjudication": {
+        "quote_fidelity": 4,
+        "method_relevance": 2
+      },
+      "generation_seconds_total": 124.57149020697398,
+      "generation_seconds_p50": 20.730841895499907,
+      "generation_seconds_p95_linear_interpolation": 23.57071344774522,
+      "generation_seconds_per_confirmed_success": null,
+      "cost_per_success_note": "undefined (zero confirmed successes)",
+      "load_seconds": 8.697828208998544,
+      "mlx_peak_gib": 16.148160798475146,
+      "swap_observations": [
+        "total = 9216.00M  used = 8040.38M  free = 1175.62M  (encrypted)",
+        "total = 9216.00M  used = 8000.38M  free = 1215.62M  (encrypted)",
+        "total = 9216.00M  used = 7928.38M  free = 1287.62M  (encrypted)",
+        "total = 9216.00M  used = 7904.38M  free = 1311.62M  (encrypted)",
+        "total = 9216.00M  used = 7886.81M  free = 1329.19M  (encrypted)",
+        "total = 9216.00M  used = 7806.50M  free = 1409.50M  (encrypted)"
+      ],
+      "outcomes": [
+        {
+          "case_id": "2608.00339v1-extraction",
+          "repeat": 1,
+          "verdict": "fail"
+        },
+        {
+          "case_id": "2606.01494v1-extraction",
+          "repeat": 0,
+          "verdict": "fail"
+        },
+        {
+          "case_id": "2609.00498v1-extraction",
+          "repeat": 1,
+          "verdict": "fail"
+        },
+        {
+          "case_id": "2608.00339v1-extraction",
+          "repeat": 0,
+          "verdict": "fail"
+        },
+        {
+          "case_id": "2606.01494v1-extraction",
+          "repeat": 1,
+          "verdict": "fail"
+        },
+        {
+          "case_id": "2609.00498v1-extraction",
+          "repeat": 0,
+          "verdict": "fail"
+        }
+      ]
+    }
+  },
+  "pairwise": [
+    {
+      "case_id": "2606.01494v1-extraction",
+      "mapped_verdicts": [
+        "tie",
+        "tie"
+      ],
+      "order_consistent": true,
+      "counted_verdict": "tie"
+    },
+    {
+      "case_id": "2608.00339v1-extraction",
+      "mapped_verdicts": [
+        "untuned-9b",
+        "untuned-27b"
+      ],
+      "order_consistent": false,
+      "counted_verdict": "inconclusive"
+    },
+    {
+      "case_id": "2609.00498v1-extraction",
+      "mapped_verdicts": [
+        "tie",
+        "tie"
+      ],
+      "order_consistent": true,
+      "counted_verdict": "tie"
+    }
+  ],
+  "training_smoke": {
+    "status": "passed",
+    "trainable_parameters": 69632,
+    "settings": {
+      "rank": 4,
+      "scale": 8.0,
+      "dropout": 0.0,
+      "num_layers": 1,
+      "keys": [
+        "self_attn.q_proj",
+        "self_attn.v_proj"
+      ],
+      "learning_rate": 1e-05,
+      "seed": 0,
+      "steps": 3,
+      "batch_size": 1,
+      "max_sequence_length": 512,
+      "loss": "assistant-only cross entropy",
+      "gradient_clip_norm": 1.0,
+      "memory_limit_gib": 14
+    },
+    "base_weights_unchanged": true,
+    "adapter_sha256": "c8d3c076b5a83c21fc980bab4570b736e16aa5852c2297945f46c109939befc4",
+    "scope": "Single full-attention block only; no recurrent gradients, full-model SFT or quality gain established"
+  },
+  "limits": [
+    "Three dev families; repeated deterministic decoding is not six independent research cases",
+    "Quote checks normalize whitespace only; dehyphenation failures are not factual hallucinations",
+    "A conceptual mechanism definition exposed ambiguity in method relevance; uncertain judgments fail closed",
+    "All reviewers use the same model alias in separate contexts, not statistically independent models",
+    "No human judge, human-labeled calibration or team-review requirement",
+    "MLX peak is not total system memory; 27B run coincided with increased system swap",
+    "Three smoke steps on quote-only evidence do not constitute a trained quality candidate"
+  ],
+  "next": [
+    "Refine and version the method-versus-phenomenon rubric, then rejudge these dev cases",
+    "Run a prompt-only control on identical evidence before attributing failures to training",
+    "LLM-review source-family grouping, expand nontrivial extraction/abstention coverage, and freeze a larger development comparison",
+    "Only then run meaningful adapter training and a predeclared tuned/untuned comparison; keep final-test families untouched"
+  ],
+  "judge_resources": {
+    "calls": 10,
+    "elapsed_seconds": 192.976,
+    "usage": {
+      "input_tokens": 187951,
+      "output_tokens": 5026,
+      "reasoning_output_tokens": 1067
+    },
+    "monetary_cost": null,
+    "route": "existing ChatGPT subscription, no API-key provider"
+  },
+  "artifact_sha256": {
+    "artifacts/adjudication-v1/adjudication.json": "95cdc1c5be68e3f10eba19caad413e165e9b20770ea658e0e82c99f696bee323",
+    "artifacts/adjudication-v1/response.json": "6f116017e15d8c5e581fb5921ab2cda2efe5a59c013a540e70a6cf48c5089a33",
+    "artifacts/baseline-27b-v1/run.json": "5ba3a7bc14b04f078e2c80b8c2fb3f026e35d666adf5d481ccd068a40a1b9a04",
+    "artifacts/baseline-9b-v1/run.json": "0591502cb35a164b8261a9f52de3e9bfd87be102a130c0de5a00fb3b903cb518",
+    "artifacts/baseline-judge-v2/evaluation.json": "99cec0d7f7f8b8d9a5aac17a0863483170f3adf860d86e5a90eddc4359128f46",
+    "artifacts/baseline-judge-v2/pairwise-order-0/response.json": "3b5d0847188f48af1c54161c89d56d62b79fbfaa3ce63232ae5a137918c9c9e9",
+    "artifacts/baseline-judge-v2/pairwise-order-1/response.json": "12412523249d5f23a2781b11af4ce3e05bfdbfd7ba3f35ccc1f7939c71c02ba0",
+    "artifacts/baseline-judge-v2/pointwise-00/response.json": "45cf3a38f211c9bf69627d20bf7319301be092a222b9bd88e956796fb342d5c3",
+    "artifacts/baseline-judge-v2/pointwise-01/response.json": "0a17e587efa8e3f03c8b7b9d711dc791d34bdcdabc223e7c786a0e5e1dc49037",
+    "artifacts/baseline-judge-v2/pointwise-02/response.json": "de839471c5f861f0a4fd95d51edc9aad078e24b421851e3fea0fd72075f14bc8",
+    "artifacts/lora-smoke-v1/adapter/adapter_config.json": "0476d8d7d11083d573b670310214c47218d78e0b12d3f7dcb88a9231bcb8d02a",
+    "artifacts/lora-smoke-v1/smoke-data.json": "1ca901bed3ec08cbb204017762e9ff9968edaa1ee333a83dd9619c3905251902",
+    "artifacts/lora-smoke-v1/smoke.json": "83aa6f1a26cef41a30f808545b94bb9209731fd49c56cfd81b0d7a09dbc36bf4",
+    "artifacts/prepared-v1/provenance.json": "707f9ec2ce79ce8732a7e50bd668558a1706a70f735e4ca99e76d6771998536f",
+    "artifacts/prepared-v1/retained-baselines.json": "bf866e2e540e5f0f7749e0e0e477dccf69db3ee1fc3a57ca79117667535ff8c4",
+    "artifacts/protocol-provenance.json": "5841c092dd50d76be05781d183b88da86dd52751693a2439ec9ab6b2481682d1",
+    "artifacts/protocol-v1.json": "8015f9ce9fded1dbe0ea386a14206667e482b09b420944e40e9a9789a8f85ffd",
+    "artifacts/target-judge-v1/evaluation.json": "bc4188d1417fc2235a86dcb5513528dadf56807f7341139d9c4e8f46287fbca1",
+    "artifacts/target-judge-v1/pointwise-00/response.json": "30862a4ee4f8a764e1c41f7d04b6cb622974a444177a3eb265e6ae866260b26a",
+    "artifacts/target-judge-v1/pointwise-01/response.json": "916ad31ece0161c4c0c16f67dd5b4d11c85d390ae9bc30af77e7825d2ef1a441",
+    "artifacts/target-judge-v1/pointwise-02/response.json": "ba930de093404110836d620ce5dec4785455759d36cbb0e3391bfe949e9300a5",
+    "artifacts/target-judge-v1/pointwise-03/response.json": "f5040488dfc4680de551866be3ad62ac37193fcb785271acdb31eb0a8e2ec905"
+  }
+}

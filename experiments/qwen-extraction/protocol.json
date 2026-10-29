@@ -1,0 +1,63 @@
+{
+  "version": "qwen-extraction-dev-v2-llm-only",
+  "declared": "2026-10-28 before new development attempts and LLM judgments",
+  "source": "Morning evaluation post supplied in dashboard 239892dc-c838-47b6-9e5c-120ebc2e0f24; revised docs/answer-quality-experiments.md in vivid-shrimp",
+  "scope": "Extraction-only development pilot. No final-test task access or model-selection claim.",
+  "attempts": {
+    "models": [
+      "untuned-9b",
+      "untuned-27b"
+    ],
+    "cases": 3,
+    "repeats": 2,
+    "max_tokens": 128,
+    "temperature": 0,
+    "seeds": [
+      0,
+      1
+    ],
+    "retry": "none"
+  },
+  "judge": {
+    "model": "gpt-6.1-sol",
+    "route": "existing ChatGPT subscription, existing text-only Codex adapter; no API-key fallback",
+    "effort": "medium",
+    "version_limit": "Model alias, not immutable snapshot; record CLI version and prompt/response hashes. No reproducibility claim across alias updates.",
+    "calibration": "Six synthetic rubric anchors and independent LLM agreement checks; no human-labeled calibration or calibrated TPR/TNR claim.",
+    "blind": "Random opaque candidate IDs, no model labels, latency or reference wording in pointwise prompts",
+    "pointwise": "Written critique before binary per-dimension and overall verdict; deterministic assertions remain separate",
+    "pairwise": "Each of three cases at repeat 0 compared twice in swapped A/B order; count only consistent verdicts",
+    "review": "LLM-only evaluation. Deterministic checks plus independent LLM review; unresolved disagreement fails closed for training-target selection."
+  },
+  "rubric": {
+    "quote_fidelity": "The answer contains exactly one contiguous quotation from one supplied passage, permitting whitespace normalization only. No paraphrase, repaired hyphenation, or invented words.",
+    "citation_valid": "The supplied citation identifies the actual passage containing the quote, not merely any known chunk ID.",
+    "method_relevance": "The quoted statement describes a research procedure, mechanism, experimental design, or how a dataset/evaluation is constructed. Findings, numeric outcomes, generic motivation, or a bare named-artifact description alone do not pass.",
+    "scope_and_qualifiers": "No unsupported additions; preserve the source's relevant conditions, uncertainty, negation, bounds and scope. A shorter or different valid method quotation is acceptable.",
+    "overall": "Pass only when all dimensions pass. If the supplied evidence cannot answer, a justified abstention may pass, but these three real dev cases contain method statements.",
+    "pairwise": "Prefer task correctness and source support, not verbosity, model style or agreement with reference wording; tie if equally valid/invalid, uncertain if evidence insufficient to discriminate."
+  },
+  "metrics": [
+    "attempt pass rate",
+    "cases passing both repeats",
+    "per-category failures",
+    "paired per-case differences",
+    "p50/p95 generation latency",
+    "summed generation seconds per successful attempt",
+    "MLX peak allocation (not total RAM)",
+    "judge usage/latency separately"
+  ],
+  "uncertainty": "Only three dev source families; report exact denominators and no significance/winner/generalization claim. Final selection thresholds deferred until adequate data.",
+  "training": {
+    "purpose": "3-step compatibility smoke only, not a tuned quality candidate",
+    "base": "existing pinned 4-bit Qwen3.5-9B",
+    "rank": 4,
+    "layers": "last full-attention block q_proj/v_proj only",
+    "steps": 3,
+    "max_sequence_length": 512,
+    "learning_rate": 1e-05,
+    "memory_limit_gib": 14,
+    "test_access": false
+  },
+  "revision_reason": "2026-10-28 explicit user instruction: LLM judges only, no human judge or team human-review requirement"
+}

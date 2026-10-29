@@ -1,0 +1,26 @@
+{
+  "reviewer": "Blackbird (AI), 2026-10-28; not human review",
+  "selection_policy": "One contiguous method/procedure statement from supplied evidence. These are valid examples, not an exhaustive set of correct answers. Whitespace may vary; words and qualifiers must not be rewritten.",
+  "cases": {
+    "2603.00824v2-extraction": {"chunk": 0, "start": "Contexts are clustered", "end": "Martens & Grosse (2015).", "rationale": "Describes context clustering and the per-chart metric, not a performance result."},
+    "2604.00319v1-extraction": {"chunk": 0, "start": "The AI agents complete their tasks", "end": "improve their responses.", "rationale": "Describes the agent/critic feedback procedure."},
+    "2604.00324v1-extraction": {"chunk": 1, "start": "The algorithm it-", "end": "a behavior of interest.", "rationale": "Selects the ACDC edge-ablation algorithm from page 2; title page alone cannot answer."},
+    "2602.00931v2-extraction": {"chunk": 0, "start": "To exploit this signal", "end": "using margin-stratified pairs.", "rationale": "Preserves both stages of the proposed training procedure."},
+    "2605.00276v1-extraction": {"chunk": 0, "start": "In our paper, we address these", "end": "task structure for fine-grained analysis.", "rationale": "Describes orchestration and dataset construction, not the accuracy figure."},
+    "2602.00937v3-extraction": {"chunk": 0, "start": "From the merged point", "end": "nipulation tasks.", "rationale": "Describes the point-cloud to multiview rendering procedure."},
+    "2605.00292v2-extraction": {"chunk": 0, "start": "We apply a frequency-domain", "end": "erative models.", "rationale": "Identifies the causal masking mechanism and padding/truncation operations."},
+    "2602.00933v3-extraction": {"chunk": 0, "start": "Each task is scored", "end": "grounded in tool outputs.", "rationale": "Describes claim-level scoring rather than the benchmark's pass rate."},
+    "2603.00829v2-extraction": {"chunk": 0, "start": "We study constitutional black-", "end": "natural-language behavior specifica- tions.", "rationale": "Describes the observable-input monitor and synthetic-data optimization."},
+    "2606.01502v1-extraction": {"chunk": 0, "start": "We characterize cross-instance MLA", "end": "within ∼7%.", "rationale": "Describes the cluster characterization, cost model and measured routing predicate; keeps measurement qualifier."},
+    "2605.00273v2-extraction": {"chunk": 0, "start": "To disentangle data effects", "end": "held out.", "rationale": "Describes the two controlled data regimes without substituting the results."},
+    "2607.00275v1-extraction": {"chunk": 0, "start": "In this work, we study entropy", "end": "mitment to sparse support.", "rationale": "Describes entropy regularization of sparse gate distributions."},
+    "2607.00276v1-extraction": {"chunk": 0, "start": "The diagnostic", "end": "(Decay World).", "rationale": "Describes locked preregistrations, session separation, judging and the three evaluation worlds."},
+    "2608.00335v1-extraction": {"chunk": 0, "start": "Reflection-conditioned", "end": "for rejected groups.", "rationale": "Describes the three training components rather than benchmark improvements."},
+    "2608.00345v1-extraction": {"chunk": 0, "start": "It merges adjacent", "end": "preserve spatial layout.", "rationale": "Describes organ-guided aggregation and positional encoding."},
+    "2609.00495v1-extraction": {"chunk": 1, "start": "We instantiate this principle", "end": "without changing model parameters.", "rationale": "Describes a decoding-only commitment decision; preserves the no-weight-change qualifier."},
+    "2609.39215v1-extraction": {"chunk": 1, "start": "Our setting assumes", "end": "during the online phase.", "rationale": "Describes the streaming evaluation protocol and the static/update distinction."},
+    "2606.01494v1-extraction": {"chunk": 0, "start": "Each row pairs", "end": "Spector.", "rationale": "Describes how evidence and labels from three scanners are combined per dataset row."},
+    "2608.00339v1-extraction": {"chunk": 0, "start": "We demonstrate this behavior", "end": "the evidence appears.", "rationale": "Describes the fixed-evidence, varied-framing design across domains."},
+    "2609.00498v1-extraction": {"chunk": 0, "start": "SEAV combines", "end": "tives.", "rationale": "Describes semantic judging plus retrieval-grounded validity verification."}
+  }
+}

@@ -17,13 +17,21 @@ from src.research_pipeline import PipelineError
 PROMPTS = Path(__file__).resolve().parents[1] / 'prompts/evidence_led'
 
 
-def prompt_provenance():
+def prompt_provenance(*, quote_selection=False):
+    if quote_selection:
+        from src.source_spans import POLICY
+        return {'summary_adapter': 'src.evidence_led:summarize',
+                'prompt_version': 'evidence-led-spans-v1',
+                'quote_validation': {'policy': POLICY,
+                    'implementation_sha256': sha256((PROMPTS.parents[1]/'src/source_spans.py').read_bytes()).hexdigest()},
+                'prompt_hashes': {name: sha256((PROMPTS/name).read_bytes()).hexdigest()
+                    for name in ('extract-spans-v1.txt', 'synthesize-v1.txt', 'business-v1.txt')}}
     return {'summary_adapter': 'src.evidence_led:summarize',
             'prompt_version': 'evidence-led-v3',
             'quote_validation': {'policy': 'one-correction-after-schema-valid-rejection-v1',
                 'implementation_sha256': sha256((PROMPTS.parents[1]/'src/quote_validation.py').read_bytes()).hexdigest()},
             'prompt_hashes': {p.name: sha256(p.read_bytes()).hexdigest()
-                             for p in sorted(PROMPTS.glob('*.txt'))}}
+                             for p in sorted(PROMPTS.glob('*.txt')) if p.name != 'extract-spans-v1.txt'}}
 
 
 def _object(properties, required=None):
@@ -45,6 +53,14 @@ def ledger_schema(ids):
                    'relevance': {'type': 'string', 'enum': ['direct', 'context']}})
     return _object({'facts': _array(row), 'coverage_gaps': _array(_string(), 8),
                     'answerability': {'type':'string','enum':['full','partial','none']}})
+
+
+def selection_schema(span_ids):
+    row = _object({'span_id': {'type': 'string', 'enum': span_ids},
+                   'finding': _string(),
+                   'relevance': {'type': 'string', 'enum': ['direct', 'context']}})
+    return _object({'facts': _array(row), 'coverage_gaps': _array(_string(), 8),
+                    'answerability': {'type': 'string', 'enum': ['full', 'partial', 'none']}})
 
 
 def _synthesis_schema(fact_ids, direct_fact_ids=None):
@@ -91,7 +107,7 @@ def validate_ledger(ledger, visible_passages):
 
 def summarize(query, passages, *, generate,
               max_context_chars=DEFAULT_MAX_CONTEXT_CHARS,
-              max_passage_chars=DEFAULT_MAX_PASSAGE_CHARS):
+              max_passage_chars=DEFAULT_MAX_PASSAGE_CHARS, quote_selection=False):
     if not isinstance(query, str) or not query.strip() or not callable(generate):
         raise ValueError('Provide a nonempty query and callable generator')
     if (isinstance(max_context_chars, bool) or not isinstance(max_context_chars, int) or
@@ -122,16 +138,32 @@ def summarize(query, passages, *, generate,
             text = _truncate(text, max_passage_chars)
         if len(_render_block(p, text)) > remaining:
             text = _truncate(p['text'], remaining - len(_render_block(p, '')))
-        visible.append({**p, 'text': text})
+        visible.append({**p, 'text': text, '_was_truncated': truncated})
         remaining -= len(_render_block(p, text))
     ledger = None
     try:
-        prompt = Template((PROMPTS/'extract-v1.txt').read_text()).substitute(query=query, evidence=context)
-        from src.quote_validation import generate_quote_checked
-        schema = ledger_schema([p['chunk_id'] for p, _ in included])
-        ledger, attempts = generate_quote_checked(
-            lambda text: _invoke(generate, text, schema), prompt,
-            lambda value: validate_ledger(value, visible))
+        if quote_selection:
+            from src.source_spans import build_spans, hydrate_selection, render_menu
+            from src.summarization import TRUNCATION_MARKER
+            # The packer's marker is not source text. Do not make it selectable.
+            sources = [{**p, 'text': p['text'][:-len(TRUNCATION_MARKER)]
+                        if p['_was_truncated'] else p['text']} for p in visible]
+            spans = build_spans(sources)
+            if not spans:
+                raise ValueError('No selectable source spans')
+            prompt = Template((PROMPTS/'extract-spans-v1.txt').read_text()).substitute(
+                query=query, evidence=render_menu(spans, sources))
+            selection = _invoke(generate, prompt, selection_schema([s['span_id'] for s in spans]))
+            ledger = hydrate_selection(selection, spans, sources)
+            validate_ledger(ledger, visible)
+            attempts = 1  # No text correction or ID repair in this treatment.
+        else:
+            prompt = Template((PROMPTS/'extract-v1.txt').read_text()).substitute(query=query, evidence=context)
+            from src.quote_validation import generate_quote_checked
+            schema = ledger_schema([p['chunk_id'] for p, _ in included])
+            ledger, attempts = generate_quote_checked(
+                lambda text: _invoke(generate, text, schema), prompt,
+                lambda value: validate_ledger(value, visible))
         direct = [f for f in ledger['facts'] if f['relevance'] == 'direct']
         if ledger['answerability']=='partial' and not ledger['coverage_gaps']:
             raise ValueError('Partial answerability requires an explicit coverage gap')
@@ -167,7 +199,7 @@ def summarize(query, passages, *, generate,
         out['answer_lead'] = ledger['coverage_gaps'][0] if out['answer_scope']=='partial' else None
         out['evidence_ledger'] = ledger
         out['support_check'] = 'exact_quote_membership_only_not_semantic_entailment'
-        out['generation_method'] = 'evidence-led-v3'
+        out['generation_method'] = 'evidence-led-spans-v1' if quote_selection else 'evidence-led-v3'
         out['extraction_validation_attempts'] = attempts
         return out
     except Exception:

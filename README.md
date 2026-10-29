@@ -62,6 +62,11 @@ Example search result fields: `chunk_id`, `text`, `distance`, `arxiv_id`, `title
 
 ## Research workflow (draft interface v1)
 
+For opt-in model-selected span IDs with code-inserted exact quotations, see
+[Deterministic quote insertion](docs/source-span-selection.md). Existing defaults
+remain unchanged.
+
+
 Shared JSON types, source-specific citation validation, callable signatures, and
 offline fixtures are documented in [Research contracts](docs/research-contracts.md).
 

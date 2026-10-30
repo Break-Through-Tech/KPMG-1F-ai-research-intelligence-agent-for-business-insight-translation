@@ -179,5 +179,7 @@ test('saved business-stage failure retains partial label and recovery guidance',
   await page.getByRole('button', {name: 'Failed business stage', exact: true}).click();
   await expect(page.locator('.answer')).toContainText('Business translation is unavailable');
   await expect(page.locator('.answer')).toContainText('Business translation failed. Summary retained.');
+  await expect(page.locator('.answer')).toContainText('generating business implications failed');
+  await expect(page.locator('#feedback')).toContainText('business implications; research summary retained');
   await expect(page.locator('.answer')).not.toContainText('Business translation was not requested');
 });

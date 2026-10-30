@@ -21,6 +21,10 @@ provider keys, model dependencies, index, or downloaded weights. Optional live
 and saved-result modes are described separately below.
 The server binds only to `127.0.0.1`; it is a development server, not a deployment.
 
+For the annotated query-to-evidence flow, fixture-state mapping, interaction
+checklist, and bounded prototype walkthrough, see
+[Query-to-evidence flow and interface acceptance](query-to-evidence-flow.md).
+
 ## Walkthrough: normal path
 
 1. Use the bottom composer. Choose **View example** (the default is **Full draft**; other states

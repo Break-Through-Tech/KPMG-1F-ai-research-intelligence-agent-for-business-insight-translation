@@ -72,7 +72,9 @@ function readyAnnouncement(demo, number) {
   const outcome = {
     'plain-language': 'ready. Draft, not approved.',
     full: 'ready. Draft, not approved.',
-    partial: 'ready. Partial draft; business translation is unavailable. Not approved.',
+    partial: demo.error?.stage === 'business'
+      ? 'failed: business implications; research summary retained. Not approved.'
+      : 'ready. Partial draft; no business recommendation is supported. Not approved.',
     'summary-only': 'ready. Research summary; business translation not requested. Not approved.',
     insufficient: 'abstained: insufficient support.',
     empty: 'unavailable: no evidence retrieved.',
@@ -112,7 +114,7 @@ const runLabel = demo => {
 const STATES = {
   'plain-language': ['Full draft · definition fixture', 'Synthetic example with explicit term support.'],
   full: ['Full draft', 'Research summary and conditional business implications are available.'],
-  partial: ['Partial draft', 'The research summary is available. Business translation is unavailable; inspect stage details.'],
+  partial: ['Partial draft', 'The sources support research findings but not a business recommendation; no recommendation is shown.'],
   'summary-only': ['Research summary', 'Business translation was not requested. Add industry context to request it.'],
   insufficient: ['Abstention · insufficient support', 'Passages are available, but do not support an answer.'],
   empty: ['No evidence', 'No passages were retrieved. Generation was skipped.'],
@@ -691,6 +693,9 @@ document.addEventListener('brief-revise', async event => {
 
 function renderDemo(demo, number, answer) {
   const [label, explanation] = STATES[demo.scenario];
+  const stateExplanation = demo.scenario === 'partial' && demo.error?.stage === 'business'
+    ? 'The research summary is available, but generating business implications failed. Inspect the error and retry.'
+    : explanation;
   const head = element('div', undefined, 'answer-head');
   head.append(answerHeading(number));
   if (demo.mode === 'indexed') head.append(element('p', demo.history_policy === 'server_owned_bounded_intent_only' ? 'Indexed research · Bounded conversation' : 'Indexed research · Independent query', 'meta'));
@@ -699,7 +704,7 @@ function renderDemo(demo, number, answer) {
   if (demo.library?.replayed) head.append(element('p', 'Saved snapshot · No new research executed', 'meta'));
   answer.replaceChildren(head);
   if (demo.result) {
-    if (demo.scenario !== 'full') answer.append(element('p', explanation));
+    if (demo.scenario !== 'full') answer.append(element('p', stateExplanation));
     renderDraft(demo, number, answer);
     answer.append(AnswerExport.controls(demo, number));
     const savedControls = BriefLibrary.controls(demo, updated => {

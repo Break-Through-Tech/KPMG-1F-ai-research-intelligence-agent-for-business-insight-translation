@@ -179,6 +179,7 @@ test('saved business-stage failure retains partial label and recovery guidance',
   await page.getByRole('button', {name: 'Failed business stage', exact: true}).click();
   await expect(page.locator('.answer')).toContainText('generating business implications failed');
   await expect(page.locator('.answer')).toContainText('Business translation failed. The supported summary is retained.');
-  await expect(page.locator('#feedback')).toContainText('business implications; research summary retained');
+  await expect(page.locator('.answer')).toContainText('Inspect the error and retry.');
+  await expect(page.locator('#feedback')).toContainText('No model call');
   await expect(page.locator('.answer')).not.toContainText('Business translation was not requested');
 });

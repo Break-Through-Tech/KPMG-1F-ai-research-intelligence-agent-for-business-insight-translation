@@ -30,7 +30,7 @@ async function main() {
     });
     const cases = [
       ['full', 'ready. Draft, not approved.'],
-      ['partial', 'ready. Partial draft; business translation abstained. Not approved.'],
+      ['partial', 'ready. Partial draft; no business recommendation is supported. Not approved.'],
       ['insufficient', 'abstained: insufficient support.'],
       ['empty', 'unavailable: no evidence retrieved.'],
       ['provider-error', 'failed: simulated provider error.'],
@@ -62,6 +62,11 @@ async function main() {
       await page.waitForFunction(() => document.querySelector('#output').getAttribute('aria-busy') === 'false');
       assert.deepEqual(await page.evaluate(() => ({focus: document.activeElement.id, scroll: document.querySelector('#conversation').scrollTop})), before);
       assert.equal(await page.locator('#feedback[role="status"]').textContent(), `Answer ${index + 1} ${outcome} Synthetic example.`);
+      if (scenario === 'partial') {
+        const answer = page.getByRole('article', {name: `Answer ${index + 1}`});
+        assert.match(await answer.innerText(), /The sources support research findings but not a business recommendation/);
+        assert.match(await answer.innerText(), /No supported business recommendations\./);
+      }
       assert.equal(await page.getByRole('region', {name: `Question ${index + 1}`, exact: true}).count(), 1);
       assert.equal(await page.getByRole('article', {name: `Answer ${index + 1}`, exact: true}).count(), 1);
       assert.equal(await page.locator('#output [aria-live], #output [role="status"], #output [role="log"]').count(), 0);

@@ -1,0 +1,10 @@
+{
+  "/Users/jacquelinehenriksen/.openclaw/workspace/output/kpmg-packing-cached-followup-20261104/pdf-contexts.json": "87aa3583ffeb2193bd958b2d58582dc867721d573b1b3b4bf7e021bbe132b580",
+  "/Users/jacquelinehenriksen/.openclaw/workspace/output/kpmg-packing-cached-followup-20261104/summary.json": "1d756247094e973f0828b38ec40117e03461388f7d8d4f8c65b288849573f698",
+  "/Users/jacquelinehenriksen/.openclaw/workspace/output/kpmg-packing-cached-followup-20261104/outcomes.json": "3643512dccfcd0a188bb74eebd9585bdde2379035f8b0380b37a8cc578c7f22d",
+  "/Users/jacquelinehenriksen/.openclaw/workspace/output/kpmg-packing-cached-followup-20261104/tex-contexts.json": "87e96e46275cbeb0759fd4a915f64fcb7e2c810f7ddc6c096ffc0c7998f4ae8a",
+  "/Users/jacquelinehenriksen/.openclaw/workspace/output/kpmg-packing-cached-followup-20261104/protocol.json": "733c4eb36e8b73e22db16726565cf8a9dc7efdf1ea7a2c1616a616fe4740a44b",
+  "/Users/jacquelinehenriksen/.openclaw/workspace/output/kpmg-packing-cached-followup-20261104/html-contexts.json": "095a18664f39d191fc43fe7d37bd3d9557dcc244605d3c114344ec0429ae5a71",
+  "experiments/retrieval_harness/packing.py": "aa0e3f67d3fbb2c5dfc8c3bb59f9df8d65efb5122edd7c3fbce39ee697de2641",
+  "experiments/retrieval_harness/run_packing.py": "fb4558573cb9890da684bbb78bfbab73bfde9f16a3762f8501e4fab98db266c8"
+}

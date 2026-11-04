@@ -1,5 +1,6 @@
 """Query-only packing ablations; source units remain atomic and traceable."""
 import numpy as np
+from functools import lru_cache
 from experiments.retrieval_harness.harness import terms, source_units, context
 
 
@@ -11,26 +12,34 @@ def protect_dense(hybrid, dense, limit=3):
     return scores
 
 
-def windows(chunks, blocks, query, count, cap=160):
-    """Best query-term contiguous unit window per seed, or original if atomic.
+@lru_cache(maxsize=12000)
+def _candidates(text,start,end,tex,count,cap):
+    spans=[(a,b) for a,b in source_units(text,tex) if start<=a<b<=end]
+    candidates=[]
+    for i,(a,b) in enumerate(spans):
+        for _,z in spans[i:]:
+            n=count(text[a:z])
+            if n>cap:break
+            candidates.append((frozenset(terms(text[a:z])),n,a,z))
+    return candidates
 
-    This is extractive lexical selection, not entailment. Never split a source
-    sentence/math unit to satisfy a cap. No targets or answer labels accepted.
+
+def windows(chunks, blocks, query, count, cap=160):
+    """Choose a query-term window; cache query-independent unit candidates.
+
+    Never split source sentences/math to satisfy the cap. This is extractive
+    lexical matching, not entailment. No targets or answer labels accepted.
     """
     result=[];qt=set(terms(query))
     for c in chunks:
         if count(c['text'])<=cap:
             result.append(dict(c));continue
         text=blocks[c['block']]['text']
-        spans=[(a,b) for a,b in source_units(text,blocks[c['block']]['source']=='tex') if c['start']<=a<b<=c['end']]
-        candidates=[]
-        for i,(a,b) in enumerate(spans):
-            for _,z in spans[i:]:
-                n=count(text[a:z])
-                if n>cap:break
-                candidates.append((len(qt & set(terms(text[a:z]))),-n,-a,a,z))
+        candidates=_candidates(text,c['start'],c['end'],blocks[c['block']]['source']=='tex',count,cap)
         if candidates:
-            *_,a,b=max(candidates);result.append(dict(c,start=a,end=b,text=text[a:b]))
+            # Prefer earlier offsets on equal coverage and cost.
+            _,_,_,a,b=max((len(qt & ts),-n,-a,a,z) for ts,n,a,z in candidates)
+            result.append(dict(c,start=a,end=b,text=text[a:b]))
         else:result.append(dict(c))
     return result
 

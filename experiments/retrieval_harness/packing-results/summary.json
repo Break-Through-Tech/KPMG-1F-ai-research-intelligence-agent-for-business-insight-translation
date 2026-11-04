@@ -1,0 +1,434 @@
+[
+  {
+    "source": "html",
+    "arm": "hybrid",
+    "budget": 800,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 18,
+    "mean_tokens": 789.7
+  },
+  {
+    "source": "html",
+    "arm": "hybrid",
+    "budget": 800,
+    "split": "validation",
+    "questions": 18,
+    "complete": 14,
+    "mean_tokens": 782.28
+  },
+  {
+    "source": "html",
+    "arm": "hybrid",
+    "budget": 1600,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 19,
+    "mean_tokens": 1585.25
+  },
+  {
+    "source": "html",
+    "arm": "hybrid",
+    "budget": 1600,
+    "split": "validation",
+    "questions": 18,
+    "complete": 17,
+    "mean_tokens": 1583.5
+  },
+  {
+    "source": "html",
+    "arm": "protected",
+    "budget": 800,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 17,
+    "mean_tokens": 789.35
+  },
+  {
+    "source": "html",
+    "arm": "protected",
+    "budget": 800,
+    "split": "validation",
+    "questions": 18,
+    "complete": 9,
+    "mean_tokens": 783.89
+  },
+  {
+    "source": "html",
+    "arm": "protected",
+    "budget": 1600,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 19,
+    "mean_tokens": 1582.9
+  },
+  {
+    "source": "html",
+    "arm": "protected",
+    "budget": 1600,
+    "split": "validation",
+    "questions": 18,
+    "complete": 17,
+    "mean_tokens": 1582.83
+  },
+  {
+    "source": "html",
+    "arm": "compact",
+    "budget": 800,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 17,
+    "mean_tokens": 798.65
+  },
+  {
+    "source": "html",
+    "arm": "compact",
+    "budget": 800,
+    "split": "validation",
+    "questions": 18,
+    "complete": 13,
+    "mean_tokens": 798.83
+  },
+  {
+    "source": "html",
+    "arm": "compact",
+    "budget": 1600,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 19,
+    "mean_tokens": 1597.7
+  },
+  {
+    "source": "html",
+    "arm": "compact",
+    "budget": 1600,
+    "split": "validation",
+    "questions": 18,
+    "complete": 15,
+    "mean_tokens": 1599.0
+  },
+  {
+    "source": "html",
+    "arm": "protected_compact",
+    "budget": 800,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 17,
+    "mean_tokens": 798.65
+  },
+  {
+    "source": "html",
+    "arm": "protected_compact",
+    "budget": 800,
+    "split": "validation",
+    "questions": 18,
+    "complete": 14,
+    "mean_tokens": 798.33
+  },
+  {
+    "source": "html",
+    "arm": "protected_compact",
+    "budget": 1600,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 19,
+    "mean_tokens": 1597.85
+  },
+  {
+    "source": "html",
+    "arm": "protected_compact",
+    "budget": 1600,
+    "split": "validation",
+    "questions": 18,
+    "complete": 15,
+    "mean_tokens": 1599.0
+  },
+  {
+    "source": "tex",
+    "arm": "hybrid",
+    "budget": 800,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 15,
+    "mean_tokens": 782.8
+  },
+  {
+    "source": "tex",
+    "arm": "hybrid",
+    "budget": 800,
+    "split": "validation",
+    "questions": 18,
+    "complete": 14,
+    "mean_tokens": 769.28
+  },
+  {
+    "source": "tex",
+    "arm": "hybrid",
+    "budget": 1600,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 16,
+    "mean_tokens": 1574.65
+  },
+  {
+    "source": "tex",
+    "arm": "hybrid",
+    "budget": 1600,
+    "split": "validation",
+    "questions": 18,
+    "complete": 16,
+    "mean_tokens": 1567.39
+  },
+  {
+    "source": "tex",
+    "arm": "protected",
+    "budget": 800,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 13,
+    "mean_tokens": 777.3
+  },
+  {
+    "source": "tex",
+    "arm": "protected",
+    "budget": 800,
+    "split": "validation",
+    "questions": 18,
+    "complete": 9,
+    "mean_tokens": 776.0
+  },
+  {
+    "source": "tex",
+    "arm": "protected",
+    "budget": 1600,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 16,
+    "mean_tokens": 1576.35
+  },
+  {
+    "source": "tex",
+    "arm": "protected",
+    "budget": 1600,
+    "split": "validation",
+    "questions": 18,
+    "complete": 14,
+    "mean_tokens": 1575.94
+  },
+  {
+    "source": "tex",
+    "arm": "compact",
+    "budget": 800,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 16,
+    "mean_tokens": 798.45
+  },
+  {
+    "source": "tex",
+    "arm": "compact",
+    "budget": 800,
+    "split": "validation",
+    "questions": 18,
+    "complete": 13,
+    "mean_tokens": 798.11
+  },
+  {
+    "source": "tex",
+    "arm": "compact",
+    "budget": 1600,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 20,
+    "mean_tokens": 1598.5
+  },
+  {
+    "source": "tex",
+    "arm": "compact",
+    "budget": 1600,
+    "split": "validation",
+    "questions": 18,
+    "complete": 13,
+    "mean_tokens": 1598.94
+  },
+  {
+    "source": "tex",
+    "arm": "protected_compact",
+    "budget": 800,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 17,
+    "mean_tokens": 798.45
+  },
+  {
+    "source": "tex",
+    "arm": "protected_compact",
+    "budget": 800,
+    "split": "validation",
+    "questions": 18,
+    "complete": 14,
+    "mean_tokens": 798.44
+  },
+  {
+    "source": "tex",
+    "arm": "protected_compact",
+    "budget": 1600,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 20,
+    "mean_tokens": 1598.05
+  },
+  {
+    "source": "tex",
+    "arm": "protected_compact",
+    "budget": 1600,
+    "split": "validation",
+    "questions": 18,
+    "complete": 14,
+    "mean_tokens": 1599.06
+  },
+  {
+    "source": "pdf",
+    "arm": "hybrid",
+    "budget": 800,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 17,
+    "mean_tokens": 788.8
+  },
+  {
+    "source": "pdf",
+    "arm": "hybrid",
+    "budget": 800,
+    "split": "validation",
+    "questions": 18,
+    "complete": 12,
+    "mean_tokens": 783.67
+  },
+  {
+    "source": "pdf",
+    "arm": "hybrid",
+    "budget": 1600,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 19,
+    "mean_tokens": 1588.75
+  },
+  {
+    "source": "pdf",
+    "arm": "hybrid",
+    "budget": 1600,
+    "split": "validation",
+    "questions": 18,
+    "complete": 14,
+    "mean_tokens": 1585.83
+  },
+  {
+    "source": "pdf",
+    "arm": "protected",
+    "budget": 800,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 12,
+    "mean_tokens": 788.6
+  },
+  {
+    "source": "pdf",
+    "arm": "protected",
+    "budget": 800,
+    "split": "validation",
+    "questions": 18,
+    "complete": 7,
+    "mean_tokens": 784.17
+  },
+  {
+    "source": "pdf",
+    "arm": "protected",
+    "budget": 1600,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 19,
+    "mean_tokens": 1587.7
+  },
+  {
+    "source": "pdf",
+    "arm": "protected",
+    "budget": 1600,
+    "split": "validation",
+    "questions": 18,
+    "complete": 14,
+    "mean_tokens": 1584.17
+  },
+  {
+    "source": "pdf",
+    "arm": "compact",
+    "budget": 800,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 19,
+    "mean_tokens": 798.25
+  },
+  {
+    "source": "pdf",
+    "arm": "compact",
+    "budget": 800,
+    "split": "validation",
+    "questions": 18,
+    "complete": 12,
+    "mean_tokens": 798.22
+  },
+  {
+    "source": "pdf",
+    "arm": "compact",
+    "budget": 1600,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 19,
+    "mean_tokens": 1598.55
+  },
+  {
+    "source": "pdf",
+    "arm": "compact",
+    "budget": 1600,
+    "split": "validation",
+    "questions": 18,
+    "complete": 14,
+    "mean_tokens": 1598.28
+  },
+  {
+    "source": "pdf",
+    "arm": "protected_compact",
+    "budget": 800,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 19,
+    "mean_tokens": 798.2
+  },
+  {
+    "source": "pdf",
+    "arm": "protected_compact",
+    "budget": 800,
+    "split": "validation",
+    "questions": 18,
+    "complete": 12,
+    "mean_tokens": 798.0
+  },
+  {
+    "source": "pdf",
+    "arm": "protected_compact",
+    "budget": 1600,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 19,
+    "mean_tokens": 1598.55
+  },
+  {
+    "source": "pdf",
+    "arm": "protected_compact",
+    "budget": 1600,
+    "split": "validation",
+    "questions": 18,
+    "complete": 14,
+    "mean_tokens": 1598.28
+  }
+]

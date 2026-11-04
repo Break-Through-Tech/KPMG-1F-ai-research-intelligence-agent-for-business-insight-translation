@@ -1,0 +1,218 @@
+[
+  {
+    "source": "html",
+    "arm": "hybrid",
+    "budget": 800,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 18,
+    "mean_tokens": 789.7
+  },
+  {
+    "source": "html",
+    "arm": "hybrid",
+    "budget": 800,
+    "split": "validation",
+    "questions": 18,
+    "complete": 14,
+    "mean_tokens": 782.28
+  },
+  {
+    "source": "html",
+    "arm": "hybrid",
+    "budget": 1600,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 19,
+    "mean_tokens": 1585.25
+  },
+  {
+    "source": "html",
+    "arm": "hybrid",
+    "budget": 1600,
+    "split": "validation",
+    "questions": 18,
+    "complete": 17,
+    "mean_tokens": 1583.5
+  },
+  {
+    "source": "html",
+    "arm": "semantic_fallback",
+    "budget": 800,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 18,
+    "mean_tokens": 798.35
+  },
+  {
+    "source": "html",
+    "arm": "semantic_fallback",
+    "budget": 800,
+    "split": "validation",
+    "questions": 18,
+    "complete": 14,
+    "mean_tokens": 798.0
+  },
+  {
+    "source": "html",
+    "arm": "semantic_fallback",
+    "budget": 1600,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 19,
+    "mean_tokens": 1598.1
+  },
+  {
+    "source": "html",
+    "arm": "semantic_fallback",
+    "budget": 1600,
+    "split": "validation",
+    "questions": 18,
+    "complete": 17,
+    "mean_tokens": 1597.83
+  },
+  {
+    "source": "tex",
+    "arm": "hybrid",
+    "budget": 800,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 15,
+    "mean_tokens": 782.8
+  },
+  {
+    "source": "tex",
+    "arm": "hybrid",
+    "budget": 800,
+    "split": "validation",
+    "questions": 18,
+    "complete": 14,
+    "mean_tokens": 769.28
+  },
+  {
+    "source": "tex",
+    "arm": "hybrid",
+    "budget": 1600,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 16,
+    "mean_tokens": 1574.65
+  },
+  {
+    "source": "tex",
+    "arm": "hybrid",
+    "budget": 1600,
+    "split": "validation",
+    "questions": 18,
+    "complete": 16,
+    "mean_tokens": 1567.39
+  },
+  {
+    "source": "tex",
+    "arm": "semantic_fallback",
+    "budget": 800,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 15,
+    "mean_tokens": 799.05
+  },
+  {
+    "source": "tex",
+    "arm": "semantic_fallback",
+    "budget": 800,
+    "split": "validation",
+    "questions": 18,
+    "complete": 14,
+    "mean_tokens": 798.72
+  },
+  {
+    "source": "tex",
+    "arm": "semantic_fallback",
+    "budget": 1600,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 17,
+    "mean_tokens": 1598.4
+  },
+  {
+    "source": "tex",
+    "arm": "semantic_fallback",
+    "budget": 1600,
+    "split": "validation",
+    "questions": 18,
+    "complete": 16,
+    "mean_tokens": 1598.72
+  },
+  {
+    "source": "pdf",
+    "arm": "hybrid",
+    "budget": 800,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 17,
+    "mean_tokens": 788.8
+  },
+  {
+    "source": "pdf",
+    "arm": "hybrid",
+    "budget": 800,
+    "split": "validation",
+    "questions": 18,
+    "complete": 12,
+    "mean_tokens": 783.67
+  },
+  {
+    "source": "pdf",
+    "arm": "hybrid",
+    "budget": 1600,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 19,
+    "mean_tokens": 1588.75
+  },
+  {
+    "source": "pdf",
+    "arm": "hybrid",
+    "budget": 1600,
+    "split": "validation",
+    "questions": 18,
+    "complete": 14,
+    "mean_tokens": 1585.83
+  },
+  {
+    "source": "pdf",
+    "arm": "semantic_fallback",
+    "budget": 800,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 17,
+    "mean_tokens": 798.6
+  },
+  {
+    "source": "pdf",
+    "arm": "semantic_fallback",
+    "budget": 800,
+    "split": "validation",
+    "questions": 18,
+    "complete": 12,
+    "mean_tokens": 798.61
+  },
+  {
+    "source": "pdf",
+    "arm": "semantic_fallback",
+    "budget": 1600,
+    "split": "tuning",
+    "questions": 20,
+    "complete": 19,
+    "mean_tokens": 1598.45
+  },
+  {
+    "source": "pdf",
+    "arm": "semantic_fallback",
+    "budget": 1600,
+    "split": "validation",
+    "questions": 18,
+    "complete": 14,
+    "mean_tokens": 1598.39
+  }
+]

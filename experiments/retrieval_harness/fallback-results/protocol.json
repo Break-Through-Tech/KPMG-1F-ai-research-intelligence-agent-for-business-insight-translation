@@ -1,0 +1,17 @@
+{
+  "corpus_sha256": "ba0a7a61d2a114a8eb0d58a8ece54a5d5d490ce39a67c3f2bf552885ecbdab81",
+  "model": "intfloat/e5-small-v2",
+  "revision": "ffb93f3bd4047442299a41ebb6fa998a38507c52",
+  "candidate_pool": 40,
+  "unit_token_cap": 160,
+  "budgets": [
+    800,
+    1600
+  ],
+  "policy": "Preserve full hybrid packing, then append whole units by query cosine; no eviction or gold labels.",
+  "limits": [
+    "Inspected development data; not blind or answer accuracy.",
+    "Extra semantic encoding cost; latency not benchmarked.",
+    "Atomic oversized units excluded; no minimum cosine threshold."
+  ]
+}

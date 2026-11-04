@@ -34,32 +34,33 @@ def main():
            '11 policies × 4 retrieval conditions × 3 models × 3 formats = 396 ablation cells.', '',
            f'{len(common_available)}/{len(qs)} questions have designated anchors available in every source format.', '',
            '## Tuning-selected semantic policy vs controls (validation only)', '',
-           'All methods below have a 1600-token cap. Baseline and token-only use the SAME neighbor setting as the selected policy; neither is tuned.', '',
-           '| Model | Source | Selected semantic policy / context | Baseline | Token-only | Selected | Paired wins/losses vs baseline | Mean tokens baseline → selected |',
-           '| --- | --- | --- | ---: | ---: | ---: | --- | --- |']
+           'All methods below have a 1600-token cap. Fixed existing/token-only controls use no expansion. An additional baseline column matches the selected neighbor setting. No control is tuned.', '',
+           '| Model | Source | Selected semantic policy / context | Existing fixed | Existing matched expansion | Token-only fixed | Selected | Paired wins/losses vs fixed baseline | Mean tokens baseline → selected |',
+           '| --- | --- | --- | ---: | ---: | ---: | ---: | --- | --- |']
     for report in reports:
         selected=report['selected'];variants=report['variants']
         label,mode=selected['policy'],selected['mode']
-        base=[r for r in variants['baseline']['queries'][mode] if r['split']=='validation']
+        base=[r for r in variants['baseline']['queries']['tokens1600'] if r['split']=='validation']
+        matched_base=[r for r in variants['baseline']['queries'][mode] if r['split']=='validation']
         chosen=[r for r in variants[label]['queries'][mode] if r['split']=='validation']
-        token=[r for r in variants['token_only240_overlap32']['queries'][mode] if r['split']=='validation']
+        token=[r for r in variants['token_only240_overlap32']['queries']['tokens1600'] if r['split']=='validation']
         wins=[c['id'] for b,c in zip(base,chosen) if c['complete'] and not b['complete']]
         losses=[c['id'] for b,c in zip(base,chosen) if b['complete'] and not c['complete']]
         bs,cs,ts=map(summarize,(base,chosen,token))
         model=report['model'].split('/')[-1]
-        lines.append(f"| {model} | {report['source']} | {label} / {mode} | {bs['complete']}/{len(base)} | {ts['complete']}/{len(base)} | {cs['complete']}/{len(base)} | {len(wins)} / {len(losses)} | {bs['mean_tokens']} → {cs['mean_tokens']} |")
+        lines.append(f"| {model} | {report['source']} | {label} / {mode} | {bs['complete']}/{len(base)} | {sum(r['complete'] for r in matched_base)}/{len(base)} | {ts['complete']}/{len(base)} | {cs['complete']}/{len(base)} | {len(wins)} / {len(losses)} | {bs['mean_tokens']} → {cs['mean_tokens']} |")
         clean={k:v for k,v in report.items() if k!='variants'}
         clean.update(wins=wins,losses=losses,variants={})
         for name,arm in variants.items():
             small={k:v for k,v in arm.items() if k!='queries'}
-            small['outcome_columns']=['question_id','anchor_found_bits','source_available','context_tokens']
-            small['outcomes']={m:[[r['id'], ''.join('1' if f else '0' for f in r['found']),r['source_available'],r['tokens']] for r in rows] for m,rows in arm['queries'].items()}
+            small['outcome_format']='question_id|anchor_found_bits|source_available(0/1)|context_tokens'
+            small['outcomes']={m:['|'.join([r['id'], ''.join('1' if f else '0' for f in r['found']),str(int(r['source_available'])),str(r['tokens'])]) for r in rows] for m,rows in arm['queries'].items()}
             small['all_formats_available']={m:{split:summarize([r for r in rows if r['id'] in common_available and r['split']==split])
                                                 for split in ('tuning','validation')} for m,rows in arm['queries'].items()}
             clean['variants'][name]=small
         compact.append(clean)
     lines+=['', '## Same questions available in every format (validation)', '',
-            '| Model | Source | Available validation questions | Baseline | Selected semantic |',
+            '| Model | Source | Available validation questions | Baseline (same expansion) | Selected semantic |',
             '| --- | --- | ---: | ---: | ---: |']
     for report in reports:
         selected=report['selected']; mode=selected['mode']; label=selected['policy']

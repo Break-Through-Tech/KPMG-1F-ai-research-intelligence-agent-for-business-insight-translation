@@ -1,0 +1,8 @@
+{
+  "numpy": "2.5.4",
+  "torch": "2.15.0",
+  "sentence-transformers": "6.2.0",
+  "transformers": "5.22.1",
+  "beautifulsoup4": "4.15.0",
+  "langchain-text-splitters": "1.1.3"
+}

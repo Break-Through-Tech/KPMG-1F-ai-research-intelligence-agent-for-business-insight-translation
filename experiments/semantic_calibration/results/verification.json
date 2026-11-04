@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "checks": [
+    "all run corpus hashes match",
+    "selection rederived from tuning only",
+    "all recorded context-token counts within caps",
+    "every emitted interval exactly matches source offsets",
+    "source/page/heading/file/line locators preserved"
+  ],
+  "runs": 9,
+  "evaluation_cells": 396,
+  "query_contexts": 15048,
+  "source_intervals": 102781
+}

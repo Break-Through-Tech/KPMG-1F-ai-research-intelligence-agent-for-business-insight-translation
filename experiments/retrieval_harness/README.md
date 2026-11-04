@@ -66,3 +66,30 @@ chunk-texts.json,chunk-vectors.npy,query-vectors.npy}` from the earlier runner.
 Exact corpus hash/model revision mismatches fail rather than silently rebuilding.
 Full retrieved source intervals and locators are saved in the output; compact
 scores, per-query outcomes, verification and artifact hashes are committed here.
+
+## Packing follow-up
+
+`run_packing.py` tests four fixed policies at the same 800/1600 token caps:
+original hybrid; hybrid with its first three positions reserved for dense hits;
+compact source-unit windows; and both changes. All four merge duplicate source
+intervals. Dense protection preserves the remaining hybrid order. Compact selects
+one contiguous window of at most 160 tokens per oversized seed by query-term
+coverage, ties preferring shorter/earlier windows. Windows are selected upfront,
+not merely after budget exhaustion. Units remain whole; an indivisible oversize
+unit retains its original seed and can be skipped by the packer. This trades
+context depth for coverage; lexical coverage is not semantic entailment.
+
+This is a retrospective follow-up to inspected failures, not held-out optimization
+or evidence that any setting should become the production default. No new model
+weights, paid inference, source acquisition, or production index changes.
+
+```sh
+python -m experiments.retrieval_harness.run_packing \
+  --corpus /path/to/corpus.json --cache /path/to/semantic-calibration/results \
+  --output /path/to/new-packing-output
+python -m pytest tests/test_retrieval_packing.py
+```
+
+Raw contexts are retained outside Git; compact outcomes, protocol, hashes and
+findings are stored in `packing-results/` when the run completes. Token accounting
+includes passage prefix/special tokens per interval, not generation prompt framing.

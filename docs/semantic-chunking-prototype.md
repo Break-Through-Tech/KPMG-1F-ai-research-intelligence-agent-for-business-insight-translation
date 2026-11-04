@@ -55,8 +55,9 @@ all nullable pandas columns:
 ```python
 from src.retrieval import citation_metadata
 
-evidence = [dict(chunk_id=row['chunk_id'], text=row['text'], title=row['title'],
-                 **citation_metadata(row)) for row in frame.to_dict('records')]
+evidence = [{'page_number': None, **citation_metadata(row),
+             'chunk_id': row['chunk_id'], 'text': row['text']}
+            for row in frame.to_dict('records')]
 ```
 
 The metadata helper lives in the existing retrieval module and has its normal

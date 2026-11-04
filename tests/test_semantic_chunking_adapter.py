@@ -26,6 +26,17 @@ class Encoder:
 
 
 class AdapterTests(unittest.TestCase):
+    def test_ingestion_metadata_conversion_matches_documented_adapter_boundary(self):
+        from src.retrieval import citation_metadata
+        raw = [passage(), passage('html', chunk_id='html')]
+        for row in raw:
+            row.pop('source_url')
+        evidence = [{'page_number': None, **citation_metadata(row),
+                     'chunk_id': row['chunk_id'], 'text': row['text']} for row in raw]
+        chunks = chunk_passages(evidence, Encoder())
+        validate_evidence(chunks)
+        self.assertEqual({'pdf', 'html'}, {c['source'] for c in chunks})
+
     def test_pdf_page_boundaries_and_original_text_are_preserved(self):
         rows = [passage(distance=0.25), passage(chunk_id='page3', page_number=3, source_url=PDF+'#page=3')]
         before = copy.deepcopy(rows)

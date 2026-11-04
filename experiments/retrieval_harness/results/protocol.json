@@ -1,0 +1,31 @@
+{
+  "model": "intfloat/e5-small-v2",
+  "revision": "ffb93f3bd4047442299a41ebb6fa998a38507c52",
+  "arms": [
+    "baseline",
+    "selective_expansion",
+    "budget_allocation",
+    "deduplication",
+    "hybrid_search",
+    "reranking",
+    "question_aware",
+    "evidence_gap",
+    "source_aware",
+    "combined"
+  ],
+  "budgets": [
+    800,
+    1600
+  ],
+  "candidate_limit": 200,
+  "rerank_candidates": 40,
+  "corpus_sha256": "ba0a7a61d2a114a8eb0d58a8ece54a5d5d490ce39a67c3f2bf552885ecbdab81",
+  "chunk_policy": "original",
+  "notes": [
+    "Already inspected development questions. No blind evaluation or answer-quality claim.",
+    "Reranker is E5 sentence-max late interaction, NOT a cross-encoder.",
+    "Query decomposition is deterministic clause splitting; gap search uses residual query terms.",
+    "Source-aware arm snaps to sentences/atomic TeX spans within original source blocks.",
+    "Isolated arms modify baseline independently. Combined composes all eight. No selection or tuning."
+  ]
+}

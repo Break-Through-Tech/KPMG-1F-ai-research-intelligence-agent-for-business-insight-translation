@@ -1,0 +1,416 @@
+[
+  {
+    "id": "n01",
+    "query": "Which two input types does the robotic manipulation pretraining framework use?",
+    "paper": "2602.00937v3",
+    "anchors": [
+      "point clouds",
+      "robot actions"
+    ],
+    "question_origin": "metadata abstract inspected before expanded retrieval; development labels",
+    "split": "tuning"
+  },
+  {
+    "id": "n02",
+    "query": "How many tasks, real servers and tools are included in the tool-use competency benchmark?",
+    "paper": "2602.00933v3",
+    "anchors": [
+      "1,000",
+      "36",
+      "220"
+    ],
+    "question_origin": "metadata abstract inspected before expanded retrieval; development labels",
+    "split": "validation"
+  },
+  {
+    "id": "n03",
+    "query": "What are the two stages of continuous-utility preference optimization?",
+    "paper": "2602.00931v2",
+    "anchors": [
+      "strategy selection",
+      "execution refinement"
+    ],
+    "question_origin": "metadata abstract inspected before expanded retrieval; development labels",
+    "split": "tuning"
+  },
+  {
+    "id": "n04",
+    "query": "Which two synthetic-trajectory pipelines were used to train scheming monitors?",
+    "paper": "2603.00829v2",
+    "anchors": [
+      "STRIDE",
+      "Gloom"
+    ],
+    "question_origin": "metadata abstract inspected before expanded retrieval; development labels",
+    "split": "tuning"
+  },
+  {
+    "id": "n05",
+    "query": "Which three obstructions to global interpretability are identified by the gauge framework?",
+    "paper": "2603.00824v2",
+    "anchors": [
+      "local jamming",
+      "proxy shearing",
+      "nontrivial holonomy"
+    ],
+    "question_origin": "metadata abstract inspected before expanded retrieval; development labels",
+    "split": "validation"
+  },
+  {
+    "id": "n07",
+    "query": "How many edges did automated circuit discovery select from the candidate set?",
+    "paper": "2604.00324v1",
+    "anchors": [
+      "68 edges",
+      "32,000"
+    ],
+    "question_origin": "metadata abstract inspected before expanded retrieval; development labels",
+    "split": "tuning"
+  },
+  {
+    "id": "n08",
+    "query": "Do collaborative telemetry agents and critics communicate directly with one another?",
+    "paper": "2604.00319v1",
+    "anchors": [
+      "no inter-agent or inter-critic communication"
+    ],
+    "question_origin": "metadata abstract inspected before expanded retrieval; development labels",
+    "split": "validation"
+  },
+  {
+    "id": "n10",
+    "query": "What transform and masking mechanism replace attention while preserving causal generation?",
+    "paper": "2605.00292v2",
+    "anchors": [
+      "Fast Fourier Transform",
+      "asymmetric padding and truncation"
+    ],
+    "question_origin": "metadata abstract inspected before expanded retrieval; development labels",
+    "split": "validation"
+  },
+  {
+    "id": "n11",
+    "query": "What accuracy did orchestrated agentic trip planning achieve on its optimization benchmark?",
+    "paper": "2605.00276v1",
+    "anchors": [
+      "77.4"
+    ],
+    "question_origin": "metadata abstract inspected before expanded retrieval; development labels",
+    "split": "tuning"
+  },
+  {
+    "id": "n12",
+    "query": "Which two generalization regimes are compared for multi-object diffusion generation?",
+    "paper": "2605.00273v2",
+    "anchors": [
+      "concept generalization",
+      "compositional generalization"
+    ],
+    "question_origin": "metadata abstract inspected before expanded retrieval; development labels",
+    "split": "validation"
+  },
+  {
+    "id": "n13",
+    "query": "Why can moving the query be cheaper than transferring remote attention caches?",
+    "paper": "2606.01502v1",
+    "anchors": [
+      "routing the query",
+      "moving the cache"
+    ],
+    "question_origin": "metadata abstract inspected before expanded retrieval; development labels",
+    "split": "validation"
+  },
+  {
+    "id": "n15",
+    "query": "Which three scanner families are compared for agent-skill security?",
+    "paper": "2606.01494v1",
+    "anchors": [
+      "VirusTotal",
+      "static heuristic analysis",
+      "SkillSpector"
+    ],
+    "question_origin": "metadata abstract inspected before expanded retrieval; development labels",
+    "split": "tuning"
+  },
+  {
+    "id": "n16",
+    "query": "What are the four stages in the parallel-physics reasoning diagnostic?",
+    "paper": "2607.00276v1",
+    "anchors": [
+      "induction, formulation, prediction, and review"
+    ],
+    "question_origin": "metadata abstract inspected before expanded retrieval; development labels",
+    "split": "validation"
+  },
+  {
+    "id": "n17",
+    "query": "What does entropy regularization prevent in sparse federated optimization?",
+    "paper": "2607.00275v1",
+    "anchors": [
+      "early commitment to sparse support"
+    ],
+    "question_origin": "metadata abstract inspected before expanded retrieval; development labels",
+    "split": "tuning"
+  },
+  {
+    "id": "n19",
+    "query": "Which two datasets were used to evaluate organ-guided CT token compression?",
+    "paper": "2608.00345v1",
+    "anchors": [
+      "CT-RATE",
+      "Merlin"
+    ],
+    "question_origin": "metadata abstract inspected before expanded retrieval; development labels",
+    "split": "validation"
+  },
+  {
+    "id": "n20",
+    "query": "What happens to agent conclusions when numerical evidence stays fixed but substantive framing changes?",
+    "paper": "2608.00339v1",
+    "anchors": [
+      "different conclusions from identical numerical data",
+      "substantive framing changes"
+    ],
+    "question_origin": "metadata abstract inspected before expanded retrieval; development labels",
+    "split": "tuning"
+  },
+  {
+    "id": "n22",
+    "query": "What two properties does the jailbreak-validation framework assess in response steps?",
+    "paper": "2609.00498v1",
+    "anchors": [
+      "validity and correctness"
+    ],
+    "question_origin": "metadata abstract inspected before expanded retrieval; development labels",
+    "split": "validation"
+  },
+  {
+    "id": "n23",
+    "query": "What decoding method commits persistent refusal signals during early denoising?",
+    "paper": "2609.00495v1",
+    "anchors": [
+      "Refusal-Aware Early Commitment"
+    ],
+    "question_origin": "metadata abstract inspected before expanded retrieval; development labels",
+    "split": "tuning"
+  },
+  {
+    "id": "n24",
+    "query": "Do static or streaming anomaly detectors perform better in most tested streaming settings?",
+    "paper": "2609.39215v1",
+    "anchors": [
+      "static TSAD methods significantly outperform streaming approaches"
+    ],
+    "question_origin": "metadata abstract inspected before expanded retrieval; development labels",
+    "split": "tuning"
+  },
+  {
+    "id": "r01",
+    "paper": "2602.00937v3",
+    "query": "Why does the robotic pretraining method supplement 2D representations with depth and spatial views?",
+    "anchors": [
+      "3D spatial information",
+      "precise manipulation"
+    ],
+    "question_origin": "New explanatory development question, abstract-backed; not human answer-quality labels",
+    "split": "tuning"
+  },
+  {
+    "id": "r02",
+    "paper": "2602.00933v3",
+    "query": "Why can a tool-use agent fail even after its tools execute successfully?",
+    "anchors": [
+      "premature stopping",
+      "incorrect synthesis"
+    ],
+    "question_origin": "New explanatory development question, abstract-backed; not human answer-quality labels",
+    "split": "validation"
+  },
+  {
+    "id": "r03",
+    "paper": "2602.00931v2",
+    "query": "Why replace binary preference labels with continuous utility scores?",
+    "anchors": [
+      "partial progress",
+      "fine-grained reasoning quality"
+    ],
+    "question_origin": "New explanatory development question, abstract-backed; not human answer-quality labels",
+    "split": "tuning"
+  },
+  {
+    "id": "r04",
+    "paper": "2603.00829v2",
+    "query": "Does more extensive monitor optimization continue to improve generalization after simple prompt sweeps?",
+    "anchors": [
+      "overfitting",
+      "simple prompt sweeps"
+    ],
+    "question_origin": "New explanatory development question, abstract-backed; not human answer-quality labels",
+    "split": "tuning"
+  },
+  {
+    "id": "r05",
+    "paper": "2603.00824v2",
+    "query": "What does nontrivial holonomy reveal about transporting representations around loops?",
+    "anchors": [
+      "path-dependent transport",
+      "loops"
+    ],
+    "question_origin": "New explanatory development question, abstract-backed; not human answer-quality labels",
+    "split": "validation"
+  },
+  {
+    "id": "r07",
+    "paper": "2604.00324v1",
+    "query": "How did agents' misbehavior change when scenarios were framed as real rather than evaluations?",
+    "anchors": [
+      "6.5",
+      "55.1"
+    ],
+    "question_origin": "New explanatory development question, abstract-backed; not human answer-quality labels",
+    "split": "tuning"
+  },
+  {
+    "id": "r08",
+    "paper": "2604.00319v1",
+    "query": "How does communication overhead scale with modalities versus the number of agents and critics?",
+    "anchors": [
+      "modalities",
+      "independent of the number"
+    ],
+    "question_origin": "New explanatory development question, abstract-backed; not human answer-quality labels",
+    "split": "validation"
+  },
+  {
+    "id": "r10",
+    "paper": "2605.00292v2",
+    "query": "Why might the Fourier architecture be easier to deploy across hardware than hardware-specific efficient models?",
+    "anchors": [
+      "standard library operators",
+      "portability"
+    ],
+    "question_origin": "New explanatory development question, abstract-backed; not human answer-quality labels",
+    "split": "validation"
+  },
+  {
+    "id": "r11",
+    "paper": "2605.00276v1",
+    "query": "What evaluation gap does the trip-planning optimization dataset address compared with reference-answer benchmarks?",
+    "anchors": [
+      "definitive optimal solutions",
+      "ground truth"
+    ],
+    "question_origin": "New explanatory development question, abstract-backed; not human answer-quality labels",
+    "split": "tuning"
+  },
+  {
+    "id": "r12",
+    "paper": "2605.00273v2",
+    "query": "What happens to compositional generalization when more concept combinations are withheld from training?",
+    "anchors": [
+      "compositional generalization collapses",
+      "held out"
+    ],
+    "question_origin": "New explanatory development question, abstract-backed; not human answer-quality labels",
+    "split": "validation"
+  },
+  {
+    "id": "r13",
+    "paper": "2606.01502v1",
+    "query": "When routing small attention queries across GPU fabrics, which network property matters more than peak bandwidth?",
+    "anchors": [
+      "probe latency",
+      "peak bandwidth"
+    ],
+    "question_origin": "New explanatory development question, abstract-backed; not human answer-quality labels",
+    "split": "validation"
+  },
+  {
+    "id": "r15",
+    "paper": "2606.01494v1",
+    "query": "Why should agent-skill governance not rely on a single scanner's allow/block decision?",
+    "anchors": [
+      "layered governance",
+      "single-scanner"
+    ],
+    "question_origin": "New explanatory development question, abstract-backed; not human answer-quality labels",
+    "split": "tuning"
+  },
+  {
+    "id": "r16",
+    "paper": "2607.00276v1",
+    "query": "Why can correct qualitative direction predictions still mask failures in counterfactual physics reasoning?",
+    "anchors": [
+      "wrong ratio",
+      "standard-physics relations"
+    ],
+    "question_origin": "New explanatory development question, abstract-backed; not human answer-quality labels",
+    "split": "validation"
+  },
+  {
+    "id": "r17",
+    "paper": "2607.00275v1",
+    "query": "How is entropy regularization intended to preserve exploration during sparse federated optimization?",
+    "anchors": [
+      "maintain uncertainty",
+      "preventing early commitment"
+    ],
+    "question_origin": "New explanatory development question, abstract-backed; not human answer-quality labels",
+    "split": "tuning"
+  },
+  {
+    "id": "r19",
+    "paper": "2608.00345v1",
+    "query": "Why might organ-guided token aggregation preserve anatomy better than grid averaging?",
+    "anchors": [
+      "blend distinct anatomy",
+      "organ guidance"
+    ],
+    "question_origin": "New explanatory development question, abstract-backed; not human answer-quality labels",
+    "split": "validation"
+  },
+  {
+    "id": "r20",
+    "paper": "2608.00339v1",
+    "query": "Besides changing conclusions, how can substantive framing change an agent's analytical process?",
+    "anchors": [
+      "search more extensively",
+      "different analytical specifications"
+    ],
+    "question_origin": "New explanatory development question, abstract-backed; not human answer-quality labels",
+    "split": "tuning"
+  },
+  {
+    "id": "r22",
+    "paper": "2609.00498v1",
+    "query": "Why might a realistic-looking jailbreak response still be an invalid success?",
+    "anchors": [
+      "factually or procedurally incorrect",
+      "linguistic plausibility"
+    ],
+    "question_origin": "New explanatory development question, abstract-backed; not human answer-quality labels",
+    "split": "validation"
+  },
+  {
+    "id": "r23",
+    "paper": "2609.00495v1",
+    "query": "Why does refusal-aware early commitment focus on persistent refusal signals in early denoising?",
+    "anchors": [
+      "refusal signals",
+      "early denoising steps"
+    ],
+    "question_origin": "New explanatory development question, abstract-backed; not human answer-quality labels",
+    "split": "tuning"
+  },
+  {
+    "id": "r24",
+    "paper": "2609.39215v1",
+    "query": "What motivates a dedicated distribution-drift dataset when comparing static and streaming anomaly detectors?",
+    "anchors": [
+      "streaming updates are theoretically justified",
+      "distribution"
+    ],
+    "question_origin": "New explanatory development question, abstract-backed; not human answer-quality labels",
+    "split": "tuning"
+  }
+]

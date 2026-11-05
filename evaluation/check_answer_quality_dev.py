@@ -11,6 +11,17 @@ from src.codex_generation import create_codex_generate
 from src.research_chat import synthesize
 
 
+def translate_accepted_summary(summary, evidence, *, industry, generate, compact=False):
+    """Pass the retained answer and all accepted source records to translation."""
+    accepted = [*summary['claims'], *summary.get('limitation_support', [])]
+    ids = {cid for item in accepted for cid in item['chunk_ids']}
+    if not ids <= {p['chunk_id'] for p in evidence}:
+        raise ValueError('An accepted summary source is missing from the evidence.')
+    return translate({k: v for k, v in summary.items() if k != 'quality_review'},
+        [p for p in evidence if p['chunk_id'] in ids], industry=industry,
+        generate=generate, compact=compact)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--baseline', type=Path, required=True)
@@ -51,10 +62,8 @@ def main():
             summary = review_summary(case['query'], draft, evidence, generate=generate)
             row.update(status='completed', draft=draft, summary=summary)
             if case.get('industry'):
-                ids = {cid for claim in summary['claims'] for cid in claim['chunk_ids']}
-                row['business'] = translate({k: v for k, v in summary.items() if k != 'quality_review'},
-                    [p for p in evidence if p['chunk_id'] in ids], industry=case['industry'], generate=generate,
-                    compact=args.compact_business)
+                row['business'] = translate_accepted_summary(summary, evidence,
+                    industry=case['industry'], generate=generate, compact=args.compact_business)
         except Exception as error:
             row.update(status='failed', error_type=type(error).__name__)
         report['results'].append(row)

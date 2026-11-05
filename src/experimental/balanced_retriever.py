@@ -25,6 +25,15 @@ class FacetRetriever(Retriever):
             # not automatically selected or treated as findings.
             for p in self.parents:
                 if p['arxiv_id'] in docs and not p.get('table_id') and re.search(r'conclusion|limitation|discussion',p.get('section',''),re.I):pool.add(p['chunk_id'])
+        # Qualifier cues expand the pool only. They do not establish relevance
+        # or reserve a slot in the bounded evidence sent to synthesis.
+        if re.search(r'trade.?off|limitation|imply|measure|production|deploy|risk|mean|conclude',query,re.I):
+            query_terms=set(tokens(query))
+            pool.update(p['chunk_id'] for p in self.parents
+                if p['arxiv_id'] in docs and not p.get('table_id')
+                and len(p['text'].split())<=120
+                and re.search(r'\bnot\b|however|although|\bwhile\b|limitation|\bcost\b|\bmay\b|rather',p['text'],re.I)
+                and set(tokens(p['text'])).intersection(query_terms))
         candidates=sorted(pool);questions=[query]+fqs;ranklists=[];scores=[];pairs_total=0
         for question in questions:
             terms=set(tokens(question));pairs=[];owners=[]
@@ -60,17 +69,5 @@ class FacetRetriever(Retriever):
             best=min(candidates,key=lambda i:(ranks[i],i))
             if best not in selected:selected.append(best)
         if hybrid[0] not in selected:selected.append(hybrid[0])
-        # Brief contrast/limitation statements can be essential evidence, even
-        # when they share few words with the question. Preserve an independently
-        # ranked source qualifier for interpretation/transfer questions.
-        if re.search(r'trade.?off|limitation|imply|measure|production|deploy|risk|mean|conclude',query,re.I):
-            qualifiers=[i for i in candidates if not self.byid[i].get('table_id')
-                and len(self.byid[i]['text'].split())<=120
-                and re.search(r'\bnot\b|however|although|\bwhile\b|limitation|\bcost\b|\bmay\b|rather',self.byid[i]['text'],re.I)
-                and set(tokens(self.byid[i]['text'])).intersection(qset)]
-            if qualifiers:
-                def qualifier_score(i):return .5/(20+hr.get(i,10**6))+max(1/(20+r[i]) for r in ranklists)
-                best=min(qualifiers,key=lambda i:(-qualifier_score(i),i))
-                if best not in selected:selected.append(best)
         order=selected+[i for i in order if i not in selected]
         return order,{'facets':fqs,'candidate_count':len(candidates),'pairs_scored':pairs_total,'paper_candidates':debug['paper_candidates'],'balanced_prefix':selected}

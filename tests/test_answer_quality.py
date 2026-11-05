@@ -10,9 +10,96 @@ from tests.test_indexed_research import adapter, generator
 
 
 class AnswerQualityTests(unittest.TestCase):
-    def review(self, decisions=None, coverage='partial', gap='The passages do not establish banking-specific performance.'):
-        return {'coverage': coverage, 'gap': gap, 'decisions': decisions or [
-            {'index': 0, 'supported': True, 'relevant': True, 'reason': 'Bounded finding supported.'}]}
+    def review(self, decisions=None, coverage='partial', gap='The passages do not establish banking-specific performance.',
+               limitations=None):
+        decisions = decisions if decisions is not None else [
+            {'index': 0, 'supported': True, 'relevant': True, 'reason': 'Bounded finding supported.'}]
+        return {'coverage': coverage, 'gap': gap, 'decisions': decisions,
+                'retained_claim_indices': [d['index'] for d in decisions if d['supported'] and d['relevant']],
+                'limitations': limitations or []}
+
+    def test_removing_irrelevant_claim_does_not_downgrade_complete_answer(self):
+        summary = deepcopy(ANSWER)
+        summary['claims'].append({**deepcopy(ANSWER['claims'][0]), 'text': 'An unrelated comparison.'})
+        decisions = [
+            {'index': 0, 'supported': True, 'relevant': True, 'reason': 'Answers the question.'},
+            {'index': 1, 'supported': True, 'relevant': False, 'reason': 'Unrelated.'}]
+        prompts = []
+        def generate(prompt):
+            prompts.append(prompt)
+            return json.dumps(self.review(decisions, coverage='full', gap='', limitations=ANSWER['limitations']))
+        result = review_summary('What score was reported?', summary, PASSAGES, generate=generate)
+        self.assertEqual(result['answer_scope'], 'full')
+        self.assertEqual(result['answer_lead'], '')
+        self.assertEqual(len(result['claims']), 1)
+        self.assertEqual(len(prompts), 1)  # No additional sequential review call.
+        self.assertIn('ONLY those retained claims', prompts[0])
+        self.assertEqual(len(result['quality_review']['original_claims']), 2)
+
+    def test_mixed_stale_limit_replaced_with_cited_scope_and_audit_preserved(self):
+        summary = synthesize('Q', PASSAGES, generate=lambda p: json.dumps(ANSWER))
+        stale = 'Scores describe evaluated systems; the deleted trip comparison was unrelated.'
+        summary['limitations'] = [stale]
+        summary['limitation_support'][0]['text'] = stale
+        before = deepcopy(summary)
+        result = review_summary('Q', summary, PASSAGES, generate=lambda p: json.dumps(
+            self.review(coverage='full', gap='', limitations=ANSWER['limitations'])))
+        self.assertEqual(result['limitations'], [ANSWER['limitations'][0]['text']])
+        self.assertEqual(result['limitation_support'][0]['chunk_ids'], ['paper-page-1'])
+        self.assertNotIn('trip', json.dumps(result['limitations']))
+        self.assertEqual(result['quality_review']['original_limitations'], [stale])
+        self.assertEqual(result['quality_review']['original_limitation_support'], before['limitation_support'])
+        self.assertEqual(summary, before)
+
+    def test_true_missing_part_still_partial_after_claim_rejection(self):
+        summary = deepcopy(ANSWER)
+        summary['claims'] *= 2
+        decisions = [
+            {'index': 0, 'supported': True, 'relevant': True, 'reason': 'Score supported.'},
+            {'index': 1, 'supported': False, 'relevant': True, 'reason': 'Cost unsupported.'}]
+        result = review_summary('What score and cost were reported?', summary, PASSAGES,
+            generate=lambda p: json.dumps(self.review(decisions, gap='The passages do not establish cost.')))
+        self.assertEqual(result['answer_scope'], 'partial')
+        self.assertEqual(result['answer_lead'], 'The passages do not establish cost.')
+
+    def test_invalid_rebuilt_limitations_fail_closed(self):
+        for key, value in [('chunk_id', 'unknown'), ('quote', 'The mean score was 0.999')]:
+            limits = deepcopy(ANSWER['limitations'])
+            limits[0]['support'][0][key] = value
+            with self.subTest(key=key), self.assertRaises(Exception):
+                review_summary('Q', ANSWER, PASSAGES, generate=lambda p: json.dumps(
+                    self.review(coverage='full', gap='', limitations=limits)))
+
+    def test_coverage_cannot_use_rejected_claims_or_conflicting_status(self):
+        accepted = self.review(coverage='full', gap='')
+        rejected = self.review([{'index': 0, 'supported': False, 'relevant': True, 'reason': 'Unsupported.'}],
+                               coverage='none')
+        for review in [{**accepted, 'retained_claim_indices': []},
+                       {**accepted, 'retained_claim_indices': [0, 0]},
+                       {**accepted, 'gap': 'Actually missing cost.'},
+                       {**rejected, 'retained_claim_indices': [0]},
+                       {**rejected, 'coverage': 'partial'},
+                       {**rejected, 'coverage': 'full', 'gap': ''}]:
+            with self.subTest(review=review), self.assertRaises(Exception):
+                review_summary('Q', ANSWER, PASSAGES, generate=lambda p: json.dumps(review))
+
+    def test_abstention_skips_generation_and_preserves_original(self):
+        summary = {'status': 'insufficient_evidence', 'claims': [], 'limitations': ['No evidence.']}
+        result = review_summary('Q', summary, [], generate=lambda p: self.fail('Unexpected model call.'))
+        self.assertEqual(result, summary)
+        self.assertIsNot(result, summary)
+
+    def test_review_native_schema_binds_rebuilt_limits_to_passages(self):
+        def generate(prompt, *, response_schema):
+            from jsonschema import Draft202012Validator
+            Draft202012Validator.check_schema(response_schema)
+            ids = response_schema['properties']['limitations']['items']['properties']['support']['items']['properties']['chunk_id']['enum']
+            self.assertEqual(ids, ['paper-page-1'])
+            return json.dumps(self.review(coverage='full', gap='', limitations=ANSWER['limitations']))
+        generate.supports_response_schema = True
+        result = review_summary('Q', ANSWER, PASSAGES, generate=generate)
+        self.assertEqual(result['quality_review']['policy'], 'answer-quality-v2')
+        self.assertEqual(result['answer_scope'], 'full')
 
     def test_partial_keeps_supported_finding_and_original_evidence(self):
         before = deepcopy(ANSWER)

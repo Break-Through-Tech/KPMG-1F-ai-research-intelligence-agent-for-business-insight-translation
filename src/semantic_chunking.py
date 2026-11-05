@@ -193,5 +193,3 @@ def semantic_chunk_document(
                 chunk["chunk_id"] = f"{arxiv_id}_c{len(chunks):04d}"
                 chunks.append(chunk)
     return chunks
-
-

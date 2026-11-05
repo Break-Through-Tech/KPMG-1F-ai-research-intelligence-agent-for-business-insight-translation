@@ -83,7 +83,7 @@ def create_codex_generate(*, model, binary=None, effort='medium', timeout=300,
                 from jsonschema import Draft202012Validator
                 Draft202012Validator.check_schema(response_schema)
                 schema_path = folder / 'schema.json'
-                schema_path.write_text(json.dumps(response_schema, allow_nan=False))
+                schema_path.write_text(json.dumps(response_schema, allow_nan=False), encoding='utf-8')
                 command += ['--output-schema', str(schema_path)]
                 record['schema_sha256'] = sha256(schema_path.read_bytes()).hexdigest()
             command += ['-']
@@ -91,7 +91,7 @@ def create_codex_generate(*, model, binary=None, effort='medium', timeout=300,
                            'read files, browse, or execute commands. All evidence is provided below. '
                            'Return only the requested JSON object.\n\n' + prompt)
             try:
-                response = subprocess.run(command, input=instruction, text=True,
+                response = subprocess.run(command, input=instruction, text=True, encoding='utf-8',
                     capture_output=True, timeout=timeout, env=env)
                 events = [json.loads(line) for line in response.stdout.splitlines() if line.strip()]
                 record['usage'] = [e['usage'] for e in events if e.get('type') == 'turn.completed']
@@ -101,7 +101,7 @@ def create_codex_generate(*, model, binary=None, effort='medium', timeout=300,
                     'command_execution', 'file_change', 'mcp_tool_call', 'web_search'}]
                 if response.returncode or config_errors or forbidden or not output.is_file():
                     raise PipelineError('Codex text-only generation failed; no provider fallback occurred.')
-                raw = output.read_text()
+                raw = output.read_text(encoding='utf-8')
                 if response_schema is not None:
                     def pairs(items):
                         result = {}

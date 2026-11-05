@@ -31,6 +31,18 @@ def adapter(**kwargs):
 
 
 class IndexedTests(unittest.TestCase):
+    def test_stage_timings_are_per_request_and_review_fingerprint_is_current(self):
+        research = adapter()
+        first = self.run_query(research, industry='banking')['result']
+        timing = first['provenance']['timings_seconds']
+        self.assertTrue({'context', 'retrieval', 'synthesis', 'business_translation', 'total'} <= timing.keys())
+        self.assertTrue(all(isinstance(v, float) and v >= 0 for v in timing.values()))
+        require_current_review(first)
+        second = self.run_query(research)['result']
+        self.assertNotIn('business_translation', second['provenance']['timings_seconds'])
+        self.assertNotIn('timings_seconds', research.provenance)
+        require_current_review(second)
+
     def run_query(self, research, **kwargs):
         return research.execute({'query': 'Compare the studies.', 'context_id': research.context_id, **kwargs})
 

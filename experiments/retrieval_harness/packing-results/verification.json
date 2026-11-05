@@ -1,0 +1,28 @@
+{
+  "status": "passed",
+  "contexts": 912,
+  "intervals": 9433,
+  "checks": [
+    "exact source offsets and URLs",
+    "TeX line parity",
+    "all recorded token counts within cap",
+    "validation hybrid anchor outcome parity with previous run",
+    "cached and uncached HTML output identical"
+  ],
+  "control_differences": [
+    {
+      "source": "tex",
+      "id": "r04",
+      "split": "tuning",
+      "budget": 1600,
+      "old": [
+        true,
+        false
+      ],
+      "new": [
+        false,
+        false
+      ]
+    }
+  ]
+}

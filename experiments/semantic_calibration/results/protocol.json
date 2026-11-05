@@ -1,0 +1,176 @@
+{
+  "corpus_sha256": "ba0a7a61d2a114a8eb0d58a8ece54a5d5d490ce39a67c3f2bf552885ecbdab81",
+  "policies": [
+    {
+      "name": "original",
+      "threshold": 0.72,
+      "min_tokens": 0,
+      "max_tokens": null,
+      "overlap_tokens": 0,
+      "percentile": null,
+      "max_chars": 1800
+    },
+    {
+      "name": "threshold35",
+      "threshold": 0.35,
+      "min_tokens": 0,
+      "max_tokens": null,
+      "overlap_tokens": 0,
+      "percentile": null,
+      "max_chars": 1800
+    },
+    {
+      "name": "threshold50",
+      "threshold": 0.5,
+      "min_tokens": 0,
+      "max_tokens": null,
+      "overlap_tokens": 0,
+      "percentile": null,
+      "max_chars": 1800
+    },
+    {
+      "name": "threshold65",
+      "threshold": 0.65,
+      "min_tokens": 0,
+      "max_tokens": null,
+      "overlap_tokens": 0,
+      "percentile": null,
+      "max_chars": 1800
+    },
+    {
+      "name": "minimum80",
+      "threshold": 0.72,
+      "min_tokens": 80,
+      "max_tokens": null,
+      "overlap_tokens": 0,
+      "percentile": null,
+      "max_chars": 1800
+    },
+    {
+      "name": "minimum80_token240",
+      "threshold": 0.72,
+      "min_tokens": 80,
+      "max_tokens": 240,
+      "overlap_tokens": 0,
+      "percentile": null,
+      "max_chars": 1800
+    },
+    {
+      "name": "minimum80_token240_overlap32",
+      "threshold": 0.72,
+      "min_tokens": 80,
+      "max_tokens": 240,
+      "overlap_tokens": 32,
+      "percentile": null,
+      "max_chars": 1800
+    },
+    {
+      "name": "threshold50_minimum80_token240",
+      "threshold": 0.5,
+      "min_tokens": 80,
+      "max_tokens": 240,
+      "overlap_tokens": 0,
+      "percentile": null,
+      "max_chars": 1800
+    },
+    {
+      "name": "percentile20_minimum80_token240",
+      "threshold": 0.72,
+      "min_tokens": 80,
+      "max_tokens": 240,
+      "overlap_tokens": 0,
+      "percentile": 20,
+      "max_chars": 1800
+    }
+  ],
+  "models": {
+    "minilm": [
+      "sentence-transformers/all-MiniLM-L6-v2",
+      "1110a243fdf4706b3f48f1d95db1a4f5529b4d41"
+    ],
+    "bge": [
+      "BAAI/bge-small-en-v1.5",
+      "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a"
+    ],
+    "e5": [
+      "intfloat/e5-small-v2",
+      "ffb93f3bd4047442299a41ebb6fa998a38507c52"
+    ]
+  },
+  "modes": [
+    [
+      "top5",
+      null,
+      5,
+      0
+    ],
+    [
+      "tokens800",
+      800,
+      null,
+      0
+    ],
+    [
+      "tokens1600",
+      1600,
+      null,
+      0
+    ],
+    [
+      "tokens1600_neighbors",
+      1600,
+      null,
+      1
+    ]
+  ],
+  "candidate_limit": 200,
+  "common_papers": [
+    "2602.00931v2",
+    "2602.00933v3",
+    "2602.00937v3",
+    "2603.00824v2",
+    "2603.00829v2",
+    "2604.00319v1",
+    "2604.00324v1",
+    "2605.00273v2",
+    "2605.00276v1",
+    "2605.00292v2",
+    "2606.01494v1",
+    "2606.01502v1",
+    "2607.00275v1",
+    "2607.00276v1",
+    "2608.00339v1",
+    "2608.00345v1",
+    "2609.00495v1",
+    "2609.00498v1",
+    "2609.39215v1"
+  ],
+  "split": {
+    "2602.00931v2": "tuning",
+    "2602.00933v3": "validation",
+    "2602.00937v3": "tuning",
+    "2603.00824v2": "validation",
+    "2603.00829v2": "tuning",
+    "2604.00319v1": "validation",
+    "2604.00324v1": "tuning",
+    "2605.00273v2": "validation",
+    "2605.00276v1": "tuning",
+    "2605.00292v2": "validation",
+    "2606.01494v1": "tuning",
+    "2606.01502v1": "validation",
+    "2607.00275v1": "tuning",
+    "2607.00276v1": "validation",
+    "2608.00339v1": "tuning",
+    "2608.00345v1": "validation",
+    "2609.00495v1": "tuning",
+    "2609.00498v1": "validation",
+    "2609.39215v1": "tuning"
+  },
+  "selection": "Per source/model, tuning-only complete-span count at 1600 tokens; choose policy and neighbor setting. Ties: fewer mean tokens then name. Baseline/token-only excluded.",
+  "limitations": [
+    "25 pre-existing plus 25 new explanatory development questions; paper-separated retrospective validation, not blind test",
+    "HTML parser omits display math/tables; TeX retains raw math/macros and historical parse provenance"
+  ],
+  "device": "mps",
+  "budget": "Exact tokenizer length with passage prefix and special tokens for each emitted interval; no generation prompt framing. Never truncate context to fill budget."
+}

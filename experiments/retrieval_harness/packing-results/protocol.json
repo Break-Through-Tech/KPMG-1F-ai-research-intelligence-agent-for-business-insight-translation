@@ -1,0 +1,18 @@
+{
+  "corpus_sha256": "ba0a7a61d2a114a8eb0d58a8ece54a5d5d490ce39a67c3f2bf552885ecbdab81",
+  "model": "intfloat/e5-small-v2",
+  "revision": "ffb93f3bd4047442299a41ebb6fa998a38507c52",
+  "protected_dense_hits": 3,
+  "window_token_cap": 160,
+  "budgets": [
+    800,
+    1600
+  ],
+  "candidate_limit": 200,
+  "notes": [
+    "Retrospective development follow-up; no blind testing or generated-answer scoring.",
+    "Extractive lexical windows; whole atomic units only; all arms deduplicate intervals.",
+    "Compact windows chosen upfront for all oversize seeds, not only after budget exhaustion.",
+    "No relevance targets or anchors available to packing."
+  ]
+}

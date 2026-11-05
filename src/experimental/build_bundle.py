@@ -31,13 +31,19 @@ def prepare_parents(parents, sources=(), source_root=None):
     return combined,reports
 
 
-def build_bundle(parents, output, encoder):
+def build_bundle(parents, output, encoder, *, strategy="token224_parent"):
     output=Path(output).resolve()
     allowed=(ROOT/'data/processed').resolve()
     if allowed not in output.parents or output.exists():
         raise ValueError('Use a NEW output directory beneath data/processed; existing bundles are never overwritten.')
     validate_evidence(parents)
-    views=make_search_views(parents,encoder.tokenizer,budget=224,overlap=32)
+    if strategy == "semantic95_token224_parent":
+        from .semantic_views import make_semantic_views
+        views = make_semantic_views(parents, encoder)
+    elif strategy == "token224_parent":
+        views=make_search_views(parents,encoder.tokenizer,budget=224,overlap=32)
+    else:
+        raise ValueError("Unknown search-view strategy.")
     if not views:raise ValueError('No searchable source views.')
     vectors=np.asarray(encoder.encode([v['text'] for v in views],show_progress_bar=False),dtype=np.float32)
     if vectors.shape != (len(views),384) or not np.isfinite(vectors).all():
@@ -46,7 +52,7 @@ def build_bundle(parents, output, encoder):
     (output/'parents.jsonl').write_text('\n'.join(json.dumps(p,ensure_ascii=False,allow_nan=False) for p in parents),encoding='utf-8')
     (output/'views.json').write_text(json.dumps(views,ensure_ascii=False,allow_nan=False),encoding='utf-8')
     np.save(output/'vectors.npy',vectors,allow_pickle=False)
-    manifest={'kind':'bounded_search_views_v1','status':'complete','strategy':'token224_parent',
+    manifest={'kind':'bounded_search_views_v1','status':'complete','strategy':strategy,
         'embedding_model':'all-MiniLM-L6-v2','distance':'squared_l2','human_acceptance':'pending',
         'parent_count':len(parents),'view_count':len(views),
         'artifact_sha256':{n:sha256((output/n).read_bytes()).hexdigest() for n in ['parents.jsonl','views.json','vectors.npy']}}
@@ -65,6 +71,7 @@ def main(argv=None):
     parser.add_argument('--html-sources',type=Path,help='Local JSON list: arxiv_id, title, html_path; paths relative to this manifest.')
     parser.add_argument('--encoder',type=Path,required=True,help='Existing local all-MiniLM-L6-v2 directory.')
     parser.add_argument('--output',type=Path,required=True)
+    parser.add_argument('--strategy', choices=['token224_parent', 'semantic95_token224_parent'], default='token224_parent')
     args=parser.parse_args(argv)
     if not args.encoder.is_dir():parser.error('Local encoder directory is missing; no download attempted.')
     parents=[json.loads(line) for line in args.parents.read_text(encoding='utf-8').splitlines() if line.strip()]
@@ -73,7 +80,7 @@ def main(argv=None):
     parents,reports=prepare_parents(parents,sources,args.html_sources.parent if args.html_sources else None)
     from sentence_transformers import SentenceTransformer
     encoder=SentenceTransformer(str(args.encoder.resolve()),local_files_only=True,device='cpu')
-    manifest=build_bundle(parents,args.output,encoder)
+    manifest=build_bundle(parents,args.output,encoder,strategy=args.strategy)
     (args.output/'extraction-audit.json').write_text(json.dumps(reports,indent=2),encoding='utf-8')
     print(json.dumps({'output':str(args.output),'parents':manifest['parent_count'],'views':manifest['view_count'],'experimental':True}))
 

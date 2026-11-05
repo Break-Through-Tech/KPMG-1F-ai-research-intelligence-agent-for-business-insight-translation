@@ -1,0 +1,20 @@
+{
+  "/Users/jacquelinehenriksen/.openclaw/workspace/output/kpmg-semantic-calibration-20261104/results/e5/html/report.json": "59a306a63c6dafd3b21e28bf2ef12f3b235689eee915ff076b3dab8f565599fe",
+  "/Users/jacquelinehenriksen/.openclaw/workspace/output/kpmg-semantic-calibration-20261104/results/e5/html/variants.json": "441844cc7d599eae288e71b13857d9238cfb4cfae4b69439f2a5c5e97c85beb2",
+  "/Users/jacquelinehenriksen/.openclaw/workspace/output/kpmg-semantic-calibration-20261104/results/e5/html/chunk-texts.json": "91732373a8b94d97ac8e1f2c08b7b55ec9bcdf248a05bc8af2daf1b2e799c1cf",
+  "/Users/jacquelinehenriksen/.openclaw/workspace/output/kpmg-semantic-calibration-20261104/results/e5/html/chunk-vectors.npy": "bb1dae69746b2f901f831707f285403c91fd1fb7aecd4525a34513d332b4cdf3",
+  "/Users/jacquelinehenriksen/.openclaw/workspace/output/kpmg-semantic-calibration-20261104/results/e5/html/query-vectors.npy": "0f7233480552635cef1c21ea640e2de9c45593638a7e0224f99dd3755c52a433",
+  "/Users/jacquelinehenriksen/.openclaw/workspace/output/kpmg-retrieval-harness-20261104/html-contexts.json": "bec8f703e92fc73ba2ac05ecb749bd69c85632c997a2fae4ba879c869af1124c",
+  "/Users/jacquelinehenriksen/.openclaw/workspace/output/kpmg-semantic-calibration-20261104/results/e5/tex/report.json": "25ae25189f15197c6dd7faa03242a2ea8b80b3a02add66f98e99a4bb326e5619",
+  "/Users/jacquelinehenriksen/.openclaw/workspace/output/kpmg-semantic-calibration-20261104/results/e5/tex/variants.json": "3cc0d288429c65444f04a7684171457100ee31cd7a5dd22cc7c115711d96387f",
+  "/Users/jacquelinehenriksen/.openclaw/workspace/output/kpmg-semantic-calibration-20261104/results/e5/tex/chunk-texts.json": "5203e850dc0a210a76d85b95977d1800713d927cfae50c6c4b50a84c9721f62b",
+  "/Users/jacquelinehenriksen/.openclaw/workspace/output/kpmg-semantic-calibration-20261104/results/e5/tex/chunk-vectors.npy": "eeaaaa3b675a6ad27f0d899f8551f76478ff715de7c50eaedf8739a2e3376242",
+  "/Users/jacquelinehenriksen/.openclaw/workspace/output/kpmg-semantic-calibration-20261104/results/e5/tex/query-vectors.npy": "0f7233480552635cef1c21ea640e2de9c45593638a7e0224f99dd3755c52a433",
+  "/Users/jacquelinehenriksen/.openclaw/workspace/output/kpmg-retrieval-harness-20261104/tex-contexts.json": "410c8ffb80a03bcff02e6906498ddcf58632854673a157f5c3224aa5575327ca",
+  "/Users/jacquelinehenriksen/.openclaw/workspace/output/kpmg-semantic-calibration-20261104/results/e5/pdf/report.json": "8ed4cd6309b06935cfe9a358b9a3b9c1a073333a6175f207875c2be78c86bd02",
+  "/Users/jacquelinehenriksen/.openclaw/workspace/output/kpmg-semantic-calibration-20261104/results/e5/pdf/variants.json": "2dd8013fd821ae0a57e6fa6e991012badcc8af207579bbb6e9ddd77dee103da0",
+  "/Users/jacquelinehenriksen/.openclaw/workspace/output/kpmg-semantic-calibration-20261104/results/e5/pdf/chunk-texts.json": "97eee5439b8669f139c59ecf271011ec84117cf4d0f031352eb444b212bc6611",
+  "/Users/jacquelinehenriksen/.openclaw/workspace/output/kpmg-semantic-calibration-20261104/results/e5/pdf/chunk-vectors.npy": "4486b04bcac4bc94d8b5a2ae3522f4a433ab776290e420fd6f701c3efbce4791",
+  "/Users/jacquelinehenriksen/.openclaw/workspace/output/kpmg-semantic-calibration-20261104/results/e5/pdf/query-vectors.npy": "0f7233480552635cef1c21ea640e2de9c45593638a7e0224f99dd3755c52a433",
+  "/Users/jacquelinehenriksen/.openclaw/workspace/output/kpmg-retrieval-harness-20261104/pdf-contexts.json": "edb4439281eb118ff847f763cff2b493da062b285fe52b44f92510a4d33c7495"
+}

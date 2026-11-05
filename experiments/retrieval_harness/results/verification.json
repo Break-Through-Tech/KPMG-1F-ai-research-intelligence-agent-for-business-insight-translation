@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "source_intervals": 11088,
+  "query_contexts": 2280,
+  "checks": [
+    "query-cache order",
+    "source text/offset/locator parity",
+    "exact token caps",
+    "score recomputation",
+    "aggregate parity"
+  ]
+}

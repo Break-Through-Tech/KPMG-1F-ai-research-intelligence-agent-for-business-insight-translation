@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "contexts": 456,
+  "intervals": 2340,
+  "checks": [
+    "incumbent evidence retained",
+    "exact source and locator parity",
+    "token caps",
+    "scores recomputed"
+  ]
+}

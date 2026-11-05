@@ -16,6 +16,34 @@ PROMPT_VERSION = '1.1'
 PROMPT_PATH = Path(__file__).resolve().parents[1] / 'prompts/business_translation/baseline-v1.txt'
 BUSINESS_KEYS = {'status', 'industry', 'implications', 'risks', 'limitations'}
 IMPLICATION_KEYS = {'text', 'chunk_ids', 'suggested_action', 'assumptions'}
+COMPACT_POLICY = (
+    '\nCONCISE BUSINESS POLICY v1: Organize implications by DISTINCT BUSINESS DECISION, '
+    'not by research claim or passage. Combine overlapping pilot recommendations into '
+    'one implication with all supporting citations and transfer assumptions. Do not repeat '
+    'a pilot comparison as a second orchestration-design recommendation. Keep genuinely '
+    'different decisions separate, including different conditions or conflicting evidence. '
+    'For one architecture-selection decision, give one concise evidence rationale and '
+    'one integrated pilot checklist. Do not repeat the research summary in full. '
+    'Use at most three implications; each text is at most 500 characters and each '
+    'suggested_action at most 700 characters. Proposed metrics are pilot suggestions, '
+    'never measured findings. Keep the evidence gap, adverse findings, and assumptions.\n'
+)
+
+
+def consolidate_exact_duplicates(output):
+    """Merge only identical prose/actions; preserve distinct conditions and citations."""
+    from copy import deepcopy
+    output = deepcopy(output)
+    rows = {}
+    for row in output['implications']:
+        key = tuple(' '.join(row[k].split()) for k in ('text', 'suggested_action'))
+        if key not in rows:
+            rows[key] = row
+        else:
+            for field in ('chunk_ids', 'assumptions'):
+                rows[key][field] = list(dict.fromkeys(rows[key][field] + row[field]))
+    output['implications'] = list(rows.values())
+    return output
 
 
 def _text(value):
@@ -39,15 +67,19 @@ def _abstain(industry, limitations):
             'implications': [], 'risks': [], 'limitations': limitations}
 
 
-def prompt_provenance():
+def prompt_provenance(*, compact=False):
     """Optional artifact metadata; no keys, provider calls, or input data."""
     try:
         template = PROMPT_PATH.read_bytes()
     except OSError:
         raise PipelineError('Business translation prompt unavailable; restore the '
                             'versioned baseline-v1.txt artifact.') from None
-    return {'prompt_id': PROMPT_ID, 'prompt_version': PROMPT_VERSION,
-            'template_sha256': sha256(template).hexdigest()}
+    result = {'prompt_id': PROMPT_ID, 'prompt_version': PROMPT_VERSION,
+              'template_sha256': sha256(template).hexdigest()}
+    if compact:
+        result['compact_policy'] = 'concise-business-v1'
+        result['compact_policy_sha256'] = sha256(COMPACT_POLICY.encode()).hexdigest()
+    return result
 
 
 def _object(pairs):
@@ -85,7 +117,7 @@ def _business(output, *, industry, ids):
     return output
 
 
-def translate(summary, passages, *, industry, generate):
+def translate(summary, passages, *, industry, generate, compact=False):
     """Render the versioned baseline and validate a pending business-advisory draft.
 
     No evidence or an insufficient summary skips generation. Conflicting evidence
@@ -141,6 +173,8 @@ def translate(summary, passages, *, industry, generate):
                             'restore the versioned baseline-v1.txt artifact.') from None
     except (TypeError, ValueError):
         raise ValueError('Summary and evidence must contain finite JSON-compatible data') from None
+    if compact:
+        prompt += COMPACT_POLICY
     try:
         raw = generate(prompt)
     except Exception:
@@ -154,4 +188,11 @@ def translate(summary, passages, *, industry, generate):
     except (ValueError, RecursionError):
         raise ValueError('Business translation provider returned malformed JSON; '
                          'return one strict JSON object without markdown or duplicate keys') from None
-    return _business(output, industry=industry, ids=ids)
+    output = _business(output, industry=industry, ids=ids)
+    if compact:
+        output = consolidate_exact_duplicates(output)
+        if len(output['implications']) > 3 or any(
+                len(row['text']) > 500 or len(row['suggested_action']) > 700
+                for row in output['implications']):
+            raise ValueError('Business output exceeds the concise policy; no truncated advice was accepted.')
+    return output

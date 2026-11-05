@@ -11,11 +11,44 @@ import unittest
 from unittest.mock import Mock, patch
 
 import main
-from src.business_translation import PROMPT_PATH, prompt_provenance, translate
+from src.business_translation import PROMPT_PATH, prompt_provenance, translate, consolidate_exact_duplicates
 from src.research_pipeline import PipelineError, run_research
 
 
 class BusinessTranslationTests(unittest.TestCase):
+    def test_exact_duplicate_consolidation_preserves_citations_and_assumptions(self):
+        first = {'text': 'Compare the architectures.', 'suggested_action': 'Run one pilot.',
+                 'chunk_ids': ['a'], 'assumptions': ['Transfer is untested.']}
+        second = {**first, 'chunk_ids': ['b'], 'assumptions': ['Coordination may add cost.']}
+        output = {'implications': [first, second]}
+        original = deepcopy(output)
+        merged = consolidate_exact_duplicates(output)
+        self.assertEqual(len(merged['implications']), 1)
+        self.assertEqual(merged['implications'][0]['chunk_ids'], ['a', 'b'])
+        self.assertEqual(len(merged['implications'][0]['assumptions']), 2)
+        self.assertEqual(output, original)
+
+    def test_consolidation_keeps_different_conditions_numbers_and_actions(self):
+        first = {'text': 'The measured score was 10.', 'suggested_action': 'Compare architectures.',
+                 'chunk_ids': ['a'], 'assumptions': []}
+        different = [{**first, 'text': 'The measured score was 20.'},
+                     {**first, 'text': 'The measured score was not 10.'},
+                     {**first, 'suggested_action': 'Evaluate privacy separately.'}]
+        self.assertEqual(len(consolidate_exact_duplicates({'implications': [first, *different]})['implications']), 4)
+
+    def test_compact_policy_preserves_citations_and_rejects_oversized_output(self):
+        generator = Mock(return_value=json.dumps(self.fixture['expected']))
+        output = translate(self.fixture['summary'], self.fixture['evidence'],
+            industry=self.fixture['industry'], generate=generator, compact=True)
+        self.assertEqual(output, self.fixture['expected'])
+        self.assertIn('DISTINCT BUSINESS DECISION', generator.call_args.args[0])
+        self.assertIn('compact_policy_sha256', prompt_provenance(compact=True))
+        bad = deepcopy(self.fixture['expected'])
+        bad['implications'][0]['suggested_action'] = 'x' * 701
+        with self.assertRaisesRegex(ValueError, 'concise policy'):
+            translate(self.fixture['summary'], self.fixture['evidence'], industry=self.fixture['industry'],
+                      generate=lambda p: json.dumps(bad), compact=True)
+
     def setUp(self):
         self.fixtures = json.loads((PROMPT_PATH.parent / 'fixtures.json').read_text())
         self.fixture = deepcopy(self.fixtures[0])

@@ -44,13 +44,15 @@ class CodexSubscriptionTests(unittest.TestCase):
             if command[-2:]==['exec','--help']: return self.help
             if command[-2:]==['login','status']:
                 return SimpleNamespace(returncode=0,stdout='',stderr='Logged in using ChatGPT')
-            output=Path(command[command.index('-o')+1]);output.write_text('{"answer":"ok"}')
+            output=Path(command[command.index('-o')+1]);output.write_text('{"answer":"café α"}', encoding='utf-8')
             return SimpleNamespace(returncode=0,stdout=json.dumps({'type':'turn.completed','usage':{'output_tokens':3}}),stderr='')
         with patch.dict('os.environ',{'CODEX_API_KEY':'secret','OPENAI_API_KEY':'secret','OPENAI_BASE_URL':'private','UNRELATED_SECRET':'private'}),patch('src.codex_generation.subprocess.run',side_effect=run):
             receipts=[];fn,meta=create_codex_generate(model='gpt-test',binary=self.binary,receipts=receipts)
-            text=fn('Return JSON.',response_schema={'type':'object','properties':{'answer':{'type':'string'}},'required':['answer'],'additionalProperties':False})
-        self.assertEqual(json.loads(text),{'answer':'ok'});self.assertEqual(receipts[0]['status'],'ok')
+            text=fn('Return JSON for café α.',response_schema={'type':'object','properties':{'answer':{'type':'string'}},'required':['answer'],'additionalProperties':False})
+        self.assertEqual(json.loads(text),{'answer':'café α'});self.assertEqual(receipts[0]['status'],'ok')
         command,kw=seen[-1]
+        self.assertEqual(kw['encoding'], 'utf-8')
+        self.assertIn('café α', kw['input'])
         for flag in ['--ignore-user-config','--ephemeral','--skip-git-repo-check','--strict-config','--output-schema']:self.assertIn(flag,command)
         self.assertEqual(command[command.index('--sandbox')+1],'read-only')
         for _,kw in seen:

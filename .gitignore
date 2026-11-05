@@ -54,3 +54,11 @@ coverage.xml
 /data/briefs/
 *.sqlite3
 *.sqlite3-*
+
+# Local demo diagnostics and temporary review archives
+/data/demo-live.stderr.log
+/data/demo-live.stdout.log
+/data/demo-live-fixed.stderr.log
+/data/demo-live-fixed.stdout.log
+/issue82-partial.zip
+/issue82-review.zip

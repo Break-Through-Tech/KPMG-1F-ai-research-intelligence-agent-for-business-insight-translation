@@ -1,0 +1,112 @@
+{
+  "schema_version": "1.0",
+  "split": "development",
+  "answer_keys_included": false,
+  "cases": [
+    {
+      "id": "d02",
+      "question": "How large is the TimeSage-MT benchmark in tasks, dialogue turns and domains?",
+      "category": "direct_factual",
+      "split": "development",
+      "required_points_count": 3
+    },
+    {
+      "id": "d04",
+      "question": "In the constitutional monitoring study, how many samples came from each synthetic pipeline and how many trajectories formed the held-out test set?",
+      "category": "direct_factual",
+      "split": "development",
+      "required_points_count": 3
+    },
+    {
+      "id": "d05",
+      "question": "Which audio encoders does UniAE-MoE integrate, and what score does it report on XARES-LLM?",
+      "category": "direct_factual",
+      "split": "development",
+      "required_points_count": 3
+    },
+    {
+      "id": "n02",
+      "question": "What are SkillSpector's source coverage and positive share in ClawHub Security Signals, and what does a positive mean?",
+      "category": "numerical_table",
+      "split": "development",
+      "required_points_count": 3
+    },
+    {
+      "id": "n03",
+      "question": "What pass rate did Claude Opus 4.7 get under each MCP-Atlas evaluator judge, and what was the range?",
+      "category": "numerical_table",
+      "split": "development",
+      "required_points_count": 4
+    },
+    {
+      "id": "n04",
+      "question": "What was the out-of-distribution strategy selection result on MATH-500 before and after CU-DPO?",
+      "category": "numerical_table",
+      "split": "development",
+      "required_points_count": 4
+    },
+    {
+      "id": "n14",
+      "question": "On the B200, how do prefill latency, seconds per report and KV-cache size compare between 13,824 and 216 visual tokens in ORCA's cost table?",
+      "category": "numerical_table",
+      "split": "development",
+      "required_points_count": 3
+    },
+    {
+      "id": "c03",
+      "question": "For network fault detection, how did agents with XG Boosting compare with Llama3.2 agents and critics with and without RAG?",
+      "category": "comparison",
+      "split": "development",
+      "required_points_count": 4
+    },
+    {
+      "id": "c05",
+      "question": "On wmdp-bio under self-correction strategy S1, how do Llama-GA and Llama-RMU compare, and what trade-off does stronger unlearning carry?",
+      "category": "comparison",
+      "split": "development",
+      "required_points_count": 3
+    },
+    {
+      "id": "m02",
+      "question": "Does the monitoring study conclude that synthetic-to-real mismatch explains its performance ceiling?",
+      "category": "multi_passage",
+      "split": "development",
+      "required_points_count": 3
+    },
+    {
+      "id": "m03",
+      "question": "How does scanner positivity change between suspicious and malicious verdicts in ClawHub, and what does this imply about what the scanners measure?",
+      "category": "multi_passage",
+      "split": "development",
+      "required_points_count": 4
+    },
+    {
+      "id": "b01",
+      "question": "Could a company approve or block third-party agent skills using one security scanner?",
+      "category": "business_implication",
+      "split": "development",
+      "required_points_count": 4
+    },
+    {
+      "id": "b05",
+      "question": "Does the monitoring study show that its monitors would protect a bank's production agents?",
+      "category": "business_implication",
+      "split": "development",
+      "required_points_count": 5
+    },
+    {
+      "id": "u01",
+      "question": "What return on investment did KPMG clients achieve from deploying AI agents, according to these papers?",
+      "category": "unanswerable",
+      "split": "development",
+      "required_points_count": 0
+    },
+    {
+      "id": "u08",
+      "question": "How helpful did human readers rate the LLM feedback in the SEFORA study?",
+      "category": "unanswerable",
+      "split": "development",
+      "required_points_count": 0
+    }
+  ]
+}

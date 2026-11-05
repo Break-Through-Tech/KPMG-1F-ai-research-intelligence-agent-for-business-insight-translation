@@ -1,0 +1,5 @@
+# Optional local retrieval dependencies; install in a project environment.
+-r requirements.txt
+numpy>=1.23,<3
+sentence-transformers>=6.2,<7
+beautifulsoup4>=4.12

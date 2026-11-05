@@ -4,9 +4,10 @@
 
 This agent-owned branch merges Khoi's PR #172 (eec2750) above PR #171
 (89de90f), which already descends from #170 (d9d4d6a). Original contributor
-branches are not rewritten. The integration PR targets #171; its diff necessarily
-includes #172 until that work lands. Do not merge duplicate copies independently
-without reconciling ancestry. This is experimental, not a production promotion.
+branches are not rewritten. Khoi's #172 is already merged into main; the
+integration PR targets main and adds the remaining #170/#171 work and adapter.
+Do not merge duplicate copies independently without reconciling ancestry.
+This is experimental, not a production promotion.
 
 ## Shared boundary
 

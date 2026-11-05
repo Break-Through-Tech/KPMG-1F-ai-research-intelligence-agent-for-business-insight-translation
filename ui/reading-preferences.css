@@ -51,9 +51,9 @@ body, textarea, .meta, #citation-preview { line-height: var(--reading-line-heigh
 /* Natural document flow keeps all content reachable at low viewport heights. */
 .masthead { height: auto; min-height: 64px; flex-wrap: wrap; padding-top: 8px; padding-bottom: 8px; }
 .header-tools { flex-wrap: wrap; min-width: 0; }
-.app-shell { height: auto; min-height: calc(100dvh - 80px); align-items: flex-start; }
+.app-shell { height: auto; min-height: 0; align-items: stretch; }
 main { align-self: stretch; }
-.conversation { overflow: visible; flex: 1; }
+.conversation { overflow-y: auto; flex: 1; }
 #evidence-panel { position: sticky; top: 0; height: auto; max-height: 100dvh; flex-basis: min(360px, 40%); min-width: 0; }
 /* Desktop panes fill the space below the actual (possibly wrapped) header.
    Keep mobile support in document flow, and scroll each desktop pane separately. */
@@ -93,6 +93,9 @@ button, select, textarea, .source-choice { min-width: 0; max-width: 100%; }
   .reading-settings-content { max-width: none; }
   #evidence-panel { position: fixed; max-height: 100dvh; height: 100dvh; padding: 16px; }
   .conversation { padding: 24px 16px; }
+  body.reading-document-flow { height: auto; min-height: 100dvh; }
+  body.reading-document-flow .app-shell { flex: none; min-height: 0; align-items: stretch; }
+  body.reading-document-flow .conversation { overflow: visible; flex: none; min-height: 12rem; }
 }
 @media (forced-colors: active) {
   :root { --border: CanvasText; --primary: LinkText; --control-border: ButtonText; }

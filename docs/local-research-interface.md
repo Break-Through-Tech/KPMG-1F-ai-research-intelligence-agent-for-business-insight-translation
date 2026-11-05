@@ -27,12 +27,18 @@ checklist, and bounded prototype walkthrough, see
 
 ## Walkthrough: normal path
 
-1. Use the bottom composer. Choose **View example** (the default is **Full draft**; other states
-   are under **Demo options**). Enter inserts a newline by default; choose **Enter key → Sends question** to change it.
-   Ctrl+Enter or Command+Enter sends; Shift+Enter always adds a newline. The conversation labels your
-   question **not executed**, and keeps the original fixture question under **Details → Run details & demo JSON**.
-   Changing the input does not change or substantiate the example's answer.
-2. Hover an inline **[1]** or **[2]** citation for a preview, or Tab to its
+1. The default screen says **Demo mode — prepared examples** and shows the
+   fixed example question before interaction. Choose a result state in
+   **Prepared example**, then select **View example**. Demo mode has no editable
+   question box and does not search the displayed question. Each state is a
+   prepared sample, not a result of a search.
+2. A separate **Research question** composer appears only when the server
+   explicitly configures live paper or indexed research. Its mode label names
+   the configured destination. Enter inserts a newline by default; **Research
+   options → Enter key** can change that, while Ctrl+Enter or Command+Enter
+   submits and Shift+Enter always adds a newline. If no live mode is configured,
+   the interface does not imply that one is available.
+3. Hover an inline **[1]** or **[2]** citation for a preview, or Tab to its
    **Inspect citation** button and press Enter/Space. Activation inspects; it does
    not navigate. Focus moves to **Close cited quote**. Tab proceeds through the
    separate **Open original paper** link and **Inspect source context** button.
@@ -45,27 +51,36 @@ checklist, and bounded prototype walkthrough, see
    or narrower) this is a modal full-height dialog. On desktop it is nonmodal.
    Close or Escape returns focus to the initiating citation. There is no
    persistent header Evidence control.
-3. Inspect **Business implications** and the suggested action. Expand
+4. Inspect **Business implications** and the suggested action. Expand
    **Details → Assumptions, risks & limitations** for secondary detail; assumptions remain
    explicitly distinct from research findings. **Inspect evidence** inside that
    disclosure also makes uncited abstention passages accessible.
-4. Inspect the source links: HTML preserves `#results` with no PDF page; PDF
+5. Inspect the source links: HTML preserves `#results` with no PDF page; PDF
    preserves `#page=2`. These are example.com locator fixtures, not verified or
    necessarily resolving papers. Their URLs are not fetched by the demo. Distances
    appear beside the passage and are labeled **Not confidence**. No fabricated
    relevance scores appear.
-5. **Human review** remains pending and **Not approved**. There is no approval
+6. **Human review** remains pending and **Not approved**. There is no approval
    button. Expand **Details → Run details & demo JSON** to inspect the untouched v1 draft and
-   additive metadata in its separate demo envelope. Additional questions append
-   separate fixed-example turns, not live answers. Earlier citations reopen their
-   own example's evidence. History is in-memory only and clears on reload.
+   additive metadata in its separate demo envelope. Export and save actions are
+   grouped under **Answer tools**. **Listen** opens the optional playback and
+   speed controls; if local speech is unavailable, the interface explains that
+   and omits unusable controls. Earlier citations reopen their own example's
+   evidence. History is in-memory only and clears on reload.
+
+On narrow screens, the conversation scrolls independently so example controls
+remain reachable; a new answer's toolbar is brought fully into view. Before the
+first result, the empty conversation pane collapses so controls sit near the
+prepared-question preview. If enlarged reading controls leave too little
+viewport height, the page switches to natural document flow rather than clipping
+the conversation.
 
 ## Walkthrough: partial and failure states
 
-Enter another question, select a state under **Demo options**, and choose **View example** again.
-Each request has a separate loading/result turn. The rail clears while loading;
-failures show an explicit failed turn rather than relabeling an earlier draft.
-Previously loaded turns remain available as labeled history, never as the new result.
+Choose another prepared state and select **View example** again. Each request
+has a separate loading/result turn. The rail clears while loading; failures show
+an explicit failed turn rather than relabeling an earlier draft. Previously
+loaded turns remain available as labeled history, never as the new result.
 
 | State | Visible outcome | Fixture / derivation |
 | --- | --- | --- |
@@ -75,10 +90,11 @@ Previously loaded turns remain available as labeled history, never as the new re
 | No evidence | Zero passages; generation skipped | `empty-v1.json`, unchanged |
 | Provider error (simulated) | No draft; explicitly simulated provider failure | UI transport envelope with error and `result=null`; no provider is called |
 
-For a local connection failure, stop the Python server and submit again. The
-inline status explains that the local example could not load; the question stays
-intact. Restart the server and choose **Retry original question**. The button becomes usable again after a
-failure (requests time out after ten seconds).
+For a local connection failure, stop the Python server and select **View
+example**. The inline status explains that the prepared example could not load.
+Restart the server and choose **Retry prepared example**. In live mode, a
+failed request keeps the typed research question for retry. The button becomes
+usable again after a failure (requests time out after ten seconds).
 
 See [Question entry and recovery](accessibility-question-entry.md) for persistent
 keyboard preferences, editable fill-only suggestions, retry behavior, and scoped QA.
@@ -337,7 +353,7 @@ manual QA, not a claim that assistive-technology acceptance has been performed.
    from a surviving panel heading/control. Historical citations still reopen
    their own turn. If an initiating element is removed by rerendering, dismissal
    falls back to the question, or the conversation when the form is hidden.
-8. Select **Abstention** or **No evidence** under Demo options, submit, and expand
+8. Select **Insufficient evidence** or **No evidence** in the composer, submit, and expand
    **Details → Assumptions, risks & limitations → Inspect evidence**. Escape must
    return to this initiating button even when there are no source choices.
 

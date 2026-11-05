@@ -8,9 +8,9 @@ screen-reader audit, or evaluation of real research answers.
 ## Annotated flow
 
 ```text
-[Research question]
-  Enter a question and choose a clearly labeled mode.
-  Fixture mode says the question is not executed.
+[Mode and research entry]
+  Demo mode shows a fixed prepared question and result selector.
+  An editable question appears only for explicitly configured live research.
           |
           v
 [Question + run status]
@@ -37,8 +37,10 @@ screen-reader audit, or evaluation of real research answers.
 
 ### Main acceptance path
 
-1. The question composer tells the user how to submit and what mode will run.
-2. The result retains the exact submitted question and a visible run outcome.
+1. The page identifies prepared examples before interaction. Selecting one
+   displays a sample and does not search the fixed example question.
+2. An editable question appears only when a live research mode is configured.
+   The result retains its exact wording and a visible run outcome.
 3. Findings link to evidence that can be inspected without losing the answer.
 4. Unsupported subquestions remain unanswered; they are not filled from model
    memory or treated as false.
@@ -59,7 +61,7 @@ URLs are labels for the UI, not links verified against real papers.
 | Abstention | `tests/fixtures/research/insufficient-v1.json` | Show that passages were found but do not support an answer. Keep claims and recommendations empty; allow inspection of the passages. |
 | No evidence | `tests/fixtures/research/empty-v1.json` | Say that no passages were retrieved and generation was skipped. Do not say that the research claim is false or that no such research exists. |
 | Provider failure | Simulated `provider-error` envelope; no provider is called | Say that execution failed, no draft was produced, and offer retry. Do not present this as an evidence gap. |
-| Local transport failure | Browser cannot reach the local demo server | Keep the exact question, explain how to recover, and offer retry. Do not display an earlier answer as the new result. |
+| Local transport failure | Browser cannot reach the local demo server | Explain how to recover and offer retry. In live mode, retain the exact question; in demo mode, retain the selected example. Do not display an earlier answer as the new result. |
 
 These are separate states: **no evidence** means retrieval returned nothing;
 **abstention** means passages exist but do not support a response; a **failure**
@@ -68,9 +70,10 @@ part while making the unsupported part visible.
 
 ## Interaction and accessibility checklist
 
-- [ ] The research question has a persistent visible or programmatic label.
-- [ ] Fixture/demo mode clearly says the question was not executed; it does not
-  imply that editing the question changed the fixed example.
+- [ ] Demo mode clearly labels prepared examples, shows their fixed question,
+  and does not expose an editable question as if it were searched.
+- [ ] A live research question has a visible label and appears only when the
+  server explicitly configures a live mode.
 - [ ] Loading, success, abstention, no-evidence, and error states have readable
   text and a polite status announcement. Failures name the failed stage when
   known and preserve the original question for retry.
@@ -90,21 +93,22 @@ part while making the unsupported part visible.
 
 ## Prototype walk-through and findings
 
-I ran the local interface at desktop size with its default fixture mode and
-tried full, partial, abstention, no-evidence, and simulated-provider-failure
-examples. The question was labeled **not executed**, and the run details kept the
-fixture's original question separate from the text I entered. This makes the
-demo boundary visible instead of implying that the example answered my query.
+The current default fixture page labels itself **Demo mode — prepared examples**
+and shows a fixed example question before interaction. The editable question
+field is absent in this mode; the example selector chooses only a prepared
+result. Configured live paper and index modes use a separate research-question
+composer. These modes do not imply a live connection unless server
+configuration enables one.
 
 Keyboard activation of a citation opened its preview and moved focus to
 **Close cited quote**. The preview correctly called the fixture text a **Source
 passage**, not a verified quotation, and provided separate actions to open the
 source locator or inspect the wider context. The partial state retained its
 findings and showed no supported business recommendation. The simulated
-provider-failure state kept the question, explained that no draft was produced,
-and offered **Retry original question**.
+provider-failure state explained that no draft was produced and offered
+**Retry prepared example**; there is no typed research question in fixture mode.
 
-The walk-through exposed ambiguous wording in the partial state: it said the
+Earlier walkthroughs exposed ambiguous wording in the partial state: it said the
 business translation was “unavailable,” even though the fixture represented
 insufficient evidence rather than a failed stage. The interface now says that
 the evidence does not support a business recommendation. A genuine business

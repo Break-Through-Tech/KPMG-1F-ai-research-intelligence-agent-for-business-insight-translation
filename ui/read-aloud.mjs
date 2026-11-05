@@ -215,6 +215,8 @@ export function mountReadAloud(root, options = {}) {
   }
   const controls = make('div');
   controls.className = 'read-aloud-controls';
+  const choiceControls = make('div');
+  choiceControls.className = 'read-aloud-options';
   const play = make('button', 'Play');
   const pause = make('button', 'Pause');
   const stop = make('button', 'Stop');
@@ -238,6 +240,9 @@ export function mountReadAloud(root, options = {}) {
     choice.value = reader.selected;
     choice.disabled = !reader.items.length;
     speed.value = String(reader.rate);
+    const available = reader.supported && reader.voices.length > 0;
+    choiceControls.hidden = !available;
+    controls.hidden = !available;
     play.disabled = active(reader.state) || !reader.supported || !reader.voices.length || !reader.items.length;
     pause.textContent = reader.state === 'paused' ? 'Resume' : 'Pause';
     // Keep the focused Pause/Resume button enabled when changing its label.
@@ -255,7 +260,8 @@ export function mountReadAloud(root, options = {}) {
   choice.addEventListener('change', () => controller.select(choice.value));
   speed.addEventListener('change', () => controller.setRate(speed.value));
   controls.append(play, pause, stop);
-  group.append(note, label, choice, speedLabel, speed, controls, status);
+  choiceControls.append(label, choice, speedLabel, speed);
+  group.append(note, choiceControls, controls, status);
   root.append(group);
   const onHide = () => controller.stop('Stopped: page hidden.');
   doc.defaultView.addEventListener('pagehide', onHide);

@@ -101,11 +101,15 @@ def main(argv=None):
     parser.add_argument('--codex-model', help='Explicit model for existing ChatGPT Codex login')
     parser.add_argument('--codex-bin', help='Installed Codex CLI binary path')
     parser.add_argument('--evidence-led', action='store_true', help='Quote-backed extraction before synthesis')
+    parser.add_argument('--evidence-span-selection', action='store_true',
+                        help='Opt-in source-span selection instead of quote copying; requires --evidence-led')
     parser.add_argument('--summary-adapter', help='module:function with summarize(query, passages, *, generate)')
     parser.add_argument('--translation-adapter', help='module:function with translate(summary, passages, *, industry, generate)')
     parser.add_argument('--review-adapter', help='module:function accepting the complete result, including jurisdiction')
     args = parser.parse_args(argv)
     try:
+        if args.evidence_span_selection and (not args.evidence_led or args.mode == 'retrieval'):
+            raise ValueError('--evidence-span-selection requires --evidence-led in summary/business mode')
         if args.intent_rerank and (args.demo or args.mode == 'retrieval' or args.retrieval_mode != 'hybrid' or args.reranker_model):
             raise ValueError('--intent-rerank requires hybrid summary/business mode without --demo or --reranker-model')
         if args.mode == 'business' and not args.industry:
@@ -170,12 +174,13 @@ def main(argv=None):
                     provenance['generation'].update(prompt_provenance())
                 elif spec == 'src.evidence_led:summarize':
                     from src.evidence_led import prompt_provenance
-                    provenance['generation'].update(prompt_provenance())
+                    provenance['generation'].update(prompt_provenance(quote_selection=args.evidence_span_selection))
                 else:
                     provenance['generation'].update(summary_adapter=spec,
                         prompt_version='external-adapter-unspecified')
                 provenance['generation']['translation_adapter'] = translation_spec
-                summary = lambda q, p: adapter(q, p, generate=generate)
+                summary_options = {'quote_selection': True} if args.evidence_span_selection else {}
+                summary = lambda q, p: adapter(q, p, generate=generate, **summary_options)
                 if business_adapter:
                     translate = lambda s, p, *, industry: business_adapter(s, p, industry=industry, generate=generate)
             if args.review_adapter:

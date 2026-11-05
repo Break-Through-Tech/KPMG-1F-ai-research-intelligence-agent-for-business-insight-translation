@@ -30,8 +30,9 @@ for (const width of [1280, 390]) {
     const errors = []; page.on('pageerror', e => errors.push(e.message));
     await page.goto(url);
     await page.getByRole('button', {name:'View example'}).click();
-    const answer = page.locator('.answer').last();
+    const answer = page.locator('.answer').first();
     const audio = answer.getByRole('group', {name:'Optional read-aloud'});
+    await answer.locator('.listen-disclosure > summary').click();
     await expect(audio.getByRole('button', {name:'Play', exact:true})).toBeEnabled();
     expect(await page.evaluate(() => speechCalls)).toEqual([]);
     const limitText = await page.evaluate(() => {
@@ -61,6 +62,7 @@ for (const width of [1280, 390]) {
     await page.getByRole('button', {name:/^Inspect source context,/}).click();
     const panel = page.locator('#evidence-panel');
     const sourceAudio = panel.getByRole('group', {name:'Optional read-aloud'});
+    await panel.locator('.listen-disclosure > summary').click();
     await expect(sourceAudio).toBeVisible();
     // Starting a passage cancels the result, never queues two readers.
     await sourceAudio.getByRole('button', {name:'Play', exact:true}).press('Enter');
@@ -76,7 +78,6 @@ for (const width of [1280, 390]) {
     expect(await page.evaluate(() => speechCalls.slice(-1)[0][0])).toBe('cancel');
     expect(await page.evaluate(() => speechCalls.length)).toBeGreaterThan(callsBeforeClose);
     await audio.getByRole('button', {name:'Play', exact:true}).press('Enter');
-    await page.getByRole('textbox', {name:'Research question'}).fill('New question');
     await page.getByRole('button', {name:'View example'}).click();
     await expect(page.locator('.answer')).toHaveCount(2);
     await expect(audio.getByRole('button', {name:'Play', exact:true})).toBeEnabled();
@@ -87,7 +88,9 @@ test('unsupported speech keeps the actual answer and citation inspection usable'
   await page.addInitScript(() => Object.defineProperty(window, 'speechSynthesis', {value:undefined}));
   await page.goto(url);
   await page.getByRole('button', {name:'View example'}).click();
+  const listen = page.locator('.answer .listen-disclosure');
+  await listen.locator('summary').click();
   await expect(page.getByText('Read-aloud unavailable in this browser. Text remains available.')).toBeVisible();
-  await expect(page.getByRole('button', {name:'Play', exact:true})).toBeDisabled();
+  await expect(listen.getByRole('button', {name:'Play', exact:true})).toHaveCount(0);
   await expect(page.locator('.citation').first()).toBeVisible();
 });

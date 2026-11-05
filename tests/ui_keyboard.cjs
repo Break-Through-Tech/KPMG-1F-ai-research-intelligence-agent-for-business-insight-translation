@@ -31,8 +31,7 @@ async function setup(t, width = 1280) {
   await page.goto(url);
   assert.equal(await page.title(), 'Research desk · 1F');
   assert.equal(new URL(page.url()).origin, url);
-  await page.locator('#query').focus();
-  await page.keyboard.press('Control+Enter');
+  await page.getByRole('button', {name: 'View example'}).click();
   await page.locator('.citation').first().waitFor();
   assert.match(await page.locator('#output').innerText(), /Draft · Not approved/);
   return page;
@@ -138,8 +137,8 @@ test('desktop panel is nonmodal, choices activate natively, Escape restores init
   assert.equal(await page.locator('.passage .source-metadata dd').last().textContent(), 'synthetic-pdf-2');
   assert.match(await page.locator('.source-link').getAttribute('href'), /#page=2$/);
   await screenshot(page, 'desktop-source-context');
-  await page.locator('#query').focus(); // desktop background remains reachable
-  await focused(page, '#query');
+  await page.locator('#submit').focus(); // desktop background remains reachable
+  await focused(page, '#submit');
   await page.keyboard.press('Escape');
   await focused(page, '.citation');
 });
@@ -150,9 +149,17 @@ test('mobile panel contains Tab/Shift+Tab, closes by button and Escape', async t
   assert.equal(await page.locator('#evidence-panel').evaluate(n => n.matches(':modal')), true);
   await page.keyboard.press('Tab');
   await focused(page, '#evidence-close');
+  let priorFocus = 'Close source context';
   for (let i = 0; i < 16; i++) {
     await page.keyboard.press('Tab');
-    assert.equal(await page.evaluate(() => document.querySelector('#evidence-panel').contains(document.activeElement)), true);
+    const focus = await page.evaluate(() => ({
+      inside: document.querySelector('#evidence-panel').contains(document.activeElement),
+      active: `${document.activeElement.tagName}#${document.activeElement.id}`,
+      last: [...document.querySelector('#evidence-panel').querySelectorAll('button, a[href], summary, select, [tabindex="0"]')]
+        .filter(node => !node.disabled && node.tabIndex >= 0 && node.getClientRects().length).at(-1)?.textContent.trim(),
+    }));
+    assert.equal(focus.inside, true, `Tab ${i + 1} moved focus from ${priorFocus} to ${focus.active}; last=${focus.last}`);
+    priorFocus = focus.active;
   }
   await page.locator('#evidence-close').focus();
   await page.keyboard.press('Shift+Tab');
@@ -176,7 +183,7 @@ test('open panel survives breakpoint changes without losing focus or modality', 
   await page.setViewportSize({width: 1280, height: 900});
   await page.waitForFunction(() => !document.querySelector('#evidence-panel').matches(':modal'));
   await focused(page, '.source-choice:last-child');
-  await page.locator('#query').focus();
+  await page.locator('#submit').focus();
   await page.setViewportSize({width: 390, height: 844});
   await page.waitForFunction(() => document.querySelector('#evidence-panel').matches(':modal'));
   await focused(page, '#evidence-heading');
@@ -195,13 +202,12 @@ test('result replacement and loading retain surviving panel focus; removed initi
   await page.evaluate(() => resetEvidence('Loading replacement evidence'));
   await focused(page, '#evidence-heading');
   await page.keyboard.press('Escape');
-  await focused(page, '#query'); // render removed the old citation
+  await focused(page, '#conversation'); // render removed the old citation
 });
 
 test('historical citation still opens its own evidence after a new turn', async t => {
   const page = await setup(t);
-  await page.locator('#query').fill('Another fixture question');
-  await page.locator('#query').press('Control+Enter');
+  await page.locator('#submit').click();
   await page.waitForFunction(() => document.querySelectorAll('.citation').length === 6);
   await panel(page);
   assert.match(await page.locator('#evidence-content').innerText(), /Example 1/);
@@ -210,11 +216,10 @@ test('historical citation still opens its own evidence after a new turn', async 
 test('abstention and empty evidence remain inspectable through Details', async t => {
   const page = await setup(t);
   for (const scenario of ['insufficient', 'empty']) {
-    await page.locator('.demo-settings > summary').focus();
-    await page.keyboard.press('Enter');
+    await page.locator('#scenario').focus();
+    await page.keyboard.press('ArrowDown');
     await page.selectOption('#scenario', scenario);
-    await page.locator('#query').fill('Fixture state');
-    await page.locator('#query').press('Control+Enter');
+    await page.locator('#submit').click();
     const answer = page.locator('.answer').last();
     await answer.locator('.detail-group > details > summary').waitFor();
     await answer.locator('.detail-group > details > summary').focus();

@@ -76,8 +76,10 @@ dependencies or keys** and never runs retrieval or generation. See the
 [local interface walkthrough](docs/local-research-interface.md) for full,
 partial, abstention, no-evidence, and simulated provider-error examples, plus
 explicit opt-in single-paper Codex synthesis, saved-result replay, citation
-previews, and source-math rendering. Live mode is separate from the fixture API
-and the persistent ingestion/index pipeline.
+previews, and source-math rendering. The default page shows a fixed prepared
+question and example selector; it does not offer a question box that implies a
+search. Live mode is separate from the fixture API and the persistent
+ingestion/index pipeline.
 
 Run an entirely offline, synthetic end-to-end example (standard library only):
 

@@ -1,11 +1,14 @@
 # Question entry and recovery (#140)
 
-This increment extends the existing composer; it does not add conversational
-memory, indexed execution, or a research-quality claim. Parent: #136.
+The interface separates its default prepared-example mode from explicitly
+configured live research. This document covers live question entry; the fixture
+mode has no editable question box and does not search its displayed example.
+Parent: #136.
 
 ## Controls
 
-- **Enter key** selects **Inserts newline** (default) or **Sends question**.
+- In configured live research modes, **Enter key** selects **Inserts newline**
+  (default) or **Sends question**.
   The selection persists in this browser/origin's local storage. If storage is
   unavailable, a visible notice explains that the preference is tab-only.
 - **Ctrl+Enter** or **Command+Enter** sends in either setting.
@@ -17,27 +20,29 @@ memory, indexed execution, or a research-quality claim. Parent: #136.
   Dictation/beforeinput events do not trigger submission. Newline is the safe
   default for voice entry. Actual OS dictation and native IME acceptance remain
   manual gates; synthetic browser events are regression evidence, not that audit.
-- Suggestions appear after a returned draft. They **fill the composer only**,
+- Suggestions appear after a returned live-paper draft. They **fill the composer only**,
   focus it, and select the term placeholder where applicable. Edit before sending.
-  Fixture suggestions include the original question or an explicit term slot;
-  their text does not promise contextual execution. Only the existing live
-  single-paper mode, with a bound paper identity and accepted recent turns, uses
-  “previous answer” suggestions. Saved-result replay remains read-only.
+  Prepared examples do not show editable-question suggestions. Only the
+  existing live single-paper mode, with a bound paper identity and accepted
+  recent turns, uses “previous answer” suggestions. Saved-result replay remains
+  read-only.
 - Busy/loading and failure status is visible and exposed by the existing polite
-  status region. A failed turn retains its original question and adds **Retry
-  original question**. This deliberately restores that turn's exact question and
-  scenario and original same-paper history, focuses the composer, and sends once.
+  status region. A failed live turn retains its original question and adds
+  **Retry original question**. This deliberately restores that turn's exact
+  question and scenario and original same-paper history, focuses the composer,
+  and sends once. A failed fixture request retains its selected prepared example.
   An older retry whose paper identity is now stale only restores the question;
   a visible notice requires review and a separate send, without cross-paper history.
   Editing while a request is busy is allowed; completion does not erase a different draft typed meanwhile.
 - Configuration/saved-result check failures disable sending, do not silently
-  switch to fixture execution, and offer **Retry loading question entry** without
-  reloading the page or discarding the draft. Successful retry focuses entry.
+  switch to fixture execution, and offer **Retry loading question entry**.
+  Question entry stays hidden until the configured mode is known. A successful
+  retry reveals the corresponding controls.
 
 ## Mode boundaries and integration handoff
 
-The integrated composer retains the shared answer-navigation busy contract:
-the submit button stays focused and uses `aria-disabled` during a request,
+The live composer retains the shared answer-navigation busy contract: the
+submit button stays focused and uses `aria-disabled` during a request,
 while one request guard prevents duplicate sends. Retry/suggestion controls
 remain disabled while busy. Failure results retain numbered answer headings,
 the explicit latest-answer jump, and concise status announcements. Browser
@@ -50,12 +55,12 @@ place. Retry after a paper change uses the server's new identity and cleared
 history, not stale conversational context. Outputs, source provenance, partial
 and abstention states, and pending/unapproved review status are unchanged.
 
-#130's indexed adapter is not present on this change's base (`ffb3027`). It must
-wire its own explicit mode label/endpoint and use self-contained suggestions for
-independent queries. Do not infer contextual capability from the chat-like layout,
-from a saved answer, or from this composer. Indexed live integration is outstanding,
-not delivered by the mocked live-paper browser tests here. #145 owns the combined
-manual accessibility audit after sibling PR integration.
+Indexed entry is selected only when configuration reports `mode: indexed` and
+uses the research endpoint. The page cleanup does not add or imply index
+connectivity. Do not infer contextual capability from the chat-like layout or
+from a saved answer. The browser tests use mocked responses and do not establish
+real index/provider behavior. #145 owns the combined manual accessibility audit
+after sibling PR integration.
 
 ## Reproduce focused verification
 

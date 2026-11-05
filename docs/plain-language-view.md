@@ -3,7 +3,7 @@
 ## Boundaries and startup
 
 `python3.13 -m src.research_demo --port 9141` starts the loopback fixture UI.
-Choose **Demo options → Plain-language · supported definition fixture**, then
+Choose **Term definition** in the composer, then
 **View example**. Open **Reading preferences → Explanation style** and choose
 **Technical / original** (the default) or **Plain language**. The choice persists
 in this browser across answers and reloads; **Reset reading preferences** restores

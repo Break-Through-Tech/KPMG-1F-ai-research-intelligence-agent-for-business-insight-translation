@@ -19,7 +19,7 @@ async function main() {
     assert.equal(await page.title(), 'Research desk · 1F');
     await page.waitForFunction(() => !document.querySelector('#submit').disabled);
     assert.equal(await page.locator('#feedback[role="status"]').count(), 1);
-    assert.equal(await page.getByRole('button', {name: 'Jump to latest answer'}).isDisabled(), true);
+    assert.equal(await page.locator('#jump-latest').isDisabled(), true);
 
     // Hold each response while the user continues reading the previous answer.
     // Observe the announcer rather than merely asserting its final text.
@@ -46,9 +46,7 @@ async function main() {
         await gate;
         await route.fulfill({response});
       });
-      await page.locator('.demo-settings summary').click();
       await page.locator('#scenario').selectOption(scenario);
-      await page.getByRole('textbox', {name: 'Research question'}).fill(`Question for ${scenario}`);
       await page.getByRole('button', {name: 'View example', exact: true}).click();
       await page.waitForFunction(() => document.querySelector('#output').getAttribute('aria-busy') === 'true');
       assert.equal(await page.locator('#submit').getAttribute('aria-disabled'), 'true');
@@ -62,14 +60,18 @@ async function main() {
       await page.waitForFunction(() => document.querySelector('#output').getAttribute('aria-busy') === 'false');
       assert.deepEqual(await page.evaluate(() => ({focus: document.activeElement.id, scroll: document.querySelector('#conversation').scrollTop})), before);
       assert.equal(await page.locator('#feedback[role="status"]').textContent(), `Answer ${index + 1} ${outcome} Synthetic example.`);
+      const answer = page.getByRole('article', {name: `Answer ${index + 1}`});
       if (scenario === 'partial') {
-        const answer = page.getByRole('article', {name: `Answer ${index + 1}`});
         assert.match(await answer.innerText(), /The sources support research findings but not a business recommendation/);
         assert.match(await answer.innerText(), /No supported business recommendations\./);
       }
       assert.equal(await page.getByRole('region', {name: `Question ${index + 1}`, exact: true}).count(), 1);
       assert.equal(await page.getByRole('article', {name: `Answer ${index + 1}`, exact: true}).count(), 1);
-      assert.equal(await page.locator('#output [aria-live], #output [role="status"], #output [role="log"]').count(), 0);
+      const statusRegions = answer.locator('[aria-live], [role="status"], [role="log"]');
+      const visibleStatusRegionsAreToolOnly = await statusRegions.evaluateAll(nodes =>
+        nodes.filter(node => !node.hidden).every(node => node.closest('.answer-toolbar')));
+      assert.equal(visibleStatusRegionsAreToolOnly, true);
+      if (scenario === 'provider-error') assert.equal(await statusRegions.count(), 0);
       const jump = page.getByRole('button', {name: 'Jump to latest answer'});
       await jump.focus();
       await page.keyboard.press(index % 2 ? 'Space' : 'Enter');
@@ -85,15 +87,17 @@ async function main() {
 
     const failedAnswer = cases.length + 1;
 
-    // Transport failure keeps the question and offers the same explicit jump.
+    // Transport failure keeps the prepared example state and offers a retry.
     await page.route('**/api/demo', route => route.abort());
-    await page.locator('#query').fill('Keep this question');
-    await page.locator('#query').press('Control+Enter');
+    await page.locator('#scenario').selectOption('full');
+    await page.getByRole('button', {name: 'View example', exact: true}).click();
     await page.waitForFunction(number => document.querySelector('#feedback').textContent.startsWith(`Answer ${number} failed.`), failedAnswer);
-    assert.equal(await page.locator('#query').inputValue(), 'Keep this question');
-    assert.equal(await page.evaluate(() => document.activeElement.id), 'query');
-    assert.equal(await page.getByRole('heading', {name: `Answer ${failedAnswer}`, exact: true}).count(), 1);
+    const failed = page.getByRole('article', {name: `Answer ${failedAnswer}`, exact: true});
+    assert.equal(await failed.getByRole('heading', {name: `Answer ${failedAnswer}`, exact: true}).count(), 1);
     await page.unroute('**/api/demo');
+    await failed.getByRole('button', {name: 'Retry prepared example'}).click();
+    await page.waitForFunction(() => document.querySelector('#feedback').textContent.includes('Draft, not approved.'));
+    assert.equal(await page.locator('.turn').count(), cases.length + 2);
 
     // Saved-result bootstrap follows the same question/answer semantics.
     fixture.mode = 'saved-result';

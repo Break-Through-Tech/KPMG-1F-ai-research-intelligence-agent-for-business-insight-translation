@@ -1,5 +1,11 @@
 # Extraction-first Qwen pilot
 
+## Private Hugging Face adapter
+
+See [access and testing instructions](HUGGING-FACE-ADAPTER.md) for the pinned
+experimental MLX adapter, private authentication, baseline comparison, and known
+acceptance failures. This is not a production-default promotion.
+
 Local work on `fine-tuning-experiments`, October 28, 2026. No application routing,
 provider, approval fields, upstream pilot artifacts or base weights were changed.
 **LLM judges only.** Neither Jacqueline nor teammates have a judging, labeling,

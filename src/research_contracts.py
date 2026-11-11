@@ -22,6 +22,7 @@ class ResearchRequest(_Request, total=False):
     top_k: int
     industry: str
     jurisdiction: str
+    risk_assessment: bool
 
 
 class _Passage(TypedDict):
@@ -143,6 +144,8 @@ def validate_request(request):
     for key in ('industry', 'jurisdiction'):
         if key in normalized and not _text(normalized[key]):
             raise ValueError(f'{key} must be nonempty text when supplied')
+    if 'risk_assessment' in normalized and not isinstance(normalized['risk_assessment'], bool):
+        raise ValueError('risk_assessment must be a boolean when supplied')
     _json(normalized)
     return normalized
 

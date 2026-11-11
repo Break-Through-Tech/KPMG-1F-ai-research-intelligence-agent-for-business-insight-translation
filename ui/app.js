@@ -9,6 +9,9 @@ const rail = document.querySelector('#evidence-panel');
 const railContent = document.querySelector('#evidence-content');
 const railHeading = document.querySelector('#evidence-heading');
 const quotePreview = document.querySelector('#citation-preview');
+const riskAssessmentInput = document.querySelector('#risk-assessment');
+const riskOptions = document.querySelector('#risk-options');
+const jurisdictionInput = document.querySelector('#jurisdiction');
 const mobile = matchMedia('(max-width: 800px)');
 let turnNumber = 0;
 let returnFocus = null;
@@ -100,7 +103,6 @@ function rememberAcceptedTurn(query, demo) {
     conversationHistory.splice(0, 2);
   }
 }
-
 const isSynthesis = demo => demo.mode === 'indexed' || demo.mode === 'live-synthesis' || demo.result?.summary.generation_method === 'cited-synthesis-v1';
 const isReal = demo => demo.mode !== 'fixture';
 const runLabel = demo => {
@@ -463,6 +465,50 @@ function renderDraft(demo, number, answer) {
       narrative.append(citedParagraph(implication, demo, number), element('p', `Suggested action: ${implication.suggested_action}`));
     }
   }
+  const checkpoint = result.regulatory_checkpoint;
+  if (checkpoint) {
+    const regulatory = element('section', undefined, 'regulatory-checkpoint');
+    regulatory.append(element('h3', 'Risk & compliance assessment'));
+    regulatory.append(element('p', 'Advisory only · Human review required · Not legal advice or compliance approval.', 'meta'));
+    const regulatoryEvidence = checkpoint.regulatory_evidence;
+    if (checkpoint.jurisdiction || regulatoryEvidence?.jurisdiction) {
+      regulatory.append(element('p', `Jurisdiction: ${checkpoint.jurisdiction || regulatoryEvidence.jurisdiction} · As of: ${regulatoryEvidence?.as_of || 'not recorded'}`, 'meta'));
+    }
+    if (checkpoint.status !== 'assessed') {
+      regulatory.append(element('p', `Assessment ${checkpoint.status}: ${checkpoint.reason || 'No assessment was produced.'}`,
+        checkpoint.status === 'failed' ? 'error' : 'meta'));
+    } else {
+      regulatory.append(element('p', checkpoint.summary));
+      const categories = [
+        ['regulatory_compliance', 'Regulatory compliance'],
+        ['legal_constraints', 'Legal constraints'],
+        ['governance', 'Governance'],
+        ['operational_feasibility', 'Operational feasibility'],
+      ];
+      for (const [key, title] of categories) {
+        const finding = checkpoint.assessment[key];
+        const section = element('section');
+        section.append(element('h4', `${title} · ${finding.status}`), element('p', finding.explanation));
+        if (finding.source_ids.length) {
+          const sources = regulatoryEvidence.sources
+            .filter(source => finding.source_ids.includes(source.source_id));
+          const listNode = element('ul');
+          for (const source of sources) {
+            const item = element('li');
+            const link = element('a', source.title || `Regulatory source ${source.source_id}`);
+            link.href = source.url; link.target = '_blank'; link.rel = 'noopener noreferrer';
+            item.append(link);
+            listNode.append(item);
+          }
+          section.append(listNode);
+        }
+        regulatory.append(section);
+      }
+      list(regulatory, 'Identified risks', checkpoint.assessment.risks);
+      regulatory.append(element('p', 'Sources and applicability have not been independently verified by a human.', 'meta'));
+    }
+    narrative.append(regulatory);
+  }
   const view = demo.plain_language;
   const viewNote = element('p', '', 'meta');
   const definitions = disclosure('Technical term definitions');
@@ -542,6 +588,9 @@ function setClarificationPending(pending, status = 'Closed') {
   document.querySelector('.composer-area').classList.toggle('awaiting-clarification', pending);
   queryInput.setAttribute('aria-label', 'Research question');
   queryInput.placeholder = 'What would you like to research?';
+  form.elements.industry.disabled = pending;
+  riskAssessmentInput.disabled = pending;
+  jurisdictionInput.disabled = pending;
   submit.firstChild.textContent = pending ? 'Send clarification' : 'Research';
 }
 
@@ -664,6 +713,13 @@ function renderClarification(demo, number, answer) {
   // Move from the now-hidden composer to the corresponding question, not a transcript answer.
   (options.querySelector('input') || free).focus({preventScroll: true});
 }
+
+riskAssessmentInput.addEventListener('change', () => {
+  riskOptions.hidden = !riskAssessmentInput.checked;
+  jurisdictionInput.required = riskAssessmentInput.checked;
+  form.elements.industry.required = riskAssessmentInput.checked;
+  if (!riskAssessmentInput.checked) jurisdictionInput.setCustomValidity('');
+});
 
 async function startResearchConversation() {
   if (requestPending) return false;
@@ -853,6 +909,14 @@ function offerRetry(answer, query, scenario, context, pendingTurn = null) {
       feedback.textContent = 'The paper changed since this question failed. Original question restored; review it before sending about the current paper. Previous context will not be sent.';
       return;
     }
+    if (indexedMode && context) form.elements.industry.value = context.industry || '';
+    if (indexedMode && context) {
+      riskAssessmentInput.checked = context.risk_assessment === true;
+      riskOptions.hidden = !riskAssessmentInput.checked;
+      jurisdictionInput.value = context.jurisdiction || '';
+      jurisdictionInput.required = riskAssessmentInput.checked;
+      form.elements.industry.required = riskAssessmentInput.checked;
+    }
     retryContext = context;
     try { form.requestSubmit(); }
     finally { retryContext = null; }
@@ -867,7 +931,10 @@ form.addEventListener('submit', async event => {
   const query = form.elements.query.value;
   const scenario = form.elements.scenario.value;
   const pendingTurn = clarificationPending ? activeClarificationTurn : null;
-  let submissionContext = indexedMode ? (retryContext || {context_id: indexedContextId, interpret_context: true,
+  let submissionContext = indexedMode ? (retryContext || {context_id: indexedContextId, industry: form.elements.industry.value,
+    interpret_context: true,
+    risk_assessment: riskAssessmentInput.checked,
+    ...(riskAssessmentInput.checked ? {jurisdiction: jurisdictionInput.value} : {}),
     ...(clarificationEnabled ? {conversation_id: researchConversationId, action: clarificationPending ? 'resume' : 'ask'} : {})}) : liveSynthesis ? (retryContext || {
     history: conversationHistory.map(message => ({...message})),
     paper_context_id: activePaperContextId,
@@ -987,6 +1054,7 @@ function loadQuestionEntry() {
     }
   }
   if (indexedMode) {
+    document.querySelector('#indexed-options').hidden = false;
     document.querySelector('#welcome h2').textContent = 'Ask across your research index.';
     document.querySelector('#welcome p').textContent = 'Explore findings and follow the evidence.';
     document.querySelector('#demo-note').textContent = `Persistent research index · ${config.index.count} passages · Independent questions; previous answers are not context.`;

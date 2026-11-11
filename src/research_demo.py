@@ -359,6 +359,16 @@ def main():
             else:
                 from src.generation import create_generate
                 generate, metadata = create_generate()
+            def assess_regulatory(draft):
+                from src.human_checkpoint import (
+                    assess_insight, create_client, retrieve_regulations,
+                )
+                from src.research_review import review_adapter
+                return review_adapter(
+                    draft, client=create_client(),
+                    retrieve_regulations_fn=retrieve_regulations,
+                    assess_insight_fn=assess_insight,
+                )
             import sys
             adapter = IndexedResearch
             if args.clarification:
@@ -366,7 +376,8 @@ def main():
                 adapter = ClarifyingIndexedResearch
             DemoHandler.research = adapter(retrieve=retrieve, identity=identity,
                 generate=generate, metadata=metadata, index_path=index_path, top_k=args.top_k,
-                code_revision=code_revision(), command=sys.argv, quality_check=args.quality_check)
+                code_revision=code_revision(), command=sys.argv,
+                quality_check=args.quality_check, regulatory_assessor=assess_regulatory)
         except Exception:
             parser.error('Indexed startup failed. Check existing index/collection, cached encoder, explicit provider and model. For Codex, select a compatible CLI with --codex-bin or RESEARCH_CODEX_BIN. No fallback, rebuild or download was attempted.')
     if args.paper:

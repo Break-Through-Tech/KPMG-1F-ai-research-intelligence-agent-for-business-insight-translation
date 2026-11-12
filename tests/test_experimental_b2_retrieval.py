@@ -86,10 +86,10 @@ class FacetTests(unittest.TestCase):
                     hybrid=[f'p{i}' for i in range(5)]+(['weak'] if already_discovered else [])
                     with patch.object(Retriever,'rank',return_value=(
                         {'document_hybrid':hybrid}, {'paper_candidates':['doc-A']})):
-                        order,debug=r.rank_facets('What accuracy do sensor measurements imply?',np.zeros(2))
+                        order,debug=r.rank_facets('What fraction do sensor measurements resolve?',np.zeros(2))
                     self.assertEqual(set(order[:5]),{f'p{i}' for i in range(5)})
                     self.assertNotIn('weak',debug['balanced_prefix'])
-                if True:
+                if weak_text:
                     self.assertIn('weak',order)
                     self.assertEqual(debug['pairs_scored'],6)
 

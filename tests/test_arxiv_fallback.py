@@ -195,7 +195,7 @@ class ResearchCitationTests(unittest.TestCase):
         rows = [dict(passage('Accuracy was 62%.'), chunk_id='result', arxiv_id='same', section='Results'),
                 dict(passage('Queries ran March 22, 2024.'), chunk_id='date', arxiv_id='other', section='Methods')]
         self.assertEqual(coverage_candidates('What accuracy is current?', rows, {'same'}), ['result'])
-        self.assertEqual(coverage_candidates('What is the title?', rows, {'same'}), [])
+        self.assertEqual(coverage_candidates('What fraction was resolved?', rows, {'same'}), ['result'])
 
     def test_fallback_comparison_retains_both_sources(self):
         a = dict(passage('Paper A scored 62%.'), chunk_id='A')

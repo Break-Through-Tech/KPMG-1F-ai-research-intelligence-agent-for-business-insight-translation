@@ -46,9 +46,11 @@ def load_artifacts(path):
     represented = {v['parent_chunk_id'] for v in views}
     if represented != {p['chunk_id'] for p in parents}:
         raise ValueError('Some source parents have no searchable view.')
+    by_parent = {}
+    for v in views:  # group once: the per-parent scan was quadratic at library scale
+        by_parent.setdefault(v['parent_chunk_id'], []).append((v['char_start'], v['char_end']))
     for parent in parents:
-        intervals = sorted((v['char_start'], v['char_end']) for v in views
-                           if v['parent_chunk_id'] == parent['chunk_id'])
+        intervals = sorted(by_parent.get(parent['chunk_id'], ()))
         end = 0
         for start, stop in intervals:
             if start > end and parent['text'][end:start].strip():

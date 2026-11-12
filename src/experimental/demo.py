@@ -45,6 +45,8 @@ def main(argv=None):
     args=parser.parse_args(argv)
     if not args.check_only and not args.generator_factory:
         parser.error('Choose --generator-factory explicitly; no provider default or fallback.')
+    if (args.bundle/'CURRENT').is_file():  # a research library folder: serve its validated current bundle
+        args.bundle=args.bundle/'bundles'/(args.bundle/'CURRENT').read_text(encoding='utf-8').strip()
     retrieval=open_b2(args.bundle,encoder_path=args.encoder,reranker_path=args.reranker)
     if args.check_only:
         print(json.dumps({'retrieval':retrieval[3],'index':retrieval[1](),

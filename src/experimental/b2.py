@@ -24,7 +24,7 @@ def open_b2(index_path, *, encoder_path, reranker_path, encoder=None, reranker=N
         raise ValueError('B2 requires the bounded token224_parent bundle; no alternate strategy selected.')
     engine = FacetRetriever(index, reranker, encoder)
     here = Path(__file__).resolve().parent
-    names = ('b2.py','retriever.py','balanced_retriever.py','search_index.py','search_chunks.py','semantic_views.py')
+    names = ('b2.py','retriever.py','balanced_retriever.py','evidence_coverage.py','search_index.py','search_chunks.py','semantic_views.py')
     hashes = {name: sha256((here/name).read_bytes()).hexdigest() for name in names}
     if index.manifest['strategy'] == 'semantic95_token224_parent':
         import src.semantic_chunking_adapter as adapter

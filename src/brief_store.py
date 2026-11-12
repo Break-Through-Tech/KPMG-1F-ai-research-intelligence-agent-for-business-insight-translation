@@ -46,11 +46,11 @@ def snapshot(envelope):
         value['plain_language'] = (plain_language_view(result, {'status': 'failed'})
                                    if view['status'] == 'failed' else view)
     # Recompute display state from stage outcomes, not imported UI labels.
-    business_failed = (isinstance(value.get('error'), dict)
-                       and value['error'].get('stage') == 'business')
+    stage_failed = (isinstance(value.get('error'), dict)
+                       and value['error'].get('stage') in {'business', 'regulatory'})
     value['scenario'] = ('empty' if not result['evidence'] else
                          'insufficient' if result['summary']['status'] != 'ok' else
-                         'partial' if business_failed or result.get('business_insight', {}).get('status') == 'insufficient_evidence' else
+                         'partial' if stage_failed or result.get('business_insight', {}).get('status') == 'insufficient_evidence' else
                          'full' if result.get('business_insight') else 'summary-only')
     value.setdefault('submitted_request', result['request'])
     validate_request(value['submitted_request'])

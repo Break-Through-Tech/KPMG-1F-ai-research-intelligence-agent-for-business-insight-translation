@@ -18,6 +18,8 @@ def timed(timings, stage, function, *args, **kwargs):
 from src.research_chat import synthesize
 from src.business_translation import translate, prompt_provenance
 from src.research_contracts import validate_request, validate_result, validate_business_insight
+from src.regulatory_validation import RegulatoryConfigurationError
+from src.research_contracts import validate_advisory_checkpoint
 from src.research_pipeline import PipelineError, run_research, content_fingerprint
 
 
@@ -115,15 +117,33 @@ def scenario_for(result):
     return 'full'
 
 
+def _regulatory_checkpoint(request, status, reason, *, summary=None):
+    return {
+        'schema_version': '1.0',
+        'evidence_namespace': 'regulatory',
+        'status': status,
+        'industry': request['industry'],
+        'jurisdiction': request['jurisdiction'],
+        'summary': summary or 'No regulatory conclusion was produced.',
+        'regulatory_evidence': None,
+        'assessment': None,
+        'reason': reason,
+        'approved': False,
+        'human_review': {'status': 'pending', 'reviewer': None, 'notes': None},
+    }
+
+
 class IndexedResearch:
     """Independent indexed queries: never use client answers as research context."""
     mode = 'indexed'
 
     def __init__(self, *, retrieve, identity, generate, metadata, index_path,
-                 top_k=5, code_revision=None, command=None, quality_check=False, arxiv_search=None):
+                 top_k=5, code_revision=None, command=None, quality_check=False,
+                 arxiv_search=None, regulatory_assessor=None):
         if isinstance(top_k, bool) or not isinstance(top_k, int) or not 1 <= top_k <= 20:
             raise ValueError('Indexed UI top_k must be between 1 and 20.')
         self.retrieve, self.identity, self.generate = retrieve, identity, generate
+        self.regulatory_assessor = regulatory_assessor
         self.top_k = top_k
         self.quality_check = quality_check
         self.arxiv_search = arxiv_search
@@ -166,6 +186,19 @@ class IndexedResearch:
         interpret = payload.get('interpret_context', False)
         if not isinstance(interpret, bool):
             raise ValueError('interpret_context must be boolean.')
+        risk_assessment = payload.get('risk_assessment', False)
+        if not isinstance(risk_assessment, bool):
+            raise ValueError('Risk assessment opt-in must be a boolean.')
+        jurisdiction = payload.get('jurisdiction', '')
+        if not isinstance(jurisdiction, str) or len(jurisdiction) > 200:
+            raise ValueError('Jurisdiction must be text up to 200 characters.')
+        if risk_assessment:
+            if not industry.strip():
+                raise ValueError('Industry is required for a risk and compliance assessment.')
+            if not jurisdiction.strip():
+                raise ValueError('Jurisdiction is required for a risk and compliance assessment.')
+            request['risk_assessment'] = True
+            request['jurisdiction'] = jurisdiction
         return validate_request(request)
 
     def resolve_context(self, request, payload):
@@ -224,6 +257,66 @@ class IndexedResearch:
                     error = {'stage': 'business', 'code': 'business_failed',
                              'message': 'Business translation failed or did not validate. The supported research summary is retained; retry the question.'}
                     stages['business'] = 'failed'
+        if submitted.get('risk_assessment'):
+            business = result.get('business_insight', {})
+            implications = business.get('implications', []) if isinstance(business, dict) else []
+            has_actionable_context = any(
+                isinstance(item, dict) and isinstance(item.get('text'), str)
+                and item['text'].strip() for item in implications
+            )
+            if business.get('status') != 'ok' or not has_actionable_context:
+                reason = (
+                    'A supported business translation is required before regulatory assessment.'
+                    if business.get('status') != 'ok' else
+                    'The business translation contains no supported implication to assess.'
+                )
+                result['regulatory_checkpoint'] = _regulatory_checkpoint(
+                    submitted, 'skipped', reason)
+                stages['regulatory'] = 'skipped'
+            else:
+                try:
+                    if self.regulatory_assessor is None:
+                        raise RuntimeError('No regulatory assessment adapter is configured.')
+                    checkpoint = self.regulatory_assessor(deepcopy(result))
+                    if not isinstance(checkpoint, dict):
+                        raise ValueError('Regulatory adapter returned an invalid advisory bundle.')
+                    if checkpoint.get('status') == 'pending':
+                        result['regulatory_checkpoint'] = _regulatory_checkpoint(
+                            submitted, 'skipped',
+                            checkpoint.get('reason') or 'Required assessment context was unavailable.',
+                            summary=checkpoint.get('summary'))
+                        stages['regulatory'] = 'skipped'
+                    else:
+                        if (checkpoint.get('status') != 'assessed'
+                                or checkpoint.get('schema_version') != '1.0'
+                                or checkpoint.get('evidence_namespace') != 'regulatory'
+                                or checkpoint.get('approved') is not False
+                                or not isinstance(checkpoint.get('human_review'), dict)
+                                or checkpoint['human_review'].get('status') != 'pending'):
+                            raise ValueError('Regulatory adapter returned an invalid status.')
+                        validate_advisory_checkpoint(checkpoint)
+                        evidence = checkpoint.get('regulatory_evidence', {})
+                        if (evidence.get('industry') != submitted['industry']
+                                or evidence.get('jurisdiction') != submitted['jurisdiction']):
+                            raise ValueError('Regulatory evidence context does not match the request.')
+                        result['regulatory_checkpoint'] = {
+                            **checkpoint, 'reason': None,
+                        }
+                        stages['regulatory'] = 'assessed'
+                except Exception as exc:
+                    configuration_failed = isinstance(exc, RegulatoryConfigurationError)
+                    guidance = (
+                        'Risk assessment requires GOOGLE_API_KEY in the local server environment or .env. '
+                        'Configure the Google provider and restart, or disable assessment to continue without it.'
+                        if configuration_failed else
+                        'Regulatory evidence retrieval or assessment failed. No regulatory conclusion was produced.')
+                    result['regulatory_checkpoint'] = _regulatory_checkpoint(
+                        submitted, 'failed',
+                        guidance)
+                    stages['regulatory'] = 'failed'
+                    if error is None:
+                        error = {'stage': 'regulatory', 'code': 'regulatory_configuration' if configuration_failed else 'regulatory_failed',
+                                 'message': guidance if configuration_failed else 'Risk and compliance assessment failed. Research findings are retained; no regulatory conclusion was produced. Retry the assessment.'}
         result['provenance']['stages'] = stages
         result['review_fingerprint'] = content_fingerprint(result)
         validate_result(result)
@@ -251,6 +344,16 @@ class IndexedResearch:
                 paper.get('status') == 'readable' for paper in search['candidates']) else 'insufficient_evidence'
             initial['provenance']['arxiv_search'] = {**search, 'status': status}
             return initial
+        # Keep each stage's bounded ranked evidence. Do not discard a library
+        # comparator when discovery supplies the other side of the question.
+        combined = {}
+        for passage in [*initial['evidence'][:request['top_k']], *passages[:request['top_k']]]:
+            ident = passage['chunk_id']
+            if ident in combined and combined[ident] != passage:
+                initial['provenance']['arxiv_search'] = {**search, 'status': 'answer_failed'}
+                return initial
+            combined[ident] = passage
+        passages = list(combined.values())
         answer_timings = {}
         try:
             result = run_research(

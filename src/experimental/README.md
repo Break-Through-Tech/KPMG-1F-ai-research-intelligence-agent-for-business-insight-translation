@@ -143,3 +143,9 @@ interpreting the reported rates as evidence about current tools.
 Search coverage is limited by the candidate cap and available versioned HTML.
 Exact quote checks and numeric literal matching complement model-based review.
 Numeric matching does not fully validate units, denominators, or interpretation.
+
+Fallback integration: library and discovery each contribute at most `top_k`
+passages (at most `2 * top_k` total), deduplicated by exact chunk identity.
+Conflicting source bindings preserve the library draft. Results/methods cues
+expand B2 candidates before relevance ranking, never replace ranked hits.
+Search failures retain the library result and offer retry/rephrasing.

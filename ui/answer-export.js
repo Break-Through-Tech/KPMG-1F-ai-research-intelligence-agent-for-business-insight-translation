@@ -90,10 +90,10 @@
     add('h1', 'Selected research result');
     add('h2', 'Question');
     add('p', result.request.query);
-    if (demo.mode === 'fixture') add('p', 'Synthetic fixture only. The displayed question is the fixed example question; the typed question was not executed.');
+    if (demo.mode === 'fixture') add('p', 'Synthetic fixture only. The prepared example question was not searched.');
     else add('p', demo.mode === 'live-synthesis' ? 'LLM synthesis; not independently verified.' : 'Saved research result; no new query executed.');
     add('h2', 'Status and review');
-    add('p', `Result state: ${demo.scenario}. Summary: ${result.summary.status}. Business translation: ${result.business_insight?.status ?? 'not requested'}.`);
+    add('p', `Result state: ${demo.scenario}. Summary: ${result.summary.status}. Business translation: ${result.business_insight?.status ?? 'not requested'}. Risk assessment: ${result.regulatory_checkpoint?.status ?? 'not requested'}.`);
     add('p', 'Human review: pending. Approved: false. This export is not approval, source certification, or verification of semantic support.');
     add('h2', 'Generated research summary');
     if (!result.summary.claims.length) add('p', 'Abstention: no supported research claims.');
@@ -109,6 +109,41 @@
         add('p', `Suggested action: ${item.suggested_action}`);
         items('Assumptions — not research findings', item.assumptions);
       });
+    }
+    const checkpoint = result.regulatory_checkpoint;
+    if (checkpoint) {
+      add('h2', 'Risk and compliance assessment');
+      add('p', 'Advisory only. Pending human review; not legal advice or compliance approval.');
+      const regulatoryEvidence = checkpoint.regulatory_evidence;
+      if (checkpoint.status !== 'assessed') {
+        add('p', `Assessment ${checkpoint.status}: ${checkpoint.reason || 'No assessment was produced.'}`);
+      } else {
+        add('p', `Jurisdiction: ${checkpoint.jurisdiction || regulatoryEvidence.jurisdiction}. As of: ${regulatoryEvidence.as_of || 'not recorded'}.`);
+        add('p', checkpoint.summary);
+        const categories = [
+          ['regulatory_compliance', 'Regulatory compliance'],
+          ['legal_constraints', 'Legal constraints'],
+          ['governance', 'Governance'],
+          ['operational_feasibility', 'Operational feasibility'],
+        ];
+        for (const [key, title] of categories) {
+          const finding = checkpoint.assessment[key];
+          add('h3', `${title} · ${finding.status}`);
+          add('p', finding.explanation);
+          for (const id of finding.source_ids) {
+            const source = regulatoryEvidence.sources.find(item => item.source_id === id);
+            if (!source) throw new Error('A regulatory citation is missing its source.');
+            const url = safeURL(source.url);
+            if (!url) throw new Error('A regulatory source URL is invalid.');
+            const link = doc.createElement('a');
+            link.href = url; link.rel = 'noopener noreferrer'; link.textContent = source.title || `Regulatory source ${id}`;
+            main.append(link);
+            markdown.push(`[${mdText(link.textContent)}](${url})\n`);
+          }
+        }
+        items('Identified regulatory risks', checkpoint.assessment.risks);
+        add('p', 'Regulatory sources and applicability have not been independently verified by a human.');
+      }
     }
     add('h2', 'Limitations and risks');
     items('Summary limitations', result.summary.limitations);
@@ -164,12 +199,13 @@
 
   function controls(demo, number) {
     const group = document.createElement('section');
+    group.className = 'answer-export-controls';
     group.setAttribute('aria-label', `Export result ${number}`);
     const status = document.createElement('p'); status.setAttribute('role', 'status');
     status.setAttribute('aria-live', 'polite'); status.className = 'meta';
     for (const [format, label] of [['html', 'HTML'], ['md', 'Markdown']]) {
       const button = document.createElement('button'); button.type = 'button'; button.className = 'quiet';
-      button.textContent = `Export this result as ${label}`;
+      button.textContent = `Export ${label}`;
       button.addEventListener('click', () => {
         let url;
         try {

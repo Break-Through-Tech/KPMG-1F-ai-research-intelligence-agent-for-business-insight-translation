@@ -111,7 +111,6 @@ class ArxivDiscovery:
 
     def __call__(self, question, top_k):
         from .retriever import Lexical
-        from .evidence_coverage import with_study_scope
 
         terms = search_terms(question, self.generate)
         exact = len(terms) == 1 and f'"{terms[0]}"' in question
@@ -176,5 +175,5 @@ class ArxivDiscovery:
                     scores[i] *= 1.25
             order = sorted(range(len(passages)), key=lambda i: (-scores[i], i))
             hits = [passages[i] for i in order[:top_k] if scores[i] > 0]
-            passages = with_study_scope(question, hits, passages)
+            passages = hits
         return passages, {"query": search, "candidates": candidates}

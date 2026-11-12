@@ -52,7 +52,7 @@ async function desk(width, fn, {supported = true, retry = false, open = false, b
   } finally { await context.close(); }
 }
 const idle = page => page.waitForFunction(() => document.querySelector('#output').getAttribute('aria-busy') === 'false');
-test('desktop rail fills viewport below header and scrolls independently', async () => {
+test('desktop rail fills available viewport, with document flow when controls exhaust height', async () => {
   await desk(1440, async page => {
     const assertRailBounds = async () => {
       const bounds = await page.evaluate(() => ({
@@ -65,12 +65,24 @@ test('desktop rail fills viewport below header and scrolls independently', async
       assert.ok(Math.abs(bounds.bottom - bounds.viewport) <= 1, JSON.stringify(bounds));
     };
     await assertRailBounds();
+    const settledReflow = () => page.waitForFunction(() => {
+      const controls = ['.masthead', '.composer-area', '#conversation-tools'].reduce((sum, selector) =>
+        sum + document.querySelector(selector).getBoundingClientRect().height, 0);
+      const minimum = 12 * parseFloat(getComputedStyle(document.documentElement).fontSize) + 56;
+      return document.body.classList.contains('reading-document-flow') === (controls + minimum > innerHeight);
+    });
     await page.setViewportSize({width: 1440, height: 600});
+    await settledReflow();
+    await page.getByText('Reading preferences', {exact: true}).click();
+    // Enlarged controls exhaust the viewport: wait for the ResizeObserver,
+    // then require reachable document flow rather than clipped pane geometry.
+    await settledReflow();
+    assert.equal(await page.locator('body').evaluate(n => n.classList.contains('reading-document-flow')), true);
+    assert.equal(await page.locator('.conversation').evaluate(n => getComputedStyle(n).overflowY), 'visible');
+    await page.getByText('Reading preferences', {exact: true}).click();
+    await page.setViewportSize({width: 1440, height: 1000});
+    await settledReflow();
     await assertRailBounds();
-    await page.getByText('Reading preferences', {exact: true}).click();
-    // When controls exhaust the viewport, document flow takes precedence.
-    if (!await page.locator('body').evaluate(n => n.classList.contains('reading-document-flow'))) await assertRailBounds();
-    await page.getByText('Reading preferences', {exact: true}).click();
     await page.locator('#evidence-content').evaluate(n => {
       const original = n.innerHTML;
       n.innerHTML = original.repeat(6);

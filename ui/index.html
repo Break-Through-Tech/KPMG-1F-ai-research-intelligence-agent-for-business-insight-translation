@@ -20,7 +20,7 @@
   <title>Research desk · 1F</title>
 </head>
 <body>
-  <a class="skip" href="#query">Skip to research question</a>
+  <a class="skip" href="#main">Skip to research desk</a>
   <header class="masthead">
     <h1>1F <span>/</span> Research desk</h1>
     <div class="header-tools">
@@ -49,42 +49,70 @@
           <select id="enter-behavior"><option value="newline">Inserts newline</option><option value="send">Sends question</option></select>
           <span id="preference-note" class="meta"></span>
         </div>
-        <p id="entry-hint" class="meta">Enter inserts a newline. Ctrl+Enter or Command+Enter sends. Shift+Enter always inserts a newline.</p>
         </div>
-      </details><details class="demo-settings"><summary>Demo options</summary><div class="settings-content"><label for="scenario">Example state</label><select id="scenario" name="scenario" form="research-form">
-              <option value="full">Full draft</option>
-              <option value="plain-language">Plain-language · supported definition fixture</option>
-              <option value="partial">Partial · no supported business recommendation</option>
-              <option value="insufficient">Abstention · insufficient support</option>
-              <option value="empty">No evidence</option>
-              <option value="provider-error">Provider error (simulated)</option>
-            </select><p class="meta">Choose a prepared example. No live research runs.</p></div></details></div>
+      </details></div>
   </header>
   <div class="app-shell">
-    <main id="main">
+    <main id="main" tabindex="-1">
+      <section id="mode-card" class="mode-card" aria-labelledby="mode-title">
+        <div class="mode-heading">
+          <div>
+            <h2 id="mode-title">Demo mode — prepared examples</h2>
+          </div>
+          <p id="mode-description" class="meta">Choose an example to view a sample result. No research is run.</p>
+        </div>
+        <div id="example-question-preview" class="example-question">
+          <p class="eyebrow">Example question</p>
+          <p id="example-question">How should the synthetic agents be evaluated?</p>
+        </div>
+      </section>
       <div id="conversation-tools" class="conversation-tools" hidden>
         <span class="meta">Research conversation</span>
         <button id="new-research-conversation" type="button" class="quiet" aria-label="New research conversation"><span aria-hidden="true">+</span> New conversation</button>
       </div>
       <div id="conversation" class="conversation" role="region" aria-label="Research conversation" tabindex="-1">
-        <div id="welcome" class="welcome"><h2>Explore a research example.</h2><p>Read an answer. Follow a citation when you need the source.</p></div>
         <div id="output" aria-busy="false"></div>
       </div>
       <div class="composer-area">
         <div id="brief-revision" class="brief-revision" hidden><span></span><button id="brief-revision-cancel" type="button" class="quiet">Cancel revision</button></div>
         <button id="jump-latest" type="button" class="quiet" disabled>Jump to latest answer</button>
-        <p id="feedback" class="sr-only" role="status" aria-atomic="true">Choose an example state to begin.</p>
+        <p id="feedback" class="sr-only" role="status" aria-atomic="true">Ready.</p>
+          <div id="indexed-options" hidden>
+            <label for="industry">Industry or business context (optional)</label>
+            <input id="industry" name="industry" form="research-form" type="text" maxlength="300" placeholder="e.g. financial-services research team">
+            <p class="meta">Business context may also be extracted from your question. Without explicit context in either place, only research is generated. Business implications remain unapproved.</p>
+            <label class="risk-opt-in"><input id="risk-assessment" name="risk_assessment" form="research-form" type="checkbox"> Add source-backed risk and compliance assessment</label>
+            <div id="risk-options" hidden>
+              <label for="jurisdiction">Jurisdiction (required for assessment)</label>
+              <input id="jurisdiction" name="jurisdiction" form="research-form" type="text" maxlength="200" placeholder="e.g. United States">
+              <p class="meta">Opt-in uses live regulatory search and assessment. Results are advisory, require human review, and are not legal advice or compliance approval.</p>
+            </div>
+          </div>
+
         <section id="clarification-panel" class="question-panel" aria-labelledby="clarification-prompt" hidden></section>
         <form id="research-form">
-          <label for="query" class="sr-only">Research question</label>
-          <textarea id="query" name="query" rows="2" required maxlength="2000" placeholder="What would you like to research?" aria-describedby="demo-note entry-hint">How should the synthetic agents be evaluated?</textarea>
+          <div id="live-question-entry" hidden>
+            <label for="query">Research question</label>
+            <textarea id="query" name="query" rows="2" maxlength="2000" placeholder="Ask a question about this paper" aria-describedby="entry-hint">What does this paper suggest about AI agents’ ability to improve AI training?</textarea>
+            <p id="entry-hint" class="meta">Enter inserts a newline. Ctrl+Enter or Command+Enter sends. Shift+Enter always inserts a newline.</p>
+          </div>
           <div class="controls">
+            <div class="example-picker">
+              <label for="scenario">Prepared example</label>
+              <select id="scenario" name="scenario">
+                <option value="full">Full draft</option>
+                <option value="plain-language">Term definition</option>
+                <option value="partial">Partial answer</option>
+                <option value="insufficient">Insufficient evidence</option>
+                <option value="empty">No evidence</option>
+                <option value="provider-error">Provider error (demo)</option>
+              </select>
+            </div>
             <button id="submit" type="submit">View example<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 19V5m-6 6 6-6 6 6"/></svg></button>
           </div>
         </form>
         <div id="question-suggestions" class="question-suggestions" role="group" aria-label="Editable question suggestions" hidden></div>
         <p id="suggestion-note" class="meta" hidden></p>
-        <p id="demo-note" class="meta">Synthetic demo · Questions are not executed.</p>
         <noscript>This local interface requires JavaScript. No provider credentials are needed.</noscript>
       </div>
     </main>

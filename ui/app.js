@@ -2,6 +2,12 @@
 const form = document.querySelector('#research-form');
 const output = document.querySelector('#output');
 const conversation = document.querySelector('#conversation');
+const modeCard = document.querySelector('#mode-card');
+const modeTitle = document.querySelector('#mode-title');
+const modeDescription = document.querySelector('#mode-description');
+const exampleQuestionPreview = document.querySelector('#example-question-preview');
+const exampleQuestion = document.querySelector('#example-question');
+const liveQuestionEntry = document.querySelector('#live-question-entry');
 const feedback = document.querySelector('#feedback');
 const submit = document.querySelector('#submit');
 const jumpLatest = document.querySelector('#jump-latest');
@@ -9,6 +15,9 @@ const rail = document.querySelector('#evidence-panel');
 const railContent = document.querySelector('#evidence-content');
 const railHeading = document.querySelector('#evidence-heading');
 const quotePreview = document.querySelector('#citation-preview');
+const riskAssessmentInput = document.querySelector('#risk-assessment');
+const riskOptions = document.querySelector('#risk-options');
+const jurisdictionInput = document.querySelector('#jurisdiction');
 const mobile = matchMedia('(max-width: 800px)');
 let turnNumber = 0;
 let returnFocus = null;
@@ -17,6 +26,7 @@ let previewTimer;
 let activeDemo = null;
 let savedResult = null;
 let liveSynthesis = false;
+let researchMode = false;
 let indexedMode = false;
 let presentationEnabled = false;
 let indexedContextId = null;
@@ -74,7 +84,9 @@ function readyAnnouncement(demo, number) {
     full: 'ready. Draft, not approved.',
     partial: demo.error?.stage === 'business'
       ? 'failed: business implications; research summary retained. Not approved.'
-      : 'ready. Partial draft; no business recommendation is supported. Not approved.',
+      : demo.error?.stage === 'regulatory'
+        ? 'failed: risk and compliance assessment; research summary and business implications retained. Not approved.'
+        : 'ready. Partial draft; no business recommendation is supported. Not approved.',
     'summary-only': 'ready. Research summary; business translation not requested. Not approved.',
     insufficient: 'abstained: insufficient support.',
     empty: 'unavailable: no evidence retrieved.',
@@ -100,7 +112,6 @@ function rememberAcceptedTurn(query, demo) {
     conversationHistory.splice(0, 2);
   }
 }
-
 const isSynthesis = demo => demo.mode === 'indexed' || demo.mode === 'live-synthesis' || demo.result?.summary.generation_method === 'cited-synthesis-v1';
 const isReal = demo => demo.mode !== 'fixture';
 const runLabel = demo => {
@@ -173,7 +184,17 @@ document.querySelector('#evidence-close').addEventListener('click', () => setRai
 rail.addEventListener('keydown', event => {
   if (event.key !== 'Tab' || !rail.matches(':modal')) return;
   const controls = [...rail.querySelectorAll('button, a[href], summary, select, [tabindex="0"]')]
-    .filter(node => !node.disabled && node.tabIndex >= 0 && node.getClientRects().length);
+    .filter(node => {
+      if (node.disabled || node.tabIndex < 0 || !node.getClientRects().length ||
+          getComputedStyle(node).visibility !== 'visible') return false;
+      // Chromium can report layout rects for controls in a closed disclosure.
+      // Only its summary participates in sequential focus, never its contents.
+      for (let details = node.closest('details:not([open])'); details;
+        details = details.parentElement?.closest('details:not([open])')) {
+        if (!details.querySelector(':scope > summary')?.contains(node)) return false;
+      }
+      return true;
+    });
   const first = controls[0];
   const last = controls[controls.length - 1];
   if (event.shiftKey && (document.activeElement === first || document.activeElement === railHeading)) {
@@ -428,10 +449,10 @@ function renderDraft(demo, number, answer) {
     const searchMessages = {
       answered: 'arXiv search completed. Open the citations to see the papers found for this question.',
       insufficient_evidence: 'arXiv search completed. The papers examined did not provide enough evidence.',
-      unreadable: 'arXiv found papers, but the app could not extract readable text. The library result is shown below.',
-      timeout: 'The arXiv search timed out. The library result is shown below.',
-      failed: 'The arXiv search could not finish. The library result is shown below.',
-      answer_failed: 'arXiv returned papers, but the app could not validate an answer. The library result is shown below.',
+      unreadable: 'arXiv found papers, but the app could not extract readable text. The library result is shown below. Retry the question or rephrase it.',
+      timeout: 'The arXiv search timed out. The library result is shown below. Retry the question or rephrase it.',
+      failed: 'The arXiv search could not finish. The library result is shown below. Retry the question or rephrase it.',
+      answer_failed: 'arXiv returned papers, but the app could not validate an answer. The library result is shown below. Retry the question or rephrase it.',
     };
     if (search && searchMessages[search.status]) {
       narrative.append(element('p', searchMessages[search.status], 'meta'));
@@ -476,6 +497,50 @@ function renderDraft(demo, number, answer) {
     for (const implication of insight.implications) {
       narrative.append(citedParagraph(implication, demo, number), element('p', `Suggested action: ${implication.suggested_action}`));
     }
+  }
+  const checkpoint = result.regulatory_checkpoint;
+  if (checkpoint) {
+    const regulatory = element('section', undefined, 'regulatory-checkpoint');
+    regulatory.append(element('h3', 'Risk & compliance assessment'));
+    regulatory.append(element('p', 'Advisory only · Human review required · Not legal advice or compliance approval.', 'meta'));
+    const regulatoryEvidence = checkpoint.regulatory_evidence;
+    if (checkpoint.jurisdiction || regulatoryEvidence?.jurisdiction) {
+      regulatory.append(element('p', `Jurisdiction: ${checkpoint.jurisdiction || regulatoryEvidence.jurisdiction} · As of: ${regulatoryEvidence?.as_of || 'not recorded'}`, 'meta'));
+    }
+    if (checkpoint.status !== 'assessed') {
+      regulatory.append(element('p', `Assessment ${checkpoint.status}: ${checkpoint.reason || 'No assessment was produced.'}`,
+        checkpoint.status === 'failed' ? 'error' : 'meta'));
+    } else {
+      regulatory.append(element('p', checkpoint.summary));
+      const categories = [
+        ['regulatory_compliance', 'Regulatory compliance'],
+        ['legal_constraints', 'Legal constraints'],
+        ['governance', 'Governance'],
+        ['operational_feasibility', 'Operational feasibility'],
+      ];
+      for (const [key, title] of categories) {
+        const finding = checkpoint.assessment[key];
+        const section = element('section');
+        section.append(element('h4', `${title} · ${finding.status}`), element('p', finding.explanation));
+        if (finding.source_ids.length) {
+          const sources = regulatoryEvidence.sources
+            .filter(source => finding.source_ids.includes(source.source_id));
+          const listNode = element('ul');
+          for (const source of sources) {
+            const item = element('li');
+            const link = element('a', source.title || `Regulatory source ${source.source_id}`);
+            link.href = source.url; link.target = '_blank'; link.rel = 'noopener noreferrer';
+            item.append(link);
+            listNode.append(item);
+          }
+          section.append(listNode);
+        }
+        regulatory.append(section);
+      }
+      list(regulatory, 'Identified risks', checkpoint.assessment.risks);
+      regulatory.append(element('p', 'Sources and applicability have not been independently verified by a human.', 'meta'));
+    }
+    narrative.append(regulatory);
   }
   const view = demo.plain_language;
   const viewNote = element('p', '', 'meta');
@@ -556,6 +621,9 @@ function setClarificationPending(pending, status = 'Closed') {
   document.querySelector('.composer-area').classList.toggle('awaiting-clarification', pending);
   queryInput.setAttribute('aria-label', 'Research question');
   queryInput.placeholder = 'What would you like to research?';
+  form.elements.industry.disabled = pending;
+  riskAssessmentInput.disabled = pending;
+  jurisdictionInput.disabled = pending;
   submit.firstChild.textContent = pending ? 'Send clarification' : 'Research';
 }
 
@@ -679,6 +747,13 @@ function renderClarification(demo, number, answer) {
   (options.querySelector('input') || free).focus({preventScroll: true});
 }
 
+riskAssessmentInput.addEventListener('change', () => {
+  riskOptions.hidden = !riskAssessmentInput.checked;
+  jurisdictionInput.required = riskAssessmentInput.checked;
+  form.elements.industry.required = riskAssessmentInput.checked;
+  if (!riskAssessmentInput.checked) jurisdictionInput.setCustomValidity('');
+});
+
 async function startResearchConversation() {
   if (requestPending) return false;
   setQuestionBusy(true);
@@ -719,7 +794,9 @@ function renderDemo(demo, number, answer) {
   const [label, explanation] = STATES[demo.scenario];
   const stateExplanation = demo.scenario === 'partial' && demo.error?.stage === 'business'
     ? 'The research summary is available, but generating business implications failed. Inspect the error and retry.'
-    : explanation;
+    : demo.scenario === 'partial' && demo.error?.stage === 'regulatory'
+      ? 'The research summary and business implications are available, but risk and compliance assessment failed. No regulatory conclusion was produced. Inspect the error and retry.'
+      : explanation;
   const head = element('div', undefined, 'answer-head');
   head.append(answerHeading(number));
   if (demo.mode === 'indexed') head.append(element('p', demo.history_policy === 'server_owned_bounded_intent_only' ? 'Indexed research · Bounded conversation' : 'Indexed research · Independent query', 'meta'));
@@ -729,23 +806,27 @@ function renderDemo(demo, number, answer) {
   answer.replaceChildren(head);
   if (demo.result) {
     if (demo.scenario !== 'full') answer.append(element('p', stateExplanation));
-    renderDraft(demo, number, answer);
-    answer.append(AnswerExport.controls(demo, number));
+    const toolbar = element('section', undefined, 'answer-toolbar');
+    toolbar.setAttribute('aria-label', 'Answer tools');
+    toolbar.append(element('p', 'Answer tools', 'eyebrow'));
+    toolbar.append(AnswerExport.controls(demo, number));
     const savedControls = BriefLibrary.controls(demo, updated => {
       ResearchSpeech.stopAll();
       renderDemo(updated, number, answer);
       const controls = answer.querySelector('.brief-controls');
       controls.open = true; controls.querySelector('summary').focus({preventScroll: true});
     });
-    answer.append(savedControls);
-    ResearchSpeech.attach(answer, ResearchSpeech.result(demo, number));
+    toolbar.append(savedControls);
+    answer.append(toolbar);
+    ResearchSpeech.attach(toolbar, ResearchSpeech.result(demo, number));
+    renderDraft(demo, number, answer);
   } else answer.append(element('p', demo.error.message, 'error'));
   if (demo.result && demo.error) answer.append(element('p', `${demo.error.stage}: ${demo.error.message}`, 'error'));
   const real = isReal(demo);
   const raw = disclosure(real ? 'Run details & result JSON' : 'Run details & demo JSON');
   if (demo.result) raw.append(element('p', `${real ? 'Executed query' : 'Fixed example'}: ${demo.result.request.query}`));
   raw.append(element('p', real ? runLabel(demo) : explanation));
-  if (!real) raw.append(element('p', `Your question (not executed): ${demo.submitted_request.query}`));
+  if (!real) raw.append(element('p', `Prepared example question (not searched): ${demo.submitted_request.query}`));
   raw.append(element('pre', JSON.stringify(demo, null, 2)));
   const group = answer.querySelector('.detail-group');
   (group?.querySelector('details') || answer).append(raw);
@@ -820,8 +901,10 @@ function updateSuggestions(query) {
   const note = document.querySelector('#suggestion-note');
   note.hidden = false;
   note.textContent = contextual
-    ? (clarificationEnabled ? 'Suggestions fill the composer; review and send. Bounded server-owned history resolves intent, never supplies evidence.' : 'Suggestions fill the composer; review and send. Recent successful turns are included in this paper mode.')
-    : 'Suggestions fill the composer; review and send. Include all needed context. Demo questions are not executed; independent modes do not use previous answers.';
+    ? (clarificationEnabled
+      ? 'Conversation helps clarify your question; it isn’t evidence.'
+      : 'Recent turns may add context. Edit before sending.')
+    : 'Edit the suggestion before sending. Independent questions don’t use previous answers.';
 }
 
 function setQuestionBusy(busy) {
@@ -843,7 +926,7 @@ function setQuestionBusy(busy) {
 }
 
 function offerRetry(answer, query, scenario, context, pendingTurn = null) {
-  const retry = element('button', 'Retry original question', 'quiet retry-question');
+  const retry = element('button', researchMode ? 'Retry original question' : 'Retry prepared example', 'quiet retry-question');
   retry.type = 'button';
   retry.addEventListener('click', () => {
     if (submit.disabled || requestPending) return;
@@ -855,9 +938,11 @@ function offerRetry(answer, query, scenario, context, pendingTurn = null) {
       feedback.classList.remove('sr-only');
       return;
     }
-    queryInput.value = query;
     form.elements.scenario.value = scenario;
-    queryInput.focus();
+    if (researchMode) {
+      queryInput.value = query;
+      queryInput.focus();
+    } else submit.focus();
     retry.remove();
     if (clarificationEnabled && context?.conversation_id !== researchConversationId) {
       feedback.textContent = 'This failed request belongs to an earlier research conversation. Your text is restored; review before sending in the new conversation.';
@@ -866,6 +951,14 @@ function offerRetry(answer, query, scenario, context, pendingTurn = null) {
     if (!indexedMode && context && context.paper_context_id !== activePaperContextId) {
       feedback.textContent = 'The paper changed since this question failed. Original question restored; review it before sending about the current paper. Previous context will not be sent.';
       return;
+    }
+    if (indexedMode && context) form.elements.industry.value = context.industry || '';
+    if (indexedMode && context) {
+      riskAssessmentInput.checked = context.risk_assessment === true;
+      riskOptions.hidden = !riskAssessmentInput.checked;
+      jurisdictionInput.value = context.jurisdiction || '';
+      jurisdictionInput.required = riskAssessmentInput.checked;
+      form.elements.industry.required = riskAssessmentInput.checked;
     }
     retryContext = context;
     try { form.requestSubmit(); }
@@ -877,18 +970,20 @@ function offerRetry(answer, query, scenario, context, pendingTurn = null) {
 form.addEventListener('submit', async event => {
   event.preventDefault();
   if (submit.disabled || requestPending || composing) return;
-  if (savedResult && !liveSynthesis) return;
-  const query = form.elements.query.value;
+  if (savedResult && !researchMode) return;
+  const query = researchMode ? form.elements.query.value : exampleQuestion.textContent;
   const scenario = form.elements.scenario.value;
   const pendingTurn = clarificationPending ? activeClarificationTurn : null;
-  let submissionContext = indexedMode ? (retryContext || {context_id: indexedContextId, interpret_context: true,
+  let submissionContext = indexedMode ? (retryContext || {context_id: indexedContextId, industry: form.elements.industry.value,
+    interpret_context: true,
+    risk_assessment: riskAssessmentInput.checked,
+    ...(riskAssessmentInput.checked ? {jurisdiction: jurisdictionInput.value} : {}),
     ...(clarificationEnabled ? {conversation_id: researchConversationId, action: clarificationPending ? 'resume' : 'ask'} : {})}) : liveSynthesis ? (retryContext || {
     history: conversationHistory.map(message => ({...message})),
     paper_context_id: activePaperContextId,
   }) : null;
-  document.querySelector('.demo-settings').open = false;
   document.querySelector('.research-settings').open = false;
-  if (!query.trim()) {
+  if (researchMode && !query.trim()) {
     feedback.textContent = 'Enter a nonempty research question.';
     feedback.classList.remove('sr-only');
     form.elements.query.focus();
@@ -897,8 +992,8 @@ form.addEventListener('submit', async event => {
   feedback.classList.remove('sr-only');
   const number = ++turnNumber;
   const loading = indexedMode ? (clarificationEnabled ? 'Checking your question and researching its evidence…' : 'Searching the research index and synthesizing supported findings…') : liveSynthesis ? 'Reading the paper and synthesizing an answer…' : 'Loading local example…';
-  const {turn, answer} = createTurn(query, number, clarificationPending ? 'Your clarification answer' : liveSynthesis ? 'Your question' : 'Your question · Not executed', loading);
-  document.querySelector('#welcome').hidden = true;
+  const questionLabel = clarificationPending ? 'Your clarification answer' : researchMode ? 'Research question' : 'Prepared example question';
+  const {turn, answer} = createTurn(query, number, questionLabel, loading);
   output.append(turn);
   resetEvidence('Loading a new example. No current evidence to inspect.');
   setQuestionBusy(true);
@@ -907,7 +1002,7 @@ form.addEventListener('submit', async event => {
   feedback.textContent = loading;
   let contextRecoveryMessage = null;
   try {
-    const response = await fetch(liveSynthesis ? '/api/research' : '/api/demo', {
+    const response = await fetch(researchMode ? '/api/research' : '/api/demo', {
       method: 'POST', headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({query, scenario,
         ...(BriefLibrary.revision() ? {library_revision: BriefLibrary.revision()} : {}),
@@ -940,8 +1035,12 @@ form.addEventListener('submit', async event => {
     }
     if (demo.result) BriefLibrary.finishRevision();
     renderDemo(demo, number, answer);
+    if (demo.result && form.contains(document.activeElement)) {
+      answer.querySelector('.answer-toolbar')?.scrollIntoView({block: 'nearest'});
+    }
     if (liveSynthesis) rememberAcceptedTurn(query, demo);
-    if (demo.error) {
+    const searchFailed = ['timeout', 'failed', 'answer_failed', 'unreadable'].includes(demo.result?.provenance?.arxiv_search?.status);
+    if (demo.error || searchFailed) {
       // A result means the pending resume has been consumed, even when the
       // later business stage fails. Recover using the original research input.
       const completed = clarificationEnabled && demo.result;
@@ -950,14 +1049,14 @@ form.addEventListener('submit', async event => {
         industry: demo.submitted_request.industry || ''} : submissionContext;
       offerRetry(answer, retryQuery, scenario, context, pendingTurn);
     }
-    if (demo.result) updateSuggestions(query);
-    if (demo.result && form.elements.query.value === query) form.elements.query.value = '';
+    if (demo.result && researchMode && !indexedMode) updateSuggestions(query);
+    if (researchMode && demo.result && form.elements.query.value === query) form.elements.query.value = '';
   } catch {
-    const message = contextRecoveryMessage || (liveSynthesis ? 'Synthesis unavailable or citation validation failed. No answer was accepted. Your question is unchanged; retry when ready.' : 'Could not load the local example. Check that the demo server is running, then retry. Your question is unchanged.');
+    const message = contextRecoveryMessage || (researchMode ? 'Research unavailable or citation validation failed. No answer was accepted. Your question is unchanged; retry when ready.' : 'Could not load the prepared example. Check that the demo server is running, then retry.');
     answer.replaceChildren(answerHeading(number), element('p', message, 'error'));
     offerRetry(answer, query, scenario, submissionContext, pendingTurn);
     markAnswerReady(answer);
-    feedback.textContent = contextRecoveryMessage && !indexedMode ? 'Paper changed. Context cleared; submit your question again.' : `Answer ${number} failed. Your question is unchanged; retry when ready.`;
+    feedback.textContent = contextRecoveryMessage && !indexedMode ? 'Paper changed. Context cleared; submit your question again.' : `Answer ${number} failed.${researchMode ? ' Your question is unchanged; retry when ready.' : ' Retry when ready.'}`;
     feedback.classList.remove('sr-only');
     resetEvidence('The latest example did not load. Retry to inspect its evidence.');
   } finally {
@@ -978,22 +1077,34 @@ function loadQuestionEntry() {
 })).then(([config, demo]) => {
   const untouchedQuestion = queryInput.value === initialQuestion;
   appReady = true;
-  feedback.textContent = config.live ? 'Ready to ask about this paper.' : 'Ready. Synthetic demo; questions are not executed.';
-  liveSynthesis = config.live;
+  feedback.textContent = 'Ready.';
+  liveSynthesis = config.live === true;
   BriefLibrary.configure(config);
   BriefLibrary.finishRevision();
   presentationEnabled = config.plain_language === true;
   activePaperContextId = config.paper_context_id || null;
   indexedMode = config.mode === 'indexed';
+  researchMode = liveSynthesis || indexedMode;
+  liveQuestionEntry.hidden = !researchMode;
+  queryInput.required = researchMode;
+  exampleQuestionPreview.hidden = researchMode;
+  document.querySelector('.example-picker').hidden = researchMode;
+  document.querySelector('.research-settings').hidden = !researchMode;
+  modeTitle.textContent = indexedMode ? 'Live research — research index' : liveSynthesis ? 'Live research — current paper' : 'Demo mode — prepared examples';
+  modeDescription.textContent = indexedMode
+    ? `Your question is searched in the configured research index. ${config.clarification === true
+      ? 'Recent successful turns are intent context, never evidence. New conversation clears context.'
+      : 'Independent questions; previous answers are not context.'}`
+    : liveSynthesis
+      ? 'Your question is sent to the configured paper research service.'
+      : 'Choose an example to view a sample result. No research is run.';
+  document.querySelector('#indexed-options').hidden = !indexedMode;
   indexedContextId = config.context_id || null;
   clarificationEnabled = config.clarification === true;
   researchConversationId = config.conversation_id || null;
   setClarificationPending(false);
   document.querySelector('#conversation-tools').hidden = !clarificationEnabled;
   if (liveSynthesis) {
-    document.querySelector('.demo-settings').hidden = true;
-    document.querySelector('#welcome h2').textContent = 'Ask about this paper.';
-    document.querySelector('#demo-note').textContent = 'Live LLM synthesis · This paper only · Recent successful turns included; older context may be dropped.';
     document.querySelector('.rail-note').textContent = 'Inspect source quotes and the original paper. Citations are not proof of support.';
     submit.firstChild.textContent = 'Ask paper';
     if (untouchedQuestion) {
@@ -1001,30 +1112,24 @@ function loadQuestionEntry() {
     }
   }
   if (indexedMode) {
-    document.querySelector('#welcome h2').textContent = 'Ask across your research index.';
-    document.querySelector('#welcome p').textContent = 'Explore findings and follow the evidence.';
-    document.querySelector('#demo-note').textContent = `Persistent research index · ${config.index.count} passages · Independent questions; previous answers are not context.`;
-    if (clarificationEnabled) document.querySelector('#demo-note').textContent = 'Persistent research index · Clarification enabled · Recent successful turns are intent context, never evidence. New conversation clears context.';
     submit.firstChild.textContent = 'Research';
     feedback.textContent = 'Ready to search the research index.';
     feedback.classList.add('sr-only');
-    document.querySelector('#demo-note').classList.add('sr-only');
     if (config.arxiv_fallback) {
       document.querySelector('#welcome p').textContent =
         'Search the library. If it lacks evidence, the app searches public arXiv papers using your topic.';
     }
+
     if (untouchedQuestion) queryInput.value = '';
   }
   if (!demo) return;
   savedResult = demo;
   if (liveSynthesis) rememberAcceptedTurn(demo.result.request.query, demo);
   // Loading/retrying configuration must not discard a question typed while waiting.
-  if (liveSynthesis && untouchedQuestion) queryInput.value = '';
-  document.querySelector('.demo-settings').hidden = true;
-  document.querySelector('#welcome').hidden = true;
-  form.hidden = !liveSynthesis;
-  if (!liveSynthesis) {
-    document.querySelector('#demo-note').textContent = runLabel(demo);
+  if (researchMode && untouchedQuestion) queryInput.value = '';
+  form.hidden = !researchMode;
+  if (!researchMode) {
+    modeCard.hidden = true;
     document.querySelector('#entry-options').hidden = true;
     entryHint.hidden = true;
   }
@@ -1035,14 +1140,22 @@ function loadQuestionEntry() {
   renderDemo(demo, number, answer);
 }).catch(() => {
   appReady = false;
-  feedback.textContent = 'Question entry unavailable: configuration or saved-result check failed. Your question is unchanged. ';
+  modeTitle.textContent = 'Research mode unavailable';
+  modeDescription.textContent = 'Could not load configuration. No research has been submitted.';
+  exampleQuestionPreview.hidden = true;
+  document.querySelector('.example-picker').hidden = true;
+  document.querySelector('.research-settings').hidden = true;
+  feedback.textContent = 'Question entry unavailable: configuration or saved-result check failed. No research has been submitted. ';
   feedback.classList.remove('sr-only');
   const retry = element('button', 'Retry loading question entry', 'quiet');
   retry.type = 'button';
   retry.addEventListener('click', () => {
     retry.disabled = true;
     feedback.firstChild.textContent = 'Retrying question entry configuration… ';
-    loadQuestionEntry().then(() => { if (appReady) queryInput.focus(); });
+    loadQuestionEntry().then(() => {
+      if (!appReady) return;
+      (researchMode ? queryInput : form.elements.scenario).focus();
+    });
   });
   feedback.append(retry);
 }).finally(() => { setQuestionBusy(false); });
@@ -1054,7 +1167,6 @@ document.addEventListener('brief-open', event => {
   const demo = event.detail;
   const number = ++turnNumber;
   const {turn, answer} = createTurn(demo.result.request.query, number, 'Saved question · No new research', 'Opening saved snapshot…');
-  document.querySelector('#welcome').hidden = true;
   output.append(turn);
   resetEvidence('Select a saved citation to inspect the retained evidence.');
   renderDemo(demo, number, answer);

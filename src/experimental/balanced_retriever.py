@@ -2,6 +2,7 @@
 import re,math
 import numpy as np
 from .retriever import Retriever,tokens
+from .evidence_coverage import coverage_candidates
 
 def facets(query):
     parts=re.split(r',\s*and\s+(?=(?:what|how|why|whether)\b)|;\s*',query,flags=re.I)
@@ -34,6 +35,7 @@ class FacetRetriever(Retriever):
                 and len(p['text'].split())<=120
                 and re.search(r'\bnot\b|however|although|\bwhile\b|limitation|\bcost\b|\bmay\b|rather',p['text'],re.I)
                 and set(tokens(p['text'])).intersection(query_terms))
+        pool.update(coverage_candidates(query, self.parents, docs))
         candidates=sorted(pool);questions=[query]+fqs;ranklists=[];scores=[];pairs_total=0
         for question in questions:
             terms=set(tokens(question));pairs=[];owners=[]

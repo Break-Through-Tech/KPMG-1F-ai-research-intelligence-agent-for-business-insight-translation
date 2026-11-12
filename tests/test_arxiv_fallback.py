@@ -42,7 +42,7 @@ class ArxivEndpointTests(unittest.TestCase):
                 raise RuntimeError("provider failed")
             payload = json.loads(prompt.rsplit("\n", 1)[-1])
             self.assertEqual(payload["question"], QUESTION)
-            row = payload["paper_passages"][0]
+            row = payload["paper_passages"][-1]
             external = row.get("arxiv_id") == "2601.12345v2"
             support = {"chunk_id": row["chunk_id"], "quote": row["text"]}
             if (external and external_answers) or row["text"] == FINDING:
@@ -102,8 +102,8 @@ class ArxivEndpointTests(unittest.TestCase):
         result = body["result"]
         self.assertEqual(result["summary"]["status"], "ok")
         self.assertEqual(result["provenance"]["arxiv_search"]["status"], "answered")
-        self.assertEqual(result["evidence"][0]["source_url"], "https://arxiv.org/html/2601.12345v2#S1")
-        self.assertEqual(result["summary"]["claims"][0]["chunk_ids"], [result["evidence"][0]["chunk_id"]])
+        self.assertEqual(result["evidence"][-1]["source_url"], "https://arxiv.org/html/2601.12345v2#S1")
+        self.assertEqual(result["summary"]["claims"][0]["chunk_ids"], [result["evidence"][-1]["chunk_id"]])
         self.assertEqual(fetch.call_count, 2)
 
     def test_readable_candidate_still_cannot_answer(self):
@@ -190,23 +190,31 @@ class ResearchCitationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "absent from"):
             attach_validated_citations([item], [passage("The measured success rate was 62% in 2024.")])
 
-    def test_companion_adds_relevant_results_within_budget(self):
-        from src.experimental.evidence_coverage import with_result_coverage
-        hits = [dict(passage("Agent benchmark tasks and models."), chunk_id=str(i),
-                     arxiv_id="same") for i in range(3)]
-        results = dict(passage("Agent benchmark success rates were 62% and 71%."),
-                       chunk_id="results", arxiv_id="same", section="Results")
-        unrelated = dict(results, chunk_id="other", arxiv_id="different")
-        retrieve = with_result_coverage(lambda q, k: hits, hits + [unrelated, results])
-        self.assertEqual(retrieve("How often did agents succeed?", 3), hits[:2] + [results])
-        self.assertEqual(retrieve("What is the benchmark?", 3), hits)
+    def test_coverage_candidates_do_not_select_or_replace_hits(self):
+        from src.experimental.evidence_coverage import coverage_candidates
+        rows = [dict(passage('Accuracy was 62%.'), chunk_id='result', arxiv_id='same', section='Results'),
+                dict(passage('Queries ran March 22, 2024.'), chunk_id='date', arxiv_id='other', section='Methods')]
+        self.assertEqual(coverage_candidates('What accuracy is current?', rows, {'same'}), ['result'])
+        self.assertEqual(coverage_candidates('What is the title?', rows, {'same'}), [])
 
-    def test_scope_passage_is_from_the_retrieved_study(self):
-        from src.experimental.evidence_coverage import with_study_scope
-        hits = [dict(passage("The benchmark evaluated agents."), chunk_id=str(i),
-                     arxiv_id="same") for i in range(2)]
-        dates = dict(passage("The queries were run from March 22 to April 22, 2024."),
-                     chunk_id="dates", arxiv_id="same", section="Methodology", subsection="Query execution")
-        self.assertEqual(with_study_scope("Do tools still make mistakes?", hits, [dates]),
-                         [hits[0], dates])
-        self.assertEqual(with_study_scope("What were the findings?", hits, [dates]), hits)
+    def test_fallback_comparison_retains_both_sources(self):
+        a = dict(passage('Paper A scored 62%.'), chunk_id='A')
+        b = dict(passage('Paper B scored 71%.'), chunk_id='B')
+        calls = []
+        def generate(prompt):
+            rows = json.loads(prompt.rsplit('\n', 1)[-1])['paper_passages']
+            calls.append([p['chunk_id'] for p in rows])
+            support = [{'chunk_id':p['chunk_id'], 'quote':p['text']} for p in rows]
+            if len(rows) == 1:
+                return json.dumps({'status':'insufficient_evidence','claims':[],
+                                  'limitations':[{'text':'Missing comparator.', 'support':support}]})
+            return json.dumps({'status':'ok', 'claims':[{'kind':'finding',
+                'text':'Paper A scored 62% and Paper B scored 71%.', 'support':support}], 'limitations':[]})
+        service = IndexedResearch(retrieve=lambda q,k:[a], identity=lambda:{'count':1},
+            generate=generate, metadata={'provider':'fixture'}, index_path='fixture', top_k=1,
+            arxiv_search=lambda q,k:([b], {'candidates':[]}))
+        out = service.execute({'query':'Compare A and B', 'context_id':service.context_id})
+        self.assertIsNone(out['error'])
+        self.assertEqual(calls, [['A'], ['A', 'B']])
+        self.assertEqual(out['result']['summary']['status'], 'ok')
+        self.assertEqual(out['result']['evidence'], [a,b])

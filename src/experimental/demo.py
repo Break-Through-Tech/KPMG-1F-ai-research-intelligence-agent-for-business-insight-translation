@@ -18,10 +18,12 @@ def load_generator(spec, options):
 
 def create_research(retrieval, generate, metadata, top_k=5, *, arxiv_search=None):
     from src.indexed_research import IndexedResearch, fingerprint, code_revision
+    from src.research_review import assess_regulatory
     retrieve, identity, path, provenance = retrieval
     research = IndexedResearch(retrieve=retrieve, identity=identity, index_path=path,
         generate=generate, metadata=metadata, top_k=top_k, quality_check=True,
-        code_revision=code_revision(), command=['experimental-b2-demo'], arxiv_search=arxiv_search)
+        code_revision=code_revision(), command=['experimental-b2-demo'],
+        arxiv_search=arxiv_search, regulatory_assessor=assess_regulatory)
     research.provenance['retrieval'] = {**provenance,'top_k':top_k}
     research.context_id = fingerprint(research.provenance)
     return research
@@ -54,12 +56,10 @@ def main(argv=None):
     discovery = None
     if args.arxiv_fallback:
         from .arxiv_fallback import ArxivDiscovery
-        from .evidence_coverage import with_result_coverage
 
         with (args.bundle / 'parents.jsonl').open(encoding='utf-8') as parents:
             source_parents = [json.loads(line) for line in parents]
         discovery = ArxivDiscovery(generate, indexed_ids={row['arxiv_id'] for row in source_parents})
-        retrieval = (with_result_coverage(retrieval[0], source_parents), *retrieval[1:])
     research = create_research(retrieval, generate, metadata, args.top_k, arxiv_search=discovery)
     from src.research_demo import DemoHandler
     from src.brief_store import BriefStore

@@ -86,6 +86,22 @@ def attach_validated_citations(items, passages):
         item['chunk_ids'] = list(dict.fromkeys(s['chunk_id'] for s in item['support']))
 
 
+def validate_reported_numbers(items):
+    """Require numeric literals in factual findings to occur in their cited excerpts."""
+    number = re.compile(r"(?<![\w.])(?:[0-9]+(?:,[0-9]{3})*|(?=\.[0-9]))(?:\.[0-9]+)?")
+    from decimal import Decimal
+
+    def values(text):
+        return {Decimal(match.group().replace(",", "")) for match in number.finditer(text)}
+
+    for item in items:
+        if item.get("kind") != "finding":
+            continue
+        cited = set().union(*(values(source["quote"]) for source in item["support"]))
+        if values(item["text"]) - cited:
+            raise ValueError("A finding contains a number absent from its cited excerpts.")
+
+
 def synthesize(query, passages, *, generate, history=None, findings_only=False):
     """Reject the entire answer on missing/unknown citations or invented quotes."""
     from jsonschema import Draft202012Validator
@@ -109,6 +125,13 @@ def synthesize(query, passages, *, generate, history=None, findings_only=False):
         'reported evidence or kind=interpretation for your explicitly qualified inference/recommendation. '
         'Prefer 2-4 findings, then at most 2 interpretations when useful. Distinguish association from '
         'causation and a bounded experiment from sustained recursive self-improvement. '
+        'Before writing, identify every requested comparison, outcome and population. Scan the retrieved '
+        'results, tables and methods for each. When several reported results answer the question, include '
+        'their individual values with labels. For questions about reliability, include reported error rates '
+        'and correct-response rates when both clarify the result. For questions about current behavior, '
+        'include the historical evaluation period if available. Preserve relevant study dates, conditions and denominators '
+        'if present. If a requested detail is missing from the passages, explicitly identify the gap. '
+        'Put each reported number in its supporting exact excerpt. Avoid derived figures. '
         'EVERY claim of either kind needs support: exact source quotes and their supplied chunk IDs. '
         'Copy quotes verbatim, including punctuation; whitespace differences are allowed. Never invent IDs. '
         'Preserve supplied LaTeX exactly in source quotes. In answer prose, delimit inline math with '
@@ -119,6 +142,9 @@ def synthesize(query, passages, *, generate, history=None, findings_only=False):
         'Limitations also require exact supporting quotes and source IDs. '
         'Describe missing evidence as a gap in the supplied passages; their silence does not prove '
         'that a result is absent from the entire paper or research literature. '
+        'When the central request is a numerical outcome and only proxy outcomes are reported, '
+        'return insufficient_evidence. Explain what the evidence measured and what is needed for '
+        'the requested outcome in cited limitations. '
         'If evidence cannot answer the question, return insufficient_evidence, no claims, and explain the gap. '
         'No human approval, no outside facts, no citation markers in text; the UI renders citations. ' +
         ('A separate business stage will propose actions. Return research findings only: '

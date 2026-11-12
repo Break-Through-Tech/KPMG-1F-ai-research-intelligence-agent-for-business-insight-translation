@@ -2,6 +2,7 @@
 from copy import deepcopy
 from hashlib import sha256
 import json
+import logging
 from pathlib import Path
 import subprocess
 from time import perf_counter
@@ -138,13 +139,14 @@ class IndexedResearch:
 
     def __init__(self, *, retrieve, identity, generate, metadata, index_path,
                  top_k=5, code_revision=None, command=None, quality_check=False,
-                 regulatory_assessor=None):
+                 arxiv_search=None, regulatory_assessor=None):
         if isinstance(top_k, bool) or not isinstance(top_k, int) or not 1 <= top_k <= 20:
             raise ValueError('Indexed UI top_k must be between 1 and 20.')
         self.retrieve, self.identity, self.generate = retrieve, identity, generate
         self.regulatory_assessor = regulatory_assessor
         self.top_k = top_k
         self.quality_check = quality_check
+        self.arxiv_search = arxiv_search
         self.provenance = {'execution': 'persistent_index_ui', 'generation': deepcopy(metadata),
             'index_path': index_path, 'index': identity(), 'code_revision': code_revision,
             'command': command, 'retrieval': {'method': 'existing_dense_search', 'top_k': top_k,
@@ -153,6 +155,8 @@ class IndexedResearch:
             'translation_adapter': 'src.business_translation:translate',
             'context_adapter': 'explicit-business-context-v1',
             'business_prompt': prompt_provenance(compact=quality_check), 'history_policy': 'independent_queries'}
+        if arxiv_search is not None:
+            self.provenance['arxiv_fallback_enabled'] = True
         if quality_check:
             from src.answer_quality import provenance
             self.provenance['answer_quality'] = provenance()
@@ -160,7 +164,8 @@ class IndexedResearch:
 
     def config(self):
         return {'mode': self.mode, 'context_id': self.context_id,
-                'history_policy': 'independent_queries', 'index': self.provenance['index']}
+                'history_policy': 'independent_queries', 'index': self.provenance['index'],
+                **({'arxiv_fallback': True} if self.arxiv_search is not None else {})}
 
     def check_context(self, context_id):
         if context_id != self.context_id or self.identity() != self.provenance['index']:
@@ -211,6 +216,9 @@ class IndexedResearch:
         if self.quality_check:
             from src.answer_quality import review_summary
             summary = timed(timings, 'quality_review', review_summary, query, summary, passages, generate=self.generate)
+        if self.arxiv_search is not None:
+            from src.research_chat import validate_reported_numbers
+            timed(timings, 'numeric_citation_check', validate_reported_numbers, summary['claims'])
         return summary
 
     def finish(self, result, submitted, *, error=None, timings=None):
@@ -316,6 +324,55 @@ class IndexedResearch:
                 'submitted_request': submitted, 'result': result, 'error': error,
                 'fixture_file': None, 'context_id': self.context_id}
 
+    def try_arxiv(self, initial, request, timings):
+        """Preserve the initial draft when the external search or answer fails."""
+        from requests import Timeout
+
+        try:
+            passages, search = timed(timings, 'arxiv_search', self.arxiv_search,
+                                     request['query'], request['top_k'])
+        except (Timeout, TimeoutError):
+            initial['provenance']['arxiv_search'] = {'status': 'timeout'}
+            return initial
+        except Exception as exc:
+            status = getattr(getattr(exc, 'response', None), 'status_code', None)
+            logging.getLogger(__name__).warning('arXiv search failed (%s, HTTP %s)', type(exc).__name__, status)
+            initial['provenance']['arxiv_search'] = {'status': 'failed'}
+            return initial
+        if not passages:
+            status = 'unreadable' if search.get('candidates') and not any(
+                paper.get('status') == 'readable' for paper in search['candidates']) else 'insufficient_evidence'
+            initial['provenance']['arxiv_search'] = {**search, 'status': status}
+            return initial
+        # Keep each stage's bounded ranked evidence. Do not discard a library
+        # comparator when discovery supplies the other side of the question.
+        combined = {}
+        for passage in [*initial['evidence'][:request['top_k']], *passages[:request['top_k']]]:
+            ident = passage['chunk_id']
+            if ident in combined and combined[ident] != passage:
+                initial['provenance']['arxiv_search'] = {**search, 'status': 'answer_failed'}
+                return initial
+            combined[ident] = passage
+        passages = list(combined.values())
+        answer_timings = {}
+        try:
+            result = run_research(
+                request, retrieve=lambda query, top_k: passages,
+                summarize_fn=lambda q, ps: self.summary(
+                    q, ps, findings_only=self.quality_check and 'industry' in request,
+                    timings=answer_timings),
+                provenance=self.provenance,
+            )
+        except Exception as exc:
+            logging.getLogger(__name__).warning('arXiv answer failed (%s)', type(exc).__name__)
+            initial['provenance']['arxiv_search'] = {**search, 'status': 'answer_failed'}
+            return initial
+        finally:
+            timings.update({f'arxiv_{stage}': seconds for stage, seconds in answer_timings.items()})
+        status = 'answered' if result['summary']['status'] == 'ok' else 'insufficient_evidence'
+        result['provenance']['arxiv_search'] = {**search, 'status': status}
+        return result
+
     def execute(self, payload, *, session_id=None):
         start = perf_counter()
         timings = {}
@@ -343,6 +400,9 @@ class IndexedResearch:
                     'error': {'stage': stage, 'code': stage + '_failed',
                               'message': f'{stage.capitalize()} failed or its contract did not validate. No answer was accepted. Check configuration and retry.'}}
         self.check_context(payload.get('context_id'))
+        if self.arxiv_search is not None and result['summary']['status'] == 'insufficient_evidence':
+            result = self.try_arxiv(result, request, timings)
+            self.check_context(payload.get('context_id'))
         response = self.finish(result, request, timings=timings)
         self.check_context(payload.get('context_id'))
         result['provenance']['timings_seconds'] = {**timings, 'total': round(perf_counter() - start, 4)}

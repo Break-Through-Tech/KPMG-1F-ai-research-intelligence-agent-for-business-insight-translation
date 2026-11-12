@@ -71,25 +71,25 @@ class FacetTests(unittest.TestCase):
         self.assertEqual(r.resolve(a)[0],r.byid[a[0]])
     def test_qualifier_cues_expand_candidates_without_displacing_answers(self):
         from unittest.mock import patch
-        for weak_text in ['Sensor packaging may be blue.', 'Sensor packaging is blue.']:
+        for weak_text in ['Sensor packaging may be blue.', 'Sensor accuracy was 1%.']:
             with self.subTest(text=weak_text):
                 parents=[{'chunk_id':f'p{i}','arxiv_id':'doc-A','title':'Sensor measurements',
                           'text':'Direct sensor measurement answer.'} for i in range(5)]
-                parents.append({**parents[0],'chunk_id':'weak','text':weak_text})
+                parents.append({**parents[0],'chunk_id':'weak','text':weak_text, 'section':'Results'})
                 idx=SimpleNamespace(parents=parents,
                     views=[{'parent_chunk_id':p['chunk_id'],'text':p['text']} for p in parents],
                     vectors=np.zeros((6,2),dtype=np.float32))
                 rr=FakeReranker()
-                rr.predict=lambda pairs,**kw:np.array([-100 if 'packaging' in t else 100 for q,t in pairs])
+                rr.predict=lambda pairs,**kw:np.array([-100 if ('packaging' in t or '1%' in t) else 100 for q,t in pairs])
                 r=FacetRetriever(idx,rr,FakeModel())
                 for already_discovered in (True,False):
                     hybrid=[f'p{i}' for i in range(5)]+(['weak'] if already_discovered else [])
                     with patch.object(Retriever,'rank',return_value=(
                         {'document_hybrid':hybrid}, {'paper_candidates':['doc-A']})):
-                        order,debug=r.rank_facets('What do sensor measurements imply?',np.zeros(2))
+                        order,debug=r.rank_facets('What fraction do sensor measurements resolve?',np.zeros(2))
                     self.assertEqual(set(order[:5]),{f'p{i}' for i in range(5)})
                     self.assertNotIn('weak',debug['balanced_prefix'])
-                if 'may' in weak_text:
+                if weak_text:
                     self.assertIn('weak',order)
                     self.assertEqual(debug['pairs_scored'],6)
 

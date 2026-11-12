@@ -114,3 +114,38 @@ python -m pytest tests/test_experimental_html_evidence.py tests/test_experimenta
 Tests use synthetic evidence and mocked generation. Evaluation questions are never
 used inside parser or ranking modules. Original data, models, execution snapshots,
 notebooks and private evaluation materials remain untracked.
+
+## Question-driven arXiv fallback
+
+Add `--arxiv-fallback --top-k 8` to the B2 demo command. Use a free local port
+such as `--port 8787`, an existing bundle and local models, and the same explicit
+generator factory and options as for indexed research. The flag is off by default.
+
+The demo searches the loaded library first. Only an explicit insufficient-evidence
+result triggers public arXiv discovery. Derived search terms are sent to arXiv.
+Use public research questions when enabling this option. The final answer uses the
+original question. Discovery examines up to three distinct versioned papers, reads
+available HTML, and keeps the extracted evidence scoped to the request. The demo
+preserves the library draft if discovery times out or fails. The index and bundle
+are read-only in this flow.
+
+For the verified settings, run the following command with your local paths and
+configured generator factory:
+
+```sh
+python -m src.experimental.demo --bundle ./bundle --encoder ./encoder --reranker ./reranker --generator-factory your_adapter:create --generator-options ./local-options.json --arxiv-fallback --top-k 8 --port 8787
+```
+
+Try: “Do the AI legal research tools that law firms buy still make things up, even
+though they look up real sources?” Open a citation and check the study dates before
+interpreting the reported rates as evidence about current tools.
+
+Search coverage is limited by the candidate cap and available versioned HTML.
+Exact quote checks and numeric literal matching complement model-based review.
+Numeric matching does not fully validate units, denominators, or interpretation.
+
+Fallback integration: library and discovery each contribute at most `top_k`
+passages (at most `2 * top_k` total), deduplicated by exact chunk identity.
+Conflicting source bindings preserve the library draft. Results/methods cues
+expand B2 candidates before relevance ranking, never replace ranked hits.
+Search failures retain the library result and offer retry/rephrasing.

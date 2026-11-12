@@ -74,6 +74,17 @@
         <div id="brief-revision" class="brief-revision" hidden><span></span><button id="brief-revision-cancel" type="button" class="quiet">Cancel revision</button></div>
         <button id="jump-latest" type="button" class="quiet" disabled>Jump to latest answer</button>
         <p id="feedback" class="sr-only" role="status" aria-atomic="true">Choose an example state to begin.</p>
+          <div id="indexed-options" hidden>
+            <label for="industry">Industry or business context (optional)</label>
+            <input id="industry" name="industry" form="research-form" type="text" maxlength="300" placeholder="e.g. financial-services research team">
+            <p class="meta">Business context may also be extracted from your question. Without explicit context in either place, only research is generated. Business implications remain unapproved.</p>
+            <label class="risk-opt-in"><input id="risk-assessment" name="risk_assessment" form="research-form" type="checkbox"> Add source-backed risk and compliance assessment</label>
+            <div id="risk-options" hidden>
+              <label for="jurisdiction">Jurisdiction (required for assessment)</label>
+              <input id="jurisdiction" name="jurisdiction" form="research-form" type="text" maxlength="200" placeholder="e.g. United States">
+              <p class="meta">Opt-in uses live regulatory search and assessment. Results are advisory, require human review, and are not legal advice or compliance approval.</p>
+            </div>
+          </div>
         <section id="clarification-panel" class="question-panel" aria-labelledby="clarification-prompt" hidden></section>
         <form id="research-form">
           <label for="query" class="sr-only">Research question</label>

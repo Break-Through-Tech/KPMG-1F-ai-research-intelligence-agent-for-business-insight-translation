@@ -22,6 +22,7 @@ class ResearchRequest(_Request, total=False):
     top_k: int
     industry: str
     jurisdiction: str
+    risk_assessment: bool
 
 
 class _Passage(TypedDict):
@@ -143,6 +144,8 @@ def validate_request(request):
     for key in ('industry', 'jurisdiction'):
         if key in normalized and not _text(normalized[key]):
             raise ValueError(f'{key} must be nonempty text when supplied')
+    if 'risk_assessment' in normalized and not isinstance(normalized['risk_assessment'], bool):
+        raise ValueError('risk_assessment must be a boolean when supplied')
     _json(normalized)
     return normalized
 
@@ -302,4 +305,19 @@ def validate_result(result):
     for key in ('provenance', 'regulatory_checkpoint'):
         if key in result and not isinstance(result[key], dict):
             raise ValueError(f'{key} must be a separate JSON object when supplied')
+    checkpoint = result.get('regulatory_checkpoint')
+    if checkpoint is not None and checkpoint.get('status') == 'assessed':
+        validate_advisory_checkpoint(checkpoint)
+    # Historical pending/unresolved and skipped/failed bundles carry no findings;
+    # consumers display their status/reason without dereferencing assessment data.
     _json(result)
+
+
+def validate_advisory_checkpoint(checkpoint):
+    """Shared assessed-checkpoint renderer contract for provider and replay boundaries."""
+    from src.regulatory_validation import validate_checkpoint
+    validate_checkpoint(checkpoint)
+    if not _text(checkpoint.get('summary')):
+        raise ValueError('Assessed regulatory checkpoints require a summary')
+    for source in checkpoint['regulatory_evidence']['sources']:
+        _url(source.get('url'), 'regulatory source URL')

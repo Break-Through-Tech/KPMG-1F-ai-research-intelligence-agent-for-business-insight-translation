@@ -65,10 +65,14 @@ def load_demo(request: dict, scenario: str) -> dict:
 def saved_result_envelope(result):
     """Preserve validated stage states rather than relabeling replay as success."""
     validate_result(result)
+    regulatory_failed = (result.get('regulatory_checkpoint', {}).get('status') == 'failed'
+                         or result.get('provenance', {}).get('stages', {}).get('regulatory') == 'failed')
     if not result['evidence']:
         scenario = 'empty'
     elif result['summary']['status'] == 'insufficient_evidence':
         scenario = 'insufficient'
+    elif regulatory_failed:
+        scenario = 'partial'
     elif (result.get('business_insight')
           and result['business_insight']['status'] == 'insufficient_evidence'):
         scenario = 'partial'
@@ -76,7 +80,11 @@ def saved_result_envelope(result):
         scenario = 'full'
     return {'mode': 'saved-real-result', 'scenario': scenario,
             'submitted_request': result['request'], 'result': result,
-            'error': None, 'fixture_file': None, 'plain_language': plain_language_view(result)}
+            'error': ({'stage': 'regulatory', 'code': 'regulatory_failed',
+                       'message': result.get('regulatory_checkpoint', {}).get('reason') or
+                       'Risk and compliance assessment failed. Research and business output retained; no regulatory conclusion was produced.'}
+                      if regulatory_failed else None),
+            'fixture_file': None, 'plain_language': plain_language_view(result)}
 
 
 def replay_presentation(result, path):
@@ -359,6 +367,7 @@ def main():
             else:
                 from src.generation import create_generate
                 generate, metadata = create_generate()
+            from src.research_review import assess_regulatory
             import sys
             adapter = IndexedResearch
             if args.clarification:
@@ -366,7 +375,8 @@ def main():
                 adapter = ClarifyingIndexedResearch
             DemoHandler.research = adapter(retrieve=retrieve, identity=identity,
                 generate=generate, metadata=metadata, index_path=index_path, top_k=args.top_k,
-                code_revision=code_revision(), command=sys.argv, quality_check=args.quality_check)
+                code_revision=code_revision(), command=sys.argv,
+                quality_check=args.quality_check, regulatory_assessor=assess_regulatory)
         except Exception:
             parser.error('Indexed startup failed. Check existing index/collection, cached encoder, explicit provider and model. For Codex, select a compatible CLI with --codex-bin or RESEARCH_CODEX_BIN. No fallback, rebuild or download was attempted.')
     if args.paper:

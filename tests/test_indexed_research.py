@@ -2,7 +2,7 @@
 import json
 import unittest
 from copy import deepcopy
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 from src.indexed_research import IndexedResearch, collection_identity, open_index
 from src.research_pipeline import require_current_review
 
@@ -28,6 +28,26 @@ def adapter(**kwargs):
     defaults = dict(retrieve=lambda q, k: deepcopy(PASSAGES), identity=lambda: deepcopy(IDENTITY),
         generate=generator, metadata={'provider': 'injected_test'}, index_path='/test/index')
     return IndexedResearch(**{**defaults, **kwargs})
+
+
+def regulatory_assessment(draft):
+    evidence = {'industry': draft['request']['industry'],
+        'jurisdiction': draft['request']['jurisdiction'], 'as_of': '2026-10-14',
+        'sources': [{'source_id': 1, 'title': 'Official regulation',
+                     'url': 'https://example.org/regulation'}],
+        'evidence': [{'text': 'Synthetic cited regulatory requirement.', 'source_ids': [1]}]}
+    finding = {'status': 'supported', 'explanation': 'Synthetic test finding.',
+               'source_ids': [1]}
+    assessment = {'verdict': 'potentially_feasible', 'summary': 'Synthetic advisory result.',
+        'risks': ['Synthetic test risk.'],
+        'regulatory_compliance': deepcopy(finding),
+        'legal_constraints': deepcopy(finding), 'governance': deepcopy(finding),
+        'operational_feasibility': deepcopy(finding)}
+    return {'schema_version': '1.0', 'evidence_namespace': 'regulatory', 'status': 'assessed',
+        'regulatory_evidence': evidence, 'assessment': assessment,
+        'jurisdiction': evidence['jurisdiction'], 'summary': assessment['summary'],
+        'approved': False,
+        'human_review': {'status': 'pending', 'reviewer': None, 'notes': None}}
 
 
 class IndexedTests(unittest.TestCase):
@@ -108,6 +128,129 @@ class IndexedTests(unittest.TestCase):
         self.assertEqual(result['scenario'], 'summary-only')
         self.assertNotIn('business_insight', result['result'])
         self.assertEqual(result['result']['provenance']['stages']['business'], 'not_requested')
+
+    def test_regulatory_assessment_is_opt_in_and_keeps_source_namespace_separate(self):
+        assessor_calls = []
+        research = adapter(regulatory_assessor=lambda draft: (
+            assessor_calls.append(deepcopy(draft)) or regulatory_assessment(draft)))
+        ordinary = self.run_query(research, industry='banking')
+        self.assertNotIn('regulatory_checkpoint', ordinary['result'])
+        self.assertEqual(assessor_calls, [])
+
+        assessed = self.run_query(research, industry='banking', risk_assessment=True,
+                                  jurisdiction='US')
+        checkpoint = assessed['result']['regulatory_checkpoint']
+        self.assertEqual(checkpoint['status'], 'assessed')
+        self.assertEqual(checkpoint['evidence_namespace'], 'regulatory')
+        self.assertEqual(checkpoint['regulatory_evidence']['jurisdiction'], 'US')
+        self.assertEqual(len(assessed['result']['evidence']), 2)
+        category_names = {
+            'regulatory_compliance', 'legal_constraints',
+            'governance', 'operational_feasibility',
+        }
+        self.assertEqual(category_names, set(checkpoint['assessment']) - {'verdict', 'summary', 'risks'})
+        self.assertTrue(all(checkpoint['assessment'][name]['source_ids'] == [1]
+                            for name in category_names))
+        self.assertEqual({p['chunk_id'] for p in assessed['result']['evidence']}, {'p1', 'p2'})
+        self.assertEqual(checkpoint['regulatory_evidence']['sources'][0]['source_id'], 1)
+        self.assertFalse(checkpoint['approved'])
+        self.assertEqual(checkpoint['human_review']['status'], 'pending')
+        self.assertEqual(assessed['result']['provenance']['stages']['regulatory'], 'assessed')
+        require_current_review(assessed['result'])
+
+    def test_regulatory_opt_in_requires_business_context_and_jurisdiction(self):
+        research = adapter()
+        with self.assertRaisesRegex(ValueError, 'Industry is required'):
+            self.run_query(research, risk_assessment=True, jurisdiction='US')
+        with self.assertRaisesRegex(ValueError, 'Jurisdiction is required'):
+            self.run_query(research, industry='banking', risk_assessment=True)
+        with self.assertRaisesRegex(ValueError, 'boolean'):
+            self.run_query(research, industry='banking', risk_assessment='yes')
+
+    def test_regulatory_provider_failure_is_not_reported_as_missing_evidence(self):
+        def fail(_draft):
+            raise RuntimeError('SECRET_TOKEN')
+        result = self.run_query(adapter(regulatory_assessor=fail), industry='banking',
+                                risk_assessment=True, jurisdiction='US')
+        checkpoint = result['result']['regulatory_checkpoint']
+        self.assertEqual(result['scenario'], 'partial')
+        self.assertEqual(result['error']['stage'], 'regulatory')
+        self.assertEqual(result['result']['provenance']['stages']['regulatory'], 'failed')
+        self.assertEqual(checkpoint['status'], 'failed')
+        self.assertIn('failed', checkpoint['reason'])
+        self.assertNotIn('SECRET_TOKEN', json.dumps(result))
+        require_current_review(result['result'])
+
+    def test_invalid_assessment_output_fails_closed_and_preserves_research(self):
+        def invalid_assessment(draft):
+            checkpoint = regulatory_assessment(draft)
+            checkpoint['assessment']['governance']['source_ids'] = [99]
+            return checkpoint
+
+        result = self.run_query(adapter(regulatory_assessor=invalid_assessment),
+                                industry='banking', risk_assessment=True,
+                                jurisdiction='US')
+        checkpoint = result['result']['regulatory_checkpoint']
+        self.assertEqual(checkpoint['status'], 'failed')
+        self.assertIsNone(checkpoint['assessment'])
+        self.assertIsNone(checkpoint['regulatory_evidence'])
+        self.assertEqual(result['result']['summary']['status'], 'ok')
+        self.assertEqual(result['result']['provenance']['stages']['regulatory'], 'failed')
+        self.assertEqual(result['error']['stage'], 'regulatory')
+        self.assertFalse(result['result']['approved'])
+
+    def test_unknown_findings_explain_uncertainty_without_claiming_support(self):
+        def uncertain_assessment(draft):
+            checkpoint = regulatory_assessment(draft)
+            checkpoint['assessment']['verdict'] = 'insufficient_evidence'
+            checkpoint['assessment']['governance'] = {
+                'status': 'unknown',
+                'explanation': 'The cited regulatory sources do not establish the model’s bias or explainability performance.',
+                'source_ids': [],
+            }
+            return checkpoint
+
+        result = self.run_query(adapter(regulatory_assessor=uncertain_assessment),
+                                industry='banking', risk_assessment=True,
+                                jurisdiction='US')
+        finding = result['result']['regulatory_checkpoint']['assessment']['governance']
+        self.assertEqual(finding['status'], 'unknown')
+        self.assertEqual(finding['source_ids'], [])
+        self.assertIn('do not establish', finding['explanation'])
+        self.assertEqual(result['result']['regulatory_checkpoint']['assessment']['verdict'],
+                         'insufficient_evidence')
+        self.assertFalse(result['result']['approved'])
+
+    def test_pending_adapter_output_is_reported_as_skipped(self):
+        def pending(_draft):
+            return {'schema_version': '1.0', 'evidence_namespace': 'regulatory',
+                'status': 'pending', 'reason': 'No usable business implication.',
+                'summary': 'Human review required.', 'approved': False,
+                'human_review': {'status': 'pending', 'reviewer': None, 'notes': None}}
+
+        result = self.run_query(adapter(regulatory_assessor=pending),
+                                industry='banking', risk_assessment=True,
+                                jurisdiction='US')
+        checkpoint = result['result']['regulatory_checkpoint']
+        self.assertEqual(checkpoint['status'], 'skipped')
+        self.assertEqual(checkpoint['reason'], 'No usable business implication.')
+        self.assertIsNone(checkpoint['assessment'])
+        self.assertEqual(result['result']['provenance']['stages']['regulatory'], 'skipped')
+
+    def test_regulatory_assessment_skips_when_supported_business_context_is_unavailable(self):
+        def fail_business(prompt, **kwargs):
+            if 'PAPER PASSAGES' in prompt:
+                return generator(prompt, **kwargs)
+            raise RuntimeError('business provider error')
+        assessor = Mock()
+        result = self.run_query(adapter(generate=fail_business,
+                                        regulatory_assessor=assessor),
+                                industry='banking', risk_assessment=True, jurisdiction='US')
+        checkpoint = result['result']['regulatory_checkpoint']
+        self.assertEqual(result['error']['stage'], 'business')
+        self.assertEqual(checkpoint['status'], 'skipped')
+        self.assertEqual(result['result']['provenance']['stages']['regulatory'], 'skipped')
+        assessor.assert_not_called()
 
     def test_empty_skips_provider_and_business_generation(self):
         def forbidden(*args, **kwargs):

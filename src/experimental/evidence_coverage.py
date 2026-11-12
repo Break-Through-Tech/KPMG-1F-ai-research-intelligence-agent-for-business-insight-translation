@@ -16,7 +16,7 @@ Three rules, none keyed to question wording, paper titles or expected answers:
 import math
 import re
 
-from .question_parts import question_parts
+from .question_parts import named_targets, question_parts
 from .retriever import Lexical, tokens
 
 QUANT = re.compile(r"\d+(?:\.\d+)?\s*(?:\\?%|percent\b|\\times|×|x\b|points?\b|pp\b)"
@@ -199,11 +199,38 @@ def with_result_coverage(retrieve, parents, *, retrieve_part=None):
 
     def search(question, top_k):
         parts = retrievable_parts(question)
-        main = retrieve(question, min(20, 2 * top_k) if parts else top_k)
-        lists = [main] + [part_search(part, top_k) for part in parts]
-        return cover_roles(question, merge_ranked(lists, top_k), by_paper)
+        intent = multi_source_intent(question)
+        main = retrieve(question, min(20, 2 * top_k) if (parts or intent) else top_k)
+        if parts:
+            part_lists = [part_search(part, top_k) for part in parts]
+            if len(named_targets(question)) >= 2:
+                # A named-target split must point at different papers; otherwise the
+                # names belong to one study (e.g. models in its results table).
+                tops = {_paper(main[0])} if main else set()
+                tops |= {_paper(l[0]) for l in part_lists if l}
+                if len(tops) < 2:
+                    return cover_roles(question, main[:top_k], by_paper)
+            return cover_roles(question, merge_ranked([main] + part_lists, top_k), by_paper)
+        if intent and main:
+            papers = list(dict.fromkeys(_paper(p) for p in main))
+            if len(papers) >= 2:  # balance the two leading papers of the ranking
+                second = [p for p in main if _paper(p) == papers[1]]
+                return cover_roles(question, merge_ranked([main, second], top_k), by_paper)
+        return cover_roles(question, main[:top_k], by_paper)
     search.coverage = coverage_provenance()
     return search
+
+
+# Explicit plural-source language only. Words such as 'comparison', 'differ' or 'combine'
+# usually describe comparisons inside one study (e.g. a results table), so they are not cues.
+MULTI_SOURCE = re.compile(
+    r"\b(both|each of|each study|each paper|either|two (?:papers|studies|works|approaches|methods|systems)|"
+    r"(?:papers|studies)\b|together|jointly|alongside|versus|vs\.?|relative to|in light of|read with)", re.I)
+
+
+def multi_source_intent(question):
+    """Generic language signalling that the answer needs more than one source."""
+    return bool(MULTI_SOURCE.search(question))
 
 
 def coverage_provenance():

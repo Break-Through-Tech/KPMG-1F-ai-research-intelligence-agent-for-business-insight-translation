@@ -4,8 +4,13 @@
   const module = import('/read-aloud.mjs');
   const readers = new Set();
   function attach(parent, item) {
+    const disclosure = document.createElement('details');
+    disclosure.className = 'listen-disclosure';
+    const summary = document.createElement('summary');
+    summary.textContent = 'Listen';
     const root = document.createElement('div');
-    parent.append(root);
+    disclosure.append(summary, root);
+    parent.append(disclosure);
     module.then(({mountReadAloud}) => {
       if (!root.isConnected) return;
       const reader = mountReadAloud(root);
@@ -16,7 +21,11 @@
       });
       observer.observe(document.documentElement, {childList: true, subtree: true});
     }).catch(() => {
-      root.textContent = 'Read-aloud could not load. All text and citations remain available.';
+      const status = document.createElement('p');
+      status.className = 'meta';
+      status.setAttribute('role', 'status');
+      status.textContent = 'Audio controls could not load. Read the text or use your screen reader.';
+      disclosure.replaceWith(status);
     });
   }
   function source(passage, number) {

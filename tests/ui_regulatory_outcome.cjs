@@ -10,10 +10,11 @@ test('regulatory outage retains business output in announcement and visible expl
   const demo = {mode: 'indexed', scenario: 'partial', error: {stage: 'regulatory'}, result: {}};
   const paragraphs = [];
   const stop = new Error('render boundary');
-  const context = {demo, BriefLibrary: {reviewText: () => 'Pending'},
+  const context = {demo, BriefLibrary: {reviewText: () => 'Pending', controls() {}},
+    AnswerExport: {controls() {}}, ResearchSpeech: {attach() {}, result() {}},
     isReal: () => true, isSynthesis: () => true,
     STATES: {partial: ['Partial draft', 'No recommendation is shown.']},
-    element: (tag, text) => { if (tag === 'p') paragraphs.push(text); return {append() {}}; },
+    element: (tag, text) => { if (tag === 'p') paragraphs.push(text); return {append() {}, setAttribute() {}}; },
     answerHeading() {}, renderDraft() { throw stop; }, stop,
     answer: {replaceChildren() {}, append() {}}};
   vm.createContext(context);

@@ -90,7 +90,7 @@
     add('h1', 'Selected research result');
     add('h2', 'Question');
     add('p', result.request.query);
-    if (demo.mode === 'fixture') add('p', 'Synthetic fixture only. The displayed question is the fixed example question; the typed question was not executed.');
+    if (demo.mode === 'fixture') add('p', 'Synthetic fixture only. The prepared example question was not searched.');
     else add('p', demo.mode === 'live-synthesis' ? 'LLM synthesis; not independently verified.' : 'Saved research result; no new query executed.');
     add('h2', 'Status and review');
     add('p', `Result state: ${demo.scenario}. Summary: ${result.summary.status}. Business translation: ${result.business_insight?.status ?? 'not requested'}. Risk assessment: ${result.regulatory_checkpoint?.status ?? 'not requested'}.`);
@@ -199,12 +199,13 @@
 
   function controls(demo, number) {
     const group = document.createElement('section');
+    group.className = 'answer-export-controls';
     group.setAttribute('aria-label', `Export result ${number}`);
     const status = document.createElement('p'); status.setAttribute('role', 'status');
     status.setAttribute('aria-live', 'polite'); status.className = 'meta';
     for (const [format, label] of [['html', 'HTML'], ['md', 'Markdown']]) {
       const button = document.createElement('button'); button.type = 'button'; button.className = 'quiet';
-      button.textContent = `Export this result as ${label}`;
+      button.textContent = `Export ${label}`;
       button.addEventListener('click', () => {
         let url;
         try {

@@ -56,10 +56,8 @@ const test = base.extend({
   },
 });
 
-async function choose(page, state = 'full', query = 'Accessibility fixture question') {
-  await page.getByText('Demo options', {exact: true}).click();
-  await page.getByLabel('Example state').selectOption(state);
-  await page.getByRole('textbox', {name: 'Research question'}).fill(query);
+async function choose(page, state = 'full') {
+  await page.locator('#scenario').selectOption(state);
   await page.getByRole('button', {name: 'View example'}).click();
   await expect(page.locator('#output')).toHaveAttribute('aria-busy', 'false');
   return page.locator('.turn').last();
@@ -83,8 +81,25 @@ async function scan(page, info, label) {
   }));
   await info.attach(`axe-${label}`, {body: JSON.stringify(results, null, 2), contentType: 'application/json'});
   expect(results.violations.map(v => ({id: v.id, impact: v.impact,
-    targets: v.nodes.map(n => n.target)})), `${label}: inspect attached axe report, including incomplete checks`).toEqual([]);
+    nodes: v.nodes.map(n => ({target: n.target, html: n.html, failureSummary: n.failureSummary}))})),
+  `${label}: inspect attached axe report, including incomplete checks`).toEqual([]);
 }
+
+test('empty demo keeps prepared-example controls near the question on desktop and mobile', async ({page}) => {
+  for (const width of [1280, 320]) {
+    await page.setViewportSize({width, height: 900});
+    await expect(page.locator('#conversation')).toBeHidden();
+    const layout = await page.evaluate(() => {
+      const mode = document.querySelector('#mode-card').getBoundingClientRect();
+      const controls = document.querySelector('.composer-area').getBoundingClientRect();
+      return {modeBottom: mode.bottom, controlsTop: controls.top, controlsBottom: controls.bottom,
+        documentWidth: document.documentElement.scrollWidth, viewportWidth: innerWidth};
+    });
+    expect(layout.controlsTop).toBeGreaterThanOrEqual(layout.modeBottom);
+    expect(layout.controlsBottom).toBeLessThanOrEqual(900);
+    expect(layout.documentWidth).toBeLessThanOrEqual(layout.viewportWidth);
+  }
+});
 
 for (const theme of ['light', 'dark']) {
   test.describe(theme, () => {
@@ -98,6 +113,15 @@ for (const theme of ['light', 'dark']) {
         } else {
           await expect(turn).toContainText('Draft · Not approved');
           await expect(turn.locator('.citation')).toHaveCount({full: 3, 'plain-language': 4, partial: 2, insufficient: 0, empty: 0}[state]);
+        }
+        if (state === 'full') {
+          await expect(turn.getByRole('button', {name: 'Export HTML', exact: true})).toBeVisible();
+          await expect(turn.getByRole('button', {name: 'Export Markdown', exact: true})).toBeVisible();
+          const downloadPromise = page.waitForEvent('download');
+          await turn.getByRole('button', {name: 'Export Markdown', exact: true}).click();
+          expect((await downloadPromise).suggestedFilename()).toBe('research-result-1.md');
+          await expect(turn.locator('.answer-export-controls [role="status"]')).toContainText('Pending review; not approved.');
+          await expect(turn.locator('.listen-disclosure > summary')).toHaveText('Listen');
         }
         if (['partial', 'insufficient', 'empty'].includes(state))
           await expect(turn).toContainText('No supported business recommendations.');
@@ -133,25 +157,22 @@ for (const theme of ['light', 'dark']) {
       await expect(page.locator('#submit')).toBeEnabled();
     });
 
-    test('transport failure: question retained and keyboard retry recovers', async ({page}, info) => {
-      const query = 'Keep this question after failure';
+    test('transport failure: selected example can be retried by keyboard', async ({page}, info) => {
       await choose(page); // Keep an earlier successful turn to test stale-answer separation.
       await page.route('**/api/demo', route => route.fulfill({status: 503,
         contentType: 'application/json', body: JSON.stringify({error: 'Injected offline failure'})}));
-      const failed = await choose(page, 'full', query);
+      const failed = await choose(page, 'full');
       await expect(failed.getByRole('heading', {name: 'Answer 2', exact: true})).toBeVisible();
-      await expect(failed).toContainText('Could not load the local example');
+      await expect(failed).toContainText('Could not load the prepared example');
       await expect(failed.locator('.citation')).toHaveCount(0);
-      await expect(page.getByRole('textbox')).toHaveValue(query);
-      await expect(page.locator('#feedback')).toContainText('retry');
+      await expect(page.locator('#feedback')).toContainText(/retry/i);
       await scan(page, info, 'transport-failure');
       await page.unroute('**/api/demo');
-      await failed.getByRole('button', {name: 'Retry original question'}).focus();
+      await failed.getByRole('button', {name: 'Retry prepared example'}).focus();
       await page.keyboard.press('Enter');
       await expect(page.locator('.turn')).toHaveCount(3);
       await expect(page.locator('.turn').last()).toContainText('Draft · Not approved');
-      await expect(page.getByRole('textbox')).toHaveValue('');
-      await expect(page.getByRole('textbox')).toBeFocused();
+      await expect(page.locator('#submit')).toBeEnabled();
     });
 
     test('long content: source, preview, and draft stay inspectable', async ({page}, info) => {
@@ -186,8 +207,12 @@ for (const width of [1280, 390]) {
     await page.keyboard.press('Tab');
     await expect(page.locator('.skip')).toBeFocused();
     await page.keyboard.press('Enter');
-    await expect(page.getByRole('textbox')).toBeFocused();
-    await page.keyboard.press('Control+Enter');
+    await expect(page.locator('#main')).toBeFocused();
+    await page.keyboard.press('Tab');
+    await expect(page.locator('#scenario')).toBeFocused();
+    await page.keyboard.press('Tab');
+    await expect(page.locator('#submit')).toBeFocused();
+    await page.keyboard.press('Enter');
     await expect(page.locator('.citation').first()).toBeVisible();
     let reached = false;
     for (let i = 0; i < 30; i++) {
@@ -277,6 +302,27 @@ for (const mode of ['reflow-320', 'text-200', 'text-spacing', 'reduced-motion'])
     if (mode === 'reflow-320') await page.setViewportSize({width: 320, height: 900});
     if (mode === 'reduced-motion') await page.emulateMedia({reducedMotion: 'reduce'});
     await choose(page);
+    if (mode === 'reflow-320') {
+      await page.locator('.reading-settings > summary').click();
+      await expect(page.locator('#reading-size')).toBeVisible();
+      const headerFlow = await page.evaluate(() => ({
+        headerBottom: document.querySelector('.masthead').getBoundingClientRect().bottom,
+        modeTop: document.querySelector('#mode-card').getBoundingClientRect().top,
+      }));
+      expect(headerFlow.modeTop).toBeGreaterThanOrEqual(headerFlow.headerBottom);
+      await page.locator('.reading-settings > summary').click();
+      const bounds = await page.evaluate(() => {
+        const toolbar = document.querySelector('.answer-toolbar').getBoundingClientRect();
+        const element = document.querySelector('#conversation');
+        const conversation = element.getBoundingClientRect();
+        return {toolbar: {top: toolbar.top, bottom: toolbar.bottom},
+          conversation: {top: conversation.top, bottom: conversation.bottom},
+          scroll: {top: element.scrollTop, height: element.scrollHeight, client: element.clientHeight,
+            overflowY: getComputedStyle(element).overflowY}};
+      });
+      expect(bounds.toolbar.top).toBeGreaterThanOrEqual(bounds.conversation.top);
+      expect(bounds.toolbar.bottom, JSON.stringify(bounds)).toBeLessThanOrEqual(bounds.conversation.bottom + 1);
+    }
     if (mode === 'text-200') {
       // Computed-font doubling is a stress proxy, NOT native browser text-only zoom.
       await page.evaluate(() => {
@@ -291,7 +337,8 @@ for (const mode of ['reflow-320', 'text-200', 'text-spacing', 'reduced-motion'])
         p {margin-bottom: 2em !important;}`}));
       await page.addStyleTag({url: '/__a11y/spacing.css'});
     }
-    await expect(page.getByRole('textbox')).toBeVisible();
+    await expect(page.locator('#query')).toBeHidden();
+    await expect(page.locator('#scenario')).toBeVisible();
     await expect(page.locator('#submit')).toBeVisible();
     await expect(page.locator('.turn')).toContainText('Draft · Not approved');
     const measurements = await page.evaluate(() => ({

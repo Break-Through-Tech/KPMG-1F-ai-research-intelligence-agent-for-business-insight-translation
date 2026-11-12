@@ -140,3 +140,13 @@ def review_adapter(draft: Dict[str, Any], *, retrieve_regulations_fn: Optional[C
     result["status"] = "assessed"
     result["summary"] = assessment["summary"]
     return result
+
+
+def assess_regulatory(draft):
+    """Lazy shared provider bridge for indexed launchers; ordinary queries never initialize it."""
+    from src.human_checkpoint import assess_insight, create_client, retrieve_regulations
+    return review_adapter(
+        draft, client=create_client(),
+        retrieve_regulations_fn=retrieve_regulations,
+        assess_insight_fn=assess_insight,
+    )

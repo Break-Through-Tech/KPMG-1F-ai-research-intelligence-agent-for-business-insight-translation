@@ -18,10 +18,12 @@ def load_generator(spec, options):
 
 def create_research(retrieval, generate, metadata, top_k=5):
     from src.indexed_research import IndexedResearch, fingerprint, code_revision
+    from src.research_review import assess_regulatory
     retrieve, identity, path, provenance = retrieval
     research = IndexedResearch(retrieve=retrieve, identity=identity, index_path=path,
         generate=generate, metadata=metadata, top_k=top_k, quality_check=True,
-        code_revision=code_revision(), command=['experimental-b2-demo'])
+        code_revision=code_revision(), command=['experimental-b2-demo'],
+        regulatory_assessor=assess_regulatory)
     research.provenance['retrieval'] = {**provenance,'top_k':top_k}
     research.context_id = fingerprint(research.provenance)
     return research

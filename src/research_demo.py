@@ -359,16 +359,7 @@ def main():
             else:
                 from src.generation import create_generate
                 generate, metadata = create_generate()
-            def assess_regulatory(draft):
-                from src.human_checkpoint import (
-                    assess_insight, create_client, retrieve_regulations,
-                )
-                from src.research_review import review_adapter
-                return review_adapter(
-                    draft, client=create_client(),
-                    retrieve_regulations_fn=retrieve_regulations,
-                    assess_insight_fn=assess_insight,
-                )
+            from src.research_review import assess_regulatory
             import sys
             adapter = IndexedResearch
             if args.clarification:

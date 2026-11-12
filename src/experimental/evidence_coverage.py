@@ -111,10 +111,16 @@ def _is_scope(p):
 
 
 def cover_roles(query, selected, paper_passages, *, external=False):
-    """Fill missing evidence roles for papers that dominate the budget (budget unchanged)."""
+    """Fill missing evidence roles for papers that dominate the budget (budget unchanged).
+
+    Library evidence keeps only the abstract role: swapping in a 'results' passage
+    displaced the ranked table row or method passage that actually answered the
+    question (development set). Newly read external papers keep abstract, results
+    and study-scope roles, which that evaluation did not cover.
+    """
     result = list(selected)
     papers = list(dict.fromkeys(_paper(p) for p in result))
-    roles = [_is_abstract, _is_quantitative] + ([_is_scope] if external else [])
+    roles = [_is_abstract] + ([_is_quantitative, _is_scope] if external else [])
     for paper in papers:
         own = [i for i, p in enumerate(result) if _paper(p) == paper]
         if len(own) < 3:
@@ -180,16 +186,21 @@ def _abstracts_for_minor_papers(query, result, paper_passages, max_swaps=2):
     return result
 
 
-def with_result_coverage(retrieve, parents):
-    """Library retrieval with part coverage, paper balance and role coverage."""
+def with_result_coverage(retrieve, parents, *, retrieve_part=None):
+    """Library retrieval with part coverage, paper balance and role coverage.
+
+    `retrieve_part` ranks question parts (default: `retrieve`); the B2 adapter
+    supplies its lower-cost light ranking so a part does not repeat a full rerank.
+    """
     by_paper = {}
     for p in parents:
         by_paper.setdefault(_paper(p), []).append(p)
+    part_search = retrieve_part or retrieve
 
     def search(question, top_k):
         parts = retrievable_parts(question)
         main = retrieve(question, min(20, 2 * top_k) if parts else top_k)
-        lists = [main] + [retrieve(part, top_k) for part in parts]
+        lists = [main] + [part_search(part, top_k) for part in parts]
         return cover_roles(question, merge_ranked(lists, top_k), by_paper)
     search.coverage = coverage_provenance()
     return search

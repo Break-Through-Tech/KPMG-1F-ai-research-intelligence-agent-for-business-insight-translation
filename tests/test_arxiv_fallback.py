@@ -219,7 +219,7 @@ class ResearchCitationTests(unittest.TestCase):
         self.assertEqual(out['result']['summary']['status'], 'ok')
         self.assertEqual(out['result']['evidence'], [a,b])
 
-    def test_companion_adds_relevant_results_within_budget(self):
+    def test_library_coverage_does_not_swap_out_ranked_evidence_for_results(self):
         from src.experimental.evidence_coverage import with_result_coverage
         hits = [dict(passage("Agent benchmark tasks and models."), chunk_id=str(i),
                      arxiv_id="same") for i in range(3)]
@@ -227,12 +227,12 @@ class ResearchCitationTests(unittest.TestCase):
                        chunk_id="results", arxiv_id="same", section="Results")
         unrelated = dict(results, chunk_id="other", arxiv_id="different")
         retrieve = with_result_coverage(lambda q, k: hits, hits + [unrelated, results])
-        # Coverage no longer depends on question wording (previously only "how often"
-        # style questions received the result passage). The budget, the best passage
-        # and the paper boundary are still preserved.
+        # Results passages reach library evidence through ranking (coverage_candidates),
+        # not by displacing ranked passages: on the development set that swap removed
+        # the answering table row or method passage. Behaviour is wording-independent.
         for question in ("How often did agents succeed?", "What is the benchmark?"):
             with self.subTest(question=question):
-                self.assertEqual(retrieve(question, 3), hits[:2] + [results])
+                self.assertEqual(retrieve(question, 3), hits)
         self.assertEqual(with_result_coverage(lambda q, k: hits[:2], hits + [results])("What is the benchmark?", 2),
                          hits[:2])  # a paper with fewer than three slots is never altered
 

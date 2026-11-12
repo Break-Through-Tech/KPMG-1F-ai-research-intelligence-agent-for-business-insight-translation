@@ -37,6 +37,19 @@ class QuestionPartsTests(unittest.TestCase):
         self.assertEqual(question_parts('Compare how Alpha Net and Beta Former reduce memory use'),
                          ['Alpha Net reduce memory use', 'Beta Former reduce memory use'])
 
+    def test_quoted_titles_are_never_split_inside(self):
+        q = 'What do the authors of "Who, What, and How of Model Audits" say about limits?'
+        self.assertEqual(question_parts(q), [])
+        q = 'Compare "Alpha: Fast, Small, and Cheap Models" and "Beta Systems for Safe Agents": what did each find?'
+        parts = question_parts(q)
+        self.assertEqual(len(parts), 2)
+        self.assertIn('"Alpha: Fast, Small, and Cheap Models"', parts[0])
+        self.assertIn('"Beta Systems for Safe Agents"', parts[1])
+
+    def test_a_mentioned_comparison_is_not_a_comparison_request(self):
+        q = 'In the table of ablations comparing prefill and decoding stages, which setting is fastest?'
+        self.assertEqual(question_parts(q), [])
+
     def test_dangling_parts_are_not_retrieved_alone(self):
         q = 'Can a monitor detect covert goal pursuit by an agent, and how was that tested?'
         self.assertEqual(retrievable_parts(q), ['Can a monitor detect covert goal pursuit by an agent'])
@@ -74,11 +87,26 @@ class CoverageTests(unittest.TestCase):
         selected = [best, p('a1', 'A', 'related work'), p('b0', 'B', 'other paper'), p('a2', 'A', 'background')]
         pool = {'A': selected[:2] + [selected[3], p('abs', 'A', 'We find that the method works.', 'abstract'),
                                      p('num', 'A', 'Accuracy rose from 41.2% to 73.5% on the test set.', 'results')]}
+        # Library evidence: only the abstract is added; ranked passages that may answer the
+        # question (e.g. a table row or method passage) are not swapped out for "results".
         out = cover_roles('method accuracy', selected, pool)
         self.assertEqual(out[0], best)
         self.assertEqual(out[2]['chunk_id'], 'b0')
         self.assertEqual(len(out), 4)
+        self.assertEqual({x['chunk_id'] for x in out if x['arxiv_id'] == 'A'}, {'a0', 'a1', 'abs'})
+        # External evidence (newly read papers) still keeps abstract and results roles.
+        out = cover_roles('method accuracy', selected, pool, external=True)
         self.assertEqual({x['chunk_id'] for x in out if x['arxiv_id'] == 'A'}, {'a0', 'abs', 'num'})
+
+    def test_parts_use_the_supplied_part_ranking(self):
+        calls = []
+        def full(q, k):
+            calls.append(('full', q)); return [p(f'f{len(calls)}{i}', 'A', 'x y z') for i in range(k)]
+        def light(q, k):
+            calls.append(('light', q)); return [p(f'l{len(calls)}{i}', 'B', 'x y z') for i in range(k)]
+        search = with_result_coverage(full, [], retrieve_part=light)
+        search('Do streaming detectors beat static ones, and do language agents degrade over longer conversations?', 8)
+        self.assertEqual([c[0] for c in calls], ['full', 'light', 'light'])
 
     def test_external_ranking_keeps_abstract_numbers_and_each_relevant_paper(self):
         a = [p(f'a{i}', 'A', f'self preference evaluator bias discussion {i}', 'discussion') for i in range(10)]

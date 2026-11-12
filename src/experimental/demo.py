@@ -72,7 +72,8 @@ def main(argv=None):
             source_parents = [json.loads(line) for line in parents]
         discovery = ArxivDiscovery(generate, indexed_ids={row['arxiv_id'] for row in source_parents},
                                    rerank=cross_encoder_scorer(reranker))
-        retrieval = (with_result_coverage(retrieval[0], source_parents), *retrieval[1:])
+        retrieval = (with_result_coverage(retrieval[0], source_parents,
+                                          retrieve_part=getattr(retrieval[0], 'light', None)), *retrieval[1:])
     research = create_research(retrieval, generate, metadata, args.top_k, arxiv_search=discovery)
     from src.research_demo import DemoHandler
     from src.brief_store import BriefStore

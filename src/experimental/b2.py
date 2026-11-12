@@ -4,6 +4,7 @@ from hashlib import sha256
 from pathlib import Path
 import numpy as np
 from .balanced_retriever import FacetRetriever
+from .light_ranking import light_order
 from .search_index import SearchViewIndex
 
 METHOD = 'document-table-balanced-facets-v1'
@@ -24,7 +25,7 @@ def open_b2(index_path, *, encoder_path, reranker_path, encoder=None, reranker=N
         raise ValueError('B2 requires the bounded token224_parent bundle; no alternate strategy selected.')
     engine = FacetRetriever(index, reranker, encoder)
     here = Path(__file__).resolve().parent
-    names = ('b2.py','retriever.py','balanced_retriever.py','evidence_coverage.py','search_index.py','search_chunks.py','semantic_views.py')
+    names = ('b2.py','retriever.py','balanced_retriever.py','evidence_coverage.py','light_ranking.py','search_index.py','search_chunks.py','semantic_views.py')
     hashes = {name: sha256((here/name).read_bytes()).hexdigest() for name in names}
     if index.manifest['strategy'] == 'semantic95_token224_parent':
         import src.semantic_chunking_adapter as adapter
@@ -54,6 +55,20 @@ def open_b2(index_path, *, encoder_path, reranker_path, encoder=None, reranker=N
             raise ValueError('Invalid query embedding.')
         order, _ = engine.rank_facets(query,vector[0])
         return engine.resolve(order,top_k)
+    def retrieve_light(query, top_k=5):
+        """Question parts: hybrid first stage reranked on its top 20 (see light_ranking)."""
+        identity()
+        if not isinstance(query,str) or not query.strip():
+            raise ValueError('Nonempty question required.')
+        if isinstance(top_k,bool) or not isinstance(top_k,int) or not 1 <= top_k <= 20:
+            raise ValueError('top_k must be 1..20.')
+        if index.token_count(query) > encoder.max_seq_length:
+            raise ValueError('Query would truncate; shorten it before retrying.')
+        vector = np.asarray(encoder.encode([query],show_progress_bar=False),dtype=np.float32)
+        if vector.shape != (1,384) or not np.isfinite(vector).all():
+            raise ValueError('Invalid query embedding.')
+        return engine.resolve(light_order(engine, reranker, query, vector[0]), top_k)
+    retrieve.light = retrieve_light
     return retrieve, identity, str(index.path), {
         'method':METHOD,'strategy':index.manifest['strategy'],'experimental':True,'human_acceptance':'pending',
         'generation_calls':0,'document_index_rebuilt':False,

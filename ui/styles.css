@@ -103,6 +103,11 @@ textarea::placeholder { color: var(--muted); }
 .controls { display: flex; gap: 12px; align-items: center; justify-content: flex-end; margin-top: 8px; }
 select { background: var(--background); border: 1px solid var(--border); border-radius: 6px; padding: 6px 28px 6px 10px; font-size: 0.875rem; max-width: 100%; }
 #submit { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 14px; font-size: 0.875rem; font-weight: 550; background: var(--primary); color: var(--on-primary); white-space: nowrap; }
+.risk-opt-in { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
+.risk-opt-in input { width: 18px; height: 18px; }
+#risk-options { margin-top: 8px; }
+#risk-options input { width: 100%; min-height: 44px; padding: 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--background); }
+#risk-options p { margin: 6px 0 0; }
 #evidence-panel { position: relative; flex: 0 0 360px; width: 360px; max-width: none; max-height: none; height: 100%; margin: 0; padding: 20px 24px; border: 0; border-left: 1px solid var(--border); background: var(--surface); color: var(--text); overflow-y: auto; }
 #evidence-panel:not([open]) { display: none; }
 .rail-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 20px; }

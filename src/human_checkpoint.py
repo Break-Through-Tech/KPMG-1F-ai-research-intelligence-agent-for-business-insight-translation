@@ -31,11 +31,14 @@ class Assessment(BaseModel):
     risks: list[str]
 
 
+from src.regulatory_validation import RegulatoryConfigurationError
+
+
 def create_client():
     load_dotenv()
     api_key = os.getenv("GOOGLE_API_KEY", "").strip()
     if not api_key or "Your API Key" in api_key:
-        raise ValueError("Set GOOGLE_API_KEY in your local .env; do not commit the key.")
+        raise RegulatoryConfigurationError("Set GOOGLE_API_KEY in your local .env; do not commit the key.")
     return genai.Client(api_key=api_key)
 
 

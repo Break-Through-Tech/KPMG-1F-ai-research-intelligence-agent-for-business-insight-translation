@@ -64,7 +64,7 @@ test('send preference persists across reload; Shift+Enter remains multiline', as
     await page.getByText('Research options', {exact: true}).click();
     await page.getByLabel('Enter key').selectOption('send'); await page.reload(); await ready(page);
     assert.equal(await page.getByLabel('Enter key').inputValue(), 'send');
-    const input = page.getByRole('textbox'); await input.fill('Persisted'); await input.press('End'); await input.press('Shift+Enter');
+    const input = page.getByRole('textbox', {name: 'Research question', exact: true}); await input.fill('Persisted'); await input.press('End'); await input.press('Shift+Enter');
     assert.equal(count, 0); await input.press('Enter'); await ready(page); assert.equal(count, 1);
   }, {live: true});
 });
@@ -75,7 +75,7 @@ test('IME composition, legacy 229, commit Enter, repeat and dictation input do n
     await page.route('**/api/research', async r => { count++; await r.fulfill({json: envelope(r.request().postDataJSON(), true)}); });
     await page.getByText('Research options', {exact: true}).click();
     await page.getByLabel('Enter key').selectOption('send');
-    const input = page.getByRole('textbox'); await input.fill('日本語');
+    const input = page.getByRole('textbox', {name: 'Research question', exact: true}); await input.fill('日本語');
     await input.dispatchEvent('compositionstart');
     await input.dispatchEvent('keydown', {key: 'Enter', isComposing: false});
     await input.dispatchEvent('compositionend');
@@ -97,7 +97,7 @@ test('HTTP failure preserves original plus concurrent draft; keyboard retry rest
       if (requests.length === 1) await r.fulfill({status: 503, json: {error: 'Unavailable'}});
       else { await new Promise(resolve => { release = resolve; }); await r.fulfill({json: envelope(requests.at(-1), true)}); }
     });
-    const input = page.getByRole('textbox'); await input.fill('Original question'); await input.press('Control+Enter'); await ready(page);
+    const input = page.getByRole('textbox', {name: 'Research question', exact: true}); await input.fill('Original question'); await input.press('Control+Enter'); await ready(page);
     assert.equal(await input.inputValue(), 'Original question');
     await input.fill('Unsent edit');
     const retry = page.getByRole('button', {name: 'Retry original question'}); await retry.focus(); await page.keyboard.press('Enter');
@@ -122,7 +122,7 @@ test('network failure and simulated provider error expose retry without clearing
       return route.fulfill({json: {mode: 'live-synthesis', scenario: 'provider-error',
         submitted_request, result: null, error: {stage: 'provider', message: 'Simulated provider failure'}}});
     });
-    const input = page.getByRole('textbox'); await input.fill('Network question'); await input.press('Control+Enter'); await ready(page);
+    const input = page.getByRole('textbox', {name: 'Research question', exact: true}); await input.fill('Network question'); await input.press('Control+Enter'); await ready(page);
     assert.equal(await input.inputValue(), 'Network question');
     assert.equal(await page.getByRole('button', {name: 'Retry original question'}).count(), 1);
     await input.press('Control+Enter'); await ready(page);
@@ -156,7 +156,7 @@ test('contextual suggestions only in bound live paper mode, with existing succes
   await desk(async page => {
     let requests = [];
     await page.route('**/api/research', async r => { const body = r.request().postDataJSON(); requests.push(body); await r.fulfill({json: envelope(body, true)}); });
-    const input = page.getByRole('textbox'); await input.fill('First'); await input.press('Control+Enter'); await ready(page);
+    const input = page.getByRole('textbox', {name: 'Research question', exact: true}); await input.fill('First'); await input.press('Control+Enter'); await ready(page);
     assert.deepEqual(requests[0].history, []);
     await page.getByRole('button', {name: 'Show the supporting evidence', exact: true}).click();
     assert.equal(requests.length, 1); assert.match(await input.inputValue(), /previous answer/);
@@ -176,7 +176,7 @@ test('delayed contextual retry retains original history and refuses stale cross-
         await r.fulfill({status: 409, json: {code: 'paper_changed', paper_context_id: 'paper-B'}});
       } else await r.fulfill({json: envelope(body, true)});
     });
-    const input = page.getByRole('textbox');
+    const input = page.getByRole('textbox', {name: 'Research question', exact: true});
     async function ask(text) { await input.fill(text); await input.press('Control+Enter'); await ready(page); }
     await ask('Answer A');
     await ask('Show the supporting evidence for the previous answer.');
@@ -206,7 +206,7 @@ test('paper_changed clears stale context and retry uses new identity with no pre
       if (requests.length === 2) await r.fulfill({status: 409, json: {code: 'paper_changed', paper_context_id: 'paper-B'}});
       else await r.fulfill({json: envelope(body, true)});
     });
-    const input = page.getByRole('textbox'); await input.fill('First'); await input.press('Control+Enter'); await ready(page);
+    const input = page.getByRole('textbox', {name: 'Research question', exact: true}); await input.fill('First'); await input.press('Control+Enter'); await ready(page);
     await input.fill('Second'); await input.press('Control+Enter'); await ready(page);
     assert.match(await page.locator('#feedback').innerText(), /paper changed/i);
     assert.equal(await input.inputValue(), 'Second');
@@ -264,7 +264,7 @@ test('320px live keyboard entry and error retry remain reachable without horizon
   await desk(async page => {
     await page.setViewportSize({width: 320, height: 700});
     await page.route('**/api/research', r => r.fulfill({status: 503, json: {error: 'Unavailable'}}));
-    const input = page.getByRole('textbox'); await input.fill('Small screen question'); await input.press('Control+Enter'); await ready(page);
+    const input = page.getByRole('textbox', {name: 'Research question', exact: true}); await input.fill('Small screen question'); await input.press('Control+Enter'); await ready(page);
     await input.press('Shift+Tab');
     assert.equal(await page.getByRole('button', {name: 'Jump to latest answer'}).evaluate(e => e === document.activeElement), true);
     await page.keyboard.press('Shift+Tab');
@@ -322,7 +322,7 @@ test('composer controls stay within narrow screens and wrap at larger text sizes
 });
 
 for (const width of [1280, 320]) {
-  test(`single prompt: context travels in question, outer focus and retry remain usable (${width}px)`, async () => {
+  test(`indexed prompt: optional business context, outer focus and retry remain usable (${width}px)`, async () => {
     await desk(async page => {
       await page.setViewportSize({width, height: 900});
       await page.emulateMedia({colorScheme: 'dark'});
@@ -332,7 +332,8 @@ for (const width of [1280, 320]) {
       await page.reload(); await ready(page);
       const input = page.getByRole('textbox', {name: 'Research question'});
       assert.equal(await input.inputValue(), '');
-      assert.equal(await page.locator('#industry').count(), 0);
+      assert.equal(await page.locator('#industry').isVisible(), true);
+      assert.equal(await page.locator('#industry').inputValue(), '');
       assert.equal(await page.locator('#entry-options').isVisible(), false);
       await input.focus();
       const style = await input.evaluate(node => ({
@@ -355,7 +356,8 @@ for (const width of [1280, 320]) {
       await page.getByRole('button', {name: 'Research', exact: true}).click(); await ready(page);
       assert.equal(body.query, 'What are the business implications for banking?');
       assert.equal(body.interpret_context, true);
-      assert.equal('industry' in body, false);
+      assert.equal(body.industry, '');
+      assert.equal(body.risk_assessment, false);
       assert.equal(await input.inputValue(), body.query);
       assert.equal(await page.getByRole('button', {name: 'Retry original question'}).isVisible(), true);
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
@@ -386,7 +388,7 @@ test('indexed deadline includes the fifth provider budget', async () => {
       started(); await gate;
       await r.fulfill({json: {...envelope(r.request().postDataJSON()), mode: 'indexed'}});
     });
-    await page.getByRole('textbox').fill('What are the business implications for banking?');
+    await page.getByRole('textbox', {name: 'Research question', exact: true}).fill('What are the business implications for banking?');
     await page.getByRole('button', {name: 'Research', exact: true}).click();
     await requestStarted;
     try {
@@ -396,6 +398,6 @@ test('indexed deadline includes the fifth provider budget', async () => {
     } finally { release(); }
     await ready(page);
     assert.match(await page.locator('.turn').innerText(), /Draft · Not approved/);
-    assert.equal(await page.getByRole('textbox').inputValue(), '');
+    assert.equal(await page.getByRole('textbox', {name: 'Research question', exact: true}).inputValue(), '');
   });
 });

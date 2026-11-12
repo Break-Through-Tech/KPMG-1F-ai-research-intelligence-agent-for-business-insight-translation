@@ -442,6 +442,29 @@ The result JSON in Run details includes the complete result and review fingerpri
 compatible with the existing `src.research_review` packet workflow. HTML/Markdown
 exports remain available. Indexed results are not placed in a global replay slot.
 
+### Optional risk and compliance assessment
+
+In indexed mode, provide an industry/business context, select **Add source-backed
+risk and compliance assessment**, and enter a jurisdiction. This opt-in runs
+after a supported business translation. It reuses `src.research_review.review_adapter`
+and the existing `src.human_checkpoint` regulatory source retrieval and structured
+assessment. Regulatory web sources have their own source IDs and namespace; they
+are not mixed with research-paper passages or citations. The UI shows regulatory
+compliance, legal constraints, governance, and operational feasibility findings
+with their source links, jurisdiction, as-of date, and any `unknown`/conflicting
+status.
+
+The regulatory adapter is initialized lazily only when requested. It uses the
+existing Google GenAI integration and requires a local `GOOGLE_API_KEY`, model
+access, and Google Search grounding availability even when indexed research
+synthesis uses another configured provider. No key is required to start the
+server or use ordinary indexed research. Provider/validation failure is labeled
+as failed (not as absence of risk evidence); if no supported business translation
+is available, assessment is marked skipped. These findings are advisory, remain
+pending human review, and do not provide legal advice, compliance certification,
+or automatic approval. Verify each source and applicability with a qualified
+reviewer before relying on the assessment.
+
 ### Run identity and reproducibility
 
 Run details retain code revision, startup arguments, explicit provider/model,

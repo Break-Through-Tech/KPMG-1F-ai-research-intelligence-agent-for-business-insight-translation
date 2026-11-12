@@ -34,8 +34,12 @@ class QuestionPartsTests(unittest.TestCase):
                                         'degrade over longer conversations?'),
                          ['Do streaming detectors beat static ones',
                           'do language agents degrade over longer conversations'])
-        self.assertEqual(question_parts('Compare how Alpha Net and Beta Former reduce memory use'),
-                         ['Alpha Net reduce memory use', 'Beta Former reduce memory use'])
+        # V3 routes named comparisons through target detection: one part per named
+        # system, each carrying the rest of the question as context.
+        parts = question_parts('Compare how Alpha Net and Beta Former reduce memory use')
+        self.assertEqual(len(parts), 2)
+        self.assertTrue(parts[0].startswith('Alpha Net') and 'reduce memory use' in parts[0])
+        self.assertTrue(parts[1].startswith('Beta Former') and 'reduce memory use' in parts[1])
 
     def test_quoted_titles_are_never_split_inside(self):
         q = 'What do the authors of "Who, What, and How of Model Audits" say about limits?'

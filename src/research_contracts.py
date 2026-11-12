@@ -305,4 +305,17 @@ def validate_result(result):
     for key in ('provenance', 'regulatory_checkpoint'):
         if key in result and not isinstance(result[key], dict):
             raise ValueError(f'{key} must be a separate JSON object when supplied')
+    checkpoint = result.get('regulatory_checkpoint')
+    if checkpoint is not None and checkpoint.get('status') == 'assessed':
+        # Replay and imports must meet the same renderer contract as fresh assessments.
+        from src.regulatory_validation import validate_checkpoint
+        validate_checkpoint(checkpoint)
+        if not _text(checkpoint.get('summary')):
+            raise ValueError('Assessed regulatory checkpoints require a summary')
+        for source in checkpoint['regulatory_evidence']['sources']:
+            if not _text(source.get('url')):
+                raise ValueError('Regulatory sources require URLs')
+            _url(source['url'], 'regulatory source URL')
+    # Historical pending/unresolved and skipped/failed bundles carry no findings;
+    # consumers display their status/reason without dereferencing assessment data.
     _json(result)

@@ -5,6 +5,8 @@ from pathlib import Path
 from unittest.mock import patch, MagicMock
 from tests.test_indexed_research import adapter
 from src.brief_store import BriefStore
+from src.research_contracts import validate_result
+from src.research_demo import saved_result_envelope
 
 
 class RegulatoryIntegrationTests(unittest.TestCase):
@@ -50,3 +52,29 @@ class RegulatoryIntegrationTests(unittest.TestCase):
             self.assertEqual(value['error']['stage'], 'regulatory')
             self.assertEqual(value['result']['business_insight']['status'], 'ok')
             self.assertEqual(value['result']['regulatory_checkpoint']['status'], 'failed')
+
+
+class CheckpointReplayTests(unittest.TestCase):
+    def test_malformed_assessed_checkpoint_rejected_at_shared_boundaries(self):
+        from tests.test_indexed_research import regulatory_assessment
+        research = adapter(regulatory_assessor=regulatory_assessment)
+        envelope = research.execute({'query': 'Compare studies.', 'industry': 'banking',
+            'jurisdiction': 'US', 'risk_assessment': True, 'context_id': research.context_id})
+        result = envelope['result']
+        validate_result(result)
+        result['regulatory_checkpoint'] = {'status': 'assessed'}
+        with self.assertRaises(ValueError):
+            validate_result(result)
+        with self.assertRaises(ValueError):
+            saved_result_envelope(result)
+        with tempfile.TemporaryDirectory() as directory:
+            with self.assertRaises(ValueError):
+                BriefStore(Path(directory) / 'briefs.sqlite').save(envelope)
+
+    def test_historical_pending_and_non_assessed_checkpoints_remain_readable(self):
+        from src.research_demo import load_demo
+        for checkpoint in ({'status': 'pending'}, {'unresolved': True},
+                           {'status': 'skipped'}, {'status': 'failed'}):
+            result = load_demo({'query': 'Example'}, 'full')['result']
+            result['regulatory_checkpoint'] = checkpoint
+            validate_result(result)

@@ -43,6 +43,10 @@ class RegulatoryIntegrationTests(unittest.TestCase):
         envelope = research.execute({'query': 'Compare studies.', 'industry': 'banking',
             'jurisdiction': 'US', 'risk_assessment': True, 'context_id': research.context_id})
         self.assertEqual(envelope['scenario'], 'partial')
+        replay = saved_result_envelope(envelope['result'])
+        self.assertEqual(replay['scenario'], 'partial')
+        self.assertEqual(replay['error']['stage'], 'regulatory')
+        self.assertEqual(replay['result']['business_insight']['status'], 'ok')
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / 'briefs.sqlite'
             saved = BriefStore(path).save(envelope)

@@ -25,6 +25,12 @@ def create_research(retrieval, generate, metadata, top_k=5, *, arxiv_search=None
         code_revision=code_revision(), command=['experimental-b2-demo'],
         arxiv_search=arxiv_search, regulatory_assessor=assess_regulatory)
     research.provenance['retrieval'] = {**provenance,'top_k':top_k}
+    if getattr(retrieve, 'coverage', None):
+        research.provenance['retrieval']['evidence_coverage'] = retrieve.coverage
+    from hashlib import sha256
+    from pathlib import Path
+    research.provenance['answer_validation'] = {'policy': 'retry-once-then-qualified-abstention-v1',
+        'implementation_sha256': sha256((Path(__file__).resolve().parents[1] / 'answer_validation.py').read_bytes()).hexdigest()}
     research.context_id = fingerprint(research.provenance)
     return research
 
@@ -45,7 +51,11 @@ def main(argv=None):
     args=parser.parse_args(argv)
     if not args.check_only and not args.generator_factory:
         parser.error('Choose --generator-factory explicitly; no provider default or fallback.')
-    retrieval=open_b2(args.bundle,encoder_path=args.encoder,reranker_path=args.reranker)
+    reranker = None
+    if args.arxiv_fallback and not args.check_only:
+        from sentence_transformers import CrossEncoder
+        reranker = CrossEncoder(str(args.reranker.resolve()), local_files_only=True, device='cpu')
+    retrieval=open_b2(args.bundle,encoder_path=args.encoder,reranker_path=args.reranker,reranker=reranker)
     if args.check_only:
         print(json.dumps({'retrieval':retrieval[3],'index':retrieval[1](),
                           'generation_calls':0,'query_executed':False},indent=2))
@@ -56,10 +66,13 @@ def main(argv=None):
     discovery = None
     if args.arxiv_fallback:
         from .arxiv_fallback import ArxivDiscovery
+        from .evidence_coverage import cross_encoder_scorer, with_result_coverage
 
         with (args.bundle / 'parents.jsonl').open(encoding='utf-8') as parents:
             source_parents = [json.loads(line) for line in parents]
-        discovery = ArxivDiscovery(generate, indexed_ids={row['arxiv_id'] for row in source_parents})
+        discovery = ArxivDiscovery(generate, indexed_ids={row['arxiv_id'] for row in source_parents},
+                                   rerank=cross_encoder_scorer(reranker))
+        retrieval = (with_result_coverage(retrieval[0], source_parents), *retrieval[1:])
     research = create_research(retrieval, generate, metadata, args.top_k, arxiv_search=discovery)
     from src.research_demo import DemoHandler
     from src.brief_store import BriefStore

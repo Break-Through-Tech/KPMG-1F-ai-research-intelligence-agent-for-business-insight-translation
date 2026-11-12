@@ -105,12 +105,13 @@ def html_passages(raw, record):
 
 
 class ArxivDiscovery:
-    def __init__(self, generate, *, indexed_ids=()):
+    def __init__(self, generate, *, indexed_ids=(), rerank=None):
         self.generate = generate
         self.indexed_ids = frozenset(indexed_ids)
+        self.rerank = rerank  # optional semantic scorer, see evidence_coverage.cross_encoder_scorer
 
     def __call__(self, question, top_k):
-        from .retriever import Lexical
+        from .evidence_coverage import select_external
 
         terms = search_terms(question, self.generate)
         exact = len(terms) == 1 and f'"{terms[0]}"' in question
@@ -168,12 +169,5 @@ class ArxivDiscovery:
                     candidate["status"] = "readable"
                     passages.extend(extracted)
         if passages:
-            lexical = Lexical([p["title"] + " " + p["text"] for p in passages])
-            scores = lexical.score(question + " " + " ".join(terms))
-            for i, passage in enumerate(passages):
-                if re.search(r"results?|evaluation|experimental|methods?", passage.get("section", ""), re.I):
-                    scores[i] *= 1.25
-            order = sorted(range(len(passages)), key=lambda i: (-scores[i], i))
-            hits = [passages[i] for i in order[:top_k] if scores[i] > 0]
-            passages = hits
+            passages = select_external(question, terms, passages, top_k, rerank=self.rerank)
         return passages, {"query": search, "candidates": candidates}

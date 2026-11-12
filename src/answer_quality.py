@@ -49,7 +49,7 @@ def provenance():
             'reviewer': 'model_not_independent_human', 'rejected_claims': 'retained_in_quality_review'}
 
 
-def review_summary(query, summary, passages, *, generate):
+def review_summary(query, summary, passages, *, generate, feedback=None):
     """Validate complete decisions, retain rejected drafts, and fail on review errors."""
     from jsonschema import Draft202012Validator
     from src.research_chat import attach_validated_citations, synthesis_schema
@@ -69,7 +69,7 @@ def review_summary(query, summary, passages, *, generate):
                         'index': {'type': 'integer', 'minimum': 0, 'maximum': len(claims) - 1},
                         'supported': {'type': 'boolean'}, 'relevant': {'type': 'boolean'},
                         'reason': {'type': 'string', 'minLength': 1, 'maxLength': 900}}}}}}
-    prompt = POLICY + json.dumps({'question': query, 'draft': summary,
+    prompt = POLICY + ((feedback.replace('\n', ' ') + '\n') if feedback else '') + json.dumps({'question': query, 'draft': summary,
         'passages': [{k: v for k, v in p.items() if k != 'reader'} for p in passages]}, ensure_ascii=False)
     kwargs = {'response_schema': schema} if getattr(generate, 'supports_response_schema', False) is True else {}
     def unique(pairs):

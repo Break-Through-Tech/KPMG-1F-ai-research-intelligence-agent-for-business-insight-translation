@@ -218,3 +218,38 @@ class ResearchCitationTests(unittest.TestCase):
         self.assertEqual(calls, [['A'], ['A', 'B']])
         self.assertEqual(out['result']['summary']['status'], 'ok')
         self.assertEqual(out['result']['evidence'], [a,b])
+
+    def test_companion_adds_relevant_results_within_budget(self):
+        from src.experimental.evidence_coverage import with_result_coverage
+        hits = [dict(passage("Agent benchmark tasks and models."), chunk_id=str(i),
+                     arxiv_id="same") for i in range(3)]
+        results = dict(passage("Agent benchmark success rates were 62% and 71%."),
+                       chunk_id="results", arxiv_id="same", section="Results")
+        unrelated = dict(results, chunk_id="other", arxiv_id="different")
+        retrieve = with_result_coverage(lambda q, k: hits, hits + [unrelated, results])
+        # Coverage no longer depends on question wording (previously only "how often"
+        # style questions received the result passage). The budget, the best passage
+        # and the paper boundary are still preserved.
+        for question in ("How often did agents succeed?", "What is the benchmark?"):
+            with self.subTest(question=question):
+                self.assertEqual(retrieve(question, 3), hits[:2] + [results])
+        self.assertEqual(with_result_coverage(lambda q, k: hits[:2], hits + [results])("What is the benchmark?", 2),
+                         hits[:2])  # a paper with fewer than three slots is never altered
+
+    def test_scope_passage_is_from_the_retrieved_study(self):
+        from src.experimental.evidence_coverage import select_external
+        hits = [dict(passage("The benchmark evaluated agents on tasks."), chunk_id=str(i),
+                     arxiv_id="same") for i in range(3)]
+        dates = dict(passage("The queries were run from March 22 to April 22, 2024."),
+                     chunk_id="dates", arxiv_id="same", section="Methodology", subsection="Query execution")
+        other = dict(passage("Another paper evaluated agents from March 1 to May 2, 2023."),
+                     chunk_id="other", arxiv_id="different", section="Methodology")
+        for question in ("Do tools still make mistakes?", "What were the findings?"):
+            with self.subTest(question=question):
+                chosen = select_external(question, ["agents benchmark"], hits + [dates], 3)
+                self.assertIn(dates, chosen)
+                self.assertEqual(len(chosen), 3)
+                self.assertTrue(all(p["arxiv_id"] == "same" for p in chosen))
+        chosen = select_external("What were the findings?", ["agents benchmark"], hits + [dates, other], 3)
+        self.assertTrue(all(p["arxiv_id"] in {"same", "different"} for p in chosen))
+        self.assertLessEqual(len(chosen), 3)

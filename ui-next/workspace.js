@@ -295,7 +295,11 @@
   function readyAnnouncement(demo, number) {
     const outcome = {
       'plain-language': 'ready. Draft, not approved.', full: 'ready. Draft, not approved.',
-      partial: 'ready. Partial draft; business translation is unavailable. Not approved.',
+      partial: demo.error?.stage === 'business'
+        ? 'failed: business implications; research summary retained. Not approved.'
+        : demo.error?.stage === 'regulatory'
+          ? 'failed: risk and compliance assessment; research summary and business implications retained. Not approved.'
+          : 'ready. Partial draft; no business recommendation is supported. Not approved.',
       'summary-only': 'ready. Research summary; business translation not requested. Not approved.',
       insufficient: 'abstained: insufficient support.', empty: 'unavailable: no evidence retrieved.',
       'provider-error': 'failed: simulated provider error.', 'execution-error': 'failed: research execution error.',
@@ -314,7 +318,9 @@
       conversationHistory.splice(0, 2);
     }
   }
-  const sourceLocation = passage => (passage.page_number != null ? `PDF page ${passage.page_number}` : (passage.section || 'No PDF page'));
+  const sourceLocation = passage => (passage.page_number != null ? `PDF page ${passage.page_number}`
+    : passage.table_id ? `Table ${passage.table_id}${passage.row_label ? ` · ${passage.row_label}` : ''}`
+      : (passage.section || passage.subsection || 'No PDF page'));
   const citationSourceContext = passage => `${passage.title}, ${sourceLocation(passage)}`;
   function focusInitiator(trigger) {
     const fallback = queryInput.getClientRects().length ? queryInput : scroller;
@@ -372,7 +378,7 @@
       document.querySelector(`#turn-${number} .sources tr[data-passage="${index}"]`)?.setAttribute('data-active', '');
     }
     evidence.forEach((passage, index) => {
-      const location = passage.source === 'pdf' ? `page ${passage.page_number}` : (passage.section || 'No PDF page');
+      const location = passage.source === 'pdf' && passage.page_number != null ? `page ${passage.page_number}` : sourceLocation(passage);
       choices.append(h('button', {type: 'button', class: 'source-tab', title: citationSourceContext(passage),
         'aria-label': `Citation ${index + 1}, ${passage.source.toUpperCase()}, ${location}`, onclick: () => selectPassage(index)},
         h('b', {text: String(index + 1)}), h('span', {text: `${passage.source.toUpperCase()} · ${location}`})));
@@ -512,12 +518,23 @@
   function answerHeading(number, text = `Answer ${number}`) {
     return h('h3', {id: `answer-${number}`, class: 'answer-kicker', tabIndex: -1, text});
   }
+  function elapsedCounter() {
+    // The endpoint answers once with a single envelope; this only shows that the wait is alive.
+    const node = h('span', {class: 'muted small elapsed', 'aria-hidden': 'true'});
+    const started = performance.now();
+    const timer = setInterval(() => {
+      if (!node.isConnected) return clearInterval(timer);
+      const seconds = Math.round((performance.now() - started) / 1000);
+      if (seconds >= 4) node.textContent = `${seconds}s`;
+    }, 1000);
+    return node;
+  }
   function createTurn(query, number, questionLabel, loading) {
     if (needsDivider && thread.children.length) thread.append(h('p', {class: 'divider', text: 'New conversation · earlier answers are not context'}));
     needsDivider = false;
     const question = h('h2', {id: `question-${number}`, class: 'question', text: query});
     const answer = h('article', {class: 'answer', 'aria-labelledby': `answer-${number}`}, answerHeading(number),
-      h('div', {class: 'loading'}, h('div', {class: 'loading-line'}, h('span', {class: 'orb'}), h('p', {text: loading})),
+      h('div', {class: 'loading'}, h('div', {class: 'loading-line'}, h('span', {class: 'orb'}), h('p', {text: loading}), elapsedCounter()),
         h('div', {class: 'skeleton'}, h('i'), h('i'), h('i'), h('i'))));
     const turn = h('section', {class: 'turn', id: `turn-${number}`, 'aria-labelledby': question.id},
       h('p', {class: 'question-label', text: `Question ${number} · ${questionLabel}`}), question, answer);
@@ -574,6 +591,31 @@
     const fallback = h('p', {class: 'note warn', role: 'status', hidden: true});
     body.append(fallback);
     if (result.summary.quality_review) body.append(note('Automated support and relevance review applied. Model judgment; not independent human verification.', '', 'shield'));
+    const search = result.provenance?.arxiv_search;
+    const searchMessages = {
+      answered: ['arXiv search completed. Open the citations to see the papers found for this question.', ''],
+      insufficient_evidence: ['arXiv search completed. The papers examined did not provide enough evidence.', 'warn'],
+      unreadable: ['arXiv found papers, but the app could not extract readable text. The library result is shown below. Retry the question or rephrase it.', 'warn'],
+      timeout: ['The arXiv search timed out. The library result is shown below. Retry the question or rephrase it.', 'warn'],
+      failed: ['The arXiv search could not finish. The library result is shown below. Retry the question or rephrase it.', 'warn'],
+      answer_failed: ['arXiv returned papers, but the app could not validate an answer. The library result is shown below. Retry the question or rephrase it.', 'warn'],
+    };
+    if (search && searchMessages[search.status]) {
+      body.append(note(searchMessages[search.status][0], searchMessages[search.status][1], 'search'));
+      if (search.candidates?.length) {
+        const found = h('details', {class: 'fold'}, h('summary', {text: `Papers examined on arXiv (${search.candidates.length})`}));
+        const items = h('ul', {class: 'bullets'});
+        for (const candidate of search.candidates) {
+          const safe = /^https?:\/\//.test(candidate.url || '');
+          items.append(h('li', null, safe ? h('a', {href: candidate.url, target: '_blank', rel: 'noopener noreferrer', text: candidate.title || candidate.arxiv_id})
+            : h('span', {text: candidate.title || candidate.arxiv_id}), h('span', {class: 'muted', text: ` · ${candidate.arxiv_id} · ${candidate.status}`})));
+        }
+        found.append(items, h('p', {class: 'muted small', text: `Search used: ${search.query}`}));
+        body.append(found);
+      }
+    } else if (result.provenance?.arxiv_fallback_enabled) {
+      body.append(note('Sources from the loaded library.', '', 'book'));
+    }
     if (result.provenance?.evidence_selection_result?.status === 'selection_failed_baseline_retained') {
       body.append(note('The question coverage check was unavailable. This answer uses the original source ranking; review its citations and limitations.', 'warn', 'alert'));
     }
@@ -614,11 +656,11 @@
     }
 
     /* Business insights */
-    if (insight || !isSynthesis(demo)) {
+    if (insight || !isSynthesis(demo) || demo.error?.stage === 'business') {
       const business = section('business', 'Business insights',
         sectionHead(`a${number}-business`, 'Business insights', 'bulb', insight && chip(`Industry: ${insight.industry}`, 'accent')));
       if (!insight) business.append(h('p', {class: 'muted', text: demo.error?.stage === 'business'
-        ? 'Business translation failed. The supported summary is retained.' : 'Business translation was not requested.'}));
+        ? 'Generating business implications failed. The supported research summary above is retained. Retry to request them again.' : 'Business translation was not requested.'}));
       else {
         business.append(h('p', {class: 'muted small', text: 'Conditional interpretations for business use—not findings validated by the study.'}));
         if (!insight.implications.length) business.append(h('p', {class: 'muted', text: 'No supported business recommendations.'}));
@@ -633,6 +675,43 @@
           cards.append(card);
         });
         business.append(cards);
+      }
+    }
+
+    /* Risk & compliance checkpoint (optional, advisory). Its sources are separate from academic citations. */
+    const checkpoint = result.regulatory_checkpoint;
+    if (checkpoint) {
+      const assessed = checkpoint.status === 'assessed';
+      const regulatoryEvidence = checkpoint.regulatory_evidence;
+      const regulatory = section('regulatory', 'Risk & compliance', sectionHead(`a${number}-regulatory`, 'Risk & compliance assessment', 'shield',
+        chip(assessed ? 'Assessed' : `Assessment ${checkpoint.status}`, assessed ? 'ok' : 'warn')),
+        h('p', {class: 'muted small', text: 'Advisory only · Human review required · Not legal advice or compliance approval.'}));
+      if (checkpoint.jurisdiction || regulatoryEvidence?.jurisdiction) {
+        regulatory.append(h('p', {class: 'muted small', text: `Jurisdiction: ${checkpoint.jurisdiction || regulatoryEvidence.jurisdiction} · As of: ${regulatoryEvidence?.as_of || 'not recorded'}`}));
+      }
+      if (!assessed || !checkpoint.assessment) {
+        regulatory.append(note(`Assessment ${checkpoint.status}: ${checkpoint.reason || 'No assessment was produced.'}`, 'warn', 'alert'),
+          h('p', {class: 'muted small', text: 'No regulatory conclusion was produced. The research findings and business insights above are unaffected.'}));
+      } else {
+        regulatory.append(h('p', {math: checkpoint.summary || ''}));
+        const cards = h('div', {class: 'risk-grid'});
+        for (const [key, title] of [['regulatory_compliance', 'Regulatory compliance'], ['legal_constraints', 'Legal constraints'],
+          ['governance', 'Governance'], ['operational_feasibility', 'Operational feasibility']]) {
+          const finding = checkpoint.assessment[key];
+          if (!finding) continue;
+          const card = h('div', {class: 'risk-card'}, h('p', {class: 'risk-title'}, icon('shield'), h('span', {text: `${title} · ${finding.status}`})),
+            h('p', {math: finding.explanation || ''}));
+          const sources = (regulatoryEvidence?.sources || []).filter(source => (finding.source_ids || []).includes(source.source_id));
+          if (sources.length) {
+            card.append(h('ul', {class: 'bullets'}, sources.map(source => h('li', null, /^https?:\/\//.test(source.url || '')
+              ? h('a', {href: source.url, target: '_blank', rel: 'noopener noreferrer', text: source.title || `Regulatory source ${source.source_id}`})
+              : h('span', {text: source.title || `Regulatory source ${source.source_id}`})))));
+          }
+          cards.append(card);
+        }
+        regulatory.append(cards);
+        if (checkpoint.assessment.risks?.length) regulatory.append(h('h5', {text: 'Identified risks'}), bullets(checkpoint.assessment.risks));
+        regulatory.append(h('p', {class: 'muted small', text: 'Sources and applicability have not been independently verified by a human.'}));
       }
     }
 
@@ -759,10 +838,18 @@
   }
 
   function renderDemo(demo, number, answer) {
-    const [label, explanation, tone] = STATES[demo.scenario] || STATES.full;
+    const [label, baseExplanation, tone] = STATES[demo.scenario] || STATES.full;
+    const stage = demo.error?.stage;
+    const explanation = demo.scenario === 'partial' && stage === 'business'
+      ? 'The research summary is available, but generating business implications failed. Inspect the error and retry.'
+      : demo.scenario === 'partial' && stage === 'regulatory'
+        ? 'The research summary and business implications are available, but risk and compliance assessment failed. No regulatory conclusion was produced. Inspect the error and retry.'
+        : demo.scenario === 'partial' && !demo.error ? 'The research summary is available. No business recommendation is supported by the evidence.' : baseExplanation;
     const seconds = demo.result?.provenance?.timings_seconds?.total;
     const chips = h('div', {class: 'chips'}, chip(label, tone),
       demo.result && chip(reviewText(demo), reviewTone(demo), 'shield'),
+      demo.result?.summary.answer_scope === 'partial' && chip('Partial coverage of the question', 'warn'),
+      demo.result?.provenance?.arxiv_search && chip('arXiv fallback used', 'accent', 'search'),
       demo.mode === 'indexed' && chip(demo.history_policy === 'server_owned_bounded_intent_only' ? 'Indexed research · Bounded conversation' : 'Indexed research · Independent query'),
       demo.library?.replayed && chip('Saved snapshot · No new research executed', '', 'history'),
       Number.isFinite(seconds) && chip(`Research processing time: ${seconds.toFixed(1)} seconds`, '', 'clock'));
@@ -770,7 +857,7 @@
     if (demo.result) {
       if (!['full', 'plain-language'].includes(demo.scenario)) answer.append(note(explanation, tone === 'ok' ? '' : tone));
       renderDraft(demo, number, answer);
-      if (demo.error) answer.append(note(`${demo.error.stage}: ${demo.error.message}`, 'bad error', 'alert'));
+      if (demo.error) answer.append(note(`${{regulatory: 'Risk & compliance', business: 'Business translation'}[stage] || stage || 'Error'}: ${demo.error.message || demo.error}`, stage === 'regulatory' ? 'warn error' : 'bad error', 'alert'));
       const tools = answerTools(demo, number, answer, updated => {
         ResearchSpeech.stopAll();
         const reopened = renderDemo(updated, number, answer);
@@ -787,7 +874,7 @@
       announce(readyAnnouncement(demo, number), false);
       return tools;
     }
-    answer.append(note(demo.error.message, 'bad error', 'alert'));
+    answer.append(note(demo.error?.message || String(demo.error || 'No answer was produced.'), 'bad error', 'alert'));
     markAnswerReady(answer);
     announce(readyAnnouncement(demo, number), false);
     return null;
@@ -968,9 +1055,18 @@
     const query = queryInput.value;
     const scenario = scenarioSelect.value || 'full';
     const industry = $('#industry-field').hidden ? '' : industryInput.value.trim();
+    const risk = !$('#risk-field').hidden && $('#risk-assessment').checked;
+    const jurisdiction = $('#jurisdiction').value.trim();
+    if (risk && !retryContext && (!industry || !jurisdiction)) {
+      setSettings(true);
+      (industry ? $('#jurisdiction') : industryInput).focus();
+      announce('Risk and compliance assessment needs an industry context and a jurisdiction. Fill both, or turn the assessment off.');
+      return;
+    }
     const pendingTurn = clarificationPending ? activeClarificationTurn : null;
     let submissionContext = indexedMode ? (retryContext || {context_id: indexedContextId, interpret_context: true,
       ...(industry && !clarificationPending ? {industry} : {}),
+      ...(risk && !clarificationPending ? {risk_assessment: true, jurisdiction} : {}),
       ...(clarificationEnabled ? {conversation_id: researchConversationId, action: clarificationPending ? 'resume' : 'ask'} : {})}) : liveSynthesis ? (retryContext || {
       history: conversationHistory.map(message => ({...message})), paper_context_id: activePaperContextId}) : null;
     setSettings(false);
@@ -1004,7 +1100,20 @@
           submissionContext = {history: [], paper_context_id: activePaperContextId};
           contextRecoveryMessage = 'The loaded paper changed. Previous conversation context was cleared. Your question is unchanged; select Ask paper again to ask about the current paper.';
         }
-        if (indexedMode) contextRecoveryMessage = demo.error || 'Indexed research failed. No answer was accepted.';
+        if (indexedMode) {
+          contextRecoveryMessage = (typeof demo.error === 'string' ? demo.error : demo.error?.message) || 'Indexed research failed. No answer was accepted.';
+          if (response.status === 409 && demo.code === 'indexed_context_changed' && !clarificationEnabled) {
+            // The server's research context moved on. Pick up the current one so a retry can succeed.
+            try {
+              const fresh = await (await fetch('/api/config', {signal: AbortSignal.timeout(10000)})).json();
+              if (fresh.context_id) {
+                indexedContextId = fresh.context_id;
+                submissionContext = {...submissionContext, context_id: fresh.context_id};
+                contextRecoveryMessage += ' The page has picked up the current research context; retry your question.';
+              }
+            } catch { /* Keep the server's own message. */ }
+          }
+        }
         throw new Error('Request rejected.');
       }
       if (demo.scenario === 'clarification') {
@@ -1026,7 +1135,8 @@
       renderDemo(demo, number, answer);
       if (demo.library) loadRecentBriefs();
       if (liveSynthesis) rememberAcceptedTurn(query, demo);
-      if (demo.error) {
+      const searchFailed = ['timeout', 'failed', 'answer_failed', 'unreadable'].includes(demo.result?.provenance?.arxiv_search?.status);
+      if (demo.error || searchFailed) {
         // A result means the pending resume has been consumed, even when the later
         // business stage fails. Recover using the original research input.
         const completed = clarificationEnabled && demo.result;
@@ -1062,15 +1172,27 @@
   async function api(path, payload) {
     const response = await fetch(path, {signal: AbortSignal.timeout(15000),
       ...(payload === undefined ? {} : {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload)})});
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error || 'Saved work is unavailable.');
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      const error = new Error((typeof data.error === 'string' && data.error) || 'Saved work is unavailable.');
+      error.status = response.status;
+      throw error;
+    }
     return data;
   }
   async function operation(control, message, action) {
     if (control.disabled) return;
     control.disabled = true;
     try { await action(); }
-    catch (error) { message.textContent = error.message || 'Saved-work request failed. Your answer is unchanged.'; message.classList.add('bad'); }
+    catch (error) {
+      const timeout = ['TimeoutError', 'AbortError'].includes(error?.name);
+      message.textContent = timeout ? 'The saved-work request timed out. Nothing was changed; retry when ready.'
+        : error instanceof TypeError ? 'Cannot reach the local server. Nothing was changed; retry when it is running.'
+          : error.message || 'Saved-work request failed. Your answer is unchanged.';
+      message.classList.add('bad');
+      // 409: this snapshot is stale (another version, review or archive happened). Offer the current one.
+      if (error.status === 409 && message.recover) message.append(' ', message.recover());
+    }
     finally { control.disabled = false; }
   }
   const when = value => new Date(value).toLocaleString(undefined, {dateStyle: 'medium', timeStyle: 'short'});
@@ -1087,10 +1209,12 @@
     renderDemo(demo, number, answer);
     latestAnswer.focus({preventScroll: true});
   }
+  const REVIEW_LABELS = {pending: 'Draft', approve: 'Approved', revise: 'Changes requested', reject: 'Rejected'};
+  const reviewLabel = status => REVIEW_LABELS[status] || status || 'Draft';
   const statusTone = text => (/approved/i.test(text) && !/not approved/i.test(text) ? 'ok' : /change|revise/i.test(text) ? 'warn' : /reject/i.test(text) ? 'bad' : 'draft');
   function briefRow(brief, status) {
     const open = h('button', {type: 'button', class: 'brief-open'}, h('span', {class: 'brief-title', text: brief.title}),
-      h('span', {class: 'brief-meta'}, chip(`v${brief.number}`, 'mono'), chip(brief.review_status, statusTone(brief.review_status)),
+      h('span', {class: 'brief-meta'}, chip(`v${brief.number}`, 'mono'), chip(reviewLabel(brief.review_status), statusTone(reviewLabel(brief.review_status))),
         h('span', {text: `${brief.mode === 'fixture' ? 'Synthetic example' : 'Research snapshot'} · ${when(brief.updated_at)}`})));
     open.addEventListener('click', () => operation(open, status, async () => openSnapshot(await api(`/api/briefs/${brief.id}`))));
     return h('li', null, open);
@@ -1116,7 +1240,7 @@
       const data = await api('/api/briefs?q=&archived=0&offset=0');
       const status = h('span');
       $('#recent-briefs').replaceChildren(...data.briefs.slice(0, 5).map(brief => {
-        const link = h('button', {type: 'button', class: 'sb-link', title: brief.title}, h('span', {class: `dot ${statusTone(brief.review_status)}`}), h('span', {text: brief.title}));
+        const link = h('button', {type: 'button', class: 'sb-link', title: brief.title}, h('span', {class: `dot ${statusTone(reviewLabel(brief.review_status))}`}), h('span', {text: brief.title}));
         link.addEventListener('click', () => operation(link, status, async () => {
           if (narrow.matches) setDrawer(false);
           openSnapshot(await api(`/api/briefs/${brief.id}`));
@@ -1178,6 +1302,11 @@
       return;
     }
     const {brief, version, versions, reviews} = demo.library;
+    message.recover = () => {
+      const reopen = btn('Reopen the latest version', () => operation(reopen, message,
+        async () => openSnapshot(await api(`/api/briefs/${brief.id}`))), 'text-btn', 'refresh');
+      return reopen;
+    };
     const current = !brief.archived && version.id === brief.current_version;
     const isLatest = version.id === brief.current_version;
     const title = h('input', {type: 'text', maxLength: 200, value: brief.title, class: 'title-input', 'aria-label': 'Brief title'});
@@ -1234,17 +1363,21 @@
     if (current) {
       const reviewer = h('input', {type: 'text', required: true, maxLength: 120, autocomplete: 'name', id: `${panel.id}-reviewer`});
       const notes = h('textarea', {maxLength: 4000, rows: 2, id: `${panel.id}-notes`});
-      let decision = 'approve';
+      // The backend refuses approval while a requested risk & compliance check is unresolved.
+      const gate = demo.result.regulatory_checkpoint;
+      const approvalBlocked = Boolean(gate) && gate.assessment?.verdict !== 'potentially_feasible';
+      let decision = approvalBlocked ? 'revise' : 'approve';
       const decisions = h('div', {class: 'decisions', role: 'radiogroup', 'aria-label': 'Review decision'});
-      for (const [value, label, hint, iconName] of [['approve', 'Approve this version', 'Records human approval of this exact snapshot.', 'check'],
+      for (const [value, label, hint, iconName] of [['approve', 'Approve this version', approvalBlocked ? 'Unavailable: the risk & compliance assessment is unresolved.' : 'Records human approval of this exact snapshot.', 'check'],
         ['revise', 'Request changes', 'Notes are required.', 'pencil'], ['reject', 'Reject this version', 'Marks the snapshot as not usable.', 'x']]) {
-        decisions.append(h('label', {class: `decision ${value}`}, h('input', {type: 'radio', name: `${panel.id}-decision`, value, checked: value === decision,
+        decisions.append(h('label', {class: `decision ${value}`}, h('input', {type: 'radio', name: `${panel.id}-decision`, value, checked: value === decision, disabled: value === 'approve' && approvalBlocked,
           onchange: () => { decision = value; }}), icon(iconName), h('span', null, h('strong', {text: label}), h('small', {text: hint}))));
       }
       const send = h('button', {type: 'submit', class: 'solid-btn'}, icon('shield'), h('span', {text: 'Record review'}));
       const reviewForm = h('form', {class: 'review-form', onsubmit: event => {
         event.preventDefault();
         if (!reviewer.value.trim()) { message.textContent = 'Reviewer name is required.'; message.classList.add('bad'); reviewer.focus(); return; }
+        if (decision === 'revise' && !notes.value.trim()) { message.textContent = 'Describe the requested changes in the review notes.'; message.classList.add('bad'); notes.focus(); return; }
         operation(send, message, async () => onChanged(await api(`/api/briefs/${brief.id}/reviews`, {version_id: version.id,
           fingerprint: version.fingerprint, reviewer: reviewer.value, decision, notes: notes.value || null})));
       }}, decisions,
@@ -1277,7 +1410,7 @@
     $('#composer-note').textContent = 'Checking question entry configuration…';
     return Promise.all(['/api/config', '/api/saved-result'].map(async url => {
       const response = await fetch(url, {signal: AbortSignal.timeout(10000)});
-      if (!response.ok) throw new Error('App configuration unavailable');
+      if (!response.ok) throw new Error((await response.json().catch(() => ({}))).error || 'App configuration unavailable');
       return response.json();
     })).then(([config, demo]) => {
       const untouchedQuestion = queryInput.value === initialQuestion;
@@ -1308,8 +1441,10 @@
       $('#scenario-hint').textContent = mock ? 'Choose which response the mock backend returns, to test each state.' : 'Choose a prepared example. No live research runs.';
       $('#industry-field').hidden = !indexedMode;
       const modeChip = $('#mode-chip');
-      modeChip.hidden = !mock && liveSynthesis;
-      modeChip.textContent = mock ? 'Prototype · mock data' : 'Synthetic demo';
+      modeChip.hidden = false;
+      modeChip.textContent = mock ? 'Prototype · mock data' : liveSynthesis ? 'Live backend' : 'Synthetic demo';
+      modeChip.classList.toggle('ok', !mock && liveSynthesis);
+      $('#risk-field').hidden = !indexedMode || mock;
       if (!liveSynthesis) {
         $('#hero-title').textContent = 'Explore a research example.';
         $('#hero-sub').textContent = 'Read an answer. Follow a citation when you need the source.';
@@ -1326,6 +1461,10 @@
         const count = Number(config.index?.count || 0).toLocaleString();
         let status = `Persistent research index · ${count} passages`;
         composerNote.textContent = 'Independent questions; previous answers are not context.';
+        if (config.arxiv_fallback) {
+          $('#hero-sub').textContent = 'Search the library. If it lacks evidence, the app searches public arXiv papers using your topic.';
+          composerNote.textContent += ' arXiv fallback enabled.';
+        }
         if (config.index?.metadata?.human_acceptance === 'pending') {
           status = `Experimental research index · ${count} complete source passages · Human evaluation pending`;
         }
@@ -1357,7 +1496,8 @@
         retry.disabled = true;
         loadQuestionEntry().then(() => { if (appReady) queryInput.focus(); });
       }, 'text-btn', 'refresh');
-      $('#composer-note').replaceChildren('Question entry unavailable: configuration or saved-result check failed. Your question is unchanged. ', retry);
+      const reason = error?.message && error.message !== 'App configuration unavailable' && !(error instanceof TypeError) ? `${error.message} ` : 'Question entry unavailable: configuration or saved-result check failed. Your question is unchanged. ';
+      $('#composer-note').replaceChildren(reason, retry);
     }).finally(() => { setQuestionBusy(false); autosize(); });
   }
   syncTheme(); syncPrefs(); autosize();

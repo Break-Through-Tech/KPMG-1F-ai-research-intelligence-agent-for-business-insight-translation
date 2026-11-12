@@ -178,7 +178,20 @@ class AnswerQualityTests(unittest.TestCase):
             return 'invalid' if prompt.startswith('ANSWER QUALITY REVIEW') else generator(prompt, **kwargs)
         research = adapter(generate=broken, quality_check=True)
         response = research.execute({'query': 'Q', 'context_id': research.context_id})
+        # A review that never validates is retried once, then no reviewed answer exists:
+        # the unreviewed draft is withheld and the rejection reason is recorded.
+        summary = response['result']['summary']
+        self.assertEqual(summary['status'], 'insufficient_evidence')
+        self.assertEqual(summary['claims'], [])
+        self.assertEqual([a['stage'] for a in summary['validation']['attempts']],
+                         ['quality_review', 'quality_review'])
+        self.assertEqual(summary['validation']['attempts'][0]['reason'], 'reply was not valid JSON')
+        def down(prompt, **kwargs):
+            raise RuntimeError('provider unavailable')
+        research = adapter(generate=down, quality_check=True)
+        response = research.execute({'query': 'Q', 'context_id': research.context_id})
         self.assertEqual(response['error']['code'], 'summary_failed')
+        self.assertEqual(response['error']['cause'], 'provider_error')
         self.assertIsNone(response['result'])
 
 

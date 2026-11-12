@@ -102,7 +102,7 @@ def validate_reported_numbers(items):
             raise ValueError("A finding contains a number absent from its cited excerpts.")
 
 
-def synthesize(query, passages, *, generate, history=None, findings_only=False):
+def synthesize(query, passages, *, generate, history=None, findings_only=False, feedback=None):
     """Reject the entire answer on missing/unknown citations or invented quotes."""
     from jsonschema import Draft202012Validator
     history = validate_history([] if history is None else history)
@@ -153,6 +153,7 @@ def synthesize(query, passages, *, generate, history=None, findings_only=False):
          'Use limitations to explain untested industry transfer. Exclude adjacent topics '
          'that do not establish the requested comparison. '
          if findings_only else '') +
+        (feedback.replace('\n', ' ') + ' ' if feedback else '') +
         'Return only JSON matching the supplied schema.\n' +
         json.dumps({'question': query, 'conversation_history': history,
                     # Reader structure is presentation metadata, not extra model evidence.

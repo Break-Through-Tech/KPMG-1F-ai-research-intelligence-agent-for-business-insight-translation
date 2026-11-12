@@ -77,7 +77,9 @@ function readyAnnouncement(demo, number) {
     full: 'ready. Draft, not approved.',
     partial: demo.error?.stage === 'business'
       ? 'failed: business implications; research summary retained. Not approved.'
-      : 'ready. Partial draft; no business recommendation is supported. Not approved.',
+      : demo.error?.stage === 'regulatory'
+        ? 'failed: risk and compliance assessment; research summary and business implications retained. Not approved.'
+        : 'ready. Partial draft; no business recommendation is supported. Not approved.',
     'summary-only': 'ready. Research summary; business translation not requested. Not approved.',
     insufficient: 'abstained: insufficient support.',
     empty: 'unavailable: no evidence retrieved.',
@@ -761,7 +763,9 @@ function renderDemo(demo, number, answer) {
   const [label, explanation] = STATES[demo.scenario];
   const stateExplanation = demo.scenario === 'partial' && demo.error?.stage === 'business'
     ? 'The research summary is available, but generating business implications failed. Inspect the error and retry.'
-    : explanation;
+    : demo.scenario === 'partial' && demo.error?.stage === 'regulatory'
+      ? 'The research summary and business implications are available, but risk and compliance assessment failed. No regulatory conclusion was produced. Inspect the error and retry.'
+      : explanation;
   const head = element('div', undefined, 'answer-head');
   head.append(answerHeading(number));
   if (demo.mode === 'indexed') head.append(element('p', demo.history_policy === 'server_owned_bounded_intent_only' ? 'Indexed research · Bounded conversation' : 'Indexed research · Independent query', 'meta'));

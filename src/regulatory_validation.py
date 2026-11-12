@@ -82,3 +82,7 @@ def validate_checkpoint(checkpoint):
         raise ValueError("Regulatory checkpoint must be a dictionary.")
     evidence = checkpoint.get("regulatory_evidence", checkpoint)
     return validate_assessment_data(checkpoint.get("assessment"), evidence)
+
+
+class RegulatoryConfigurationError(ValueError):
+    """A local regulatory-provider prerequisite is missing; never include credentials."""

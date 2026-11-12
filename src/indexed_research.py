@@ -17,7 +17,8 @@ def timed(timings, stage, function, *args, **kwargs):
 from src.research_chat import synthesize
 from src.business_translation import translate, prompt_provenance
 from src.research_contracts import validate_request, validate_result, validate_business_insight
-from src.regulatory_validation import validate_checkpoint
+from src.regulatory_validation import RegulatoryConfigurationError
+from src.research_contracts import validate_advisory_checkpoint
 from src.research_pipeline import PipelineError, run_research, content_fingerprint
 
 
@@ -285,7 +286,7 @@ class IndexedResearch:
                                 or not isinstance(checkpoint.get('human_review'), dict)
                                 or checkpoint['human_review'].get('status') != 'pending'):
                             raise ValueError('Regulatory adapter returned an invalid status.')
-                        validate_checkpoint(checkpoint)
+                        validate_advisory_checkpoint(checkpoint)
                         evidence = checkpoint.get('regulatory_evidence', {})
                         if (evidence.get('industry') != submitted['industry']
                                 or evidence.get('jurisdiction') != submitted['jurisdiction']):
@@ -294,14 +295,20 @@ class IndexedResearch:
                             **checkpoint, 'reason': None,
                         }
                         stages['regulatory'] = 'assessed'
-                except Exception:
+                except Exception as exc:
+                    configuration_failed = isinstance(exc, RegulatoryConfigurationError)
+                    guidance = (
+                        'Risk assessment requires GOOGLE_API_KEY in the local server environment or .env. '
+                        'Configure the Google provider and restart, or disable assessment to continue without it.'
+                        if configuration_failed else
+                        'Regulatory evidence retrieval or assessment failed. No regulatory conclusion was produced.')
                     result['regulatory_checkpoint'] = _regulatory_checkpoint(
                         submitted, 'failed',
-                        'Regulatory evidence retrieval or assessment failed. No regulatory conclusion was produced.')
+                        guidance)
                     stages['regulatory'] = 'failed'
                     if error is None:
-                        error = {'stage': 'regulatory', 'code': 'regulatory_failed',
-                                 'message': 'Risk and compliance assessment failed. Research findings are retained; no regulatory conclusion was produced. Retry the assessment.'}
+                        error = {'stage': 'regulatory', 'code': 'regulatory_configuration' if configuration_failed else 'regulatory_failed',
+                                 'message': guidance if configuration_failed else 'Risk and compliance assessment failed. Research findings are retained; no regulatory conclusion was produced. Retry the assessment.'}
         result['provenance']['stages'] = stages
         result['review_fingerprint'] = content_fingerprint(result)
         validate_result(result)

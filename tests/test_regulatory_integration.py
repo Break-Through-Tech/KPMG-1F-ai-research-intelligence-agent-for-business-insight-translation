@@ -78,3 +78,31 @@ class CheckpointReplayTests(unittest.TestCase):
             result = load_demo({'query': 'Example'}, 'full')['result']
             result['regulatory_checkpoint'] = checkpoint
             validate_result(result)
+
+
+class RegulatoryFailureBoundaryTests(unittest.TestCase):
+    def test_invalid_source_url_retains_successful_research(self):
+        from tests.test_indexed_research import regulatory_assessment
+        def invalid(draft):
+            checkpoint = regulatory_assessment(draft)
+            checkpoint['regulatory_evidence']['sources'][0]['url'] = 'https://'
+            return checkpoint
+        research = adapter(regulatory_assessor=invalid)
+        response = research.execute({'query': 'Compare studies.', 'industry': 'banking',
+            'jurisdiction': 'US', 'risk_assessment': True, 'context_id': research.context_id})
+        self.assertEqual(response['scenario'], 'partial')
+        self.assertEqual(response['result']['business_insight']['status'], 'ok')
+        self.assertEqual(response['result']['regulatory_checkpoint']['status'], 'failed')
+
+    def test_missing_credentials_have_safe_actionable_guidance(self):
+        from src.regulatory_validation import RegulatoryConfigurationError
+        def missing(draft):
+            raise RegulatoryConfigurationError('SECRET')
+        research = adapter(regulatory_assessor=missing)
+        response = research.execute({'query': 'Compare studies.', 'industry': 'banking',
+            'jurisdiction': 'US', 'risk_assessment': True, 'context_id': research.context_id})
+        self.assertEqual(response['error']['code'], 'regulatory_configuration')
+        self.assertIn('GOOGLE_API_KEY', response['error']['message'])
+        self.assertIn('disable assessment', response['error']['message'])
+        self.assertNotIn('SECRET', str(response))
+        self.assertEqual(response['result']['business_insight']['status'], 'ok')

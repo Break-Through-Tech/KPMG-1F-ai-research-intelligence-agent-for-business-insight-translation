@@ -151,11 +151,24 @@ class IndexedTests(unittest.TestCase):
         require_current_review(result['result'])
 
     def test_bad_quotes_fail_closed(self):
+        # A fabricated quote is retried once with the rejection reason; a second
+        # fabrication becomes a qualified abstention that shows no draft claim.
+        prompts = []
         def bad(prompt, **kwargs):
+            prompts.append(prompt)
             answer = json.loads(generator(prompt, **kwargs))
             answer['claims'][0]['support'][0]['quote'] = 'A fabricated quote absent from evidence.'
             return json.dumps(answer)
-        self.assertIsNone(self.run_query(adapter(generate=bad))['result'])
+        response = self.run_query(adapter(generate=bad))
+        summary = response['result']['summary']
+        self.assertEqual(summary['status'], 'insufficient_evidence')
+        self.assertEqual(summary['claims'], [])
+        self.assertEqual(summary['validation']['status'], 'rejected')
+        self.assertEqual([a['stage'] for a in summary['validation']['attempts']], ['synthesis', 'synthesis'])
+        self.assertIn('absent from its cited passage', summary['validation']['attempts'][0]['reason'])
+        self.assertNotIn('fabricated quote', json.dumps(response['result']))
+        self.assertIn('AUTOMATED VALIDATION REJECTED', prompts[1])
+        self.assertFalse(response['result']['approved'])
 
     def test_identity_and_history_rejected_before_retrieval(self):
         research = adapter()

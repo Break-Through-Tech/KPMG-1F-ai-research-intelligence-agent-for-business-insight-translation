@@ -441,6 +441,12 @@ function renderDraft(demo, number, answer) {
     if (result.summary.answer_lead) {
       narrative.append(element('p', result.summary.answer_lead));
     }
+    const validation = result.summary.validation;
+    if (validation?.status === 'rejected') {
+      narrative.append(element('p', 'Answer validation failed: no draft is shown. This is not an evidence finding; retry or open the sources.', 'meta'));
+    } else if (validation?.status === 'accepted_after_retry') {
+      narrative.append(element('p', 'The first draft failed automated citation checks; this answer passed on a checked retry.', 'meta'));
+    }
     if (result.summary.quality_review) {
       narrative.append(element('p', 'Automated support and relevance review applied. Model judgment; not independent human verification.', 'meta'));
     }

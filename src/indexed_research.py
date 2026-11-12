@@ -177,16 +177,47 @@ class IndexedResearch:
         return validate_request(request)
 
     def summary(self, query, passages, *, history=None, findings_only=False, timings=None):
+        """Synthesize, review and check numbers; retry one validation rejection with feedback.
+
+        Provider failures propagate unchanged as execution errors. A second rejection
+        returns a qualified abstention that records why, never the rejected draft.
+        """
+        from src.answer_validation import (MAX_ATTEMPTS, ProviderFailure, describe_rejection,
+                                           feedback_text, guard_provider, qualified_abstention, LOG)
         timings = {} if timings is None else timings
-        summary = timed(timings, 'synthesis', synthesize, query, passages, generate=self.generate, history=history,
-                             findings_only=findings_only)
-        if self.quality_check:
-            from src.answer_quality import review_summary
-            summary = timed(timings, 'quality_review', review_summary, query, summary, passages, generate=self.generate)
-        if self.arxiv_search is not None:
-            from src.research_chat import validate_reported_numbers
-            timed(timings, 'numeric_citation_check', validate_reported_numbers, summary['claims'])
-        return summary
+        generate = guard_provider(self.generate)
+        attempts, feedback, draft = [], None, None
+        while len(attempts) < MAX_ATTEMPTS:
+            n = len(attempts) + 1
+            stage = 'synthesis'
+            try:
+                extra = {'feedback': feedback} if feedback else {}
+                if draft is None:
+                    draft = timed(timings, 'synthesis' if n == 1 else 'synthesis_retry', synthesize, query, passages,
+                                  generate=generate, history=history, findings_only=findings_only, **extra)
+                summary = draft
+                if self.quality_check:
+                    stage = 'quality_review'
+                    from src.answer_quality import review_summary
+                    summary = timed(timings, 'quality_review' if n == 1 else 'quality_review_retry', review_summary,
+                                    query, draft, passages, generate=generate, **extra)
+                if self.arxiv_search is not None:
+                    stage = 'numeric_citation_check'
+                    from src.research_chat import validate_reported_numbers
+                    timed(timings, 'numeric_citation_check', validate_reported_numbers, summary['claims'])
+                if attempts:
+                    summary = {**summary, 'validation': {'status': 'accepted_after_retry', 'attempts': attempts}}
+                return summary
+            except ProviderFailure:
+                raise
+            except Exception as exc:
+                rejection = describe_rejection(stage, exc)
+                attempts.append(rejection)
+                LOG.warning('Answer validation rejected attempt %d at %s: %s', n, stage, rejection['reason'])
+                feedback = feedback_text(rejection)
+                if stage != 'quality_review':
+                    draft = None  # a rejected draft is regenerated; a rejected review is re-reviewed
+        return qualified_abstention(query, attempts)
 
     def finish(self, result, submitted, *, error=None, timings=None):
         timings = {} if timings is None else timings
@@ -261,11 +292,20 @@ class IndexedResearch:
                 provenance=self.provenance,
             )
         except Exception as exc:
+            from src.answer_validation import ProviderFailure
             logging.getLogger(__name__).warning('arXiv answer failed (%s)', type(exc).__name__)
-            initial['provenance']['arxiv_search'] = {**search, 'status': 'answer_failed'}
+            cause = exc.cause if isinstance(exc, ProviderFailure) else 'answer_error'
+            initial['provenance']['arxiv_search'] = {**search, 'status': 'answer_failed', 'cause': cause}
             return initial
         finally:
             timings.update({f'arxiv_{stage}': seconds for stage, seconds in answer_timings.items()})
+        validation = result['summary'].get('validation', {})
+        if validation.get('status') == 'rejected':
+            # The external answer never validated: keep the library draft, record why.
+            initial['provenance']['arxiv_search'] = {**search, 'status': 'answer_failed',
+                                                     'cause': 'validation_rejected',
+                                                     'validation': validation}
+            return initial
         status = 'answered' if result['summary']['status'] == 'ok' else 'insufficient_evidence'
         result['provenance']['arxiv_search'] = {**search, 'status': status}
         return result
@@ -289,15 +329,23 @@ class IndexedResearch:
                     findings_only=self.quality_check and 'industry' in request, timings=timings),
                 provenance=self.provenance)
         except Exception as exc:
+            from src.answer_validation import ProviderFailure
             stage = 'retrieval' if isinstance(exc, PipelineError) and str(exc).startswith('Retrieval') else 'summary'
+            error = {'stage': stage, 'code': stage + '_failed',
+                     'message': f'{stage.capitalize()} failed or its contract did not validate. No answer was accepted. Check configuration and retry.'}
+            if isinstance(exc, ProviderFailure):
+                messages = {'rate_limited': 'The model provider reported a usage or rate limit.',
+                            'timeout': 'The model provider timed out.'}
+                error.update(cause=exc.cause, message=messages.get(exc.cause, 'The model provider call failed.')
+                             + ' This is a service failure, not an evidence result. No answer was accepted; retry later.')
             return {'mode': 'indexed', 'scenario': 'execution-error',
                     'submitted_request': request, 'result': None, 'fixture_file': None,
                     'provenance': {**deepcopy(self.provenance), 'stages': {stage: 'failed'},
                                    'timings_seconds': {**timings, 'total': round(perf_counter() - start, 4)}},
-                    'error': {'stage': stage, 'code': stage + '_failed',
-                              'message': f'{stage.capitalize()} failed or its contract did not validate. No answer was accepted. Check configuration and retry.'}}
+                    'error': error}
         self.check_context(payload.get('context_id'))
-        if self.arxiv_search is not None and result['summary']['status'] == 'insufficient_evidence':
+        rejected = result['summary'].get('validation', {}).get('status') == 'rejected'
+        if self.arxiv_search is not None and result['summary']['status'] == 'insufficient_evidence' and not rejected:
             result = self.try_arxiv(result, request, timings)
             self.check_context(payload.get('context_id'))
         response = self.finish(result, request, timings=timings)

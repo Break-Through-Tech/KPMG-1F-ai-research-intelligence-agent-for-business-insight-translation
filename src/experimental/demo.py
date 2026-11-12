@@ -16,12 +16,12 @@ def load_generator(spec, options):
     return factory(**options)
 
 
-def create_research(retrieval, generate, metadata, top_k=5):
+def create_research(retrieval, generate, metadata, top_k=5, *, arxiv_search=None):
     from src.indexed_research import IndexedResearch, fingerprint, code_revision
     retrieve, identity, path, provenance = retrieval
     research = IndexedResearch(retrieve=retrieve, identity=identity, index_path=path,
         generate=generate, metadata=metadata, top_k=top_k, quality_check=True,
-        code_revision=code_revision(), command=['experimental-b2-demo'])
+        code_revision=code_revision(), command=['experimental-b2-demo'], arxiv_search=arxiv_search)
     research.provenance['retrieval'] = {**provenance,'top_k':top_k}
     research.context_id = fingerprint(research.provenance)
     return research
@@ -35,6 +35,8 @@ def main(argv=None):
     parser.add_argument('--check-only',action='store_true',help='Validate local retrieval without loading a generation factory or submitting a question.')
     parser.add_argument('--generator-factory',help='Explicit existing provider factory, module:function; required except for --check-only.')
     parser.add_argument('--generator-options',type=Path,help='Local JSON object of explicit factory options; keep it untracked.')
+    parser.add_argument('--arxiv-fallback', action='store_true',
+                        help='Search public arXiv after an insufficient library answer.')
     parser.add_argument('--top-k',type=int,default=5,choices=range(1,21))
     parser.add_argument('--port',type=int,default=8785)
     parser.add_argument('--library',type=Path,help='Optional separate local brief database; original database is never selected by default.')
@@ -49,7 +51,16 @@ def main(argv=None):
     options=json.loads(args.generator_options.read_text(encoding='utf-8')) if args.generator_options else {}
     if not isinstance(options,dict):parser.error('Generator options must be a JSON object.')
     generate,metadata=load_generator(args.generator_factory,options)
-    research=create_research(retrieval,generate,metadata,args.top_k)
+    discovery = None
+    if args.arxiv_fallback:
+        from .arxiv_fallback import ArxivDiscovery
+        from .evidence_coverage import with_result_coverage
+
+        with (args.bundle / 'parents.jsonl').open(encoding='utf-8') as parents:
+            source_parents = [json.loads(line) for line in parents]
+        discovery = ArxivDiscovery(generate, indexed_ids={row['arxiv_id'] for row in source_parents})
+        retrieval = (with_result_coverage(retrieval[0], source_parents), *retrieval[1:])
+    research = create_research(retrieval, generate, metadata, args.top_k, arxiv_search=discovery)
     from src.research_demo import DemoHandler
     from src.brief_store import BriefStore
     class ExperimentalHandler(DemoHandler):

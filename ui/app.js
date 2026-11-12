@@ -424,6 +424,20 @@ function renderDraft(demo, number, answer) {
     if (Number.isFinite(researchSeconds)) {
       narrative.append(element('p', `Research processing time: ${researchSeconds.toFixed(1)} seconds.`, 'meta'));
     }
+    const search = result.provenance?.arxiv_search;
+    const searchMessages = {
+      answered: 'arXiv search completed. Open the citations to see the papers found for this question.',
+      insufficient_evidence: 'arXiv search completed. The papers examined did not provide enough evidence.',
+      unreadable: 'arXiv found papers, but the app could not extract readable text. The library result is shown below.',
+      timeout: 'The arXiv search timed out. The library result is shown below.',
+      failed: 'The arXiv search could not finish. The library result is shown below.',
+      answer_failed: 'arXiv returned papers, but the app could not validate an answer. The library result is shown below.',
+    };
+    if (search && searchMessages[search.status]) {
+      narrative.append(element('p', searchMessages[search.status], 'meta'));
+    } else if (result.provenance?.arxiv_fallback_enabled) {
+      narrative.append(element('p', 'Sources from the loaded library.', 'meta'));
+    }
     if (result.summary.answer_lead) {
       narrative.append(element('p', result.summary.answer_lead));
     }
@@ -995,6 +1009,10 @@ function loadQuestionEntry() {
     feedback.textContent = 'Ready to search the research index.';
     feedback.classList.add('sr-only');
     document.querySelector('#demo-note').classList.add('sr-only');
+    if (config.arxiv_fallback) {
+      document.querySelector('#welcome p').textContent =
+        'Search the library. If it lacks evidence, the app searches public arXiv papers using your topic.';
+    }
     if (untouchedQuestion) queryInput.value = '';
   }
   if (!demo) return;

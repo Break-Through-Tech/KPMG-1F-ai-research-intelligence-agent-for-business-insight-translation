@@ -590,7 +590,14 @@
     body.append(nav);
     const fallback = h('p', {class: 'note warn', role: 'status', hidden: true});
     body.append(fallback);
-    if (result.summary.quality_review) body.append(note('Automated support and relevance review applied. Model judgment; not independent human verification.', '', 'shield'));
+    // One trust line instead of separate notes repeating that nothing was independently verified.
+    const checks = [];
+    if (isSynthesis(demo)) checks.push('Citation IDs and source quotes checked');
+    if (result.summary.quality_review) checks.push('automated support and relevance review applied (model judgment)');
+    if (checks.length) {
+      const text = checks.join('; ');
+      body.append(note(`${text.charAt(0).toUpperCase()}${text.slice(1)}. Claim support has not been independently verified by a person.`, 'trust', 'shield'));
+    }
     const search = result.provenance?.arxiv_search;
     const searchMessages = {
       answered: ['arXiv search completed. Open the citations to see the papers found for this question.', ''],
@@ -637,12 +644,7 @@
         interpretations.map(claim => cited('p', claim, demo, number))));
     }
     if (isSynthesis(demo)) {
-      const scoped = result.summary.limitation_support?.length;
-      if (scoped || result.summary.limitations?.length) {
-        findings.append(h('h5', {text: 'Scope & limitations'}),
-          ...(scoped ? result.summary.limitation_support.map(item => cited('p', item, demo, number, 'scope')) : [bullets(result.summary.limitations)]));
-      }
-      findings.append(note('Citation IDs and source quotes checked. Claim support has not been independently verified.', '', 'check'));
+      // Scope & limitations are shown once, under Risks & limits (with their citations).
       const citedIds = new Set();
       for (const groups of [result.summary.claims, result.summary.limitation_support, insight?.implications]) {
         for (const item of groups || []) {
@@ -721,9 +723,16 @@
       if (items?.length) riskCards.append(h('div', {class: `risk-card ${tone}`}, h('p', {class: 'risk-title'}, icon(iconName), h('span', {text: title})), bullets(items)));
     };
     riskCard('Risks', insight?.risks, 'warn', 'alert');
-    riskCard('Summary limitations', result.summary.limitations, '', 'book');
+    const scoped = isSynthesis(demo) && result.summary.limitation_support?.length ? result.summary.limitation_support : null;
+    if (scoped) {
+      // Keep every summary limitation: cited ones first, then any uncited ones not already shown.
+      const shown = new Set(scoped.map(item => item.text.trim()));
+      const extra = (result.summary.limitations || []).filter(text => !shown.has(String(text).trim()));
+      riskCards.append(h('div', {class: 'risk-card'}, h('p', {class: 'risk-title'}, icon('book'), h('span', {text: 'Scope & limitations'})),
+        h('div', {class: 'scoped'}, scoped.map(item => cited('p', item, demo, number, 'scope'))), extra.length ? bullets(extra) : null));
+    } else riskCard('Scope & limitations', result.summary.limitations, '', 'book');
     riskCard('Business limitations', insight?.limitations, '', 'bulb');
-    riskCard('Assumptions · not research findings', insight?.implications.flatMap(item => item.assumptions || []), '', 'layers');
+    // Assumptions stay attached to each business insight (one place, next to the claim they qualify).
     riskCards.append(h('div', {class: `risk-card review ${reviewTone(demo)}`}, h('p', {class: 'risk-title'}, icon('shield'), h('span', {text: 'Review status'})),
       h('p', {text: demo.library ? reviewText(demo) : 'No reviewer has approved this draft. Save it as a brief to record a review.'})));
     section('risks', 'Risks & limits', sectionHead(`a${number}-risks`, 'Risks, assumptions & limitations', 'alert'), riskCards);

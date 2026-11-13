@@ -214,6 +214,12 @@ main { display: flex; flex-direction: column; flex: 1; min-height: 0; }
 .composer-note { margin-top: 12px; text-align: center; font-size: .75rem; color: var(--muted); }
 .suggestions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 10px; animation: rise .35s var(--ease); }
 .jump { position: absolute; left: 50%; top: -46px; z-index: 3; display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 14px 0 10px; translate: -50% 0; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); box-shadow: var(--shadow-md); font-size: .8125rem; font-weight: 600; animation: rise .3s var(--ease); }
+/* While reading an answer, keep the pinned composer compact so it takes less of the reading area. */
+.stage:not(.is-home) .composer textarea#query { min-height: 44px; padding-top: 12px; }
+.stage:not(.is-home) .composer-bar { padding-top: 2px; padding-bottom: 8px; }
+.stage:not(.is-home) .suggestions { margin-bottom: 6px; }
+.stage:not(.is-home) .composer-note { margin-top: 8px; }
+.stage:not(.is-home) .dock:not(.awaiting-clarification) .composer-note.static { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dock.awaiting-clarification :is(.composer, .suggestions) { display: none; }
 .dock.awaiting-clarification .composer-note::before { content: "Answer the clarification above to continue. "; font-weight: 600; color: var(--ink-2); }
 

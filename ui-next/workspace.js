@@ -132,6 +132,7 @@
       $('#hero').hidden = !home; thread.hidden = home; $('#examples').hidden = !home;
       $('#thread-title').classList.toggle('show', !home);
       if (home) { suggestions.hidden = true; jumpLatest.hidden = true; }
+      autosize(); // the composer is shorter while reading; drop the home-screen height
     };
     if (animate) morph(change); else change();
   }
@@ -1528,6 +1529,9 @@
         $('.send-label').textContent = 'Research';
       }
       if (mock) composerNote.textContent = `Prototype with mock research data · ${composerNote.textContent}`;
+      // Static mode description: shown in full on home, one line while reading (full text on hover).
+      composerNote.classList.add('static');
+      composerNote.title = composerNote.textContent;
       syncSettingsSummary();
       loadRecentBriefs();
       if (!demo) return;
@@ -1537,7 +1541,7 @@
       if (liveSynthesis && untouchedQuestion) setQuery('');
       $('#scenario-field').hidden = !mock;
       form.hidden = !liveSynthesis;
-      if (!liveSynthesis) composerNote.textContent = runLabel(demo);
+      if (!liveSynthesis) composerNote.title = composerNote.textContent = runLabel(demo);
       const number = ++turnNumber;
       const {turn, answer} = createTurn(demo.result.request.query, number, 'Executed query · Saved result', 'Loading saved result…');
       setView('thread', false);
@@ -1551,6 +1555,8 @@
         loadQuestionEntry().then(() => { if (appReady) queryInput.focus(); });
       }, 'text-btn', 'refresh');
       const reason = error?.message && error.message !== 'App configuration unavailable' && !(error instanceof TypeError) ? `${error.message} ` : 'Question entry unavailable: configuration or saved-result check failed. Your question is unchanged. ';
+      $('#composer-note').classList.remove('static');
+      $('#composer-note').title = '';
       $('#composer-note').replaceChildren(reason, retry);
     }).finally(() => { setQuestionBusy(false); autosize(); });
   }

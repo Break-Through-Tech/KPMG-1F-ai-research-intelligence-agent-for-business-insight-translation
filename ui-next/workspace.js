@@ -505,6 +505,20 @@
   window.addEventListener('touchmove', dismissForReadingGesture, {passive: true});
   window.addEventListener('resize', closePreview);
 
+  // One-time hint that citation numbers open their source quote; hidden after the first citation is used.
+  const citeHintKey = 'research-desk.cite-hint-seen.v1';
+  let citeHintSeen = store.get(citeHintKey) === '1';
+  function citeHint() {
+    return citeHintSeen ? null : h('p', {class: 'cite-hint'}, h('span', {class: 'cite-sample', 'aria-hidden': 'true', text: '1'}),
+      h('span', {text: 'Select a number to see the exact quote it came from.'}));
+  }
+  function dismissCiteHint() {
+    if (citeHintSeen) return;
+    citeHintSeen = true;
+    store.set(citeHintKey, '1');
+    document.querySelectorAll('.cite-hint').forEach(node => node.remove());
+  }
+
   function cited(tag, item, demo, number, className) {
     const node = h(tag, {class: className}, h('span', {class: 'cited-text', math: item.text}));
     for (const id of item.chunk_ids) {
@@ -525,7 +539,9 @@
         }
       });
       // Opening the original URL stays a separate, explicitly named link inside the preview.
+      citation.title = 'See the source quote';
       citation.addEventListener('click', () => {
+        dismissCiteHint();
         showQuote(item, demo, number, index, citation);
         quotePreview.querySelector('.quote-actions button').focus({preventScroll: true});
       });
@@ -684,7 +700,8 @@
       const node = cited('li', claim, demo, number);
       claimList.append(node); claimNodes.push({index, claim, node});
     }
-    const findings = section('findings', 'Research findings',sectionHead(`a${number}-findings`, 'Research findings', 'book'),
+    const findings = section('findings', 'Research findings', sectionHead(`a${number}-findings`, 'Research findings', 'book'),
+      result.summary.claims.length ? citeHint() : null,
       result.summary.claims.length ? claimList : h('p', {class: 'muted', text: 'No supported research claims.'}));
     const interpretations = result.summary.claims.filter(claim => claim.kind === 'interpretation');
     if (interpretations.length) {

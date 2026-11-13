@@ -259,7 +259,10 @@ main { display: flex; flex-direction: column; flex: 1; min-height: 0; }
 .scope { margin: 4px 0; color: var(--ink-2); }
 .citation { display: inline-grid; place-items: center; min-width: 24px; height: 24px; padding: 0 6px; margin: 0 1px; border: 0; border-radius: 8px; background: var(--accent-soft); color: var(--accent); font-family: var(--sans); font-size: .71875rem; font-weight: 750; line-height: 1; vertical-align: .12em; transition: background .16s, color .16s, transform .2s var(--ease), box-shadow .2s; }
 .citation:hover, .citation[aria-expanded="true"] { background: var(--accent); color: var(--accent-ink); transform: translateY(-2px); box-shadow: 0 4px 10px color-mix(in srgb, var(--accent) 35%, transparent); }
-.cite-num { display: inline-grid; place-items: center; min-width: 24px; height: 24px; border-radius: 8px; background: var(--accent-soft); color: var(--accent); font-size: .71875rem; font-weight: 750; }
+/* Row numbers in the sources table are labels, not buttons: keep them plain so only in-text citations look clickable. */
+.cite-num { display: inline-grid; place-items: center; min-width: 24px; height: 24px; color: var(--muted); font-family: var(--mono); font-size: .75rem; font-weight: 600; }
+.cite-hint { display: flex; align-items: center; gap: 8px; margin: 2px 0 4px; font-size: .8125rem; color: var(--muted); animation: rise .4s var(--ease) both; }
+.cite-sample { display: inline-grid; place-items: center; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 8px; background: var(--accent-soft); color: var(--accent); font-size: .6875rem; font-weight: 750; }
 .interpretation { display: grid; gap: 4px; margin-top: 18px; padding: 14px 16px; border-left: 3px solid var(--line-strong); border-radius: 0 12px 12px 0; background: var(--sunken); }
 .note { display: flex; align-items: flex-start; gap: 8px; margin: 12px 0 0; padding: 9px 12px; border-radius: 10px; background: var(--sunken); color: var(--muted); font-size: .8125rem; line-height: 1.5 !important; }
 .note .icon { width: 15px; height: 15px; margin-top: 2px; }

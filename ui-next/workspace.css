@@ -207,6 +207,10 @@ main { display: flex; flex-direction: column; flex: 1; min-height: 0; }
 .example .icon { color: var(--muted); opacity: 0; transform: translateX(-6px); transition: all .25s var(--ease); }
 .example:hover:not(:disabled) { background: var(--surface); border-color: var(--line-strong); color: var(--ink); transform: translateX(2px); }
 .example:hover .icon { opacity: 1; transform: none; color: var(--accent); }
+.industry-inline { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; padding: 0 4px; font-size: .8125rem; font-weight: 600; color: var(--ink-2); animation: rise .5s .1s var(--ease) both; }
+.industry-inline .hint { font-weight: 500; }
+.stage:not(.is-home) .industry-inline { display: none; }
+.quick-chip[aria-pressed="true"] { background: var(--accent-soft); border-color: transparent; color: var(--accent); }
 .composer-note { margin-top: 12px; text-align: center; font-size: .75rem; color: var(--muted); }
 .suggestions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 10px; animation: rise .35s var(--ease); }
 .jump { position: absolute; left: 50%; top: -46px; z-index: 3; display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 14px 0 10px; translate: -50% 0; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); box-shadow: var(--shadow-md); font-size: .8125rem; font-weight: 600; animation: rise .3s var(--ease); }

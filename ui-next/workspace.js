@@ -193,8 +193,17 @@
     if (!store.set(enterKey, value)) announce('Preference storage unavailable; applies to this tab only.');
   }));
   updateEntryHint();
+  const inlineIndustry = [];
   for (const name of ['Banking', 'Insurance', 'Healthcare', 'Retail']) {
     $('#industry-quick').append(btn(name, () => { industryInput.value = name.toLowerCase(); syncSettingsSummary(); }, 'quick-chip'));
+    // Same choices, visible under the composer on the home screen: business insights need an industry.
+    const toggle = btn(name, () => {
+      industryInput.value = industryInput.value.trim().toLowerCase() === name.toLowerCase() ? '' : name.toLowerCase();
+      syncSettingsSummary();
+    }, 'quick-chip');
+    toggle.dataset.industry = name.toLowerCase();
+    inlineIndustry.push(toggle);
+    $('#industry-inline-chips').append(toggle);
   }
   industryInput.addEventListener('input', syncSettingsSummary);
   scenarioSelect.addEventListener('change', syncSettingsSummary);
@@ -204,6 +213,16 @@
     if (ReadingPrefs.get('explanation') === 'plain') parts.push('Plain language');
     if (!$('#scenario-field').hidden && scenarioSelect.selectedIndex > 0) parts.push(scenarioSelect.selectedOptions[0].textContent);
     $('#settings-summary').textContent = parts.join(' · ');
+    const current = industryInput.value.trim().toLowerCase();
+    for (const toggle of inlineIndustry) toggle.setAttribute('aria-pressed', String(toggle.dataset.industry === current));
+    $('#industry-inline').hidden = $('#industry-field').hidden;
+  }
+  function requestBusinessInsights(query) {
+    // Summary-only answers: keep the question, open settings at the industry field.
+    setQuery(query);
+    setSettings(true);
+    industryInput.focus();
+    announce('Choose or type an industry, then send the question again to get business insights.');
   }
   function setSettings(open) {
     $('#settings').classList.toggle('open', open);
@@ -873,6 +892,10 @@
     answer.replaceChildren(h('header', {class: 'answer-head'}, answerHeading(number), chips));
     if (demo.result) {
       if (!['full', 'plain-language'].includes(demo.scenario)) answer.append(note(explanation, tone === 'ok' ? '' : tone));
+      if (demo.scenario === 'summary-only' && !demo.result.business_insight && !$('#industry-field').hidden) {
+        answer.append(h('div', {class: 'row'}, btn('Add an industry to get business insights',
+          () => requestBusinessInsights(demo.result.request?.query || demo.submitted_request?.query || ''), 'tool primary', 'bulb')));
+      }
       renderDraft(demo, number, answer);
       if (demo.error) answer.append(note(`${{regulatory: 'Risk & compliance', business: 'Business translation'}[stage] || stage || 'Error'}: ${demo.error.message || demo.error}`, stage === 'regulatory' ? 'warn error' : 'bad error', 'alert'));
       const tools = answerTools(demo, number, answer, updated => {

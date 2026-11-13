@@ -239,9 +239,10 @@ main { display: flex; flex-direction: column; flex: 1; min-height: 0; }
 .head-actions .tool { height: 32px; }
 .answer-body { animation: rise .5s var(--ease) both; }
 .lead { margin: 18px 0 6px; font-size: 1.1875rem; line-height: 1.6; letter-spacing: -.005em; }
-.answer-nav { position: sticky; top: 0; z-index: 2; display: flex; gap: 6px; margin: 10px 0 0; padding: 10px 0; overflow-x: auto; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+.answer-nav { position: sticky; top: 0; z-index: 2; display: flex; gap: 6px; margin: 10px 0 0; padding: 10px 0; overflow-x: auto; background: var(--bg); border-bottom: 1px solid var(--line); }
 .nav-pill { height: 30px; padding: 0 12px; flex: none; border: 0; border-radius: 999px; background: transparent; color: var(--muted); font-size: .8125rem; font-weight: 600; transition: background .15s, color .15s; }
 .nav-pill:hover { background: var(--sunken); color: var(--ink); }
+.nav-pill[aria-current="true"] { background: var(--accent-soft); color: var(--accent); }
 .block { padding: 24px 0 6px; scroll-margin-top: 54px; }
 .section-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
 .section-head > .icon { width: 30px; height: 30px; padding: 6px; border-radius: 9px; background: var(--accent-soft); color: var(--accent); }

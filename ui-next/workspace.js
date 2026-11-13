@@ -593,19 +593,48 @@
   function bullets(items) { return h('ul', {class: 'bullets'}, items.map(item => h('li', {math: item}))); }
   function note(text, tone = '', iconName) { return h('p', {class: `note ${tone}`}, iconName && icon(iconName), h('span', {text})); }
 
+  // Section navigation highlight, one check per answer, run once per frame while the thread scrolls.
+  const sectionSpies = new Set();
+  let spyFrame = 0;
+  function runSectionSpies() {
+    spyFrame = 0;
+    for (const check of sectionSpies) if (check() === false) sectionSpies.delete(check);
+  }
+  scroller.addEventListener('scroll', () => { if (!spyFrame) spyFrame = requestAnimationFrame(runSectionSpies); }, {passive: true});
+
   function renderDraft(demo, number, answer) {
     const result = demo.result, insight = result.business_insight, view = demo.plain_language;
     const body = h('div', {class: 'answer-body'});
     const nav = h('nav', {class: 'answer-nav', 'aria-label': `Answer ${number} sections`});
+    const spy = [];
+    const markCurrent = pill => spy.forEach(item => {
+      if (item.pill === pill) item.pill.setAttribute('aria-current', 'true'); else item.pill.removeAttribute('aria-current');
+    });
     const section = (key, label, ...children) => {
       const node = h('section', {class: `block block-${key}`, 'aria-labelledby': `a${number}-${key}`}, children);
-      nav.append(h('button', {type: 'button', class: 'nav-pill', text: label, onclick: () => {
+      const pill = h('button', {type: 'button', class: 'nav-pill', text: label, onclick: () => {
+        markCurrent(pill);
         node.scrollIntoView({block: 'start', behavior: reduced.matches ? 'auto' : 'smooth'});
         $(`#a${number}-${key}`).focus({preventScroll: true});
-      }}));
+      }});
+      nav.append(pill);
+      spy.push({node, pill});
       body.append(node);
       return node;
     };
+    // Highlight the section being read: the last one whose top has passed the bottom of the sticky bar.
+    sectionSpies.add(() => {
+      if (!nav.isConnected) return false;
+      // A section jumped to with the bar lands with its top ~15px below the bar (scroll-margin-top), so allow 32px.
+      const line = nav.getBoundingClientRect().bottom + 32;
+      const box = body.getBoundingClientRect();
+      if (box.bottom < line || box.top > scroller.getBoundingClientRect().bottom) return markCurrent(null);
+      let current = null;
+      for (const item of spy) if (item.node.getBoundingClientRect().top <= line) current = item.pill;
+      // At the very bottom the last (short) section can never reach the bar.
+      if (scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 4 && spy.at(-1).node.getBoundingClientRect().top < scroller.getBoundingClientRect().bottom) current = spy.at(-1).pill;
+      markCurrent(current);
+    });
     if (result.summary.answer_lead) body.append(h('p', {class: 'lead', math: result.summary.answer_lead}));
     body.append(nav);
     const fallback = h('p', {class: 'note warn', role: 'status', hidden: true});
@@ -655,7 +684,7 @@
       const node = cited('li', claim, demo, number);
       claimList.append(node); claimNodes.push({index, claim, node});
     }
-    const findings = section('findings', 'Findings', sectionHead(`a${number}-findings`, 'Research findings', 'book'),
+    const findings = section('findings', 'Research findings',sectionHead(`a${number}-findings`, 'Research findings', 'book'),
       result.summary.claims.length ? claimList : h('p', {class: 'muted', text: 'No supported research claims.'}));
     const interpretations = result.summary.claims.filter(claim => claim.kind === 'interpretation');
     if (interpretations.length) {
@@ -664,7 +693,7 @@
         interpretations.map(claim => cited('p', claim, demo, number))));
     }
     if (isSynthesis(demo)) {
-      // Scope & limitations are shown once, under Risks & limits (with their citations).
+      // Scope & limitations are shown once, under Risks & limitations (with their citations).
       const citedIds = new Set();
       for (const groups of [result.summary.claims, result.summary.limitation_support, insight?.implications]) {
         for (const item of groups || []) {
@@ -755,7 +784,7 @@
     // Assumptions stay attached to each business insight (one place, next to the claim they qualify).
     riskCards.append(h('div', {class: `risk-card review ${reviewTone(demo)}`}, h('p', {class: 'risk-title'}, icon('shield'), h('span', {text: 'Review status'})),
       h('p', {text: demo.library ? reviewText(demo) : 'No reviewer has approved this draft. Save it as a brief to record a review.'})));
-    section('risks', 'Risks & limits', sectionHead(`a${number}-risks`, 'Risks, assumptions & limitations', 'alert'), riskCards);
+    section('risks', 'Risks & limitations', sectionHead(`a${number}-risks`, 'Risks & limitations', 'alert'), riskCards);
 
     /* Sources table: each row opens the evidence inspector on that passage */
     const rows = result.evidence.map((passage, index) => {

@@ -836,7 +836,15 @@
         h('pre', {class: 'json', tabIndex: 0, text: JSON.stringify(demo, null, 2)})));
     });
     answer.append(bar, panels);
-    return {open: key => entries.forEach(entry => entry.set(entry.key === key))};
+    const open = key => entries.forEach(entry => entry.set(entry.key === key));
+    // Header shortcuts open the same panels as the tool row and bring them into view.
+    const reveal = key => {
+      open(key);
+      const button = $(`.tool[aria-controls="a${number}-panel-${key}"]`, bar);
+      bar.scrollIntoView({block: 'start', behavior: reduced.matches ? 'auto' : 'smooth'});
+      button?.focus({preventScroll: true});
+    };
+    return {open, reveal, inspect: trigger => showEvidence(demo, number, 0, trigger)};
   }
   function snapshotButton(demo) {
     return btn('Export snapshot JSON', () => {
@@ -875,6 +883,20 @@
         loadRecentBriefs();
       });
       if (demo.library_error) tools.open('brief');
+      // Primary actions next to the status chips, so saving and reviewing is not only at the end of a long answer.
+      const reviewChip = $('.chips > .chip:nth-child(2)', answer);
+      const briefLabel = demo.library ? (demo.library.reviews.length ? 'Open brief & review' : 'Review brief') : 'Save brief';
+      const reviewHint = demo.library ? 'Open the saved brief to record or view its review.' : 'No reviewer has approved this draft. Save it as a brief to record a review.';
+      if (reviewChip) {
+        const chipButton = h('button', {type: 'button', class: `${reviewChip.className} chip-btn`, title: reviewHint,
+          'aria-label': `${reviewChip.textContent}. ${reviewHint}`, onclick: () => tools.reveal('brief')}, ...reviewChip.childNodes);
+        reviewChip.replaceWith(chipButton);
+      }
+      const inspectTop = h('button', {type: 'button', class: 'tool', onclick: () => tools.inspect(inspectTop)},
+        icon('layers'), h('span', {text: `Inspect evidence (${demo.result.evidence.length})`}));
+      $('.answer-head', answer).append(h('div', {class: 'head-actions', role: 'group', 'aria-label': `Answer ${number} actions`},
+        h('button', {type: 'button', class: 'tool primary', onclick: () => tools.reveal('brief')}, icon('bookmark'), h('span', {text: briefLabel})),
+        inspectTop));
       // Keep an open inspector current without opening one over the answer.
       activeDemo = {demo, number};
       if (document.body.classList.contains('insp-open')) showEvidence(demo, number);

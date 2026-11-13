@@ -223,6 +223,10 @@ main { display: flex; flex-direction: column; flex: 1; min-height: 0; }
 .answer-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 .answer-kicker { color: var(--accent); outline-offset: 4px; scroll-margin-top: 16px; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip-btn { border: 0; cursor: pointer; font-family: inherit; transition: box-shadow .18s, transform .18s var(--ease); }
+.chip-btn:hover { transform: translateY(-1px); box-shadow: inset 0 0 0 1px var(--accent); }
+.head-actions { display: flex; flex-basis: 100%; flex-wrap: wrap; gap: 8px; }
+.head-actions .tool { height: 32px; }
 .answer-body { animation: rise .5s var(--ease) both; }
 .lead { margin: 18px 0 6px; font-size: 1.1875rem; line-height: 1.6; letter-spacing: -.005em; }
 .answer-nav { position: sticky; top: 0; z-index: 2; display: flex; gap: 6px; margin: 10px 0 0; padding: 10px 0; overflow-x: auto; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }

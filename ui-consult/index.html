@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="data:,">
+  <script src="/prefs.js"></script>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/read-aloud.css">
+  <link rel="stylesheet" href="/consult.css">
+  <!-- Existing modules, loaded unmodified from ui/: math, source reader, exports, read-aloud. -->
+  <script src="/vendor/katex/katex.min.js" defer></script>
+  <script src="/math.js" defer></script>
+  <script src="/source-reader.js" defer></script>
+  <script src="/answer-export.js" defer></script>
+  <!-- Prototype only: answers /api/* in the browser with invented data, and only when the page is opened with ?mock=1. -->
+  <script src="/mock-api.js" defer></script>
+  <script src="/research-speech.js" defer></script>
+  <script src="/evidence.js" defer></script>
+  <script src="/async-guards.js" defer></script>
+  <script src="/chart-svg.js" defer></script>
+  <script src="/app.js" defer></script>
+  <title>Research Intelligence · 1F</title>
+</head>
+<body>
+  <a class="skip" href="#query">Skip to research question</a>
+
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Research Intelligence, Team 1F, home">
+      <span class="brand-mark" aria-hidden="true">1F</span>
+      <span class="brand-name">Research Intelligence</span>
+    </a>
+    <nav class="views" aria-label="Workspace">
+      <button id="nav-research" class="view-tab" type="button" aria-current="page">Research</button>
+      <button id="library-open" class="view-tab" type="button" hidden>Library</button>
+    </nav>
+    <p id="thread-title" class="thread-title" aria-hidden="true"></p>
+    <div class="topbar-end">
+      <span id="mode-chip" class="mode" hidden></span>
+      <button id="evidence-toggle" class="quiet-btn" type="button" aria-expanded="false" aria-controls="inspector" hidden><span data-icon="layers"></span>Sources</button>
+      <button id="prefs-open" class="icon-btn" type="button" title="Reading preferences" aria-label="Reading preferences" aria-haspopup="dialog"><span data-icon="sliders"></span></button>
+      <button id="theme-toggle" class="icon-btn" type="button" title="Switch theme"><span data-icon="moon"></span></button>
+      <button id="new-research" class="primary-btn" type="button"><span data-icon="plus"></span><span>New research</span></button>
+    </div>
+  </header>
+
+  <div id="mode-banner" class="mode-banner" role="status" aria-live="polite" data-tone="pending">
+    <span id="mode-banner-icon" class="mode-banner-icon" aria-hidden="true"></span>
+    <strong id="mode-banner-title">Checking connection…</strong>
+    <span id="mode-banner-text">Looking for a research backend. Nothing is shown until it answers.</span>
+  </div>
+
+  <div id="stage" class="stage is-home">
+    <aside id="rail" class="rail" aria-label="Brief navigation">
+      <nav id="contents" class="contents" aria-label="Contents of this answer"></nav>
+      <section id="session-section" class="rail-group" hidden>
+        <h2 class="rail-title">This session</h2>
+        <ul id="session-list" class="rail-list"></ul>
+      </section>
+    </aside>
+
+    <main id="main" class="main">
+      <div id="scroll" class="scroll" role="region" aria-label="Research workspace" tabindex="-1">
+        <section id="hero" class="home" aria-labelledby="hero-title">
+          <div class="home-intro">
+            <h1 id="hero-title">What does the client need to know?</h1>
+            <p id="hero-sub" class="home-sub">Ask a question of the research index. Findings, numbers and tables link back to the passage or table cell they came from.</p>
+          </div>
+          <div id="home-slot" class="composer-slot"></div>
+          <section id="recent-section" class="recent" aria-labelledby="recent-heading" hidden>
+            <div class="recent-head">
+              <h2 id="recent-heading">Recent briefs</h2>
+              <button id="recent-all" class="link-btn" type="button">Open library</button>
+            </div>
+            <ul id="recent-briefs" class="brief-rows"></ul>
+          </section>
+        </section>
+
+        <div id="thread" class="thread" aria-busy="false" hidden></div>
+
+        <section id="library-view" class="library" aria-labelledby="library-heading" hidden>
+          <header class="library-head">
+            <div>
+              <h1 id="library-heading">Library</h1>
+              <p class="lede">Saved briefs keep their exact answer, evidence and review history. Opening one never runs research or calls a model.</p>
+            </div>
+            <div id="library-import"></div>
+          </header>
+          <div class="library-tools">
+            <form id="library-search-form" class="search" role="search">
+              <span data-icon="search"></span>
+              <label for="brief-search" class="sr-only">Search titles and original questions</label>
+              <input id="brief-search" type="search" maxlength="200" placeholder="Search titles and original questions">
+              <button type="submit" class="quiet-btn">Search</button>
+            </form>
+            <label class="check"><input id="brief-archived" type="checkbox"> Show archived</label>
+          </div>
+          <p id="library-status" role="status" aria-atomic="true" class="hint"></p>
+          <ul id="brief-list" class="brief-rows library-rows" aria-label="Saved briefs" aria-busy="false"></ul>
+          <div class="pages"><button id="brief-previous" type="button" class="quiet-btn" disabled>Previous</button><button id="brief-next" type="button" class="quiet-btn" disabled>Next</button></div>
+        </section>
+      </div>
+
+      <div id="dock" class="dock">
+        <button id="jump-latest" class="jump" type="button" hidden><span data-icon="down"></span>Jump to latest answer</button>
+        <div id="suggestions" class="suggestions" role="group" aria-label="Editable follow-up suggestions" hidden></div>
+        <form id="composer" class="composer" novalidate>
+          <div id="revision-banner" class="revision" hidden><span data-icon="history"></span><span id="revision-text"></span><button id="revision-cancel" type="button" class="link-btn">Cancel revision</button></div>
+          <label for="query" class="sr-only">Research question</label>
+          <textarea id="query" name="query" rows="1" maxlength="2000" placeholder="Ask a research question…" aria-describedby="entry-hint composer-note"></textarea>
+          <div class="composer-bar">
+            <button id="settings-toggle" class="pill" type="button" aria-expanded="false" aria-controls="settings"><span data-icon="sliders"></span><span>Settings</span><span id="settings-summary" class="pill-summary"></span><span class="pill-caret" data-icon="down"></span></button>
+            <span class="grow"></span>
+            <span id="counter" class="counter" hidden></span>
+            <button id="submit" class="send" type="submit" disabled><span class="send-label">Research</span><span data-icon="arrow"></span></button>
+          </div>
+          <div id="settings" class="settings" inert>
+            <div class="settings-inner">
+              <div class="field" id="industry-field">
+                <label for="industry">Industry context <span class="optional">optional</span></label>
+                <input id="industry" type="text" maxlength="300" placeholder="e.g. banking" autocomplete="off">
+                <div id="industry-quick" class="quick" role="group" aria-label="Common industries"></div>
+                <p class="hint">Requests conditional business implications for this industry. Leave empty for a research summary only.</p>
+              </div>
+              <div class="field" id="risk-field" hidden>
+                <span class="field-label">Risk &amp; compliance <span class="optional">optional</span></span>
+                <label class="check"><input id="risk-assessment" type="checkbox"> Add source-backed risk and compliance assessment</label>
+                <label for="jurisdiction" class="sr-only">Jurisdiction (required for assessment)</label>
+                <input id="jurisdiction" type="text" maxlength="200" placeholder="Jurisdiction, e.g. United States" autocomplete="off">
+                <p class="hint">Advisory only. Needs an industry context and a jurisdiction. If it fails, your research answer is kept.</p>
+              </div>
+              <div class="field">
+                <span class="field-label" id="explanation-label">Explanation style</span>
+                <div id="explanation-seg"></div>
+                <p class="hint">Plain language rewrites research findings only, when available. Sources and business actions stay unchanged.</p>
+              </div>
+              <div class="field">
+                <span class="field-label" id="enter-label">Enter key</span>
+                <div id="enter-seg"></div>
+                <p id="entry-hint" class="hint"></p>
+              </div>
+              <div class="field" id="scenario-field" hidden>
+                <label for="scenario"><span id="scenario-label">Example state</span> <span class="optional proto">prototype only</span></label>
+                <select id="scenario" name="scenario"></select>
+                <p class="hint" id="scenario-hint">Choose which response the mock backend returns.</p>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div id="industry-inline" class="industry-inline" role="group" aria-labelledby="industry-inline-label" hidden>
+          <span id="industry-inline-label">Business implications for</span>
+          <span id="industry-inline-chips" class="quick"></span>
+          <span class="hint">Optional. Leave empty for a research summary only.</span>
+        </div>
+        <div id="examples" class="examples" role="group" aria-label="Example questions"></div>
+        <p id="composer-note" class="composer-note"></p>
+        <noscript>This local interface requires JavaScript. No provider credentials are needed.</noscript>
+      </div>
+    </main>
+
+    <aside id="inspector" class="drawer" aria-labelledby="inspector-heading" inert>
+      <div class="drawer-panel">
+        <div class="drawer-head">
+          <div><p id="inspector-kicker" class="drawer-kicker">Evidence</p><h2 id="inspector-heading" tabindex="-1">Source context</h2></div>
+          <button id="inspector-close" class="icon-btn" type="button" aria-label="Close source context"><span data-icon="x"></span></button>
+        </div>
+        <div id="inspector-body" class="drawer-body"><p class="empty">Select a citation or a table cell to inspect its source here.</p></div>
+        <p id="inspector-note" class="drawer-note">Inspect source quotes and the original paper. Citations are not proof of support.</p>
+      </div>
+    </aside>
+
+    <aside id="review-drawer" class="drawer" aria-labelledby="review-heading" inert>
+      <div class="drawer-panel">
+        <div class="drawer-head">
+          <div><p id="review-kicker" class="drawer-kicker">Brief</p><h2 id="review-heading" tabindex="-1">Save and review</h2></div>
+          <button id="review-close" class="icon-btn" type="button" aria-label="Close brief and review"><span data-icon="x"></span></button>
+        </div>
+        <div id="review-body" class="drawer-body"></div>
+      </div>
+    </aside>
+  </div>
+
+  <dialog id="prefs" class="popover-panel" aria-labelledby="prefs-heading">
+    <div class="sheet-head"><h2 id="prefs-heading">Reading preferences</h2><button id="prefs-close" class="icon-btn" type="button" aria-label="Close reading preferences"><span data-icon="x"></span></button></div>
+    <div id="prefs-body"></div>
+    <button id="prefs-reset" class="link-btn" type="button">Reset reading preferences</button>
+    <p class="hint">Stored only in this browser when available. Reset follows your system theme.</p>
+    <p id="prefs-status" class="hint" role="status"></p>
+  </dialog>
+
+  <div id="citation-preview" popover="manual" role="dialog" aria-label="Citation preview"></div>
+  <p id="toast" class="toast" role="status" aria-atomic="true"></p>
+</body>
+</html>

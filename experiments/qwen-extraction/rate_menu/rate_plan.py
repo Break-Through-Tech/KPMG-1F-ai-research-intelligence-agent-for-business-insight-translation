@@ -26,7 +26,7 @@ def parse(raw, finish, c):
     a,b=map(Decimal,vals)
     if not (0<=a<=100 and 0<=b<=100): raise ValueError('rate range')
     # A string match proves only that the numbers occur, not which is initial/final.
-    printed={Decimal(m) for e in c['evidence'] if e['chunk_id'] in ids for m in re.findall(r'(?<![0-9.−+-])([0-9]+(?:\.[0-9]+)?)\s*%',e['text'])}
+    printed={Decimal(m) for e in c['evidence'] if e['chunk_id'] in ids for m in re.findall(r'(?<![\w.,−+\-])([0-9]+(?:\.[0-9]+)?)\s*%',e['text'])}
     if not {a,b}<=printed: raise ValueError('operand absent from cited text')
     if op==REL and not a: raise ValueError('undefined relative change')
     with localcontext() as ctx:

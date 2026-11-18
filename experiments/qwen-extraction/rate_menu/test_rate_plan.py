@@ -17,6 +17,13 @@ class RatePlan(unittest.TestCase):
                 self.assertEqual(checked_parse(request, 'stop', case)[1],
                                  dict(value=value, unit=unit, source_ids=['a']))
 
+    def test_grouped_percentage_is_not_a_smaller_operand(self):
+        case = {'evidence': [{'chunk_id': 'a', 'text': 'Before 1,010%; after 20%.'}]}
+        request = json.dumps(dict(operation='relative_change', initial=10,
+                                  final=20, source_ids=['a']))
+        with self.assertRaisesRegex(ValueError, 'operand absent'):
+            checked_parse(request, 'stop', case)
+
     def test_unsupported_operand(self):
         case = {'evidence': [{'chunk_id': 'a', 'text': 'Before 10%; after 20%.'}]}
         with self.assertRaisesRegex(ValueError, 'operand absent'):

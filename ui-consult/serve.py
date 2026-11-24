@@ -52,18 +52,24 @@ ROUTES = (
     (re.compile(r'/api/(?:config|saved-result)'), {'GET'}),
     (re.compile(r'/api/(?:research|demo)'), {'POST'}),
     (re.compile(r'/api/evidence-table'), {'GET'}),
+    # Experimental, model-free chart-first routes (offered only by the isolated backend).
+    (re.compile(r'/api/progress'), {'GET'}),
+    (re.compile(r'/api/chart-preview'), {'POST'}),
+    # Experimental multi-agent research (offered only by a live backend started with --agentic).
+    (re.compile(r'/api/agentic-research'), {'POST'}),
     (re.compile(r'/api/briefs(?:/[0-9a-f]{1,64})?'), {'GET', 'POST'}),
     (re.compile(r'/api/briefs/[0-9a-f]{1,64}/reviews'), {'POST'}),
 )
 # Largest backend response the proxy will hold in memory. The table endpoint caps itself at
 # 1 MB; saved briefs and research envelopes stay well under 32 MB.
-MAX_RESPONSE = {'/api/evidence-table': 2_000_000}
+MAX_RESPONSE = {'/api/evidence-table': 2_000_000, '/api/progress': 64_000,
+                '/api/chart-preview': 4_000_000}  # up to 3 verified tables plus their retrieved rows
 MAX_RESPONSE_DEFAULT = 32_000_000
 # Runtime assets only. Tests are added by --serve-tests.
-STATIC = {'index.html', 'app.js', 'evidence.js', 'async-guards.js', 'chart-svg.js', 'consult.css', 'prefs.js', 'mock-api.js',
+STATIC = {'index.html', 'app.js', 'evidence.js', 'chart-select.js', 'async-guards.js', 'chart-svg.js', 'consult.css', 'prefs.js', 'mock-api.js',
           'research-speech.js', 'read-aloud.mjs', 'read-aloud.css', 'answer-export.js', 'math.js', 'source-reader.js'}
 STATIC_PATTERN = re.compile(r'vendor/katex/(?:katex\.min\.(?:js|css)|fonts/[A-Za-z0-9_-]+\.(?:woff2|woff|ttf))')
-TEST_STATIC = re.compile(r'tests/(?:evidence\.test\.(?:html|js)|run-tests\.js|tests\.css|fixtures/[a-z0-9-]+\.json)')
+TEST_STATIC = re.compile(r'tests/(?:evidence\.test\.(?:html|js)|chart-gallery\.(?:html|js)|run-tests\.js|tests\.css|fixtures/[a-z0-9-]+\.json)')
 # Modules the page loads unmodified from the Research Desk UI. In live mode they come
 # from the backend itself so they always match the API version being served.
 SHARED = re.compile(r'/(?:research-speech\.js|read-aloud\.mjs|read-aloud\.css|answer-export\.js|math\.js|'
@@ -85,6 +91,8 @@ def static_allowed(name, serve_tests=False):
 class ResponseTooLarge(Exception):
     pass
 RESEARCH_TIMEOUT = 1600  # The page's own research timeout is 1560 s.
+# Multi-agent worst case: 6 model calls of up to 300 s each plus retrieval. The page waits 1860 s.
+AGENTIC_TIMEOUT = 1900
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -188,7 +196,9 @@ class Handler(BaseHTTPRequestHandler):
         delivery = {'sent': False}
         try:
             status, payload, kind = self.upstream(
-                method, target, body if method == 'POST' else None, RESEARCH_TIMEOUT if parts.path in {'/api/research', '/api/demo'} else self.api_timeout,
+                method, target, body if method == 'POST' else None,
+                AGENTIC_TIMEOUT if parts.path == '/api/agentic-research'
+                else RESEARCH_TIMEOUT if parts.path in {'/api/research', '/api/demo'} else self.api_timeout,
                 MAX_RESPONSE.get(parts.path, MAX_RESPONSE_DEFAULT), delivery)
         except ResponseTooLarge:
             return self.send(502, {'code': 'backend_response_too_large', 'write_outcome': 'unknown' if method == 'POST' else None,

@@ -1,0 +1,14 @@
+A anchors 22 complete 5
+gain [] loss []
+tokens median 2303 offref slots 9 slots 120 repeated pairs 0
+B anchors 31 complete 9
+gain ['C02.1', 'C02.2', 'C02.3', 'C02.4', 'C05.1', 'C07.2', 'C10.1', 'C11.1', 'C12.1'] loss []
+tokens median 4521 offref slots 32 slots 240 repeated pairs 0
+C anchors 22 complete 4
+gain ['C02.4'] loss ['C09.2']
+tokens median 2321 offref slots 18 slots 120 repeated pairs 0
+ms median max 1.275199931114912 4.3793999357149005 peak traced KiB 393.51953125
+D anchors 22 complete 5
+gain [] loss []
+tokens median 2287 offref slots 12 slots 120 repeated pairs 0
+ms median max 14.19090002309531 27.933400007896125 peak traced KiB 879.9931640625

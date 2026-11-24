@@ -1,0 +1,28 @@
+15 cases; 15 exact replay packets
+k, points covered, complete questions
+8 22 5
+12 25 7
+16 31 9
+20 32 9
+30 37 11
+1000000 40 14
+Identifier | Point(s) | Funnel location | Paper shortlist / top8 paper count | Initial hybrid rank | CE ranks | Final rank
+2505.14607v3_c0018 | C02.1,C02.2 | reranked, below top 8 | True/8 | 16 | [9, 63] | 16
+2505.14607v3_c0022 | C02.3 | reranked, below top 8 | True/8 | 5 | [13, 49] | 10
+2505.14607v3_c0014 | C02.4 | reranked, below top 8 | True/8 | 59 | [40, 6] | 14
+2405.19358v2_c0021 | C03.3 | reranked, below top 8 | True/7 | 17 | [16, 70] | 21
+2412.21154v1_c0028 | C05.1 | reranked, below top 8 | True/7 | 5 | [8, 100] | 12
+2502.06864v1_c0000 | C07.1 | reranked, below top 8 | True/0 | 11 | [28, 26] | 24
+2502.06864v1_c0019 | C07.2 | reranked, below top 8 | True/0 | 50 | [27, 6] | 14
+2508.03553v1_c0004 | C07.3 | reranked, below top 8 | True/6 | 43 | [15, 34] | 27
+2508.03553v1_c0026 | C07.3 | reranked, below top 8 | True/6 | 38 | [16, 9] | 10
+2402.12713v2_c0024 | C08.1 | reranked, below top 8 | True/7 | None | [14, 44] | 30
+2402.12713v2_c0022 | C08.2 | outside discovery, not reranked | True/7 | None | [None, None] | None
+2401.11641v5_c0043 | C10.1 | reranked, below top 8 | True/8 | 19 | [3, 19] | 10
+2506.23123v1_c0014 | C11.1 | reranked, below top 8 | True/8 | 31 | [13] | 15
+2506.23123v1_c0274 | C11.2 | reranked, below top 8 | True/8 | 22 | [35] | 32
+2506.23123v1_c0286 | C11.3 | reranked, below top 8 | True/8 | 14 | [23] | 18
+2508.19097v1_c0033 | C12.1 | reranked, below top 8 | True/7 | 10 | [11, 49] | 14
+2510.24402v1_table_de629a5f57790c34_9 | C14.1 | reranked, below top 8 | True/8 | 21 | [24, 110] | 37
+2510.24402v1_table_de629a5f57790c34_10 | C14.2 | reranked, below top 8 | True/8 | 19 | [17, 127] | 30
+2511.08621v1_c0016 | C15.1 | reranked, below top 8 | True/4 | 82 | [32] | 40

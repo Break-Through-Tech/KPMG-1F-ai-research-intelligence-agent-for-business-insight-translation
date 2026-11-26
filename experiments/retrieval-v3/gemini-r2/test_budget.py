@@ -98,6 +98,36 @@ class LedgerTests(unittest.TestCase):
             self.assertEqual(db.execute('SELECT outcome FROM dispatch ORDER BY id').fetchall(),
                              [('TransientError',), ('response',)])
 
+    def test_real_sdk_client_survives_adapter_construction(self):
+        import gc
+        import json
+        import httpx
+        from google import genai
+
+        requests = []
+        sdk_client = genai.Client
+
+        def respond(request):
+            requests.append(json.loads(request.content))
+            return httpx.Response(200, json={
+                'candidates': [{'content': {'parts': [{'text': '{"ok":true}'}], 'role': 'model'},
+                                'finishReason': 'STOP'}],
+                'usageMetadata': {'promptTokenCount': 8, 'candidatesTokenCount': 4},
+            })
+
+        def factory(**kwargs):
+            kwargs['http_options'].client_args = {'transport': httpx.MockTransport(respond)}
+            return sdk_client(**kwargs)
+
+        generate, _ = application_generate(self.ledger, lambda: ('S2', 'U1'), 'fake-test-key',
+                                             client_factory=factory)
+        gc.collect()
+        self.assertEqual(generate('Offline probe', response_schema={'type': 'object'}), '{"ok":true}')
+        self.assertEqual(len(requests), 1)
+        self.assertEqual(requests[0]['generationConfig']['maxOutputTokens'], MAX_OUTPUT)
+        with closing(sqlite3.connect(self.path)) as db:
+            self.assertEqual(db.execute('SELECT COUNT(*) FROM dispatch').fetchone(), (1,))
+
     def test_local_payload_screen_blocks_prompt_and_schema_before_sdk_dispatch(self):
         def send(**kwargs):
             self.fail('A flagged body must never reach the SDK.')

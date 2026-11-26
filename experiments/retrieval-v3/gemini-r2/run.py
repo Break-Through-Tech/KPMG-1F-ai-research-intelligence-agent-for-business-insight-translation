@@ -58,7 +58,7 @@ def application_generate(ledger, scope, key, *, client_factory=None, sleep=time.
 
     def limited_client(**kwargs):
         client = factory(**kwargs)
-        return SimpleNamespace(models=GuardedModels(client.models, ledger, _usage, scope))
+        return SimpleNamespace(models=GuardedModels(client, ledger, _usage, scope))
 
     with patch.object(genai, 'Client', limited_client):
         raw, metadata = create_generate(GenerationConfig('gemini', MODEL, key))

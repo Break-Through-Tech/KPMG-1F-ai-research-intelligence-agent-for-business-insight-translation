@@ -116,8 +116,9 @@ class Ledger:
 
 
 class GuardedModels:
-    def __init__(self, models, ledger, usage, scope):
-        self.models, self.ledger, self.usage, self.scope = models, ledger, usage, scope
+    def __init__(self, client, ledger, usage, scope):
+        # Keep the SDK client alive for as long as its models can dispatch.
+        self.client, self.ledger, self.usage, self.scope = client, ledger, usage, scope
 
     def generate_content(self, *, model, contents, config):
         from google.genai.types import ThinkingConfig
@@ -137,7 +138,7 @@ class GuardedModels:
         dispatch = self.ledger.reserve(arm, question, bound)
         start = monotonic()
         try:
-            response = self.models.generate_content(model=model, contents=contents, config=metered)
+            response = self.client.models.generate_content(model=model, contents=contents, config=metered)
         except Exception as error:
             self.ledger.failure(dispatch, monotonic() - start, error)
             raise

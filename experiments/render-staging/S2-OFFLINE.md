@@ -23,8 +23,8 @@ continues to be shared and the cookie does not constitute a reviewer account.
   The first module needs only the standard library. The second uses the
   application dependencies and fake providers.
 - From retrieval-v3, run
-  `python -m unittest test_s2_paper_balance.PaperResolution test_s2_paper_balance.Selection test_s2_paper_balance.EngineFlag test_s3`.
-  The B1 classes shown here use synthetic fixtures. Some S3 cases use local
+  `python -m unittest test_s2_paper_balance.PaperResolution test_s2_paper_balance.Selection test_s2_paper_balance.EngineFlag`.
+  The B1 classes shown here use synthetic fixtures. Run test_s3 separately with the historical suites. Some S3 cases use local
   replay data. Run the complete historical suites on the evaluation machine
   with the assets listed in CODEX-CHECKPOINT-REPORT.md.
 - Windows Python 3.11.9 compiled the integration and engine modules and ran

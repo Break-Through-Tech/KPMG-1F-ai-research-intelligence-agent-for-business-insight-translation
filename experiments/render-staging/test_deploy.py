@@ -71,6 +71,38 @@ class DeploymentUnitTests(unittest.TestCase):
             Budget(self.path, clock=self.clock).reserve(reservation(400_000))
         self.assertEqual(0, self.attempts())
 
+    def test_transient_server_error_is_retried_under_quota(self):
+        from src.generation import ProviderUnavailable
+        valid = json.dumps({'status': 'ok'})
+        provider = Mock(side_effect=[ProviderUnavailable('503'), ProviderUnavailable('503'), valid])
+        sleeps = []
+        call = quota_generate(provider, Budget(self.path, clock=self.clock), sleep=sleeps.append)
+        self.assertEqual(valid, call('input'))
+        self.assertEqual(3, provider.call_count)
+        self.assertEqual([2, 6], sleeps)
+        self.assertEqual(3, self.attempts())  # each attempt is reserved
+
+    def test_transient_retries_are_bounded(self):
+        from src.generation import ProviderUnavailable
+        provider = Mock(side_effect=ProviderUnavailable('503'))
+        call = quota_generate(provider, Budget(self.path, clock=self.clock), sleep=lambda _: None)
+        with self.assertRaises(ProviderUnavailable):
+            call('input')
+        self.assertEqual(3, provider.call_count)
+        self.assertEqual(3, self.attempts())
+
+    def test_transient_retry_stops_at_budget(self):
+        from src.generation import ProviderUnavailable
+        budget = Budget(self.path, clock=self.clock)
+        for _ in range(5):
+            budget.reserve(1)
+        provider = Mock(side_effect=ProviderUnavailable('503'))
+        call = quota_generate(provider, budget, sleep=lambda _: None)
+        with self.assertRaises(QuotaExhausted):
+            call('input')
+        self.assertEqual(1, provider.call_count)  # the 6-per-minute limit refuses the retry
+        self.assertEqual(6, self.attempts())
+
     def test_failure_is_reserved_and_not_retried(self):
         provider = Mock(side_effect=TimeoutError)
         call = quota_generate(provider, Budget(self.path, clock=self.clock))

@@ -89,5 +89,22 @@ class BYOKTests(unittest.TestCase):
         self.assertEqual(metadata['provider'],'gemini')
         self.assertEqual(client.models.generate_content.call_args.kwargs['config'].response_mime_type,'application/json')
 
+    def test_gemini_server_errors_are_marked_transient_and_client_errors_final(self):
+        from google import genai
+        from google.genai import errors
+        from src.generation import ProviderUnavailable
+        cases = [(errors.ServerError(503, {'error': {'code': 503, 'status': 'UNAVAILABLE', 'message': 'overloaded'}}), True),
+                 (errors.ClientError(429, {'error': {'code': 429, 'status': 'RESOURCE_EXHAUSTED', 'message': 'quota'}}), False),
+                 (errors.ClientError(400, {'error': {'code': 400, 'status': 'INVALID_ARGUMENT', 'message': 'key'}}), False),
+                 (TimeoutError(), False)]
+        for error, transient in cases:
+            client=Mock();client.models.generate_content.side_effect=error
+            with patch.object(genai,'Client',return_value=client):
+                generate,_=create_generate(GenerationConfig('gemini','test-model','own-key'))
+                with self.assertRaises(PipelineError) as caught:
+                    generate('source prompt')
+            self.assertIs(isinstance(caught.exception, ProviderUnavailable), transient, repr(error))
+            self.assertNotIn('own-key', str(caught.exception))
+
 
 if __name__ == '__main__': unittest.main()

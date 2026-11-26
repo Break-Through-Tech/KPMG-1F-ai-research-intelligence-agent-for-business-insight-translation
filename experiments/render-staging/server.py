@@ -23,7 +23,7 @@ from evidence_tables import TableIndex
 from recorded_backend import make_handler
 from src.experimental.b2 import open_b2
 from src.experimental.demo import create_research
-from src.generation import create_generate, log_provider_failure
+from src.generation import ProviderUnavailable, create_generate, log_provider_failure
 from src.generation_config import GenerationConfig
 from src.indexed_research import fingerprint
 from jsonschema import Draft202012Validator
@@ -98,16 +98,28 @@ def reservation(payload_bytes):
     return payload_bytes // 2 + REPLY_ALLOWANCE
 
 
-def quota_generate(generate, budget):
+TRANSIENT_RETRY_DELAYS = (2, 6)  # seconds before the 2nd and 3rd attempt after a provider 5xx
+
+
+def quota_generate(generate, budget, *, sleep=time.sleep):
     def guarded(prompt, *, response_schema=None):
         wire = wire_schema(response_schema) if response_schema is not None else None
         payload = json.dumps({'prompt': prompt, 'schema': wire}, ensure_ascii=False).encode()
-        try:
-            budget.reserve(reservation(len(payload)))
-        except QuotaExhausted as error:
-            log_provider_failure('local_budget', error)
-            raise
-        text = generate(prompt, response_schema=wire)
+        for attempt in range(len(TRANSIENT_RETRY_DELAYS) + 1):
+            # Every attempt, including a retry, is reserved first, so all minute, daily and smoke limits apply.
+            try:
+                budget.reserve(reservation(len(payload)))
+            except QuotaExhausted as error:
+                log_provider_failure('local_budget', error)
+                raise
+            try:
+                text = generate(prompt, response_schema=wire)
+                break
+            except ProviderUnavailable:
+                if attempt == len(TRANSIENT_RETRY_DELAYS):
+                    raise
+                print(f'provider-retry attempt={attempt + 2} after=transient_server_error', file=sys.stderr, flush=True)
+                sleep(TRANSIENT_RETRY_DELAYS[attempt])
         if response_schema is not None:
             try:
                 Draft202012Validator(response_schema).validate(json.loads(text))

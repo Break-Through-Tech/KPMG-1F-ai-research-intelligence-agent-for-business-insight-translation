@@ -11,6 +11,13 @@ class SchemaResponseError(PipelineError):
     """An actual response violated its requested schema; details stay private."""
 
 
+TRANSIENT_STATUS = frozenset({500, 502, 503, 504})
+
+
+class ProviderUnavailable(PipelineError):
+    """The provider answered with a transient server error (5xx); nothing was generated or approved."""
+
+
 class IncompleteResponse(ValueError):
     """A structured reply did not finish normally. Carries only the provider's finish reason and token counts."""
     def __init__(self, finish_reason, usage=None):
@@ -155,9 +162,13 @@ def create_generate(config=None, *, http_client=None):
             text = invoke(prompt, schema)
         except Exception as error:
             log_provider_failure('request', error)
-            raise PipelineError('Selected generation provider failed; check model access, '
-                                'credentials, region, response format and quota. '
-                                'No provider fallback or approval occurred.') from None
+            # A provider-side server error (5xx) is transient and says nothing about the request; callers may
+            # retry it under their own quota. Client errors (4xx, including 429 quota) and every format or
+            # validation failure stay final.
+            kind = ProviderUnavailable if getattr(error, 'code', None) in TRANSIENT_STATUS else PipelineError
+            raise kind('Selected generation provider failed; check model access, '
+                       'credentials, region, response format and quota. '
+                       'No provider fallback or approval occurred.') from None
         if not isinstance(text,str) or not text.strip():
             raise PipelineError('Selected generation provider returned empty output; no result was approved.')
         if schema is not None:

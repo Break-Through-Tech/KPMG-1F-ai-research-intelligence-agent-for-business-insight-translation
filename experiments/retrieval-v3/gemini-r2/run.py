@@ -92,7 +92,7 @@ def run(assets, bundle, questions, state):
         lock.write(str(os.getpid()))
         lock.flush()
         try:
-            ledger = Ledger(state / 'dispatch.sqlite3')
+            ledger = Ledger(state / 'dispatch.sqlite3', pace=True)
             ledger.check_blocked()
             scope = ('S2', 'U1')
             guarded, metadata = application_generate(ledger, lambda: scope, key)

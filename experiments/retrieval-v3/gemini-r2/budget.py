@@ -3,8 +3,11 @@ from contextlib import closing
 import json
 import re
 import sqlite3
-from time import monotonic
+from time import monotonic, sleep, time
 
+PROJECT_RPM = 15
+PROJECT_INPUT_TPM = 250_000
+WINDOW_SECONDS = 61
 CALL_LIMIT = 40
 ARM_LIMIT = 20
 INPUT_LIMIT = 1_200_000
@@ -25,8 +28,9 @@ class LimitReached(RuntimeError):
 
 
 class Ledger:
-    def __init__(self, path):
+    def __init__(self, path, *, pace=False, clock=time, wait=sleep):
         self.path = path
+        self.pace, self.clock, self.wait = pace, clock, wait
         self.limit_hit = False
         self.payload_blocked = False
         with closing(sqlite3.connect(path)) as db, db:
@@ -34,10 +38,21 @@ class Ledger:
                 id INTEGER PRIMARY KEY, arm TEXT NOT NULL, question TEXT NOT NULL,
                 input_bound INTEGER NOT NULL, output_bound INTEGER NOT NULL,
                 usage TEXT, blocked INTEGER NOT NULL DEFAULT 0,
-                seconds REAL, outcome TEXT
+                seconds REAL, outcome TEXT, sent_at REAL
             )""")
 
+            columns = {row[1] for row in db.execute('PRAGMA table_info(dispatch)')}
+            if 'sent_at' not in columns:
+                db.execute('ALTER TABLE dispatch ADD COLUMN sent_at REAL')
+
     def reserve(self, arm, question, input_bound):
+        while True:
+            dispatch, delay = self._reserve(arm, question, input_bound)
+            if dispatch is not None:
+                return dispatch
+            self.wait(delay)
+
+    def _reserve(self, arm, question, input_bound):
         if arm not in ('S2', 'R2') or input_bound <= 0:
             raise ValueError('Invalid dispatch reservation.')
         with closing(sqlite3.connect(self.path)) as db, db:
@@ -51,10 +66,25 @@ class Ledger:
                     inputs + input_bound > INPUT_LIMIT or outputs + MAX_OUTPUT > OUTPUT_LIMIT):
                 self.limit_hit = True
                 raise LimitReached('Campaign request or token budget exhausted.')
-            return db.execute(
-                'INSERT INTO dispatch (arm, question, input_bound, output_bound) VALUES (?, ?, ?, ?)',
-                (arm, question, input_bound, MAX_OUTPUT),
+            now = self.clock()
+            if self.pace:
+                latest, undated = db.execute(
+                    'SELECT MAX(sent_at), COUNT(*) - COUNT(sent_at) FROM dispatch'
+                ).fetchone()
+                if undated or (latest is not None and latest > now) or input_bound > PROJECT_INPUT_TPM:
+                    self.limit_hit = True
+                    raise LimitReached('Project quota cannot be safely reserved.')
+                active = db.execute(
+                    'SELECT sent_at, input_bound FROM dispatch WHERE sent_at > ? ORDER BY sent_at',
+                    (now - WINDOW_SECONDS,),
+                ).fetchall()
+                if len(active) >= PROJECT_RPM or sum(bound for _, bound in active) + input_bound > PROJECT_INPUT_TPM:
+                    return None, active[0][0] + WINDOW_SECONDS - now
+            dispatch = db.execute(
+                'INSERT INTO dispatch (arm, question, input_bound, output_bound, sent_at) VALUES (?, ?, ?, ?, ?)',
+                (arm, question, input_bound, MAX_OUTPUT, now),
             ).lastrowid
+            return dispatch, None
 
     def check_blocked(self):
         if self.payload_blocked:

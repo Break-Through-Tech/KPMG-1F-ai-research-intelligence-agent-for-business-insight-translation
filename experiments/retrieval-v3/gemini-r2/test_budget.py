@@ -40,6 +40,20 @@ class LedgerTests(unittest.TestCase):
         with closing(sqlite3.connect(self.path)) as db:
             self.assertEqual(db.execute('SELECT outcome FROM dispatch').fetchone(), ('TimeoutError',))
 
+    def test_project_pacing_survives_restart_and_counts_unknown_usage(self):
+        for index, (bound, burst) in enumerate(((100, 15), (100_000, 2))):
+            now = [1000.0]
+            waits = []
+            def wait(seconds):
+                waits.append(seconds)
+                now[0] += seconds
+            path = self.path.with_name(f'pacing-{index}.sqlite3')
+            for _ in range(burst):
+                Ledger(path, pace=True, clock=lambda: now[0], wait=wait).reserve('S2', 'U1', bound)
+            self.assertEqual(waits, [])
+            Ledger(path, pace=True, clock=lambda: now[0], wait=wait).reserve('R2', 'U1', bound)
+            self.assertEqual(waits, [61.0])
+
     def test_confirmed_input_usage_reconciles_the_reservation(self):
         first = self.ledger.reserve('S2', 'U1', 1_199_999)
         self.ledger.record(first, {'prompt': 100, 'candidates': 20}, 1)

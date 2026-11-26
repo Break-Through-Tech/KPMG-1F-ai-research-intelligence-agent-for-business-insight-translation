@@ -70,6 +70,9 @@ for mode in fixture real; do
   runuser -u kpmg -- env HOME=/opt/kpmg PATH="$VENV/bin:/usr/bin:/bin" KPMG_DEPLOY_MODE=$mode \
     bash "$APP/deploy/render/build.sh" | grep -vE '^(Requirement already satisfied|Looking in indexes)'
 done
+# Real mode stages demo-100 from the data disk only when no context is recorded. Clear the record so the
+# next start re-verifies and stages the index against the code just checked out, not an older snapshot.
+rm -f "$APP/.kpmg-onboarding/context.txt"
 
 echo "== Configuration $ENV_FILE"
 install -d -m 0750 -o root -g kpmg /etc/kpmg

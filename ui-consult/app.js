@@ -2044,12 +2044,13 @@
     const partial = summary.answer_scope === 'partial';
     const scoped = isSynthesis(demo) && summary.limitation_support?.length ? summary.limitation_support : null;
     const gapItems = (summary.limitation_support || []).filter(item => item.kind === 'coverage_gap');
-    // Evidence-led answers use their first coverage gap as answer_lead when coverage is partial. That
-    // sentence describes what is missing; it is shown as a caveat, never as the answer's headline.
-    const gapTexts = new Set([...(summary.limitations || []), ...gapItems.map(item => item.text)].map(text => String(text).trim()));
-    const leadIsGap = Boolean(summary.answer_lead) && partial && gapTexts.has(summary.answer_lead.trim());
-    const lead = !abstained && summary.answer_lead && !leadIsGap ? summary.answer_lead : null;
-    if (!summary.answer_lead && claims.length && !abstained) ctx.technical.push('No separate summary was generated; the answer opens with its first supported finding.');
+    // answer_lead is a coverage note in every pipeline that sets it (answer_quality, evidence_led,
+    // consolidated publication, S3, agentic, completion): the review gap and/or "Some drafted findings
+    // could not be verified … withheld". It is uncited, so it is shown as a caveat line and in the
+    // research notes, never as the answer's opening paragraph. The answer opens with its first finding.
+    const coverageNote = !abstained && summary.answer_lead ? String(summary.answer_lead).trim() : null;
+    const lead = null;
+    const held = Array.isArray(summary.held_claims) ? summary.held_claims : [];
 
     const prose = h('div', {class: 'prose', id: `a${number}-summary`});
     const claimNodes = [];
@@ -2122,9 +2123,9 @@
     }
 
     /* Material uncertainty, in plain words. */
-    if (partial) {
-      const gap = leadIsGap ? summary.answer_lead : gapItems[0]?.text || null;
-      aside(h('span', null, h('strong', {text: 'Partial answer. '}), h('span', {math: gap || 'The answer covers only part of the question.'})));
+    if (partial || coverageNote) {
+      const gap = coverageNote || gapItems[0]?.text || null;
+      aside(h('span', null, h('strong', {text: partial ? 'Partial answer. ' : 'Note. '}), h('span', {math: gap || 'The answer covers only part of the question.'})));
     }
     const numberChecks = result.provenance?.agentic?.claims_needing_number_check || [];
     if (numberChecks.length) {
@@ -2229,10 +2230,16 @@
         const key = String(text).trim();
         if (shownText.has(key)) continue;
         shownText.add(key);
-        if (leadIsGap && key === summary.answer_lead.trim()) notes.coverage.push(text);
+        if (coverageNote && key === coverageNote) notes.coverage.push(text);
         else notes.limits.push(text);
       }
-      if (leadIsGap && !notes.coverage.length) notes.coverage.push(summary.answer_lead);
+      if (coverageNote && !notes.coverage.some(text => String(text).trim() === coverageNote)) notes.coverage.unshift(coverageNote);
+      // Withheld drafts: how many and why, from the recorded gate reasons. Their text is unverified, so it is not shown.
+      if (held.length) {
+        const reasons = [...new Set(held.flatMap(item => item.reasons || []))];
+        notes.coverage.push(`${plural(held.length, 'drafted statement')} ${held.length === 1 ? 'was' : 'were'} withheld by the verification gates${reasons.length ? ` (${reasons.join('; ')})` : ''}.`);
+      }
+      for (const text of summary.evidence_notes || []) notes.other.push(text);
     }
     if (new Set(evidence.map(paperKey)).size === 1 && summary.status === 'ok') notes.other.push('The answer rests on a single paper.');
     if (tables.some(t => !t.headerStatus.verified) && tables.some(t => t.rows.some(r => r.citedBy.length))) {

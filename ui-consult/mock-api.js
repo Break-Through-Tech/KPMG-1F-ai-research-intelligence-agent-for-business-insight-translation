@@ -227,6 +227,8 @@
     const result = makeResult(query, industry, options);
     result.provenance.index.indexed_records_sha256 = INDEX_SHA;
     if (['short', 'coverage-gap', 'conflict', 'tables', 'long'].includes(scenario)) shaped(result, scenario);
+    // Real pipelines set answer_lead only as a coverage note (see app.js renderBrief), never as a summary.
+    if (scenario !== 'coverage-gap') delete result.summary.answer_lead;
     const env = {mode: 'indexed', scenario: ['short', 'coverage-gap', 'conflict', 'tables', 'long'].includes(scenario) ? (industry ? 'full' : 'summary-only') : scenario,
       history_policy: 'server_owned_bounded_intent_only',
       submitted_request: {query, industry: industry || ''}, result, error: null,

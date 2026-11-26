@@ -103,8 +103,8 @@
 /* ---------- Base ---------- */
 * { box-sizing: border-box; }
 html, body { height: 100%; }
-html { overflow: hidden; } /* only .scroll and drawers scroll; off-screen layers (toast) must not move the page */
-body { display: flex; height: 100vh; margin: 0; overflow: hidden; background: var(--bg); color: var(--text); font-family: var(--sans); font-size: var(--fs-ui); line-height: 1.5; -webkit-font-smoothing: antialiased; font-feature-settings: "cv11", "ss01"; }
+html, body { overflow: clip; } /* only .scroll and drawers scroll; clip (unlike hidden) also blocks scrollIntoView from moving the page */
+body { display: flex; height: 100vh; margin: 0; overflow: clip; background: var(--bg); color: var(--text); font-family: var(--sans); font-size: var(--fs-ui); line-height: 1.5; -webkit-font-smoothing: antialiased; font-feature-settings: "cv11", "ss01"; }
 button, input, select, textarea { font: inherit; color: inherit; }
 button { cursor: pointer; background: none; border: 0; padding: 0; }
 button:disabled { cursor: default; opacity: .5; }

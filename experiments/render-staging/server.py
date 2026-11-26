@@ -32,8 +32,10 @@ ASSETS = {
     'index.html', 'app.js', 'async-guards.js', 'chart-select.js', 'chart-svg.js',
     'consult.css', 'evidence.js', 'prefs.js', 'answer-export.js', 'math.js',
     'read-aloud.css', 'read-aloud.mjs', 'research-speech.js', 'source-reader.js',
+    'kpmg-logo-white.png',
 }
 VENDOR = re.compile(r'vendor/katex/(?:katex\.min\.(?:js|css)|fonts/[A-Za-z0-9_-]+\.woff2)')
+FONTS = re.compile(r'fonts/[a-z0-9-]+\.woff2')  # bundled Inter and Source Serif 4
 BRIEF = r'/api/briefs/[0-9a-f]{32}'
 READ_API = re.compile(rf'/api/(?:config|saved-result|evidence-table|briefs)|{BRIEF}')
 WRITE_API = re.compile(rf'/api/(?:research|briefs)|{BRIEF}(?:/reviews)?')
@@ -214,7 +216,7 @@ def build_handler(snapshot, state, origin, password, generate, metadata, *, synt
             if READ_API.fullmatch(path):
                 return super().do_GET()
             name = 'index.html' if path == '/' else path.removeprefix('/')
-            if name in ASSETS or VENDOR.fullmatch(name):
+            if name in ASSETS or VENDOR.fullmatch(name) or FONTS.fullmatch(name):
                 file = assets / name
                 if file.is_file():
                     media = {'.js': 'text/javascript', '.mjs': 'text/javascript',

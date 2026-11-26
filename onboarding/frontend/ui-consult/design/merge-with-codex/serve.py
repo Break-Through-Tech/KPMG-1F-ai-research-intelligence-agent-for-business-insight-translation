@@ -44,7 +44,7 @@ ROOTS = (HERE, HERE.parent / 'ui')
 CSP = ("default-src 'self'; style-src 'self'; style-src-attr 'unsafe-inline'; script-src 'self'; "
        "connect-src 'self'; img-src 'self' data:; object-src 'none'; "
        "base-uri 'none'; frame-ancestors 'none'; form-action 'self'")
-TYPES = {'.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css',
+TYPES = {'.png': 'image/png', '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css',
          '.html': 'text/html; charset=utf-8', '.woff2': 'font/woff2', '.json': 'application/json'}
 # Each forwarded route with the methods it accepts. Anything else is 404 (unknown route) or
 # 405 (known route, wrong method) and never reaches the backend.
@@ -66,9 +66,9 @@ MAX_RESPONSE = {'/api/evidence-table': 2_000_000, '/api/progress': 64_000,
                 '/api/chart-preview': 4_000_000}  # up to 3 verified tables plus their retrieved rows
 MAX_RESPONSE_DEFAULT = 32_000_000
 # Runtime assets only. Tests are added by --serve-tests.
-STATIC = {'index.html', 'app.js', 'evidence.js', 'chart-select.js', 'async-guards.js', 'chart-svg.js', 'consult.css', 'prefs.js', 'mock-api.js',
+STATIC = {'kpmg-logo-white.png', 'index.html', 'app.js', 'evidence.js', 'chart-select.js', 'async-guards.js', 'chart-svg.js', 'consult.css', 'prefs.js', 'mock-api.js',
           'research-speech.js', 'read-aloud.mjs', 'read-aloud.css', 'answer-export.js', 'math.js', 'source-reader.js'}
-STATIC_PATTERN = re.compile(r'vendor/katex/(?:katex\.min\.(?:js|css)|fonts/[A-Za-z0-9_-]+\.(?:woff2|woff|ttf))')
+STATIC_PATTERN = re.compile(r'vendor/katex/(?:katex\.min\.(?:js|css)|fonts/[A-Za-z0-9_-]+\.(?:woff2|woff|ttf))|fonts/[a-z0-9-]+\.woff2')
 TEST_STATIC = re.compile(r'tests/(?:evidence\.test\.(?:html|js)|chart-gallery\.(?:html|js)|run-tests\.js|tests\.css|fixtures/[a-z0-9-]+\.json)')
 # Modules the page loads unmodified from the Research Desk UI. In live mode they come
 # from the backend itself so they always match the API version being served.

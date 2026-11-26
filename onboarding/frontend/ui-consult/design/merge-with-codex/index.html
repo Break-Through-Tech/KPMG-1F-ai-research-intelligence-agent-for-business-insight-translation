@@ -29,37 +29,46 @@
 
   <aside id="sidebar" class="sidebar" aria-label="Workspace">
     <div class="side-head">
-      <a class="side-brand" href="/" title="Research Intelligence home"><span class="brand-mark" aria-hidden="true">1F</span><span class="side-label">Research Intelligence</span></a>
+      <a class="side-brand" href="/" title="Research Intelligence home"><img class="kpmg-logo" src="/kpmg-logo-white.png" alt="KPMG" width="72" height="29"><span class="side-label product-name">Research Intelligence</span></a>
       <button id="side-collapse" class="icon-btn side-toggle" type="button" aria-expanded="true" aria-controls="sidebar" title="Collapse sidebar" aria-label="Collapse sidebar"><span data-icon="sidebar"></span></button>
     </div>
     <nav class="side-nav" aria-label="Main">
-      <button id="side-new" class="side-item" type="button" title="New research"><span data-icon="plus"></span><span class="side-label">New research</span></button>
+      <button id="side-new" class="side-item side-new" type="button" title="New research"><span data-icon="plus"></span><span class="side-label">New research</span></button>
       <button id="side-library" class="side-item" type="button" title="Library" hidden><span data-icon="book"></span><span class="side-label">Library</span></button>
     </nav>
-    <div id="side-history" class="side-history" aria-label="History"></div>
+    <div class="side-history-wrap">
+      <button id="history-toggle" class="side-section-toggle" type="button" aria-expanded="true" aria-controls="side-history"><span class="side-label">History</span><span data-icon="down" class="caret"></span></button>
+      <div id="side-history" class="side-history" aria-label="History"></div>
+    </div>
     <div class="side-foot">
       <p id="side-mode" class="side-mode" role="status"></p>
       <button id="side-display" class="side-item" type="button" title="Theme, text size and spacing"><span data-icon="type"></span><span class="side-label">Display</span></button>
       <button id="side-theme" class="side-item" type="button" title="Switch theme"><span data-icon="moon"></span><span class="side-label">Theme</span></button>
     </div>
   </aside>
+  <div id="side-scrim" class="side-scrim" hidden></div>
 
+  <div class="app">
   <header class="topbar">
-    <a class="brand" href="/" aria-label="Research Intelligence, Team 1F, home">
-      <span class="brand-mark" aria-hidden="true">1F</span>
-      <span class="brand-name">Research Intelligence</span>
-    </a>
-    <nav class="views" aria-label="Workspace">
-      <button id="nav-research" class="view-tab" type="button" aria-current="page">Research</button>
-      <button id="library-open" class="view-tab" type="button" hidden>Library</button>
+    <button id="menu-open" class="icon-btn menu-open" type="button" aria-label="Open navigation" aria-controls="sidebar" aria-expanded="false"><span data-icon="menu"></span></button>
+    <nav id="view-tabs" class="view-tabs" role="tablist" aria-label="Answer views" hidden>
+      <button id="tab-answer" class="view-tab" type="button" role="tab" aria-selected="true" data-tab="answer"><span data-icon="sparkle"></span><span>Answer</span></button>
+      <button id="tab-sources" class="view-tab" type="button" role="tab" aria-selected="false" data-tab="sources"><span data-icon="layers"></span><span>Sources</span><span class="tab-count" id="tab-sources-count"></span></button>
+      <button id="tab-evidence" class="view-tab" type="button" role="tab" aria-selected="false" data-tab="evidence"><span data-icon="shield"></span><span>Evidence</span></button>
     </nav>
     <p id="thread-title" class="thread-title" aria-hidden="true"></p>
     <div class="topbar-end">
       <span id="mode-chip" class="mode" hidden></span>
-      <button id="evidence-toggle" class="quiet-btn" type="button" aria-expanded="false" aria-controls="inspector" hidden><span data-icon="layers"></span><span class="btn-text">Sources</span></button>
-      <button id="prefs-open" class="quiet-btn" type="button" title="Theme, text size, line spacing and explanation style" aria-haspopup="dialog"><span data-icon="type"></span><span class="btn-text">Display</span></button>
-      <button id="theme-toggle" class="icon-btn" type="button" title="Switch theme"><span data-icon="moon"></span></button>
-      <button id="new-research" class="primary-btn" type="button"><span data-icon="plus"></span><span class="btn-text">New research</span></button>
+      <button id="source-stack" class="source-stack" type="button" hidden></button>
+      <button id="brief-action" class="quiet-btn brief-action" type="button" hidden><span data-icon="bookmark"></span><span class="btn-text">Save</span></button>
+      <button id="new-research" class="icon-btn" type="button" title="New research" aria-label="New research"><span data-icon="plus"></span></button>
+    </div>
+    <div class="legacy-controls" hidden>
+      <button id="nav-research" type="button" aria-current="page">Research</button>
+      <button id="library-open" type="button" hidden>Library</button>
+      <button id="evidence-toggle" type="button" aria-expanded="false" aria-controls="inspector" hidden>Sources</button>
+      <button id="prefs-open" type="button" aria-haspopup="dialog">Display</button>
+      <button id="theme-toggle" type="button" title="Switch theme"></button>
     </div>
   </header>
 
@@ -70,7 +79,7 @@
   </div>
 
   <div id="stage" class="stage is-home">
-    <aside id="rail" class="rail" aria-label="Brief navigation">
+    <aside id="rail" class="rail" aria-label="Brief navigation" hidden>
       <nav id="contents" class="contents" aria-label="Contents of this answer"></nav>
       <section id="session-section" class="rail-group" hidden>
         <h2 class="rail-title">This session</h2>
@@ -82,9 +91,8 @@
       <div id="scroll" class="scroll" role="region" aria-label="Research workspace" tabindex="-1">
         <section id="hero" class="home" aria-labelledby="hero-title">
           <div class="home-intro">
-            <p class="home-eyebrow">Ask · Verify · Explore · Reuse</p>
             <h1 id="hero-title">What would you like to research?</h1>
-            <p id="hero-sub" class="home-sub">Ask about the indexed research papers. Every claim in the answer links to the passage or table cell it came from.</p>
+            <p id="hero-sub" class="home-sub">Answers from indexed research papers. Every statement links to the passage or table it came from.</p>
           </div>
           <div id="home-slot" class="composer-slot"></div>
           <section id="recent-section" class="recent" aria-labelledby="recent-heading" hidden>
@@ -129,10 +137,10 @@
           <label for="query" class="sr-only">Research question</label>
           <textarea id="query" name="query" rows="1" maxlength="2000" placeholder="Ask a research question…" aria-describedby="entry-hint composer-note"></textarea>
           <div class="composer-bar">
-            <button id="settings-toggle" class="pill" type="button" aria-expanded="false" aria-controls="settings"><span data-icon="sliders"></span><span>Research settings</span><span id="settings-summary" class="pill-summary"></span><span class="pill-caret" data-icon="down"></span></button>
+            <button id="settings-toggle" class="pill" type="button" aria-expanded="false" aria-controls="settings"><span data-icon="sliders"></span><span class="pill-label">Settings</span><span id="settings-summary" class="pill-summary"></span><span class="pill-caret" data-icon="down"></span></button>
             <span class="grow"></span>
             <span id="counter" class="counter" hidden></span>
-            <button id="submit" class="send" type="submit" disabled><span class="send-label">Research</span><span data-icon="arrow"></span></button>
+            <button id="submit" class="send" type="submit" disabled><span class="send-label sr-only">Research</span><span data-icon="up"></span></button>
           </div>
           <div id="settings" class="settings" inert>
             <div class="settings-inner">
@@ -205,11 +213,13 @@
     </aside>
   </div>
 
+  </div>
+
   <dialog id="prefs" class="popover-panel" aria-labelledby="prefs-heading">
     <div class="sheet-head"><h2 id="prefs-heading">Display preferences</h2><button id="prefs-close" class="icon-btn" type="button" aria-label="Close display preferences"><span data-icon="x"></span></button></div>
     <div id="prefs-body"></div>
     <button id="prefs-reset" class="link-btn" type="button">Reset display preferences</button>
-    <p class="hint">Stored only in this browser when available. Reset follows your system theme.</p>
+    <p class="hint">Stored only in this browser when available. Reset returns to the light theme.</p>
     <p id="prefs-status" class="hint" role="status"></p>
   </dialog>
 

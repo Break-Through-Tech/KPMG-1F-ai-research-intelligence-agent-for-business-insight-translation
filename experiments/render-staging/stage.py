@@ -10,7 +10,7 @@ from engine_runtime import RUNTIME_FILES
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
-UI_FILES = 'index.html app.js async-guards.js chart-select.js chart-svg.js consult.css evidence.js prefs.js'
+UI_FILES = 'index.html app.js async-guards.js chart-select.js chart-svg.js consult.css evidence.js prefs.js kpmg-logo-white.png'
 SHARED = 'answer-export.js math.js read-aloud.css read-aloud.mjs research-speech.js source-reader.js'
 BUNDLE = ('manifest.json', 'parents.jsonl', 'views.json', 'vectors.npy')
 MODEL_SUFFIXES = {'.json', '.safetensors', '.txt', '.model'}
@@ -63,9 +63,9 @@ def snapshot(args):
         hashes[dest] = sources[dest]
 
     candidate = args.ui / 'ui-consult/design/merge-with-codex'
-    expected = {'app.js': '2727823a3bf36ae4', 'consult.css': '6738dbece910a93d',
-                'index.html': '31acce5ef7b97c64', 'mock-api.js': '626097358e43b31d',
-                'serve.py': '39a39fc64622e655'}
+    expected = {'app.js': '6e662c0e4a4db620', 'consult.css': 'ec26ad6fc7f2dab6',
+                'index.html': '81e9636e02d4ef38', 'mock-api.js': 'dd6d469be53c6b59',
+                'serve.py': '102f32391cc5dcf9'}
     for name, prefix in expected.items():
         if not checksum(candidate / name).startswith(prefix):
             raise ValueError(f'Handoff checksum mismatch: {name}')
@@ -106,6 +106,10 @@ def snapshot(args):
     for path in (vendor / 'katex.min.js', vendor / 'katex.min.css', vendor / 'LICENSE',
                  *sorted((vendor / 'fonts').glob('*.woff2'))):
         add(path, 'snapshot/assets/vendor/katex/' + path.relative_to(vendor).as_posix())
+    # Bundled interface fonts (SIL OFL 1.1) and their licence texts, served at /fonts/.
+    fonts = args.ui / 'ui-consult/fonts'
+    for path in sorted(fonts.glob('*.woff2')) + sorted(fonts.glob('LICENSE-*.txt')):
+        add(path, 'snapshot/assets/fonts/' + path.name)
     for name in BUNDLE:
         add(args.bundle / name, f'snapshot/artifacts/bundle/{name}')
     add(args.audit, 'snapshot/artifacts/table-audit.json')

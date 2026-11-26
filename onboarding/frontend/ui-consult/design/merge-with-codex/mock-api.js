@@ -129,10 +129,110 @@
           [['mock-b-pdf-3', 'the share of cited passages that a human annotator judges to support the attached claim']])},
         {term: 'Cross-document reasoning', status: 'unavailable', reason: 'No retained passage defines this term.'}]};
   }
+  /* ---- Extra deterministic answer shapes for layout testing (2026-11-26) ----
+     Each reuses the invented passages above, plus one invented complete table, so every answer
+     state can be checked visually without a model call. Quotes are verbatim substrings. */
+  const ROW_INTRO = 'Derived source table row (HTML cell serialization, not verbatim prose).';
+  const INDEX_SHA = 'mock-index-sha256-not-a-real-digest';
+  const T3 = {arxiv_id: 'mock.0001v2', table_id: 'S4.T3', caption: 'Table 3: Reviewer agreement by case type',
+    source_sha256: 'mock-sha256-not-a-real-digest', extractor_version: 'mock-extractor-v0', header_provenance: 'html_th_markup', header_review: 'unverified',
+    html_url: 'https://example.org/mock-study-a#table-3',
+    headers: ['Case type', 'Cases', 'Agent + verification', 'Single prompt'].map((text, column) => ({column, text, source_id: `S4.T3.h${column}`})),
+    rows: [['Routine, single document', '812', '95.2%', '84.1%'], ['Policy exception', '236', '88.6%', '74.2%'],
+      ['Cross-document reasoning', '192', '72.3%', '61.5%'], ['All cases', '1,240', '91.4%', '78.9%']]};
+  const t3Cells = (row, index) => row.map((text, column) => ({row: index + 1, column, text, source_id: `S4.T3.r${index + 1}c${column}`}));
+  const t3Row = index => {
+    const cells = t3Cells(T3.rows[index], index);
+    return {chunk_id: `${T3.arxiv_id}_table_S4.T3_r${index + 1}`, arxiv_id: T3.arxiv_id, title: PAPER_A, source: 'html', section: '4.2 Results',
+      page_number: null, distance: 0.2 + index / 100, source_url: T3.html_url, html_url: T3.html_url, representation: 'linearized_table',
+      table_id: T3.table_id, table_row: index + 1, row_label: cells[0].text, caption: T3.caption, table_headers: clone(T3.headers), table_cells: cells,
+      header_provenance: T3.header_provenance, header_review: T3.header_review, source_sha256: T3.source_sha256, extractor_version: T3.extractor_version,
+      text: `${ROW_INTRO}\n${PAPER_A}\n${T3.caption}\n${T3.headers.map((h, c) => `${h.text}: ${cells[c].text}`).join('; ')}`};
+  };
+  const PAPER_C = 'Illustrative study C · Auditing LLM reviewers across insurance claims';
+  const CONFLICT = {chunk_id: 'mock-c-results-2', arxiv_id: 'mock.0003v1', title: PAPER_C, source: 'html', section: '5.1 Agreement with adjusters',
+    page_number: null, distance: 0.29, source_url: 'https://example.org/mock-study-c#results',
+    text: 'On 600 insurance claims, the verified agent agreed with senior adjusters in 79.5% of cases, against 76.8% for a single prompt. We find the verification step adds little on claims, where most errors stem from missing documents rather than unsupported statements.'};
+  byId[CONFLICT.chunk_id] = CONFLICT;
+  T3.rows.forEach((_, index) => { const row = t3Row(index); byId[row.chunk_id] = row; });
+  const evidenceTable = url => {
+    const id = url.searchParams.get('chunk_id') || '';
+    if (!id.startsWith(`${T3.arxiv_id}_table_S4.T3`)) throw [404, 'No table for this passage.'];
+    if (url.searchParams.get('index') !== INDEX_SHA) throw [409, 'Index differs.'];
+    return {complete: true, index_sha256: INDEX_SHA, arxiv_id: T3.arxiv_id, table_id: T3.table_id, source_sha256: T3.source_sha256,
+      caption: T3.caption, headers: clone(T3.headers), header_provenance: T3.header_provenance, header_review: T3.header_review,
+      extractor_version: T3.extractor_version, source_notes: [], row_count: T3.rows.length, completeness_check: 'extractor_table_audit_v1',
+      extractor_rows_emitted: T3.rows.length,
+      rows: T3.rows.map((row, index) => ({chunk_id: `${T3.arxiv_id}_table_S4.T3_r${index + 1}`, table_row: index + 1, row_label: row[0], cells: t3Cells(row, index)}))};
+  };
+  function shaped(result, scenario) {
+    const s = result.summary;
+    if (scenario === 'short') {
+      result.evidence = result.evidence.filter(p => p.chunk_id === 'mock-b-pdf-3');
+      s.answer_lead = 'Not reliably. Across the systems studied, about 87% of cited passages actually supported the claim they were attached to, and no system exceeded 93%.';
+      s.claims = [cite('Citation precision averaged 0.87 across systems; no system exceeded 0.93.',
+        [['mock-b-pdf-3', 'Citation precision averaged 0.87 across systems; no system exceeded 0.93.']])];
+      s.limitations = ['Based on a single study.'];
+      s.limitation_support = [];
+    } else if (scenario === 'coverage-gap') {
+      // Mirrors the evidence-led backend: a partial answer's lead is its first coverage gap.
+      s.answer_scope = 'partial';
+      s.answer_lead = 'Some drafted findings could not be verified against their attached quotes and are withheld.';
+      s.claims = s.claims.slice(0, 2);
+      s.limitation_support = [{text: s.answer_lead, kind: 'coverage_gap', chunk_ids: [], fact_ids: []},
+        cite('Evidence comes from English-language retail banking policies at a single institution.', [['mock-a-limits-1', 'Our evaluation covers English-language retail banking policies from a single institution.']])];
+      s.limitations = [s.answer_lead, 'Cost and latency were not covered by the verified findings.'];
+    } else if (scenario === 'conflict') {
+      result.evidence.push(clone(CONFLICT));
+      s.answer_lead = 'The studies disagree on how much a verification step helps. One reports a 12.5-point gain in agreement with senior reviewers on banking cases; another finds only a 2.7-point gain on insurance claims.';
+      s.claims = [s.claims[0],
+        cite('On insurance claims, a verified agent agreed with senior adjusters in 79.5% of cases, against 76.8% for a single prompt.',
+          [['mock-c-results-2', 'the verified agent agreed with senior adjusters in 79.5% of cases, against 76.8% for a single prompt']]),
+        cite('The second study attributes most claim errors to missing documents rather than unsupported statements, which verification does not address.',
+          [['mock-c-results-2', 'most errors stem from missing documents rather than unsupported statements']]),
+        s.claims[3]];
+      s.limitations = ['The two studies use different domains (retail banking policies, insurance claims), so their gains are not directly comparable.'];
+      s.limitation_support = [];
+    } else if (scenario === 'tables') {
+      result.evidence = [...[0, 2].map(t3Row), ...result.evidence.filter(p => p.chunk_id !== 'mock-a-table-5')];
+      const [r1, r3] = [result.evidence[0], result.evidence[1]];
+      s.claims = [
+        cite('On routine single-document cases the verified agent reached 95.2% agreement, against 84.1% for a single prompt.',
+          [[r1.chunk_id, 'Agent + verification: 95.2%'], [r1.chunk_id, 'Single prompt: 84.1%']]),
+        cite('Cross-document reasoning was the hardest case type: 72.3% with verification and 61.5% without.',
+          [[r3.chunk_id, 'Agent + verification: 72.3%'], [r3.chunk_id, 'Single prompt: 61.5%']]),
+        s.claims[0], s.claims[3]];
+    } else if (scenario === 'long') {
+      result.evidence.push(clone(CONFLICT));
+      s.answer_lead = 'Verification layers make AI compliance reviewers measurably more accurate on routine work, but the size of the gain depends heavily on the domain and on the kind of error that dominates. Human approval remains necessary for adverse decisions in every study retrieved.';
+      s.claims = [...s.claims.slice(0, 3),
+        cite('Human reviewers overturned 14% of agent decisions flagged as high confidence, most often where the governing policy had changed after the index was built.',
+          [['mock-a-pdf-7', 'Human reviewers overturned 14% of agent decisions flagged as high confidence']]),
+        cite('The study therefore recommends retaining a human approval step for all adverse determinations.',
+          [['mock-a-pdf-7', 'We therefore recommend that deployments retain a human approval step for all adverse determinations.']]),
+        cite('On insurance claims the gain was far smaller: 79.5% agreement with verification against 76.8% without.',
+          [['mock-c-results-2', 'the verified agent agreed with senior adjusters in 79.5% of cases, against 76.8% for a single prompt']]),
+        cite('There, most errors came from missing documents rather than unsupported statements.',
+          [['mock-c-results-2', 'most errors stem from missing documents rather than unsupported statements']]),
+        cite('Citation precision, the share of cited passages that actually support their claim, averaged 0.87 across systems; none exceeded 0.93.',
+          [['mock-b-pdf-3', 'Citation precision averaged 0.87 across systems; no system exceeded 0.93.']]),
+        cite('So a cited answer still needs its quotes read against its claims.',
+          [['mock-b-pdf-3', 'the share of cited passages that a human annotator judges to support the attached claim']]),
+        s.claims[4]];
+    }
+    return result;
+  }
+
   function envelope(query, industry, scenario = 'full', options) {
     const result = makeResult(query, industry, options);
-    const env = {mode: 'indexed', scenario, history_policy: 'server_owned_bounded_intent_only',
-      submitted_request: {query, industry: industry || ''}, result, error: null, plain_language: plainLanguage()};
+    result.provenance.index.indexed_records_sha256 = INDEX_SHA;
+    if (['short', 'coverage-gap', 'conflict', 'tables', 'long'].includes(scenario)) shaped(result, scenario);
+    // Real pipelines set answer_lead only as a coverage note (see app.js renderBrief), never as a summary.
+    if (scenario !== 'coverage-gap') delete result.summary.answer_lead;
+    const env = {mode: 'indexed', scenario: ['short', 'coverage-gap', 'conflict', 'tables', 'long'].includes(scenario) ? (industry ? 'full' : 'summary-only') : scenario,
+      history_policy: 'server_owned_bounded_intent_only',
+      submitted_request: {query, industry: industry || ''}, result, error: null,
+      plain_language: ['short', 'coverage-gap', 'conflict', 'tables', 'long'].includes(scenario) ? {status: 'unavailable', reason: 'Not prepared for this example.'} : plainLanguage()};
     if (scenario === 'summary-only') delete result.business_insight;
     if (scenario === 'partial') {
       delete result.business_insight;
@@ -192,6 +292,10 @@
     const third = createBrief('Verification cost per case (archived)',
       envelope('What does a verification step cost per reviewed case?', 'insurance', 'full', {seconds: 16.9}), daysAgo(20));
     third.brief.archived = true;
+    createBrief('Where verification helps, and where it does not',
+      envelope('Across banking and insurance, how much does a verification step improve AI reviewer accuracy, and why does it differ?', '', 'long', {seconds: 31.2}), daysAgo(1));
+    createBrief('Reviewer agreement by case type',
+      envelope('How does reviewer agreement vary by compliance case type?', '', 'coverage-gap', {seconds: 19.5}), daysAgo(0));
     briefs.sort((a, b) => b.brief.updated_at.localeCompare(a.brief.updated_at));
   })();
   const find = briefId => {
@@ -312,6 +416,7 @@
   function route(url, method, body) {
     const path = url.pathname;
     if (path === '/api/config') return config();
+    if (path === '/api/evidence-table') return evidenceTable(url);
     if (path === '/api/saved-result') return null;
     if (path === '/api/research' || path === '/api/demo') return research(body || {});
     if (path === '/api/agentic-research') return agentic(body || {});

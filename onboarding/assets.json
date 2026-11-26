@@ -130,16 +130,16 @@
     }
   },
   "frontend": {
-    "ui-consult/design/merge-with-codex/app.js": "2727823a3bf36ae4d90737157f677de87b37caa8432f3a46dd3b93d9c5727a21",
-    "ui-consult/design/merge-with-codex/consult.css": "6738dbece910a93d5b3cf02611e4815d79d5fff52e31fc6efc0510e49ad7060e",
-    "ui-consult/design/merge-with-codex/index.html": "31acce5ef7b97c64d88f1d056ae706c982256eb96383bb01f3d9e03d331de17a",
-    "ui-consult/design/merge-with-codex/mock-api.js": "626097358e43b31dadcc979cc14c0551c82eac3db16eab925d4cb057ed0597f5",
-    "ui-consult/design/merge-with-codex/serve.py": "39a39fc64622e65578352c57827cd9fe8f42b80ee95f343f34c316c0f8dd813c",
+    "ui-consult/design/merge-with-codex/app.js": "6e662c0e4a4db6203d94ee04361e8d3eb6f60c54c98c8fb8b8b73f5278170025",
+    "ui-consult/design/merge-with-codex/consult.css": "ec26ad6fc7f2dab62defda595cba8fce1f5aa5c7fd25eaf450b82d5a3b9458fb",
+    "ui-consult/design/merge-with-codex/index.html": "81e9636e02d4ef38c2c083f7ddf1052967d88d2efb0e92cb6c313c4dd0f9d11e",
+    "ui-consult/design/merge-with-codex/mock-api.js": "dd6d469be53c6b59eca017dd1d841849cba32c609d49fc529999755a50df40c7",
+    "ui-consult/design/merge-with-codex/serve.py": "102f32391cc5dcf9cf2716d4cadca0ef20fffeabab680206d7cff2ce800ac94c",
     "ui-consult/async-guards.js": "d83e616eb47d20c407827cb45b30aef845d58fa27d00a4c669a64b1a023ac586",
     "ui-consult/chart-select.js": "01b5bb9967307dc64ef5195fbd04bdb649f507a52f526e22725d7d387e3b5014",
     "ui-consult/chart-svg.js": "11d72c5682a81a815eff24e24b592abfa9d77ea8d9dc3fa495af252d3a2f2ec4",
     "ui-consult/evidence.js": "5e8a8eb8810e731cf11b709475b49b04cd80aa1892d723c5507dab8f058f8c55",
-    "ui-consult/prefs.js": "29a62d25cfb4a9041445b05be2fcdec5cb033e65b2d6d200090b119f137acb1b",
+    "ui-consult/prefs.js": "9c8bed5d6ff90c40d4fdecd6e14b2235dc3e6f6259c190779f5bba23fd881518",
     "ui/answer-export.js": "d58c74847c8f0b467ad28c057a15130d0b9499e05ec41c63171f8f2da545f739",
     "ui/math.js": "66adef031812ac626fb4ca5ba8d7b5c3eee18ceca7f8d3f95c82dff63a999af6",
     "ui/read-aloud.css": "d5a36d56a574afebcbbb82893cc2df81741c1e4fb26b039b6c6856821b898e78",
@@ -168,6 +168,15 @@
     "ui/vendor/katex/fonts/KaTeX_Size2-Regular.woff2": "d04c54219f9eaec6d4d4fd42dfb28785975a4794d6b2fc71e566b9cd6db842dd",
     "ui/vendor/katex/fonts/KaTeX_Size3-Regular.woff2": "73d591271b1604960cb10bb90fee021670af7297017e0e98480b332d11f51995",
     "ui/vendor/katex/fonts/KaTeX_Size4-Regular.woff2": "a4af7d414440a1c1790825cfb700cf9cf43b0f2c4b04f0ebc523011ad9853ec0",
-    "ui/vendor/katex/fonts/KaTeX_Typewriter-Regular.woff2": "71d517d67827787cfabdf186914cc3358eda539e37931941f2b2fd4a21f68c0b"
+    "ui/vendor/katex/fonts/KaTeX_Typewriter-Regular.woff2": "71d517d67827787cfabdf186914cc3358eda539e37931941f2b2fd4a21f68c0b",
+    "ui-consult/kpmg-logo-white.png": "34dfe460050eebf861256146c363bf432869f4cbe517fb10ba7cf834a63f3ef7",
+    "ui-consult/fonts/inter-latin-ext-opsz-normal.woff2": "5e6d4fe9d9f4bff8b2a2469d25ab19576bb85331e22c6ed51398e16f95d56a9c",
+    "ui-consult/fonts/inter-latin-opsz-normal.woff2": "2c295d99e26dcf357d4d01bcf270fd6924b600c9a13dd8c363ef114f4c6976fa",
+    "ui-consult/fonts/LICENSE-Inter.txt": "3b0a5fca3d17942cde889069889dedbbbd075e9b599968c82a95f4d944e9b345",
+    "ui-consult/fonts/LICENSE-SourceSerif4.txt": "18aabf190848725e2576eefb5c29ba06aac1029d02132252a7f312eac2e50cf3",
+    "ui-consult/fonts/source-serif-4-latin-ext-opsz-italic.woff2": "2078240cee94e627d0e180d56d74a11b2a1d387bbd61a9b7269f0a43df756896",
+    "ui-consult/fonts/source-serif-4-latin-ext-opsz-normal.woff2": "155f6e701097cc269cf8d5d7ac86795f263f1afbeb47c14d1d747108c9335389",
+    "ui-consult/fonts/source-serif-4-latin-opsz-italic.woff2": "96e6393209728ab93c334ae739af8a040cd2006c82e8614d6465a8084db88f89",
+    "ui-consult/fonts/source-serif-4-latin-opsz-normal.woff2": "f2ea9c12d2fe9bd3a9589b02ad2c0909da88f30938c91adc838c4f4098f9f9e0"
   }
 }

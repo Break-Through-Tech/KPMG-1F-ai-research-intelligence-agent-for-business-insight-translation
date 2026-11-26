@@ -297,6 +297,15 @@
 /onboarding/frontend/ui-consult/chart-svg.js -text
 /onboarding/frontend/ui-consult/evidence.js -text
 /onboarding/frontend/ui-consult/prefs.js -text
+/onboarding/frontend/ui-consult/kpmg-logo-white.png -text
+/onboarding/frontend/ui-consult/fonts/inter-latin-ext-opsz-normal.woff2 -text
+/onboarding/frontend/ui-consult/fonts/inter-latin-opsz-normal.woff2 -text
+/onboarding/frontend/ui-consult/fonts/LICENSE-Inter.txt -text
+/onboarding/frontend/ui-consult/fonts/LICENSE-SourceSerif4.txt -text
+/onboarding/frontend/ui-consult/fonts/source-serif-4-latin-ext-opsz-italic.woff2 -text
+/onboarding/frontend/ui-consult/fonts/source-serif-4-latin-ext-opsz-normal.woff2 -text
+/onboarding/frontend/ui-consult/fonts/source-serif-4-latin-opsz-italic.woff2 -text
+/onboarding/frontend/ui-consult/fonts/source-serif-4-latin-opsz-normal.woff2 -text
 /onboarding/frontend/ui/answer-export.js -text
 /onboarding/frontend/ui/math.js -text
 /onboarding/frontend/ui/read-aloud.css -text

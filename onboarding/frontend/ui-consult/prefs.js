@@ -1,7 +1,7 @@
 /* Applied before first paint. Same storage key and data attributes as ui/reading-preferences.js. */
 (() => {
   const key = '1f.reading-preferences.v1';
-  const defaults = {theme: 'system', size: '100', spacing: 'standard', explanation: 'technical'};
+  const defaults = {theme: 'light', size: '100', spacing: 'standard', explanation: 'technical'};
   const choices = {theme: ['system', 'light', 'dark', 'contrast-light', 'contrast-dark'], size: ['100', '125', '150', '200'],
     spacing: ['standard', 'relaxed', 'wide'], explanation: ['technical', 'plain']};
   let preferences = {...defaults};

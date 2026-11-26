@@ -36,5 +36,9 @@ services:
         sync: false
       - key: KPMG_GEMINI_DEDICATED_FREE
         sync: false
-      - key: KPMG_ASSET_FETCH
+      # Real mode index source: leave both unset to load the three files from
+      # /var/data/assets/demo-100/ at startup, or set them to download at build.
+      - key: KPMG_ARTIFACT_BASE_URL
+        sync: false
+      - key: KPMG_ARTIFACT_TOKEN
         sync: false

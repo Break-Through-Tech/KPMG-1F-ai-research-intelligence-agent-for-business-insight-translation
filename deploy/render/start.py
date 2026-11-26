@@ -4,7 +4,10 @@ Runs the verified staged context produced by deploy/render/build.sh, never the
 working tree, so the hosted code and assets are exactly the hashed snapshot.
 
   KPMG_DEPLOY_MODE=real     unchanged experiments/render-staging/server.py (Gemini,
-                            quota ledger, Basic auth, same-origin checks).
+                            quota ledger, Basic auth, same-origin checks). If the build
+                            did not download the index, the three files are copied from
+                            the persistent disk (KPMG_ASSET_DIR, default
+                            $KPMG_STATE_DIR/assets) and verified and staged by setup.py.
   KPMG_DEPLOY_MODE=fixture  the same handler, authentication, quotas, saved work and
                             persistent disk, but with the synthetic index and the
                             scripted developer responses. It never constructs a model
@@ -19,9 +22,47 @@ from urllib.parse import urlsplit
 ROOT = Path(__file__).resolve().parents[2]
 
 
+DISK_FILES = ('demo-100/parents.jsonl', 'demo-100/views.json', 'demo-100/vectors.npy')
+
+
+def stage_from_disk():
+    """Copy the three index files from the persistent disk, then let setup.py verify and stage.
+
+    Used in real mode when the build did not download them (KPMG_ARTIFACT_BASE_URL unset).
+    setup.py checks every size and SHA-256 against onboarding/assets.json and refuses any
+    mismatch, so nothing unverified reaches the snapshot.
+    """
+    import shutil
+    import subprocess
+    state = os.environ.get('KPMG_STATE_DIR', '')
+    source = Path(os.environ.get('KPMG_ASSET_DIR') or (Path(state) / 'assets' if state else ''))
+    if not str(source) or not all((source / name).is_file() for name in DISK_FILES):
+        raise SystemExit(f'Real mode needs {", ".join(DISK_FILES)} under KPMG_ASSET_DIR '
+                         f'(default $KPMG_STATE_DIR/assets), or KPMG_ARTIFACT_BASE_URL at build time.')
+    cache = ROOT / '.kpmg-onboarding/assets'
+    copied = []
+    for name in DISK_FILES:
+        target = cache / name
+        if not target.exists():
+            target.parent.mkdir(parents=True, exist_ok=True)
+            partial = target.with_name(target.name + '.partial')
+            shutil.copyfile(source / name, partial)
+            partial.replace(target)
+            copied.append(target)
+    print('Verifying and staging demo-100 from the persistent disk.', flush=True)
+    result = subprocess.run([sys.executable, '-B', str(ROOT / 'onboarding/setup.py'),
+                             '--runtime', 'native', '--prepare-only'], cwd=ROOT)
+    if result.returncode:
+        for target in copied:
+            target.unlink(missing_ok=True)
+        raise SystemExit('The disk copy of demo-100 failed verification. Replace it with the exact pinned files.')
+
+
 def staged_context(fixture):
     workspace = ROOT / '.kpmg-onboarding' / ('fixture' if fixture else '')
     record = workspace / 'context.txt'
+    if not record.is_file() and not fixture:
+        stage_from_disk()
     if not record.is_file():
         raise SystemExit('No staged context. Run deploy/render/build.sh with the same KPMG_DEPLOY_MODE.')
     context = (ROOT / record.read_text(encoding='utf-8').strip()).resolve()
@@ -84,6 +125,9 @@ def main():
         os.environ[name] = value
     for name in ('OMP_NUM_THREADS', 'MKL_NUM_THREADS', 'OPENBLAS_NUM_THREADS'):
         os.environ.setdefault(name, '1')
+    shim = ROOT / '.kpmg-onboarding/git-shim'
+    if (shim / 'git').is_file():
+        os.environ['PATH'] = str(shim) + os.pathsep + os.environ.get('PATH', '')
     context = staged_context(mode == 'fixture')
     sys.path.insert(0, str(context / 'experiments/render-staging'))
     if mode == 'fixture':

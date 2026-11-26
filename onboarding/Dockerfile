@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends libgomp1 \
     && rm -rf /var/lib/apt/lists/* \
     && pip install --no-cache-dir --index-url https://download.pytorch.org/whl/cpu --no-deps torch==2.15.0+cpu
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt && pip check
+RUN pip install --no-cache-dir --no-deps -r requirements.txt && pip check
 COPY src src
 COPY prompts prompts
 COPY experiments experiments

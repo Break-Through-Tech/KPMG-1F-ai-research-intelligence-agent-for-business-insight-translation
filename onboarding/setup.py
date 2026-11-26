@@ -3,6 +3,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 import shutil
 import subprocess
@@ -13,7 +14,6 @@ ROOT = Path(__file__).resolve().parents[1]
 HERE = ROOT / 'experiments/render-staging'
 CACHE = ROOT / '.kpmg-onboarding'
 FRONTEND = ROOT / 'onboarding/frontend'
-GITHUB_REPO = 'Break-Through-Tech/KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation'
 IMAGE = 'kpmg-research-offline:local'
 
 
@@ -47,7 +47,7 @@ def verify(path, expected):
         raise SetupError(f'Checksum or size mismatch: {path.name}. Replace the damaged cache from the approved release.')
 
 
-def acquire(spec, cache):
+def acquire(spec, cache, repository=None):
     cache.mkdir(parents=True, exist_ok=True)
     missing = []
     for name, item in spec['files'].items():
@@ -58,16 +58,21 @@ def acquire(spec, cache):
             missing.append((name, item))
     if not missing:
         return
+    if not repository:
+        raise SetupError('No private asset repository configured. Supply --asset-repo OWNER/REPO '
+                         'after the project owner provisions and clears the private release.')
+    if not re.fullmatch(r'[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+', repository):
+        raise SetupError('Specify a private GitHub asset repository as OWNER/REPO.')
     gh = exists('gh')
     try:
-        visibility = run([gh, 'repo', 'view', GITHUB_REPO, '--json', 'visibility',
+        visibility = run([gh, 'repo', 'view', repository, '--json', 'visibility',
                           '--jq', '.visibility'], capture=True)
     except SetupError as error:
         raise SetupError('Authenticate GitHub CLI with gh auth login and request project repository access.') from error
     if visibility != 'PRIVATE':
         raise SetupError('The configured asset release repository must be private.')
     with tempfile.TemporaryDirectory(prefix='download-', dir=cache) as tmp:
-        args = [gh, 'release', 'download', spec['release_tag'], '--repo', GITHUB_REPO, '--dir', tmp]
+        args = [gh, 'release', 'download', spec['release_tag'], '--repo', repository, '--dir', tmp]
         for _, item in missing:
             args.extend(('--pattern', item['release_asset']))
         try:
@@ -131,6 +136,8 @@ def main():
     parser.add_argument('action', choices=('setup', 'start'), nargs='?', default='setup')
     parser.add_argument('--runtime', choices=('docker', 'native'), default='docker')
     parser.add_argument('--prepare-only', action='store_true', help='Verify and stage without building or installing.')
+    parser.add_argument('--asset-repo', default=os.environ.get('KPMG_ASSET_REPO'),
+                        help='Approved private GitHub repository in OWNER/REPO form')
     parser.add_argument('--engine', choices=('baseline', 's2'), default='baseline')
     args = parser.parse_args()
     if sys.version_info[:2] < (3, 11):
@@ -148,7 +155,7 @@ def main():
                 raise SetupError('Switch Docker to Linux containers.')
     spec = json.loads((ROOT / 'onboarding/assets.json').read_bytes())
     if args.action == 'setup':
-        acquire(spec, CACHE / 'assets')
+        acquire(spec, CACHE / 'assets', args.asset_repo)
         context = prepare(spec, CACHE / 'assets')
         if not args.prepare_only:
             if args.runtime == 'docker':
@@ -159,7 +166,7 @@ def main():
                     run([sys.executable, '-m', 'venv', str(CACHE / 'venv')])
                 run([str(python), '-m', 'pip', 'install', '--index-url',
                      'https://download.pytorch.org/whl/cpu', '--no-deps', 'torch==2.15.0+cpu'])
-                run([str(python), '-m', 'pip', 'install', '-r', str(context / 'requirements.txt')])
+                run([str(python), '-m', 'pip', 'install', '--no-deps', '-r', str(context / 'requirements.txt')])
                 run([str(python), '-m', 'pip', 'check'])
         print('Verified runtime context:', context.relative_to(ROOT))
         return

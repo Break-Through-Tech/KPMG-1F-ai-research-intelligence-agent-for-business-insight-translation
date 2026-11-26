@@ -8,12 +8,12 @@ image targets Linux AMD64. No provider credentials are needed.
 
 From the checkout root on Windows:
 
-    py -3.11 onboarding/setup.py
+    py -3.11 onboarding/setup.py --asset-repo OWNER/PRIVATE-ASSETS
     py -3.11 onboarding/setup.py start
 
 On Linux:
 
-    python3.11 onboarding/setup.py
+    python3.11 onboarding/setup.py --asset-repo OWNER/PRIVATE-ASSETS
     python3.11 onboarding/setup.py start
 
 If Docker is unavailable, add --runtime native to both commands. Native
@@ -37,7 +37,12 @@ for an approved deployment.
 
 ## Asset source and clearance
 
-The intended source is the private GitHub Release tagged s2-runtime-v1.
+The current code remote is public. The intended source is a separate private
+team repository with a Release tagged s2-runtime-v1. Set KPMG_ASSET_REPO
+or use --asset-repo as shown above. A private team fork can contain both the
+onboarding code and release if the project owner prefers that arrangement.
+Never publish the approved UI branch or the asset release to the public
+remote.
 Setup verifies repository visibility, fetches the named release attachments
 using the caller's GitHub CLI login, and checks each size and SHA-256
 before accepting it. The asset manifest lists the attachment filename

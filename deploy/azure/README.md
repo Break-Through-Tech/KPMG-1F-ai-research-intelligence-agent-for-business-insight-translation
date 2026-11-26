@@ -53,7 +53,7 @@ Then `sudoedit /etc/kpmg/preview.env`: `KPMG_DEPLOY_MODE=real`, `GOOGLE_API_KEY=
 | Logs | `sudo journalctl -u kpmg-preview -f` |
 | Restart | `sudo systemctl restart kpmg-preview` |
 | Engine | `RESEARCH_ENGINE=baseline` or `s2` in `/etc/kpmg/preview.env`, then restart |
-| Update code | `sudo -u kpmg git -C /opt/kpmg/app pull`, then re-run `install.sh` with the same variables (it re-stages real mode on the next start) |
+| Update code | `sudo -u kpmg git -C /opt/kpmg/app fetch` and `sudo -u kpmg git -C /opt/kpmg/app checkout origin/deploy/azure-vm`, then re-run `install.sh` with the same variables (it re-stages real mode on the next start) |
 | Roll back code | `sudo -u kpmg git -C /opt/kpmg/app checkout <commit>`, then re-run `install.sh` |
 | Pause billing | Portal → VM → **Stop** (deallocates; disks and public IP still billed) |
 

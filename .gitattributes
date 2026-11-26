@@ -278,3 +278,12 @@
 /src/source_spans.py -text
 /src/summarization.py -text
 /experiments/agentic-handoff/current-multi-agent.json -text
+/experiments/heldout-v1/build_set.py -text
+/experiments/heldout-v1/build_key.py -text
+/experiments/combined-v1/SELECTION-RULE.md -text
+/experiments/combined-v1/OVERLAP.md -text
+/experiments/combined-v1/build_set.py -text
+/experiments/completion-eval-v1/OVERLAP.md -text
+/experiments/completion-eval-v1/build_set.py -text
+/experiments/completion-eval-v1/build_key.py -text
+/experiments/baseline-completion/completion.py -text

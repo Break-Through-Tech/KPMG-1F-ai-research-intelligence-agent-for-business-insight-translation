@@ -39,8 +39,8 @@ for an approved deployment.
 
 The current code remote is public. The intended source is a separate private
 team repository with a Release tagged s2-runtime-v1. Set KPMG_ASSET_REPO
-or use --asset-repo as shown above. A private team fork can contain both the
-onboarding code and release if the project owner prefers that arrangement.
+or use --asset-repo as shown above. A separately created private team repository can host the onboarding code
+and the release together.
 Never publish the approved UI branch or the asset release to the public
 remote.
 Setup verifies repository visibility, fetches the named release attachments

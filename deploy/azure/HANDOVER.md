@@ -1,14 +1,17 @@
-# Hosted research preview: handover (26 Nov 2026)
+# Hosted research preview: handover (26 Nov 2026, updated after the frontend deploy)
 
 | | |
 |---|---|
 | Website | https://kpmg-proofline.mexicocentral.cloudapp.azure.com (user `reviewer`) |
 | Password | on the VM: `sudo grep ^KPMG_REVIEW_PASSWORD= /etc/kpmg/preview.env` |
-| Deployed commit | `edc3e43` on `deploy/azure-vm` (staged context `edc3e43-sn51nefa-ready`) |
+| Deployed commit | `f950d96` on `deploy/azure-vm` (= `integration/kpmg-blue-azure`), deployed 26 Nov 2026 20:35 UTC; staged context `f950d96-1dh66xl0-ready` |
+| Frontend | Approved KPMG-blue research-publication UI (Answer / Sources / Evidence views, research notes, KPMG logo, bundled Inter and Source Serif 4 under OFL 1.1) |
 | Engine | S2 consolidated-v2 Standard, B1 paper balance off (`RESEARCH_ENGINE=s2`, `S2_PAPER_BALANCE=0`) |
 | Mode | real: exact demo-100 index (7,667 records, `parents.jsonl` SHA-256 `78d8efd7…`) and Gemini `gemini-3.1-flash-lite` |
 | VM | `kpmg-preview`, Mexico Central, Standard_B2als_v2 (2 vCPU, 4 GiB), Ubuntu 24.04 |
 | Fallback | `deploy/render-native` at `9e53008` (Render) |
+
+`f950d96` = `edc3e43` (backend, unchanged) + the approved frontend (`b89536b`, `9b98c6a`, merged in `1356f1c`) + hosted wiring for the logo and fonts (`f950d96`: `onboarding/frontend`, `assets.json`, `stage.py`, `server.py` allowlist).
 
 `edc3e43` = `9a85c92` (Azure VM scripts) + sanitized provider-failure logging (`b7b4d52`) + installer
 re-staging fix (`9302af8`) + calibrated budget reservations (`8d3b026`) + bounded retry of Gemini 5xx errors
@@ -26,6 +29,26 @@ re-staging fix (`9302af8`) + calibrated budget reservations (`8d3b026`) + bounde
    reserved in the ledger first. 4xx (including 429 quota), timeouts, finish-reason, parsing and schema failures
    are never retried; validation is unchanged. Verified: the same question then answered (5 verbatim-cited
    findings, one interpretation withheld by the G4/G5 gate) after Gemini returned 500 and 504 on two attempts.
+
+## Frontend deploy (26 Nov 2026, `f950d96`)
+
+Installed with the procedure below; no Gemini calls. Verified afterwards: `preview.env` byte-identical (real mode, S2,
+`S2_PAPER_BALANCE=0`, dedicated free key), briefs 8 / versions 8 / reviews 1 and quota ledger 15 attempts unchanged,
+SQLite integrity ok, both seals `verified`; over public HTTPS the new UI, `kpmg-logo-white.png` and all
+`/fonts/*.woff2` serve (licence texts and `mock-api.js` are not served); saved Fin-RATE and CU-DPO briefs render with
+mapped citations, the Table 2 chart and source cells, research notes and the library. Restart ready in 22 s.
+Rollback to `edc3e43` and roll-forward to `f950d96` were rehearsed (about 30 s each, data unchanged).
+
+Pre-deploy backups on the VM: `/etc/kpmg/preview.env.bak-pre-f950d96-20261126T203400Z` and
+`/var/lib/kpmg/backups/{briefs,provider-usage,gemini-smoke-attempts}-pre-f950d96-20261126T203400Z.sqlite3` (0600).
+
+### Rollback checkpoints
+
+| Commit | What it is |
+|---|---|
+| `f950d96` | Current: approved frontend on the `edc3e43` backend |
+| `edc3e43` | Previous deployment: budget calibration and Gemini 5xx retries, original consultant UI |
+| `9302af8` / `9a85c92` | Earlier VM installs (see Roll back for the `context.txt` note before `9302af8`) |
 
 ## Verified on the hosted server
 
@@ -77,7 +100,7 @@ All on the VM (`ssh -i kpmg-preview_key.pem azureuser@kpmg-proofline.mexicocentr
 |---|---|
 | Baseline engine | In `/etc/kpmg/preview.env` set `RESEARCH_ENGINE=baseline`, keep `S2_PAPER_BALANCE=0`; restart. The previous settings file is saved as `/etc/kpmg/preview.env.bak-baseline-default`. |
 | Synthetic fixture (no Gemini) | Set `KPMG_DEPLOY_MODE=fixture`; restart. |
-| Earlier code | `cd /opt/kpmg/app && sudo -u kpmg git fetch && sudo -u kpmg git checkout <commit>`, then `sudo rm -f .kpmg-onboarding/context.txt` (required for commits before `9302af8`), then re-run the installer: `sudo KPMG_DOMAIN=kpmg-proofline.mexicocentral.cloudapp.azure.com KPMG_DATA_DEVICE=/dev/disk/azure/scsi1/lun0 bash deploy/azure/install.sh`. Settings, password and data are kept. |
+| Previous UI (`edc3e43`) or earlier code | `cd /opt/kpmg/app && sudo -u kpmg git fetch && sudo -u kpmg git checkout <commit>`, then `sudo rm -f .kpmg-onboarding/context.txt` (required for commits before `9302af8`), then re-run the installer: `sudo KPMG_DOMAIN=kpmg-proofline.mexicocentral.cloudapp.azure.com KPMG_DATA_DEVICE=/dev/disk/azure/scsi1/lun0 bash deploy/azure/install.sh`. Settings, password and data are kept. |
 | Render | Follow `deploy/render/DEPLOYMENT-READINESS.md` on `deploy/render-native`. |
 
 The installer keeps `/etc/kpmg/preview.env`, the password and everything on the data disk; it re-verifies the

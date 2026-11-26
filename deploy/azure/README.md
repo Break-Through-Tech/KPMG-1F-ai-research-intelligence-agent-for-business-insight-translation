@@ -57,4 +57,9 @@ Then `sudoedit /etc/kpmg/preview.env`: `KPMG_DEPLOY_MODE=real`, `GOOGLE_API_KEY=
 | Roll back code | `sudo -u kpmg git -C /opt/kpmg/app checkout <commit>`, then re-run `install.sh` |
 | Pause billing | Portal → VM → **Stop** (deallocates; disks and public IP still billed) |
 
-Current deployment, limitations and rollback: [HANDOVER.md](HANDOVER.md).
+`deploy/azure-vm` is the deployment branch; it currently points at `f950d96` (approved KPMG-blue frontend on the
+`edc3e43` backend), the same commit as `integration/kpmg-blue-azure`. Only fast-forward it to commits that have passed
+`deploy/render/test_hosted_fixture.py` on both engines. The UI is served from the hash-pinned copy in
+`onboarding/frontend/` (re-pin `onboarding/assets.json` and `stage.py` when it changes), not from `ui-consult/` directly.
+
+Current deployment, limitations and rollback checkpoints: [HANDOVER.md](HANDOVER.md).

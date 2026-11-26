@@ -1,0 +1,37 @@
+{
+  "correction_base": "bde8959c89308f904dd0982509fd4997c74a2d2c",
+  "branch": "feat/business-translation-v1",
+  "live_api_calls": 0,
+  "execution": "offline fixtures and injected generators only",
+  "final_regressions": {"business_and_shared": {"tests": 168, "result": "passed"}, "research_http": {"tests": 20, "result": "passed"}, "javascript_syntax": "passed", "diff_whitespace": "passed", "protected_paths": "unchanged"},
+  "adversarial_before_after": [
+    {"text": "It is not a pilot: it is production-ready and guarantees zero errors for audit teams.", "before": [], "after": ["deployment_claim", "exaggerated_benefit"]},
+    {"text": "Compare memo error logs; there is no doubt it will save costs and increase revenue for the firm.", "before": [], "after": ["financial_projection"]},
+    {"text": "This is not optional: roll it out firm-wide, it guarantees accuracy.", "before": [], "after": ["deployment_claim", "exaggerated_benefit", "unbounded_deployment_action"]}
+  ],
+  "negative_control": {"text": "The study does not establish enterprise savings.", "after": [], "preserved_in_limitations": true},
+  "coverage": "Exact examples and mixed positive/negative variants tested in implication text, action, assumptions, risks and limitations; bounded nonproduction recommendations and unsupported conditional rollout controls tested separately.",
+  "prompt": {"version": "1.1", "legacy_compact_policy_sent": false, "complete_rendered_prompt_hash_recorded": true, "schema_lengths_and_duplicate_handling_retained": true},
+  "provenance": "Research-input kind/file/hash is independent of business generation kind/provider. A simulated-model unit test verifies model translation over fixture research is not labeled handwritten. No actual model output exists in this QA.",
+  "browser": {
+    "runtime": "ChatGPT in-app browser via CUA",
+    "data": "Disposable local SQLite store; handwritten synthetic research and handwritten generated response; no actual provider configured",
+    "initial_translation": "passed: version 1 research -> version 2 business",
+    "citation_rendering": "passed: implication citation opens Paper 1, PDF page 2, with the retained passage and explicit synthetic-evidence label; no external link was followed",
+    "repeat_translation": "passed: already-translated version 2 -> version 3",
+    "review_reset": "No defect reproduced. A synthetic automated approval on version 2 stayed in version 2; version 3 was pending with no inherited approval. Unit and HTTP regressions cover this behavior.",
+    "original_research": "passed: reopened version 1 remained research-only; original finding and source persisted",
+    "reload_persistence": "passed: latest version 3 reopened pending review after browser reload",
+    "forced_failure": "passed: scripted generation failure saved version 4, displayed business-stage failure and retained research/citation",
+    "recovery": "passed: next explicitly requested translation saved version 5 with business output and pending review",
+    "console_errors": [],
+    "screenshots": ["failure.jpg", "success.jpg"]
+  },
+  "usefulness_review_criteria": {
+    "generic_recommendations": "Does the action follow a specific finding, rather than apply to almost any AI project?",
+    "workflow_parroting": "Does the insight add a meaningful decision beyond repeating the supplied workflow?",
+    "semantic_repetition": "Do implications represent distinct decisions, with material conditions retained?",
+    "pilot_overreliance": "Is a pilot proportionate and necessary, or would an evidence request, process change, comparison or deferral be more useful?"
+  },
+  "evaluation_boundary": "Reference-aligned and synthetic adversarial cases remain development evidence. Freeze genuinely unseen cases before live generation; score usefulness independently and retain failures. No generalization or stakeholder acceptance is claimed."
+}

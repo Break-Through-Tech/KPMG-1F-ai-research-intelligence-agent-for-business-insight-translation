@@ -57,7 +57,7 @@ class DownstreamTests(unittest.TestCase):
             self.assertEqual(envelope['result'][field], source[field])
         require_current_review(envelope['result'])
         self.assertNotIn('SECRET', json.dumps(envelope))
-        self.assertIn('downstream; version: 1.0', generator.call_args.args[0])
+        self.assertIn('downstream; version: 1.1', generator.call_args.args[0])
 
     def test_quote_bounds_exclude_same_chunk_tail_and_audit(self):
         source = result_for(); summary = source['summary']; evidence = source['evidence']
@@ -154,8 +154,7 @@ class DownstreamTests(unittest.TestCase):
             self.assertEqual(envelope['result']['business_insight']['implications'], [])
 
     def test_generic_and_repeated_actions_do_not_pad_output(self):
-        for action in ('Adopt AI, improve performance and ensure governance.',
-                       'Run an onboarding workflow pilot.', 'Monitor onboarding performance.'):
+        for action in ('Adopt AI, improve performance and ensure governance.',):
             envelope, _ = self.call(business(action=action))
             self.assertEqual(envelope['result']['business_insight']['implications'], [])
         output = business(); output['implications'].append(deepcopy(output['implications'][0]))

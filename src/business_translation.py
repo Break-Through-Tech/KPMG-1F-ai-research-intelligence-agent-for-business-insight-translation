@@ -117,7 +117,7 @@ def _business(output, *, industry, ids):
     return output
 
 
-def translate(summary, passages, *, industry, generate, compact=False, _prompt_path=None):
+def translate(summary, passages, *, industry, generate, compact=False, concise=False, _prompt_path=None):
     """Render the versioned baseline and validate a pending business-advisory draft.
 
     No evidence or an insufficient summary skips generation. Conflicting evidence
@@ -189,7 +189,7 @@ def translate(summary, passages, *, industry, generate, compact=False, _prompt_p
         raise ValueError('Business translation provider returned malformed JSON; '
                          'return one strict JSON object without markdown or duplicate keys') from None
     output = _business(output, industry=industry, ids=ids)
-    if compact:
+    if compact or concise:
         output = consolidate_exact_duplicates(output)
         if len(output['implications']) > 3 or any(
                 len(row['text']) > 500 or len(row['suggested_action']) > 700

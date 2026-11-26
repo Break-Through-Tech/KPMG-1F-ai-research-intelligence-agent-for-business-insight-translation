@@ -1,5 +1,41 @@
 # Downstream business translation v1
 
+## Pre evaluation corrections
+
+The bounded correction pass on top of `bde8959` uses prompt version 1.1.
+The downstream path no longer sends the legacy COMPACT_POLICY; `concise=True`
+retains schema validation, length bounds and exact duplicate handling separately.
+Provenance records both the template hash and the complete rendered prompt hash
+at dispatch, with an explicit empty instruction-suffix list.
+
+Safety screening no longer deletes negated spans. It checks each positive match,
+exempts only its directly negated predicate or a complete restricted negative
+evidence-gap proposition, and rejects ambiguous double negation. The three exact
+Claude repros and mixed claims across every business field are regression cases.
+Bounded sandbox/prototype/limited-pilot recommendations can pass with explicit
+validation conditions; readiness, guarantees and enterprise rollout are still
+screened independently. A conditional word alone provides no exemption, nor can
+a sandbox in another clause authorize an unbounded deployment action.
+
+Research-input origin/file/content hash and business-generation kind/provider
+are separate. A model route over synthetic research is labeled model-generated
+business output, with synthetic research disclosed independently. Injected and
+canned outputs remain fixtures. Kind is a declaration from the configured route,
+not independent proof of provider execution; this pass made no live calls.
+
+Local browser QA verified initial and repeated translation, citation rendering,
+version persistence, forced failure and recovery. The suspected review-reset
+defect was not reproduced: new versions correctly start pending, and older
+reviews and original research remain intact. See
+`business-corrections-qa/report.json` and its screenshots. The previous v1 offline
+receipt is historical; the correction receipt records the current verification.
+
+The live evaluation must score generic recommendations, workflow parroting,
+semantic repetition and excessive pilot reliance explicitly. Reviewers judge
+whether the action adds a research-specific decision; the runtime does not infer
+semantic quality from an action-verb whitelist. Keep reference-aligned cases
+separate from genuinely unseen cases and freeze both before live generation.
+
 Implementation base: `579aca109889516c54c695692f3c8898b334028e`.
 Branch: `feat/business-translation-v1`. No model calls or deployment were used
 to implement or test this change.
@@ -16,7 +52,7 @@ outputs; a pilot is only one possible action.
 explicit industry/capability, workflow and optional decision, and an injected
 generator. It never invokes a research engine, retrieval, context extraction,
 presentation rewrite or regulatory assessment. It uses the existing translator
-with `downstream-v1.txt` and the existing BusinessInsight contract. One successful
+with `downstream-v1.1.txt` and the existing BusinessInsight contract. One successful
 request attempts one additional generation call, without automatic retry. Research
 alone retains its existing call count. Frozen S2/R2 code and research prompts are
 unchanged. Combined two-call business generation is deliberately deferred.
@@ -89,8 +125,9 @@ information must be labeled as an evidence or transfer gap.
 Surface checks reuse the existing dependency-free numerical/premise checker.
 They withhold known unsupported financial projections, compliance/readiness claims,
 exaggerated benefits, changed numbers and detectable invented factual premises in
-any business field. Generic actions without a source/context connection or concrete
-next step are withheld. Repeated actions with the same citations and assumptions
+any business field. Actions without any source/context connection are withheld;
+semantic specificity is evaluated by reviewers, not an action-verb allowlist.
+Repeated actions with the same citations and assumptions
 are withheld; distinct transfer conditions are retained. Prompt instructions handle
 semantic repetition; lexical similarity is not used to merge different findings.
 

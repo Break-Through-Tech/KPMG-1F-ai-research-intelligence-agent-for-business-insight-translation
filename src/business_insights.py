@@ -12,7 +12,7 @@ from src.research_contracts import validate_result, validate_business_insight
 from src.research_pipeline import content_fingerprint
 from src.research_review import make_review_packet, require_current_review
 
-PROMPT = Path(__file__).resolve().parents[1] / 'prompts/business_translation/downstream-v1.txt'
+PROMPT = Path(__file__).resolve().parents[1] / 'prompts/business_translation/downstream-v1.1.txt'
 
 
 def digest(value):
@@ -31,7 +31,7 @@ def business_context(value):
     return result
 
 
-def translate_result(result, *, context, generate, metadata=None, expected_fingerprint=None):
+def translate_result(result, *, context, generate, metadata=None, expected_fingerprint=None, research_input=None):
     """Translate a server-owned or explicitly loaded frozen result in one call.
 
     Structural/precondition errors raise before generation. Business stage failures
@@ -52,8 +52,18 @@ def translate_result(result, *, context, generate, metadata=None, expected_finge
     output['request']['industry'] = context['industry']
     output['request'].pop('risk_assessment', None)
     output['request'].pop('jurisdiction', None)
-    info = {'policy': 'downstream-business-v1', 'prompt_id': 'business-translation/downstream',
-            'prompt_version': '1.0',
+    prior = result.get('provenance', {}).get('business_translation', {})
+    origin = deepcopy(prior.get('research_input') or research_input or {'kind': 'unspecified'})
+    origin['content_sha256'] = digest([result['summary'], result['evidence']])
+    provider = (metadata or {}).get('provider')
+    execution = (metadata or {}).get('execution')
+    generation_kind = ('fixture' if execution in {'canned_fixture', 'injected_fixture', 'offline_fixture'}
+                       else 'model' if provider and provider not in {'injected', 'injected_test'} else 'injected')
+    info = {'policy': 'downstream-business-v1.1', 'prompt_id': 'business-translation/downstream',
+            'prompt_version': '1.1', 'research_input': origin,
+            'generation_kind': generation_kind,
+            'usefulness_review_criteria': ['generic_recommendations', 'workflow_parroting',
+                                         'semantic_repetition', 'pilot_overreliance'],
             'source_review_fingerprint': source_fingerprint, 'context': context,
             'context_sha256': digest(context), 'checks': checks_provenance(),
             'implementation_sha256': sha256(Path(__file__).read_bytes()).hexdigest(),
@@ -69,10 +79,14 @@ def translate_result(result, *, context, generate, metadata=None, expected_finge
         info.update(accepted_bundle_sha256=digest([summary, evidence]), evidence_bounds=bounds)
         summary['business_context'] = context
         def invoke(prompt):
+            # Hash the actual rendered instruction + input payload at dispatch,
+            # rather than claiming a template-only hash identifies the full call.
+            info['complete_prompt_sha256'] = sha256(prompt.encode('utf-8')).hexdigest()
+            info['instruction_suffixes'] = []
             info['attempted_calls'] += 1
             return generate(prompt)
         business = translate(summary, evidence, industry=context['industry'], generate=invoke,
-                             compact=True, _prompt_path=PROMPT)
+                             concise=True, _prompt_path=PROMPT)
         if any(len(business[field]) > 4 or any(len(line) > 500 for line in business[field])
                for field in ('risks', 'limitations')) or any(
                 len(row['assumptions']) > 3 or any(len(a) > 300 for a in row['assumptions'])
@@ -92,10 +106,10 @@ def translate_result(result, *, context, generate, metadata=None, expected_finge
     output.setdefault('provenance', {})['business_translation'] = info
     output['review_fingerprint'] = content_fingerprint(output)
     validate_result(output)
-    return {'mode': 'saved-real-result',
+    return {'mode': 'saved-real-result' if generation_kind == 'model' else 'fixture',
             'scenario': 'partial' if error or info['status'] != 'ok' else 'full',
             'submitted_request': deepcopy(output['request']), 'result': output, 'error': error,
-            'fixture_file': None}
+            'fixture_file': None if generation_kind == 'model' else 'injected-business-generation'}
 
 
 def main():
@@ -122,7 +136,9 @@ def main():
     else:
         from src.generation import create_generate
         generate, metadata = create_generate()
-    envelope = translate_result(result, context=context, generate=generate, metadata=metadata)
+    origin = {'kind': 'fixture' if data.get('mode') == 'fixture' or data.get('fixture_file') else 'recorded_research',
+              'mode': data.get('mode'), 'fixture_file': data.get('fixture_file')}
+    envelope = translate_result(result, context=context, generate=generate, metadata=metadata, research_input=origin)
     if args.fixture_response:
         envelope['fixture_file'] = str(args.fixture_response)
         envelope['mode'] = 'fixture'

@@ -2148,6 +2148,10 @@
       const section = h('section', {class: 'answer-section', id: `a${number}-business`, 'aria-labelledby': `a${number}-business-h`},
         h('h2', {class: 'section-h', id: `a${number}-business-h`, tabIndex: -1, text: `Implications for ${insight.industry}`}),
         h('p', {class: 'section-note', text: 'Conditional interpretations for business use, drawn from the findings above. The studies did not test them.'}));
+      const businessOrigin = result.provenance?.business_translation;
+      if (businessOrigin?.research_input?.kind === 'fixture' && businessOrigin.generation_kind === 'model') {
+        section.append(h('p', {class: 'aside-line info', text: 'Research input is a synthetic fixture; the business translation was generated separately.'}));
+      }
       if (result.provenance?.agentic) {
         const dropped = (result.provenance.agentic.business_screening || []).filter(item => item.status === 'removed').length;
         section.append(h('p', {class: 'aside-line warn'}, icon('alert'), h('span', {text: `Drafted by the business insight agent and not checked by the verification agent or a person. ${plural(dropped, 'unsupported statement')} ${dropped === 1 ? 'was' : 'were'} withheld.`})));

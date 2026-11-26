@@ -57,9 +57,9 @@ class BusinessHandler(DemoHandler):
         try:
             response = translate_result(source['result'], context=payload['context'],
                 generate=type(self).business_generate, metadata=type(self).business_metadata,
-                expected_fingerprint=payload['fingerprint'])
-            if source.get('fixture_file') or source.get('mode') == 'fixture':
-                response.update(mode='fixture', fixture_file=source.get('fixture_file') or 'imported-fixture')
+                expected_fingerprint=payload['fingerprint'],
+                research_input={'kind': 'fixture' if source.get('fixture_file') or source.get('mode') == 'fixture' else 'recorded_research',
+                                'mode': source.get('mode'), 'fixture_file': source.get('fixture_file')})
             try:
                 response = self.library.save(response, brief_id=payload['brief_id'],
                     expected_version=payload['expected_version'])

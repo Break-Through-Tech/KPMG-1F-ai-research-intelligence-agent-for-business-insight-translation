@@ -89,3 +89,28 @@ from the Linux cgroup memory.peak counter. Run the browser suite locally
 with an installed Chromium and Playwright using the command in smoke.cjs.
 Use a fresh fake-provider state directory for each engine. Run Baseline
 first, then Standard S2 with RESEARCH_ENGINE=s2 and S2_PAPER_BALANCE=0.
+
+## Offline verification results
+
+Windows Python 3.11.9 installed all pinned requirements and CPU Torch 2.15.0.
+pip check found no broken dependencies. All 10 preview tests, 18 saved-work
+tests, 13 review tests and 21 evidence-table tests passed. The table tests
+require the pinned audit supplied from the local evaluation artifacts.
+They refused 13 tables without adequate completeness or reconstruction evidence.
+
+The real-index Python 3.11 S2 worker loaded in 38.15 seconds. Its peak working
+set was 1,223,995,392 bytes at startup and after the scripted research run.
+A scripted timeout recovered in the same session. A different session created
+a separate checkpoint. This measurement is for the Windows worker process.
+
+A separate loopback HTTP run started with pinned artifacts. The first S2
+request returned a cited answer with approval pending. A second authenticated
+client did not receive a result envelope. The diagnostic did not retain that
+error payload, and full HTTP session, chart and review coverage remains open.
+Repeat with distinct client cookies, paced requests and error-envelope capture
+while keeping the configured rate limits. The independent saved-work and
+table tests do not substitute for the browser test.
+
+Smoke mode passed the persistent cap test with failed fake-provider calls,
+concurrent attempts and restart. Linux build, memory and browser verification
+are still required before requesting approval for the Gemini smoke test.

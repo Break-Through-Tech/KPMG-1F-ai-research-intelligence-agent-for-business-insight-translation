@@ -1,11 +1,14 @@
 {
   "deploy/render/start.py": "b30ad92086e3ca3b5f208674b2f2a0c505fafbb0afe8ad84982da8defa7b68da",
-  "experiments/retrieval-v3/gemini-r2/budget.py": "ef287b65cbe3264acf9132c03d5a9398365aa1d9b34940ff8d0c5aafbfcd8883",
+  "experiments/retrieval-v3/gemini-r2/budget.py": "766c0c8d0aea06246c7b4d00fd2dd4168a40fe72487db281a78fa17ecfd56530",
   "experiments/retrieval-v3/gemini-r2/deployment.json": "0bee5d4ae1b7c1da0cc4fd6dbb33be4d798db8a61609dd4262d50b7bac3db5a7",
   "experiments/retrieval-v3/gemini-r2/questions.json": "a77c21e208d1f0ba51681d9ef3576eaac9a0bdf2a3945eb4eca4c9464df97da6",
   "experiments/retrieval-v3/gemini-r2/README.md": "d1c670ba974365ba92b9eb940538da4dfd6a7afea7f8df356bbf8218fb94b004",
-  "experiments/retrieval-v3/gemini-r2/run.py": "52b252c31da2bcc124e67faeb5472a37f8e06843237329d882800010323f5cfb",
+  "experiments/retrieval-v3/gemini-r2/run.py": "5bca9d853f814c2365d6c03e8a22bf4aa907d8bec3b8181b4162c1533c15dad6",
   "experiments/retrieval-v3/gemini-r2/test_budget.py": "909abfec5da740a228f1025893a9bc68150d6ce6d8d577cc18f513bc09a7175e",
   "onboarding/assets.json": "4e6a0c64be68833318899e6cfe4d09d198eef3989d07fda3d29e71fb66c2f560",
-  "onboarding/requirements-py311.lock.txt": "a8edc3c6a79a26a04fc99e908ed50774522fa4c5d847664e874ea0dc36a07d47"
+  "onboarding/requirements-py311.lock.txt": "a8edc3c6a79a26a04fc99e908ed50774522fa4c5d847664e874ea0dc36a07d47",
+  "experiments/retrieval-v3/gemini-r2/RECOVERY.md": "f34fc91e740e5f3b57a9c87211ddca238f75dfb4bd9f231dace31c1ec358cf73",
+  "experiments/retrieval-v3/gemini-r2/recovery.py": "52dfb5c48892117594e39f898d025ba60efbbebb45940306a0baa4f8eab9ebaf",
+  "experiments/retrieval-v3/gemini-r2/test_recovery.py": "adab9f3fc001d0fe40f8efd9c71ada5fbe0113e0a00da6ae52b5312e74430649"
 }

@@ -1,5 +1,6 @@
 """Sealed paired evaluation. With no --authorized-run, performs offline checks only."""
 import argparse
+from contextvars import ContextVar
 from hashlib import sha256
 import json
 import os
@@ -55,10 +56,11 @@ def application_generate(ledger, scope, key, *, client_factory=None, sleep=time.
     from server import MODEL, quota_generate
 
     factory = client_factory or genai.Client
+    original_schema = ContextVar("original_schema", default=None)
 
     def limited_client(**kwargs):
         client = factory(**kwargs)
-        return SimpleNamespace(models=GuardedModels(client, ledger, _usage, scope))
+        return SimpleNamespace(models=GuardedModels(client, ledger, _usage, scope, original_schema))
 
     with patch.object(genai, 'Client', limited_client):
         raw, metadata = create_generate(GenerationConfig('gemini', MODEL, key))
@@ -68,7 +70,17 @@ def application_generate(ledger, scope, key, *, client_factory=None, sleep=time.
             # The SDK boundary accounts for every actual send.
             return
 
-    return quota_generate(raw, DispatchBudget(), sleep=sleep), metadata
+    strict_generate = quota_generate(raw, DispatchBudget(), sleep=sleep)
+
+    def generate(prompt, *, response_schema=None):
+        token = original_schema.set(response_schema)
+        try:
+            return strict_generate(prompt, response_schema=response_schema)
+        finally:
+            original_schema.reset(token)
+
+    generate.supports_response_schema = True
+    return generate, metadata
 
 
 def run(assets, bundle, questions, state):
@@ -86,6 +98,8 @@ def run(assets, bundle, questions, state):
         raise SystemExit('Set the approved, dedicated GEMINI_EVAL_API_KEY in the process environment.')
     if state.is_relative_to(ROOT):
         raise SystemExit('Use private state outside the checkout.')
+    if (state / 'ABORTED.json').exists():
+        raise SystemExit('This evaluation campaign is permanently aborted.')
     state.mkdir(mode=0o700, exist_ok=True)
     # Fail closed after a crash. The operator must inspect state before removing a stale lock.
     with (state / 'active.lock').open('x') as lock:
@@ -136,6 +150,9 @@ def run(assets, bundle, questions, state):
                     ledger.check_blocked()
                     return False
                 attempt.write_text(json.dumps({'seconds': time.monotonic() - started}), encoding='utf-8')
+                recovered = ledger.recovery_events(arm, qid)
+                if recovered:
+                    answer['experimental_response_recovery'] = recovered
                 temp = target.with_suffix('.tmp')
                 temp.write_text(json.dumps(answer, ensure_ascii=False), encoding='utf-8')
                 temp.replace(target)

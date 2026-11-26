@@ -5,6 +5,9 @@ import re
 import sqlite3
 import sys
 from time import monotonic, sleep, time
+from types import SimpleNamespace
+
+from recovery import recover_response
 
 PROJECT_RPM = 15
 PROJECT_INPUT_TPM = 250_000
@@ -95,6 +98,9 @@ class Ledger:
                 seconds REAL, outcome TEXT, sent_at REAL
             )""")
 
+            db.execute('''CREATE TABLE IF NOT EXISTS response_recovery (
+                dispatch_id INTEGER NOT NULL, stage TEXT NOT NULL, field TEXT NOT NULL, item_index INTEGER NOT NULL
+            )''')
             columns = {row[1] for row in db.execute('PRAGMA table_info(dispatch)')}
             if 'sent_at' not in columns:
                 db.execute('ALTER TABLE dispatch ADD COLUMN sent_at REAL')
@@ -140,6 +146,19 @@ class Ledger:
             ).lastrowid
             return dispatch, None
 
+    def record_recovery(self, dispatch, events):
+        with closing(sqlite3.connect(self.path)) as db, db:
+            db.executemany('INSERT INTO response_recovery VALUES (?, ?, ?, ?)',
+                           [(dispatch, event['stage'], event['field'], event['index']) for event in events])
+
+    def recovery_events(self, arm, question):
+        with closing(sqlite3.connect(self.path)) as db:
+            rows = db.execute(
+                """SELECT dispatch_id, stage, field, item_index FROM response_recovery
+                   JOIN dispatch ON dispatch.id = dispatch_id WHERE arm = ? AND question = ?
+                   ORDER BY dispatch_id, field, item_index""", (arm, question))
+            return [dict(zip(('dispatch', 'stage', 'field', 'index'), row)) for row in rows]
+
     def check_blocked(self):
         if self.payload_blocked:
             raise SystemExit('Free-tier payload screen failed. Campaign stopped before dispatch.')
@@ -176,9 +195,10 @@ class Ledger:
 
 
 class GuardedModels:
-    def __init__(self, client, ledger, usage, scope):
+    def __init__(self, client, ledger, usage, scope, schema):
         # Keep the SDK client alive for as long as its models can dispatch.
         self.client, self.ledger, self.usage, self.scope = client, ledger, usage, scope
+        self.schema = schema
 
     def generate_content(self, *, model, contents, config):
         # Match the deployed adapter's provider-default thinking behavior.
@@ -202,4 +222,13 @@ class GuardedModels:
         reason = getattr(candidates[0], 'finish_reason', None) if candidates else None
         outcome = 'MAX_TOKENS' if reason == 'MAX_TOKENS' else 'response'
         self.ledger.record(dispatch, self.usage(response), monotonic() - start, outcome=outcome)
+        schema = self.schema.get()
+        if schema is not None and reason == 'STOP' and isinstance(response.text, str):
+            draft_recovered = (schema.get('properties', {}).get('decisions') is not None and
+                               any(event['stage'] == 'draft' for event in self.ledger.recovery_events(arm, question)))
+            text, events = recover_response(response.text, schema, draft_was_recovered=draft_recovered)
+            if events:
+                self.ledger.record_recovery(dispatch, events)
+            if text != response.text:
+                return SimpleNamespace(candidates=candidates, text=text)
         return response

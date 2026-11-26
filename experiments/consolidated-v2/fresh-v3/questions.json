@@ -1,0 +1,42 @@
+[
+ {
+  "id": "J01",
+  "type": "single-paper; numerical; business",
+  "question": "A chemicals client is exploring AI-assisted catalyst discovery. What did the retrieval-augmented high-entropy-alloy catalyst study do, what did it report on stability, cost and catalytic performance, and what limits apply before the client invests in laboratory work?"
+ },
+ {
+  "id": "J02",
+  "type": "single-paper; numerical/table",
+  "question": "A pharmaceutical analytics client is considering retrieval-augmented mass spectrum simulation. What did MARASON achieve, how does it use retrieved molecules, on what data was it trained, and when does retrieval actually help?"
+ },
+ {
+  "id": "J03",
+  "type": "cross-paper",
+  "question": "A hospital network wants to benchmark LLMs for clinical decision support. What do CliBench and MedQA-CS evaluate, how did leading models perform, and what limits apply to using these results?"
+ },
+ {
+  "id": "J04",
+  "type": "cross-paper; misleading-evidence probe",
+  "question": "A health insurer wants to use an LLM to grade other LLMs' medical answers. What do MedQA-CS and Med-CoDE show about how reliable LLM-based evaluators are, and where do they fall short?"
+ },
+ {
+  "id": "J05",
+  "type": "single-paper; numerical/table; partially unanswerable",
+  "question": "A biotech client wants natural-language access to its compound-screening database. What did the SANE study show about a few-shot LLM querying a microscopy database - setup, accuracy and failure modes - and how would it perform on the client's own proprietary chemistry database?"
+ },
+ {
+  "id": "J06",
+  "type": "single-paper; partially unanswerable",
+  "question": "A bank's AI red team wants better ways to test chatbot jailbreak resistance. What are \"subtoxic questions\", what did the Gradual Attitude Change observations show, how does the paper propose to rank jailbreak prompts, and what jailbreak success rate should the bank expect against its own production chatbot?"
+ },
+ {
+  "id": "J07",
+  "type": "single-paper (survey); partially unanswerable",
+  "question": "A client wants to deploy an LLM on resource-constrained hardware. What compression approaches does the survey cover, what makes compressing large language models different, how does it separate medium and large models, and how much will compression cut the client's inference cost?"
+ },
+ {
+  "id": "J08",
+  "type": "cross-paper",
+  "question": "An R&D client wants to know where retrieval augmentation adds value in chemistry machine learning. What do the catalyst-discovery study and MARASON retrieve, how is the retrieved material used, and what evidence shows when retrieval helps?"
+ }
+]

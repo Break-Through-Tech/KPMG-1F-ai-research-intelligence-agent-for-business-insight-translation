@@ -1,0 +1,50 @@
+{
+ "S": {
+  "calls": 16,
+  "failed_calls": 0,
+  "median_total_s": 119.0,
+  "p90_total_s": 139.7,
+  "median_success_s": 119.0,
+  "p90_success_s": 139.7,
+  "total_s": {
+   "H01": 105,
+   "H02": 115,
+   "H03": 135,
+   "H04": 140,
+   "H05": 254,
+   "H06": 110,
+   "H07": 115,
+   "H08": 123
+  },
+  "estimated_request_tokens": 512407,
+  "actual_input_tokens": 620383,
+  "actual_output_tokens": 39263,
+  "published_items": 129,
+  "quote_not_exact": [],
+  "number_not_in_quotes": []
+ },
+ "D": {
+  "calls": 24,
+  "failed_calls": 0,
+  "median_total_s": 140.0,
+  "p90_total_s": 143.2,
+  "median_success_s": 140.0,
+  "p90_success_s": 143.2,
+  "total_s": {
+   "H01": 149,
+   "H02": 131,
+   "H03": 140,
+   "H04": 129,
+   "H05": 131,
+   "H06": 142,
+   "H07": 143,
+   "H08": 140
+  },
+  "estimated_request_tokens": 617102,
+  "actual_input_tokens": 801826,
+  "actual_output_tokens": 44138,
+  "published_items": 135,
+  "quote_not_exact": [],
+  "number_not_in_quotes": []
+ }
+}

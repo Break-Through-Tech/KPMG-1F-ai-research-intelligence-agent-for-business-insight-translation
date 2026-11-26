@@ -1,0 +1,52 @@
+[
+ {
+  "id": "K01",
+  "type": "single",
+  "question": "A medical-device client wants to add retrieval to its AI ECG reporting tool. What did the RAG-TRACE study evaluate, what did retrieval do to unsupported criteria and to diagnostic recall, how well did deterministic verification work, and what limits apply before deployment?"
+ },
+ {
+  "id": "K02",
+  "type": "single",
+  "question": "A consumer brand wants machine translation of Chinese social-media comments for market monitoring. What is CULTURE-CMT and how is translation quality judged, does adding the conversation context fix cultural errors, do larger or reasoning models help, and what approach worked best?"
+ },
+ {
+  "id": "K03",
+  "type": "single",
+  "question": "A neurology network wants to automate EEG report drafting without sending patient data to external providers. How does ERIA work, how much did policy optimization improve report quality, how did it do on external benchmarks, and what limits apply before clinical use?"
+ },
+ {
+  "id": "K04",
+  "type": "single",
+  "question": "A software company pays for long agent instructions (harnesses) re-sent with every model call. What does Latent Harness do, how well do compiled behaviors match the original harness, how does it compare with LoRA on agent tasks, and what deployment cautions apply?"
+ },
+ {
+  "id": "K05",
+  "type": "cross",
+  "question": "A bank wants a streaming safety guard for its customer chatbot. How do HaloGuard 2.0 and PGuard each work, how accurate are they relative to dedicated guard models, what does PGuard add to serving cost, and what residual risks does HaloGuard report?"
+ },
+ {
+  "id": "K06",
+  "type": "single",
+  "question": "A hospital group wants an on-device medical assistant so patient data never leaves the device. What does MedPsy offer, how does its accuracy compare with much larger medical models, what does quantization cost in accuracy and size, and is it ready to support clinical decisions in the group's hospitals?"
+ },
+ {
+  "id": "K07",
+  "type": "cross",
+  "question": "A cardiology analytics client is comparing two ways to use language models on ECGs: report generation with retrieved criteria (RAG-TRACE) and direct diagnostic option scoring (ECGJev). How does ECGJev work and perform, what evidence shows it relies on the ECG signal, what does RAG-TRACE show about retrieved criteria as evidence, and is either validated for clinical use?"
+ },
+ {
+  "id": "K08",
+  "type": "single",
+  "question": "A healthcare client plans to fine-tune an LLM on patient records with differential privacy, using LoRA adapters on an LLM.int8-quantized backbone. What problem did this study find, how large was it in constructed and natural settings, did it break the privacy guarantee of released models, and how can the client avoid it?"
+ },
+ {
+  "id": "K09",
+  "type": "single",
+  "question": "A consumer-electronics client wants to run a mixture-of-experts LLM on edge devices. What does MatMoE change about quantization, how much faster and more accurate is it than existing approaches, which component drives which gain, and what accuracy should the client expect on its own customer-support assistant?"
+ },
+ {
+  "id": "K10",
+  "type": "single",
+  "question": "A video platform needs safety moderation for a multimodal assistant at scale. How does PGuard perform on image-text safety, how does a two-tier setup with an external guard perform and what does it save, what memory does PGuard need, and what overhead should the platform expect on its own serving stack?"
+ }
+]

@@ -22,7 +22,7 @@ def summarize_with_generation(query, passages, *, generate):
     return json.loads(generate(prompt))
 
 
-def create_generate(config=None):
+def create_generate(config=None, *, http_client=None):
     """Build only the explicitly selected BYOK client; never fall back providers.
 
     Config/keys are loaded only when generation is requested. Keys are not part
@@ -35,6 +35,8 @@ def create_generate(config=None):
         config = GenerationConfig.from_environment()
     if not isinstance(config, GenerationConfig):
         raise PipelineError('Generation requires a validated GenerationConfig.')
+    if http_client is not None and config.provider not in {'openai', 'openai_compatible'}:
+        raise PipelineError('A custom HTTP client requires an OpenAI adapter.')
     try:
         if config.provider == 'gemini':
             from google import genai
@@ -93,7 +95,7 @@ def create_generate(config=None):
             # the named OpenAI provider or receiving another provider's key.
             client = OpenAI(api_key=config.api_key,
                 base_url=config.base_url or 'https://api.openai.com/v1',
-                timeout=60, max_retries=0)
+                timeout=60, max_retries=0, **({'http_client': http_client} if http_client is not None else {}))
             def invoke(prompt, response_schema=None):
                 output_format = {'type':'json_object'} if response_schema is None else {
                     'type':'json_schema', 'json_schema': {'name':'research_output',

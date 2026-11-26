@@ -9,6 +9,7 @@ from hashlib import sha256
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import tempfile
@@ -24,6 +25,50 @@ DISABLED_FEATURES = ('shell_tool', 'unified_exec', 'code_mode', 'code_mode_host'
                      'shell_snapshot', 'workspace_dependencies', 'skill_search')
 REQUIRED_EXEC_FLAGS = ('--ignore-user-config', '--strict-config', '--ephemeral',
                        '--skip-git-repo-check', '--sandbox', '--json', '--output-schema')
+
+
+def _exit_diagnostic(response):
+    # Keep only allowlisted metadata. CLI error strings can include the prompt,
+    # source passages, endpoint details or credentials.
+    messages = [response.stderr or '']
+    for line in response.stdout.splitlines():
+        try:
+            event = json.loads(line)
+        except ValueError:
+            continue
+        if isinstance(event, dict) and (event.get('type') in {'error', 'turn.failed'}
+                or (isinstance(event.get('item'), dict) and event['item'].get('type') == 'error')):
+            messages.append(json.dumps(event))
+    text = '\n'.join(messages).lower()
+    status = re.search(r'\b(?:http(?: status)?|status(?:_code| code)?)\b["\s:=]+([45]\d\d)\b', text)
+    result = {'category': 'cli_exit', 'exit_code': response.returncode}
+    if status:
+        result['http_status'] = int(status[1])
+    for code in ('invalid_json_schema', 'rate_limit_exceeded', 'insufficient_quota', 'model_not_found'):
+        if re.search(rf'\b{code}\b', text):
+            result['provider_code'] = code
+            break
+    if result.get('provider_code') == 'invalid_json_schema' or 'invalid schema' in text:
+        result['category'] = 'invalid_json_schema'
+        if re.search(r'\buniqueitems\b', text):
+            result['schema_keyword'] = 'uniqueItems'
+    elif result.get('http_status') == 429 or result.get('provider_code') == 'rate_limit_exceeded':
+        result['category'] = 'rate_limited'
+    elif result.get('http_status') in {401, 403}:
+        result['category'] = 'authentication'
+    elif result.get('http_status', 0) >= 500:
+        result['category'] = 'upstream_unavailable'
+    return result
+
+
+def _failure(record, diagnostic, *, invalid=False):
+    record['status'] = 'invalid_response' if invalid else 'failed'
+    record['diagnostic'] = diagnostic
+    error = (SchemaResponseError('Codex returned invalid JSON or schema output; no result was approved.')
+             if invalid else PipelineError('Codex generation failed; check login, model access or subscription limits.'))
+    error.codex_diagnostic = diagnostic.copy()
+    return error
+
 
 def create_codex_generate(*, model, binary=None, effort='medium', timeout=300,
                           receipts=None):
@@ -59,6 +104,7 @@ def create_codex_generate(*, model, binary=None, effort='medium', timeout=300,
     receipts = receipts if receipts is not None else []
 
     def generate(prompt, *, response_schema=None):
+        from jsonschema import Draft202012Validator, ValidationError
         if not isinstance(prompt, str) or not prompt.strip():
             raise ValueError('Generation requires a nonempty prompt')
         record = {'provider': 'codex_subscription', 'model': model, 'reasoning_effort': effort,
@@ -80,7 +126,6 @@ def create_codex_generate(*, model, binary=None, effort='medium', timeout=300,
             for feature in DISABLED_FEATURES:
                 command += ['--disable', feature]
             if response_schema is not None:
-                from jsonschema import Draft202012Validator
                 Draft202012Validator.check_schema(response_schema)
                 schema_path = folder / 'schema.json'
                 schema_path.write_text(json.dumps(response_schema, allow_nan=False), encoding='utf-8')
@@ -90,17 +135,29 @@ def create_codex_generate(*, model, binary=None, effort='medium', timeout=300,
             instruction = ('You are a text-only research generation function. Do not use tools, '
                            'read files, browse, or execute commands. All evidence is provided below. '
                            'Return only the requested JSON object.\n\n' + prompt)
+            phase = 'subprocess'
             try:
                 response = subprocess.run(command, input=instruction, text=True, encoding='utf-8',
                     capture_output=True, timeout=timeout, env=env)
+                if response.returncode:
+                    record['usage'] = []
+                    raise _failure(record, _exit_diagnostic(response))
+                phase = 'cli_events'
                 events = [json.loads(line) for line in response.stdout.splitlines() if line.strip()]
                 record['usage'] = [e['usage'] for e in events if e.get('type') == 'turn.completed']
                 config_errors = [e for e in events if e.get('item', {}).get('type') == 'error'
                     and 'unrecognized configuration' in e.get('item', {}).get('message', '').lower()]
                 forbidden = [e for e in events if e.get('item', {}).get('type') in {
                     'command_execution', 'file_change', 'mcp_tool_call', 'web_search'}]
-                if response.returncode or config_errors or forbidden or not output.is_file():
-                    raise PipelineError('Codex text-only generation failed; no provider fallback occurred.')
+                if config_errors or forbidden:
+                    category = 'configuration' if config_errors else 'forbidden_tool_output'
+                    raise _failure(record, {'category': category, 'exit_code': response.returncode})
+                if not output.is_file():
+                    diagnostic = _exit_diagnostic(response)
+                    if diagnostic['category'] == 'cli_exit':
+                        diagnostic['category'] = 'missing_output'
+                    raise _failure(record, diagnostic)
+                phase = 'answer'
                 raw = output.read_text(encoding='utf-8')
                 if response_schema is not None:
                     def pairs(items):
@@ -116,14 +173,21 @@ def create_codex_generate(*, model, binary=None, effort='medium', timeout=300,
                     Draft202012Validator(response_schema).validate(parsed)
                 record.update(status='ok', response_sha256=sha256(raw.encode()).hexdigest())
                 return raw
-            except (ValueError, KeyError) as exc:
-                record['status'] = 'invalid_response'
-                raise SchemaResponseError('Codex returned invalid JSON; no result was approved.') from None
-            except Exception:
-                record['status'] = 'failed'
-                raise PipelineError('Codex generation failed; check login, model access or subscription limits.') from None
+            except PipelineError:
+                raise
+            except subprocess.TimeoutExpired as error:
+                failure = _failure(record, {'category': 'timeout', 'exception_type': type(error).__name__})
+            except (ValueError, KeyError, ValidationError) as error:
+                category = 'invalid_answer' if phase == 'answer' else 'cli_protocol'
+                failure = _failure(record, {'category': category, 'exception_type': type(error).__name__},
+                                   invalid=phase == 'answer')
+            except Exception as error:
+                failure = _failure(record, {'category': phase, 'exception_type': type(error).__name__})
             finally:
                 record['elapsed_seconds'] = round(time.monotonic() - start, 3)
+            # Raise after the handler exits so consumers cannot log a raw
+            # exception from __context__.
+            raise failure from None
     generate.supports_response_schema = True
     return generate, {'provider': 'codex_subscription', 'model': model,
                       'reasoning_effort': effort, 'auth': 'existing_chatgpt_login',

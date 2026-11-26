@@ -1,0 +1,3 @@
+{"status": "PROPOSED by Claude; project lead adjudication is final",
+ "S3": {"citation_grounding_failures": 1, "misleading_or_fabricated": 0, "quote_errors": 0, "numerical_errors": 0, "uncited_absence_claims": 0},
+ "S2": {"citation_grounding_failures": 0, "misleading_or_fabricated": 0, "quote_errors": 0, "numerical_errors": 0, "uncited_absence_claims": 0}}

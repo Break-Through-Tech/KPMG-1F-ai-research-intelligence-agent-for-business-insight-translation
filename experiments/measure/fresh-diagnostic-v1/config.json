@@ -1,0 +1,17 @@
+{
+  "provider": "existing ChatGPT Codex subscription",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "low",
+  "cli_timeout_seconds": 300,
+  "mode": "current experimental Multi-Agent, research only",
+  "table_comparisons": true,
+  "top_k_per_search": 8,
+  "merged_synthesis_cap": 14,
+  "retrieval_rounds": 2,
+  "retry_policy": "Only the workflow's normal verifier-requested retrieval round with new evidence. No provider retries at application level and no reruns.",
+  "max_attempts_per_question": 5,
+  "max_attempts_total": 50,
+  "optional_agents": false,
+  "numeric_shadow": false,
+  "threads_cpu": 4
+}

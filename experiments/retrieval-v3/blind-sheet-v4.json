@@ -1,0 +1,295 @@
+{
+ "scorer": "",
+ "questions": {
+  "K01": {
+   "points": {
+    "K01.1": {
+     "A": null,
+     "B": null
+    },
+    "K01.2": {
+     "A": null,
+     "B": null
+    },
+    "K01.3": {
+     "A": null,
+     "B": null
+    },
+    "K01.4": {
+     "A": null,
+     "B": null
+    },
+    "K01.5": {
+     "A": null,
+     "B": null
+    }
+   },
+   "citation_grounding_failures": [],
+   "misleading_claims": [],
+   "numerical_errors": [],
+   "interpretation_scores": {},
+   "notes": ""
+  },
+  "K02": {
+   "points": {
+    "K02.1": {
+     "A": null,
+     "B": null
+    },
+    "K02.2": {
+     "A": null,
+     "B": null
+    },
+    "K02.3": {
+     "A": null,
+     "B": null
+    },
+    "K02.4": {
+     "A": null,
+     "B": null
+    },
+    "K02.5": {
+     "A": null,
+     "B": null
+    }
+   },
+   "citation_grounding_failures": [],
+   "misleading_claims": [],
+   "numerical_errors": [],
+   "interpretation_scores": {},
+   "notes": ""
+  },
+  "K03": {
+   "points": {
+    "K03.1": {
+     "A": null,
+     "B": null
+    },
+    "K03.2": {
+     "A": null,
+     "B": null
+    },
+    "K03.3": {
+     "A": null,
+     "B": null
+    },
+    "K03.4": {
+     "A": null,
+     "B": null
+    },
+    "K03.5": {
+     "A": null,
+     "B": null
+    }
+   },
+   "citation_grounding_failures": [],
+   "misleading_claims": [],
+   "numerical_errors": [],
+   "interpretation_scores": {},
+   "notes": ""
+  },
+  "K04": {
+   "points": {
+    "K04.1": {
+     "A": null,
+     "B": null
+    },
+    "K04.2": {
+     "A": null,
+     "B": null
+    },
+    "K04.3": {
+     "A": null,
+     "B": null
+    },
+    "K04.4": {
+     "A": null,
+     "B": null
+    },
+    "K04.5": {
+     "A": null,
+     "B": null
+    }
+   },
+   "citation_grounding_failures": [],
+   "misleading_claims": [],
+   "numerical_errors": [],
+   "interpretation_scores": {},
+   "notes": ""
+  },
+  "K05": {
+   "points": {
+    "K05.1": {
+     "A": null,
+     "B": null
+    },
+    "K05.2": {
+     "A": null,
+     "B": null
+    },
+    "K05.3": {
+     "A": null,
+     "B": null
+    },
+    "K05.4": {
+     "A": null,
+     "B": null
+    },
+    "K05.5": {
+     "A": null,
+     "B": null
+    }
+   },
+   "citation_grounding_failures": [],
+   "misleading_claims": [],
+   "numerical_errors": [],
+   "interpretation_scores": {},
+   "notes": ""
+  },
+  "K06": {
+   "points": {
+    "K06.1": {
+     "A": null,
+     "B": null
+    },
+    "K06.2": {
+     "A": null,
+     "B": null
+    },
+    "K06.3": {
+     "A": null,
+     "B": null
+    },
+    "K06.4": {
+     "A": null,
+     "B": null
+    },
+    "K06.5": {
+     "A": null,
+     "B": null
+    }
+   },
+   "citation_grounding_failures": [],
+   "misleading_claims": [],
+   "numerical_errors": [],
+   "interpretation_scores": {},
+   "notes": ""
+  },
+  "K07": {
+   "points": {
+    "K07.1": {
+     "A": null,
+     "B": null
+    },
+    "K07.2": {
+     "A": null,
+     "B": null
+    },
+    "K07.3": {
+     "A": null,
+     "B": null
+    },
+    "K07.4": {
+     "A": null,
+     "B": null
+    },
+    "K07.5": {
+     "A": null,
+     "B": null
+    }
+   },
+   "citation_grounding_failures": [],
+   "misleading_claims": [],
+   "numerical_errors": [],
+   "interpretation_scores": {},
+   "notes": ""
+  },
+  "K08": {
+   "points": {
+    "K08.1": {
+     "A": null,
+     "B": null
+    },
+    "K08.2": {
+     "A": null,
+     "B": null
+    },
+    "K08.3": {
+     "A": null,
+     "B": null
+    },
+    "K08.4": {
+     "A": null,
+     "B": null
+    },
+    "K08.5": {
+     "A": null,
+     "B": null
+    }
+   },
+   "citation_grounding_failures": [],
+   "misleading_claims": [],
+   "numerical_errors": [],
+   "interpretation_scores": {},
+   "notes": ""
+  },
+  "K09": {
+   "points": {
+    "K09.1": {
+     "A": null,
+     "B": null
+    },
+    "K09.2": {
+     "A": null,
+     "B": null
+    },
+    "K09.3": {
+     "A": null,
+     "B": null
+    },
+    "K09.4": {
+     "A": null,
+     "B": null
+    },
+    "K09.5": {
+     "A": null,
+     "B": null
+    }
+   },
+   "citation_grounding_failures": [],
+   "misleading_claims": [],
+   "numerical_errors": [],
+   "interpretation_scores": {},
+   "notes": ""
+  },
+  "K10": {
+   "points": {
+    "K10.1": {
+     "A": null,
+     "B": null
+    },
+    "K10.2": {
+     "A": null,
+     "B": null
+    },
+    "K10.3": {
+     "A": null,
+     "B": null
+    },
+    "K10.4": {
+     "A": null,
+     "B": null
+    },
+    "K10.5": {
+     "A": null,
+     "B": null
+    }
+   },
+   "citation_grounding_failures": [],
+   "misleading_claims": [],
+   "numerical_errors": [],
+   "interpretation_scores": {},
+   "notes": ""
+  }
+ }
+}

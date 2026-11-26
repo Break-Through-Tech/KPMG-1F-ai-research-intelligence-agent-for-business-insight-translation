@@ -1,0 +1,406 @@
+{
+ "summary": {
+  "S2": 36,
+  "S3": 39,
+  "anchored": 50,
+  "points": 50,
+  "S2_coverage_pct": 72.0,
+  "S3_coverage_pct": 78.0,
+  "serialized_ratio_mean": 1.264,
+  "max_s3_base_tokens": 7982,
+  "max_serialized_est": 15425,
+  "added_retrieval_s_median": 9.92
+ },
+ "questions": [
+  {
+   "q": "K01",
+   "S2": 5,
+   "S3": 5,
+   "points": 5,
+   "per_point": [
+    {
+     "point": "K01.1",
+     "S2": true,
+     "S3": true
+    },
+    {
+     "point": "K01.2",
+     "S2": true,
+     "S3": true
+    },
+    {
+     "point": "K01.3",
+     "S2": true,
+     "S3": true
+    },
+    {
+     "point": "K01.4",
+     "S2": true,
+     "S3": true
+    },
+    {
+     "point": "K01.5",
+     "S2": true,
+     "S3": true
+    }
+   ],
+   "s3_base_tokens": 7031,
+   "s2_base_tokens": 5983,
+   "serialized_ratio": 1.145,
+   "max_serialized_est": 13456,
+   "retrieval_s_S2": 13.38,
+   "retrieval_s_S3": 24.17
+  },
+  {
+   "q": "K02",
+   "S2": 5,
+   "S3": 5,
+   "points": 5,
+   "per_point": [
+    {
+     "point": "K02.1",
+     "S2": true,
+     "S3": true
+    },
+    {
+     "point": "K02.2",
+     "S2": true,
+     "S3": true
+    },
+    {
+     "point": "K02.3",
+     "S2": true,
+     "S3": true
+    },
+    {
+     "point": "K02.4",
+     "S2": true,
+     "S3": true
+    },
+    {
+     "point": "K02.5",
+     "S2": true,
+     "S3": true
+    }
+   ],
+   "s3_base_tokens": 6759,
+   "s2_base_tokens": 5913,
+   "serialized_ratio": 1.109,
+   "max_serialized_est": 13292,
+   "retrieval_s_S2": 5.77,
+   "retrieval_s_S3": 11.55
+  },
+  {
+   "q": "K03",
+   "S2": 5,
+   "S3": 5,
+   "points": 5,
+   "per_point": [
+    {
+     "point": "K03.1",
+     "S2": true,
+     "S3": true
+    },
+    {
+     "point": "K03.2",
+     "S2": true,
+     "S3": true
+    },
+    {
+     "point": "K03.3",
+     "S2": true,
+     "S3": true
+    },
+    {
+     "point": "K03.4",
+     "S2": true,
+     "S3": true
+    },
+    {
+     "point": "K03.5",
+     "S2": true,
+     "S3": true
+    }
+   ],
+   "s3_base_tokens": 7973,
+   "s2_base_tokens": 5973,
+   "serialized_ratio": 1.349,
+   "max_serialized_est": 15425,
+   "retrieval_s_S2": 4.31,
+   "retrieval_s_S3": 8.02
+  },
+  {
+   "q": "K04",
+   "S2": 4,
+   "S3": 5,
+   "points": 5,
+   "per_point": [
+    {
+     "point": "K04.1",
+     "S2": true,
+     "S3": true
+    },
+    {
+     "point": "K04.2",
+     "S2": true,
+     "S3": true
+    },
+    {
+     "point": "K04.3",
+     "S2": false,
+     "S3": true
+    },
+    {
+     "point": "K04.4",
+     "S2": true,
+     "S3": true
+    },
+    {
+     "point": "K04.5",
+     "S2": true,
+     "S3": true
+    }
+   ],
+   "s3_base_tokens": 7965,
+   "s2_base_tokens": 5862,
+   "serialized_ratio": 1.35,
+   "max_serialized_est": 13322,
+   "retrieval_s_S2": 9.27,
+   "retrieval_s_S3": 18.7
+  },
+  {
+   "q": "K05",
+   "S2": 1,
+   "S3": 1,
+   "points": 5,
+   "per_point": [
+    {
+     "point": "K05.1",
+     "S2": false,
+     "S3": false
+    },
+    {
+     "point": "K05.2",
+     "S2": true,
+     "S3": true
+    },
+    {
+     "point": "K05.3",
+     "S2": false,
+     "S3": false
+    },
+    {
+     "point": "K05.4",
+     "S2": false,
+     "S3": false
+    },
+    {
+     "point": "K05.5",
+     "S2": false,
+     "S3": false
+    }
+   ],
+   "s3_base_tokens": 7870,
+   "s2_base_tokens": 5992,
+   "serialized_ratio": 1.303,
+   "max_serialized_est": 12014,
+   "retrieval_s_S2": 12.57,
+   "retrieval_s_S3": 23.990000000000002
+  },
+  {
+   "q": "K06",
+   "S2": 5,
+   "S3": 5,
+   "points": 5,
+   "per_point": [
+    {
+     "point": "K06.1",
+     "S2": true,
+     "S3": true
+    },
+    {
+     "point": "K06.2",
+     "S2": true,
+     "S3": true
+    },
+    {
+     "point": "K06.3",
+     "S2": true,
+     "S3": true
+    },
+    {
+     "point": "K06.4",
+     "S2": true,
+     "S3": true
+    },
+    {
+     "point": "K06.5",
+     "S2": true,
+     "S3": true
+    }
+   ],
+   "s3_base_tokens": 7948,
+   "s2_base_tokens": 5933,
+   "serialized_ratio": 1.303,
+   "max_serialized_est": 13213,
+   "retrieval_s_S2": 4.37,
+   "retrieval_s_S3": 11.57
+  },
+  {
+   "q": "K07",
+   "S2": 1,
+   "S3": 1,
+   "points": 5,
+   "per_point": [
+    {
+     "point": "K07.1",
+     "S2": false,
+     "S3": false
+    },
+    {
+     "point": "K07.2",
+     "S2": false,
+     "S3": false
+    },
+    {
+     "point": "K07.3",
+     "S2": false,
+     "S3": false
+    },
+    {
+     "point": "K07.4",
+     "S2": true,
+     "S3": true
+    },
+    {
+     "point": "K07.5",
+     "S2": false,
+     "S3": false
+    }
+   ],
+   "s3_base_tokens": 7042,
+   "s2_base_tokens": 5947,
+   "serialized_ratio": 1.189,
+   "max_serialized_est": 13752,
+   "retrieval_s_S2": 4.43,
+   "retrieval_s_S3": 14.84
+  },
+  {
+   "q": "K08",
+   "S2": 3,
+   "S3": 4,
+   "points": 5,
+   "per_point": [
+    {
+     "point": "K08.1",
+     "S2": true,
+     "S3": true
+    },
+    {
+     "point": "K08.2",
+     "S2": true,
+     "S3": true
+    },
+    {
+     "point": "K08.3",
+     "S2": false,
+     "S3": false
+    },
+    {
+     "point": "K08.4",
+     "S2": true,
+     "S3": true
+    },
+    {
+     "point": "K08.5",
+     "S2": false,
+     "S3": true
+    }
+   ],
+   "s3_base_tokens": 7888,
+   "s2_base_tokens": 5919,
+   "serialized_ratio": 1.349,
+   "max_serialized_est": 13944,
+   "retrieval_s_S2": 15.78,
+   "retrieval_s_S3": 27.009999999999998
+  },
+  {
+   "q": "K09",
+   "S2": 4,
+   "S3": 5,
+   "points": 5,
+   "per_point": [
+    {
+     "point": "K09.1",
+     "S2": true,
+     "S3": true
+    },
+    {
+     "point": "K09.2",
+     "S2": true,
+     "S3": true
+    },
+    {
+     "point": "K09.3",
+     "S2": true,
+     "S3": true
+    },
+    {
+     "point": "K09.4",
+     "S2": true,
+     "S3": true
+    },
+    {
+     "point": "K09.5",
+     "S2": false,
+     "S3": true
+    }
+   ],
+   "s3_base_tokens": 7982,
+   "s2_base_tokens": 5930,
+   "serialized_ratio": 1.258,
+   "max_serialized_est": 13608,
+   "retrieval_s_S2": 9.85,
+   "retrieval_s_S3": 17.189999999999998
+  },
+  {
+   "q": "K10",
+   "S2": 3,
+   "S3": 3,
+   "points": 5,
+   "per_point": [
+    {
+     "point": "K10.1",
+     "S2": true,
+     "S3": true
+    },
+    {
+     "point": "K10.2",
+     "S2": false,
+     "S3": false
+    },
+    {
+     "point": "K10.3",
+     "S2": false,
+     "S3": false
+    },
+    {
+     "point": "K10.4",
+     "S2": true,
+     "S3": true
+    },
+    {
+     "point": "K10.5",
+     "S2": true,
+     "S3": true
+    }
+   ],
+   "s3_base_tokens": 7739,
+   "s2_base_tokens": 5932,
+   "serialized_ratio": 1.283,
+   "max_serialized_est": 14044,
+   "retrieval_s_S2": 17.32,
+   "retrieval_s_S3": 27.740000000000002
+  }
+ ]
+}

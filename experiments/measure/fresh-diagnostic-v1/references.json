@@ -1,0 +1,682 @@
+[
+  {
+    "id": "F01",
+    "category": "table",
+    "question": "On the image-based and table-based questions in MultiFinRAG's evaluation, how many questions were in each group, and how did the Gemma baseline and MultiFinRAG with Gemma score in each?",
+    "required_points": [
+      {
+        "point_id": "F01.1",
+        "expected": "Image-based: 42 questions; baseline Gemma 0%, MultiFinRAG Gemma 66.7%.",
+        "anchors": [
+          [
+            "2506.20821v1_table_de629a5f57790c34_2"
+          ]
+        ],
+        "paper": "2506.20821v1",
+        "source_sha256": "49ca6d504963a79d506d7931c922eca21fdf74d99518a3d9ba366894b400e199",
+        "source_url": "https://arxiv.org/html/2506.20821v1#S4.T1",
+        "table_id": "S4.T1",
+        "original_anchors": [
+          {
+            "original_id": "S4.T1.5.1.4",
+            "original_text": "Baseline"
+          },
+          {
+            "original_id": "S4.T1.5.2.4",
+            "original_text": "with Gemma"
+          },
+          {
+            "original_id": "S4.T1.5.1.6",
+            "original_text": "MultiFinRAG"
+          },
+          {
+            "original_id": "S4.T1.5.2.6",
+            "original_text": "with Gemma"
+          },
+          {
+            "original_id": "S4.T1.5.4.1",
+            "original_text": "2. Image-based"
+          },
+          {
+            "original_id": "S4.T1.5.4.2",
+            "original_text": "42"
+          },
+          {
+            "original_id": "S4.T1.5.4.4",
+            "original_text": "0%"
+          },
+          {
+            "original_id": "S4.T1.5.4.6",
+            "original_text": "66.7%"
+          }
+        ]
+      },
+      {
+        "point_id": "F01.2",
+        "expected": "Table-based: 72 questions; baseline Gemma 5.6%, MultiFinRAG Gemma 69.4%.",
+        "anchors": [
+          [
+            "2506.20821v1_table_de629a5f57790c34_3"
+          ]
+        ],
+        "paper": "2506.20821v1",
+        "source_sha256": "49ca6d504963a79d506d7931c922eca21fdf74d99518a3d9ba366894b400e199",
+        "source_url": "https://arxiv.org/html/2506.20821v1#S4.T1",
+        "table_id": "S4.T1",
+        "original_anchors": [
+          {
+            "original_id": "S4.T1.5.1.4",
+            "original_text": "Baseline"
+          },
+          {
+            "original_id": "S4.T1.5.2.4",
+            "original_text": "with Gemma"
+          },
+          {
+            "original_id": "S4.T1.5.1.6",
+            "original_text": "MultiFinRAG"
+          },
+          {
+            "original_id": "S4.T1.5.2.6",
+            "original_text": "with Gemma"
+          },
+          {
+            "original_id": "S4.T1.5.5.1",
+            "original_text": "3. Table-based"
+          },
+          {
+            "original_id": "S4.T1.5.5.2",
+            "original_text": "72"
+          },
+          {
+            "original_id": "S4.T1.5.5.4",
+            "original_text": "5.6%"
+          },
+          {
+            "original_id": "S4.T1.5.5.6",
+            "original_text": "69.4%"
+          }
+        ]
+      }
+    ],
+    "human_verified": false
+  },
+  {
+    "id": "F02",
+    "category": "table",
+    "question": "In LoFT-LLM's dataset summary, what were the sampling frequency, total time points, and prediction target for FundAR and Solar?",
+    "required_points": [
+      {
+        "point_id": "F02.1",
+        "expected": "FundAR: daily, 675, Apply&Redeem.",
+        "anchors": [
+          [
+            "2512.20002v3_table_73e166fbe4d2eb83_1"
+          ]
+        ],
+        "paper": "2512.20002v3",
+        "source_sha256": "6bdcfbc11dd20e384de8a7f53955f5045d2f1799dfbf279a1b803155c0bb7f43",
+        "source_url": "https://arxiv.org/html/2512.20002v3#S3.T1",
+        "table_id": "S3.T1",
+        "original_anchors": [
+          {
+            "original_id": "S3.T1.5.1.2",
+            "original_text": "Time Frequency"
+          },
+          {
+            "original_id": "S3.T1.5.1.4",
+            "original_text": "Total Time Points"
+          },
+          {
+            "original_id": "S3.T1.5.1.5",
+            "original_text": "Prediction Target"
+          },
+          {
+            "original_id": "S3.T1.5.2.1",
+            "original_text": "FundAR"
+          },
+          {
+            "original_id": "S3.T1.5.2.2",
+            "original_text": "Daily"
+          },
+          {
+            "original_id": "S3.T1.5.2.4",
+            "original_text": "675"
+          },
+          {
+            "original_id": "S3.T1.5.2.5",
+            "original_text": "Apply&Redeem"
+          }
+        ]
+      },
+      {
+        "point_id": "F02.2",
+        "expected": "Solar: hourly, 8,760, power.",
+        "anchors": [
+          [
+            "2512.20002v3_table_73e166fbe4d2eb83_2"
+          ]
+        ],
+        "paper": "2512.20002v3",
+        "source_sha256": "6bdcfbc11dd20e384de8a7f53955f5045d2f1799dfbf279a1b803155c0bb7f43",
+        "source_url": "https://arxiv.org/html/2512.20002v3#S3.T1",
+        "table_id": "S3.T1",
+        "original_anchors": [
+          {
+            "original_id": "S3.T1.5.1.2",
+            "original_text": "Time Frequency"
+          },
+          {
+            "original_id": "S3.T1.5.1.4",
+            "original_text": "Total Time Points"
+          },
+          {
+            "original_id": "S3.T1.5.1.5",
+            "original_text": "Prediction Target"
+          },
+          {
+            "original_id": "S3.T1.5.3.1",
+            "original_text": "Solar"
+          },
+          {
+            "original_id": "S3.T1.5.3.2",
+            "original_text": "Hourly"
+          },
+          {
+            "original_id": "S3.T1.5.3.4",
+            "original_text": "8,760"
+          },
+          {
+            "original_id": "S3.T1.5.3.5",
+            "original_text": "Power"
+          }
+        ]
+      }
+    ],
+    "human_verified": false
+  },
+  {
+    "id": "F03",
+    "category": "table",
+    "question": "For Cora and Arxiv in the topology-aware text generation study, how many graph nodes did each dataset have, and which used a random rather than a time-based split?",
+    "required_points": [
+      {
+        "point_id": "F03.1",
+        "expected": "Cora: 2,708 nodes and random splitting.",
+        "anchors": [
+          [
+            "2405.17602v1_table_d97384047b764e44_1"
+          ]
+        ],
+        "paper": "2405.17602v1",
+        "source_sha256": "799610b9e8d0fe456c664bec8929a02b2d29785a65628215c7087e01b1a07f16",
+        "source_url": "https://arxiv.org/html/2405.17602v1#S6.T1",
+        "table_id": "S6.T1",
+        "original_anchors": [
+          {
+            "original_id": "S6.T1.9.1.3",
+            "original_text": "# Nodes"
+          },
+          {
+            "original_id": "S6.T1.9.1.6",
+            "original_text": "Splitting"
+          },
+          {
+            "original_id": "S6.T1.9.2.2",
+            "original_text": "Cora ( Yang et al., 2016 ; Chen et al., 2023 )"
+          },
+          {
+            "original_id": "S6.T1.9.2.3",
+            "original_text": "2,708"
+          },
+          {
+            "original_id": "S6.T1.9.2.6",
+            "original_text": "Random"
+          }
+        ]
+      },
+      {
+        "point_id": "F03.2",
+        "expected": "Arxiv: 16,316 nodes and time-based splitting.",
+        "anchors": [
+          [
+            "2405.17602v1_table_d97384047b764e44_3"
+          ]
+        ],
+        "paper": "2405.17602v1",
+        "source_sha256": "799610b9e8d0fe456c664bec8929a02b2d29785a65628215c7087e01b1a07f16",
+        "source_url": "https://arxiv.org/html/2405.17602v1#S6.T1",
+        "table_id": "S6.T1",
+        "original_anchors": [
+          {
+            "original_id": "S6.T1.9.1.3",
+            "original_text": "# Nodes"
+          },
+          {
+            "original_id": "S6.T1.9.1.6",
+            "original_text": "Splitting"
+          },
+          {
+            "original_id": "S6.T1.9.4.1",
+            "original_text": "Arxiv ( Hu et al., 2020 ; Chen et al., 2023 )"
+          },
+          {
+            "original_id": "S6.T1.9.4.2",
+            "original_text": "16,316"
+          },
+          {
+            "original_id": "S6.T1.9.4.5",
+            "original_text": "Time"
+          }
+        ]
+      }
+    ],
+    "human_verified": false
+  },
+  {
+    "id": "F04",
+    "category": "multi-paper",
+    "question": "I'm comparing CG-RAG and SAM-RAG for a literature assistant. How does each use a different signal to decide which material to bring into the answer?",
+    "required_points": [
+      {
+        "point_id": "F04.1",
+        "expected": "CG-RAG uses hierarchical citation links and combines lexical/sparse and semantic/dense signals.",
+        "anchors": [
+          [
+            "2501.15067v1_c0000"
+          ]
+        ],
+        "paper": "2501.15067v1",
+        "source_sha256": "f291b694e229ea0ac262b5f825cc401f01c86e39f6d55941ca9f23e341a6ecf4",
+        "source_url": "https://arxiv.org/html/2501.15067v1#abstract1",
+        "table_id": null,
+        "original_anchors": [
+          {
+            "original_id": "abstract1.1",
+            "phrase": "capturing both explicit and implicit connections within and across documents",
+            "original_text": "Research question answering requires accurate retrieval and contextual understanding of scientific literature. However, current Retrieval-Augmented Generation (RAG) methods often struggle to balance complex document relationships with precise information retrieval.\nIn this paper, we introduce Contextualized Graph Retrieval-Augmented Generation (CG-RAG), a novel framework that integrates sparse and dense retrieval signals within graph structures to enhance retrieval efficiency and subsequently improve generation quality for research question answering. First, we propose a contextual graph representation for citation graphs, effectively capturing both explicit and implicit connections within and across documents. Next, we introduce Lexical-Semantic Graph Retrieval (LeSeGR), which seamlessly integrates sparse and dense retrieval signals with graph encoding. It bridges the gap between lexical precision and semantic understanding in citation graph retrieval, demonstrating generalizability to existing graph retrieval and hybrid retrieval methods. Finally, we present a context-aware generation strategy that utilizes the retrieved graph-structured information to generate precise and contextually enriched responses using large language models (LLMs). Extensive experiments on research question answering benchmarks across multiple domains demonstrate that our CG-RAG framework significantly outperforms RAG methods combined with various state-of-the-art retrieval approaches, delivering superior retrieval accuracy and generation quality."
+          },
+          {
+            "original_id": "abstract1.1",
+            "phrase": "integrates sparse and dense retrieval signals with graph encoding",
+            "original_text": "Research question answering requires accurate retrieval and contextual understanding of scientific literature. However, current Retrieval-Augmented Generation (RAG) methods often struggle to balance complex document relationships with precise information retrieval.\nIn this paper, we introduce Contextualized Graph Retrieval-Augmented Generation (CG-RAG), a novel framework that integrates sparse and dense retrieval signals within graph structures to enhance retrieval efficiency and subsequently improve generation quality for research question answering. First, we propose a contextual graph representation for citation graphs, effectively capturing both explicit and implicit connections within and across documents. Next, we introduce Lexical-Semantic Graph Retrieval (LeSeGR), which seamlessly integrates sparse and dense retrieval signals with graph encoding. It bridges the gap between lexical precision and semantic understanding in citation graph retrieval, demonstrating generalizability to existing graph retrieval and hybrid retrieval methods. Finally, we present a context-aware generation strategy that utilizes the retrieved graph-structured information to generate precise and contextually enriched responses using large language models (LLMs). Extensive experiments on research question answering benchmarks across multiple domains demonstrate that our CG-RAG framework significantly outperforms RAG methods combined with various state-of-the-art retrieval approaches, delivering superior retrieval accuracy and generation quality."
+          }
+        ]
+      },
+      {
+        "point_id": "F04.2",
+        "expected": "SAM-RAG dynamically filters documents by query relevance and can use image captions.",
+        "anchors": [
+          [
+            "2410.11321v1_c0000"
+          ]
+        ],
+        "paper": "2410.11321v1",
+        "source_sha256": "331ba6fb3b346c331bfa0d82d045a6b552b9118de878a8dee4536f4c87e25831",
+        "source_url": "https://arxiv.org/html/2410.11321v1#abstract1",
+        "table_id": null,
+        "original_anchors": [
+          {
+            "original_id": "abstract1.1",
+            "phrase": "dynamically filters relevant documents based on the input query, including image captions when needed",
+            "original_text": "Traditional Retrieval-Augmented Generation (RAG) methods are limited by their reliance on a fixed number of retrieved documents, often resulting in incomplete or noisy information that undermines task performance. Although recent adaptive approaches alleviated these problems, their application in intricate and real-world multimodal tasks remains limited. To address these, we propose a new approach called Self-adaptive Multimodal Retrieval-Augmented Generation (SAM-RAG), tailored specifically for multimodal contexts. SAM-RAG not only dynamically filters relevant documents based on the input query, including image captions when needed, but also verifies the quality of both the retrieved documents and the output. Extensive experimental results show that SAM-RAG surpasses existing state-of-the-art methods in both retrieval accuracy and response generation. By further ablation experiments and effectiveness analysis, SAM-RAG maintains high recall quality while improving overall task performance in multimodal RAG task. Our codes are available at https://github.com/SAM-RAG/SAM_RAG ."
+          }
+        ]
+      }
+    ],
+    "human_verified": false
+  },
+  {
+    "id": "F05",
+    "category": "multi-paper",
+    "question": "Where did the data come from in the real-estate contract extraction study and in the FinBloom Financial Context Dataset, and how did each use that data to adapt a model?",
+    "required_points": [
+      {
+        "point_id": "F05.1",
+        "expected": "The contract study generated synthetic contracts from a real-world transaction dataset and used them for fine-tuning.",
+        "anchors": [
+          [
+            "2404.18043v3_c0000"
+          ]
+        ],
+        "paper": "2404.18043v3",
+        "source_sha256": "dbafb7ef62c677b01ab1374612f1e9f58d71da45aec52b7131d6640aecdb634e",
+        "source_url": "https://arxiv.org/html/2404.18043v3#abstract1",
+        "table_id": null,
+        "original_anchors": [
+          {
+            "original_id": "abstract1.1",
+            "phrase": "We generated synthetic contracts using the real-world transaction dataset",
+            "original_text": "Real estate sales contracts contain crucial information for property transactions, but manual data extraction can be time-consuming and error-prone. This paper explores the application of large language models, specifically transformer-based architectures, for automated information extraction from real estate contracts. We discuss challenges, techniques, and future directions in leveraging these models to improve efficiency and accuracy in real estate contract analysis. We generated synthetic contracts using the real-world transaction dataset, thereby fine-tuning the large-language model and achieving significant metrics improvements and qualitative improvements in information retrieval and reasoning tasks."
+          }
+        ]
+      },
+      {
+        "point_id": "F05.2",
+        "expected": "FinBloom used queries from brokerage technology channels and consultations with financial advisors and retail investors, expanding templates into about 50,000 queries.",
+        "anchors": [
+          [
+            "2502.18471v2_c0020"
+          ]
+        ],
+        "paper": "2502.18471v2",
+        "source_sha256": "a4ccf618ddeb9cd7a7eafdea3c5288d5ac4aaa5d811414f84accfc41501dfff7",
+        "source_url": "https://arxiv.org/html/2502.18471v2#S3",
+        "table_id": null,
+        "original_anchors": [
+          {
+            "original_id": "S3.p2.1",
+            "phrase": "collecting queries sent by retail customers over technology channels",
+            "original_text": "To fine-tune our model effectively, the dataset should be diverse in terms of sentence structure and comprehensive in terms of financial metrics and companies. Specifically, the dataset should include queries in a variety of forms, such as simple yes/no questions, comparative questions, and open-ended questions. This will help the model to learn to understand the different ways that users can present their queries. Additionally, the dataset should include a large number of financial metrics and companies, in the form of their many possible names and other ways they are referred to generally. This diversity in the dataset will enable our model to generalize well to a wide range of user queries, ensuring that it can accurately identify the required information. To construct this dataset, which consists of natural language user queries and their corresponding structured data requests, we followed a multi-method query sampling approach. The first method involved collecting queries sent by retail customers over technology channels to a brokerage and investment firm, like email, web-based forms, queries on app and Whatsapp. The second method involved interaction and consultation with 10 financial advisors on the kind of queries retail investors commonly have. The third method involved interviews with 20 retail investors about common questions that come to their mind before investing in a particular stock or forming a portfolio. Details of these interactions are provided in Appendix B . Based on the three methods of data collection; i.e. technology channel queries, advisor interviews and investor interviews; we created 5000 query templates, in which 4000 templates were extracted from technology channels, 500 were created with financial advisors, and another 500 were created with retail investors. This approach ensured the incorporation of a broad scope of financial queries, resulting in a diverse dataset. In order to extend the dataset to 50000 queries, the 5000 templates were scaled-up by randomly varying various aspects within each template. Table 2 shows 4 queries and the corresponding template that we created. Once the template is created, it is possible to map various kinds of queries to each template, for instance, Table 9 in Appendix B provides randomization of various aspects in the template leading to a larger set of queries in our dataset. The flow for the dataset generation process is provided through Figure 4 ."
+          },
+          {
+            "original_id": "S3.p2.1",
+            "phrase": "interaction and consultation with 10 financial advisors",
+            "original_text": "To fine-tune our model effectively, the dataset should be diverse in terms of sentence structure and comprehensive in terms of financial metrics and companies. Specifically, the dataset should include queries in a variety of forms, such as simple yes/no questions, comparative questions, and open-ended questions. This will help the model to learn to understand the different ways that users can present their queries. Additionally, the dataset should include a large number of financial metrics and companies, in the form of their many possible names and other ways they are referred to generally. This diversity in the dataset will enable our model to generalize well to a wide range of user queries, ensuring that it can accurately identify the required information. To construct this dataset, which consists of natural language user queries and their corresponding structured data requests, we followed a multi-method query sampling approach. The first method involved collecting queries sent by retail customers over technology channels to a brokerage and investment firm, like email, web-based forms, queries on app and Whatsapp. The second method involved interaction and consultation with 10 financial advisors on the kind of queries retail investors commonly have. The third method involved interviews with 20 retail investors about common questions that come to their mind before investing in a particular stock or forming a portfolio. Details of these interactions are provided in Appendix B . Based on the three methods of data collection; i.e. technology channel queries, advisor interviews and investor interviews; we created 5000 query templates, in which 4000 templates were extracted from technology channels, 500 were created with financial advisors, and another 500 were created with retail investors. This approach ensured the incorporation of a broad scope of financial queries, resulting in a diverse dataset. In order to extend the dataset to 50000 queries, the 5000 templates were scaled-up by randomly varying various aspects within each template. Table 2 shows 4 queries and the corresponding template that we created. Once the template is created, it is possible to map various kinds of queries to each template, for instance, Table 9 in Appendix B provides randomization of various aspects in the template leading to a larger set of queries in our dataset. The flow for the dataset generation process is provided through Figure 4 ."
+          },
+          {
+            "original_id": "S3.p2.1",
+            "phrase": "interviews with 20 retail investors",
+            "original_text": "To fine-tune our model effectively, the dataset should be diverse in terms of sentence structure and comprehensive in terms of financial metrics and companies. Specifically, the dataset should include queries in a variety of forms, such as simple yes/no questions, comparative questions, and open-ended questions. This will help the model to learn to understand the different ways that users can present their queries. Additionally, the dataset should include a large number of financial metrics and companies, in the form of their many possible names and other ways they are referred to generally. This diversity in the dataset will enable our model to generalize well to a wide range of user queries, ensuring that it can accurately identify the required information. To construct this dataset, which consists of natural language user queries and their corresponding structured data requests, we followed a multi-method query sampling approach. The first method involved collecting queries sent by retail customers over technology channels to a brokerage and investment firm, like email, web-based forms, queries on app and Whatsapp. The second method involved interaction and consultation with 10 financial advisors on the kind of queries retail investors commonly have. The third method involved interviews with 20 retail investors about common questions that come to their mind before investing in a particular stock or forming a portfolio. Details of these interactions are provided in Appendix B . Based on the three methods of data collection; i.e. technology channel queries, advisor interviews and investor interviews; we created 5000 query templates, in which 4000 templates were extracted from technology channels, 500 were created with financial advisors, and another 500 were created with retail investors. This approach ensured the incorporation of a broad scope of financial queries, resulting in a diverse dataset. In order to extend the dataset to 50000 queries, the 5000 templates were scaled-up by randomly varying various aspects within each template. Table 2 shows 4 queries and the corresponding template that we created. Once the template is created, it is possible to map various kinds of queries to each template, for instance, Table 9 in Appendix B provides randomization of various aspects in the template leading to a larger set of queries in our dataset. The flow for the dataset generation process is provided through Figure 4 ."
+          },
+          {
+            "original_id": "S3.p2.1",
+            "phrase": "5000 templates were scaled-up",
+            "original_text": "To fine-tune our model effectively, the dataset should be diverse in terms of sentence structure and comprehensive in terms of financial metrics and companies. Specifically, the dataset should include queries in a variety of forms, such as simple yes/no questions, comparative questions, and open-ended questions. This will help the model to learn to understand the different ways that users can present their queries. Additionally, the dataset should include a large number of financial metrics and companies, in the form of their many possible names and other ways they are referred to generally. This diversity in the dataset will enable our model to generalize well to a wide range of user queries, ensuring that it can accurately identify the required information. To construct this dataset, which consists of natural language user queries and their corresponding structured data requests, we followed a multi-method query sampling approach. The first method involved collecting queries sent by retail customers over technology channels to a brokerage and investment firm, like email, web-based forms, queries on app and Whatsapp. The second method involved interaction and consultation with 10 financial advisors on the kind of queries retail investors commonly have. The third method involved interviews with 20 retail investors about common questions that come to their mind before investing in a particular stock or forming a portfolio. Details of these interactions are provided in Appendix B . Based on the three methods of data collection; i.e. technology channel queries, advisor interviews and investor interviews; we created 5000 query templates, in which 4000 templates were extracted from technology channels, 500 were created with financial advisors, and another 500 were created with retail investors. This approach ensured the incorporation of a broad scope of financial queries, resulting in a diverse dataset. In order to extend the dataset to 50000 queries, the 5000 templates were scaled-up by randomly varying various aspects within each template. Table 2 shows 4 queries and the corresponding template that we created. Once the template is created, it is possible to map various kinds of queries to each template, for instance, Table 9 in Appendix B provides randomization of various aspects in the template leading to a larger set of queries in our dataset. The flow for the dataset generation process is provided through Figure 4 ."
+          }
+        ]
+      },
+      {
+        "point_id": "F05.3",
+        "expected": "The Financial Agent was built by fine-tuning FinBloom 7B on that custom dataset.",
+        "anchors": [
+          [
+            "2502.18471v2_c0032"
+          ]
+        ],
+        "paper": "2502.18471v2",
+        "source_sha256": "a4ccf618ddeb9cd7a7eafdea3c5288d5ac4aaa5d811414f84accfc41501dfff7",
+        "source_url": "https://arxiv.org/html/2502.18471v2#S5",
+        "table_id": null,
+        "original_anchors": [
+          {
+            "original_id": "S5.p1.1",
+            "phrase": "fine-tuning the FinBloom 7B model on the the custom dataset",
+            "original_text": "This section describes the Financial Agent’s structure and function, explaining how it works with the Data Module to provide relevant context for an LLM to answer user queries. The Financial Agent was developed by fine-tuning the FinBloom 7B model on the the custom dataset detailed in Section 3 . The entire development process for the Financial Agent has been represented through blocks in Figure 5 . For comparison purposes, we also fine-tuned the Bloom 7B model directly on Financial Context Dataset and compared it’s performance with FinBloom 7B model fine-tuned on the same dataset."
+          }
+        ]
+      }
+    ],
+    "human_verified": false
+  },
+  {
+    "id": "F06",
+    "category": "methodology",
+    "question": "In the conversational-grounding study, how can a listener's response distinguish explicit grounding, implicit grounding, and a clarification request?",
+    "required_points": [
+      {
+        "point_id": "F06.1",
+        "expected": "Explicit: verbal or nonverbal acceptance.",
+        "anchors": [
+          [
+            "2406.01749v1_c0006"
+          ]
+        ],
+        "paper": "2406.01749v1",
+        "source_sha256": "cdc1738be2f85cf196169fe5092fdbb3dee4f77b47bf6b12e881a703e30ff061",
+        "source_url": "https://arxiv.org/html/2406.01749v1#S2",
+        "table_id": null,
+        "original_anchors": [
+          {
+            "original_id": "S2.p2.1",
+            "phrase": "asserting acceptance through verbal confirmation",
+            "original_text": "The basis for our grounding model is in Clark and Schaefer’s (1989) cognitive model of grounding, which we adapt for the practical, interactive application to predict grounding and construct shared knowledge given the listener feedback.\nWe use LLMs and a suitable prompt design with examples to learn the grounding patterns and representation of the grounded knowledge elements. Clark and Schaefer (1989) differentiate between three grounding types: explicit grounding, implicit grounding, and clarification. Explicit grounding corresponds to a partner asserting acceptance through verbal confirmation (e.g., “Okay!”) or non-verbal expressions like smiling or nodding. Implicit grounding involves a partner moving forward with the dialogue by contributing a new idea or asking a question regarding a new topic, ensuring that the conversation partner shows no signs of confusion. Lastly, clarification occurs when a partner seeks additional information to enhance the mutual understanding of an already introduced concept before the conversation can proceed."
+          }
+        ]
+      },
+      {
+        "point_id": "F06.2",
+        "expected": "Implicit: moves on with an idea or new topic without showing confusion.",
+        "anchors": [
+          [
+            "2406.01749v1_c0006"
+          ]
+        ],
+        "paper": "2406.01749v1",
+        "source_sha256": "cdc1738be2f85cf196169fe5092fdbb3dee4f77b47bf6b12e881a703e30ff061",
+        "source_url": "https://arxiv.org/html/2406.01749v1#S2",
+        "table_id": null,
+        "original_anchors": [
+          {
+            "original_id": "S2.p2.1",
+            "phrase": "moving forward with the dialogue by contributing a new idea",
+            "original_text": "The basis for our grounding model is in Clark and Schaefer’s (1989) cognitive model of grounding, which we adapt for the practical, interactive application to predict grounding and construct shared knowledge given the listener feedback.\nWe use LLMs and a suitable prompt design with examples to learn the grounding patterns and representation of the grounded knowledge elements. Clark and Schaefer (1989) differentiate between three grounding types: explicit grounding, implicit grounding, and clarification. Explicit grounding corresponds to a partner asserting acceptance through verbal confirmation (e.g., “Okay!”) or non-verbal expressions like smiling or nodding. Implicit grounding involves a partner moving forward with the dialogue by contributing a new idea or asking a question regarding a new topic, ensuring that the conversation partner shows no signs of confusion. Lastly, clarification occurs when a partner seeks additional information to enhance the mutual understanding of an already introduced concept before the conversation can proceed."
+          }
+        ]
+      },
+      {
+        "point_id": "F06.3",
+        "expected": "Clarification: seeks more information about an already introduced concept.",
+        "anchors": [
+          [
+            "2406.01749v1_c0006"
+          ]
+        ],
+        "paper": "2406.01749v1",
+        "source_sha256": "cdc1738be2f85cf196169fe5092fdbb3dee4f77b47bf6b12e881a703e30ff061",
+        "source_url": "https://arxiv.org/html/2406.01749v1#S2",
+        "table_id": null,
+        "original_anchors": [
+          {
+            "original_id": "S2.p2.1",
+            "phrase": "seeks additional information to enhance the mutual understanding",
+            "original_text": "The basis for our grounding model is in Clark and Schaefer’s (1989) cognitive model of grounding, which we adapt for the practical, interactive application to predict grounding and construct shared knowledge given the listener feedback.\nWe use LLMs and a suitable prompt design with examples to learn the grounding patterns and representation of the grounded knowledge elements. Clark and Schaefer (1989) differentiate between three grounding types: explicit grounding, implicit grounding, and clarification. Explicit grounding corresponds to a partner asserting acceptance through verbal confirmation (e.g., “Okay!”) or non-verbal expressions like smiling or nodding. Implicit grounding involves a partner moving forward with the dialogue by contributing a new idea or asking a question regarding a new topic, ensuring that the conversation partner shows no signs of confusion. Lastly, clarification occurs when a partner seeks additional information to enhance the mutual understanding of an already introduced concept before the conversation can proceed."
+          }
+        ]
+      }
+    ],
+    "human_verified": false
+  },
+  {
+    "id": "F07",
+    "category": "methodology",
+    "question": "How did the systematic review of responsible-AI governance tools build its search vocabulary, and why did it reject studies that use AI for financial auditing?",
+    "required_points": [
+      {
+        "point_id": "F07.1",
+        "expected": "Seed AI/ML/framework/governance terms and refine with synonyms or related terms from initial Google Scholar and Scopus results.",
+        "anchors": [
+          [
+            "2502.13294v2_c0014"
+          ]
+        ],
+        "paper": "2502.13294v2",
+        "source_sha256": "5cad1b873218764ec1d60b74666516b6eeecbd18314e418f745ee016b4780f77",
+        "source_url": "https://arxiv.org/html/2502.13294v2#S3.SS1",
+        "table_id": null,
+        "original_anchors": [
+          {
+            "original_id": "S3.SS1.p1.1",
+            "phrase": "Google Scholar and Scopus",
+            "original_text": "Terminology Selection and Refinement. The literature selection began with a focused list of key terms chosen to cover a breadth of AI governance framework descriptions. These included common words and phrases such as AI / artificial intelligence, ML / machine learning, framework, responsible, governance, stakeholder. Using these terms, we conducted an initial search on Google Scholar and Scopus, yielding a limited but targeted set of papers. From this initial collection, we identified synonyms and related terms to expand the search.\nAdditional terms included transparency, assurance, auditing, risk management, regulation, ethics / ethical. This expanded list was used to generate combinations of terms to comprehensively capture the relevant literature.\nExamples of combinations included “AI framework”, “responsible AI”, “AI governance”, “AI risk management”, “responsible AI framework”, “responsible AI stakeholder”, “responsible AI auditing”, “AI assurance”, “responsible AI governance”, “ethical AI framework”."
+          },
+          {
+            "original_id": "S3.SS1.p1.1",
+            "phrase": "identified synonyms and related terms",
+            "original_text": "Terminology Selection and Refinement. The literature selection began with a focused list of key terms chosen to cover a breadth of AI governance framework descriptions. These included common words and phrases such as AI / artificial intelligence, ML / machine learning, framework, responsible, governance, stakeholder. Using these terms, we conducted an initial search on Google Scholar and Scopus, yielding a limited but targeted set of papers. From this initial collection, we identified synonyms and related terms to expand the search.\nAdditional terms included transparency, assurance, auditing, risk management, regulation, ethics / ethical. This expanded list was used to generate combinations of terms to comprehensively capture the relevant literature.\nExamples of combinations included “AI framework”, “responsible AI”, “AI governance”, “AI risk management”, “responsible AI framework”, “responsible AI stakeholder”, “responsible AI auditing”, “AI assurance”, “responsible AI governance”, “ethical AI framework”."
+          }
+        ]
+      },
+      {
+        "point_id": "F07.2",
+        "expected": "Using AI for financial auditing is an application of AI, outside the review's scope of auditing or governing AI itself.",
+        "anchors": [
+          [
+            "2502.13294v2_c0015"
+          ]
+        ],
+        "paper": "2502.13294v2",
+        "source_sha256": "5cad1b873218764ec1d60b74666516b6eeecbd18314e418f745ee016b4780f77",
+        "source_url": "https://arxiv.org/html/2502.13294v2#S3.SS1",
+        "table_id": null,
+        "original_anchors": [
+          {
+            "original_id": "S3.SS1.p2.1",
+            "phrase": "using AI for financial auditing rather than processes or tools for auditing AI",
+            "original_text": "These term combinations were applied two times, first using AI/artificial intelligence, then replacing the term with ML/machine learning.\nWe then collected the top 100 papers from Scopus and Google Scholar for each combination. The process resulted in overlapping results, which were deduplicated by removing articles that matched either DOI number or title, resulting in 1313 unique papers.\nFive of these papers ( Ayling and Chapman, 2022 ; Ortega-Bolaños et al., 2024 ; Prem, 2023 ; Ojewale et al., 2024 ; Morley et al., 2019 ) were also reviews of existing AI frameworks and tools; we worked through each of the frameworks and tools contained in these papers and added them to the initial list as well.\nThese surveys also identified open source, industry, and other tools not published in academic domains.\nUpon reading the literature search methodology of these papers, we determined that the methodology in these papers was sound (for example, many of the surveys included a keyword search and selection criteria similar to ours in non-academic domains, such as English Google searches).\nThus, we decided to rely on these sources to identify relevant work in non-academic settings.\nIt is worth noting that this broad selection approach resulted in finding several papers that use reversed versions of the terms in specific technologies or use cases, for example using AI for financial auditing rather than processes or tools for auditing AI. These application-specific papers did not apply to our current research and were excluded from the final selection, reducing the number of applicable papers to 416."
+          }
+        ]
+      }
+    ],
+    "human_verified": false
+  },
+  {
+    "id": "F08",
+    "category": "limitations",
+    "question": "What makes it difficult for LLM agents to represent both variation in individual choices and differences between population groups in transportation simulations?",
+    "required_points": [
+      {
+        "point_id": "F08.1",
+        "expected": "Human choices can differ in identical circumstances; LLM behavior can be too uniform or repetitive.",
+        "anchors": [
+          [
+            "2412.06681v2_c0054"
+          ]
+        ],
+        "paper": "2412.06681v2",
+        "source_sha256": "3ff5439a3d87777a379df971f84432e0a4da33b002079085b942cad0faebb02e",
+        "source_url": "https://arxiv.org/html/2412.06681v2#S6.SS1",
+        "table_id": null,
+        "original_anchors": [
+          {
+            "original_id": "S6.I1.i1.p1.1",
+            "phrase": "individuals may make different choices even when faced with the same context",
+            "original_text": "Modeling the randomness in human behavior : Human travel behavior exhibits inherent randomness, as individuals may make different choices even when faced with the same context. Traditional modeling frameworks address this variability through stochastic models grounded in random utility theory, which help capture the stochasticity of humans in decision-making. However, LLMs may struggle to replicate this randomness, as they are designed to predict the most probable next word or sequence based on training data, often resulting in uniform and repetitive responses. This limitation has been observed in social science ( Dominguez-Olmedo et al.,, 2024 ; Park et al., 2024b, ) and economics research ( Chen et al., 2023b, ; Korinek,, 2023 ) . While LLM hyperparameters, such as the “temperature” setting, can modulate randomness in text generation, studies have shown that temperature adjustments alone are insufficient to achieve the level of behavioral variability observed in human travelers ( Wang et al., 2024b, ; Liu et al., 2024c, ) . Further research is needed to address this misalignment and develop strategies to better capture randomness in LLM-agent-based travel behavior simulation."
+          },
+          {
+            "original_id": "S6.I1.i1.p1.1",
+            "phrase": "often resulting in uniform and repetitive",
+            "original_text": "Modeling the randomness in human behavior : Human travel behavior exhibits inherent randomness, as individuals may make different choices even when faced with the same context. Traditional modeling frameworks address this variability through stochastic models grounded in random utility theory, which help capture the stochasticity of humans in decision-making. However, LLMs may struggle to replicate this randomness, as they are designed to predict the most probable next word or sequence based on training data, often resulting in uniform and repetitive responses. This limitation has been observed in social science ( Dominguez-Olmedo et al.,, 2024 ; Park et al., 2024b, ) and economics research ( Chen et al., 2023b, ; Korinek,, 2023 ) . While LLM hyperparameters, such as the “temperature” setting, can modulate randomness in text generation, studies have shown that temperature adjustments alone are insufficient to achieve the level of behavioral variability observed in human travelers ( Wang et al., 2024b, ; Liu et al., 2024c, ) . Further research is needed to address this misalignment and develop strategies to better capture randomness in LLM-agent-based travel behavior simulation."
+          }
+        ]
+      },
+      {
+        "point_id": "F08.2",
+        "expected": "Training-data bias can systematically misrepresent some groups; evaluation or mitigation is needed.",
+        "anchors": [
+          [
+            "2412.06681v2_c0055"
+          ]
+        ],
+        "paper": "2412.06681v2",
+        "source_sha256": "3ff5439a3d87777a379df971f84432e0a4da33b002079085b942cad0faebb02e",
+        "source_url": "https://arxiv.org/html/2412.06681v2#S6.SS1",
+        "table_id": null,
+        "original_anchors": [
+          {
+            "original_id": "S6.I1.i2.p1.1",
+            "phrase": "misrepresentation of certain population groups",
+            "original_text": "Understanding and reducing inherent bias in LLMs : Despite being trained on extensive and diverse datasets, LLMs are not immune to biases embedded in their training data. These biases may lead to systematic distortions in the representation of human travel behavior, particularly in the misrepresentation of certain population groups. This issue has been documented in existing research as well ( Wang et al.,, 2025 ) , highlighting the need for a comprehensive evaluation of biases in LLM-agent-generated travel behavior. Future research need to work on identifying and quantifying biases in LLM-based travel behavior simulations and developing robust mitigation strategies to ensure fair and accurate representation across different travelers."
+          }
+        ]
+      }
+    ],
+    "human_verified": false
+  },
+  {
+    "id": "F09",
+    "category": "limitations",
+    "question": "Did the robot-versus-chatbot study find that an empathetic tone or physical embodiment increased willingness to help? What did it actually measure as willingness to help?",
+    "required_points": [
+      {
+        "point_id": "F09.1",
+        "expected": "Neither embodiment nor tone had a statistically significant effect on willingness to volunteer in this study; this is a null result, not proof of no effect.",
+        "anchors": [
+          [
+            "2503.20518v1_c0000"
+          ]
+        ],
+        "paper": "2503.20518v1",
+        "source_sha256": "a38dc133e46564dd853ef5536243568f25cdafda43bc1cfe808c02d2c3731d45",
+        "source_url": "https://arxiv.org/html/2503.20518v1#abstract1",
+        "table_id": null,
+        "original_anchors": [
+          {
+            "original_id": "abstract1.1",
+            "phrase": "neither robotic embodiment nor empathetic tone significantly influenced",
+            "original_text": "This study investigates the elicitation of empathy toward a third party through interaction with social agents. Participants engaged with either a physical robot or a voice-enabled chatbot, both driven by a large language model (LLM) programmed to exhibit either an empathetic tone or remain neutral. The interaction is focused on a fictional character, Katie Banks, who is in a challenging situation and in need of financial donations. The willingness to help Katie, measured by the number of hours participants were willing to volunteer, along with their perceptions of the agent, were assessed for 60 participants. Results indicate that neither robotic embodiment nor empathetic tone significantly influenced participants’ willingness to volunteer. While the LLM effectively simulated human empathy, fostering genuine empathetic responses in participants proved challenging."
+          }
+        ]
+      },
+      {
+        "point_id": "F09.2",
+        "expected": "Willingness to help was measured by the number of hours participants said they would volunteer, rather than observed hours.",
+        "anchors": [
+          [
+            "2503.20518v1_c0000"
+          ]
+        ],
+        "paper": "2503.20518v1",
+        "source_sha256": "a38dc133e46564dd853ef5536243568f25cdafda43bc1cfe808c02d2c3731d45",
+        "source_url": "https://arxiv.org/html/2503.20518v1#abstract1",
+        "table_id": null,
+        "original_anchors": [
+          {
+            "original_id": "abstract1.1",
+            "phrase": "measured by the number of hours participants were willing to volunteer",
+            "original_text": "This study investigates the elicitation of empathy toward a third party through interaction with social agents. Participants engaged with either a physical robot or a voice-enabled chatbot, both driven by a large language model (LLM) programmed to exhibit either an empathetic tone or remain neutral. The interaction is focused on a fictional character, Katie Banks, who is in a challenging situation and in need of financial donations. The willingness to help Katie, measured by the number of hours participants were willing to volunteer, along with their perceptions of the agent, were assessed for 60 participants. Results indicate that neither robotic embodiment nor empathetic tone significantly influenced participants’ willingness to volunteer. While the LLM effectively simulated human empathy, fostering genuine empathetic responses in participants proved challenging."
+          }
+        ]
+      }
+    ],
+    "human_verified": false
+  },
+  {
+    "id": "F10",
+    "category": "limitations",
+    "question": "In SAM-RAG's limitations, what distinct risks do the authors identify for fairness and privacy, and what could give rise to each?",
+    "required_points": [
+      {
+        "point_id": "F10.1",
+        "expected": "Biased or unrepresentative training data may produce biased or unfair outputs.",
+        "anchors": [
+          [
+            "2410.11321v1_c0023"
+          ]
+        ],
+        "paper": "2410.11321v1",
+        "source_sha256": "331ba6fb3b346c331bfa0d82d045a6b552b9118de878a8dee4536f4c87e25831",
+        "source_url": "https://arxiv.org/html/2410.11321v1#S5",
+        "table_id": null,
+        "original_anchors": [
+          {
+            "original_id": "S5.p2.1",
+            "phrase": "historical biases or unrepresentative samples",
+            "original_text": "One notable limitation is the potential for biased outputs, which can arise from the training data used for the underlying models. If the data contains historical biases or unrepresentative samples, the SAM-RAG system may inadvertently generate responses that unfair narratives, impacting its effectiveness and fairness."
+          }
+        ]
+      },
+      {
+        "point_id": "F10.2",
+        "expected": "Sensitive or personally identifiable information might be incorporated into responses, creating privacy or disclosure risk.",
+        "anchors": [
+          [
+            "2410.11321v1_c0023"
+          ]
+        ],
+        "paper": "2410.11321v1",
+        "source_sha256": "331ba6fb3b346c331bfa0d82d045a6b552b9118de878a8dee4536f4c87e25831",
+        "source_url": "https://arxiv.org/html/2410.11321v1#S5",
+        "table_id": null,
+        "original_anchors": [
+          {
+            "original_id": "S5.p3.1",
+            "phrase": "personally identifiable information could be inadvertently incorporated into the responses",
+            "original_text": "Additionally, the reliance on large language models poses significant data privacy challenges. Given that these models are trained on extensive datasets, there is a risk that sensitive or personally identifiable information could be inadvertently incorporated into the responses. If not properly managed, this could lead to privacy breaches or the dissemination of confidential information, raising ethical concerns about data handling and user trust."
+          }
+        ]
+      }
+    ],
+    "human_verified": false
+  }
+]

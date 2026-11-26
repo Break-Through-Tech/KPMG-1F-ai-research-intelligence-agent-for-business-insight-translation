@@ -1,0 +1,46 @@
+{
+ "points": {
+  "S3": 37.0,
+  "S2": 37.0
+ },
+ "percent": {
+  "S3": 74.0,
+  "S2": 74.0
+ },
+ "fully_answered_reported_only": {
+  "S3": 3,
+  "S2": 1
+ },
+ "mechanics": {
+  "S3": {
+   "input_tokens": 489561,
+   "calls": 21,
+   "median_total_s": 157.96499999999997,
+   "p90_total_s": 5237.596,
+   "complete": 10,
+   "first_pass": 9
+  },
+  "S2": {
+   "input_tokens": 423024,
+   "calls": 20,
+   "median_total_s": 92.91550000000001,
+   "p90_total_s": 140.58,
+   "complete": 10,
+   "first_pass": 10
+  }
+ },
+ "safety": {
+  "S3": false,
+  "S2": true
+ },
+ "S3_criteria": {
+  "completeness >= 80%": false,
+  "safety": false,
+  "S3 >= S2 + 2 points": false,
+  "execution 10/10 and >= 9/10 first pass": true,
+  "median <= 120 s": false,
+  "p90 <= 180 s": false,
+  "input tokens <= 1.15 x S2": false
+ },
+ "S3_qualifies": false
+}

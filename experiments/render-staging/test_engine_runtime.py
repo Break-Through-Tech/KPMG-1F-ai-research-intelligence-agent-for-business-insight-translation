@@ -39,3 +39,14 @@ class EngineRuntimeTests(unittest.TestCase):
             first, second = (executor.submit(request) for _ in range(2))
             self.assertNotEqual(first.result(), second.result())
         self.assertIsNone(SESSION.get())
+
+
+class RetrievalSettingTests(unittest.TestCase):
+    def test_s2_default_and_r2_opt_in(self):
+        from engine_runtime import retrieval_setting
+        self.assertEqual(retrieval_setting({}), 's2')
+        self.assertEqual(retrieval_setting({'RESEARCH_ENGINE': 's2', 'S2_RETRIEVAL': 'r2'}), 'r2')
+        for invalid in ({'S2_RETRIEVAL': 'r2'}, {'S2_RETRIEVAL': 'R2'},
+                        {'RESEARCH_ENGINE': 's2', 'S2_PAPER_BALANCE': '1', 'S2_RETRIEVAL': 'r2'}):
+            with self.assertRaises(ValueError):
+                retrieval_setting(invalid)

@@ -18,7 +18,7 @@ from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path[:0] = [str(ROOT), str(ROOT / 'experiments/table-endpoint')]
-from engine_runtime import SESSION, build_s2, engine_settings, session_token
+from engine_runtime import SESSION, build_s2, engine_settings, retrieval_setting, session_token
 from evidence_tables import TableIndex
 from recorded_backend import make_handler
 from src.experimental.b2 import open_b2
@@ -148,8 +148,9 @@ def build_handler(snapshot, state, origin, password, generate, metadata, *, synt
         raise ValueError('Synthetic snapshots require explicit offline fixture mode.')
     bundle = snapshot / 'artifacts/bundle'
     engine, paper_balance = engine_settings(os.environ)
+    retrieval_strategy = retrieval_setting(os.environ)
     smoke = os.environ.get('KPMG_GEMINI_SMOKE', '0')
-    if smoke not in ('0', '1') or (smoke == '1' and (engine != 's2' or paper_balance)):
+    if smoke not in ('0', '1') or (smoke == '1' and (engine != 's2' or paper_balance or retrieval_strategy != 's2')):
         raise ValueError('Gemini smoke mode requires Standard S2.')
     ledger = state / ('gemini-smoke-attempts.sqlite3' if smoke == '1' else 'provider-usage.sqlite3')
     guarded = quota_generate(generate, Budget(ledger, smoke=smoke == '1'))
@@ -157,7 +158,8 @@ def build_handler(snapshot, state, origin, password, generate, metadata, *, synt
     reranker = snapshot / 'artifacts/reranker'
     if engine == 's2':
         research, index = build_s2(bundle, encoder, reranker, guarded, metadata,
-                                   state / 's2-checkpoints', paper_balance=paper_balance)
+                                   state / 's2-checkpoints', paper_balance=paper_balance,
+                                   retrieval_strategy=retrieval_strategy)
     else:
         retrieval = open_b2(bundle, encoder_path=encoder, reranker_path=reranker)
         index = retrieval[1]()

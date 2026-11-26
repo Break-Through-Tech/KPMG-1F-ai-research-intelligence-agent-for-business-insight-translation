@@ -6,6 +6,12 @@ selection uses B1 only when the question names >= 2 papers present in the top-12
 The variant is part of the checkpoint fingerprint ('standard' vs 'standard+paper-balance'), so the two never share
 cached stages.
 
+retrieval_strategy='r2' (opt-in) constructs optimized S2-R2 (s2_r2_opt.S2R2OptResearch, validated as 1d0e0ae and
+optimized in a462275): B1 when >= 2 named papers resolve, otherwise component-rank fusion, otherwise S2's window.
+Synthesis, review, gates, budget and the 2-call structure are frozen S2. Its variant 'standard+r2-opt' keeps its
+checkpoints, provenance and generation_method separate from S2 and B1. R2 already contains the B1 route, so it cannot
+be combined with paper_balance=True.
+
     research = create_s2_research(retrieval=open_ranked(...), generate=..., metadata=..., checkpoint_root=Path(...),
                                   paper_balance=False)
 """
@@ -19,14 +25,24 @@ ENGINE_VERSION = v2adapter.ENGINE_VERSION
 
 
 def create_s2_research(*, retrieval, generate, metadata, checkpoint_root, paper_balance=False, rows=None, tables=None,
-                       v2=None, gate=None):
+                       v2=None, gate=None, retrieval_strategy='s2'):
     from src.indexed_research import IndexedResearch, code_revision, fingerprint
     _retrieve, identity, ranked, count, path, provenance = retrieval
     rows = rows if rows is not None else {r['chunk_id']: r for r in env.bundle_rows()}
     tables = tables or ev.TableIndex(rows.values())
-    variant = 'standard+paper-balance' if paper_balance else 'standard'
-    engine = S2Research(ranked=ranked, count=count, tables=tables, generate=generate, v2=v2 or env.load_v2(),
-                        gate=gate or env.load_gate(), paper_balance=paper_balance, rows=rows)
+    if retrieval_strategy not in ('s2', 'r2'):
+        raise ValueError("retrieval_strategy must be 's2' or 'r2'")
+    if retrieval_strategy == 'r2' and paper_balance:
+        raise ValueError('S2-R2 already includes the B1 route; leave paper_balance off.')
+    common = dict(ranked=ranked, count=count, tables=tables, generate=generate, v2=v2 or env.load_v2(),
+                  gate=gate or env.load_gate(), rows=rows)
+    if retrieval_strategy == 'r2':
+        from s2_r2_opt import S2R2OptResearch
+        variant = 'standard+r2-opt'
+        engine = S2R2OptResearch(retrieval_strategy='r2', **common)
+    else:
+        variant = 'standard+paper-balance' if paper_balance else 'standard'
+        engine = S2Research(paper_balance=paper_balance, **common)
     checkpoints = v2adapter.RequestCheckpoints(checkpoint_root)
     state = v2adapter._request
 
@@ -74,7 +90,9 @@ def create_s2_research(*, retrieval, generate, metadata, checkpoint_root, paper_
                                  command=[f'{ENGINE_VERSION}-{variant}'])
     research.provenance['retrieval'] = {**provenance, 'engine': f'{ENGINE_VERSION}-{variant}',
                                         'evidence': 'protected 6k skip-fit + bounded conclusion coverage'
-                                                    + (' + B1 paper balance (>= 2 named papers)' if paper_balance else '')}
+                                                    + (' + B1 paper balance (>= 2 named papers)' if paper_balance else '')
+                                                    + (' + S2-R2 routing (B1 for >= 2 named papers, else component-rank'
+                                                       ' fusion)' if retrieval_strategy == 'r2' else '')}
     research.provenance['summary_adapter'] = f'experiments/retrieval-v3/s2_adapter.py ({variant})'
     research.context_id = fingerprint(research.provenance)
     return research

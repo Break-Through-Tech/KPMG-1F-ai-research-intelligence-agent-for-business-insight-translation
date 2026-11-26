@@ -120,6 +120,7 @@ def main():
         raise SystemExit('Set KPMG_DEPLOY_MODE to fixture or real.')
     os.environ.setdefault('RESEARCH_ENGINE', 'baseline')
     os.environ.setdefault('S2_PAPER_BALANCE', '0')
+    os.environ.setdefault('S2_RETRIEVAL', 's2')
     for name, value in (('HF_HUB_OFFLINE', '1'), ('TRANSFORMERS_OFFLINE', '1'),
                         ('HF_HUB_DISABLE_PROGRESS_BARS', '1'), ('TOKENIZERS_PARALLELISM', 'false')):
         os.environ[name] = value

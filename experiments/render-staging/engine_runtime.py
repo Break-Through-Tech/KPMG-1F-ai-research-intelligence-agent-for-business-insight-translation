@@ -12,7 +12,7 @@ import sys
 SESSION = ContextVar('s2_preview_session', default=None)
 COOKIE = 'kpmg_s2_session'
 RUNTIME_FILES = {
-    'retrieval-v3': 's2_adapter s2_paper_balance s3_env paper_balance components',
+    'retrieval-v3': 's2_adapter s2_paper_balance s3_env paper_balance components s3_evidence s2_r2 s2_r2_opt',
     'consolidated-v2': 'adapter env engine evidence publication assist_route review synthesis accounting',
     'verification-repair': 'verification_v2 numeric_checks_v2 interpretation_gate',
     'evidence-budget': 'evidence_budget',
@@ -28,6 +28,18 @@ def engine_settings(env):
     if engine == 'baseline' and balance == '1':
         raise ValueError('Paper balancing requires the S2 engine.')
     return engine, balance == '1'
+
+
+def retrieval_setting(env):
+    """S2_RETRIEVAL=s2 (default, frozen S2) or r2 (optimized S2-R2, explicit opt-in)."""
+    retrieval = env.get('S2_RETRIEVAL', 's2')
+    if retrieval not in ('s2', 'r2'):
+        raise ValueError('Invalid S2 retrieval configuration.')
+    if retrieval == 'r2':
+        engine, paper_balance = engine_settings(env)
+        if engine != 's2' or paper_balance:
+            raise ValueError('S2-R2 requires RESEARCH_ENGINE=s2 and S2_PAPER_BALANCE=0.')
+    return retrieval
 
 
 def session_token(header, key):
@@ -48,7 +60,7 @@ def session_token(header, key):
 
 
 def build_s2(bundle, encoder_path, reranker_path, generate, metadata, checkpoint_root,
-             *, paper_balance=False):
+             *, paper_balance=False, retrieval_strategy='s2'):
     root = Path(__file__).resolve().parents[1]
     sys.path.insert(0, str(root / 'retrieval-v3'))
     from s2_adapter import create_s2_research
@@ -62,7 +74,7 @@ def build_s2(bundle, encoder_path, reranker_path, generate, metadata, checkpoint
     checkpoint_root.mkdir(mode=0o700, parents=True, exist_ok=True)
     research = create_s2_research(retrieval=retrieval, generate=generate, metadata=metadata,
                                   checkpoint_root=checkpoint_root, rows=rows,
-                                  paper_balance=paper_balance)
+                                  paper_balance=paper_balance, retrieval_strategy=retrieval_strategy)
     research.regulatory_assessor = assess_regulatory
     execute = research.execute
 

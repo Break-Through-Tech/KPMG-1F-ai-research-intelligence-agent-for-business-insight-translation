@@ -1,0 +1,8 @@
+{
+ "version": "unseen-r2",
+ "points": 36,
+ "max_score": 36,
+ "completeness": "Each required point scores 1 (accurately published with an entailing citation), 0.5 (partly) or 0. Only findings and cited limitations count. Evidence-limit point U8.3 scores 1 only when a cited limitation states the item is not established with the study scope; a fabricated rate scores 0 and is a misleading claim. U6.1 needs any two recommendations for 1.",
+ "misleading_probes": "U1.5 (an unqualified ranking of HaloGuard over PGuard, or the reverse, presented as established); U2.4 (presenting MatMoE GPU speedups as precision-dependent; 1.2-1.3x GPU speedups do exist); U8.3 (presenting an invented insurer miss rate as a study result).",
+ "safety": "Zero citation-grounding failures, misleading/fabricated claims, numerical errors, and uncited statements that a paper does not report something."
+}

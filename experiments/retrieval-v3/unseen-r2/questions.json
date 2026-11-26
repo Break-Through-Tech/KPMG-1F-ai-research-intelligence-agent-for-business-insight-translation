@@ -1,0 +1,42 @@
+[
+ {
+  "id": "U1",
+  "type": "named-cross",
+  "question": "A multinational bank needs chatbot safety screening in many languages. How did HaloGuard 2.0 and PGuard perform on multilingual safety benchmarks, where are their weaknesses by language, and what drove HaloGuard's multilingual improvement?"
+ },
+ {
+  "id": "U2",
+  "type": "named-cross",
+  "question": "A device maker plans to run language models on phones and small boards. What do MedPsy and MatMoE report about the limits of very low-bit precision, response-length or token efficiency, speed on CPUs and GPUs, and memory offloading?"
+ },
+ {
+  "id": "U3",
+  "type": "named-cross",
+  "question": "A cardiology software vendor is weighing RAG-TRACE and ECGJev. How did the two language models in RAG-TRACE differ in their failures and in how verification treated them, what happened to agreement with cardiologist statements, and what do ECGJev's ablations and small-cohort results show?"
+ },
+ {
+  "id": "U4",
+  "type": "unnamed-multipart",
+  "question": "A localization vendor is studying a recent Chinese-English benchmark for translating social-media comments with their conversation context. How was the benchmark built, how was its automatic judge trained and validated, and how many model configurations were evaluated?"
+ },
+ {
+  "id": "U5",
+  "type": "unnamed-multipart",
+  "question": "An AI platform team read about compiling agent instructions into small activation shifts on a frozen model instead of sending long prompts. Do the compiled behaviours transfer to new tasks, how much do they help harness search, do they still help when the harness is removed, how much of the gain comes from prompt-phase injection, and do instructions that reduce task performance compile too?"
+ },
+ {
+  "id": "U6",
+  "type": "unnamed-multipart",
+  "question": "A privacy engineering team is reviewing a recent audit of differentially private fine-tuning on quantized backbones. What practical recommendations does it make, how often did the cross-record coupling actually occur on natural text, how efficient is the proposed record-owned dispatch, and how broad is the natural-data evidence?"
+ },
+ {
+  "id": "U7",
+  "type": "simple-control",
+  "question": "What clinical EEG data did the ERIA study use for its internal evaluation, how was it split, and who authored the matched reports under which guidelines?"
+ },
+ {
+  "id": "U8",
+  "type": "evidence-limit-control",
+  "question": "Does HaloGuard 2.0 handle chain-of-thought reasoning traces and refusal labelling, and what harmful-response miss rate should an insurer expect on its own claims chatbot?"
+ }
+]

@@ -7,7 +7,7 @@ import unittest
 from unittest.mock import Mock
 
 from jsonschema import ValidationError
-from server import Budget, QuotaExhausted, quota_generate, wire_schema
+from server import REPLY_ALLOWANCE, Budget, QuotaExhausted, quota_generate, reservation, wire_schema
 from src.research_chat import synthesis_schema
 
 
@@ -50,6 +50,26 @@ class DeploymentUnitTests(unittest.TestCase):
             self.now += 61
         with self.assertRaises(QuotaExhausted):
             budget.reserve(1)
+
+    def test_s2_drafting_and_review_fit_one_minute_budget(self):
+        # Measured payloads of the hosted request that failed at review (26 Nov 18:58): drafting 35,640 B, review
+        # 41,325 B. The former 2-tokens-per-byte estimate reserved 162,122 for the pair, over the 160k minute budget.
+        budget = Budget(self.path, clock=self.clock)
+        budget.reserve(reservation(35_640))
+        budget.reserve(reservation(41_325))
+        budget.reserve(reservation(35_640))
+        budget.reserve(reservation(41_325))
+        self.assertEqual(4, self.attempts())
+
+    def test_reservation_stays_conservative(self):
+        # Measured 7,651 input tokens for a 28,338-byte payload; the reservation must still exceed it with margin.
+        self.assertGreater(reservation(28_338), 1.5 * 7_651 + 976)
+        self.assertEqual(reservation(0), REPLY_ALLOWANCE)
+
+    def test_oversized_request_is_still_refused(self):
+        with self.assertRaises(QuotaExhausted):
+            Budget(self.path, clock=self.clock).reserve(reservation(400_000))
+        self.assertEqual(0, self.attempts())
 
     def test_failure_is_reserved_and_not_retried(self):
         provider = Mock(side_effect=TimeoutError)

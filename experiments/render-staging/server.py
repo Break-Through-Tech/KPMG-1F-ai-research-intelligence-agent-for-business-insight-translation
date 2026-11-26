@@ -87,12 +87,23 @@ def wire_schema(schema):
     return wire
 
 
+REPLY_ALLOWANCE = 8192
+
+
+def reservation(payload_bytes):
+    """Tokens to reserve for one call. Gemini measured about 3.6 UTF-8 bytes per input token on demo-100 prompts,
+    so one token per 2 bytes still over-reserves input about 1.8x, plus a fixed allowance for the reply. The former
+    2 tokens per byte over-reserved about 7x, so one S2 question (drafting + review) could exceed the 160k minute
+    budget on its own and fail at review."""
+    return payload_bytes // 2 + REPLY_ALLOWANCE
+
+
 def quota_generate(generate, budget):
     def guarded(prompt, *, response_schema=None):
         wire = wire_schema(response_schema) if response_schema is not None else None
         payload = json.dumps({'prompt': prompt, 'schema': wire}, ensure_ascii=False).encode()
         try:
-            budget.reserve(2 * len(payload) + 4096)
+            budget.reserve(reservation(len(payload)))
         except QuotaExhausted as error:
             log_provider_failure('local_budget', error)
             raise

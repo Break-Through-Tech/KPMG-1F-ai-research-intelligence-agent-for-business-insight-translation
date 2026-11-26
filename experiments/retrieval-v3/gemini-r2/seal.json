@@ -1,0 +1,11 @@
+{
+  "deploy/render/start.py": "b30ad92086e3ca3b5f208674b2f2a0c505fafbb0afe8ad84982da8defa7b68da",
+  "experiments/retrieval-v3/gemini-r2/budget.py": "bece9b145bd2ee0d9fd2e142bee0c9889995e0ae758884ae55bc883979282180",
+  "experiments/retrieval-v3/gemini-r2/deployment.json": "0bee5d4ae1b7c1da0cc4fd6dbb33be4d798db8a61609dd4262d50b7bac3db5a7",
+  "experiments/retrieval-v3/gemini-r2/questions.json": "1c7bfbe1a71cc7a993324dead9af7ec9059f8e0f6a6a79df2f39bbbe30eac82c",
+  "experiments/retrieval-v3/gemini-r2/README.md": "69cece8fb692e4b49ab16853b5bb35253c5156971a59ac952617bb422274a87e",
+  "experiments/retrieval-v3/gemini-r2/run.py": "a1803acb9066aa38b0ff841cfee14ccd25ab35ba4045980a4ad5b1f2680ee639",
+  "experiments/retrieval-v3/gemini-r2/test_budget.py": "44cf17a8f8ec251449555a67a96eda828ddd354c5ee533f18a53758ca6ab2827",
+  "onboarding/assets.json": "4e6a0c64be68833318899e6cfe4d09d198eef3989d07fda3d29e71fb66c2f560",
+  "onboarding/requirements-py311.lock.txt": "a8edc3c6a79a26a04fc99e908ed50774522fa4c5d847664e874ea0dc36a07d47"
+}

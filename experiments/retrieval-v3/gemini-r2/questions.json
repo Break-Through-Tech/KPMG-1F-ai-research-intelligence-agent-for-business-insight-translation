@@ -1,0 +1,382 @@
+[
+  {
+    "id": "U1",
+    "kind": "named-two-paper",
+    "question": "A Survey on Hardware Accelerators for Large Language Models and SWRouter both address ways to choose among resources for LLM workloads. What choices does the survey consider, and how does SWRouter construct and evaluate multi-turn prompts and routes?",
+    "required_points": [
+      {
+        "point": "The survey studies hardware accelerators for LLM workloads, including GPUs, FPGAs and custom architectures.",
+        "anchors": [
+          [
+            "2401.09890v1_c0000"
+          ]
+        ],
+        "point_id": "U1.1"
+      },
+      {
+        "point": "The survey considers architecture, performance, and energy efficiency.",
+        "anchors": [
+          [
+            "2401.09890v1_c0000"
+          ]
+        ],
+        "point_id": "U1.2"
+      },
+      {
+        "point": "SWRouter routes queries among LLMs in multi-turn dialogue.",
+        "anchors": [
+          [
+            "2609.11414v1_c0000"
+          ]
+        ],
+        "point_id": "U1.3"
+      },
+      {
+        "point": "It segments context by similarity to construct prompts.",
+        "anchors": [
+          [
+            "2609.11414v1_c0000"
+          ]
+        ],
+        "point_id": "U1.4"
+      },
+      {
+        "point": "A dual-metric evaluation separates context construction from routing performance.",
+        "anchors": [
+          [
+            "2609.11414v1_c0000"
+          ]
+        ],
+        "point_id": "U1.5"
+      }
+    ]
+  },
+  {
+    "id": "U2",
+    "kind": "named-two-paper",
+    "question": "Compare MultiFinRAG with Prompt-Guided Prefiltering for VLM Image Compression. How do they transform visual inputs, where do those transformations sit in their respective pipelines, and what bitrate result does the compression paper report?",
+    "required_points": [
+      {
+        "point": "MultiFinRAG batches financial table and figure images for processing by a lightweight quantized multimodal model.",
+        "anchors": [
+          [
+            "2506.20821v1_c0000"
+          ]
+        ],
+        "point_id": "U2.1"
+      },
+      {
+        "point": "It produces structured JSON and concise text summaries from those images.",
+        "anchors": [
+          [
+            "2506.20821v1_c0000"
+          ]
+        ],
+        "point_id": "U2.2"
+      },
+      {
+        "point": "The outputs and narrative text are embedded and indexed with modality-aware thresholds.",
+        "anchors": [
+          [
+            "2506.20821v1_c0000"
+          ]
+        ],
+        "point_id": "U2.3"
+      },
+      {
+        "point": "The prompt-guided prefilter is codec-agnostic and runs before conventional or learned encoders.",
+        "anchors": [
+          [
+            "2604.00314v1_c0000"
+          ]
+        ],
+        "point_id": "U2.4"
+      },
+      {
+        "point": "Across several VQA benchmarks the prefilter reduced average bitrate by 25–50% at the same task accuracy.",
+        "anchors": [
+          [
+            "2604.00314v1_c0000"
+          ]
+        ],
+        "point_id": "U2.5"
+      }
+    ]
+  },
+  {
+    "id": "U3",
+    "kind": "named-two-paper",
+    "question": "Contrast SimGRAG and In Defense of RAG in the Era of Long-Context Language Models. How does each select external context, and what does the latter report about answer quality as the context grows?",
+    "required_points": [
+      {
+        "point": "SimGRAG uses an LLM to convert query text to a desired graph pattern.",
+        "anchors": [
+          [
+            "2412.15272v2_c0000"
+          ]
+        ],
+        "point_id": "U3.1"
+      },
+      {
+        "point": "It ranks candidate subgraphs by graph semantic distance and retrieves the top k.",
+        "anchors": [
+          [
+            "2412.15272v2_c0000"
+          ]
+        ],
+        "point_id": "U3.2"
+      },
+      {
+        "point": "OP-RAG preserves the order of the selected chunks.",
+        "anchors": [
+          [
+            "2409.01666v1_c0000"
+          ]
+        ],
+        "point_id": "U3.3"
+      },
+      {
+        "point": "As the number of chunks increases, quality first rises and then declines.",
+        "anchors": [
+          [
+            "2409.01666v1_c0000"
+          ]
+        ],
+        "point_id": "U3.4"
+      },
+      {
+        "point": "At suitable intermediate lengths OP-RAG can yield better answers with fewer tokens than using the whole context.",
+        "anchors": [
+          [
+            "2409.01666v1_c0000"
+          ]
+        ],
+        "point_id": "U3.5"
+      }
+    ]
+  },
+  {
+    "id": "U4",
+    "kind": "unnamed-multipart",
+    "question": "How can a finance language model acquire instruction-following behavior without a new finance instruction dataset? Describe the training order, where the relevant task vector comes from, how it is applied, and which finance-domain training is still required.",
+    "required_points": [
+      {
+        "point": "Continual pretraining on financial data precedes merging.",
+        "anchors": [
+          [
+            "2409.19854v1_c0000"
+          ]
+        ],
+        "point_id": "U4.1"
+      },
+      {
+        "point": "The instruction task vector is derived from general-purpose base and instruction-tuned variants.",
+        "anchors": [
+          [
+            "2409.19854v1_c0000"
+          ]
+        ],
+        "point_id": "U4.2"
+      },
+      {
+        "point": "That task vector is merged with the domain-specific pretrained vector.",
+        "anchors": [
+          [
+            "2409.19854v1_c0000"
+          ]
+        ],
+        "point_id": "U4.3"
+      },
+      {
+        "point": "The method still needs financial pretraining data, while removing the need for additional finance instruction examples.",
+        "anchors": [
+          [
+            "2409.19854v1_c0000"
+          ]
+        ],
+        "point_id": "U4.4"
+      }
+    ]
+  },
+  {
+    "id": "U5",
+    "kind": "unnamed-multipart",
+    "question": "How does the large-scale benchmark for streaming time-series anomaly detection compare incremental and static methods? Describe the training and evaluation sequence, what it measures, and which approach usually did better.",
+    "required_points": [
+      {
+        "point": "Static and streaming anomaly detectors are compared under the same streaming protocol.",
+        "anchors": [
+          [
+            "2609.39215v1_c0000"
+          ]
+        ],
+        "point_id": "U5.1"
+      },
+      {
+        "point": "An initial batch is available for training before online evaluation.",
+        "anchors": [
+          [
+            "2609.39215v1_c0000"
+          ]
+        ],
+        "point_id": "U5.2"
+      },
+      {
+        "point": "Evaluation measures both detection accuracy and computational efficiency.",
+        "anchors": [
+          [
+            "2609.39215v1_c0000"
+          ]
+        ],
+        "point_id": "U5.3"
+      },
+      {
+        "point": "Static approaches significantly outperform streaming ones in most of the studied settings.",
+        "anchors": [
+          [
+            "2609.39215v1_c0000"
+          ]
+        ],
+        "point_id": "U5.4"
+      }
+    ]
+  },
+  {
+    "id": "U6",
+    "kind": "unnamed-multipart",
+    "question": "How can a benchmark make studies of language-model gameplay reproducible across genres while supporting adaptation of general models? Describe task coverage, the integration interface, the fine-tuning material, and two evaluation modes.",
+    "required_points": [
+      {
+        "point": "Orak covers 12 games spanning the major genres.",
+        "anchors": [
+          [
+            "2506.03610v3_c0000"
+          ]
+        ],
+        "point_id": "U6.1"
+      },
+      {
+        "point": "A plug-and-play interface based on Model Context Protocol supports comparable studies.",
+        "anchors": [
+          [
+            "2506.03610v3_c0000"
+          ]
+        ],
+        "point_id": "U6.2"
+      },
+      {
+        "point": "Expert language-model gameplay trajectories across genres form fine-tuning data.",
+        "anchors": [
+          [
+            "2506.03610v3_c0000"
+          ]
+        ],
+        "point_id": "U6.3"
+      },
+      {
+        "point": "Two of leaderboards, battle arenas, or systematic ablations are identified.",
+        "anchors": [
+          [
+            "2506.03610v3_c0000"
+          ]
+        ],
+        "point_id": "U6.4"
+      }
+    ]
+  },
+  {
+    "id": "U7",
+    "kind": "control",
+    "question": "What gap is AncientBench designed to cover, and what four abilities does it evaluate in that setting?",
+    "required_points": [
+      {
+        "point": "It covers comprehension of ancient characters in excavated documents.",
+        "anchors": [
+          [
+            "2512.17756v1_c0000"
+          ]
+        ],
+        "point_id": "U7.1"
+      },
+      {
+        "point": "It tests glyph comprehension.",
+        "anchors": [
+          [
+            "2512.17756v1_c0000"
+          ]
+        ],
+        "point_id": "U7.2"
+      },
+      {
+        "point": "It tests pronunciation comprehension.",
+        "anchors": [
+          [
+            "2512.17756v1_c0000"
+          ]
+        ],
+        "point_id": "U7.3"
+      },
+      {
+        "point": "It tests meaning comprehension.",
+        "anchors": [
+          [
+            "2512.17756v1_c0000"
+          ]
+        ],
+        "point_id": "U7.4"
+      },
+      {
+        "point": "It tests contextual comprehension.",
+        "anchors": [
+          [
+            "2512.17756v1_c0000"
+          ]
+        ],
+        "point_id": "U7.5"
+      }
+    ]
+  },
+  {
+    "id": "U8",
+    "kind": "control",
+    "question": "What materials are paired in the Sefora writing-feedback corpus, and how does UniMatch evaluate generated feedback? Include the corpus size in drafts and annotations.",
+    "required_points": [
+      {
+        "point": "The corpus pairs instructor inline feedback with assignments, rubrics, scores, and revisions.",
+        "anchors": [
+          [
+            "2607.00274v1_c0000"
+          ]
+        ],
+        "point_id": "U8.1"
+      },
+      {
+        "point": "It contains 564 drafts.",
+        "anchors": [
+          [
+            "2607.00274v1_c0000"
+          ]
+        ],
+        "point_id": "U8.2"
+      },
+      {
+        "point": "It contains 8,240 instructor annotations.",
+        "anchors": [
+          [
+            "2607.00274v1_c0000"
+          ]
+        ],
+        "point_id": "U8.3"
+      },
+      {
+        "point": "UniMatch segments feedback into units, optimally matches semantic correspondences, and reports precision, recall, and F1.",
+        "anchors": [
+          [
+            "2607.00274v1_c0000"
+          ]
+        ],
+        "point_id": "U8.4"
+      }
+    ]
+  }
+]

@@ -342,3 +342,19 @@
 /onboarding/fixture/table-audit-demo-100.json -text
 /onboarding/runtime-metadata/demo-100/manifest.json -text
 /onboarding/runtime-metadata/table-audit-demo-100.json -text
+
+# Preserve raw deployment and historical R2 seal bytes across checkouts.
+/experiments/render-staging/dev_server.py -text
+/experiments/render-staging/engine_runtime.py -text
+/experiments/render-staging/server.py -text
+/experiments/render-staging/smoke_server.py -text
+/experiments/retrieval-v3/s2_r2.py -text
+/experiments/retrieval-v3/s2_r2_opt.py -text
+/experiments/retrieval-v3/unseen-r2/run_unseen.py -text
+/experiments/table-endpoint/chart_preview.py -text
+/experiments/table-endpoint/evidence_tables.py -text
+/experiments/table-endpoint/recorded_backend.py -text
+/prompts/business_translation/baseline-v1.txt -text
+/experiments/retrieval-v3/gemini-r2/** text eol=lf
+/onboarding/assets.json -text
+/onboarding/requirements-py311.lock.txt -text

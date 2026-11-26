@@ -1,0 +1,698 @@
+{
+ "identity": [
+  {
+   "set": "heldout-v1",
+   "q": "H01",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 4,
+   "searches_new": 3,
+   "tokens": 6035
+  },
+  {
+   "set": "heldout-v1",
+   "q": "H02",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 4,
+   "searches_new": 3,
+   "tokens": 6040
+  },
+  {
+   "set": "heldout-v1",
+   "q": "H03",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 4,
+   "searches_new": 3,
+   "tokens": 5941
+  },
+  {
+   "set": "heldout-v1",
+   "q": "H04",
+   "identical": true,
+   "route": "s2-window (single ask)",
+   "searches_old": 2,
+   "searches_new": 1,
+   "tokens": 5957
+  },
+  {
+   "set": "heldout-v1",
+   "q": "H05",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 5,
+   "searches_new": 4,
+   "tokens": 5706
+  },
+  {
+   "set": "heldout-v1",
+   "q": "H06",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 4,
+   "searches_new": 3,
+   "tokens": 5777
+  },
+  {
+   "set": "heldout-v1",
+   "q": "H07",
+   "identical": true,
+   "route": "s2-window (single ask)",
+   "searches_old": 2,
+   "searches_new": 1,
+   "tokens": 5951
+  },
+  {
+   "set": "heldout-v1",
+   "q": "H08",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 4,
+   "searches_new": 3,
+   "tokens": 5758
+  },
+  {
+   "set": "heldout-v1",
+   "q": "H09",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 5,
+   "searches_new": 4,
+   "tokens": 5990
+  },
+  {
+   "set": "heldout-v1",
+   "q": "H10",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 4,
+   "searches_new": 3,
+   "tokens": 5981
+  },
+  {
+   "set": "completion-eval-v1",
+   "q": "C01",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 5,
+   "searches_new": 4,
+   "tokens": 5940
+  },
+  {
+   "set": "completion-eval-v1",
+   "q": "C02",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 6,
+   "searches_new": 5,
+   "tokens": 5973
+  },
+  {
+   "set": "completion-eval-v1",
+   "q": "C03",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 4,
+   "searches_new": 3,
+   "tokens": 6262
+  },
+  {
+   "set": "completion-eval-v1",
+   "q": "C04",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 4,
+   "searches_new": 3,
+   "tokens": 6174
+  },
+  {
+   "set": "completion-eval-v1",
+   "q": "C05",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 4,
+   "searches_new": 3,
+   "tokens": 6174
+  },
+  {
+   "set": "completion-eval-v1",
+   "q": "C06",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 4,
+   "searches_new": 3,
+   "tokens": 6103
+  },
+  {
+   "set": "completion-eval-v1",
+   "q": "C07",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 5,
+   "searches_new": 4,
+   "tokens": 6117
+  },
+  {
+   "set": "completion-eval-v1",
+   "q": "C08",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 5,
+   "searches_new": 4,
+   "tokens": 6104
+  },
+  {
+   "set": "completion-eval-v1",
+   "q": "C09",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 5,
+   "searches_new": 4,
+   "tokens": 6140
+  },
+  {
+   "set": "completion-eval-v1",
+   "q": "C10",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 5,
+   "searches_new": 4,
+   "tokens": 5908
+  },
+  {
+   "set": "completion-eval-v1",
+   "q": "C11",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 4,
+   "searches_new": 3,
+   "tokens": 5896
+  },
+  {
+   "set": "completion-eval-v1",
+   "q": "C12",
+   "identical": true,
+   "route": "s2-window (single ask)",
+   "searches_old": 2,
+   "searches_new": 1,
+   "tokens": 6040
+  },
+  {
+   "set": "completion-eval-v1",
+   "q": "C13",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 4,
+   "searches_new": 3,
+   "tokens": 5997
+  },
+  {
+   "set": "completion-eval-v1",
+   "q": "C14",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 4,
+   "searches_new": 3,
+   "tokens": 5982
+  },
+  {
+   "set": "completion-eval-v1",
+   "q": "C15",
+   "identical": true,
+   "route": "s2-window (single ask)",
+   "searches_old": 2,
+   "searches_new": 1,
+   "tokens": 6065
+  },
+  {
+   "set": "combined-v1",
+   "q": "G01",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 5,
+   "searches_new": 4,
+   "tokens": 5909
+  },
+  {
+   "set": "combined-v1",
+   "q": "G02",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 4,
+   "searches_new": 3,
+   "tokens": 6043
+  },
+  {
+   "set": "combined-v1",
+   "q": "G03",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 5,
+   "searches_new": 4,
+   "tokens": 6110
+  },
+  {
+   "set": "combined-v1",
+   "q": "G04",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 5,
+   "searches_new": 4,
+   "tokens": 6063
+  },
+  {
+   "set": "combined-v1",
+   "q": "G05",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 4,
+   "searches_new": 3,
+   "tokens": 6120
+  },
+  {
+   "set": "combined-v1",
+   "q": "G06",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 5,
+   "searches_new": 4,
+   "tokens": 5899
+  },
+  {
+   "set": "combined-v1",
+   "q": "G07",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 5,
+   "searches_new": 4,
+   "tokens": 5625
+  },
+  {
+   "set": "combined-v1",
+   "q": "G08",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 4,
+   "searches_new": 3,
+   "tokens": 5953
+  },
+  {
+   "set": "combined-v1",
+   "q": "G09",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 6,
+   "searches_new": 5,
+   "tokens": 5969
+  },
+  {
+   "set": "combined-v1",
+   "q": "G10",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 4,
+   "searches_new": 3,
+   "tokens": 6149
+  },
+  {
+   "set": "consolidated/fresh-v2",
+   "q": "H01",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 6,
+   "searches_new": 5,
+   "tokens": 5948
+  },
+  {
+   "set": "consolidated/fresh-v2",
+   "q": "H02",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 4,
+   "searches_new": 3,
+   "tokens": 4739
+  },
+  {
+   "set": "consolidated/fresh-v2",
+   "q": "H03",
+   "identical": true,
+   "route": "b1",
+   "searches_old": 2,
+   "searches_new": 1,
+   "tokens": 5884
+  },
+  {
+   "set": "consolidated/fresh-v2",
+   "q": "H04",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 5,
+   "searches_new": 4,
+   "tokens": 6180
+  },
+  {
+   "set": "consolidated/fresh-v2",
+   "q": "H05",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 4,
+   "searches_new": 3,
+   "tokens": 6222
+  },
+  {
+   "set": "consolidated/fresh-v2",
+   "q": "H06",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 5,
+   "searches_new": 4,
+   "tokens": 5917
+  },
+  {
+   "set": "consolidated/fresh-v2",
+   "q": "H07",
+   "identical": true,
+   "route": "b1",
+   "searches_old": 2,
+   "searches_new": 1,
+   "tokens": 6140
+  },
+  {
+   "set": "consolidated/fresh-v2",
+   "q": "H08",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 5,
+   "searches_new": 4,
+   "tokens": 5973
+  },
+  {
+   "set": "consolidated-v2/fresh-v3",
+   "q": "J01",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 5,
+   "searches_new": 4,
+   "tokens": 5991
+  },
+  {
+   "set": "consolidated-v2/fresh-v3",
+   "q": "J02",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 6,
+   "searches_new": 5,
+   "tokens": 5956
+  },
+  {
+   "set": "consolidated-v2/fresh-v3",
+   "q": "J03",
+   "identical": true,
+   "route": "b1",
+   "searches_old": 2,
+   "searches_new": 1,
+   "tokens": 6035
+  },
+  {
+   "set": "consolidated-v2/fresh-v3",
+   "q": "J04",
+   "identical": true,
+   "route": "b1",
+   "searches_old": 2,
+   "searches_new": 1,
+   "tokens": 5989
+  },
+  {
+   "set": "consolidated-v2/fresh-v3",
+   "q": "J05",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 4,
+   "searches_new": 3,
+   "tokens": 5988
+  },
+  {
+   "set": "consolidated-v2/fresh-v3",
+   "q": "J06",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 6,
+   "searches_new": 5,
+   "tokens": 6231
+  },
+  {
+   "set": "consolidated-v2/fresh-v3",
+   "q": "J07",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 6,
+   "searches_new": 5,
+   "tokens": 5994
+  },
+  {
+   "set": "consolidated-v2/fresh-v3",
+   "q": "J08",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 5,
+   "searches_new": 4,
+   "tokens": 5907
+  },
+  {
+   "set": "fresh-v4",
+   "q": "K01",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 6,
+   "searches_new": 5,
+   "tokens": 5973
+  },
+  {
+   "set": "fresh-v4",
+   "q": "K02",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 7,
+   "searches_new": 6,
+   "tokens": 6063
+  },
+  {
+   "set": "fresh-v4",
+   "q": "K03",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 6,
+   "searches_new": 5,
+   "tokens": 6019
+  },
+  {
+   "set": "fresh-v4",
+   "q": "K04",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 6,
+   "searches_new": 5,
+   "tokens": 5954
+  },
+  {
+   "set": "fresh-v4",
+   "q": "K05",
+   "identical": true,
+   "route": "b1",
+   "searches_old": 2,
+   "searches_new": 1,
+   "tokens": 5980
+  },
+  {
+   "set": "fresh-v4",
+   "q": "K06",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 6,
+   "searches_new": 5,
+   "tokens": 5964
+  },
+  {
+   "set": "fresh-v4",
+   "q": "K07",
+   "identical": true,
+   "route": "b1",
+   "searches_old": 2,
+   "searches_new": 1,
+   "tokens": 5993
+  },
+  {
+   "set": "fresh-v4",
+   "q": "K08",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 6,
+   "searches_new": 5,
+   "tokens": 5991
+  },
+  {
+   "set": "fresh-v4",
+   "q": "K09",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 6,
+   "searches_new": 5,
+   "tokens": 5930
+  },
+  {
+   "set": "fresh-v4",
+   "q": "K10",
+   "identical": true,
+   "route": "fusion",
+   "searches_old": 7,
+   "searches_new": 6,
+   "tokens": 5940
+  }
+ ],
+ "timing": [
+  {
+   "q": "U1",
+   "validated": {
+    "wall_s": 25.74,
+    "cpu_s": 125.52,
+    "searches": 2,
+    "route": "b1"
+   },
+   "optimized": {
+    "wall_s": 12.99,
+    "cpu_s": 62.19,
+    "searches": 1,
+    "route": "b1"
+   },
+   "identical": true
+  },
+  {
+   "q": "U2",
+   "optimized": {
+    "wall_s": 3.94,
+    "cpu_s": 19.81,
+    "searches": 1,
+    "route": "b1"
+   },
+   "validated": {
+    "wall_s": 14.49,
+    "cpu_s": 49.2,
+    "searches": 2,
+    "route": "b1"
+   },
+   "identical": true
+  },
+  {
+   "q": "U3",
+   "validated": {
+    "wall_s": 17.38,
+    "cpu_s": 78.02,
+    "searches": 2,
+    "route": "b1"
+   },
+   "optimized": {
+    "wall_s": 7.82,
+    "cpu_s": 37.11,
+    "searches": 1,
+    "route": "b1"
+   },
+   "identical": true
+  },
+  {
+   "q": "U4",
+   "optimized": {
+    "wall_s": 22.09,
+    "cpu_s": 100.48,
+    "searches": 4,
+    "route": "fusion"
+   },
+   "validated": {
+    "wall_s": 32.97,
+    "cpu_s": 145.92,
+    "searches": 5,
+    "route": "fusion"
+   },
+   "identical": true
+  },
+  {
+   "q": "U5",
+   "validated": {
+    "wall_s": 24.26,
+    "cpu_s": 116.14,
+    "searches": 7,
+    "route": "fusion"
+   },
+   "optimized": {
+    "wall_s": 18.65,
+    "cpu_s": 92.16,
+    "searches": 6,
+    "route": "fusion"
+   },
+   "identical": true
+  },
+  {
+   "q": "U6",
+   "optimized": {
+    "wall_s": 18.44,
+    "cpu_s": 96.78,
+    "searches": 5,
+    "route": "fusion"
+   },
+   "validated": {
+    "wall_s": 27.79,
+    "cpu_s": 145.52,
+    "searches": 6,
+    "route": "fusion"
+   },
+   "identical": true
+  },
+  {
+   "q": "U7",
+   "validated": {
+    "wall_s": 14.29,
+    "cpu_s": 74.39,
+    "searches": 5,
+    "route": "fusion"
+   },
+   "optimized": {
+    "wall_s": 11.33,
+    "cpu_s": 56.64,
+    "searches": 4,
+    "route": "fusion"
+   },
+   "identical": true
+  },
+  {
+   "q": "U8",
+   "optimized": {
+    "wall_s": 17.57,
+    "cpu_s": 90.55,
+    "searches": 3,
+    "route": "fusion"
+   },
+   "validated": {
+    "wall_s": 29.02,
+    "cpu_s": 147.45,
+    "searches": 4,
+    "route": "fusion"
+   },
+   "identical": true
+  }
+ ],
+ "timing_summary": {
+  "validated": {
+   "median_wall_s": 25.0,
+   "total_wall_s": 185.9,
+   "total_cpu_s": 882.2,
+   "searches": 33
+  },
+  "optimized": {
+   "median_wall_s": 15.280000000000001,
+   "total_wall_s": 112.8,
+   "total_cpu_s": 555.7,
+   "searches": 25
+  },
+  "all_identical_live": true
+ }
+}

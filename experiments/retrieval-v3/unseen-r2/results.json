@@ -1,0 +1,70 @@
+{
+ "points": {
+  "S2": 25.0,
+  "R2": 29.5
+ },
+ "percent": {
+  "S2": 69.4,
+  "R2": 81.9
+ },
+ "max": 36,
+ "fully_answered": {
+  "S2": 3,
+  "R2": 4
+ },
+ "per_question": {
+  "U1": {
+   "S2": 3,
+   "R2": 3.0
+  },
+  "U2": {
+   "S2": 2.5,
+   "R2": 3.5
+  },
+  "U3": {
+   "S2": 2.0,
+   "R2": 3.5
+  },
+  "U4": {
+   "S2": 5,
+   "R2": 5
+  },
+  "U5": {
+   "S2": 4.0,
+   "R2": 5
+  },
+  "U6": {
+   "S2": 2.5,
+   "R2": 3.5
+  },
+  "U7": {
+   "S2": 3,
+   "R2": 3
+  },
+  "U8": {
+   "S2": 3,
+   "R2": 3
+  }
+ },
+ "blind_flags": {
+  "S2": [],
+  "R2": []
+ },
+ "audit_issues": {
+  "S2": 0,
+  "R2": 0
+ },
+ "criteria": {
+  "1 R2 >= S2 + 2 points": true,
+  "2 zero new safety flags (blind + audit)": true,
+  "3 median <= 1.25x S2 and <= 120 s": true,
+  "4 p90 <= 180 s": true,
+  "5 input tokens <= 1.10x S2": true,
+  "6 no silent failures (all 8 recorded per arm)": true
+ },
+ "R2_passes": true,
+ "reference_stricter_1.10x_latency": false,
+ "latency_ratio_median": 1.126,
+ "input_token_ratio": 0.986,
+ "output_token_ratio": 0.936
+}

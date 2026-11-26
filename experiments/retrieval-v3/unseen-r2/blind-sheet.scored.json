@@ -1,0 +1,261 @@
+{
+    "scorer":  "GPT-6",
+    "questions":  {
+                      "U1":  {
+                                 "points":  {
+                                                "U1.1":  {
+                                                             "A":  1,
+                                                             "B":  1
+                                                         },
+                                                "U1.2":  {
+                                                             "A":  1,
+                                                             "B":  0.5
+                                                         },
+                                                "U1.3":  {
+                                                             "A":  1,
+                                                             "B":  0
+                                                         },
+                                                "U1.4":  {
+                                                             "A":  0,
+                                                             "B":  1
+                                                         },
+                                                "U1.5":  {
+                                                             "A":  0,
+                                                             "B":  0.5
+                                                         }
+                                            },
+                                 "citation_grounding_failures":  [
+
+                                                                 ],
+                                 "misleading_claims":  [
+
+                                                       ],
+                                 "numerical_errors":  [
+
+                                                      ],
+                                 "notes":  "A U1.4=0: PGuard results absent. A U1.5=0: no HaloGuard/PGuard protocol comparison or qualification. B U1.2=0.5: Hindi/Thai weaknesses named, but language F1 and Hindi-versus-English FNR omitted. B U1.3=0: no false-negative/false-positive reduction result. B U1.5=0.5: both studies and response scores supplied, but unmatched protocols and comparison caveat omitted."
+                             },
+                      "U2":  {
+                                 "points":  {
+                                                "U2.1":  {
+                                                             "A":  1,
+                                                             "B":  1
+                                                         },
+                                                "U2.2":  {
+                                                             "A":  1,
+                                                             "B":  0.5
+                                                         },
+                                                "U2.3":  {
+                                                             "A":  0.5,
+                                                             "B":  0.5
+                                                         },
+                                                "U2.4":  {
+                                                             "A":  0,
+                                                             "B":  1
+                                                         },
+                                                "U2.5":  {
+                                                             "A":  0,
+                                                             "B":  0.5
+                                                         }
+                                            },
+                                 "citation_grounding_failures":  [
+
+                                                                 ],
+                                 "misleading_claims":  [
+
+                                                       ],
+                                 "numerical_errors":  [
+
+                                                      ],
+                                 "notes":  "A/B U2.3=0.5: general CPU speedup ranges supplied, but model-specific multi-thread speedups and shared-expert explanation omitted. A U2.4=0: no flat GPU precision curves or INT8/dp4a explanation. A U2.5=0: offloading mechanism absent. B U2.2=0.5: 3.2x token reduction given, but 909/2953 counts and 96.6% retention at 300-token cap omitted. B U2.5=0.5: reduced SSD-to-DRAM traffic reported, but separate 4-bit copy versus two additional bitplanes omitted."
+                             },
+                      "U3":  {
+                                 "points":  {
+                                                "U3.1":  {
+                                                             "A":  0.5,
+                                                             "B":  0.5
+                                                         },
+                                                "U3.2":  {
+                                                             "A":  0,
+                                                             "B":  0
+                                                         },
+                                                "U3.3":  {
+                                                             "A":  1,
+                                                             "B":  0.5
+                                                         },
+                                                "U3.4":  {
+                                                             "A":  1,
+                                                             "B":  0
+                                                         },
+                                                "U3.5":  {
+                                                             "A":  1,
+                                                             "B":  1
+                                                         }
+                                            },
+                                 "citation_grounding_failures":  [
+
+                                                                 ],
+                                 "misleading_claims":  [
+
+                                                       ],
+                                 "numerical_errors":  [
+
+                                                      ],
+                                 "notes":  "A U3.1=0.5: GPT withdrawal/preservation counts supplied, but predicate breakdown and Qwen comparison omitted. B U3.1=0.5: both failure patterns and preservation counts supplied, but GPT 8 failed/7 rejected and Qwen 880 unchecked omitted. A/B U3.2=0: before/after Uni-G rejection rates absent. B U3.3=0.5: L1 quotation supplies retrieval mismatch increases, but two-algorithm reductions omitted. B U3.4=0: full-model ablation score given without spectrogram-only drop or waveform conclusion."
+                             },
+                      "U4":  {
+                                 "points":  {
+                                                "U4.1":  {
+                                                             "A":  1,
+                                                             "B":  1
+                                                         },
+                                                "U4.2":  {
+                                                             "A":  1,
+                                                             "B":  1
+                                                         },
+                                                "U4.3":  {
+                                                             "A":  1,
+                                                             "B":  1
+                                                         },
+                                                "U4.4":  {
+                                                             "A":  1,
+                                                             "B":  1
+                                                         },
+                                                "U4.5":  {
+                                                             "A":  1,
+                                                             "B":  1
+                                                         }
+                                            },
+                                 "citation_grounding_failures":  [
+
+                                                                 ],
+                                 "misleading_claims":  [
+
+                                                       ],
+                                 "numerical_errors":  [
+
+                                                      ],
+                                 "notes":  "All required points supported by their own cited findings/limitations."
+                             },
+                      "U5":  {
+                                 "points":  {
+                                                "U5.1":  {
+                                                             "A":  1,
+                                                             "B":  1
+                                                         },
+                                                "U5.2":  {
+                                                             "A":  0.5,
+                                                             "B":  1
+                                                         },
+                                                "U5.3":  {
+                                                             "A":  1,
+                                                             "B":  1
+                                                         },
+                                                "U5.4":  {
+                                                             "A":  1,
+                                                             "B":  1
+                                                         },
+                                                "U5.5":  {
+                                                             "A":  0.5,
+                                                             "B":  1
+                                                         }
+                                            },
+                                 "citation_grounding_failures":  [
+
+                                                                 ],
+                                 "misleading_claims":  [
+
+                                                       ],
+                                 "numerical_errors":  [
+
+                                                      ],
+                                 "notes":  "A U5.2=0.5: matched-budget 1.45x gain given without +0.430/+0.624 search results or library-only attribution. A U5.5=0.5: detrimental instructions compiling is supported, but M1 GSM8K -10.7/-6.7 example and explicit task-accuracy meaning omitted."
+                             },
+                      "U6":  {
+                                 "points":  {
+                                                "U6.1":  {
+                                                             "A":  0.5,
+                                                             "B":  0.5
+                                                         },
+                                                "U6.2":  {
+                                                             "A":  0.5,
+                                                             "B":  1
+                                                         },
+                                                "U6.3":  {
+                                                             "A":  0,
+                                                             "B":  0
+                                                         },
+                                                "U6.4":  {
+                                                             "A":  0.5,
+                                                             "B":  1
+                                                         },
+                                                "U6.5":  {
+                                                             "A":  1,
+                                                             "B":  1
+                                                         }
+                                            },
+                                 "citation_grounding_failures":  [
+
+                                                                 ],
+                                 "misleading_claims":  [
+
+                                                       ],
+                                 "numerical_errors":  [
+
+                                                      ],
+                                 "notes":  "A/B U6.1=0.5: physical batching is identified as privacy-relevant, but no second listed recommendation is established. A U6.2=0.5: rounded 5-20% coupling range and batch sizes supplied without outlier-layer denominator or FP16 threshold mechanism; B additionally supplies these details, and rounded percentages are accepted. A/B U6.3=0: single-owner 3-7 columns and mostly shared columns omitted. A U6.4=0.5: arithmetic neutrality and unimplemented optimized kernel stated, but same-GEMM details and 1.5-7.5% correction-work saving omitted."
+                             },
+                      "U7":  {
+                                 "points":  {
+                                                "U7.1":  {
+                                                             "A":  1,
+                                                             "B":  1
+                                                         },
+                                                "U7.2":  {
+                                                             "A":  1,
+                                                             "B":  1
+                                                         },
+                                                "U7.3":  {
+                                                             "A":  1,
+                                                             "B":  1
+                                                         }
+                                            },
+                                 "citation_grounding_failures":  [
+
+                                                                 ],
+                                 "misleading_claims":  [
+
+                                                       ],
+                                 "numerical_errors":  [
+
+                                                      ],
+                                 "notes":  "All required points supported by their own cited findings."
+                             },
+                      "U8":  {
+                                 "points":  {
+                                                "U8.1":  {
+                                                             "A":  1,
+                                                             "B":  1
+                                                         },
+                                                "U8.2":  {
+                                                             "A":  1,
+                                                             "B":  1
+                                                         },
+                                                "U8.3":  {
+                                                             "A":  1,
+                                                             "B":  1
+                                                         }
+                                            },
+                                 "citation_grounding_failures":  [
+
+                                                                 ],
+                                 "misleading_claims":  [
+
+                                                       ],
+                                 "numerical_errors":  [
+
+                                                      ],
+                                 "notes":  "All required points supported; cited L0 limitations state the study scope and that insurer transfer/miss rate is unestablished. No invented insurer rate."
+                             }
+                  }
+}

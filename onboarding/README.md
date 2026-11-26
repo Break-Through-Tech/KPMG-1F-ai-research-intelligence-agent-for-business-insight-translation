@@ -8,12 +8,12 @@ image targets Linux AMD64. No provider credentials are needed.
 
 From the checkout root on Windows:
 
-    py -3.11 onboarding/setup.py --asset-repo OWNER/PRIVATE-ASSETS
+    py -3.11 onboarding/setup.py
     py -3.11 onboarding/setup.py start
 
 On Linux:
 
-    python3.11 onboarding/setup.py --asset-repo OWNER/PRIVATE-ASSETS
+    python3.11 onboarding/setup.py
     python3.11 onboarding/setup.py start
 
 If Docker is unavailable, add --runtime native to both commands. Native
@@ -39,7 +39,8 @@ for an approved deployment.
 
 The current code remote is public. The intended source is a separate private
 team repository with a Release tagged s2-runtime-v1. Set KPMG_ASSET_REPO
-or use --asset-repo as shown above. A separately created private team repository can host the onboarding code
+or use --asset-repo for a separate asset repository. By default setup uses
+the GitHub origin of the private clone. A separately created private team repository can host the onboarding code
 and the release together.
 Never publish the approved UI branch or the asset release to the public
 remote.
@@ -81,3 +82,26 @@ No asset release or upload is part of this change.
 Run bootstrap unit tests with python -m unittest discover -s onboarding
 -p test_setup.py (as one line). Keep the package cache, credentials, state,
 and generated contexts out of Git.
+
+
+## Synthetic onboarding fixture before data clearance
+
+From the clone, run:
+
+    python3.11 onboarding/setup.py --fixture
+    python3.11 onboarding/setup.py start --fixture
+
+Use py -3.11 in place of python3.11 on Windows. The same --runtime native
+option is available for both steps. The fixture needs Docker and Python for
+the Docker route, and downloads size- and SHA-256-verified public model files
+from the pinned Hugging Face revisions. It requires no GitHub Release or
+provider login. Its one artificial passage, zero search vector, and empty
+matching table audit exercise startup and evidence handling, not retrieval
+quality or chart coverage. Ask the printed fixture question and expect a
+cited synthetic answer and a pending review. Use --engine s2 on start to
+exercise the optional engine. Its cache, Docker image and saved state are
+separate from the real runtime. Normal setup still requires the exact
+private release and cannot accept the fixture as a substitute.
+
+For ownership, permission assignments and the approval-gated attachment
+preparer, see PUBLISHING.md.

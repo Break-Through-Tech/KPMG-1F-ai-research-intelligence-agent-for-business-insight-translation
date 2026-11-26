@@ -109,8 +109,10 @@ def verify_snapshot(path):
     return manifest
 
 
-def build_handler(snapshot, state, origin, password, generate, metadata):
+def build_handler(snapshot, state, origin, password, generate, metadata, *, synthetic_fixture=False):
     manifest = verify_snapshot(snapshot)
+    if bool(manifest.get('synthetic_fixture')) != synthetic_fixture:
+        raise ValueError('Synthetic snapshots require explicit offline fixture mode.')
     bundle = snapshot / 'artifacts/bundle'
     engine, paper_balance = engine_settings(os.environ)
     smoke = os.environ.get('KPMG_GEMINI_SMOKE', '0')
@@ -131,7 +133,7 @@ def build_handler(snapshot, state, origin, password, generate, metadata):
     if tables.audit_problem or tables.index_sha256 != index['indexed_records_sha256']:
         raise ValueError('Table audit or retrieval identity does not match the bundle.')
     # Apply display-safe provenance before the context or snapshot is fingerprinted.
-    research.provenance['index_path'] = 'demo-100'
+    research.provenance['index_path'] = 'synthetic-fixture' if synthetic_fixture else 'demo-100'
     research.provenance['retrieval']['reranker'] = 'ms-marco-MiniLM-L6-v2'
     research.provenance['code_revision'] = manifest['backend_head']
     research.context_id = fingerprint(research.provenance)

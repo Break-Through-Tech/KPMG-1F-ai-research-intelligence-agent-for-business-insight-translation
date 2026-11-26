@@ -326,3 +326,8 @@
 /onboarding/frontend/ui/vendor/katex/fonts/KaTeX_Size3-Regular.woff2 -text
 /onboarding/frontend/ui/vendor/katex/fonts/KaTeX_Size4-Regular.woff2 -text
 /onboarding/frontend/ui/vendor/katex/fonts/KaTeX_Typewriter-Regular.woff2 -text
+/onboarding/fixture/demo-100/manifest.json -text
+/onboarding/fixture/demo-100/parents.jsonl -text
+/onboarding/fixture/demo-100/vectors.npy -text
+/onboarding/fixture/demo-100/views.json -text
+/onboarding/fixture/table-audit-demo-100.json -text

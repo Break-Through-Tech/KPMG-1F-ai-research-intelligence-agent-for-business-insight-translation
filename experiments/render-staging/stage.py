@@ -42,7 +42,17 @@ def snapshot(args):
     output = args.output.resolve()
     if not output.is_relative_to(HERE) or output == HERE:
         raise ValueError('Choose a new Render experiment output directory.')
-    if checksum(args.bundle / 'parents.jsonl') != EXPECTED_INDEX:
+    synthetic = getattr(args, 'synthetic_fixture', False)
+    pin = EXPECTED_INDEX
+    if synthetic:
+        expected = json.loads((ROOT / 'onboarding/fixture-assets.json').read_bytes())
+        for name in BUNDLE:
+            if checksum(args.bundle / name) != expected['demo-100/' + name]['sha256']:
+                raise ValueError('Synthetic fixture bundle checksum mismatch.')
+        if checksum(args.audit) != expected['table-audit-demo-100.json']['sha256']:
+            raise ValueError('Synthetic fixture audit checksum mismatch.')
+        pin = expected['demo-100/parents.jsonl']['sha256']
+    if checksum(args.bundle / 'parents.jsonl') != pin:
         raise ValueError('The supplied index is not the pinned demo-100 bundle.')
     output.mkdir()
     hashes = {}
@@ -128,6 +138,8 @@ def snapshot(args):
                 'source_sha256': sources,
                 'files': {name.removeprefix('snapshot/'): digest for name, digest in hashes.items()
                           if name.startswith('snapshot/')}}
+    if synthetic:
+        manifest['synthetic_fixture'] = True
     (output / 'snapshot/manifest.json').write_text(json.dumps(manifest, indent=2), encoding='utf-8')
     print(f'Staged {len(hashes)} allowlisted files at {sum(p.stat().st_size for p in output.rglob("*") if p.is_file())} bytes.')
 
@@ -136,4 +148,5 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     for option in ('output', 'ui', 'bundle', 'audit', 'encoder', 'reranker'):
         parser.add_argument(f'--{option}', required=True, type=Path)
+    parser.add_argument('--synthetic-fixture', action='store_true')
     snapshot(parser.parse_args())

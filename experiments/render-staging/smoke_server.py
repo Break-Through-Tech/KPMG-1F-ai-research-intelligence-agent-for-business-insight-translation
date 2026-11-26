@@ -11,30 +11,30 @@ QUOTE = 'On mathematical reasoning benchmarks, CU- DPO improves strategy selecti
 CLAIM = 'On mathematical reasoning benchmarks, CU-DPO improved strategy-selection accuracy from 35–46% to 68–78% across seven base models.'
 
 
-def scripted(prompt, *, response_schema):
+def scripted(prompt, *, response_schema, question=QUESTION, quote=QUOTE, claim=CLAIM):
     properties = response_schema.get('properties', {})
     if 'decisions' in properties and 'retained_claim_indices' not in properties:
         return json.dumps({'coverage': 'full', 'gap': '', 'limitations': [], 'decisions': [{
             'index': 0, 'supported': True, 'relevant': True, 'quotes_entail': True,
-            'reason': 'The retrieved abstract supplies the exact ranges and model count.',
+            'reason': 'The retrieved passage supports the scripted finding.',
             'supported_text': '', 'reduced_entailed': False, 'related': False,
             'added_support': [], 'flag_resolutions': []
         }]})
     if prompt.startswith('Synthesize an answer'):
         request = json.loads(prompt.split('\n', 1)[1])
-        if request['question'] != QUESTION:
+        if request['question'] != question:
             raise ValueError('Only the disclosed browser-test question is allowed.')
-        passage = next(p for p in request['paper_passages'] if QUOTE in ' '.join(p['text'].split()))
+        passage = next(p for p in request['paper_passages'] if quote in ' '.join(p['text'].split()))
         return json.dumps({'status': 'ok', 'claims': [
-            {'text': CLAIM, 'kind': 'finding', 'support': [{'chunk_id': passage['chunk_id'], 'quote': QUOTE}]}
+            {'text': claim, 'kind': 'finding', 'support': [{'chunk_id': passage['chunk_id'], 'quote': quote}]}
         ], 'limitations': []})
     from src.answer_quality import POLICY
     if prompt.startswith(POLICY):
         draft = json.loads(prompt[len(POLICY):])['draft']
-        assert len(draft['claims']) == 1 and draft['claims'][0]['text'] == CLAIM
+        assert len(draft['claims']) == 1 and draft['claims'][0]['text'] == claim
         return json.dumps({'coverage': 'full', 'gap': '', 'retained_claim_indices': [0],
                            'decisions': [{'index': 0, 'supported': True, 'relevant': True,
-                                          'reason': 'The retrieved abstract supplies the exact ranges and model count.'}],
+                                          'reason': 'The retrieved passage supports the scripted finding.'}],
                            'limitations': []})
     raise ValueError('Unexpected generation stage.')
 

@@ -50,5 +50,19 @@ class AcquisitionTests(unittest.TestCase):
                 setup.acquire(self.spec, self.cache, 'example/private-assets')
 
 
+class RepositoryTests(unittest.TestCase):
+    def test_origin_inference_supports_github_https_and_ssh(self):
+        for origin in ('https://github.com/team/private.git', 'git@github.com:team/private.git',
+                       'ssh://git@github.com/team/private.git'):
+            with patch.object(setup, 'exists', return_value='git'), patch.object(setup, 'run', return_value=origin):
+                self.assertEqual(setup.origin_repository(), 'team/private')
+
+    def test_non_github_and_embedded_credentials_are_rejected(self):
+        for origin in ('/local/clone', 'https://elsewhere.example/team/private',
+                       'https://user:password@github.com/team/private'):
+            with patch.object(setup, 'exists', return_value='git'), patch.object(setup, 'run', return_value=origin):
+                self.assertIsNone(setup.origin_repository())
+
+
 if __name__ == '__main__':
     unittest.main()

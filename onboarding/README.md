@@ -106,3 +106,36 @@ private release and cannot accept the fixture as a substitute.
 
 For ownership, permission assignments and the approval-gated attachment
 preparer, see PUBLISHING.md.
+
+
+## Download of the exact approved index
+
+Use this path once an approved storage location is configured. Set
+`KPMG_ARTIFACT_BASE_URL` to its HTTPS directory URL with no query string.
+If authentication is required, inject the read-only bearer secret as
+`KPMG_ARTIFACT_TOKEN` through the runner's secret store. Both variables
+are read from the environment. Keep token values out of Git and logs.
+
+From the checkout root, run the following as one preparation step in a
+POSIX shell (including Linux native Render builds):
+
+    python3.11 onboarding/fetch_demo100.py && python3.11 onboarding/setup.py --prepare-only
+
+On Windows PowerShell, run:
+
+    py -3.11 onboarding/fetch_demo100.py
+    if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+    py -3.11 onboarding/setup.py --prepare-only
+
+The endpoint must serve `demo-100--parents.jsonl`,
+`demo-100--views.json` and `demo-100--vectors.npy`. The downloader is
+noninteractive and verifies all sizes and SHA-256 hashes against
+`onboarding/assets.json` before promoting files into the existing
+`.kpmg-onboarding/assets/demo-100` cache. A verified cache hit skips
+downloads. The optional bearer token is retained only on same-origin
+HTTPS redirects. The setup step prints the verified runtime context.
+It does not install native dependencies in prepare-only mode.
+
+Run the downloader tests with:
+
+    python3.11 -m unittest discover -s onboarding -p test_fetch_demo100.py

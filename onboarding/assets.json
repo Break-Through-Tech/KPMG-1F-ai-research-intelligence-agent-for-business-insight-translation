@@ -1,111 +1,132 @@
 {
   "release_tag": "s2-runtime-v1",
-  "publication": "blocked_pending_project_clearance",
+  "publication": "blocked_pending_corpus_redistribution_review",
   "files": {
     "demo-100/vectors.npy": {
       "bytes": 16942208,
       "sha256": "50468962cff785b71c4de72f9e7436b656bcf30d8df801b2681473873d23bd14",
-      "release_asset": "demo-100--vectors.npy"
+      "release_asset": "demo-100--vectors.npy",
+      "source": "release"
     },
     "demo-100/manifest.json": {
       "bytes": 548,
       "sha256": "7ed723faea8a31a2efb6738223d86edbcb58c047c1ebe356d1f20ab3ece1e587",
-      "release_asset": "demo-100--manifest.json"
+      "release_asset": "demo-100--manifest.json",
+      "source": "git"
     },
     "table-audit-demo-100.json": {
       "bytes": 115662,
       "sha256": "f7d54aaa3e8f469a2fe7ab549d555416a391b11e3fcf21a1f90bae7cabf23af9",
-      "release_asset": "table-audit-demo-100.json"
+      "release_asset": "table-audit-demo-100.json",
+      "source": "git"
     },
     "models/encoder/1_Pooling/config.json": {
       "bytes": 190,
       "sha256": "4be450dde3b0273bb9787637cfbd28fe04a7ba6ab9d36ac48e92b11e350ffc23",
-      "release_asset": "models--encoder--1_Pooling--config.json"
+      "release_asset": "models--encoder--1_Pooling--config.json",
+      "source": "public-model"
     },
     "models/encoder/config.json": {
       "bytes": 612,
       "sha256": "953f9c0d463486b10a6871cc2fd59f223b2c70184f49815e7efbcab5d8908b41",
-      "release_asset": "models--encoder--config.json"
+      "release_asset": "models--encoder--config.json",
+      "source": "public-model"
     },
     "models/encoder/config_sentence_transformers.json": {
       "bytes": 116,
       "sha256": "061ca9d39661d6c6d6de5ba27f79a1cd5770ea247f8d46412a68a498dc5ac9f3",
-      "release_asset": "models--encoder--config_sentence_transformers.json"
+      "release_asset": "models--encoder--config_sentence_transformers.json",
+      "source": "public-model"
     },
     "models/encoder/model.safetensors": {
       "bytes": 90868376,
       "sha256": "53aa51172d142c89d9012cce15ae4d6cc0ca6895895114379cacb4fab128d9db",
-      "release_asset": "models--encoder--model.safetensors"
+      "release_asset": "models--encoder--model.safetensors",
+      "source": "public-model"
     },
     "models/encoder/modules.json": {
       "bytes": 349,
       "sha256": "84e40c8e006c9b1d6c122e02cba9b02458120b5fb0c87b746c41e0207cf642cf",
-      "release_asset": "models--encoder--modules.json"
+      "release_asset": "models--encoder--modules.json",
+      "source": "public-model"
     },
     "models/encoder/sentence_bert_config.json": {
       "bytes": 53,
       "sha256": "fc1993fde0a95c24ec6c022539d41cf6e2f7c9721e5415d6fb6897472a9cd4b7",
-      "release_asset": "models--encoder--sentence_bert_config.json"
+      "release_asset": "models--encoder--sentence_bert_config.json",
+      "source": "public-model"
     },
     "models/encoder/special_tokens_map.json": {
       "bytes": 112,
       "sha256": "303df45a03609e4ead04bc3dc1536d0ab19b5358db685b6f3da123d05ec200e3",
-      "release_asset": "models--encoder--special_tokens_map.json"
+      "release_asset": "models--encoder--special_tokens_map.json",
+      "source": "public-model"
     },
     "models/encoder/tokenizer.json": {
       "bytes": 466247,
       "sha256": "be50c3628f2bf5bb5e3a7f17b1f74611b2561a3a27eeab05e5aa30f411572037",
-      "release_asset": "models--encoder--tokenizer.json"
+      "release_asset": "models--encoder--tokenizer.json",
+      "source": "public-model"
     },
     "models/encoder/tokenizer_config.json": {
       "bytes": 350,
       "sha256": "acb92769e8195aabd29b7b2137a9e6d6e25c476a4f15aa4355c233426c61576b",
-      "release_asset": "models--encoder--tokenizer_config.json"
+      "release_asset": "models--encoder--tokenizer_config.json",
+      "source": "public-model"
     },
     "models/encoder/vocab.txt": {
       "bytes": 231508,
       "sha256": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3",
-      "release_asset": "models--encoder--vocab.txt"
+      "release_asset": "models--encoder--vocab.txt",
+      "source": "public-model"
     },
     "models/reranker/config.json": {
       "bytes": 794,
       "sha256": "380e02c93f431831be65d99a4e7e5f67c133985bf2e77d9d4eba46847190bacc",
-      "release_asset": "models--reranker--config.json"
+      "release_asset": "models--reranker--config.json",
+      "source": "public-model"
     },
     "models/reranker/model.safetensors": {
       "bytes": 90870598,
       "sha256": "821d1aa69520101d6e0737f78a042ae25b19e5cb9160701909d10434f4aeb0ae",
-      "release_asset": "models--reranker--model.safetensors"
+      "release_asset": "models--reranker--model.safetensors",
+      "source": "public-model"
     },
     "models/reranker/special_tokens_map.json": {
       "bytes": 132,
       "sha256": "3c3507f36dff57bce437223db3b3081d1e2b52ec3e56ee55438193ecb2c94dd6",
-      "release_asset": "models--reranker--special_tokens_map.json"
+      "release_asset": "models--reranker--special_tokens_map.json",
+      "source": "public-model"
     },
     "models/reranker/tokenizer.json": {
       "bytes": 711396,
       "sha256": "d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66",
-      "release_asset": "models--reranker--tokenizer.json"
+      "release_asset": "models--reranker--tokenizer.json",
+      "source": "public-model"
     },
     "models/reranker/tokenizer_config.json": {
       "bytes": 1330,
       "sha256": "a5c2e5a7b1a29a0702cd28c08a399b5ecc110c263009d17f7e3b415f25905fd8",
-      "release_asset": "models--reranker--tokenizer_config.json"
+      "release_asset": "models--reranker--tokenizer_config.json",
+      "source": "public-model"
     },
     "models/reranker/vocab.txt": {
       "bytes": 231508,
       "sha256": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3",
-      "release_asset": "models--reranker--vocab.txt"
+      "release_asset": "models--reranker--vocab.txt",
+      "source": "public-model"
     },
     "demo-100/parents.jsonl": {
       "bytes": 21731899,
       "sha256": "78d8efd7c9df075be09ffa5f3a9c7ca79c54efa2d7caf75c8f0329ea72ff41aa",
-      "release_asset": "demo-100--parents.jsonl"
+      "release_asset": "demo-100--parents.jsonl",
+      "source": "release"
     },
     "demo-100/views.json": {
       "bytes": 10373981,
       "sha256": "c6c1563ee6888887d354ec6a27e61de4b931f534f9142fbab2e94a30ad5ec5d3",
-      "release_asset": "demo-100--views.json"
+      "release_asset": "demo-100--views.json",
+      "source": "release"
     }
   },
   "frontend": {

@@ -1,29 +1,23 @@
 # Portable developer setup
 
-Use a private checkout of this integration branch. Install Git, GitHub CLI
-and Python 3.11 or newer. Authenticate GitHub CLI with gh auth login and
-use your own team account. For Docker mode, run a local Linux container
-daemon (Docker Desktop on Windows, Docker Engine on Linux). The built
-image targets Linux AMD64. No provider credentials are needed.
+The public integration branch can run the synthetic developer preview
+without GitHub CLI authentication or restricted project assets. Install Git,
+Python 3.11, and a running Docker Linux container daemon. From the checkout
+root:
 
-From the checkout root on Windows:
+    python3.11 onboarding/setup.py --fixture
+    python3.11 onboarding/setup.py start --fixture
 
-    py -3.11 onboarding/setup.py
-    py -3.11 onboarding/setup.py start
+On Windows, use py -3.11 in place of python3.11. Add --runtime native to both
+commands if Docker is unavailable. Native setup creates a repository-local
+environment with pinned Python dependencies and CPU Torch. The Docker image
+targets Linux AMD64. Use --prepare-only to verify and stage without building
+or installing dependencies.
 
-On Linux:
-
-    python3.11 onboarding/setup.py
-    python3.11 onboarding/setup.py start
-
-If Docker is unavailable, add --runtime native to both commands. Native
-setup requires Python 3.11 and uses a fresh repository-local environment
-with pinned CPU Torch and a version-locked dependency set. Linux dependency
-resolution and container startup still require local Linux verification.
-Use --prepare-only with setup to verify and stage without installing or
-building. Windows package versions are pinned and were exercised locally.
-Python package installers may need public package repositories. Model
-inference uses only staged files.
+For the real index, omit --fixture once an authorized release is available.
+Authenticate GitHub CLI with your own account if the cleared release is private.
+Use --asset-repo OWNER/REPO only when the approved release lives separately
+from the clone origin. There is no automatic fixture fallback.
 
 Open http://127.0.0.1:8821 and use the local login printed by start. Try the
 scripted question printed at startup. This is a supervised offline developer
@@ -35,49 +29,34 @@ use a local state directory or a Docker volume. The local password is generated
 at startup and stays out of the repository. Use the separate Render procedure
 for an approved deployment.
 
-## Asset source and clearance
+## What ships and what requires clearance
 
-The current code remote is public. The intended source is a separate private
-team repository with a Release tagged s2-runtime-v1. Set KPMG_ASSET_REPO
-or use --asset-repo for a separate asset repository. By default setup uses
-the GitHub origin of the private clone. A separately created private team repository can host the onboarding code
-and the release together.
-Never publish the approved UI branch or the asset release to the public
-remote.
-Setup verifies repository visibility, fetches the named release attachments
-using the caller's GitHub CLI login, and checks each size and SHA-256
-before accepting it. The asset manifest lists the attachment filename
-for each required path. A cache hit checks the bytes again. An incomplete
-or corrupted cache fails with a specific error. Remove a damaged cached
-file and rerun setup to reacquire it. Runtime contexts are rebuilt from
-the checked-out source plus verified assets. All paths are relative to
-the checkout. No ZIP needs to be transferred manually.
+The Git checkout supplies the approved frontend, exact index manifest and
+matching table audit. The audit records table IDs, row counts, source hashes
+and extraction status. Setup downloads the public MiniLM models at their
+exact upstream revisions and checks size and SHA-256. No model weights,
+index text, vectors or historical runs are added to Git history.
 
-Use one private Release for the exact demo-100 corpus, table audit and both
-model snapshots. Release attachments keep large data out of Git history and
-avoid adding an LFS client, per-clone smudge behavior and separate LFS quotas.
-Pinned external model revisions are a viable alternative, but the exact
-evaluated snapshots would still need verification and the private corpus
-would still require a separate distribution path. This setup uses one
-authenticated retrieval and integrity policy for all runtime data.
-The approved frontend is checked in under onboarding/frontend, with
-path-specific byte preservation and independent SHA-256 checks. Historical
-evaluation assets, validation sets, replay logs and scoring records are not
-required by this bootstrap.
+The exact demo-100 parent text, search views and vectors are an indivisible
+evaluated bundle. The version-specific license inventory covers all 100
+papers. It records 47 CC BY, 3 CC BY-SA, 6 CC BY-NC-SA, 7 CC BY-NC-ND, and
+37 arXiv non-exclusive distribution declarations. The arXiv-only grant
+authorizes arXiv to distribute the submission. It does not establish rights
+for this project to redistribute the extracted corpus. Publicly published
+addresses are not the reason for withholding. The project data owner must
+confirm the permitted audience and a redistribution basis for the entire
+exact bundle, including any license and attribution obligations. Keep all
+three corpus attachments together and unchanged.
 
-**Publication is blocked on project data-use clearance.** Demo-100
-parents.jsonl and views.json contain a publicly reproduced address inside
-a research scenario. The optional fresh-v4 versions additionally include
-published author correspondence and are outside runtime setup. No project
-rule clearing publication of the scenario address was located. Exact
-bytes are required. The project data owner must explicitly clear the
-published scenario text and the team-private release audience. After clearance,
-an authorized maintainer can create the private release and attach the
-21 exact files using the names in assets.json. Verify release access and
-the full manifest on a fresh clone. If clearance is denied, the existing
-pinned engine cannot be distributed through this release; changing the
-corpus requires a separately approved provenance and evaluation decision.
-No asset release or upload is part of this change.
+- Paper-version inventory: demo-100-licenses.json
+- arXiv's license guidance: https://info.arxiv.org/help/license/index.html
+- arXiv-only terms: https://arxiv.org/licenses/nonexclusive-distrib/1.0/
+
+Until clearance, use the explicit synthetic fixture path above. The optional
+fresh-v4 corpus is not needed for application setup and is excluded. If only
+private redistribution is cleared, a private release location is necessary.
+If public redistribution is later approved, publication and the setup access
+policy can be reviewed together. No new repository is needed for the fixture.
 
 Run bootstrap unit tests with python -m unittest discover -s onboarding
 -p test_setup.py (as one line). Keep the package cache, credentials, state,

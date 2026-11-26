@@ -68,14 +68,21 @@ def acquire(spec, cache, repository=None):
                          'after the project owner provisions and clears the private release.')
     if not re.fullmatch(r'[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+', repository):
         raise SetupError('Specify a private GitHub asset repository as OWNER/REPO.')
-    gh = exists('gh')
+    try:
+        gh = exists('gh')
+    except SetupError as error:
+        raise SetupError('GitHub CLI is required for a cleared private corpus release. '
+                         'Use --fixture for the public synthetic preview without GitHub CLI.') from error
     try:
         visibility = run([gh, 'repo', 'view', repository, '--json', 'visibility',
                           '--jq', '.visibility'], capture=True)
     except SetupError as error:
         raise SetupError('Authenticate GitHub CLI with gh auth login and request project repository access.') from error
     if visibility != 'PRIVATE':
-        raise SetupError('The configured asset release repository must be private.')
+        raise SetupError('The checked-in code is available from this public repository, but the '
+                         'exact demo-100 corpus is not cleared for redistribution. Run setup '
+                         'with --fixture for the public synthetic preview. A private repo does '
+                         'not by itself grant corpus redistribution rights.')
     with tempfile.TemporaryDirectory(prefix='download-', dir=cache) as tmp:
         args = [gh, 'release', 'download', spec['release_tag'], '--repo', repository, '--dir', tmp]
         for _, item in missing:
@@ -84,7 +91,7 @@ def acquire(spec, cache, repository=None):
             run(args, capture=True)
         except SetupError as error:
             raise SetupError(f'Private asset release {spec["release_tag"]} is unavailable. '
-                             'Check repository access. Publication of the exact corpus is pending project data-use clearance.') from error
+                             'Check repository access. Publication of the exact corpus is pending redistribution clearance.') from error
         for _, item in missing:
             verify(Path(tmp) / item['release_asset'], item)
         for name, item in missing:
@@ -102,9 +109,9 @@ def origin_repository():
     return match[1].removesuffix('.git') if match else None
 
 
-def acquire_fixture(spec, cache):
-    fixture = ROOT / 'onboarding/fixture'
-    for name, item in spec['files'].items():
+def acquire_open_files(files, cache, *, synthetic):
+    local = ROOT / ('onboarding/fixture' if synthetic else 'onboarding/runtime-metadata')
+    for name, item in files.items():
         target = cache / name
         if not target.exists():
             target.parent.mkdir(parents=True, exist_ok=True)
@@ -125,7 +132,7 @@ def acquire_fixture(spec, cache):
                         if remaining or source.read(1):
                             raise SetupError(f'Unexpected download length: {name}')
                 else:
-                    shutil.copyfile(fixture / name, staged)
+                    shutil.copyfile(local / name, staged)
                 verify(staged, item)
                 staged.replace(target)
         verify(target, item)
@@ -207,9 +214,12 @@ def main():
             synthetic = json.loads((ROOT / 'onboarding/fixture-assets.json').read_bytes())
             spec['files'] = {**synthetic, **{p: item for p, item in spec['files'].items()
                                              if p.startswith('models/')}}
-            acquire_fixture(spec, workspace / 'assets')
+            acquire_open_files(spec['files'], workspace / 'assets', synthetic=True)
         else:
-            acquire(spec, workspace / 'assets', args.asset_repo or origin_repository())
+            release = {name: item for name, item in spec['files'].items() if item['source'] == 'release'}
+            acquire({**spec, 'files': release}, workspace / 'assets', args.asset_repo or origin_repository())
+            opened = {name: item for name, item in spec['files'].items() if item['source'] != 'release'}
+            acquire_open_files(opened, workspace / 'assets', synthetic=False)
         context = prepare(spec, workspace / 'assets', synthetic=args.fixture)
         if not args.prepare_only:
             if args.runtime == 'docker':

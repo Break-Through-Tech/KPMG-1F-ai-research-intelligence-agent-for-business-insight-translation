@@ -1,6 +1,6 @@
 # Private team publication handoff
 
-## Recommended arrangement
+## Only if private distribution is authorized
 
 Ask the approved project GitHub organization owner to create one new
 **private organization-owned repository** for the code branch and runtime
@@ -39,9 +39,9 @@ only if the organization approves separate code and asset repositories.
    runtime release. Stop if any clearance is missing.
 2. Confirm PRIVATE in gh repo view OWNER/REPO --json visibility. Confirm
    membership and applicable SSO with the repository owner. Add this
-   repository as a separate Git remote and push the reviewed branch there
-   only. Set the team's clone instructions to that branch. Keep the existing
-   integration/portable-onboarding branch and the public remote untouched.
+   repository as a separate Git remote only if a private audience is required.
+   The team can continue using the public code branch and --asset-repo with
+   the cleared private release. Repository privacy does not confer redistribution rights.
 3. On an authorized machine with a verified source tree matching assets.json,
    run the local attachment preparer:
 
@@ -52,7 +52,7 @@ only if the organization approves separate code and asset repositories.
    release attachments. It checks again after copying. It does not validate
    the approval record independently and has no upload capability.
 4. In the private repository, make a draft s2-runtime-v1 release targeting
-   the exact reviewed onboarding commit. Attach only the 21 generated
+   the exact reviewed onboarding commit. Attach only the three generated
    files. Review repo visibility, membership, tag, files and checksums
    before publishing. Keep the version tag stable and use an immutable
    release if the organization permits. Verify developer Read access by

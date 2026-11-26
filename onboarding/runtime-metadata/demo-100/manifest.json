@@ -1,0 +1,15 @@
+{
+  "kind": "bounded_search_views_v1",
+  "status": "complete",
+  "strategy": "token224_parent",
+  "embedding_model": "all-MiniLM-L6-v2",
+  "distance": "squared_l2",
+  "human_acceptance": "pending",
+  "parent_count": 7667,
+  "view_count": 11030,
+  "artifact_sha256": {
+    "parents.jsonl": "78d8efd7c9df075be09ffa5f3a9c7ca79c54efa2d7caf75c8f0329ea72ff41aa",
+    "views.json": "c6c1563ee6888887d354ec6a27e61de4b931f534f9142fbab2e94a30ad5ec5d3",
+    "vectors.npy": "50468962cff785b71c4de72f9e7436b656bcf30d8df801b2681473873d23bd14"
+  }
+}

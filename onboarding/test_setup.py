@@ -40,13 +40,13 @@ class AcquisitionTests(unittest.TestCase):
 
     def test_rejects_public_repository(self):
         with patch.object(setup, 'exists', return_value='gh'), patch.object(setup, 'run', return_value='PUBLIC'):
-            with self.assertRaisesRegex(setup.SetupError, 'private'):
+            with self.assertRaisesRegex(setup.SetupError, 'not cleared'):
                 setup.acquire(self.spec, self.cache, 'example/private-assets')
 
     def test_missing_release_explains_clearance(self):
         with patch.object(setup, 'exists', return_value='gh'), patch.object(
                 setup, 'run', side_effect=['PRIVATE', setup.SetupError('release unavailable')]):
-            with self.assertRaisesRegex(setup.SetupError, 'data-use clearance'):
+            with self.assertRaisesRegex(setup.SetupError, 'redistribution clearance'):
                 setup.acquire(self.spec, self.cache, 'example/private-assets')
 
 

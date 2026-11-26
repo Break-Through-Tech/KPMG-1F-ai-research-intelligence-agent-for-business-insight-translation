@@ -331,3 +331,5 @@
 /onboarding/fixture/demo-100/vectors.npy -text
 /onboarding/fixture/demo-100/views.json -text
 /onboarding/fixture/table-audit-demo-100.json -text
+/onboarding/runtime-metadata/demo-100/manifest.json -text
+/onboarding/runtime-metadata/table-audit-demo-100.json -text

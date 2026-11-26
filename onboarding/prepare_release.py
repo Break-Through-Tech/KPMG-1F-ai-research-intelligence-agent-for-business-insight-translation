@@ -19,14 +19,15 @@ def main():
     if args.output.resolve().is_relative_to(ROOT):
         raise SetupError('Use a private output directory outside the Git checkout.')
     spec = json.loads((ROOT / 'onboarding/assets.json').read_bytes())
-    for name, item in spec['files'].items():
+    files = {name: item for name, item in spec['files'].items() if item['source'] == 'release'}
+    for name, item in files.items():
         verify(args.assets / name, item)
     args.output.mkdir()
-    for name, item in spec['files'].items():
+    for name, item in files.items():
         path = args.output / item['release_asset']
         shutil.copyfile(args.assets / name, path)
         verify(path, item)
-    print(f'Prepared {len(spec["files"])} verified local attachments for {spec["release_tag"]}.')
+    print(f'Prepared {len(files)} verified local attachments for {spec["release_tag"]}.')
 
 
 if __name__ == '__main__':

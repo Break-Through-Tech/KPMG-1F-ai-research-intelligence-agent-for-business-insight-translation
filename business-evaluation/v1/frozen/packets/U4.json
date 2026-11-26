@@ -1,0 +1,71 @@
+{
+  "id": "U4",
+  "result": {
+    "schema_version": "1.0",
+    "review_fingerprint_version": 2,
+    "request": {
+      "query": "What should an audit enablement team infer when a single agent beats Swarm but the orchestrated system beats both?",
+      "top_k": 5
+    },
+    "evidence": [
+      {
+        "chunk_id": "2605.00276v1_pdf_p7_architecture",
+        "text": "Implementation Details For our proposed Agentic AI system and other baseline systems, all agents are powered by the GPT4o model [14]. All systems are provided with the same set of tools and have access to the same offline database containing POI information, pairwise travel times, and popularity data to ensure a fair and reproducible comparison. As shown in Fig. 3, our system is able to interact with users for clarification information. However, to have a fair comparison with baselines, we disable the ability of our system to interact with users in the following experiments. We implemented our multi-agent environment using the Microsoft Autogen [15] framework, which provides structured tools for orchestrating agent interactions and managing communication workflows. B. Evaluation Results To show the effectiveness of our proposed agentic system in trip planning, we compare our proposed system with other baselines using our generated dataset TOP. In detail, for every question in the dataset, we allow each system only one trial and calculate the accuracy based on the difficulty levels. In detail, the results are presented in Table III, and we can have the following observation: \u2022 Superior Overall Performance and Architectural Advantage: Our agentic framework achieves the highest overall accuracy of 77.4%, substantially outperforming both the Single-Agent (30.4%) and Swarm (23.6%) baselines. This demonstrates that centralized orchestration with specialized sub-agents leads to more reliable and consistent reasoning. \u2022 Robustness to Increasing Task Complexity: The most significant performance gap emerges as task difficulty increases. While all systems perform adequately on \u201dEasy\u201d queries, the baselines experience a dramatic collapse on \u201dMedium\u201d and \u201dHard\u201d tasks. Our system maintains a high 87% accuracy on medium-level compositional reasoning tasks, while the baselines drop to 15-26%. This robustness extends to the \u201dHard\u201d queries, which require multi-intention reasoning under simultaneous constraints. Here, our system\u2019s 58% accuracy is nearly seven times higher than the baselines. This demonstrates that our architecture is uniquely capable of managing the complex, multi-step, and interdependent reasoning required for realistic trip planning, whereas the baselines prove almost entirely incapable of solving these complex problems. \u2022 Single-Agent vs. Multi-Agent: An important observation from our experiments is that the superiority of a multi-agent system is not guaranteed by default. Although multi-agent frameworks are conceptually more powerful due to distributed reasoning and specialization, poorly coordinated systems can even underperform a single-agent baseline. For example, in our results, the Single-Agent model outperforms the generic multiagent Swarm framework. This finding highlights that simply deploying multiple agents without explicit orchestration or task structure may lead to communication overhead, redundant reasoning, or inconsistent outputs. In contrast, our proposed agentic system demonstrates that when multi-agent collaboration is well designed and strategically orchestrated, it can achieve significant gains across all difficulty levels. The Orchestration Agent in our architecture acts as a central meta-controller that manages sub-task decomposition, enforces consistency of the reasoning, and triggers rethinking when necessary. This structured collaboration enables agents to reason coherently and adaptively rather than acting as isolated entities.",
+        "arxiv_id": "2605.00276v1",
+        "title": "2605.00276v1",
+        "source": "pdf",
+        "page_number": 7,
+        "pdf_url": "https://arxiv.org/pdf/2605.00276v1",
+        "source_url": "https://arxiv.org/pdf/2605.00276v1#page=7"
+      }
+    ],
+    "summary": {
+      "query": "What should an audit enablement team infer when a single agent beats Swarm but the orchestrated system beats both?",
+      "status": "ok",
+      "claims": [
+        {
+          "text": "In the TOP trip-planning evaluation, the single-agent baseline outperformed Swarm, while the centrally orchestrated system outperformed both.",
+          "kind": "finding",
+          "chunk_ids": [
+            "2605.00276v1_pdf_p7_architecture"
+          ],
+          "support": [
+            {
+              "chunk_id": "2605.00276v1_pdf_p7_architecture",
+              "quote": "Implementation Details For our proposed Agentic AI system and other baseline systems, all agents are powered by the GPT4o model [14]. All systems are provided with the same set of tools and have access to the same offline database containing POI information, pairwise travel times, and popularity data to ensure a fair and reproducible comparison. As shown in Fig. 3, our system is able to interact with users for clarification information. However, to have a fair comparison with baselines, we disable the ability of our system to interact with users in the following experiments. We implemented our multi-agent environment using the Microsoft Autogen [15] framework, which provides structured tools for orchestrating agent interactions and managing communication workflows. B. Evaluation Results To show the effectiveness of our proposed agentic system in trip planning, we compare our proposed system with other baselines using our generated dataset TOP. In detail, for every question in the dataset, we allow each system only one trial and calculate the accuracy based on the difficulty levels. In detail, the results are presented in Table III, and we can have the following observation: \u2022 Superior Overall Performance and Architectural Advantage: Our agentic framework achieves the highest overall accuracy of 77.4%, substantially outperforming both the Single-Agent (30.4%) and Swarm (23.6%) baselines. This demonstrates that centralized orchestration with specialized sub-agents leads to more reliable and consistent reasoning. \u2022 Robustness to Increasing Task Complexity: The most significant performance gap emerges as task difficulty increases. While all systems perform adequately on \u201dEasy\u201d queries, the baselines experience a dramatic collapse on \u201dMedium\u201d and \u201dHard\u201d tasks. Our system maintains a high 87% accuracy on medium-level compositional reasoning tasks, while the baselines drop to 15-26%. This robustness extends to the \u201dHard\u201d queries, which require multi-intention reasoning under simultaneous constraints. Here, our system\u2019s 58% accuracy is nearly seven times higher than the baselines. This demonstrates that our architecture is uniquely capable of managing the complex, multi-step, and interdependent reasoning required for realistic trip planning, whereas the baselines prove almost entirely incapable of solving these complex problems. \u2022 Single-Agent vs. Multi-Agent: An important observation from our experiments is that the superiority of a multi-agent system is not guaranteed by default. Although multi-agent frameworks are conceptually more powerful due to distributed reasoning and specialization, poorly coordinated systems can even underperform a single-agent baseline. For example, in our results, the Single-Agent model outperforms the generic multiagent Swarm framework. This finding highlights that simply deploying multiple agents without explicit orchestration or task structure may lead to communication overhead, redundant reasoning, or inconsistent outputs. In contrast, our proposed agentic system demonstrates that when multi-agent collaboration is well designed and strategically orchestrated, it can achieve significant gains across all difficulty levels. The Orchestration Agent in our architecture acts as a central meta-controller that manages sub-task decomposition, enforces consistency of the reasoning, and triggers rethinking when necessary. This structured collaboration enables agents to reason coherently and adaptively rather than acting as isolated entities."
+            }
+          ]
+        }
+      ],
+      "limitations": [
+        "The supplied research does not establish outcomes in the target workflow."
+      ],
+      "limitation_support": [],
+      "answer_scope": "partial",
+      "answer_lead": "The supplied research does not establish outcomes in the target workflow.",
+      "quality_review": {
+        "coverage": "partial",
+        "reviewer": "assistant_primary_source_check_not_human",
+        "gap": "The supplied research does not establish outcomes in the target workflow."
+      }
+    },
+    "human_review": {
+      "status": "pending",
+      "reviewer": null,
+      "notes": null
+    },
+    "approved": false,
+    "provenance": {
+      "preparation": "primary_source_verified_manual_packet_no_research_generation",
+      "scientific_evidence": "original_local_PDF_not_unit_fixture"
+    },
+    "review_fingerprint": "f1cdb6c3eeb8fae1953953b53790e72a7f74c93ca7c59005ac7a3e8cb70e060b"
+  },
+  "context": {
+    "industry": "Internal audit enablement",
+    "workflow": "Choosing an assistant for multi-step evidence reconciliation",
+    "decision": "What should an audit enablement team infer when a single agent beats Swarm but the orchestrated system beats both?"
+  },
+  "shared_input_sha256": "009590ad641c053e2052be088882d421452d63d8d4b8cd8b880f80f76f8d45d3",
+  "preparation": "manual source-checked accepted packet, no model output"
+}

@@ -1,0 +1,71 @@
+{
+  "id": "R3",
+  "result": {
+    "schema_version": "1.0",
+    "review_fingerprint_version": 2,
+    "request": {
+      "query": "Which model-routing decision could this research inform, and what should determine whether extra estimation is worthwhile?",
+      "top_k": 5
+    },
+    "evidence": [
+      {
+        "chunk_id": "2608.20316v1_pdf_p1_routing",
+        "text": "Routing requires estimating each specialist\u2019s expected return, but this value estimation has a cost. Cheap estimators (e.g., embedding-based predictors) are fast but noisy, while accurate estimators (e.g., fine-tuned models with access to retrieval results or partial reasoning traces) are expensive. We formalize this tradeoff as an instance of Pandora\u2019s Box, the classical problem of optimal search with costly inspection. Under a Gaussian signal model, the resulting policies have closed-form value-of-information expressions that determine, for each specialist and input, whether refining the value estimate is worth its cost. We call the centralized policy Pandora\u2019s Router. We extend this to a decentralized setting, Pandora\u2019s Bidder, where specialists independently decide whether to invest in self-assessment before accepting an offered price to claim a query. Experiments across three domains\u2014a standard multi-LLM benchmark, retrieval-augmented specialists, and LLMs with variable inference-time reasoning\u2014show that Pandora\u2019s Router matches the routing quality of exhaustive estimation, while querying the expensive estimator far less often. In the decentralized setting, value-of-information reasoning improves allocative efficiency when competing estimates are accurate; when competing estimates are noisy, however, it can increase the strategic specialist\u2019s utility at the expense of others.",
+        "arxiv_id": "2608.20316v1",
+        "title": "Pandora's AI Model Routing Box Efficient Allocation with Costly Value Estimation",
+        "source": "pdf",
+        "page_number": 1,
+        "pdf_url": "https://arxiv.org/pdf/2608.20316v1",
+        "source_url": "https://arxiv.org/pdf/2608.20316v1#page=1"
+      }
+    ],
+    "summary": {
+      "query": "Which model-routing decision could this research inform, and what should determine whether extra estimation is worthwhile?",
+      "status": "ok",
+      "claims": [
+        {
+          "text": "The routing study reports comparable routing quality to exhaustive estimation using fewer expensive estimates; noisy competitors can create adverse allocation effects.",
+          "kind": "finding",
+          "chunk_ids": [
+            "2608.20316v1_pdf_p1_routing"
+          ],
+          "support": [
+            {
+              "chunk_id": "2608.20316v1_pdf_p1_routing",
+              "quote": "Routing requires estimating each specialist\u2019s expected return, but this value estimation has a cost. Cheap estimators (e.g., embedding-based predictors) are fast but noisy, while accurate estimators (e.g., fine-tuned models with access to retrieval results or partial reasoning traces) are expensive. We formalize this tradeoff as an instance of Pandora\u2019s Box, the classical problem of optimal search with costly inspection. Under a Gaussian signal model, the resulting policies have closed-form value-of-information expressions that determine, for each specialist and input, whether refining the value estimate is worth its cost. We call the centralized policy Pandora\u2019s Router. We extend this to a decentralized setting, Pandora\u2019s Bidder, where specialists independently decide whether to invest in self-assessment before accepting an offered price to claim a query. Experiments across three domains\u2014a standard multi-LLM benchmark, retrieval-augmented specialists, and LLMs with variable inference-time reasoning\u2014show that Pandora\u2019s Router matches the routing quality of exhaustive estimation, while querying the expensive estimator far less often. In the decentralized setting, value-of-information reasoning improves allocative efficiency when competing estimates are accurate; when competing estimates are noisy, however, it can increase the strategic specialist\u2019s utility at the expense of others."
+            }
+          ]
+        }
+      ],
+      "limitations": [
+        "The supplied research does not establish outcomes in the target workflow."
+      ],
+      "limitation_support": [],
+      "answer_scope": "partial",
+      "answer_lead": "The supplied research does not establish outcomes in the target workflow.",
+      "quality_review": {
+        "coverage": "partial",
+        "reviewer": "assistant_primary_source_check_not_human",
+        "gap": "The supplied research does not establish outcomes in the target workflow."
+      }
+    },
+    "human_review": {
+      "status": "pending",
+      "reviewer": null,
+      "notes": null
+    },
+    "approved": false,
+    "provenance": {
+      "preparation": "primary_source_verified_manual_packet_no_research_generation",
+      "scientific_evidence": "original_local_PDF_not_unit_fixture"
+    },
+    "review_fingerprint": "02ebc30e2edde5aa2e867dffc1912b04feb4ee208b8b3f4648de6355b8ee76d2"
+  },
+  "context": {
+    "industry": "Technology advisory",
+    "workflow": "Selecting models for research requests",
+    "decision": "Which model-routing decision could this research inform, and what should determine whether extra estimation is worthwhile?"
+  },
+  "shared_input_sha256": "eea9df43fb53a190c591d845473f3404013030c54e37337b214c49c3637c90ef",
+  "preparation": "manual source-checked accepted packet, no model output"
+}

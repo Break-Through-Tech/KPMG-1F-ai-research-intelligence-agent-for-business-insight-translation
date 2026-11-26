@@ -1,0 +1,86 @@
+[
+  {
+    "source_key": "collection",
+    "original_pdf": "C:\\Users\\ngkho\\KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation\\data\\2608.20320v1_An Agentic Approach for Active Data Collection, Travel Behavior Modeling, and We.pdf",
+    "pdf_sha256": "558cdae525c97f01e5b50000a3b9e307cae227f37f67d7aa7491a58507845872",
+    "page_number": 1,
+    "quote_sha256": "7bc8c7171809d9f7481a48d9a209987d8eefb522c0e8fe2ea6a9a727a05df8ef",
+    "quote": "This study proposes and applies a three-agent workflow integrating conversational data collection, structured data processing, and behavioral prediction. A chatbot-administered, image-augmented stated-preference survey collected mode choices from 92 student commuters across five predefined weather scenarios, yielding 454 respondent\u2013scenario observations. Weather-related associations were analyzed using a multinomial logit model, while logistic regression and random forest provided machine-learning benchmarks. Nine locally deployed large language models (LLMs), ranging from 2 to 35 billion parameters, were evaluated across four zero-shot prompt-and-context conditions and further extended through persona, few-shot, and vision-based configurations. Cycling was particularly sensitive to adverse weather, while public transit use increased substantially under the Snowy scenario. Random forest achieved 69.6% five-class accuracy, while the best text-only zero-shot LLM reached 69.9% without task-specific fitting. Habitual travel information produced the most consistent improvement in LLM prediction, Expert framing generally outperformed Role-Play, and persona information was most beneficial when habitual travel information was unavailable. Few-shot prompting further improved five-class prediction for several models, with gains generally stabilizing after a small number of examples. Vision-capable models were also evaluated using the same weather images presented to respondents, and the best vision-based configuration reached the highest observed five-class accuracy of 71.5%, indicating that visual context can provide additional predictive information for selected models. Taken together, the findings show that habitual travel information, prompting strategy, demonstrations, and visual context can meaningfully shape LLM-based travel-choice prediction. More broadly, the study demonstrates how conversational survey administration, structured data processing, conventional behavioral modeling, machine learning, and multimodal LLM prediction can be coordinated within a single auditable multi-agent workflow, while broader application requires validation with larger and more representative traveler samples.",
+    "dual_extractor_membership": true,
+    "semantic_check": "assistant compared paraphrase against primary source; not independent human approval",
+    "source_authenticity": "local original PDF; remote publisher identity not revalidated",
+    "locator": "https://arxiv.org/pdf/2608.20320v1#page=1"
+  },
+  {
+    "source_key": "traces",
+    "original_pdf": "C:\\Users\\ngkho\\KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation\\data\\2608.20319v1_Inducing Task Models from Computer-Use Traces.pdf",
+    "pdf_sha256": "055abd08c5fed667badebc447be457006c754634853da9c27cf4b8811c8fad15",
+    "page_number": 1,
+    "quote_sha256": "147071ea0a8366ffd65184790a6c0f5c3ee9975a5dfe46909e0f245732cb9d2d",
+    "quote": "We introduce TASK MODEL INDUCTION (TMI), which (i) discovers the latent tasks in an unconstrained trace, disentangling concurrent activity, and (ii) for each latent task, induces a task model pairing a hierarchical objective model of recursive goal decomposition with a procedure model of the control flow that organized the execution. Intrinsically, on controlled human and agent trajectories, TMI recovers interleaved tasks with 0.974 agreement against ground-truth groupings and reconstructs 74.9% of the observed execution steps, far more than the strongest workflow induction baseline. Extrinsically, skills derived from TMI\u2019s task models improve held-out task accuracy by 30.0% over the strongest baseline. 1",
+    "dual_extractor_membership": true,
+    "semantic_check": "assistant compared paraphrase against primary source; not independent human approval",
+    "source_authenticity": "local original PDF; remote publisher identity not revalidated",
+    "locator": "https://arxiv.org/pdf/2608.20319v1#page=1"
+  },
+  {
+    "source_key": "trace_privacy",
+    "original_pdf": "C:\\Users\\ngkho\\KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation\\data\\2608.20319v1_Inducing Task Models from Computer-Use Traces.pdf",
+    "pdf_sha256": "055abd08c5fed667badebc447be457006c754634853da9c27cf4b8811c8fad15",
+    "page_number": 10,
+    "quote_sha256": "9d9157fbfb66a4db26a94d8303017057635587c87a03d8e39483a17b7b8fc677",
+    "quote": "TMI operates on naturalistic computer-use traces that may contain personally identifiable information. Future deployments that apply this method to raw computer-use traces should consider privacy redaction of screenshots and keyboard events before induction, so that private and sensitive content does not propagate into induced artifacts distributed for downstream uses such as skill learning. Studying the effect of such redaction on the induction quality is left to future work.",
+    "dual_extractor_membership": true,
+    "semantic_check": "assistant compared paraphrase against primary source; not independent human approval",
+    "source_authenticity": "local original PDF; remote publisher identity not revalidated",
+    "locator": "https://arxiv.org/pdf/2608.20319v1#page=10"
+  },
+  {
+    "source_key": "routing",
+    "original_pdf": "C:\\Users\\ngkho\\KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation\\data\\2608.20316v1_Pandora's AI Model Routing Box Efficient Allocation with Costly Value Estimation.pdf",
+    "pdf_sha256": "c311eeb4801ab29f80e111d732483e5eadc22eb4603dab0c614b1bdba691629c",
+    "page_number": 1,
+    "quote_sha256": "c89317b77d6b92de30bca9f187f8c4f12ddcb72b0bc4c3c1f789d6bef1a7fa50",
+    "quote": "Routing requires estimating each specialist\u2019s expected return, but this value estimation has a cost. Cheap estimators (e.g., embedding-based predictors) are fast but noisy, while accurate estimators (e.g., fine-tuned models with access to retrieval results or partial reasoning traces) are expensive. We formalize this tradeoff as an instance of Pandora\u2019s Box, the classical problem of optimal search with costly inspection. Under a Gaussian signal model, the resulting policies have closed-form value-of-information expressions that determine, for each specialist and input, whether refining the value estimate is worth its cost. We call the centralized policy Pandora\u2019s Router. We extend this to a decentralized setting, Pandora\u2019s Bidder, where specialists independently decide whether to invest in self-assessment before accepting an offered price to claim a query. Experiments across three domains\u2014a standard multi-LLM benchmark, retrieval-augmented specialists, and LLMs with variable inference-time reasoning\u2014show that Pandora\u2019s Router matches the routing quality of exhaustive estimation, while querying the expensive estimator far less often. In the decentralized setting, value-of-information reasoning improves allocative efficiency when competing estimates are accurate; when competing estimates are noisy, however, it can increase the strategic specialist\u2019s utility at the expense of others.",
+    "dual_extractor_membership": true,
+    "semantic_check": "assistant compared paraphrase against primary source; not independent human approval",
+    "source_authenticity": "local original PDF; remote publisher identity not revalidated",
+    "locator": "https://arxiv.org/pdf/2608.20316v1#page=1"
+  },
+  {
+    "source_key": "algorithm",
+    "original_pdf": "C:\\Users\\ngkho\\KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation\\data\\2608.20318v1_AI4AI-Bench Benchmarking LLM Agents in Algorithmic Design for Recursive Self-Imp.pdf",
+    "pdf_sha256": "93029b04f8612f4bfdd221a6f726e86a2d1408cab0a3256866f164e3c3749dfc",
+    "page_number": 1,
+    "quote_sha256": "6ac3ace3c7c146e4b07cd99a74f74dc39362684cac5be096daf3d598fc9fc1d4",
+    "quote": "We present AI4AI-Bench, 10 frozen research repositories spanning 10 training algorithm families. In each task, an agent has 4 hours on one B300 to rewrite the training algorithm; its code is then rerun from scratch for up to 12 hours and scored by a fixed evaluator hidden from the agent, against the repository\u2019s original algorithm under the same procedure. Because the 10 metrics are incommensurable, every task is mapped onto one scale on which 0 is an uninformative model, 0.1 is the algorithm the repository ships, and 1.0 is the task optimum. Across 29 configurations of 6 systems on all 10 tasks the mean score is 0.166, and the best system reaches 0.250: even the strongest closes under a fifth of the distance between the algorithm that was already there and the optimum. The submissions show where that distance went: most never change how the model learns at all, and the minority that do average 0.226 against 0.126 for the rest. More reasoning effort mostly buys the willingness to go there, taking that minority from 8% of submissions to 64% and the mean score from 0.094 to 0.196. We release the task suite, the evaluators and every scored submission, so that the measurement can be repeated as these systems change.",
+    "dual_extractor_membership": true,
+    "semantic_check": "assistant compared paraphrase against primary source; not independent human approval",
+    "source_authenticity": "local original PDF; remote publisher identity not revalidated",
+    "locator": "https://arxiv.org/pdf/2608.20318v1#page=1"
+  },
+  {
+    "source_key": "quality",
+    "original_pdf": "C:\\Users\\ngkho\\KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation\\data\\2608.20331v1_G-CARL Grounded Checklist-Aligned Reward Learning for Patient-Oriented Medical R.pdf",
+    "pdf_sha256": "a91e11c0df97c24fe5a7553cc993cc463a958862bc3fbf8b864a7ef9ae352075",
+    "page_number": 1,
+    "quote_sha256": "444770880a399d1098e0e1be9cc820bb1a79dbfd37d526e1b46649bc3b070fbc",
+    "quote": "To address this challenge, we propose G-CARL, a grounded, checklist-aligned reinforcement learning framework that combines multi-source retrieval for atomic claim verification with context-aware, instance-specific weighted checklists for response coverage, providing structured supervision for factuality, user-demand satisfaction, and expression quality without constraining response diversity. We further construct MMedReport, a realworld PMRI benchmark, along with a clinician-designed three-dimensional evaluation protocol. Extensive experiments demonstrate that G-CARL consistently outperforms existing post-training baselines in overall quality, claim-level precision, and checklist recall. Pairwise preference evaluation by clinicians further confirms that G-CARL produces interpretations that are more accurate and better aligned with patient needs.",
+    "dual_extractor_membership": true,
+    "semantic_check": "assistant compared paraphrase against primary source; not independent human approval",
+    "source_authenticity": "local original PDF; remote publisher identity not revalidated",
+    "locator": "https://arxiv.org/pdf/2608.20331v1#page=1"
+  },
+  {
+    "source_key": "architecture",
+    "original_pdf": "C:\\Users\\ngkho\\KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation\\data\\pdfs\\2605.00276v1.pdf",
+    "pdf_sha256": "42c60c82b4b4089928d239a58950f3605acea1aac0a3f0f39af6cc4cc74dcf95",
+    "page_number": 7,
+    "quote_sha256": "dc7e74a9d1d3a3e94e184ab3bec13227ddcd0c7fef844d106724a986c57198b6",
+    "quote": "Implementation Details For our proposed Agentic AI system and other baseline systems, all agents are powered by the GPT4o model [14]. All systems are provided with the same set of tools and have access to the same offline database containing POI information, pairwise travel times, and popularity data to ensure a fair and reproducible comparison. As shown in Fig. 3, our system is able to interact with users for clarification information. However, to have a fair comparison with baselines, we disable the ability of our system to interact with users in the following experiments. We implemented our multi-agent environment using the Microsoft Autogen [15] framework, which provides structured tools for orchestrating agent interactions and managing communication workflows. B. Evaluation Results To show the effectiveness of our proposed agentic system in trip planning, we compare our proposed system with other baselines using our generated dataset TOP. In detail, for every question in the dataset, we allow each system only one trial and calculate the accuracy based on the difficulty levels. In detail, the results are presented in Table III, and we can have the following observation: \u2022 Superior Overall Performance and Architectural Advantage: Our agentic framework achieves the highest overall accuracy of 77.4%, substantially outperforming both the Single-Agent (30.4%) and Swarm (23.6%) baselines. This demonstrates that centralized orchestration with specialized sub-agents leads to more reliable and consistent reasoning. \u2022 Robustness to Increasing Task Complexity: The most significant performance gap emerges as task difficulty increases. While all systems perform adequately on \u201dEasy\u201d queries, the baselines experience a dramatic collapse on \u201dMedium\u201d and \u201dHard\u201d tasks. Our system maintains a high 87% accuracy on medium-level compositional reasoning tasks, while the baselines drop to 15-26%. This robustness extends to the \u201dHard\u201d queries, which require multi-intention reasoning under simultaneous constraints. Here, our system\u2019s 58% accuracy is nearly seven times higher than the baselines. This demonstrates that our architecture is uniquely capable of managing the complex, multi-step, and interdependent reasoning required for realistic trip planning, whereas the baselines prove almost entirely incapable of solving these complex problems. \u2022 Single-Agent vs. Multi-Agent: An important observation from our experiments is that the superiority of a multi-agent system is not guaranteed by default. Although multi-agent frameworks are conceptually more powerful due to distributed reasoning and specialization, poorly coordinated systems can even underperform a single-agent baseline. For example, in our results, the Single-Agent model outperforms the generic multiagent Swarm framework. This finding highlights that simply deploying multiple agents without explicit orchestration or task structure may lead to communication overhead, redundant reasoning, or inconsistent outputs. In contrast, our proposed agentic system demonstrates that when multi-agent collaboration is well designed and strategically orchestrated, it can achieve significant gains across all difficulty levels. The Orchestration Agent in our architecture acts as a central meta-controller that manages sub-task decomposition, enforces consistency of the reasoning, and triggers rethinking when necessary. This structured collaboration enables agents to reason coherently and adaptively rather than acting as isolated entities.",
+    "dual_extractor_membership": true,
+    "semantic_check": "assistant compared paraphrase against primary source; not independent human approval",
+    "source_authenticity": "local original PDF; remote publisher identity not revalidated",
+    "locator": "https://arxiv.org/pdf/2605.00276v1#page=7"
+  }
+]

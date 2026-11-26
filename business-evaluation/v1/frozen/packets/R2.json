@@ -1,0 +1,94 @@
+{
+  "id": "R2",
+  "result": {
+    "schema_version": "1.0",
+    "review_fingerprint_version": 2,
+    "request": {
+      "query": "How could task induction support process documentation, and what should a team establish before capturing work traces?",
+      "top_k": 5
+    },
+    "evidence": [
+      {
+        "chunk_id": "2608.20319v1_pdf_p1_traces",
+        "text": "We introduce TASK MODEL INDUCTION (TMI), which (i) discovers the latent tasks in an unconstrained trace, disentangling concurrent activity, and (ii) for each latent task, induces a task model pairing a hierarchical objective model of recursive goal decomposition with a procedure model of the control flow that organized the execution. Intrinsically, on controlled human and agent trajectories, TMI recovers interleaved tasks with 0.974 agreement against ground-truth groupings and reconstructs 74.9% of the observed execution steps, far more than the strongest workflow induction baseline. Extrinsically, skills derived from TMI\u2019s task models improve held-out task accuracy by 30.0% over the strongest baseline. 1",
+        "arxiv_id": "2608.20319v1",
+        "title": "Inducing Task Models from Computer-Use Traces",
+        "source": "pdf",
+        "page_number": 1,
+        "pdf_url": "https://arxiv.org/pdf/2608.20319v1",
+        "source_url": "https://arxiv.org/pdf/2608.20319v1#page=1"
+      },
+      {
+        "chunk_id": "2608.20319v1_pdf_p10_trace_privacy",
+        "text": "TMI operates on naturalistic computer-use traces that may contain personally identifiable information. Future deployments that apply this method to raw computer-use traces should consider privacy redaction of screenshots and keyboard events before induction, so that private and sensitive content does not propagate into induced artifacts distributed for downstream uses such as skill learning. Studying the effect of such redaction on the induction quality is left to future work.",
+        "arxiv_id": "2608.20319v1",
+        "title": "Inducing Task Models from Computer-Use Traces",
+        "source": "pdf",
+        "page_number": 10,
+        "pdf_url": "https://arxiv.org/pdf/2608.20319v1",
+        "source_url": "https://arxiv.org/pdf/2608.20319v1#page=10"
+      }
+    ],
+    "summary": {
+      "query": "How could task induction support process documentation, and what should a team establish before capturing work traces?",
+      "status": "ok",
+      "claims": [
+        {
+          "text": "TMI discovers interleaved tasks and reconstructs task models from controlled human and agent computer-use traces.",
+          "kind": "finding",
+          "chunk_ids": [
+            "2608.20319v1_pdf_p1_traces"
+          ],
+          "support": [
+            {
+              "chunk_id": "2608.20319v1_pdf_p1_traces",
+              "quote": "We introduce TASK MODEL INDUCTION (TMI), which (i) discovers the latent tasks in an unconstrained trace, disentangling concurrent activity, and (ii) for each latent task, induces a task model pairing a hierarchical objective model of recursive goal decomposition with a procedure model of the control flow that organized the execution. Intrinsically, on controlled human and agent trajectories, TMI recovers interleaved tasks with 0.974 agreement against ground-truth groupings and reconstructs 74.9% of the observed execution steps, far more than the strongest workflow induction baseline. Extrinsically, skills derived from TMI\u2019s task models improve held-out task accuracy by 30.0% over the strongest baseline. 1"
+            }
+          ]
+        },
+        {
+          "text": "The authors warn that traces may contain personal information and leave the effect of privacy redaction on induction quality to future work.",
+          "kind": "finding",
+          "chunk_ids": [
+            "2608.20319v1_pdf_p10_trace_privacy"
+          ],
+          "support": [
+            {
+              "chunk_id": "2608.20319v1_pdf_p10_trace_privacy",
+              "quote": "TMI operates on naturalistic computer-use traces that may contain personally identifiable information. Future deployments that apply this method to raw computer-use traces should consider privacy redaction of screenshots and keyboard events before induction, so that private and sensitive content does not propagate into induced artifacts distributed for downstream uses such as skill learning. Studying the effect of such redaction on the induction quality is left to future work."
+            }
+          ]
+        }
+      ],
+      "limitations": [
+        "The supplied research does not establish outcomes in the target workflow."
+      ],
+      "limitation_support": [],
+      "answer_scope": "partial",
+      "answer_lead": "The supplied research does not establish outcomes in the target workflow.",
+      "quality_review": {
+        "coverage": "partial",
+        "reviewer": "assistant_primary_source_check_not_human",
+        "gap": "The supplied research does not establish outcomes in the target workflow."
+      }
+    },
+    "human_review": {
+      "status": "pending",
+      "reviewer": null,
+      "notes": null
+    },
+    "approved": false,
+    "provenance": {
+      "preparation": "primary_source_verified_manual_packet_no_research_generation",
+      "scientific_evidence": "original_local_PDF_not_unit_fixture"
+    },
+    "review_fingerprint": "67b22caa93225af3d8801f970a3ee526f266b74c96d031d8a2af64742644bcf8"
+  },
+  "context": {
+    "industry": "Advisory",
+    "workflow": "Documenting knowledge-worker processes",
+    "decision": "How could task induction support process documentation, and what should a team establish before capturing work traces?"
+  },
+  "shared_input_sha256": "6d022021515a87cd369451ec71b589f7d8a259a2253d5d0d44a853be52e2b2e6",
+  "preparation": "manual source-checked accepted packet, no model output"
+}

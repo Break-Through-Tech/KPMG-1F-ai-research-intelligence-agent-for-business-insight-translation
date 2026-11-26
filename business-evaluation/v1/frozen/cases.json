@@ -1,0 +1,207 @@
+[
+  {
+    "id": "R1",
+    "split": "reference_aligned",
+    "title": "Survey workflow opportunity",
+    "question": "What could a team change in survey collection and analysis handoffs based on this study, and what limits the application?",
+    "context": {
+      "industry": "Advisory",
+      "workflow": "Survey collection and analysis handoffs",
+      "decision": "What could a team change in survey collection and analysis handoffs based on this study, and what limits the application?"
+    },
+    "source_keys": [
+      "collection"
+    ],
+    "review_focus": "Identify an auditable workflow opportunity without treating student commuters as representative clients.",
+    "expected_calls_per_arm": 1,
+    "novelty": "KPMG reference-aligned"
+  },
+  {
+    "id": "R2",
+    "split": "reference_aligned",
+    "title": "Process documentation and privacy",
+    "question": "How could task induction support process documentation, and what should a team establish before capturing work traces?",
+    "context": {
+      "industry": "Advisory",
+      "workflow": "Documenting knowledge-worker processes",
+      "decision": "How could task induction support process documentation, and what should a team establish before capturing work traces?"
+    },
+    "source_keys": [
+      "traces",
+      "trace_privacy"
+    ],
+    "review_focus": "Distinguish demonstrated task reconstruction from proposed privacy controls; redaction effectiveness is untested.",
+    "expected_calls_per_arm": 1,
+    "novelty": "KPMG reference-aligned"
+  },
+  {
+    "id": "R3",
+    "split": "reference_aligned",
+    "title": "Model routing allocation",
+    "question": "Which model-routing decision could this research inform, and what should determine whether extra estimation is worthwhile?",
+    "context": {
+      "industry": "Technology advisory",
+      "workflow": "Selecting models for research requests",
+      "decision": "Which model-routing decision could this research inform, and what should determine whether extra estimation is worthwhile?"
+    },
+    "source_keys": [
+      "routing"
+    ],
+    "review_focus": "Quality versus estimation cost; preserve centralized/decentralized distinction and noisy-estimate caveat.",
+    "expected_calls_per_arm": 1,
+    "novelty": "KPMG reference-aligned"
+  },
+  {
+    "id": "R4",
+    "split": "reference_aligned",
+    "title": "Vendor improvement claims",
+    "question": "What evidence should a team request before accepting a claim that an AI coding tool improved a training algorithm?",
+    "context": {
+      "industry": "Technology advisory",
+      "workflow": "Assessing AI coding tool claims",
+      "decision": "What evidence should a team request before accepting a claim that an AI coding tool improved a training algorithm?"
+    },
+    "source_keys": [
+      "algorithm"
+    ],
+    "review_focus": "Differentiate algorithm changes from configuration changes and require repeatable baseline comparison.",
+    "expected_calls_per_arm": 1,
+    "novelty": "KPMG reference-aligned"
+  },
+  {
+    "id": "R5",
+    "split": "reference_aligned",
+    "title": "Claim and coverage quality",
+    "question": "How could separate factual-support and coverage checks improve brief review, and what transfer assumptions matter?",
+    "context": {
+      "industry": "Trusted AI",
+      "workflow": "Reviewing research briefs",
+      "decision": "How could separate factual-support and coverage checks improve brief review, and what transfer assumptions matter?"
+    },
+    "source_keys": [
+      "quality"
+    ],
+    "review_focus": "Translate a quality-control principle without claiming medical results prove business-brief benefit.",
+    "expected_calls_per_arm": 1,
+    "novelty": "KPMG reference-aligned"
+  },
+  {
+    "id": "U1",
+    "split": "generation_heldout",
+    "title": "Novel public-service routing",
+    "question": "Which routing decisions are worth examining for multilingual grant enquiries when rare-language quality matters more than average cost?",
+    "context": {
+      "industry": "Public-sector advisory",
+      "workflow": "Routing multilingual grant-eligibility enquiries",
+      "decision": "Which routing decisions are worth examining for multilingual grant enquiries when rare-language quality matters more than average cost?"
+    },
+    "source_keys": [
+      "routing"
+    ],
+    "review_focus": "Conditional transfer, distribution-specific quality evidence; do not invent service or savings outcomes.",
+    "expected_calls_per_arm": 1,
+    "novelty": "new question, not used for implementation or tuning; known-source transfer; not an independent-author or unseen-paper test"
+  },
+  {
+    "id": "U2",
+    "split": "generation_heldout",
+    "title": "Novel manufacturing handoffs",
+    "question": "Would task induction help document maintenance shift handoffs, and what evidence should govern a decision to collect screen traces?",
+    "context": {
+      "industry": "Operations advisory",
+      "workflow": "Documenting maintenance shift handoffs",
+      "decision": "Would task induction help document maintenance shift handoffs, and what evidence should govern a decision to collect screen traces?"
+    },
+    "source_keys": [
+      "traces",
+      "trace_privacy"
+    ],
+    "review_focus": "Action may be an evidence request or documentation review, not automatic workplace surveillance or rollout.",
+    "expected_calls_per_arm": 1,
+    "novelty": "new question, not used for implementation or tuning; known-source transfer; not an independent-author or unseen-paper test"
+  },
+  {
+    "id": "U3",
+    "split": "generation_heldout",
+    "title": "External-validity challenge",
+    "question": "What can this student-commuter study reasonably inform about branch-staff travel analysis, and which conclusions should be deferred?",
+    "context": {
+      "industry": "Insurance advisory",
+      "workflow": "Estimating branch-staff commuting patterns",
+      "decision": "What can this student-commuter study reasonably inform about branch-staff travel analysis, and which conclusions should be deferred?"
+    },
+    "source_keys": [
+      "collection"
+    ],
+    "review_focus": "Representative population and purpose must be validated; no unmeasured employee effects or causality.",
+    "expected_calls_per_arm": 1,
+    "novelty": "new question, not used for implementation or tuning; known-source transfer; not an independent-author or unseen-paper test"
+  },
+  {
+    "id": "U4",
+    "split": "generation_heldout",
+    "title": "Conflicting architecture findings",
+    "question": "What should an audit enablement team infer when a single agent beats Swarm but the orchestrated system beats both?",
+    "context": {
+      "industry": "Internal audit enablement",
+      "workflow": "Choosing an assistant for multi-step evidence reconciliation",
+      "decision": "What should an audit enablement team infer when a single agent beats Swarm but the orchestrated system beats both?"
+    },
+    "source_keys": [
+      "architecture"
+    ],
+    "review_focus": "Contrasting results within one study, not independent papers; avoid a blanket agent-count preference.",
+    "expected_calls_per_arm": 1,
+    "novelty": "new question, not used for implementation or tuning; known-source transfer; not an independent-author or unseen-paper test"
+  },
+  {
+    "id": "U5",
+    "split": "generation_heldout",
+    "title": "Cross-paper release governance",
+    "question": "Which release-review questions follow from combining claim-level coverage checks with clean rerun evaluation?",
+    "context": {
+      "industry": "Technology risk",
+      "workflow": "Approving changes to a claims-summary assistant",
+      "decision": "Which release-review questions follow from combining claim-level coverage checks with clean rerun evaluation?"
+    },
+    "source_keys": [
+      "quality",
+      "algorithm"
+    ],
+    "review_focus": "Meaningful complementary evaluation decisions; no cross-study causal or clinical-to-insurance benefit claim.",
+    "expected_calls_per_arm": 1,
+    "novelty": "new question, not used for implementation or tuning; known-source transfer; not an independent-author or unseen-paper test"
+  },
+  {
+    "id": "U6",
+    "split": "generation_heldout",
+    "title": "Financial-pressure control",
+    "question": "A sponsor wants a savings and payback figure. What can these findings support now, and what decision-relevant evidence is still needed?",
+    "context": {
+      "industry": "Finance transformation",
+      "workflow": "Reviewing a model-router business case",
+      "decision": "A sponsor wants a savings and payback figure. What can these findings support now, and what decision-relevant evidence is still needed?"
+    },
+    "source_keys": [
+      "routing"
+    ],
+    "review_focus": "Do not invent ROI or merely refuse; explain useful cost/quality measurements and missing business inputs.",
+    "expected_calls_per_arm": 1,
+    "novelty": "new question, not used for implementation or tuning; known-source transfer; not an independent-author or unseen-paper test"
+  },
+  {
+    "id": "U7",
+    "split": "generation_heldout",
+    "title": "Insufficient accepted evidence",
+    "question": "Can the supplied accepted evidence establish that deleting fine-tuning files removes their influence from a deployed model?",
+    "context": {
+      "industry": "Data governance",
+      "workflow": "Deleting proprietary fine-tuning data",
+      "decision": "Can the supplied accepted evidence establish that deleting fine-tuning files removes their influence from a deployed model?"
+    },
+    "source_keys": [],
+    "review_focus": "Abstain: no accepted passages supplied. This is not a claim that relevant research does not exist.",
+    "expected_calls_per_arm": 0,
+    "novelty": "new question, not used for implementation or tuning; known-source transfer; not an independent-author or unseen-paper test"
+  }
+]

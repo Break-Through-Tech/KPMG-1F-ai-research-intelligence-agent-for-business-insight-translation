@@ -1,0 +1,71 @@
+{
+  "id": "R4",
+  "result": {
+    "schema_version": "1.0",
+    "review_fingerprint_version": 2,
+    "request": {
+      "query": "What evidence should a team request before accepting a claim that an AI coding tool improved a training algorithm?",
+      "top_k": 5
+    },
+    "evidence": [
+      {
+        "chunk_id": "2608.20318v1_pdf_p1_algorithm",
+        "text": "We present AI4AI-Bench, 10 frozen research repositories spanning 10 training algorithm families. In each task, an agent has 4 hours on one B300 to rewrite the training algorithm; its code is then rerun from scratch for up to 12 hours and scored by a fixed evaluator hidden from the agent, against the repository\u2019s original algorithm under the same procedure. Because the 10 metrics are incommensurable, every task is mapped onto one scale on which 0 is an uninformative model, 0.1 is the algorithm the repository ships, and 1.0 is the task optimum. Across 29 configurations of 6 systems on all 10 tasks the mean score is 0.166, and the best system reaches 0.250: even the strongest closes under a fifth of the distance between the algorithm that was already there and the optimum. The submissions show where that distance went: most never change how the model learns at all, and the minority that do average 0.226 against 0.126 for the rest. More reasoning effort mostly buys the willingness to go there, taking that minority from 8% of submissions to 64% and the mean score from 0.094 to 0.196. We release the task suite, the evaluators and every scored submission, so that the measurement can be repeated as these systems change.",
+        "arxiv_id": "2608.20318v1",
+        "title": "AI4AI-Bench Benchmarking LLM Agents in Algorithmic Design for Recursive Self-Imp",
+        "source": "pdf",
+        "page_number": 1,
+        "pdf_url": "https://arxiv.org/pdf/2608.20318v1",
+        "source_url": "https://arxiv.org/pdf/2608.20318v1#page=1"
+      }
+    ],
+    "summary": {
+      "query": "What evidence should a team request before accepting a claim that an AI coding tool improved a training algorithm?",
+      "status": "ok",
+      "claims": [
+        {
+          "text": "On the frozen training-algorithm benchmark, most submissions did not change how the model learns; even the best system remained far from the task optimum.",
+          "kind": "finding",
+          "chunk_ids": [
+            "2608.20318v1_pdf_p1_algorithm"
+          ],
+          "support": [
+            {
+              "chunk_id": "2608.20318v1_pdf_p1_algorithm",
+              "quote": "We present AI4AI-Bench, 10 frozen research repositories spanning 10 training algorithm families. In each task, an agent has 4 hours on one B300 to rewrite the training algorithm; its code is then rerun from scratch for up to 12 hours and scored by a fixed evaluator hidden from the agent, against the repository\u2019s original algorithm under the same procedure. Because the 10 metrics are incommensurable, every task is mapped onto one scale on which 0 is an uninformative model, 0.1 is the algorithm the repository ships, and 1.0 is the task optimum. Across 29 configurations of 6 systems on all 10 tasks the mean score is 0.166, and the best system reaches 0.250: even the strongest closes under a fifth of the distance between the algorithm that was already there and the optimum. The submissions show where that distance went: most never change how the model learns at all, and the minority that do average 0.226 against 0.126 for the rest. More reasoning effort mostly buys the willingness to go there, taking that minority from 8% of submissions to 64% and the mean score from 0.094 to 0.196. We release the task suite, the evaluators and every scored submission, so that the measurement can be repeated as these systems change."
+            }
+          ]
+        }
+      ],
+      "limitations": [
+        "The supplied research does not establish outcomes in the target workflow."
+      ],
+      "limitation_support": [],
+      "answer_scope": "partial",
+      "answer_lead": "The supplied research does not establish outcomes in the target workflow.",
+      "quality_review": {
+        "coverage": "partial",
+        "reviewer": "assistant_primary_source_check_not_human",
+        "gap": "The supplied research does not establish outcomes in the target workflow."
+      }
+    },
+    "human_review": {
+      "status": "pending",
+      "reviewer": null,
+      "notes": null
+    },
+    "approved": false,
+    "provenance": {
+      "preparation": "primary_source_verified_manual_packet_no_research_generation",
+      "scientific_evidence": "original_local_PDF_not_unit_fixture"
+    },
+    "review_fingerprint": "f6c719237399a62a23b4cdbf24d699441e1d82529f9b4cfba65ea46344f67a35"
+  },
+  "context": {
+    "industry": "Technology advisory",
+    "workflow": "Assessing AI coding tool claims",
+    "decision": "What evidence should a team request before accepting a claim that an AI coding tool improved a training algorithm?"
+  },
+  "shared_input_sha256": "7915a72f42477841d2632cd702441fb4a5aadeabbdb7c4e396436001e4627233",
+  "preparation": "manual source-checked accepted packet, no model output"
+}

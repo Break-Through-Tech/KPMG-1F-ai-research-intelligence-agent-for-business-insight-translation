@@ -1,0 +1,24 @@
+{
+  "assets": "PASS",
+  "source_hashes_and_dual_membership": "PASS",
+  "cases": 12,
+  "reference_aligned": 5,
+  "new_generation_heldout": 7,
+  "scheduled_model_calls": 22,
+  "no_call_outcomes": 2,
+  "live_calls_made": 0,
+  "live_ready": false,
+  "pending": [
+    "approved provider/model and separate project configuration",
+    "explicit live-call approval",
+    "two independent reviewers; do not use assistant ratings as human scores"
+  ],
+  "manifest_sha256": "0584099d08c21093cc078e66ce6fbaa0839b6535baab827f7624e777ef3886ce",
+  "offline_tests": {
+    "tests": 3,
+    "result": "passed",
+    "injected_prompt_captures": 22,
+    "provider_clients_initialized": 0
+  },
+  "source_page_visual_review": "seven primary pages rendered and inspected; no scientific human-approval claim"
+}

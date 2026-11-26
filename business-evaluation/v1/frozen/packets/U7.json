@@ -1,0 +1,38 @@
+{
+  "id": "U7",
+  "result": {
+    "schema_version": "1.0",
+    "review_fingerprint_version": 2,
+    "request": {
+      "query": "Can the supplied accepted evidence establish that deleting fine-tuning files removes their influence from a deployed model?",
+      "top_k": 5
+    },
+    "evidence": [],
+    "summary": {
+      "status": "insufficient_evidence",
+      "query": "Can the supplied accepted evidence establish that deleting fine-tuning files removes their influence from a deployed model?",
+      "claims": [],
+      "limitations": [
+        "No passages retrieved; generation skipped."
+      ]
+    },
+    "human_review": {
+      "status": "pending",
+      "reviewer": null,
+      "notes": null
+    },
+    "approved": false,
+    "provenance": {
+      "preparation": "primary_source_verified_manual_packet_no_research_generation",
+      "scientific_evidence": "original_local_PDF_not_unit_fixture"
+    },
+    "review_fingerprint": "073dea215c0579ecdcb0c818e2e3fcd37a775a3c53a17073d27f78327a8e4ac2"
+  },
+  "context": {
+    "industry": "Data governance",
+    "workflow": "Deleting proprietary fine-tuning data",
+    "decision": "Can the supplied accepted evidence establish that deleting fine-tuning files removes their influence from a deployed model?"
+  },
+  "shared_input_sha256": "5726903373a0aa633c223891181713d891c1bf3e1841d32e3aa42f62a9c2c955",
+  "preparation": "manual source-checked accepted packet, no model output"
+}

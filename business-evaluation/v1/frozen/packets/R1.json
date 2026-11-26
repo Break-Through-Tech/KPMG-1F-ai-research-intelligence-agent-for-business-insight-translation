@@ -1,0 +1,71 @@
+{
+  "id": "R1",
+  "result": {
+    "schema_version": "1.0",
+    "review_fingerprint_version": 2,
+    "request": {
+      "query": "What could a team change in survey collection and analysis handoffs based on this study, and what limits the application?",
+      "top_k": 5
+    },
+    "evidence": [
+      {
+        "chunk_id": "2608.20320v1_pdf_p1_collection",
+        "text": "This study proposes and applies a three-agent workflow integrating conversational data collection, structured data processing, and behavioral prediction. A chatbot-administered, image-augmented stated-preference survey collected mode choices from 92 student commuters across five predefined weather scenarios, yielding 454 respondent\u2013scenario observations. Weather-related associations were analyzed using a multinomial logit model, while logistic regression and random forest provided machine-learning benchmarks. Nine locally deployed large language models (LLMs), ranging from 2 to 35 billion parameters, were evaluated across four zero-shot prompt-and-context conditions and further extended through persona, few-shot, and vision-based configurations. Cycling was particularly sensitive to adverse weather, while public transit use increased substantially under the Snowy scenario. Random forest achieved 69.6% five-class accuracy, while the best text-only zero-shot LLM reached 69.9% without task-specific fitting. Habitual travel information produced the most consistent improvement in LLM prediction, Expert framing generally outperformed Role-Play, and persona information was most beneficial when habitual travel information was unavailable. Few-shot prompting further improved five-class prediction for several models, with gains generally stabilizing after a small number of examples. Vision-capable models were also evaluated using the same weather images presented to respondents, and the best vision-based configuration reached the highest observed five-class accuracy of 71.5%, indicating that visual context can provide additional predictive information for selected models. Taken together, the findings show that habitual travel information, prompting strategy, demonstrations, and visual context can meaningfully shape LLM-based travel-choice prediction. More broadly, the study demonstrates how conversational survey administration, structured data processing, conventional behavioral modeling, machine learning, and multimodal LLM prediction can be coordinated within a single auditable multi-agent workflow, while broader application requires validation with larger and more representative traveler samples.",
+        "arxiv_id": "2608.20320v1",
+        "title": "An Agentic Approach for Active Data Collection, Travel Behavior Modeling, and We",
+        "source": "pdf",
+        "page_number": 1,
+        "pdf_url": "https://arxiv.org/pdf/2608.20320v1",
+        "source_url": "https://arxiv.org/pdf/2608.20320v1#page=1"
+      }
+    ],
+    "summary": {
+      "query": "What could a team change in survey collection and analysis handoffs based on this study, and what limits the application?",
+      "status": "ok",
+      "claims": [
+        {
+          "text": "The study coordinated survey collection, processing and travel prediction; broader application requires larger and more representative samples.",
+          "kind": "finding",
+          "chunk_ids": [
+            "2608.20320v1_pdf_p1_collection"
+          ],
+          "support": [
+            {
+              "chunk_id": "2608.20320v1_pdf_p1_collection",
+              "quote": "This study proposes and applies a three-agent workflow integrating conversational data collection, structured data processing, and behavioral prediction. A chatbot-administered, image-augmented stated-preference survey collected mode choices from 92 student commuters across five predefined weather scenarios, yielding 454 respondent\u2013scenario observations. Weather-related associations were analyzed using a multinomial logit model, while logistic regression and random forest provided machine-learning benchmarks. Nine locally deployed large language models (LLMs), ranging from 2 to 35 billion parameters, were evaluated across four zero-shot prompt-and-context conditions and further extended through persona, few-shot, and vision-based configurations. Cycling was particularly sensitive to adverse weather, while public transit use increased substantially under the Snowy scenario. Random forest achieved 69.6% five-class accuracy, while the best text-only zero-shot LLM reached 69.9% without task-specific fitting. Habitual travel information produced the most consistent improvement in LLM prediction, Expert framing generally outperformed Role-Play, and persona information was most beneficial when habitual travel information was unavailable. Few-shot prompting further improved five-class prediction for several models, with gains generally stabilizing after a small number of examples. Vision-capable models were also evaluated using the same weather images presented to respondents, and the best vision-based configuration reached the highest observed five-class accuracy of 71.5%, indicating that visual context can provide additional predictive information for selected models. Taken together, the findings show that habitual travel information, prompting strategy, demonstrations, and visual context can meaningfully shape LLM-based travel-choice prediction. More broadly, the study demonstrates how conversational survey administration, structured data processing, conventional behavioral modeling, machine learning, and multimodal LLM prediction can be coordinated within a single auditable multi-agent workflow, while broader application requires validation with larger and more representative traveler samples."
+            }
+          ]
+        }
+      ],
+      "limitations": [
+        "The supplied research does not establish outcomes in the target workflow."
+      ],
+      "limitation_support": [],
+      "answer_scope": "partial",
+      "answer_lead": "The supplied research does not establish outcomes in the target workflow.",
+      "quality_review": {
+        "coverage": "partial",
+        "reviewer": "assistant_primary_source_check_not_human",
+        "gap": "The supplied research does not establish outcomes in the target workflow."
+      }
+    },
+    "human_review": {
+      "status": "pending",
+      "reviewer": null,
+      "notes": null
+    },
+    "approved": false,
+    "provenance": {
+      "preparation": "primary_source_verified_manual_packet_no_research_generation",
+      "scientific_evidence": "original_local_PDF_not_unit_fixture"
+    },
+    "review_fingerprint": "db9b3be7b52dbc62593aebfd9d0995f7c684a3017dbd761ce9f6f569f852069e"
+  },
+  "context": {
+    "industry": "Advisory",
+    "workflow": "Survey collection and analysis handoffs",
+    "decision": "What could a team change in survey collection and analysis handoffs based on this study, and what limits the application?"
+  },
+  "shared_input_sha256": "67f448a1c64f618c7d22a58a0177c75610092bc708a6a6ffe269d742fbe661a7",
+  "preparation": "manual source-checked accepted packet, no model output"
+}

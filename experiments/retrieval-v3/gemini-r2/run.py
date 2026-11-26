@@ -68,7 +68,7 @@ def application_generate(ledger, scope, key, *, client_factory=None, sleep=time.
             # The SDK boundary accounts for every actual send.
             return
 
-    return quota_generate(raw, DispatchBudget(), sleep=sleep), metadata
+    return quota_generate(raw, DispatchBudget(), sleep=sleep, recover_review_limitations=True), metadata
 
 
 def run(assets, bundle, questions, state):
@@ -86,6 +86,8 @@ def run(assets, bundle, questions, state):
         raise SystemExit('Set the approved, dedicated GEMINI_EVAL_API_KEY in the process environment.')
     if state.is_relative_to(ROOT):
         raise SystemExit('Use private state outside the checkout.')
+    if (state / 'ABORTED.json').exists() or state.name.startswith('compat-'):
+        raise SystemExit('Use a separate state directory for the fresh comparison.')
     state.mkdir(mode=0o700, exist_ok=True)
     # Fail closed after a crash. The operator must inspect state before removing a stale lock.
     with (state / 'active.lock').open('x') as lock:

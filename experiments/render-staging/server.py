@@ -103,7 +103,36 @@ def reservation(payload_bytes):
 TRANSIENT_RETRY_DELAYS = (2, 6)  # seconds before the 2nd and 3rd attempt after a provider 5xx
 
 
-def quota_generate(generate, budget, *, sleep=time.sleep):
+def validate_generation(text, schema, *, recover_review_limitations=False):
+    validator = Draft202012Validator(schema)
+    result = json.loads(text)
+    if not recover_review_limitations or set(schema.get('properties', {})) != {
+            'coverage', 'gap', 'decisions', 'limitations'}:
+        validator.validate(result)
+        return text
+
+    errors = list(validator.iter_errors(result))
+    if not errors:
+        return text
+    withheld = set()
+    for error in errors:
+        path = list(error.absolute_path)
+        if not (error.validator == 'minItems' and error.validator_value == 1 and error.instance == []
+                and len(path) == 3 and path[0] == 'limitations' and path[2] == 'support'
+                and type(path[1]) is int):
+            raise errors[0]
+        withheld.add(path[1])
+    result['limitations'] = [item for i, item in enumerate(result['limitations']) if i not in withheld]
+    if result['coverage'] == 'full':
+        result['coverage'] = 'partial'
+    result['gap'] = 'An uncited review limitation was withheld. Answer coverage needs human review.'
+    validator.validate(result)
+    print(f'provider-response-recovery stage=review withheld_uncited_limitations={len(withheld)}',
+          file=sys.stderr, flush=True)
+    return json.dumps(result, ensure_ascii=False)
+
+
+def quota_generate(generate, budget, *, sleep=time.sleep, recover_review_limitations=False):
     def guarded(prompt, *, response_schema=None):
         wire = wire_schema(response_schema) if response_schema is not None else None
         payload = json.dumps({'prompt': prompt, 'schema': wire}, ensure_ascii=False).encode()
@@ -124,7 +153,8 @@ def quota_generate(generate, budget, *, sleep=time.sleep):
                 sleep(TRANSIENT_RETRY_DELAYS[attempt])
         if response_schema is not None:
             try:
-                Draft202012Validator(response_schema).validate(json.loads(text))
+                text = validate_generation(text, response_schema,
+                                           recover_review_limitations=recover_review_limitations)
             except Exception as error:
                 log_provider_failure('contract_schema', error)
                 raise
@@ -153,7 +183,8 @@ def build_handler(snapshot, state, origin, password, generate, metadata, *, synt
     if smoke not in ('0', '1') or (smoke == '1' and (engine != 's2' or paper_balance or retrieval_strategy != 's2')):
         raise ValueError('Gemini smoke mode requires Standard S2.')
     ledger = state / ('gemini-smoke-attempts.sqlite3' if smoke == '1' else 'provider-usage.sqlite3')
-    guarded = quota_generate(generate, Budget(ledger, smoke=smoke == '1'))
+    guarded = quota_generate(generate, Budget(ledger, smoke=smoke == '1'),
+                             recover_review_limitations=engine == 's2')
     encoder = snapshot / 'artifacts/encoder'
     reranker = snapshot / 'artifacts/reranker'
     if engine == 's2':

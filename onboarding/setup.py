@@ -191,6 +191,19 @@ def native_python(cache=CACHE):
     return native_venv(cache) / ('Scripts/python.exe' if os.name == 'nt' else 'bin/python')
 
 
+def install_native(workspace, requirements):
+    if sys.version_info[:2] != (3, 11):
+        raise SetupError('Use Python 3.11 to install the pinned native dependencies.')
+    python = native_python(workspace)
+    if not python.is_file():
+        run([sys.executable, '-m', 'venv', str(native_venv(workspace))])
+    run([str(python), '-m', 'pip', 'install', '--index-url',
+         'https://download.pytorch.org/whl/cpu', '--no-deps', 'torch==2.15.0+cpu'])
+    run([str(python), '-m', 'pip', 'install', '--no-deps', '-r', str(requirements)])
+    run([str(python), '-m', 'pip', 'check'])
+    return python
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('action', choices=('setup', 'start'), nargs='?', default='setup')
@@ -226,21 +239,37 @@ def main():
             acquire_open_files(spec['files'], workspace / 'assets', synthetic=True)
         else:
             release = {name: item for name, item in spec['files'].items() if item['source'] == 'release'}
-            acquire({**spec, 'files': release}, workspace / 'assets', args.asset_repo or origin_repository())
             opened = {name: item for name, item in spec['files'].items() if item['source'] != 'release'}
-            acquire_open_files(opened, workspace / 'assets', synthetic=False)
+            assets = workspace / 'assets'
+            if args.asset_repo or all((assets / name).is_file() for name in release):
+                acquire({**spec, 'files': release}, assets, args.asset_repo)
+            else:
+                # Import only for reconstruction; the synthetic preview remains independent.
+                from rebuild_corpus import records, retrieve_sources
+                report = retrieve_sources(workspace / 'arxiv-html')
+                differences = [row for row in report if row['status'] != 'exact']
+                if differences:
+                    raise SetupError(f'{len(differences)} arXiv sources changed or are unavailable. '
+                                     'See .kpmg-onboarding/source-verification.json. '
+                                     'The exact evaluated index cannot be reproduced from these sources. '
+                                     'Use --fixture for the synthetic preview.')
+                legacy = [p['id'] for p in records() if 'html-evidence-v1.2' in p['extractors']]
+                if legacy:
+                    raise SetupError('Exact HTML verified, but the original v1.2 extractor is unavailable '
+                                     'for these pinned papers: ' + ', '.join(legacy))
+                if args.prepare_only and not native_python(workspace).is_file():
+                    raise SetupError('Sources verified. Run setup without --prepare-only to install the reconstruction runtime.')
+                acquire_open_files(opened, assets, synthetic=False)
+                python = (native_python(workspace) if args.prepare_only else
+                          install_native(workspace, ROOT / 'onboarding/requirements-py311.lock.txt'))
+                run([str(python), str(ROOT / 'onboarding/rebuild_corpus.py'), '--workspace', str(workspace)])
+            acquire_open_files(opened, assets, synthetic=False)
         context = prepare(spec, workspace / 'assets', synthetic=args.fixture)
         if not args.prepare_only:
             if args.runtime == 'docker':
                 run([docker, 'build', '--platform', 'linux/amd64', '-t', image, str(context)])
             else:
-                python = native_python(workspace)
-                if not python.is_file():
-                    run([sys.executable, '-m', 'venv', str(native_venv(workspace))])
-                run([str(python), '-m', 'pip', 'install', '--index-url',
-                     'https://download.pytorch.org/whl/cpu', '--no-deps', 'torch==2.15.0+cpu'])
-                run([str(python), '-m', 'pip', 'install', '--no-deps', '-r', str(context / 'requirements.txt')])
-                run([str(python), '-m', 'pip', 'check'])
+                install_native(workspace, context / 'requirements.txt')
         print('Verified runtime context:', context.relative_to(ROOT))
         return
     if args.prepare_only:
@@ -256,7 +285,7 @@ def main():
         if not python.is_file() or not (workspace / 'context.txt').is_file():
             raise SetupError('Run native setup first.')
         context = ROOT / (workspace / 'context.txt').read_text(encoding='utf-8').strip()
-        run([str(python), '-B', str(context / command[0]), '--engine', args.engine,
+        run([str(python), '-B', str(context / command[0]), *command[1:],
              '--snapshot', str(context / 'snapshot'), '--state', str(workspace / 'state')])
 
 

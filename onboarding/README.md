@@ -16,10 +16,13 @@ If the environment is cleaned up, run setup again. The Docker image
 targets Linux AMD64. Use --prepare-only to verify and stage without building
 or installing dependencies.
 
-For the real index, omit --fixture once an authorized release is available.
-Authenticate GitHub CLI with your own account if the cleared release is private.
-Use --asset-repo OWNER/REPO only when the approved release lives separately
-from the clone origin. There is no automatic fixture fallback.
+For the real index, omit --fixture. Setup automatically fetches the exact
+versioned arXiv HTML listed in demo-100-sources.json and compares each
+response to the evaluated input hash. No GitHub login or transfer is
+required for this path. It runs the existing extractor and CPU bundle
+builder only if the source inputs match. There is no fixture fallback.
+Use the synthetic preview explicitly when upstream differences block the
+real index.
 
 Open http://127.0.0.1:8821 and use the local login printed by start. Try the
 scripted question printed at startup. This is a supervised offline developer
@@ -54,14 +57,31 @@ three corpus attachments together and unchanged.
 - arXiv's license guidance: https://info.arxiv.org/help/license/index.html
 - arXiv-only terms: https://arxiv.org/licenses/nonexclusive-distrib/1.0/
 
-Until clearance, use the explicit synthetic fixture path above. The optional
-fresh-v4 corpus is not needed for application setup and is excluded. If only
-private redistribution is cleared, a private release location is necessary.
-If public redistribution is later approved, publication and the setup access
-policy can be reviewed together. No new repository is needed for the fixture.
+Standard setup stores the source-check report under
+.kpmg-onboarding/source-verification.json. Changed or unavailable HTML
+stops setup. If the source pass succeeds, the reconstruction records per-paper
+parent counts and hashes, then compares the aggregate parents, views and
+embedding bytes. It promotes the index only on an exact match. The
+expected configuration is CPU encoding with token224_parent, 224 tokens,
+32-token overlap, evaluated parent order, and CRLF parent serialization.
+The original evaluation is not rerun.
+
+A versioned arXiv ID pins the paper revision. It cannot pin the HTML
+renderer output. The indexed data also includes six papers with old v1.2
+supplement rows. That legacy extractor is absent from this checkout, so
+those rows cannot currently be reproduced by the ordinary extraction
+route. A manually reconstructed, semantically similar index is not
+accepted in place of the evaluated one.
+
+Run a fresh source-only diagnostic without installing models:
+
+    python3.11 onboarding/rebuild_corpus.py --check-sources
+
+The optional fresh-v4 corpus is outside application setup. No separate
+repository is required for source reconstruction or the fixture.
 
 Run bootstrap unit tests with python -m unittest discover -s onboarding
--p test_setup.py (as one line). Keep the package cache, credentials, state,
+-p "test_*.py" (as one line). Keep the package cache, credentials, state,
 and generated contexts out of Git.
 
 

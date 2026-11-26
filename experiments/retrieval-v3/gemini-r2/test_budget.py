@@ -108,7 +108,7 @@ class LedgerTests(unittest.TestCase):
         sdk_client = genai.Client
 
         def respond(request):
-            requests.append(json.loads(request.content))
+            requests.append((request.url.path, json.loads(request.content)))
             return httpx.Response(200, json={
                 'candidates': [{'content': {'parts': [{'text': '{"ok":true}'}], 'role': 'model'},
                                 'finishReason': 'STOP'}],
@@ -123,10 +123,52 @@ class LedgerTests(unittest.TestCase):
                                              client_factory=factory)
         gc.collect()
         self.assertEqual(generate('Offline probe', response_schema={'type': 'object'}), '{"ok":true}')
-        self.assertEqual(len(requests), 1)
-        self.assertEqual(requests[0]['generationConfig']['maxOutputTokens'], MAX_OUTPUT)
+        from unittest.mock import patch
+        from server import MODEL, quota_generate
+        from src.generation import create_generate
+        from src.generation_config import GenerationConfig
+
+        with patch.object(genai, 'Client', factory):
+            production, _ = create_generate(GenerationConfig('gemini', MODEL, 'fake-test-key'))
+        quota = SimpleNamespace(reserve=lambda _: None)
+        self.assertEqual(quota_generate(production, quota)('Offline probe', response_schema={'type': 'object'}),
+                         '{"ok":true}')
+        self.assertEqual(len(requests), 2)
+        evaluation_path, evaluation = requests[0]
+        production_path, production_body = requests[1]
+        self.assertEqual(evaluation_path, '/v1beta/models/gemini-3.1-flash-lite:generateContent')
+        self.assertEqual(evaluation_path, production_path)
+        self.assertEqual(evaluation['generationConfig'].pop('maxOutputTokens'), MAX_OUTPUT)
+        self.assertEqual(evaluation, production_body)
         with closing(sqlite3.connect(self.path)) as db:
             self.assertEqual(db.execute('SELECT COUNT(*) FROM dispatch').fetchone(), (1,))
+
+    def test_google_400_diagnostic_keeps_labels_and_discards_provider_text(self):
+        from contextlib import redirect_stderr
+        from io import StringIO
+        from google.genai.errors import ClientError
+
+        dispatch = self.ledger.reserve('S2', 'U1', 100)
+        error = ClientError(400, {'error': {
+            'status': 'INVALID_ARGUMENT', 'message': 'private-prompt',
+            'details': [
+                {'@type': 'type.googleapis.com/google.rpc.BadRequest', 'fieldViolations': [
+                    {'field': 'generation_config.thinking_config.thinking_level',
+                     'description': 'private-value'},
+                    {'field': 'generationConfig.responseJsonSchema.properties.private-name'},
+                    {'field': 'private-field'},
+                ]},
+                {'@type': 'type.googleapis.com/google.rpc.ErrorInfo',
+                 'reason': 'API_KEY_INVALID', 'metadata': {'hidden': 'private-credential'}},
+            ],
+        }})
+        stderr = StringIO()
+        with redirect_stderr(stderr):
+            self.ledger.failure(dispatch, 0.3, error)
+        expected = 'ClientError HTTP 400 API_KEY_INVALID response_json_schema thinking_level'
+        self.assertEqual(stderr.getvalue().strip(), 'evaluation-provider-rejection ' + expected)
+        with closing(sqlite3.connect(self.path)) as db:
+            self.assertEqual(db.execute('SELECT outcome FROM dispatch').fetchone(), (expected,))
 
     def test_local_payload_screen_blocks_prompt_and_schema_before_sdk_dispatch(self):
         def send(**kwargs):

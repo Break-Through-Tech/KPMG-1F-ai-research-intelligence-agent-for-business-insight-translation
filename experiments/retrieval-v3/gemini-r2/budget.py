@@ -3,6 +3,7 @@ from contextlib import closing
 import json
 import re
 import sqlite3
+import sys
 from time import monotonic, sleep, time
 
 PROJECT_RPM = 15
@@ -21,6 +22,59 @@ RESTRICTED_PATTERN = re.compile(
     r'(?:\d{3}-\d{2}-\d{4}|AIza[\w-]{35}|gh[pousr]_[a-z0-9]{25,})|'
     r'-----BEGIN [A-Z ]*PRIVATE KEY-----', re.IGNORECASE,
 )
+
+
+# Only fixed labels can leave the adapter. Google error messages and arbitrary
+# field paths can contain submitted values, so never log them verbatim.
+SAFE_ERROR_REASONS = {'API_KEY_INVALID', 'API_KEY_SERVICE_BLOCKED', 'SERVICE_DISABLED',
+                      'API_KEY_HTTP_REFERRER_BLOCKED', 'API_KEY_IP_ADDRESS_BLOCKED'}
+SAFE_FIELDS = {
+    'model': 'model',
+    'contents': 'contents',
+    'generationconfig': 'generation_config',
+    'generationconfig.temperature': 'temperature',
+    'generationconfig.maxoutputtokens': 'max_output_tokens',
+    'generationconfig.thinkingconfig': 'thinking_config',
+    'generationconfig.thinkingconfig.thinkinglevel': 'thinking_level',
+    'generationconfig.responsemimetype': 'response_mime_type',
+    'generationconfig.responsejsonschema': 'response_json_schema',
+    'generationconfig.responseschema': 'response_schema',
+}
+
+
+def provider_diagnostic(error):
+    from google.genai.errors import APIError
+
+    if not isinstance(error, APIError):
+        return ''
+    body = error.details if isinstance(error.details, dict) else {}
+    envelope = body.get('error', body)
+    if not isinstance(envelope, dict):
+        return ''
+    details = envelope.get('details', [])
+    tags = set()
+    for detail in details if isinstance(details, list) else []:
+        if not isinstance(detail, dict):
+            continue
+        reason = detail.get('reason')
+        if detail.get('@type') == 'type.googleapis.com/google.rpc.ErrorInfo' and isinstance(reason, str):
+            if reason in SAFE_ERROR_REASONS:
+                tags.add(reason)
+        if detail.get('@type') == 'type.googleapis.com/google.rpc.BadRequest':
+            violations = detail.get('fieldViolations', [])
+            for violation in violations if isinstance(violations, list) else []:
+                path = violation.get('field') if isinstance(violation, dict) else None
+                if isinstance(path, str):
+                    normalized = path.lower().replace('_', '')
+                    label = SAFE_FIELDS.get(normalized)
+                    if label is None:
+                        label = next((label for key, label in SAFE_FIELDS.items()
+                                      if key in ('contents', 'generationconfig.responsejsonschema',
+                                                 'generationconfig.responseschema')
+                                      and normalized.startswith((key + '.', key + '['))), None)
+                    if label:
+                        tags.add(label)
+    return ' '.join(sorted(tags)) or 'no_allowlisted_provider_detail'
 
 
 class LimitReached(RuntimeError):
@@ -96,9 +150,15 @@ class Ledger:
                 raise SystemExit('Provider usage breached or could not verify the reservation. Campaign stopped.')
 
     def failure(self, dispatch, seconds, error):
+        diagnostic = provider_diagnostic(error)
+        outcome = type(error).__name__
+        if diagnostic:
+            code = error.code if type(error.code) is int else 0
+            outcome = f'{outcome} HTTP {code} {diagnostic}'
+            print(f'evaluation-provider-rejection {outcome}', file=sys.stderr, flush=True)
         with closing(sqlite3.connect(self.path)) as db, db:
             db.execute('UPDATE dispatch SET seconds = ?, outcome = ? WHERE id = ?',
-                       (seconds, type(error).__name__, dispatch))
+                       (seconds, outcome, dispatch))
 
     def record(self, dispatch, usage, seconds, *, outcome='response'):
         with closing(sqlite3.connect(self.path)) as db, db:
@@ -121,12 +181,8 @@ class GuardedModels:
         self.client, self.ledger, self.usage, self.scope = client, ledger, usage, scope
 
     def generate_content(self, *, model, contents, config):
-        from google.genai.types import ThinkingConfig
-
-        metered = config.model_copy(update={
-            'max_output_tokens': MAX_OUTPUT,
-            'thinking_config': ThinkingConfig(thinking_level='MINIMAL'),
-        })
+        # Match the deployed adapter's provider-default thinking behavior.
+        metered = config.model_copy(update={'max_output_tokens': MAX_OUTPUT})
         payload = json.dumps({'model': model, 'prompt': contents, 'config': metered.model_dump(mode='json')},
                              ensure_ascii=False)
         if RESTRICTED_PATTERN.search(payload):

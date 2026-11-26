@@ -1,6 +1,7 @@
 """Persistent limits on actual Gemini SDK dispatch, including automatic retries."""
 from contextlib import closing
 import json
+import re
 import sqlite3
 from time import monotonic
 
@@ -9,6 +10,14 @@ ARM_LIMIT = 20
 INPUT_LIMIT = 1_200_000
 OUTPUT_LIMIT = 150_000
 MAX_OUTPUT = OUTPUT_LIMIT // CALL_LIMIT
+
+# Screen the full request body, including evidence, schema metadata and review drafts.
+# A clean pattern scan cannot establish redistribution rights or exclude all personal data.
+RESTRICTED_PATTERN = re.compile(
+    r'[\w.+%-]+@[\w.-]+\.[a-z]{2,}|'
+    r'(?:\d{3}-\d{2}-\d{4}|AIza[\w-]{35}|gh[pousr]_[a-z0-9]{25,})|'
+    r'-----BEGIN [A-Z ]*PRIVATE KEY-----', re.IGNORECASE,
+)
 
 
 class LimitReached(RuntimeError):
@@ -19,6 +28,7 @@ class Ledger:
     def __init__(self, path):
         self.path = path
         self.limit_hit = False
+        self.payload_blocked = False
         with closing(sqlite3.connect(path)) as db, db:
             db.execute("""CREATE TABLE IF NOT EXISTS dispatch (
                 id INTEGER PRIMARY KEY, arm TEXT NOT NULL, question TEXT NOT NULL,
@@ -34,7 +44,8 @@ class Ledger:
             db.execute('BEGIN IMMEDIATE')
             calls, arm_calls, inputs, outputs, blocked = db.execute(
                 """SELECT COUNT(*), COALESCE(SUM(arm = ?), 0),
-                          COALESCE(SUM(input_bound), 0), COALESCE(SUM(output_bound), 0), COALESCE(MAX(blocked), 0)
+                          COALESCE(SUM(COALESCE(json_extract(usage, '$.prompt'), input_bound)), 0),
+                          COALESCE(SUM(output_bound), 0), COALESCE(MAX(blocked), 0)
                    FROM dispatch""", (arm,)).fetchone()
             if (blocked or calls >= CALL_LIMIT or arm_calls >= ARM_LIMIT or
                     inputs + input_bound > INPUT_LIMIT or outputs + MAX_OUTPUT > OUTPUT_LIMIT):
@@ -46,6 +57,8 @@ class Ledger:
             ).lastrowid
 
     def check_blocked(self):
+        if self.payload_blocked:
+            raise SystemExit('Free-tier payload screen failed. Campaign stopped before dispatch.')
         if self.limit_hit:
             raise SystemExit('Campaign dispatch limit reached.')
         with closing(sqlite3.connect(self.path)) as db:
@@ -57,15 +70,17 @@ class Ledger:
             db.execute('UPDATE dispatch SET seconds = ?, outcome = ? WHERE id = ?',
                        (seconds, type(error).__name__, dispatch))
 
-    def record(self, dispatch, usage, seconds):
+    def record(self, dispatch, usage, seconds, *, outcome='response'):
         with closing(sqlite3.connect(self.path)) as db, db:
             input_bound, output_bound = db.execute(
                 'SELECT input_bound, output_bound FROM dispatch WHERE id = ?', (dispatch,)).fetchone()
-            blocked = (usage.get('prompt') is None or usage.get('candidates') is None or
+            blocked = (type(usage.get('prompt')) is not int or usage['prompt'] <= 0 or
+                       type(usage.get('candidates')) is not int or usage['candidates'] < 0 or
+                       type(usage.get('thoughts', 0)) is not int or usage.get('thoughts', 0) < 0 or
                        usage['prompt'] > input_bound or
                        usage['candidates'] + usage.get('thoughts', 0) > output_bound)
             db.execute('UPDATE dispatch SET usage = ?, blocked = ?, seconds = ?, outcome = ? WHERE id = ?',
-                       (json.dumps(usage), blocked, seconds, 'response', dispatch))
+                       (json.dumps(usage), blocked, seconds, outcome, dispatch))
         if blocked:
             raise LimitReached('Missing usage or provider token counts exceeded the reservation.')
 
@@ -81,10 +96,13 @@ class GuardedModels:
             'max_output_tokens': MAX_OUTPUT,
             'thinking_config': ThinkingConfig(thinking_level='MINIMAL'),
         })
-        payload = json.dumps({'prompt': contents, 'config': metered.model_dump(mode='json')},
-                             ensure_ascii=False).encode()
+        payload = json.dumps({'model': model, 'prompt': contents, 'config': metered.model_dump(mode='json')},
+                             ensure_ascii=False)
+        if RESTRICTED_PATTERN.search(payload):
+            self.ledger.payload_blocked = True
+            raise LimitReached('Payload failed the local free-tier screen.')
         # Conservative local estimate. Gemini exposes exact usage only after dispatch.
-        bound = len(payload) + 1024
+        bound = len(payload.encode()) + 1024
         arm, question = self.scope()
         dispatch = self.ledger.reserve(arm, question, bound)
         start = monotonic()
@@ -93,5 +111,8 @@ class GuardedModels:
         except Exception as error:
             self.ledger.failure(dispatch, monotonic() - start, error)
             raise
-        self.ledger.record(dispatch, self.usage(response), monotonic() - start)
+        candidates = getattr(response, 'candidates', None)
+        reason = getattr(candidates[0], 'finish_reason', None) if candidates else None
+        outcome = 'MAX_TOKENS' if reason == 'MAX_TOKENS' else 'response'
+        self.ledger.record(dispatch, self.usage(response), monotonic() - start, outcome=outcome)
         return response

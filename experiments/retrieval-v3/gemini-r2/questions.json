@@ -54,7 +54,7 @@
   {
     "id": "U2",
     "kind": "named-two-paper",
-    "question": "Compare MultiFinRAG with Prompt-Guided Prefiltering for VLM Image Compression. How do they transform visual inputs, where do those transformations sit in their respective pipelines, and what bitrate result does the compression paper report?",
+    "question": "Compare MultiFinRAG and Prompt-Guided Prefiltering for VLM Image Compression. How does MultiFinRAG process financial table and figure images and index the resulting material? For the prefilter, where does it sit relative to the image encoder, which types of encoder can it precede, and what average bitrate change was reported at unchanged task accuracy?",
     "required_points": [
       {
         "point": "MultiFinRAG batches financial table and figure images for processing by a lightweight quantized multimodal model.",

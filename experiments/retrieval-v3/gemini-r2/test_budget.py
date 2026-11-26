@@ -40,6 +40,11 @@ class LedgerTests(unittest.TestCase):
         with closing(sqlite3.connect(self.path)) as db:
             self.assertEqual(db.execute('SELECT outcome FROM dispatch').fetchone(), ('TimeoutError',))
 
+    def test_confirmed_input_usage_reconciles_the_reservation(self):
+        first = self.ledger.reserve('S2', 'U1', 1_199_999)
+        self.ledger.record(first, {'prompt': 100, 'candidates': 20}, 1)
+        Ledger(self.path).reserve('R2', 'U1', 1_199_900)
+
     def test_thinking_is_charged_and_a_breach_stops_future_calls(self):
         dispatch = self.ledger.reserve('S2', 'U1', 1000)
         with self.assertRaises(LimitReached):
@@ -78,6 +83,25 @@ class LedgerTests(unittest.TestCase):
         with closing(sqlite3.connect(self.path)) as db:
             self.assertEqual(db.execute('SELECT outcome FROM dispatch ORDER BY id').fetchall(),
                              [('TransientError',), ('response',)])
+
+    def test_local_payload_screen_blocks_prompt_and_schema_before_sdk_dispatch(self):
+        def send(**kwargs):
+            self.fail('A flagged body must never reach the SDK.')
+
+        generate, _ = application_generate(
+            self.ledger, lambda: ('S2', 'U1'), 'fake-test-key',
+            client_factory=lambda **_: SimpleNamespace(models=SimpleNamespace(generate_content=send)),
+        )
+        from src.generation import PipelineError
+
+        schema = {'type': 'object', 'description': 'Contact person@example.org.'}
+        for prompt, response_schema in [('Evidence person@example.org', None), ('Evidence', schema)]:
+            with self.assertRaises(PipelineError):
+                generate(prompt, response_schema=response_schema)
+        with closing(sqlite3.connect(self.path)) as db:
+            self.assertEqual(db.execute('SELECT COUNT(*) FROM dispatch').fetchone(), (0,))
+        with self.assertRaisesRegex(SystemExit, 'Free-tier payload screen failed'):
+            self.ledger.check_blocked()
 
     def test_missing_usage_fails_closed(self):
         dispatch = self.ledger.reserve('S2', 'U1', 100)

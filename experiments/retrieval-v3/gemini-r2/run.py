@@ -125,6 +125,7 @@ def run(assets, bundle, questions, state):
                            'interpret_context': False, 'scenario': 'full'}
                 try:
                     answer = engine.execute(payload, session_id=f'eval-{arm}-{qid}')
+                    ledger.check_blocked()
                     summary = (answer.get('result') or {}).get('summary', {})
                     if summary.get('status') != 'ok' or not any(
                             claim.get('support') for claim in summary.get('claims', [])):

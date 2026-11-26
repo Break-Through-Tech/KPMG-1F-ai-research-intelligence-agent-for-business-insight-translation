@@ -1,5 +1,6 @@
 """Lazy BYOK generation and interim summary adapter for workflow v1."""
 import json
+import sys
 from copy import deepcopy
 from src.research_pipeline import PipelineError
 
@@ -8,6 +9,36 @@ SUMMARY_PROMPT_VERSION = 'workflow-summary-v1'
 
 class SchemaResponseError(PipelineError):
     """An actual response violated its requested schema; details stay private."""
+
+
+class IncompleteResponse(ValueError):
+    """A structured reply did not finish normally. Carries only the provider's finish reason and token counts."""
+    def __init__(self, finish_reason, usage=None):
+        super().__init__('Structured generation did not complete')
+        self.finish_reason, self.usage = finish_reason, usage or {}
+
+
+def _usage(response):
+    usage = getattr(response, 'usage_metadata', None)
+    return {name: getattr(usage, name + '_token_count', None) for name in ('prompt', 'candidates', 'thoughts')
+            if usage is not None and getattr(usage, name + '_token_count', None) is not None}
+
+
+def log_provider_failure(stage, error):
+    """One sanitized operator log line: categories and counts only, never keys, prompts or model text."""
+    fields = {'stage': stage, 'error': type(error).__name__}
+    for attr in ('code', 'status'):
+        value = getattr(error, attr, None)
+        if isinstance(value, (int, str)) and len(str(value)) <= 40:
+            fields['api_' + attr] = value
+    if isinstance(error, IncompleteResponse):
+        fields['finish_reason'] = str(error.finish_reason)[:40]
+        fields.update({'tokens_' + k: v for k, v in error.usage.items()})
+    for attr in ('validator', 'json_path'):
+        value = getattr(error, attr, None)
+        if isinstance(value, str):
+            fields['schema_' + attr] = value[:120]
+    print('provider-failure ' + ' '.join(f'{k}={v}' for k, v in fields.items()), file=sys.stderr, flush=True)
 
 
 def summarize_with_generation(query, passages, *, generate):
@@ -53,7 +84,8 @@ def create_generate(config=None, *, http_client=None):
                     config=types.GenerateContentConfig(**options))
                 if response_schema is not None and (not response.candidates or
                         response.candidates[0].finish_reason != 'STOP'):
-                    raise ValueError('Structured generation did not complete')
+                    reason = response.candidates[0].finish_reason if response.candidates else 'NO_CANDIDATES'
+                    raise IncompleteResponse(getattr(reason, 'name', reason), _usage(response))
                 return response.text
         elif config.provider == 'bedrock':
             import boto3
@@ -121,7 +153,8 @@ def create_generate(config=None, *, http_client=None):
                 from jsonschema import Draft202012Validator
                 Draft202012Validator.check_schema(schema)
             text = invoke(prompt, schema)
-        except Exception:
+        except Exception as error:
+            log_provider_failure('request', error)
             raise PipelineError('Selected generation provider failed; check model access, '
                                 'credentials, region, response format and quota. '
                                 'No provider fallback or approval occurred.') from None
@@ -141,7 +174,8 @@ def create_generate(config=None, *, http_client=None):
                 parsed = json.loads(text, object_pairs_hook=pairs, parse_constant=nonfinite)
                 json.dumps(parsed, allow_nan=False)
                 Draft202012Validator(schema).validate(parsed)
-            except Exception:
+            except Exception as error:
+                log_provider_failure('local_schema', error)
                 raise SchemaResponseError('Selected provider response failed JSON Schema validation; '
                                     'no result was approved.') from None
         return text

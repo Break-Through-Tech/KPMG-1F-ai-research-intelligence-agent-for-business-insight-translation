@@ -37,9 +37,8 @@ continues to be shared and the cookie does not constitute a reviewer account.
   proxy deadlines remain to be measured.
 - The fetched UI checkpoint at 11ae22d passed JavaScript syntax checking.
   Its optional summary fields and indexed deadlines were reviewed in source.
-  Browser E2E and a combined container run still require the approved
-  hash-pinned UI staging candidate and a local Linux image runner with the
-  pinned dependencies. The current stage.py intentionally requires the
+  The separate local follow-up below records browser verification. A combined
+  Linux container run still requires an approved local Linux runner. The current stage.py intentionally requires the
   separately approved design candidate. Preserve that integrity check.
 
 ## Proposed provider smoke test for a later approval
@@ -77,10 +76,9 @@ quota, timeout or schema failure. These commands were not run with Gemini.
 Use an authorized Linux AMD64 machine with Docker Engine or an equivalent
 local Docker-compatible runner. It needs local access to the pinned demo-100
 bundle, matching table audit, both pinned MiniLM snapshots, and the approved
-UI checkout. Provide the UI checkout path or a read-only archive containing
+UI checkout. Use the existing KPMG-ui-refresh worktree, whose candidate
 ui-consult/design/merge-with-codex/{app.js,consult.css,index.html,mock-api.js,serve.py}
-that matches the hash prefixes in stage.py, plus the tracked UI and shared
-assets from that checkout. A replacement candidate needs explicit approval
+matches the hash prefixes in stage.py, with its surrounding UI assets. A replacement candidate needs explicit approval
 and a new recorded hash. Keep the original staging integrity checks active.
 
 Build the private staged context using the README commands. Run the image
@@ -114,3 +112,37 @@ table tests do not substitute for the browser test.
 Smoke mode passed the persistent cap test with failed fake-provider calls,
 concurrent attempts and restart. Linux build, memory and browser verification
 are still required before requesting approval for the Gemini smoke test.
+
+## Local asset and HTTP follow-up
+
+The approved UI candidate is available in the existing KPMG-ui-refresh
+worktree under ui-consult/design/merge-with-codex. All five staged candidate
+hashes match. The local pinned bundle, matching table audit and both MiniLM
+snapshots were verified and produced a 148-file private staging context.
+Windows Chrome and bundled Playwright Core 1.57.0 successfully launch
+headlessly. No separate browser or UI package is required.
+
+The second HTTP client received status 200 with scenario execution-error,
+result null and error code summary_failed. The first answer reserved
+62,648 and 67,174 estimated input units. The second request added no
+reservation. Its synthesis could not fit in the existing 160,000-unit
+rolling minute window. With distinct cookie jars and the same question,
+retrying the second client after the window expired returned a cited
+answer. The ledger recorded four calls and the two session IDs produced
+two separate checkpoint markers. The second client recorded and reopened
+a review. The matching audited table endpoint returned 16 rows.
+
+For the later approved Gemini smoke test, space each question at least
+61 seconds after the preceding answer completes. Keep the existing rate
+limits, hard ten-attempt cap and state ledger active.
+
+No usable WSL2 distribution, Docker Desktop or Podman was found on this
+host. Linux image build, startup and memory still need an approved
+Docker-compatible Linux AMD64 runner.
+
+Both Windows browser runs passed with the approved candidate and scripted
+providers. They covered authentication, exact quote inspection, the full
+16-row chart, keyboard cell selection, saved work, human review, and
+reopening the saved review after a full server restart. Baseline startup
+was 23.24 seconds and its request took 6.55 seconds. S2 startup was 40.23
+seconds and its request took 6.37 seconds.

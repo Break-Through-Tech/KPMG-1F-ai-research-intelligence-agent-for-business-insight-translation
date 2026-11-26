@@ -103,9 +103,11 @@ async function main() {
     const point = table.locator('.ev-chart').getByRole('button', {name: /open source/i}).first();
     await point.focus();
     await point.press('Enter');
-    await page.locator('#inspector').getByText('Cell source ID', {exact: true}).waitFor();
-    assert.match(await page.locator('#inspector').innerText(), /Cell source ID/);
-    assert.ok(await page.locator('#inspector td.hit').count());
+    // Retrieved table rows use the citation inspector. Rows loaded to complete
+    // the table use the standalone row inspector. Both must highlight the cell.
+    const chartSource = page.locator('#inspector');
+    await chartSource.locator('td.hit').first().waitFor();
+    assert.match(await chartSource.innerText(), /Cell source ID|Selected cell: \S+/);
     await page.keyboard.press('Escape');
     await page.locator('#inspector').waitFor({state: 'hidden'});
 

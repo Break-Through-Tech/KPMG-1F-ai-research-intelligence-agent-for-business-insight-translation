@@ -46,8 +46,8 @@ class QuotaExhausted(RuntimeError):
 
 class Budget:
     """Persist reservations before dispatch, including calls that later fail."""
-    def __init__(self, path, clock=time.time):
-        self.path, self.clock = path, clock
+    def __init__(self, path, clock=time.time, *, smoke=False):
+        self.path, self.clock, self.smoke = path, clock, smoke
         with closing(sqlite3.connect(path)) as store, store:
             store.execute('CREATE TABLE IF NOT EXISTS attempts (at REAL NOT NULL, tokens INTEGER NOT NULL)')
 
@@ -55,6 +55,10 @@ class Budget:
         with closing(sqlite3.connect(self.path, timeout=5)) as store, store:
             store.execute('PRAGMA synchronous=FULL')
             store.execute('BEGIN IMMEDIATE')
+            if self.smoke:
+                count, = store.execute('SELECT COUNT(*) FROM attempts').fetchone()
+                if count >= 10:
+                    raise QuotaExhausted('Gemini smoke test attempt cap reached.')
             now = self.clock()
             latest, = store.execute('SELECT MAX(at) FROM attempts').fetchone()
             day, = store.execute('SELECT COUNT(*) FROM attempts WHERE at >= ?', (now - 86400,)).fetchone()
@@ -109,7 +113,11 @@ def build_handler(snapshot, state, origin, password, generate, metadata):
     manifest = verify_snapshot(snapshot)
     bundle = snapshot / 'artifacts/bundle'
     engine, paper_balance = engine_settings(os.environ)
-    guarded = quota_generate(generate, Budget(state / 'provider-usage.sqlite3'))
+    smoke = os.environ.get('KPMG_GEMINI_SMOKE', '0')
+    if smoke not in ('0', '1') or (smoke == '1' and (engine != 's2' or paper_balance)):
+        raise ValueError('Gemini smoke mode requires Standard S2.')
+    ledger = state / ('gemini-smoke-attempts.sqlite3' if smoke == '1' else 'provider-usage.sqlite3')
+    guarded = quota_generate(generate, Budget(ledger, smoke=smoke == '1'))
     encoder = snapshot / 'artifacts/encoder'
     reranker = snapshot / 'artifacts/reranker'
     if engine == 's2':

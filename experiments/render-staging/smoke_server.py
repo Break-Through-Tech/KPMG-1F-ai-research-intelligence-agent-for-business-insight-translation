@@ -17,6 +17,14 @@ CLAIM = 'On mathematical reasoning benchmarks, CU-DPO improved strategy-selectio
 
 
 def scripted(prompt, *, response_schema):
+    properties = response_schema.get('properties', {})
+    if 'decisions' in properties and 'retained_claim_indices' not in properties:
+        return json.dumps({'coverage': 'full', 'gap': '', 'limitations': [], 'decisions': [{
+            'index': 0, 'supported': True, 'relevant': True, 'quotes_entail': True,
+            'reason': 'The retrieved abstract supplies the exact ranges and model count.',
+            'supported_text': '', 'reduced_entailed': False, 'related': False,
+            'added_support': [], 'flag_resolutions': []
+        }]})
     if prompt.startswith('Synthesize an answer'):
         request = json.loads(prompt.split('\n', 1)[1])
         if request['question'] != QUESTION:

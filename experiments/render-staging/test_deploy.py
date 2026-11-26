@@ -84,3 +84,29 @@ class DeploymentUnitTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class PersistentSmokeTests(unittest.TestCase):
+    def test_attempt_cap_survives_failures_restart_and_concurrency(self):
+        from concurrent.futures import ThreadPoolExecutor
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / 'smoke.sqlite3'
+            provider = Mock(side_effect=TimeoutError('scripted'))
+            guarded = quota_generate(provider, Budget(path, lambda: 100, smoke=True))
+            for _ in range(5):
+                with self.assertRaises(TimeoutError):
+                    guarded('fixture')
+
+            def attempt(_):
+                restarted = Budget(path, lambda: 200, smoke=True)
+                try:
+                    restarted.reserve(1)
+                    return True
+                except QuotaExhausted:
+                    return False
+
+            with ThreadPoolExecutor(max_workers=8) as pool:
+                self.assertEqual(sum(pool.map(attempt, range(8))), 5)
+            self.assertEqual(provider.call_count, 5)
+            with self.assertRaises(QuotaExhausted):
+                Budget(path, lambda: 100000, smoke=True).reserve(1)

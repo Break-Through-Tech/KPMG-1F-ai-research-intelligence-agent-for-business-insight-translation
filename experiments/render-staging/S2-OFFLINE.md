@@ -52,7 +52,7 @@ commands are a proposed local preview procedure, with browser requests
 authenticated through the existing Basic challenge.
 
 ```sh
-export RESEARCH_ENGINE=s2 S2_PAPER_BALANCE=0 PORT=8821
+export RESEARCH_ENGINE=s2 S2_PAPER_BALANCE=0 KPMG_GEMINI_SMOKE=1 PORT=8821
 export KPMG_ORIGIN=http://127.0.0.1:8821
 python -B experiments/render-staging/server.py
 ```
@@ -63,10 +63,29 @@ questions, serially, using the same authenticated browser session. Retrieve
 equivalent client sequence for each question is a same-origin JSON POST to
 /api/research with query, context_id from /api/config, and
 interpret_context set to false. Allow at most two stages per question and
-avoid automatic retries. This command path is limited to six attempted
-generation calls by the three-request procedure. Before authorizing any
-retries, add and verify a dedicated hard 10-attempt smoke ledger cap rather
-than relying on the regular preview quota. Inspect structured output,
+avoid automatic retries. Smoke mode enforces a lifetime cap of ten reservations
+in gemini-smoke-attempts.sqlite3, including failed attempts. The existing
+minute and day limits also apply. Reuse the same private state directory
+and ledger for every restart or retry of this approved campaign. Never
+delete or rotate the ledger mid-campaign. Inspect structured output,
 grounding, pending review status, provider errors, token usage and individual
 stage durations against the 60-second provider timeout. Stop on the first
 quota, timeout or schema failure. These commands were not run with Gemini.
+
+## Remaining Linux and browser verification
+
+Use an authorized Linux AMD64 machine with Docker Engine or an equivalent
+local Docker-compatible runner. It needs local access to the pinned demo-100
+bundle, matching table audit, both pinned MiniLM snapshots, and the approved
+UI checkout. Provide the UI checkout path or a read-only archive containing
+ui-consult/design/merge-with-codex/{app.js,consult.css,index.html,mock-api.js,serve.py}
+that matches the hash prefixes in stage.py, plus the tracked UI and shared
+assets from that checkout. A replacement candidate needs explicit approval
+and a new recorded hash. Keep the original staging integrity checks active.
+
+Build the private staged context using the README commands. Run the image
+with scripted synthesis and review and record startup and research peaks
+from the Linux cgroup memory.peak counter. Run the browser suite locally
+with an installed Chromium and Playwright using the command in smoke.cjs.
+Use a fresh fake-provider state directory for each engine. Run Baseline
+first, then Standard S2 with RESEARCH_ENGINE=s2 and S2_PAPER_BALANCE=0.

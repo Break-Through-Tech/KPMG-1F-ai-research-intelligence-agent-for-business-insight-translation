@@ -98,8 +98,9 @@ class DeploymentUnitTests(unittest.TestCase):
         provider = Mock()
         call = quota_generate(provider, Budget(self.path, clock=self.clock))
         with self.assertRaises(QuotaExhausted):
-            call('z' * 100_000)
+            call('z' * 400_000)  # reserves about 208k tokens, over the 160k minute budget
         provider.assert_not_called()
+        self.assertEqual(0, self.attempts())
 
 
 if __name__ == '__main__':

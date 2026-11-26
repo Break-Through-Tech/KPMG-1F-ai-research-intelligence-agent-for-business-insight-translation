@@ -37,15 +37,17 @@ If you prefer not to authorise a key here, the alternative is for Laptop Claude 
 **Arms:** frozen S2 vs optimized S2-R2 (`a462275`). Both use the same Gemini model, temperature 0, schema output, the application's 60 s adapter timeout, the same index and the same 6k budget. The order alternates per question.
 
 **Phase 0, a provider smoke test (inside the budget):**
-- U1 and U2 on S2 only, 4 calls.
-- **Stop** if any structured-output or schema failure, malformed-output failure or timeout is not recovered by the single resume. Report it as a Gemini-compatibility finding before spending more.
+- The smoke test is **the first two S2 questions of the real run** (U1 and U2, S2 arm, 2 calls each = 4 calls).
+- Their checkpoints and answers are **kept and scored** as part of the evaluation. They are not repeated, so the smoke test adds **no extra calls**.
+- The runner **pauses after them**. It continues automatically only if both completed with valid structured output and no unrecovered timeout. Otherwise it **stops**, and the failure is reported as a Gemini-compatibility finding.
+- **Execution order:** S2 U1 and S2 U2 run first (phase 0). After that, R2 U1 and R2 U2 run, and from U3 onward the order alternates per question as before. This small deviation from strict alternation is recorded in `order.json`.
 
 **Budget:**
 
 | Item | Value |
 |---|---|
-| Calls expected | 32 (16 per arm; smoke-test calls count) |
-| **Hard cap on calls** | **40**, including failures and retries |
+| Calls expected | 32 (8 questions x 2 arms x 2 calls), **including the 4 smoke-test calls**, which are the first part of the real run |
+| **Hard cap on calls** | **40** (20 per arm), including the smoke-test calls, failures and retries |
 | Token caps | input ≤ **1.2 M** and output ≤ **150 k** in total; the runner stops if either would be exceeded |
 | Cost ceiling | the project budget above (proposed USD 10). Expected spend is a small fraction of that for this token volume, but you should check current Gemini pricing |
 
@@ -60,7 +62,7 @@ If you prefer not to authorise a key here, the alternative is for Laptop Claude 
 | 3 | R2 median total latency ≤ 1.25× S2 **and** ≤ 120 s; p90 ≤ 180 s |
 | 4 | R2 input tokens ≤ 1.10× S2 |
 | 5 | No silent failures, exclusions or unreported retries |
-| 6 | **Gemini compatibility:** ≥ 15 of 16 questions complete per arm, after at most one resume each |
+| 6 | **Gemini compatibility:** ≥ **7 of 8** questions complete **per arm** (8 answers per arm), after at most one resume each; a failed question scores 0 and is reported |
 
 **Also reported:**
 - absolute completeness against the 85% goal;

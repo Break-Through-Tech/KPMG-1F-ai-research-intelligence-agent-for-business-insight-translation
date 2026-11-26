@@ -233,19 +233,12 @@ class IndexedResearch:
                 stages['business'] = 'skipped'
             else:
                 try:
-                    evidence = result['evidence']
-                    business_summary = result['summary']
-                    if self.quality_check:
-                        # Accepted caveats need their sources too. Audit-only
-                        # citations from rejected drafts are not business evidence.
-                        accepted_items = [*business_summary['claims'],
-                                          *business_summary.get('limitation_support', [])]
-                        cited = {cid for item in accepted_items for cid in item['chunk_ids']}
-                        if not cited <= {p['chunk_id'] for p in evidence}:
-                            raise ValueError('An accepted summary source is missing from the evidence.')
-                        evidence = [p for p in evidence if p['chunk_id'] in cited]
-                        # Retain rejected drafts for audit, never feed them back as findings.
-                        business_summary = {k: v for k, v in result['summary'].items() if k != 'quality_review'}
+                    from src.business_handoff import accepted_research
+                    # Legacy integrated mode remains available, but never forwards
+                    # audit-only claims, interpretations or unrelated evidence.
+                    # The new downstream entry point additionally requires review.
+                    business_summary, evidence, _bounds = accepted_research(
+                        result['summary'], result['evidence'], require_review=False)
                     business = timed(timings, 'business_translation', translate, business_summary, evidence,
                         industry=submitted['industry'], generate=self.generate, compact=self.quality_check)
                     validate_business_insight(business,

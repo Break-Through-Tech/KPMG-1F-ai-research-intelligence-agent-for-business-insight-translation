@@ -1,0 +1,23 @@
+{
+  "base_commit": "579aca109889516c54c695692f3c8898b334028e",
+  "branch": "feat/business-translation-v1",
+  "execution": "offline_scripted_providers_only",
+  "live_model_calls": 0,
+  "research_deployment_changes": false,
+  "final_runs": [
+    {"tests": 159, "result": "passed", "scope": "downstream, business, handoff, indexed research, contracts, review, quality, saved work, chat, clarification"},
+    {"tests": 20, "result": "passed", "scope": "isolated existing research_demo HTTP and adapter suite"}
+  ],
+  "checks": {"javascript_syntax": "passed", "git_diff_check": "passed", "protected_paths_diff": "unchanged: experiments, deploy, onboarding, evaluation, prompts/evidence_led"},
+  "test_limitations": [
+    "Two combined-suite attempts encountered WinError 10053 in the unchanged test_live_history_roundtrip_and_rejection_before_generation. The isolated research_demo suite passed on both the pinned base and implementation. No transport code was changed to mask the abort.",
+    "No visual browser QA was performed; UI syntax, local HTTP integration and existing rendering contract were checked.",
+    "Five reference-aligned cases are handwritten canned fixtures using synthetic abbreviated evidence. They are not model-generated outputs or verified paper excerpts.",
+    "Novel workflow and adversarial fixtures are development checks, not genuinely unseen model evaluations. No generalization or stakeholder acceptance is established."
+  ],
+  "demonstrated_fixture_behavior": {
+    "withheld": ["invented ROI/savings", "compliance and production-readiness assertions", "changed numbers", "detectable invented premises including assumptions", "plainly generic actions", "repeated actions with identical evidence and assumptions"],
+    "retained": ["five reference-aligned conditional applications", "specific evidence requests and checklist/process changes without mandatory pilots", "conditional transfer to a different workflow", "supported study numbers and observed study cost", "distinct transfer conditions", "accepted material caveats"]
+  },
+  "live_quality_evaluation": "ready for bounded approved comparison; not executed"
+}

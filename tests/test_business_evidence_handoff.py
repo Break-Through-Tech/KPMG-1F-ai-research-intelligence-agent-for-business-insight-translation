@@ -149,7 +149,7 @@ class BusinessEvidenceHandoffTests(unittest.TestCase):
                     self.assertEqual(response['error']['code'],'business_failed')
                     self.assertNotIn('business_insight',response['result'])
 
-    def test_unreviewed_path_keeps_the_full_evidence_set(self):
+    def test_legacy_path_also_filters_to_final_claim_sources(self):
         p1,p2,p3,p4=sources()
         summary={'status':'ok','query':'What does the research support?',
             'claims':[dict(item('The pilot improved task completion.',p1),kind='finding')],
@@ -159,7 +159,7 @@ class BusinessEvidenceHandoffTests(unittest.TestCase):
         with patch('src.indexed_research.translate',return_value=business()) as translate:
             response=research.finish(result,request)
         self.assertIsNone(response['error'])
-        self.assertEqual(translate.call_args.args[1],result['evidence'])
+        self.assertEqual(translate.call_args.args[1],[p1])
 
 
 if __name__=='__main__':unittest.main()

@@ -73,6 +73,7 @@
 
   let turnNumber = 0, returnFocus = null, previewTrigger = null, previewTimer, activeDemo = null, savedResult = null;
   let liveSynthesis = false, indexedMode = false, presentationEnabled = false, indexedContextId = null;
+  let businessTranslationEnabled = false;
   let clarificationEnabled = false, researchConversationId = null, clarificationPending = false, activeClarificationTurn = null;
   let clarificationCard = null, conversationHistory = [], activePaperContextId = null, requestPending = false;
   let latestAnswer = null, appReady = false, retryContext = null, composing = false, compositionEndedAt = -Infinity;
@@ -2511,6 +2512,40 @@
     }, 'quiet-btn', 'download');
   }
 
+  function businessTranslationControl(demo, onChanged) {
+    if (!businessTranslationEnabled || !demo.library || demo.result?.summary?.status !== 'ok') return null;
+    const previous = demo.result.provenance?.business_translation?.context || {};
+    const industry = h('input', {type: 'text', required: true, maxLength: 300, value: previous.industry || '', placeholder: 'e.g. Advisory'});
+    const workflow = h('input', {type: 'text', required: true, maxLength: 600, value: previous.workflow || '', placeholder: 'e.g. Documenting client onboarding handoffs'});
+    const decision = h('input', {type: 'text', maxLength: 600, value: previous.decision || '', placeholder: 'Optional decision to inform'});
+    const status = h('p', {class: 'muted small', role: 'status'});
+    const send = h('button', {type: 'submit', class: 'quiet-btn', text: 'Translate these findings'});
+    const form = h('form', {class: 'review-form', onsubmit: async event => {
+      event.preventDefault();
+      if (send.disabled) return;
+      send.disabled = true;
+      status.textContent = 'Preparing business implications from this saved research…';
+      try {
+        const response = await fetch('/api/business', {method: 'POST', headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({brief_id: demo.library.brief.id, expected_version: demo.library.version.id,
+            fingerprint: demo.result.review_fingerprint,
+            context: {industry: industry.value, workflow: workflow.value, decision: decision.value}}),
+          signal: AbortSignal.timeout(180000)});
+        const updated = await response.json();
+        if (!response.ok) throw new Error(updated.error || 'Business translation failed.');
+        if (form.isConnected) onChanged(updated);
+      } catch (error) {
+        status.textContent = error.name === 'TimeoutError'
+          ? 'The request timed out. Reload saved research before retrying; the translation may have completed.'
+          : error.message || 'Business translation failed; the research is retained.';
+      } finally { send.disabled = false; }
+    }}, h('label', null, h('span', {text: 'Industry or capability'}), industry),
+    h('label', null, h('span', {text: 'Business workflow'}), workflow),
+    h('label', null, h('span', {text: 'Decision'}), decision), send, status);
+    return h('details', {class: 'fold'}, h('summary', {text: 'Business implications'}),
+      h('p', {class: 'muted small', text: 'Uses the saved findings in one additional model call. Research is not rerun.'}), form);
+  }
+
   function renderDemo(demo, number, answer) {
     const [label, baseExplanation, tone] = STATES[demo.scenario] || STATES.full;
     const stage = demo.error?.stage;
@@ -2551,6 +2586,12 @@
       // remain for the screen-reader announcement below.)
       void explanation; void tone; void abstention;
       renderBrief(demo, number, answer, tools);
+      const businessControl = businessTranslationControl(demo, updated => {
+        ResearchSpeech.stopAll();
+        renderDemo(updated, number, answer);
+        loadRecentBriefs();
+      });
+      if (businessControl) answer.append(businessControl);
       turn.tools = tools;
       if (demo.library_error) openReview(demo, number, onChanged, null);
       turn.demoState = {demo, number};
@@ -3542,6 +3583,7 @@
       appReady = true;
       liveSynthesis = config.live;
       libraryEnabled = config.library === true;
+      businessTranslationEnabled = config.business_translation === true;
       $('#library-open').hidden = !libraryEnabled;
       finishRevision();
       presentationEnabled = config.plain_language === true;

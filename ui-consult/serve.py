@@ -57,6 +57,7 @@ ROUTES = (
     (re.compile(r'/api/chart-preview'), {'POST'}),
     # Experimental multi-agent research (offered only by a live backend started with --agentic).
     (re.compile(r'/api/agentic-research'), {'POST'}),
+    (re.compile(r'/api/business'), {'POST'}),
     (re.compile(r'/api/briefs(?:/[0-9a-f]{1,64})?'), {'GET', 'POST'}),
     (re.compile(r'/api/briefs/[0-9a-f]{1,64}/reviews'), {'POST'}),
 )

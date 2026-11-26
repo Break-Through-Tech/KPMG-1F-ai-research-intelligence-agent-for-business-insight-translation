@@ -117,7 +117,7 @@ def _business(output, *, industry, ids):
     return output
 
 
-def translate(summary, passages, *, industry, generate, compact=False):
+def translate(summary, passages, *, industry, generate, compact=False, _prompt_path=None):
     """Render the versioned baseline and validate a pending business-advisory draft.
 
     No evidence or an insufficient summary skips generation. Conflicting evidence
@@ -164,7 +164,7 @@ def translate(summary, passages, *, industry, generate, compact=False):
         return _abstain(industry, summary['limitations'] +
                         ['No supported summary available; translation skipped.'])
     try:
-        prompt = Template(PROMPT_PATH.read_text(encoding='utf-8')).substitute(
+        prompt = Template((_prompt_path or PROMPT_PATH).read_text(encoding='utf-8')).substitute(
             industry=industry,
             summary_json=json.dumps(summary, allow_nan=False),
             evidence_json=json.dumps(passages, allow_nan=False))

@@ -332,13 +332,103 @@
       if (unsafe) { excluded.push({column, header, reason: `"${unsafe.text}" has too many digits to place exactly on a chart`}); continue; }
       const merged = rows.findIndex(row => row.cells[column].merged_from_previous_row);
       if (merged >= 0) { excluded.push({column, header, reason: `Row "${labels[merged]}" repeats a value merged across rows in the source.`}); continue; }
-      panels.push({column, header, percent: cells[0].parsed.percent});
+      panels.push({column, header, percent: cells[0].parsed.percent, unit: panelUnit(table, column, cells)});
     }
     if (!panels.length) {
       return {...no(excluded.length ? `No column can be charted: ${excluded[0].header}: ${excluded[0].reason}` : 'This table has no columns of plain numbers to chart (its values are text or symbols).'), excluded};
     }
     return {eligible: true, reason: '', form: category ? 'paired_dot' : 'dot', category,
       panels: panels.slice(0, MAX_PANELS), excluded, truncatedPanels: Math.max(0, panels.length - MAX_PANELS)};
+  }
+
+  /* Unit and meaningful zero for one value column (chart-first design, 2026-11-17).
+     Bars are drawn only when the paper itself states a percentage unit, so zero means "none":
+     every cell carries "%", or the column header says "%", or the caption states exactly one
+     parenthetical unit containing "%" (e.g. "(Pass@1, %)"). Values must then lie in 0..100.
+     Nonnegative numbers alone are NOT enough: accuracies written as 0.46, correlations, scores
+     or losses without a stated unit stay on a dot or dumbbell plot. The label is quoted verbatim. */
+  const CAPTION_UNIT = /\(([^()]*%[^()]*)\)/g;
+  function panelUnit(table, column, cells) {
+    const header = table.headers[column]?.text || '';
+    const values = cells.map(cell => cell.parsed && cell.parsed.value);
+    const inRange = values.every(value => Number.isFinite(value) && value >= 0 && value <= 100);
+    const none = reason => ({unit: null, label: null, basis: null, zero: false, reason});
+    let found = null;
+    if (cells.every(cell => cell.parsed && cell.parsed.percent)) found = {label: '%', basis: 'cells'};
+    else if (/%|\bpercent(?:age)?\b/i.test(header)) found = {label: header, basis: 'column label'};
+    else {
+      const units = [...(table.caption || '').matchAll(CAPTION_UNIT)].map(match => match[1].trim());
+      if (units.length === 1) found = {label: units[0], basis: 'caption'};
+      else if (units.length > 1) return none('The caption states more than one percentage unit, so this column\'s unit is not certain.');
+    }
+    if (!found) return none('No unit with a meaningful zero is stated for this column.');
+    if (!inRange) return none(`Values fall outside 0–100, which does not fit the stated unit "${found.label}".`);
+    return {unit: '%', label: found.label, basis: found.basis, zero: true, reason: ''};
+  }
+
+  /* A chart title built from the table's own words: "Table 4: DM by base model, Baseline vs + CU- DPO". */
+  function chartTitle(table, plan, panel) {
+    const match = /^(Table\s*[A-Za-z]?\d+[a-z]?)/.exec(table.caption || '');
+    const name = match ? match[1].replace(/\s+/g, ' ') : `Table ${table.table_id}`;
+    const by = (table.headers[0]?.text || 'row').toLowerCase();
+    const metric = panel ? panel.header : plan.panels.map(p => p.header).join(', ');
+    return `${name}: ${metric} by ${by}${plan.form === 'paired_dot' ? `, ${plan.category.values[0]} vs ${plan.category.values[1]}` : ''}`;
+  }
+
+  /* The takeaway is never written by the chart: it is the answer's own accepted, cited finding
+     about this table (quotes already checked against the source), or nothing. */
+  function takeawayFor(table, result) {
+    if (!result || result.summary?.status !== 'ok') return null;
+    const ids = new Set(table.rows.map(row => row.chunk_id));
+    const evidence = result.evidence || [];
+    for (const claim of result.summary.claims || []) {
+      if (claim.kind !== 'finding' || !(claim.chunk_ids || []).some(id => ids.has(id))) continue;
+      const numbers = (claim.chunk_ids || []).map(id => evidence.findIndex(p => p.chunk_id === id) + 1).filter(n => n > 0);
+      return {text: claim.text, citations: [...new Set(numbers)].sort((a, b) => a - b)};
+    }
+    return null;
+  }
+
+  /* Explicit chart request, same rule as the backend (chart_preview.py). */
+  const CHART_INTENT = /\b(?:charts?|graphs?|plots?|plotting|visuali[sz](?:e|ed|ing|ation)|bar\s+charts?|diagram)\b/i;
+  const chartIntent = query => typeof query === 'string' && CHART_INTENT.test(query);
+
+  /* Chart preview (POST /api/chart-preview): the page re-runs its own checks before drawing.
+     The retrieved rows must round-trip to their source text, and the complete table must pass
+     mergeComplete (extractor row count, index and source hashes, headers, every retrieved cell).
+     Anything that fails stays out of the chart, with its reason. */
+  function previewTables(preview) {
+    const out = [], refused = [];
+    if (!preview || !Array.isArray(preview.tables) || !Array.isArray(preview.evidence)) return {tables: out, refused};
+    const pseudo = {evidence: preview.evidence, summary: {claims: []}};
+    const built = new Map(buildTables(pseudo).map(table => [table.key, table]));
+    for (const entry of preview.tables) {
+      const table = built.get(entry.key);
+      if (entry.status !== 'complete' || !entry.table) { refused.push({key: entry.key, reason: entry.reason || 'The index could not show that this table is complete.'}); continue; }
+      if (!table) { refused.push({key: entry.key, reason: 'The retrieved rows for this table were not returned.'}); continue; }
+      if (table.fidelity !== 'round_trip_ok') { refused.push({key: entry.key, reason: 'The structured cells did not match the source text.'}); continue; }
+      const merged = mergeComplete(table, entry.table, preview.index_sha256);
+      if (!merged.ok) { refused.push({key: entry.key, reason: merged.reason}); continue; }
+      // Rows are not part of an answer yet: no citation numbers, no evidence-list position.
+      merged.table.rows.forEach(row => { row.evidenceIndex = null; row.citedBy = []; });
+      out.push({table: merged.table, plan: chartPlan(merged.table), entry});
+    }
+    return {tables: out, refused};
+  }
+
+  /* Horizontal bar geometry: one shared zero on the left, bars grow right in proportion to value. */
+  const BARS = {minWidth: 560, maxLabel: 220, minLabel: 120, labelShare: 0.26, valueSpace: 72, minSpan: 220, right: 16};
+  function barLayout(available) {
+    const frame = Math.max(0, Math.round(Number(available) || 0));
+    let width = Math.max(BARS.minWidth, frame || 880);
+    const labelW = Math.max(BARS.minLabel, Math.min(BARS.maxLabel, Math.round(width * BARS.labelShare)));
+    if (width - labelW - BARS.valueSpace - BARS.right < BARS.minSpan) width = labelW + BARS.minSpan + BARS.valueSpace + BARS.right;
+    const span = width - labelW - BARS.valueSpace - BARS.right;
+    return {width, labelW, span, x0: labelW, scrolls: frame > 0 && width > frame};
+  }
+  function barScale(layout, max) {
+    if (!(layout.span > 0) || !(max > 0)) throw new Error('Bar chart needs a positive span and maximum.');
+    return value => layout.x0 + (value / max) * layout.span;
   }
 
   /* Points for one chart panel: verbatim text plus parsed value, in source row order. */
@@ -426,7 +516,30 @@
     return items;
   }
 
-  return {parseNumber, compareParsed, sortRows, columnSortKind, chartLayout, panelScale, MIN_PANEL_WIDTH,
+
+  /* Papers the question names, in the order the question names them. A paper counts as named when its
+     full title, or the part before the first colon (at least 4 characters), appears in the question as
+     whole words. Matching only; nothing about the evidence changes. */
+  function namedStudies(studies, question) {
+    const norm = text => String(text || '').toLowerCase().replace(/[“”"'‘’]/g, '').replace(/\s+/g, ' ').trim();
+    const q = norm(question);
+    if (!q) return [];
+    const escape = text => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const found = [];
+    for (const study of studies) {
+      const full = norm(study.title);
+      const short = norm((study.title || '').split(':')[0]);
+      let at = full ? q.indexOf(full) : -1;
+      if (at < 0 && short.length >= 4) {
+        const match = new RegExp(`(^|[^a-z0-9])${escape(short)}($|[^a-z0-9])`).exec(q);
+        if (match) at = match.index;
+      }
+      if (at >= 0) found.push({study, at});
+    }
+    return found.sort((a, b) => a.at - b.at).map(item => item.study);
+  }
+  return {namedStudies, parseNumber, compareParsed, sortRows, columnSortKind, chartLayout, panelScale, MIN_PANEL_WIDTH,
+    panelUnit, chartTitle, takeawayFor, chartIntent, previewTables, barLayout, barScale, BARS,
     rowText, roundTripOk, buildTables, mergeComplete, chartPlan, panelSeries,
     studies, verificationItems, citationMap, headerStatus, EMPTY_CELL};
 });

@@ -158,7 +158,7 @@
       assert(items.some(item => /S3\.T2/.test(item.text)));
     });
 
-    /* ---------- Regression tests for the Codex audit (2026-11-17) ---------- */
+    /* ---------- Regression tests for the evidence audit (2026-11-17) ---------- */
     const fullS32 = cu.full_tables['2602.00931v2#S3.T2'];
     const merged32 = () => M.mergeComplete(tables[0], fullS32, indexSha).table;
     // Synthetic complete table with `columns` numeric columns: no paper data, only geometry.
@@ -380,7 +380,7 @@
       eq(G.briefChanged({title: 'Old', archived: true}, {expected_version: 'v', archived: true}), true);
     });
 
-    /* ---------- Regression tests for the Codex verification blockers (2026-11-17) ---------- */
+    /* ---------- Regression tests for verification regressions (2026-11-17) ---------- */
     test('B1: a proxy 504 or other 5xx after forwarding a write is "unknown", never a rejection', () => {
       const status = (code, writeOutcome) => Object.assign(new Error('x'), {status: code, ...(writeOutcome ? {writeOutcome} : {})});
       eq(G.writeFailure(status(504, 'unknown'), {write: true}).kind, 'unknown', 'proxy timeout after forwarding');
@@ -452,6 +452,365 @@
         const wider = chart.update(1200);
         assert(wider.rebuilt && document.activeElement && document.activeElement.getAttribute('data-point') === point.getAttribute('data-point'),
           'a real rebuild restores focus to the same cell');
+      } finally { host.remove(); }
+    });
+
+    /* ---------- Chart-first design (2026-11-17) ---------- */
+    const fullFig = cu.full_tables['2602.00931v2#S4.T4.fig1'];
+    const mergedFig = () => M.mergeComplete(tables[1], fullFig, indexSha).table;
+    const previewPayload = () => ({index_sha256: fullFig.index_sha256, model_calls: 0,
+      evidence: clone(result.evidence.filter(p => p.table_id === 'S4.T4.fig1')),
+      tables: [{key: '2602.00931v2#S4.T4.fig1', status: 'complete', table: clone(fullFig)}]});
+
+    test('CF1: chart intent is explicit (chart, graph, plot, visualize), same rule as the backend', () => {
+      for (const q of ['Show a grouped bar chart using Table 4', 'Plot accuracy by model', 'Can you visualize Table 2?', 'show a graph'])
+        assert(M.chartIntent(q), q);
+      for (const q of ['How much did CU-DPO improve accuracy?', 'Explain the method', 'Which table reports DeepMath?', ''])
+        assert(!M.chartIntent(q), q);
+    });
+
+    test('CF2: bars only where the table states a percentage unit with a meaningful zero', () => {
+      const fig = M.chartPlan(mergedFig());
+      eq(fig.panels.map(p => [p.header, p.unit.zero, p.unit.label, p.unit.basis]),
+        [['DM', true, 'Pass@1, %', 'caption'], ['HM2', true, 'Pass@1, %', 'caption'], ['PN', true, 'Pass@1, %', 'caption']]);
+      const t2 = M.chartPlan(merged32());
+      assert(t2.panels.every(p => !p.unit.zero && /No unit/.test(p.unit.reason)), 'Table 2 accuracies (0.46 …) have no stated unit: no bars');
+      const t = synthetic(2);
+      ['10%', '20%', '30%', '40%'].forEach((text, i) => { t.rows[i].cells[1] = {...t.rows[i].cells[1], text, parsed: M.parseNumber(text)}; });
+      eq(M.chartPlan(t).panels.map(p => [p.column, p.unit.zero, p.unit.basis]), [[1, true, 'cells'], [2, false, null]]);
+      const twoUnits = synthetic(1); twoUnits.caption = 'Table 9: Rates (%) and shares (%).';
+      assert(!M.chartPlan(twoUnits).panels[0].unit.zero, 'two caption units: not certain');
+      const outOfRange = synthetic(1); outOfRange.caption = 'Table 9: Scores (%).';
+      outOfRange.rows[0].cells[1] = {...outOfRange.rows[0].cells[1], text: '140.5', parsed: M.parseNumber('140.5')};
+      assert(!M.chartPlan(outOfRange).panels[0].unit.zero && /outside 0–100/.test(M.chartPlan(outOfRange).panels[0].unit.reason));
+    });
+
+    test('CF3 rendered: grouped bars share one zero, are proportional, label exact values and open their own cells', () => {
+      if (!root.ChartSvg || typeof document === 'undefined') throw new Error('needs the browser test page');
+      const table = mergedFig();
+      const plan = M.chartPlan(table);
+      const panel = plan.panels[0];
+      const host = document.createElement('div');
+      host.style.cssText = 'position:absolute;left:-10000px;top:0;';
+      document.body.append(host);
+      try {
+        for (const available of [860, 1100, 560, 400]) {
+          const opened = [];
+          const {root: svgRoot, layout} = root.ChartSvg.buildBars({document, table, plan, panel, available, title: 'T4', onOpen: (row, cell) => opened.push([row.chunk_id, cell.source_id])});
+          host.replaceChildren(svgRoot);
+          const bars = [...svgRoot.querySelectorAll('.point.bar')];
+          eq(bars.length, 14, 'one bar per row');
+          const ratios = bars.map(group => {
+            const rect = group.querySelector('rect');
+            assert(Number(rect.getAttribute('x')) === layout.x0, 'every bar starts at the shared zero');
+            const [column, chunk] = group.getAttribute('data-point').split('|');
+            const cell = table.rows.find(r => r.chunk_id === chunk).cells[Number(column)];
+            eq(group.querySelector('text').textContent, cell.text, 'label is the exact cell text');
+            eq(group.getAttribute('data-source-id'), cell.source_id);
+            return Number(rect.getAttribute('width')) / cell.parsed.value;
+          });
+          assert(Math.max(...ratios) - Math.min(...ratios) < 1e-6, `bar length proportional to value at ${available}`);
+          assert(layout.span >= M.BARS.minSpan && (available < M.BARS.minWidth ? layout.scrolls : true), 'narrow frames scroll instead of squeezing');
+          bars[0].dispatchEvent(new MouseEvent('click'));
+          bars[1].dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
+          eq(opened.map(o => o[1]), [bars[0].getAttribute('data-source-id'), bars[1].getAttribute('data-source-id')]);
+          assert(opened[0][0] !== opened[1][0], 'baseline and treatment bars open different rows');
+        }
+        let refused = false;
+        const t2 = merged32(), plan2 = M.chartPlan(t2);
+        try { root.ChartSvg.buildBars({document, table: t2, plan: plan2, panel: plan2.panels[0], available: 900, title: 'x', onOpen() {}}); }
+        catch { refused = true; }
+        assert(refused, 'bars are refused for a column without a confirmed zero');
+      } finally { host.remove(); }
+    });
+
+    test('CF4: a preview chart passes the same checks as an answer table, and fails closed', () => {
+      const ok = M.previewTables(previewPayload());
+      eq([ok.tables.length, ok.refused.length], [1, 0]);
+      const t = ok.tables[0].table;
+      eq([t.completeness, t.rows.length, t.extractorRowsEmitted], ['complete_from_index', 14, 14]);
+      assert(t.rows.every(r => r.evidenceIndex === null && r.citedBy.length === 0), 'preview rows are not cited');
+      assert(ok.tables[0].plan.eligible);
+      const cases = [
+        [p => { delete p.tables[0].table.extractor_rows_emitted; }, /complete/],
+        [p => { p.tables[0].table.rows.pop(); p.tables[0].table.row_count -= 1; }, /extractor emitted|numbered/],
+        [p => { p.evidence[0].table_cells[2].text = '99.9'; }, /did not match/],
+        [p => { p.tables[0].status = 'refused'; p.tables[0].table = null; p.tables[0].reason = 'audit'; }, /audit/],
+        [p => { p.evidence = []; }, /not returned/],
+      ];
+      for (const [mutate, pattern] of cases) {
+        const payload = previewPayload(); mutate(payload);
+        const out = M.previewTables(payload);
+        assert(out.tables.length === 0 && pattern.test(out.refused[0]?.reason), `${pattern}: ${JSON.stringify(out.refused)}`);
+      }
+    });
+
+    test('CF5: the takeaway is the answer\'s own cited finding about the table, or nothing', () => {
+      const t = mergedFig();
+      eq(M.takeawayFor(t, result), null, 'the recorded answer cites only the abstract, not this table');
+      const r = clone(result);
+      const row = r.evidence.find(p => p.table_id === 'S4.T4.fig1');
+      r.summary.claims = [{kind: 'interpretation', text: 'An inference.', chunk_ids: [row.chunk_id]},
+        {kind: 'finding', text: 'Mistral-8x7B reaches 28.9 on DM with CU-DPO.', chunk_ids: [row.chunk_id]}];
+      r.summary.status = 'ok';
+      const takeaway = M.takeawayFor(t, r);
+      eq(takeaway, {text: 'Mistral-8x7B reaches 28.9 on DM with CU-DPO.', citations: [r.evidence.indexOf(row) + 1]});
+      r.summary.status = 'insufficient_evidence';
+      eq(M.takeawayFor(t, r), null, 'no takeaway for an abstention');
+    });
+
+    test('CF6: the chart title uses only the table\'s own words', () => {
+      const t = mergedFig();
+      const plan = M.chartPlan(t);
+      eq(M.chartTitle(t, plan, plan.panels[0]), 'Table 4: DM by base model, Baseline vs + CU- DPO');
+      eq(M.chartTitle(t, plan, null), 'Table 4: DM, HM2, PN by base model, Baseline vs + CU- DPO');
+    });
+
+    test('CF7: switching metric or width keeps keyboard focus and the scroll state in bar view', () => {
+      if (!root.ChartSvg || typeof document === 'undefined') throw new Error('needs the browser test page');
+      const table = mergedFig();
+      const plan = M.chartPlan(table);
+      const host = document.createElement('div');
+      host.style.cssText = 'position:absolute;left:-10000px;top:0;';
+      const frame = document.createElement('div');
+      host.append(frame); document.body.append(host);
+      try {
+        const chart = root.ChartSvg.mount({document, frame, table, plan, title: 'T4', onOpen() {}, view: {kind: 'bars', panel: plan.panels[1]}});
+        chart.update(900);
+        const target = frame.querySelectorAll('.point.bar')[3];
+        target.focus();
+        const key = target.getAttribute('data-point');
+        assert(!frame.classList.contains('scrolls'));
+        const narrow = chart.update(400);
+        assert(narrow.rebuilt && frame.classList.contains('scrolls') && frame.getAttribute('tabindex') === '0', 'narrow: rebuilt and scrollable');
+        eq(document.activeElement && document.activeElement.getAttribute('data-point'), key, 'focus follows the same cell');
+        eq(chart.kind, 'bars');
+        const dots = root.ChartSvg.mount({document, frame, table, plan, title: 'T4', onOpen() {}, view: {kind: 'dots', panel: plan.panels[1]}});
+        dots.update(900);
+        eq(frame.querySelectorAll('.panel-head').length, 1, 'single-metric dot view has one panel');
+      } finally { host.remove(); }
+    });
+
+    /* ---------- Business-intelligence views (chart-select.js), real tables from the index ---------- */
+    const CS = isNode ? require('../chart-select.js') : root.ChartSelect;
+    const corpus = await load('corpus-tables');
+    const real = key => {
+      const entry = corpus.tables[key];
+      const result = {evidence: entry.passages, summary: {status: 'ok', claims: []}};
+      const [table] = M.buildTables(result);
+      const merged = M.mergeComplete(table, entry.full, corpus.index_sha256);
+      if (!merged.ok) throw new Error(`${key}: ${merged.reason}`);
+      return merged.table;
+    };
+    const viewsOf = (key, question = '') => {
+      const table = real(key);
+      const views = CS.viewsFor(table);
+      return {table, views, by: Object.fromEntries(views.map(v => [v.kind, v])), def: CS.chooseDefault(views, question)};
+    };
+    const eligibleKinds = views => views.filter(v => v.eligible).map(v => v.kind).sort();
+
+    test('TeX labels: readable text with no raw commands or duplicates (ρ\\rhoρ regression)', () => {
+      eq(CS.texPlain('Spear. \\rho'), 'Spear. ρ');
+      eq(CS.texPlain('\\mathcal{D}_{\\mathrm{2k}}\\cup\\mathcal{D}_{\\mathrm{EH}}'), 'D_2k∪D_EH');
+      eq(CS.texPlain('\\scriptstyle\\mathbf{\\frac{N}{d}}'), 'N/d');
+      eq(CS.texPlain('Llama-3-8B / \\mathcal{S}_{\\mathrm{harm}}'), 'Llama-3-8B / S_harm');
+      eq(CS.texPlain('Token Cost \\downarrow'), 'Token Cost ↓');
+      eq(CS.texPlain('0.211 \\pm 0.004'), '0.211 ± 0.004');
+      eq(CS.texPlain('plain text'), 'plain text');
+    });
+
+    test('± cells: value and half-width exactly as printed; artefacts and plain numbers refused', () => {
+      eq(CS.parsePlusMinus('0.211 \\pm 0.004'), {value: 0.211, err: 0.004, percent: false});
+      eq(CS.parsePlusMinus('82.4\\pm 1.8'), {value: 82.4, err: 1.8, percent: false});
+      eq(CS.parsePlusMinus('0.576 \\pm 0.0060.718'), null, 'extraction artefact');
+      eq(CS.parsePlusMinus('0.238'), null);
+      eq(CS.parsePlusMinus('-'), null);
+    });
+
+    test('uncertainty meaning: quoted only when the caption names the statistic', () => {
+      eq(CS.uncertaintyMeaning(real('2502.17874v2#A2.T6')).quote, 'mean \\pm 1.96 standard deviation of three random seeds');
+      eq(CS.uncertaintyMeaning(real('2607.00275v1#S4.T1')).quote, 'mean \\pm standard deviation of A(\\theta) over 30 different run seeds');
+      eq(CS.uncertaintyMeaning(real('2603.15712v1#A3.T2')), null, '"over 5 independent runs" does not name the statistic');
+      eq(CS.uncertaintyMeaning(real('2506.03610v3#S5.T8.st1')), null);
+    });
+
+    test('eligibility: ordered top-k columns give a line by default; no trade-off, no pairing', () => {
+      const {views, def, by} = viewsOf('2502.17874v2#A1.T5');
+      eq(eligibleKinds(views), ['dots', 'heatmap', 'line']);
+      eq(def.kind, 'line');
+      eq(by.line.ordered.positions, [1, 2, 3, 4, 5, 8, 10], 'x positions come from the headers, with true spacing');
+    });
+
+    test('eligibility: mixed ± table refuses error bars and line, and names the offending cell', () => {
+      const {views, by} = viewsOf('2502.17874v2#A2.T6');
+      eq(eligibleKinds(views), ['heatmap']);
+      assert(/mixes value ± range cells/.test(by.errorbars.reason), by.errorbars.reason);
+      assert(/mix plain numbers with other formats/.test(by.line.reason), by.line.reason);
+    });
+
+    test('eligibility: stated mean ± sd over ordered sample sizes gives line and error bars', () => {
+      const {views, def, by} = viewsOf('2607.00275v1#S4.T1');
+      eq(eligibleKinds(views), ['errorbars', 'heatmap', 'line']);
+      eq(def.kind, 'line');
+      eq(by.line.ordered.axis, 'rows');
+      assert(by.line.ordered.shared, 'four methods on one quantity share a scale');
+      eq(CS.chooseDefault(views, 'How uncertain are these results across seeds?').kind, 'errorbars');
+    });
+
+    test('eligibility: unstated ± meaning refuses error bars', () => {
+      const {by} = viewsOf('2506.03610v3#S5.T8.st1');
+      assert(!by.errorbars.eligible && /do not say whether ± is/.test(by.errorbars.reason), by.errorbars.reason);
+      const ablation = viewsOf('2603.15712v1#A3.T2');
+      assert(!ablation.by.errorbars.eligible, 'over 5 runs only');
+      assert(ablation.by.scatter.eligible, 'Time (h) is a cost measure');
+    });
+
+    test('eligibility: accuracy vs token cost is a trade-off, default only when the question asks', () => {
+      const {views, def, by} = viewsOf('2609.11414v1#S6.T6');
+      assert(by.scatter.eligible);
+      eq(by.scatter.x.map(c => c.plain), ['Token Cost ↓']);
+      eq(def.kind, 'dots', 'no question: the neutral view');
+      const asked = CS.chooseDefault(views, 'Which router gives the best accuracy for its token cost?');
+      eq(asked.kind, 'scatter');
+      assert(/asks about cost or efficiency/.test(asked.why), asked.why);
+    });
+
+    test('refusal: identifier-numbered rows never form a line or a trade-off', () => {
+      const {by} = viewsOf('2412.06681v2#S5.T1');
+      assert(!by.line.eligible && /identifiers/.test(by.line.reason), by.line.reason);
+      assert(!by.scatter.eligible, 'travel time vs capacity per link ID is not a trade-off between alternatives');
+    });
+
+    test('eligibility: stated percentages give bars from zero; paired rows give before/after and slope', () => {
+      eq(viewsOf('2412.15272v2#S6.T4').def.kind, 'bars');
+      const paired = viewsOf('2405.19358v2#S5.T2');
+      eq(paired.def.kind, 'paired');
+      assert(paired.by.slope.eligible);
+      const cost = CS.chooseDefault(paired.views, 'What does it cost?');
+      assert(cost.kind === 'paired' && /has no matching view/.test(cost.why), 'intent never picks an ineligible view');
+    });
+
+    test('eligibility: retrieved rows only means every view is off, with the completeness reason', () => {
+      const views = CS.viewsFor(tables[0]);
+      assert(views.every(v => !v.eligible));
+      assert(/complete table is loaded/.test(views[0].reason), views[0].reason);
+      eq(CS.chooseDefault(views, 'improve').kind, 'table');
+    });
+
+    test('intent: deterministic keywords', () => {
+      eq(CS.intentOf('By how much did CU-DPO improve accuracy?').name, 'improvement');
+      eq(CS.intentOf('Which model is best?').name, 'ranking');
+      eq(CS.intentOf('How does accuracy change as k increases?').name, 'trend');
+      eq(CS.intentOf('Compare results across benchmarks').name, 'multi');
+      eq(CS.intentOf('What is the latency overhead?').name, 'tradeoff');
+      eq(CS.intentOf(''), null);
+    });
+
+    test('KPI tiles: cited rows only, values verbatim, paired as printed before → after', () => {
+      const merged = clone(M.mergeComplete(tables[0], cu.full_tables['2602.00931v2#S3.T2'], indexSha).table);
+      const restore = t => { t.rows.forEach(r => r.cells.forEach(c => { c.parsed = M.parseNumber(c.text); })); return t; };
+      const table = restore(merged);
+      eq(CS.kpiTiles(table).tiles.length, table.rows.some(r => r.citedBy.length) ? CS.kpiTiles(table).tiles.length : 0);
+      table.rows.forEach(r => { r.citedBy = r.cells[0].text === 'DeepSeek-Math (7B)' ? [2] : []; });
+      const {tiles} = CS.kpiTiles(table);
+      eq(tiles.length, 1);
+      eq([tiles[0].label, tiles[0].header, tiles[0].from.cell.text, tiles[0].to.cell.text, tiles[0].conditions], ['DeepSeek-Math (7B)', 'Acc.', '0.46', '0.78', ['Baseline', '+ CU- DPO']]);
+      eq(tiles[0].from.cell.source_id, table.rows.find(r => r.chunk_id === tiles[0].from.row.chunk_id).cells[2].source_id);
+    });
+
+    test('count check: "seven base models" vs Table 2 (8 models) flags a review item; Table 4 (7) does not', () => {
+      const t2 = M.mergeComplete(tables[0], cu.full_tables['2602.00931v2#S3.T2'], indexSha).table;
+      const t4 = M.mergeComplete(tables[1], cu.full_tables['2602.00931v2#S4.T4.fig1'], indexSha).table;
+      const issue = CS.countCheck(result, t2);
+      assert(issue && issue.stated === 7 && issue.distinct === 8, JSON.stringify(issue));
+      assert(/seven base models/.test(issue.text) && /\[1\]/.test(issue.text), issue.text);
+      eq(CS.countCheck(result, t4), null);
+      eq(CS.countCheck(result, tables[0]), null, 'never on a partial table');
+      eq(result.summary.claims[0].text.includes('seven base models'), true, 'the recorded answer is not rewritten');
+    });
+
+    test('plain framing: chart titles are questions built only from table labels, never results', () => {
+      const t2 = M.mergeComplete(tables[0], cu.full_tables['2602.00931v2#S3.T2'], indexSha).table;
+      eq(CS.businessQuestion('paired', t2, {metric: 'Acc.', from: 'Baseline', to: '+ CU- DPO'}),
+        'How did Acc. change from “Baseline” to “+ CU- DPO” for each base model?');
+      const q = CS.businessQuestion('scatter', real('2609.11414v1#S6.T6'), {x: 'Token Cost \\downarrow', y: 'Evaluation Acc. \\uparrow'});
+      eq(q, 'How does Evaluation Acc. ↑ compare with Token Cost ↓?');
+      for (const kind of ['paired', 'slope', 'bars', 'dots', 'line', 'scatter', 'errorbars', 'heatmap']) {
+        const text = CS.businessQuestion(kind, t2, {metric: 'Acc.', from: 'a', to: 'b', x: 'x', y: 'y', axis: 'k'});
+        assert(text.endsWith('?') && !/\d/.test(text.replace('Acc.', '')), `${kind}: a question with no numbers: ${text}`);
+      }
+      eq(CS.LABELS.heatmap, 'Colour-coded table');
+    });
+
+    test('comparison focus: papers named in the question, in question order; partial names need whole words', () => {
+      const studies = [{title: 'Fin-RATE: A Real-world Financial Analytics and Tracking Evaluation Benchmark for LLMs on SEC Filings'},
+        {title: 'MultiRAG: A Knowledge-guided Framework for Mitigating Hallucination in Multi-source Retrieval Augmented Generation'},
+        {title: 'Scalable Defense against In-the-wild Jailbreaking Attacks'}];
+      const q = 'How do the conclusions of "MultiRAG: A Knowledge-guided Framework for Mitigating Hallucination in Multi-source Retrieval Augmented Generation" differ from those of "Fin-RATE: A Real-world Financial Analytics and Tracking Evaluation Benchmark for LLMs on SEC Filings"?';
+      eq(M.namedStudies(studies, q).map(s => s.title.split(':')[0]), ['MultiRAG', 'Fin-RATE']);
+      eq(M.namedStudies(studies, 'Compare Fin-RATE with MultiRAG').map(s => s.title.split(':')[0]), ['Fin-RATE', 'MultiRAG']);
+      eq(M.namedStudies(studies, 'What do multiragged systems do?'), []);
+      eq(M.namedStudies(studies, ''), []);
+    });
+
+    test('glossary: general meanings for abbreviations present in the labels only', () => {
+      eq(CS.glossaryFor(['Acc.', 'Top-3', 'Spear. \\rho']).map(g => g.term), ['Spearman ρ', 'Acc.', 'Top-k']);
+      eq(CS.glossaryFor(['Configuration', 'Calls', 'Cost (USD)']), []);
+      eq(CS.glossaryFor(['Llama-3-8B / ASR']).map(g => g.term), ['ASR']);
+      assert(!CS.glossaryFor(['Evaluation Acc. \\uparrow']).some(g => /\d/.test(g.meaning) && !/1 = same|0\.5/.test(g.meaning)), 'no numbers from the data');
+    });
+
+    if (!isNode) await atest('new SVG views: every mark opens its own source cell; texts verbatim', async () => {
+      const host = document.createElement('div');
+      host.style.width = '1000px';
+      document.body.append(host);
+      try {
+        const check = (frame, table, expected) => {
+          const marks = [...frame.querySelectorAll('.point')];
+          eq(marks.length, expected, 'mark count');
+          for (const mark of marks) {
+            const row = table.rows.find(r => r.chunk_id === mark.getAttribute('data-chunk-id'));
+            assert(row, 'mark names a row of this table');
+            const cell = row.cells.find(c => c.source_id === mark.getAttribute('data-source-id'));
+            assert(cell, `mark ${mark.getAttribute('data-point')} names a cell of its row`);
+            assert(mark.getAttribute('aria-label').includes(CS.texPlain(cell.text)), 'accessible name carries the cell text');
+          }
+        };
+        const opened = [];
+        const onOpen = (row, cell) => opened.push([row.chunk_id, cell.source_id]);
+        // Line over ordered columns: 4 rows × 7 columns.
+        let table = real('2502.17874v2#A1.T5'), views = CS.viewsFor(table), frame = document.createElement('div');
+        host.append(frame);
+        let chart = root.ChartSvg.mount({document, frame, table, plan: M.chartPlan(table), title: 'T5', onOpen, view: {kind: 'line', ordered: views.find(v => v.kind === 'line').ordered}});
+        chart.update(1000);
+        check(frame, table, 28);
+        const ends = [...frame.querySelectorAll('[data-end]')].map(n => n.textContent).sort();
+        eq(ends, ['0.142', '0.853'], 'scale ends are the printed lowest and highest values');
+        frame.querySelector('.point').dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
+        eq(opened.length, 1, 'Enter opens the source');
+        // Error bars: 7 rows × 4 ± columns; slope: 4 pairs × 2; scatter: 3 rows.
+        table = real('2607.00275v1#S4.T1'); views = CS.viewsFor(table);
+        chart = root.ChartSvg.mount({document, frame, table, plan: M.chartPlan(table), title: 'T1', onOpen, view: {kind: 'errorbars', columns: views.find(v => v.kind === 'errorbars').columns}});
+        chart.update(1000);
+        check(frame, table, 28);
+        assert([...frame.querySelectorAll('.value')].some(n => n.textContent === '0.140 ± 0.039'), 'printed ± text shown');
+        chart = root.ChartSvg.mount({document, frame, table, plan: M.chartPlan(table), title: 'T1', onOpen, view: {kind: 'line', ordered: views.find(v => v.kind === 'line').ordered, column: 'all'}});
+        chart.update(1000);
+        check(frame, table, 28);
+        table = real('2405.19358v2#S5.T2');
+        const plan = M.chartPlan(table);
+        chart = root.ChartSvg.mount({document, frame, table, plan, title: 'T2', onOpen, view: {kind: 'slope', panel: plan.panels[0]}});
+        chart.update(1000);
+        check(frame, table, 8);
+        table = real('2609.11414v1#S6.T6'); views = CS.viewsFor(table);
+        const sc = views.find(v => v.kind === 'scatter');
+        chart = root.ChartSvg.mount({document, frame, table, plan: M.chartPlan(table), title: 'T6', onOpen, view: {kind: 'scatter', x: sc.x[0].column, y: sc.y[0].column}});
+        chart.update(1000);
+        check(frame, table, 3);
+        eq([...frame.querySelectorAll('[data-end]')].map(n => n.textContent).length, 4, 'both axes labelled at the printed ends');
+        // Narrow frames scroll instead of squeezing the drawing.
+        const narrow = chart.update(400);
+        assert(frame.classList.contains('scrolls') && narrow.layout.width >= 480, 'scatter keeps its minimum width (480) and scrolls instead of shrinking text');
       } finally { host.remove(); }
     });
 

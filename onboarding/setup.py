@@ -178,8 +178,17 @@ def prepare(spec, cache, *, synthetic=False):
     return target
 
 
+def native_venv(cache):
+    if os.name != 'nt':
+        return cache / 'venv'
+    # Torch's wheel contains deep paths. Avoid nesting them under arbitrary
+    # checkout paths on Windows systems without long paths enabled.
+    key = hashlib.sha256(str(cache.resolve()).casefold().encode()).hexdigest()[:12]
+    return Path(tempfile.gettempdir()) / f'kpmg-311-{key}'
+
+
 def native_python(cache=CACHE):
-    return cache / ('venv/Scripts/python.exe' if os.name == 'nt' else 'venv/bin/python')
+    return native_venv(cache) / ('Scripts/python.exe' if os.name == 'nt' else 'bin/python')
 
 
 def main():
@@ -227,7 +236,7 @@ def main():
             else:
                 python = native_python(workspace)
                 if not python.is_file():
-                    run([sys.executable, '-m', 'venv', str(workspace / 'venv')])
+                    run([sys.executable, '-m', 'venv', str(native_venv(workspace))])
                 run([str(python), '-m', 'pip', 'install', '--index-url',
                      'https://download.pytorch.org/whl/cpu', '--no-deps', 'torch==2.15.0+cpu'])
                 run([str(python), '-m', 'pip', 'install', '--no-deps', '-r', str(context / 'requirements.txt')])

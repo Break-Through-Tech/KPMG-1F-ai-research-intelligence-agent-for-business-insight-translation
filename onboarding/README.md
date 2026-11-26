@@ -9,8 +9,10 @@ root:
     python3.11 onboarding/setup.py start --fixture
 
 On Windows, use py -3.11 in place of python3.11. Add --runtime native to both
-commands if Docker is unavailable. Native setup creates a repository-local
-environment with pinned Python dependencies and CPU Torch. The Docker image
+commands if Docker is unavailable. Native setup creates a checkout-specific environment with pinned Python
+dependencies and CPU Torch. Windows uses an automatically selected short
+path under its temporary directory to avoid Torch wheel path limits.
+If the environment is cleaned up, run setup again. The Docker image
 targets Linux AMD64. Use --prepare-only to verify and stage without building
 or installing dependencies.
 

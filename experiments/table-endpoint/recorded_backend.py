@@ -1,9 +1,11 @@
 """Experimental loopback backend: recorded briefs + read-only full-table endpoint.
 
 Isolated prototype (2026-11-17). It imports the unchanged shared ``DemoHandler`` and
-``BriefStore`` from a clean export of ``main`` and adds exactly one route:
+``BriefStore`` from a clean export of ``main`` and adds these experimental routes:
 
-    GET /api/evidence-table?chunk_id=<table-row passage ID>&index=<parents.jsonl SHA-256>
+    GET  /api/evidence-table?chunk_id=<table-row passage ID>&index=<parents.jsonl SHA-256>
+    POST /api/chart-preview   {"query": ...}  (only when a retriever is supplied; 0 model calls)
+    GET  /api/progress                        (only when a progress tracker is supplied)
 
 No retrieval models are loaded and no generation provider is configured, so
 ``/api/research`` answers 503 exactly as the shared handler does without a provider.
@@ -14,6 +16,7 @@ import argparse
 import json
 import shutil
 import sys
+import time
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
@@ -42,14 +45,40 @@ def drain_request_body(handler):
     return True
 
 
-def make_handler(export_root, tables, library_path):
+ROUTE_METHODS = {'/api/evidence-table': 'GET', '/api/progress': 'GET', '/api/chart-preview': 'POST'}
+MAX_PREVIEW_BODY = 16384
+
+
+def make_handler(export_root, tables, library_path, *, preview_retrieve=None, progress=None, budget=None, top_k=8):
+    """Recorded/experimental handler.
+
+    ``preview_retrieve(query, top_k)`` enables the model-free ``POST /api/chart-preview`` (the live
+    launcher passes its B2 retriever; tests pass a recorded one). ``progress`` (a ``Progress``)
+    enables ``GET /api/progress``. Both are additive experimental routes; shared routes are unchanged.
+    """
     sys.path.insert(0, str(export_root))
     from src.research_demo import DemoHandler
     from src.brief_store import BriefStore
+    import chart_preview
 
     class RecordedHandler(DemoHandler):
+        def respond(self, status, body, content_type='application/json; charset=utf-8'):
+            # Tell the page which experimental, model-free features this backend offers.
+            if self.path == '/api/config' and status == 200 and isinstance(body, dict):
+                body = {**body, 'chart_preview': preview_retrieve is not None and tables is not None,
+                        'progress': progress is not None}
+            return super().respond(status, body, content_type)
+
         def do_GET(self):
             parts = urlsplit(self.path)
+            if parts.path == '/api/progress':
+                if not self.local_request():
+                    return self.respond(403, {'error': 'Use the local research page.'})
+                if progress is None:
+                    return self.respond(404, {'code': 'progress_disabled', 'error': 'Progress reporting is not enabled.'})
+                return self.respond(200, progress.snapshot(budget() if budget else None))
+            if parts.path == '/api/chart-preview':
+                return self._method_not_allowed()
             if parts.path != '/api/evidence-table':
                 return super().do_GET()
             if not self.local_request():
@@ -72,16 +101,51 @@ def make_handler(export_root, tables, library_path):
                 return self.respond(error.status, {'code': error.code, 'error': error.reason})
             self.respond(200, table)
 
+        def chart_preview(self):
+            """Model-free: retrieve, then return audit-verified complete tables for the table rows found."""
+            if not self.local_request():
+                drain_request_body(self)
+                return self.respond(403, {'error': 'Use the local research page.'})
+            if preview_retrieve is None or tables is None:
+                drain_request_body(self)
+                return self.respond(404, {'code': 'chart_preview_disabled', 'error': 'Chart preview is not enabled on this backend.'})
+            try:
+                length = int(self.headers.get('Content-Length') or 0)
+            except ValueError:
+                length = -1
+            if not 0 < length <= MAX_PREVIEW_BODY:
+                drain_request_body(self)
+                return self.respond(400, {'code': 'bad_request', 'error': 'Send a JSON body with the question.'})
+            try:
+                payload = json.loads(self.rfile.read(length))
+            except ValueError:
+                return self.respond(400, {'code': 'bad_request', 'error': 'The request body is not valid JSON.'})
+            query = payload.get('query') if isinstance(payload, dict) else None
+            if not isinstance(query, str) or not query.strip() or len(query) > chart_preview.MAX_QUERY_CHARS:
+                return self.respond(400, {'code': 'bad_request', 'error': 'query must be 1 to 2000 characters.'})
+            started = time.perf_counter()
+            try:
+                passages = preview_retrieve(query, top_k)
+            except Exception:
+                return self.respond(503, {'code': 'retrieval_failed', 'error': 'Retrieval for the chart preview failed. No model call was made.'})
+            retrieved = time.perf_counter()
+            result = chart_preview.preview(query, passages, tables, tables.index_sha256)
+            result['timings_seconds'] = {'retrieval': round(retrieved - started, 3),
+                                         'table_validation': round(time.perf_counter() - retrieved, 3)}
+            self.respond(200, result)
+
         def _method_not_allowed(self):
-            # The table route is read-only: only GET is accepted, whatever the shared handler does.
-            if urlsplit(self.path).path == '/api/evidence-table':
+            # Experimental routes accept one method each, whatever the shared handler does.
+            path = urlsplit(self.path).path
+            allowed = ROUTE_METHODS.get(path)
+            if allowed is not None and allowed != self.command:
                 # Read the request body before answering. Closing a socket that still holds unread
                 # bytes makes Windows send a reset, which can discard this response before the
                 # client reads it (WinError 10053, seen in about 1 in 5 refusals with a body).
                 drained = drain_request_body(self)
                 self.send_response(405)
-                body = json.dumps({'code': 'method_not_allowed', 'error': 'Use GET for /api/evidence-table.'}).encode()
-                self.send_header('Allow', 'GET')
+                body = json.dumps({'code': 'method_not_allowed', 'error': f'Use {allowed} for {path}.'}).encode()
+                self.send_header('Allow', allowed)
                 if not drained:
                     self.send_header('Connection', 'close')
                     self.close_connection = True
@@ -93,6 +157,8 @@ def make_handler(export_root, tables, library_path):
             return False
 
         def do_POST(self):
+            if urlsplit(self.path).path == '/api/chart-preview':
+                return self.chart_preview()
             if not self._method_not_allowed():
                 return super().do_POST()
 

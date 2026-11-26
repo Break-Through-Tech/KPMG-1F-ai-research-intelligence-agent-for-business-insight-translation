@@ -4,14 +4,28 @@
 |---|---|
 | Website | https://kpmg-proofline.mexicocentral.cloudapp.azure.com (user `reviewer`) |
 | Password | on the VM: `sudo grep ^KPMG_REVIEW_PASSWORD= /etc/kpmg/preview.env` |
-| Deployed commit | `9302af8` on `deploy/azure-vm` (staged context `9302af8-q419u00z-ready`) |
+| Deployed commit | `edc3e43` on `deploy/azure-vm` (staged context `edc3e43-sn51nefa-ready`) |
 | Engine | S2 consolidated-v2 Standard, B1 paper balance off (`RESEARCH_ENGINE=s2`, `S2_PAPER_BALANCE=0`) |
 | Mode | real: exact demo-100 index (7,667 records, `parents.jsonl` SHA-256 `78d8efd7…`) and Gemini `gemini-3.1-flash-lite` |
 | VM | `kpmg-preview`, Mexico Central, Standard_B2als_v2 (2 vCPU, 4 GiB), Ubuntu 24.04 |
 | Fallback | `deploy/render-native` at `9e53008` (Render) |
 
-`9302af8` = `9a85c92` (Azure VM scripts) + sanitized provider-failure logging (`b7b4d52`) + installer
-re-staging fix. Frozen engine files are unchanged; `seal_s3.py` and `seal_v3.py` both print `verified`.
+`edc3e43` = `9a85c92` (Azure VM scripts) + sanitized provider-failure logging (`b7b4d52`) + installer
+re-staging fix (`9302af8`) + calibrated budget reservations (`8d3b026`) + bounded retry of Gemini 5xx errors
+(`edc3e43`). Frozen engine files are unchanged; `seal_s3.py` and `seal_v3.py` both print `verified`.
+
+## Fixes after the first browser test (26 Nov, 12:58 PM Central)
+
+1. **Local budget.** "How accurately do LLMs answer financial analysis questions on SEC filings…" failed at the
+   review stage with `provider-failure stage=local_budget`. Reservations were 2 tokens per request byte (about 7×
+   real usage), so drafting + review reserved 162,122 against the 160,000 minute budget and the review call was
+   refused locally. Now one token per 2 bytes plus 8,192 for the reply (still about 1.8× real input): 54,866 for
+   the same question. All limits are unchanged.
+2. **Gemini server errors.** The retest then hit `ServerError 503 UNAVAILABLE` from Gemini, and the client made
+   exactly one attempt. Provider 5xx responses are now retried at most twice (after 2 s and 6 s); every attempt is
+   reserved in the ledger first. 4xx (including 429 quota), timeouts, finish-reason, parsing and schema failures
+   are never retried; validation is unchanged. Verified: the same question then answered (5 verbatim-cited
+   findings, one interpretation withheld by the G4/G5 gate) after Gemini returned 500 and 504 on two attempts.
 
 ## Verified on the hosted server
 
@@ -21,7 +35,7 @@ re-staging fix. Frozen engine files are unchanged; `seal_s3.py` and `seal_v3.py`
   verbatim citations to the retrieved passages and Table 2 rows, two unsupported draft claims withheld by the P4
   gate, human review pending. Audited Table 2 (16 rows, complete) served for the chart. Saved brief reopens
   identically.
-- Latency 32.6 s (retrieval 5.6, drafting 2.7, review 23.9). Memory about 840–920 MiB of the 3 GiB service limit.
+- Latency 32.6 s for CU-DPO (retrieval 5.6, drafting 2.7, review 23.9). Memory about 840–950 MiB at work, 1.36 GiB peak, of the 3 GiB service limit.
 - S2 default, saved data and security checks persist across service restarts and full VM reboots (site healthy
   about 50 s after a reboot). The data disk mounts by UUID; device names can change between boots.
 
@@ -40,14 +54,15 @@ All on the VM (`ssh -i kpmg-preview_key.pem azureuser@kpmg-proofline.mexicocentr
 
 ## Known limitations
 
-- **Pace S2 questions about a minute apart.** Each S2 question reserves about 130k of the local 160k-per-minute
-  generation budget (the reservation is 2 × request bytes, about 8× the real token count). A second question
-  inside the minute ends with "Summary failed … retry". Other limits: 6 calls per minute and 60 calls per
-  rolling 24 hours, so about 30 S2 questions a day (7 synthetic-fixture reservations from 26 Nov count until
-  about 08:50 VM time on 27 Nov).
-- About 33 s per S2 answer, mostly the review stage.
-- One early S2 drafting failure (26 Nov, 09:31) could not be reproduced in two later runs; its cause is
-  unconfirmed. If it recurs, the `provider-failure` log line names the category.
+- **Generation limits.** Each S2 question is two Gemini calls reserving about 50–60k of the 160k-per-minute
+  budget, and at most 6 calls per minute and 60 per rolling 24 hours are allowed (retries count). That is about
+  3 questions a minute and up to 30 a day. When a limit is reached the page shows "Summary failed … retry";
+  `journalctl` shows `provider-failure stage=local_budget`.
+- **Latency depends on Gemini.** Normally about 20–35 s per S2 answer (the first question after a restart adds
+  about 10 s of retrieval warm-up). While Gemini is degraded, retries can stretch one answer to about 3 minutes
+  (observed 26 Nov, 19:06 UTC: 500 and 504 before success). If all three attempts fail, the page shows the same
+  retry message; re-asking in the same browser session resumes from the saved stages.
+- One early S2 drafting failure (26 Nov, 09:31) predates the logging; its cause is unconfirmed.
 - Answers are research findings with human review pending; business and regulatory analysis is disabled.
 - A single shared `reviewer` login. Research results are auto-saved to the library; briefs can be archived,
   not deleted (versions and reviews are append-only). The four synthetic hosting-test briefs are archived.

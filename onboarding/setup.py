@@ -1,0 +1,186 @@
+"""Portable setup for the supervised offline research application."""
+import argparse
+import hashlib
+import json
+import os
+from pathlib import Path
+import shutil
+import subprocess
+import sys
+import tempfile
+
+ROOT = Path(__file__).resolve().parents[1]
+HERE = ROOT / 'experiments/render-staging'
+CACHE = ROOT / '.kpmg-onboarding'
+FRONTEND = ROOT / 'onboarding/frontend'
+GITHUB_REPO = 'Break-Through-Tech/KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation'
+IMAGE = 'kpmg-research-offline:local'
+
+
+class SetupError(Exception):
+    pass
+
+
+def run(command, *, capture=False):
+    result = subprocess.run(command, cwd=ROOT, text=True, capture_output=capture)
+    if result.returncode:
+        raise SetupError(f'{Path(command[0]).name} command failed. {result.stderr.strip() if capture else "See output above."}')
+    return result.stdout.strip() if capture else None
+
+
+def exists(command):
+    path = shutil.which(command)
+    if not path:
+        raise SetupError(f'{command} is required. See onboarding/README.md.')
+    return path
+
+
+def sha256(path):
+    with path.open('rb') as stream:
+        return hashlib.file_digest(stream, 'sha256').hexdigest()
+
+
+def verify(path, expected):
+    if not path.is_file() or path.is_symlink():
+        raise SetupError(f'Missing verified file: {path.name}')
+    if path.stat().st_size != expected['bytes'] or sha256(path) != expected['sha256']:
+        raise SetupError(f'Checksum or size mismatch: {path.name}. Replace the damaged cache from the approved release.')
+
+
+def acquire(spec, cache):
+    cache.mkdir(parents=True, exist_ok=True)
+    missing = []
+    for name, item in spec['files'].items():
+        path = cache / name
+        if path.exists():
+            verify(path, item)
+        else:
+            missing.append((name, item))
+    if not missing:
+        return
+    gh = exists('gh')
+    try:
+        visibility = run([gh, 'repo', 'view', GITHUB_REPO, '--json', 'visibility',
+                          '--jq', '.visibility'], capture=True)
+    except SetupError as error:
+        raise SetupError('Authenticate GitHub CLI with gh auth login and request project repository access.') from error
+    if visibility != 'PRIVATE':
+        raise SetupError('The configured asset release repository must be private.')
+    with tempfile.TemporaryDirectory(prefix='download-', dir=cache) as tmp:
+        args = [gh, 'release', 'download', spec['release_tag'], '--repo', GITHUB_REPO, '--dir', tmp]
+        for _, item in missing:
+            args.extend(('--pattern', item['release_asset']))
+        try:
+            run(args, capture=True)
+        except SetupError as error:
+            raise SetupError(f'Private asset release {spec["release_tag"]} is unavailable. '
+                             'Check repository access. Publication of the exact corpus is pending project data-use clearance.') from error
+        for _, item in missing:
+            verify(Path(tmp) / item['release_asset'], item)
+        for name, item in missing:
+            path = cache / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            (Path(tmp) / item['release_asset']).replace(path)
+
+
+def prepare(spec, cache):
+    present = {p.relative_to(cache).as_posix() for model in ('encoder', 'reranker')
+               for p in (cache / 'models' / model).rglob('*') if p.is_file()}
+    expected_models = {name for name in spec['files'] if name.startswith('models/')}
+    if present != expected_models:
+        raise SetupError('Unexpected model cache content. Use only the exact files in assets.json.')
+    observed_ui = {p.relative_to(FRONTEND).as_posix()
+                   for p in FRONTEND.rglob('*') if p.is_file()}
+    if observed_ui != set(spec['frontend']):
+        raise SetupError('Frontend directory differs from the approved allowlist.')
+    for name, expected in spec['frontend'].items():
+        path = FRONTEND / name
+        if not path.is_file() or sha256(path) != expected:
+            raise SetupError(f'Approved frontend checksum mismatch: {name}. Restore the file from Git.')
+    git = exists('git')
+    # Fresh context each time keeps stale source or assets out of the runtime.
+    with tempfile.TemporaryDirectory(prefix='image-context-prepare-', dir=HERE) as temp:
+        output = Path(temp) / 'context'
+        run([sys.executable, '-B', str(HERE / 'stage.py'), '--output', str(output),
+             '--ui', str(FRONTEND), '--bundle', str(cache / 'demo-100'),
+             '--audit', str(cache / 'table-audit-demo-100.json'),
+             '--encoder', str(cache / 'models/encoder'), '--reranker', str(cache / 'models/reranker')])
+        for name, destination in [('requirements-py311.lock.txt', 'requirements.txt'), ('Dockerfile', 'Dockerfile')]:
+            shutil.copyfile(ROOT / 'onboarding' / name, output / destination)
+        verify_snapshot = json.loads((output / 'snapshot/manifest.json').read_bytes())
+        for name, expected in verify_snapshot['files'].items():
+            path = output / 'snapshot' / name
+            if sha256(path) != expected:
+                raise SetupError(f'Staged asset checksum mismatch: {name}')
+        parent = HERE / 'image-context-onboarding'
+        parent.mkdir(exist_ok=True)
+        revision = run([git, 'rev-parse', '--short', 'HEAD'], capture=True)
+        with tempfile.TemporaryDirectory(prefix=f'{revision}-', dir=parent) as holder:
+            target = Path(holder).with_name(Path(holder).name + '-ready')
+            shutil.move(str(output), str(target))
+    (CACHE / 'context.txt').write_text(str(target.relative_to(ROOT)) + '\n', encoding='utf-8')
+    return target
+
+
+def native_python():
+    return CACHE / ('venv/Scripts/python.exe' if os.name == 'nt' else 'venv/bin/python')
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('action', choices=('setup', 'start'), nargs='?', default='setup')
+    parser.add_argument('--runtime', choices=('docker', 'native'), default='docker')
+    parser.add_argument('--prepare-only', action='store_true', help='Verify and stage without building or installing.')
+    parser.add_argument('--engine', choices=('baseline', 's2'), default='baseline')
+    args = parser.parse_args()
+    if sys.version_info[:2] < (3, 11):
+        raise SetupError('Python 3.11 or newer is required for setup.')
+    if args.runtime == 'native' and sys.version_info[:2] != (3, 11):
+        raise SetupError('Run native setup using Python 3.11.')
+    if args.action == 'start' or not args.prepare_only:
+        if args.runtime == 'docker':
+            docker = exists('docker')
+            try:
+                os_type = run([docker, 'info', '--format', '{{.OSType}}'], capture=True)
+            except SetupError as error:
+                raise SetupError('Docker Engine is unavailable. Start Docker Desktop/Engine, or choose native Python 3.11.') from error
+            if os_type != 'linux':
+                raise SetupError('Switch Docker to Linux containers.')
+    spec = json.loads((ROOT / 'onboarding/assets.json').read_bytes())
+    if args.action == 'setup':
+        acquire(spec, CACHE / 'assets')
+        context = prepare(spec, CACHE / 'assets')
+        if not args.prepare_only:
+            if args.runtime == 'docker':
+                run([docker, 'build', '--platform', 'linux/amd64', '-t', IMAGE, str(context)])
+            else:
+                python = native_python()
+                if not python.is_file():
+                    run([sys.executable, '-m', 'venv', str(CACHE / 'venv')])
+                run([str(python), '-m', 'pip', 'install', '--index-url',
+                     'https://download.pytorch.org/whl/cpu', '--no-deps', 'torch==2.15.0+cpu'])
+                run([str(python), '-m', 'pip', 'install', '-r', str(context / 'requirements.txt')])
+                run([str(python), '-m', 'pip', 'check'])
+        print('Verified runtime context:', context.relative_to(ROOT))
+        return
+    if args.prepare_only:
+        raise SetupError('--prepare-only is only supported during setup.')
+    command = ['experiments/render-staging/dev_server.py', '--engine', args.engine]
+    if args.runtime == 'docker':
+        run([docker, 'run', '--rm', '--platform', 'linux/amd64', '-p', '127.0.0.1:8821:8821',
+             '--mount', 'type=volume,source=kpmg-offline-state,target=/state', IMAGE,
+             'python', '-B', *command, '--snapshot', '/app/snapshot', '--state', '/state', '--container'])
+    else:
+        python = native_python()
+        if not python.is_file() or not (CACHE / 'context.txt').is_file():
+            raise SetupError('Run native setup first.')
+        context = ROOT / (CACHE / 'context.txt').read_text(encoding='utf-8').strip()
+        run([str(python), '-B', str(context / command[0]), '--engine', args.engine,
+             '--snapshot', str(context / 'snapshot'), '--state', str(CACHE / 'state')])
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    except (SetupError, OSError) as error:
+        sys.exit(f'Setup error: {error}')

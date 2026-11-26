@@ -1,0 +1,152 @@
+{
+  "release_tag": "s2-runtime-v1",
+  "publication": "blocked_pending_project_clearance",
+  "files": {
+    "demo-100/vectors.npy": {
+      "bytes": 16942208,
+      "sha256": "50468962cff785b71c4de72f9e7436b656bcf30d8df801b2681473873d23bd14",
+      "release_asset": "demo-100--vectors.npy"
+    },
+    "demo-100/manifest.json": {
+      "bytes": 548,
+      "sha256": "7ed723faea8a31a2efb6738223d86edbcb58c047c1ebe356d1f20ab3ece1e587",
+      "release_asset": "demo-100--manifest.json"
+    },
+    "table-audit-demo-100.json": {
+      "bytes": 115662,
+      "sha256": "f7d54aaa3e8f469a2fe7ab549d555416a391b11e3fcf21a1f90bae7cabf23af9",
+      "release_asset": "table-audit-demo-100.json"
+    },
+    "models/encoder/1_Pooling/config.json": {
+      "bytes": 190,
+      "sha256": "4be450dde3b0273bb9787637cfbd28fe04a7ba6ab9d36ac48e92b11e350ffc23",
+      "release_asset": "models--encoder--1_Pooling--config.json"
+    },
+    "models/encoder/config.json": {
+      "bytes": 612,
+      "sha256": "953f9c0d463486b10a6871cc2fd59f223b2c70184f49815e7efbcab5d8908b41",
+      "release_asset": "models--encoder--config.json"
+    },
+    "models/encoder/config_sentence_transformers.json": {
+      "bytes": 116,
+      "sha256": "061ca9d39661d6c6d6de5ba27f79a1cd5770ea247f8d46412a68a498dc5ac9f3",
+      "release_asset": "models--encoder--config_sentence_transformers.json"
+    },
+    "models/encoder/model.safetensors": {
+      "bytes": 90868376,
+      "sha256": "53aa51172d142c89d9012cce15ae4d6cc0ca6895895114379cacb4fab128d9db",
+      "release_asset": "models--encoder--model.safetensors"
+    },
+    "models/encoder/modules.json": {
+      "bytes": 349,
+      "sha256": "84e40c8e006c9b1d6c122e02cba9b02458120b5fb0c87b746c41e0207cf642cf",
+      "release_asset": "models--encoder--modules.json"
+    },
+    "models/encoder/sentence_bert_config.json": {
+      "bytes": 53,
+      "sha256": "fc1993fde0a95c24ec6c022539d41cf6e2f7c9721e5415d6fb6897472a9cd4b7",
+      "release_asset": "models--encoder--sentence_bert_config.json"
+    },
+    "models/encoder/special_tokens_map.json": {
+      "bytes": 112,
+      "sha256": "303df45a03609e4ead04bc3dc1536d0ab19b5358db685b6f3da123d05ec200e3",
+      "release_asset": "models--encoder--special_tokens_map.json"
+    },
+    "models/encoder/tokenizer.json": {
+      "bytes": 466247,
+      "sha256": "be50c3628f2bf5bb5e3a7f17b1f74611b2561a3a27eeab05e5aa30f411572037",
+      "release_asset": "models--encoder--tokenizer.json"
+    },
+    "models/encoder/tokenizer_config.json": {
+      "bytes": 350,
+      "sha256": "acb92769e8195aabd29b7b2137a9e6d6e25c476a4f15aa4355c233426c61576b",
+      "release_asset": "models--encoder--tokenizer_config.json"
+    },
+    "models/encoder/vocab.txt": {
+      "bytes": 231508,
+      "sha256": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3",
+      "release_asset": "models--encoder--vocab.txt"
+    },
+    "models/reranker/config.json": {
+      "bytes": 794,
+      "sha256": "380e02c93f431831be65d99a4e7e5f67c133985bf2e77d9d4eba46847190bacc",
+      "release_asset": "models--reranker--config.json"
+    },
+    "models/reranker/model.safetensors": {
+      "bytes": 90870598,
+      "sha256": "821d1aa69520101d6e0737f78a042ae25b19e5cb9160701909d10434f4aeb0ae",
+      "release_asset": "models--reranker--model.safetensors"
+    },
+    "models/reranker/special_tokens_map.json": {
+      "bytes": 132,
+      "sha256": "3c3507f36dff57bce437223db3b3081d1e2b52ec3e56ee55438193ecb2c94dd6",
+      "release_asset": "models--reranker--special_tokens_map.json"
+    },
+    "models/reranker/tokenizer.json": {
+      "bytes": 711396,
+      "sha256": "d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66",
+      "release_asset": "models--reranker--tokenizer.json"
+    },
+    "models/reranker/tokenizer_config.json": {
+      "bytes": 1330,
+      "sha256": "a5c2e5a7b1a29a0702cd28c08a399b5ecc110c263009d17f7e3b415f25905fd8",
+      "release_asset": "models--reranker--tokenizer_config.json"
+    },
+    "models/reranker/vocab.txt": {
+      "bytes": 231508,
+      "sha256": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3",
+      "release_asset": "models--reranker--vocab.txt"
+    },
+    "demo-100/parents.jsonl": {
+      "bytes": 21731899,
+      "sha256": "78d8efd7c9df075be09ffa5f3a9c7ca79c54efa2d7caf75c8f0329ea72ff41aa",
+      "release_asset": "demo-100--parents.jsonl"
+    },
+    "demo-100/views.json": {
+      "bytes": 10373981,
+      "sha256": "c6c1563ee6888887d354ec6a27e61de4b931f534f9142fbab2e94a30ad5ec5d3",
+      "release_asset": "demo-100--views.json"
+    }
+  },
+  "frontend": {
+    "ui-consult/design/merge-with-codex/app.js": "2727823a3bf36ae4d90737157f677de87b37caa8432f3a46dd3b93d9c5727a21",
+    "ui-consult/design/merge-with-codex/consult.css": "6738dbece910a93d5b3cf02611e4815d79d5fff52e31fc6efc0510e49ad7060e",
+    "ui-consult/design/merge-with-codex/index.html": "31acce5ef7b97c64d88f1d056ae706c982256eb96383bb01f3d9e03d331de17a",
+    "ui-consult/design/merge-with-codex/mock-api.js": "626097358e43b31dadcc979cc14c0551c82eac3db16eab925d4cb057ed0597f5",
+    "ui-consult/design/merge-with-codex/serve.py": "39a39fc64622e65578352c57827cd9fe8f42b80ee95f343f34c316c0f8dd813c",
+    "ui-consult/async-guards.js": "d83e616eb47d20c407827cb45b30aef845d58fa27d00a4c669a64b1a023ac586",
+    "ui-consult/chart-select.js": "01b5bb9967307dc64ef5195fbd04bdb649f507a52f526e22725d7d387e3b5014",
+    "ui-consult/chart-svg.js": "11d72c5682a81a815eff24e24b592abfa9d77ea8d9dc3fa495af252d3a2f2ec4",
+    "ui-consult/evidence.js": "5e8a8eb8810e731cf11b709475b49b04cd80aa1892d723c5507dab8f058f8c55",
+    "ui-consult/prefs.js": "29a62d25cfb4a9041445b05be2fcdec5cb033e65b2d6d200090b119f137acb1b",
+    "ui/answer-export.js": "d58c74847c8f0b467ad28c057a15130d0b9499e05ec41c63171f8f2da545f739",
+    "ui/math.js": "66adef031812ac626fb4ca5ba8d7b5c3eee18ceca7f8d3f95c82dff63a999af6",
+    "ui/read-aloud.css": "d5a36d56a574afebcbbb82893cc2df81741c1e4fb26b039b6c6856821b898e78",
+    "ui/read-aloud.mjs": "03aba8ac813640244bae973f1d71da973fa43071befbdc55dcf188bd0ced1943",
+    "ui/research-speech.js": "4dba794a65c07a36b24157bc5e4b4b2916ebddae3e3e0cda0d66051768e285e5",
+    "ui/source-reader.js": "1e3246267c6d105af302dca1ddfe8c61c273f75de332d5dcd9ea53f8d2f0f5b8",
+    "ui/vendor/katex/katex.min.js": "e8d885505949f3a5f4abdd5dd0d53696bd1371ad26ffbf4f310dcd77c8cdae89",
+    "ui/vendor/katex/katex.min.css": "b668a32dd6d3c13c4f6029dfbe41dedc89ed260586f73ff8caa88b513fa0913f",
+    "ui/vendor/katex/LICENSE": "4313255416487a4a7602f134a7cdd2b33dd9f7e7b41d3af63dc9f785bca425a0",
+    "ui/vendor/katex/fonts/KaTeX_AMS-Regular.woff2": "0cdd387c9590a1a9f9794560022dbb59654a7d86f187aa0c81495ad42d3a7308",
+    "ui/vendor/katex/fonts/KaTeX_Caligraphic-Bold.woff2": "de7701e42cf1f4cf0b766c03fb27977207eee2f4fd5d76fa82188406da43ea4c",
+    "ui/vendor/katex/fonts/KaTeX_Caligraphic-Regular.woff2": "5d53e70ad607c2352162dec9e0923fb54ecdafaccbf604cd8dcf7d00facb989b",
+    "ui/vendor/katex/fonts/KaTeX_Fraktur-Bold.woff2": "74444efd593c005e3f4573b44524704c0af0a937fe911cca9e94068d0d140d3f",
+    "ui/vendor/katex/fonts/KaTeX_Fraktur-Regular.woff2": "51814d270d06ff0255dba0799994fa4d8c84d11f09951d47595f4abb1f3602dc",
+    "ui/vendor/katex/fonts/KaTeX_Main-Bold.woff2": "0f60d1b897938ec918c8ce073092411baf9438f6739465693ff18b0f9d20b021",
+    "ui/vendor/katex/fonts/KaTeX_Main-BoldItalic.woff2": "99cd42a3c072d918f2f44984a807cf7aa16e13545fd0875fc07c6c65f99e715b",
+    "ui/vendor/katex/fonts/KaTeX_Main-Italic.woff2": "97479ca6cce906abc961ecac96faa5f9ca2e61b8e7670d475826bcdee9a7c267",
+    "ui/vendor/katex/fonts/KaTeX_Main-Regular.woff2": "c2342cd8b869e01752a9321dc17213fc40d4d04c79688c1d43f2cf316abd7866",
+    "ui/vendor/katex/fonts/KaTeX_Math-BoldItalic.woff2": "dc47344dbb6cb5b655c8460d561f4df5f501b90c804ad3c6cec65fe322351ab1",
+    "ui/vendor/katex/fonts/KaTeX_Math-Italic.woff2": "7af58c5ec8f132a2ddde9027c6d7814decce4d3b822a11192a42a20e2e973264",
+    "ui/vendor/katex/fonts/KaTeX_SansSerif-Bold.woff2": "e99ae51144bf1232efcc1bfe5add36262c6866b0faab24fa75740e1b98577a62",
+    "ui/vendor/katex/fonts/KaTeX_SansSerif-Italic.woff2": "00b26ac825e2095056396e0553b8ac26d3f8ad158c3826e28b4c45b385c4714a",
+    "ui/vendor/katex/fonts/KaTeX_SansSerif-Regular.woff2": "68e8c73ef42afd3ccec58bf0fba302cce448938e7fc020a5e31f8a952eee1342",
+    "ui/vendor/katex/fonts/KaTeX_Script-Regular.woff2": "036d4e95149b69ff9bcc0cd55771efeb25ffa3947293e69acd78d5ac328c684b",
+    "ui/vendor/katex/fonts/KaTeX_Size1-Regular.woff2": "6b47c40166b6dbe21a5dfca7718413f2147fd2399be1ba605d8ad39cedf25dfe",
+    "ui/vendor/katex/fonts/KaTeX_Size2-Regular.woff2": "d04c54219f9eaec6d4d4fd42dfb28785975a4794d6b2fc71e566b9cd6db842dd",
+    "ui/vendor/katex/fonts/KaTeX_Size3-Regular.woff2": "73d591271b1604960cb10bb90fee021670af7297017e0e98480b332d11f51995",
+    "ui/vendor/katex/fonts/KaTeX_Size4-Regular.woff2": "a4af7d414440a1c1790825cfb700cf9cf43b0f2c4b04f0ebc523011ad9853ec0",
+    "ui/vendor/katex/fonts/KaTeX_Typewriter-Regular.woff2": "71d517d67827787cfabdf186914cc3358eda539e37931941f2b2fd4a21f68c0b"
+  }
+}

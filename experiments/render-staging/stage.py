@@ -112,7 +112,7 @@ def snapshot(args):
         add(ROOT / f'experiments/table-endpoint/{name}', f'experiments/table-endpoint/{name}')
     prompt = 'prompts/business_translation/baseline-v1.txt'
     add(ROOT / prompt, prompt)
-    for name in ('server.py', 'engine_runtime.py'):
+    for name in ('server.py', 'engine_runtime.py', 'dev_server.py', 'smoke_server.py'):
         add(HERE / name, f'experiments/render-staging/{name}')
     for folder, modules in RUNTIME_FILES.items():
         for module in modules.split():

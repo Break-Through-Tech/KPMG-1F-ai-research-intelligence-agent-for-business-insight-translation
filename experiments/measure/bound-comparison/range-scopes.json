@@ -1,0 +1,12 @@
+[
+  {
+    "paper": "2510.02243v2",
+    "table_id": "S2.T2",
+    "suite": "APIBench",
+    "columns": ["HF", "Torch Hub", "TF Hub"],
+    "metric": "AST-match",
+    "metric_text": "For the APIBench datasets, following previous work, we employ the standard Abstract Syntax Tree matching evaluation script",
+    "scope_chunk": "2510.02243v2_c0015",
+    "scope_text": "APIBench datasets of HuggingFace, Torch Hub and TensorFlow Hub"
+  }
+]

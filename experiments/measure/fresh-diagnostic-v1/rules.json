@@ -1,0 +1,16 @@
+{
+  "unit": "One original question, plus each required reference point as an unweighted unit.",
+  "complete": "All required points appear accurately in the published answer; all material published claims are source-supported by their citations, and all required caveats and limitations are preserved with correct scope.",
+  "partial": "At least one required point accurately published, but the complete criteria are unmet. Unsupported claims are independently counted even in a partial answer.",
+  "false_abstention": "No factual findings published even though the actual synthesis packet jointly supports all required points. An abstention from a packet that supports only some points is reported separately. Execution errors are never scored as abstentions.",
+  "citation_support": "Check exact ID and verbatim quote first; independently check that the source entails the precise claim including metric, unit, method, population, table row/header, configuration and scope. Count supported, unsupported, and unreviewed published claims with denominators. Review cited limitations separately.",
+  "point_attribution": [
+    "If a sufficient source set never appears in any effective packet, identify missing retrieval versus selection using matching search-return IDs and synthesis packet IDs. Without per-candidate rank or index evidence, leave the substage unresolved. Accept independently checked equivalent anchors and document them without editing frozen references.",
+    "If a packet supplied the answer but the draft omitted the point, label draft omission. If the draft misstated it, label wrong or unsupported draft. Keep missing and incorrect claims distinct.",
+    "When the same round contains sufficient evidence and a correct draft that was held, label verification hold only if the recorded verdict/check shows it. If a verified claim disappeared during round selection, label publication loss. Track each round separately and score completeness only on the final envelope.",
+    "If no answer can be scored because of a provider or execution error, report the error stage. Do not infer answer incorrectness or assign an unsupported-claim count to missing output."
+  ],
+  "review_status": "References source-checked by the preparing assistant. Live scoring is machine-assisted unless an independent human reviewer signs off. Disputes are inconclusive and are never resolved by editing the frozen expected points.",
+  "usage": "Report wall time per question plus median and p90 across completed attempts, per-search and per-stage timings, CLI invocations including failures, and receipt token counts where present. No estimate of internal HTTP retries.",
+  "completion": "Publish counts and denominators for successful, partial, false-abstention, evidence-limited, unsupported, inconclusive, execution-error and unrun cases. Identify the most frequent confirmed earliest failure only if the observed counts support it."
+}

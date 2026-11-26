@@ -1,0 +1,24 @@
+{
+ "version": "completion-eval-v1",
+ "arms": {
+  "A": "Baseline/B2 unchanged (create_research, quality_check=True, table comparisons off, top_k 8, gpt-6.1-sol low); one run per question; outputs saved.",
+  "B": "The SAME saved A answers passed through experiments/baseline-completion/completion.py exactly as frozen (sha256 recorded in seal.json). A answers are never regenerated; only completion calls are made."
+ },
+ "point_scoring": "Each required point scores 1 (accurately published with an entailing citation), 0.5 (partly published), or 0. Equivalent passages stating the same fact count and are documented. Facts may appear in claims or in cited limitations. Total 41 points.",
+ "published_vs_inferred": "Required points are published findings, including implications the authors themselves state. A business implication the system infers must be presented as an interpretation or qualified inference grounded in cited findings; presenting it as a finding is a misleading claim.",
+ "added_claim_audit": "Every claim added by B is checked for: correct numbers against its quote; exact quotes present in the cited passage; correct chunk citations; duplication of an existing claim; unsupported or misleading interpretation. The audit also confirms every A claim and limitation is still present and unchanged.",
+ "detection_metrics": {
+  "omitted_available": "A required point scored below 1 in A while its anchor (or an equivalent passage) was in the A packet.",
+  "trigger_recall": "omitted_available points in triggered questions / all omitted_available points.",
+  "recovery": "omitted_available points whose score rose in B / omitted_available points in triggered questions.",
+  "missed_omissions": "omitted_available points in questions that never triggered (listed individually)."
+ },
+ "decision_rule": {
+  "integrate": "All of: B >= A + 2.0 points; zero unsupported or misleading added claims; zero A claims or limitations removed or altered; zero duplicate added claims; median extra latency on triggered questions <= 45 s.",
+  "leave_experimental": "Zero unsupported or misleading added claims and zero removals, but the integrate bar is not met (gain below 2.0 points, or a duplicate, or latency above the bound).",
+  "abandon": "Any unsupported or misleading added claim, any removed or altered A content, or no point recovered on any triggered question.",
+  "execution_errors": "A questions with an execution error are excluded from both arms and reported; a completion call error leaves the A answer unchanged (counted as no recovery)."
+ },
+ "fixed": "No change to questions, key, rules, completion code or Baseline after sealing. Same model and index for all calls.",
+ "review": "AI-assisted key review and machine-assisted scoring; independent human verification remains outstanding."
+}

@@ -1,0 +1,687 @@
+{
+  "identity": {
+    "collection": "experimental_complete_parent_search",
+    "count": 7667,
+    "metadata": {
+      "embedding_model": "all-MiniLM-L6-v2",
+      "strategy": "token224_parent",
+      "search_views": 11030,
+      "human_acceptance": "pending"
+    },
+    "indexed_records_sha256": "78d8efd7c9df075be09ffa5f3a9c7ca79c54efa2d7caf75c8f0329ea72ff41aa",
+    "embedding_bytes_sha256": "50468962cff785b71c4de72f9e7436b656bcf30d8df801b2681473873d23bd14",
+    "identity_limits": "Local artifact integrity; source certification and human acceptance remain pending.",
+    "candidate_algorithm": "document-table-balanced-facets-v1",
+    "algorithm_sha256": {
+      "b2.py": "5810ad2e4b135568e886cfdf68feb9cd2ed214a1c5c010c8cab42a3a6ca5ffe5",
+      "retriever.py": "1c2a1400d76e1b6add0f96493e5f92acc0a6913440234fb28934203080eefb41",
+      "balanced_retriever.py": "18657facfa8802b329a2dba38a9330a09f2cbe92ae0195f5fc1447ba5958d1d8",
+      "evidence_coverage.py": "4b2158babc618039c524914957746b4e5a69ad1c5bcb1dc98ad5a98b247616ee",
+      "search_index.py": "02fb4a261d862bc47283f290ee5c1c42d8fcb798dd501887f237c76f51b77900",
+      "search_chunks.py": "103a3b5440879a5300ece876c5fadd0f77dc4f9dc3f6a65b79f94432a9ca7f16",
+      "semantic_views.py": "0d727cb00e82884a68d9a5d8c6e7ac6bbd9fc3e942ec41e1a75d43631f1556f7"
+    }
+  },
+  "results": {
+    "laptop_xgboost": {
+      "question": "How does XGBoost compare with LLM-based AI agents for fault detection in terms of accuracy, precision, recall, and speed?",
+      "evidence": [
+        {
+          "rank": 1,
+          "chunk_id": "2406.09923v2_c0022",
+          "arxiv_id": "2406.09923v2",
+          "source_url": "https://arxiv.org/html/2406.09923v2#S5.SS1",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 2,
+          "chunk_id": "2504.05104v2_c0000",
+          "arxiv_id": "2504.05104v2",
+          "source_url": "https://arxiv.org/html/2504.05104v2#abstract1",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 3,
+          "chunk_id": "2606.28456v1_c0020",
+          "arxiv_id": "2606.28456v1",
+          "source_url": "https://arxiv.org/html/2606.28456v1#S3.SS3",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 4,
+          "chunk_id": "2504.05104v2_c0017",
+          "arxiv_id": "2504.05104v2",
+          "source_url": "https://arxiv.org/html/2504.05104v2#S5.SS3",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 5,
+          "chunk_id": "2606.28456v1_c0028",
+          "arxiv_id": "2606.28456v1",
+          "source_url": "https://arxiv.org/html/2606.28456v1#S3.SS4",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 6,
+          "chunk_id": "2412.14470v2_c0002",
+          "arxiv_id": "2412.14470v2",
+          "source_url": "https://arxiv.org/html/2412.14470v2#S1",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 7,
+          "chunk_id": "2504.05104v2_c0016",
+          "arxiv_id": "2504.05104v2",
+          "source_url": "https://arxiv.org/html/2504.05104v2#S5.SS3",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 8,
+          "chunk_id": "2402.09742v4_c0014",
+          "arxiv_id": "2402.09742v4",
+          "source_url": "https://arxiv.org/html/2402.09742v4#S3.SS1",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 9,
+          "chunk_id": "2601.17692v1_c0012",
+          "arxiv_id": "2601.17692v1",
+          "source_url": "https://arxiv.org/html/2601.17692v1#S3.SS1",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 10,
+          "chunk_id": "2606.28456v1_c0038",
+          "arxiv_id": "2606.28456v1",
+          "source_url": "https://arxiv.org/html/2606.28456v1#S4.SS5",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 11,
+          "chunk_id": "2504.05104v2_c0020",
+          "arxiv_id": "2504.05104v2",
+          "source_url": "https://arxiv.org/html/2504.05104v2#S6",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 12,
+          "chunk_id": "2412.14470v2_c0018",
+          "arxiv_id": "2412.14470v2",
+          "source_url": "https://arxiv.org/html/2412.14470v2#S4.SS2",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 13,
+          "chunk_id": "2402.09742v4_c0019",
+          "arxiv_id": "2402.09742v4",
+          "source_url": "https://arxiv.org/html/2402.09742v4#S5.SS2",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 14,
+          "chunk_id": "2606.28456v1_c0018",
+          "arxiv_id": "2606.28456v1",
+          "source_url": "https://arxiv.org/html/2606.28456v1#S3.SS2",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 15,
+          "chunk_id": "2412.14470v2_c0004",
+          "arxiv_id": "2412.14470v2",
+          "source_url": "https://arxiv.org/html/2412.14470v2#S1",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 16,
+          "chunk_id": "2606.28456v1_c0004",
+          "arxiv_id": "2606.28456v1",
+          "source_url": "https://arxiv.org/html/2606.28456v1#S1",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 17,
+          "chunk_id": "2606.28456v1_c0027",
+          "arxiv_id": "2606.28456v1",
+          "source_url": "https://arxiv.org/html/2606.28456v1#S3.SS4",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 18,
+          "chunk_id": "2504.05104v2_table_0ff9b02ec9b484d0_5",
+          "arxiv_id": "2504.05104v2",
+          "source_url": "https://arxiv.org/html/2504.05104v2#S5.T1",
+          "table_id": "S5.T1",
+          "row_label": "Agent"
+        },
+        {
+          "rank": 19,
+          "chunk_id": "2606.28456v1_c0039",
+          "arxiv_id": "2606.28456v1",
+          "source_url": "https://arxiv.org/html/2606.28456v1#S4.SS5",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 20,
+          "chunk_id": "2606.28456v1_c0048",
+          "arxiv_id": "2606.28456v1",
+          "source_url": "https://arxiv.org/html/2606.28456v1#S6",
+          "table_id": null,
+          "row_label": null
+        }
+      ]
+    },
+    "laptop_critics": {
+      "question": "What criteria do AI critics use to evaluate agent responses?",
+      "evidence": [
+        {
+          "rank": 1,
+          "chunk_id": "2402.09742v4_c0017",
+          "arxiv_id": "2402.09742v4",
+          "source_url": "https://arxiv.org/html/2402.09742v4#S5.SS1",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 2,
+          "chunk_id": "2504.15330v1_c0005",
+          "arxiv_id": "2504.15330v1",
+          "source_url": "https://arxiv.org/html/2504.15330v1#S2",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 3,
+          "chunk_id": "2403.12482v2_c0012",
+          "arxiv_id": "2403.12482v2",
+          "source_url": "https://arxiv.org/html/2403.12482v2#S3.SS2",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 4,
+          "chunk_id": "2503.05773v1_c0014",
+          "arxiv_id": "2503.05773v1",
+          "source_url": "https://arxiv.org/html/2503.05773v1#S3.SS3",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 5,
+          "chunk_id": "2410.16285v1_c0011",
+          "arxiv_id": "2410.16285v1",
+          "source_url": "https://arxiv.org/html/2410.16285v1#S2.SS1",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 6,
+          "chunk_id": "2403.13313v1_c0093",
+          "arxiv_id": "2403.13313v1",
+          "source_url": "https://arxiv.org/html/2403.13313v1#S8",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 7,
+          "chunk_id": "2410.16285v1_c0018",
+          "arxiv_id": "2410.16285v1",
+          "source_url": "https://arxiv.org/html/2410.16285v1#S2.SS3",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 8,
+          "chunk_id": "2410.16285v1_c0000",
+          "arxiv_id": "2410.16285v1",
+          "source_url": "https://arxiv.org/html/2410.16285v1#abstract1",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 9,
+          "chunk_id": "2410.16285v1_c0013",
+          "arxiv_id": "2410.16285v1",
+          "source_url": "https://arxiv.org/html/2410.16285v1#S2.SS1",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 10,
+          "chunk_id": "2506.03610v3_c0001",
+          "arxiv_id": "2506.03610v3",
+          "source_url": "https://arxiv.org/html/2506.03610v3#S1",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 11,
+          "chunk_id": "2503.05773v1_table_080f58af664ee53b_3",
+          "arxiv_id": "2503.05773v1",
+          "source_url": "https://arxiv.org/html/2503.05773v1#S3.T2",
+          "table_id": "S3.T2",
+          "row_label": "Adaptability"
+        },
+        {
+          "rank": 12,
+          "chunk_id": "2402.09742v4_c0010",
+          "arxiv_id": "2402.09742v4",
+          "source_url": "https://arxiv.org/html/2402.09742v4#S2.SS3",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 13,
+          "chunk_id": "2508.08345v2_table_316c00aaf927d361_23",
+          "arxiv_id": "2508.08345v2",
+          "source_url": "https://arxiv.org/html/2508.08345v2#A4.T17",
+          "table_id": "A4.T17",
+          "row_label": "Report on adversarial testing used to determine appropriateness of deployment"
+        },
+        {
+          "rank": 14,
+          "chunk_id": "2410.16285v1_c0028",
+          "arxiv_id": "2410.16285v1",
+          "source_url": "https://arxiv.org/html/2410.16285v1#S3.SS3",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 15,
+          "chunk_id": "2412.14470v2_c0017",
+          "arxiv_id": "2412.14470v2",
+          "source_url": "https://arxiv.org/html/2412.14470v2#S4.SS1",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 16,
+          "chunk_id": "2609.11414v1_c0030",
+          "arxiv_id": "2609.11414v1",
+          "source_url": "https://arxiv.org/html/2609.11414v1#S6.SS1",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 17,
+          "chunk_id": "2402.09742v4_c0019",
+          "arxiv_id": "2402.09742v4",
+          "source_url": "https://arxiv.org/html/2402.09742v4#S5.SS2",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 18,
+          "chunk_id": "2410.16285v1_c0020",
+          "arxiv_id": "2410.16285v1",
+          "source_url": "https://arxiv.org/html/2410.16285v1#S2.SS3",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 19,
+          "chunk_id": "2410.16285v1_c0036",
+          "arxiv_id": "2410.16285v1",
+          "source_url": "https://arxiv.org/html/2410.16285v1#S4.SS3",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 20,
+          "chunk_id": "2503.05773v1_c0005",
+          "arxiv_id": "2503.05773v1",
+          "source_url": "https://arxiv.org/html/2503.05773v1#S2.SS2",
+          "table_id": null,
+          "row_label": null
+        }
+      ]
+    },
+    "Q3": {
+      "question": "By how much did the CU-DPO training method improve strategy-selection accuracy, and on how many base models?",
+      "evidence": [
+        {
+          "rank": 1,
+          "chunk_id": "2602.00931v2_c0000",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 2,
+          "chunk_id": "2602.00931v2_table_080f58af664ee53b_4",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#S3.T2",
+          "table_id": "S3.T2",
+          "row_label": "DeepSeek-R1 (8B)"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "2602.00931v2_c0004",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#S2",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 4,
+          "chunk_id": "2602.00931v2_table_080f58af664ee53b_10",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#S3.T2",
+          "table_id": "S3.T2",
+          "row_label": "Mistral-8x7B"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "2602.00931v2_table_080f58af664ee53b_14",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#S3.T2",
+          "table_id": "S3.T2",
+          "row_label": "Llama-3 (8B)"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "2602.00931v2_table_080f58af664ee53b_16",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#S3.T2",
+          "table_id": "S3.T2",
+          "row_label": "Llama-3.1 (8B)"
+        },
+        {
+          "rank": 7,
+          "chunk_id": "2602.00931v2_table_8811e0196b0cbdb7_6",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#S4.T4.fig1",
+          "table_id": "S4.T4.fig1",
+          "row_label": "Llama-3.1 (8B)"
+        },
+        {
+          "rank": 8,
+          "chunk_id": "2602.00931v2_table_8811e0196b0cbdb7_10",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#S4.T4.fig1",
+          "table_id": "S4.T4.fig1",
+          "row_label": "Mistral-8x7B"
+        },
+        {
+          "rank": 9,
+          "chunk_id": "2602.00931v2_table_8811e0196b0cbdb7_14",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#S4.T4.fig1",
+          "table_id": "S4.T4.fig1",
+          "row_label": "Mistral-7B"
+        },
+        {
+          "rank": 10,
+          "chunk_id": "2602.00931v2_table_080f58af664ee53b_2",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#S3.T2",
+          "table_id": "S3.T2",
+          "row_label": "DeepSeek-Math (7B)"
+        },
+        {
+          "rank": 11,
+          "chunk_id": "2602.00931v2_table_080f58af664ee53b_12",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#S3.T2",
+          "table_id": "S3.T2",
+          "row_label": "Qwen3 (8B)"
+        },
+        {
+          "rank": 12,
+          "chunk_id": "2602.00931v2_table_e0d6f55c56cc4354_6",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#S4.T4.fig2",
+          "table_id": "S4.T4.fig2",
+          "row_label": "Llama-3.1 (8B)"
+        },
+        {
+          "rank": 13,
+          "chunk_id": "2602.00931v2_table_e0d6f55c56cc4354_12",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#S4.T4.fig2",
+          "table_id": "S4.T4.fig2",
+          "row_label": "Llama-3 (8B)"
+        },
+        {
+          "rank": 14,
+          "chunk_id": "2602.00931v2_table_8811e0196b0cbdb7_12",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#S4.T4.fig1",
+          "table_id": "S4.T4.fig1",
+          "row_label": "Llama-3 (8B)"
+        },
+        {
+          "rank": 15,
+          "chunk_id": "2602.00931v2_table_e0d6f55c56cc4354_2",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#S4.T4.fig2",
+          "table_id": "S4.T4.fig2",
+          "row_label": "DeepSeek-R1 (8B)"
+        },
+        {
+          "rank": 16,
+          "chunk_id": "2602.00931v2_c0017",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#S4",
+          "table_id": null,
+          "row_label": null
+        },
+        {
+          "rank": 17,
+          "chunk_id": "2602.00931v2_table_8811e0196b0cbdb7_8",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#S4.T4.fig1",
+          "table_id": "S4.T4.fig1",
+          "row_label": "Gemma-2 (9B)"
+        },
+        {
+          "rank": 18,
+          "chunk_id": "2602.00931v2_table_8811e0196b0cbdb7_4",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#S4.T4.fig1",
+          "table_id": "S4.T4.fig1",
+          "row_label": "Qwen3 (8B)"
+        },
+        {
+          "rank": 19,
+          "chunk_id": "2602.00931v2_table_8811e0196b0cbdb7_2",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#S4.T4.fig1",
+          "table_id": "S4.T4.fig1",
+          "row_label": "DeepSeek-R1 (8B)"
+        },
+        {
+          "rank": 20,
+          "chunk_id": "2602.00931v2_table_080f58af664ee53b_8",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#S3.T2",
+          "table_id": "S3.T2",
+          "row_label": "Mistral-7B"
+        }
+      ]
+    },
+    "saved_CU-DPO_chart": {
+      "question": "Compare the seven base models' performance before and after CU-DPO. Show a chart using the paper's original numerical results table, with citations for each value.",
+      "evidence": [
+        {
+          "rank": 1,
+          "chunk_id": "2602.00931v2_table_b8e933772f6631bb_7",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#A2.T11",
+          "table_id": "A2.T11",
+          "row_label": "Qwen3 (8B)"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "2602.00931v2_table_8811e0196b0cbdb7_10",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#S4.T4.fig1",
+          "table_id": "S4.T4.fig1",
+          "row_label": "Mistral-8x7B"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "2602.00931v2_table_080f58af664ee53b_2",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#S3.T2",
+          "table_id": "S3.T2",
+          "row_label": "DeepSeek-Math (7B)"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "2602.00931v2_table_b8e933772f6631bb_10",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#A2.T11",
+          "table_id": "A2.T11",
+          "row_label": "Qwen3 (8B)"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "2602.00931v2_table_080f58af664ee53b_8",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#S3.T2",
+          "table_id": "S3.T2",
+          "row_label": "Mistral-7B"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "2602.00931v2_table_080f58af664ee53b_10",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#S3.T2",
+          "table_id": "S3.T2",
+          "row_label": "Mistral-8x7B"
+        },
+        {
+          "rank": 7,
+          "chunk_id": "2602.00931v2_table_080f58af664ee53b_1",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#S3.T2",
+          "table_id": "S3.T2",
+          "row_label": "DeepSeek-Math (7B)"
+        },
+        {
+          "rank": 8,
+          "chunk_id": "2602.00931v2_table_b8e933772f6631bb_5",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#A2.T11",
+          "table_id": "A2.T11",
+          "row_label": "DeepSeek-R1 (8B)"
+        },
+        {
+          "rank": 9,
+          "chunk_id": "2602.00931v2_table_b8e933772f6631bb_15",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#A2.T11",
+          "table_id": "A2.T11",
+          "row_label": "Gemma-2 (9B)"
+        },
+        {
+          "rank": 10,
+          "chunk_id": "2602.00931v2_table_080f58af664ee53b_7",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#S3.T2",
+          "table_id": "S3.T2",
+          "row_label": "Mistral-7B"
+        },
+        {
+          "rank": 11,
+          "chunk_id": "2602.00931v2_table_b8e933772f6631bb_6",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#A2.T11",
+          "table_id": "A2.T11",
+          "row_label": "Qwen3 (8B)"
+        },
+        {
+          "rank": 12,
+          "chunk_id": "2602.00931v2_table_b8e933772f6631bb_14",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#A2.T11",
+          "table_id": "A2.T11",
+          "row_label": "Gemma-2 (9B)"
+        },
+        {
+          "rank": 13,
+          "chunk_id": "2602.00931v2_table_b8e933772f6631bb_9",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#A2.T11",
+          "table_id": "A2.T11",
+          "row_label": "Qwen3 (8B)"
+        },
+        {
+          "rank": 14,
+          "chunk_id": "2602.00931v2_table_b8e933772f6631bb_13",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#A2.T11",
+          "table_id": "A2.T11",
+          "row_label": "Gemma-2 (9B)"
+        },
+        {
+          "rank": 15,
+          "chunk_id": "2602.00931v2_table_080f58af664ee53b_14",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#S3.T2",
+          "table_id": "S3.T2",
+          "row_label": "Llama-3 (8B)"
+        },
+        {
+          "rank": 16,
+          "chunk_id": "2602.00931v2_table_b8e933772f6631bb_12",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#A2.T11",
+          "table_id": "A2.T11",
+          "row_label": "Gemma-2 (9B)"
+        },
+        {
+          "rank": 17,
+          "chunk_id": "2602.00931v2_table_080f58af664ee53b_12",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#S3.T2",
+          "table_id": "S3.T2",
+          "row_label": "Qwen3 (8B)"
+        },
+        {
+          "rank": 18,
+          "chunk_id": "2602.00931v2_table_080f58af664ee53b_16",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#S3.T2",
+          "table_id": "S3.T2",
+          "row_label": "Llama-3.1 (8B)"
+        },
+        {
+          "rank": 19,
+          "chunk_id": "2602.00931v2_table_b8e933772f6631bb_8",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#A2.T11",
+          "table_id": "A2.T11",
+          "row_label": "Qwen3 (8B)"
+        },
+        {
+          "rank": 20,
+          "chunk_id": "2602.00931v2_table_b8e933772f6631bb_4",
+          "arxiv_id": "2602.00931v2",
+          "source_url": "https://arxiv.org/html/2602.00931v2#A2.T11",
+          "table_id": "A2.T11",
+          "row_label": "DeepSeek-R1 (8B)"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,296 @@
+{
+  "scorer": "Independent blinded machine-assisted review",
+  "date": "2026-11-24",
+  "questions": {
+    "G01": {
+      "points": {
+        "G01.1": {
+          "A": 1,
+          "B": 1,
+          "C": 1
+        },
+        "G01.2": {
+          "A": 1,
+          "B": 1,
+          "C": 1
+        },
+        "G01.3": {
+          "A": 0,
+          "B": 0,
+          "C": 0
+        },
+        "G01.4": {
+          "A": 1,
+          "B": 1,
+          "C": 1
+        }
+      },
+      "misleading_claims": [],
+      "unsupported_recommendations": [],
+      "notes": "All three explain financial incentives and disclosures, but none states the safety-washing or actuarial-hype point."
+    },
+    "G02": {
+      "points": {
+        "G02.1": {
+          "A": 1,
+          "B": 1,
+          "C": 1
+        },
+        "G02.2": {
+          "A": 1,
+          "B": 1,
+          "C": 1
+        },
+        "G02.3": {
+          "A": 1,
+          "B": 1,
+          "C": 1
+        },
+        "G02.4": {
+          "A": 1,
+          "B": 1,
+          "C": 1
+        }
+      },
+      "misleading_claims": [],
+      "unsupported_recommendations": [],
+      "notes": "The four study-specific regime descriptions are supported. A's shared controls proposal is labeled and grounded in observed regulatory differences."
+    },
+    "G03": {
+      "points": {
+        "G03.1": {
+          "A": 1,
+          "B": 1,
+          "C": 1
+        },
+        "G03.2": {
+          "A": 0,
+          "B": 1,
+          "C": 0
+        },
+        "G03.3": {
+          "A": 0,
+          "B": 1,
+          "C": 0
+        },
+        "G03.4": {
+          "A": 0,
+          "B": 1,
+          "C": 1
+        },
+        "G03.5": {
+          "A": 0,
+          "B": 0.5,
+          "C": 0.5
+        }
+      },
+      "misleading_claims": "G03-C F1: The cited passages do not substantiate transfer across model sizes without regenerating adversarial examples.",
+      "unsupported_recommendations": [],
+      "notes": "A states SCR mechanics in a cited limitation. B and C get the cost half of G03.5. C reports a different attack setting, so its pairs do not satisfy the known-attack requirement. Quotes alone do not earn credit."
+    },
+    "G04": {
+      "points": {
+        "G04.1": {
+          "A": 0.5,
+          "B": 1,
+          "C": 1
+        },
+        "G04.2": {
+          "A": 0,
+          "B": 0.5,
+          "C": 1
+        },
+        "G04.3": {
+          "A": 0,
+          "B": 1,
+          "C": 1
+        },
+        "G04.4": {
+          "A": 0,
+          "B": 0,
+          "C": 0
+        },
+        "G04.5": {
+          "A": 0,
+          "B": 0.5,
+          "C": 0.5
+        }
+      },
+      "misleading_claims": [],
+      "unsupported_recommendations": [],
+      "notes": "A describes part of Pandora's mechanism, but its published findings and limitations never state the numerical results quoted under L0. B omits the numeric naive baseline. C's 96% is for one model and does not satisfy the ten-model average. B and C describe moderation stealth but omit the token-wise defense result."
+    },
+    "G05": {
+      "points": {
+        "G05.1": {
+          "A": 0,
+          "B": 0,
+          "C": 0
+        },
+        "G05.2": {
+          "A": 0.5,
+          "B": 1,
+          "C": 1
+        },
+        "G05.3": {
+          "A": 0,
+          "B": 1,
+          "C": 1
+        },
+        "G05.4": {
+          "A": 0,
+          "B": 1,
+          "C": 0.5
+        },
+        "G05.5": {
+          "A": 0,
+          "B": 1,
+          "C": 0.5
+        }
+      },
+      "misleading_claims": [],
+      "unsupported_recommendations": [],
+      "notes": "A states parity without the participant counts. B's cited limitations establish the Chinese records used in MVME. C omits that population context and does not explicitly say dispute resolution improved performance. The supervised pilot interpretations are conditional and make no readiness claim."
+    },
+    "G06": {
+      "points": {
+        "G06.1": {
+          "A": 0.5,
+          "B": 0.5,
+          "C": 0.5
+        },
+        "G06.2": {
+          "A": 0.5,
+          "B": 0,
+          "C": 0.5
+        },
+        "G06.3": {
+          "A": 1,
+          "B": 1,
+          "C": 1
+        },
+        "G06.4": {
+          "A": 0,
+          "B": 0,
+          "C": 1
+        }
+      },
+      "misleading_claims": [],
+      "unsupported_recommendations": [],
+      "notes": "53% is source-reported rounding, but all omit the median. A and C omit the group cutoffs and dispersion in G06.2. C correctly attributes 17% and 22.9% to different sections and gives the zero count, so credit G06.3 without flagging either attributed figure."
+    },
+    "G07": {
+      "points": {
+        "G07.1": {
+          "A": 1,
+          "B": 0.5,
+          "C": 1
+        },
+        "G07.2": {
+          "A": 0.5,
+          "B": 0.5,
+          "C": 0.5
+        },
+        "G07.3": {
+          "A": 0.5,
+          "B": 0.5,
+          "C": 0.5
+        },
+        "G07.4": {
+          "A": 1,
+          "B": 0.5,
+          "C": 1
+        }
+      },
+      "misleading_claims": [],
+      "unsupported_recommendations": [],
+      "notes": "All omit GPT-4o-mini's exact score and the exact untuned base score. B gives 7B accuracy but omits speed, and does not state the SME exclusion. A earns the scope point by faithfully attributing the narrower scope to the limitations section and noting the conflicting database description."
+    },
+    "G08": {
+      "points": {
+        "G08.1": {
+          "A": 1,
+          "B": 1,
+          "C": 1
+        },
+        "G08.2": {
+          "A": 1,
+          "B": 1,
+          "C": 1
+        },
+        "G08.3": {
+          "A": 1,
+          "B": 1,
+          "C": 1
+        },
+        "G08.4": {
+          "A": 1,
+          "B": 1,
+          "C": 0.5
+        },
+        "G08.5": {
+          "A": 1,
+          "B": 0.5,
+          "C": 1
+        }
+      },
+      "misleading_claims": [],
+      "unsupported_recommendations": [],
+      "notes": "86.4% is the source precision for the rounded 86% requirement. A and B give both accuracy values and the study's qualitative small overhead. C cites a compute measure but does not state the small overhead. B identifies one of four model names."
+    },
+    "G09": {
+      "points": {
+        "G09.1": {
+          "A": 1,
+          "B": 1,
+          "C": 0.5
+        },
+        "G09.2": {
+          "A": 0,
+          "B": 0,
+          "C": 0
+        },
+        "G09.3": {
+          "A": 1,
+          "B": 1,
+          "C": 1
+        },
+        "G09.4": {
+          "A": 1,
+          "B": 1,
+          "C": 1
+        }
+      },
+      "misleading_claims": [],
+      "unsupported_recommendations": [],
+      "notes": "A's cited STARD Recall@10 and MRR@10 are valid but distinct from the requested MAS+GRPO Recall@14/HitRate@14 results. C omits the zero-shot commercial Qwen-Max identification. All distinguish compute proxies from monetary prices and state Chinese-only scope."
+    },
+    "G10": {
+      "points": {
+        "G10.1": {
+          "A": 0,
+          "B": 0,
+          "C": 0
+        },
+        "G10.2": {
+          "A": 0,
+          "B": 0,
+          "C": 0
+        },
+        "G10.3": {
+          "A": 0,
+          "B": 0,
+          "C": 0
+        },
+        "G10.4": {
+          "A": 0,
+          "B": 1,
+          "C": 1
+        }
+      },
+      "misleading_claims": [],
+      "unsupported_recommendations": [],
+      "notes": "B and C explicitly say the deployment rate is unavailable and identify the controlled-game reason, which satisfies both components. They do not state the requested game setup or outcome figures. A has no published content."
+    }
+  }
+}

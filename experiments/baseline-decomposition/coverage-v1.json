@@ -1,0 +1,437 @@
+{
+ "questions": {
+  "F01": {
+   "queries": [
+    "On the image-based and table-based questions in MultiFinRAG's evaluation, how many questions were in each group, and how did the Gemma baseline and MultiFinRAG with Gemma score in each?",
+    "MultiFinRAG On the image-based and table-based questions in 's evaluation, how many questions were in each group, and how did the Gemma baseline and with Gemma score in each",
+    "MultiFinRAG with Gemma On the image-based and table-based questions in 's evaluation, how many questions were in each group, and how did the Gemma baseline and with Gemma score in each"
+   ],
+   "packet_size": {
+    "original": 8,
+    "decomposed": 10
+   },
+   "original_matches_saved_baseline_packet": true,
+   "original_kept_in_decomposed": 8,
+   "off_paper_passages": {
+    "original": 0,
+    "decomposed": 0
+   },
+   "seconds": {
+    "original": 11.09,
+    "decomposed": 38.57
+   },
+   "points": [
+    {
+     "point": "F01.1",
+     "original": true,
+     "decomposed": true,
+     "multi_agent": true
+    },
+    {
+     "point": "F01.2",
+     "original": false,
+     "decomposed": true,
+     "multi_agent": true
+    }
+   ],
+   "new_ids": [
+    "2506.20821v1_table_de629a5f57790c34_3",
+    "2506.20821v1_c0020"
+   ]
+  },
+  "F02": {
+   "queries": [
+    "In LoFT-LLM's dataset summary, what were the sampling frequency, total time points, and prediction target for FundAR and Solar?",
+    "LoFT-LLM In 's dataset summary, what were the sampling frequency, total time points, and prediction target for and Solar",
+    "FundAR In 's dataset summary, what were the sampling frequency, total time points, and prediction target for and Solar"
+   ],
+   "packet_size": {
+    "original": 8,
+    "decomposed": 11
+   },
+   "original_matches_saved_baseline_packet": true,
+   "original_kept_in_decomposed": 8,
+   "off_paper_passages": {
+    "original": 0,
+    "decomposed": 0
+   },
+   "seconds": {
+    "original": 3.81,
+    "decomposed": 10.77
+   },
+   "points": [
+    {
+     "point": "F02.1",
+     "original": true,
+     "decomposed": true,
+     "multi_agent": true
+    },
+    {
+     "point": "F02.2",
+     "original": false,
+     "decomposed": true,
+     "multi_agent": true
+    }
+   ],
+   "new_ids": [
+    "2512.20002v3_table_dda9dc168318c057_2",
+    "2512.20002v3_table_73e166fbe4d2eb83_2",
+    "2512.20002v3_table_dda9dc168318c057_6"
+   ]
+  },
+  "F03": {
+   "queries": [
+    "For Cora and Arxiv in the topology-aware text generation study, how many graph nodes did each dataset have, and which used a random rather than a time-based split?",
+    "For Cora and Arxiv in the topology-aware text generation study, how many graph nodes did each dataset have",
+    "which used a random rather than a time-based split"
+   ],
+   "packet_size": {
+    "original": 8,
+    "decomposed": 14
+   },
+   "original_matches_saved_baseline_packet": true,
+   "original_kept_in_decomposed": 8,
+   "off_paper_passages": {
+    "original": 0,
+    "decomposed": 6
+   },
+   "seconds": {
+    "original": 4.08,
+    "decomposed": 11.72
+   },
+   "points": [
+    {
+     "point": "F03.1",
+     "original": true,
+     "decomposed": true,
+     "multi_agent": true
+    },
+    {
+     "point": "F03.2",
+     "original": true,
+     "decomposed": true,
+     "multi_agent": true
+    }
+   ],
+   "new_ids": [
+    "2607.00275v1_c0017",
+    "2502.17874v2_c0024",
+    "2502.17874v2_c0031",
+    "2502.17874v2_table_807af7eaa1c801ce_6",
+    "2502.17874v2_table_807af7eaa1c801ce_5",
+    "2502.17874v2_table_807af7eaa1c801ce_9"
+   ]
+  },
+  "F04": {
+   "queries": [
+    "I'm comparing CG-RAG and SAM-RAG for a literature assistant. How does each use a different signal to decide which material to bring into the answer?",
+    "CG-RAG I'm comparing and for a literature assistant. How does each use a different signal to decide which material to bring into the answer",
+    "SAM-RAG I'm comparing and for a literature assistant. How does each use a different signal to decide which material to bring into the answer"
+   ],
+   "packet_size": {
+    "original": 8,
+    "decomposed": 14
+   },
+   "original_matches_saved_baseline_packet": true,
+   "original_kept_in_decomposed": 8,
+   "off_paper_passages": {
+    "original": 0,
+    "decomposed": 0
+   },
+   "seconds": {
+    "original": 3.53,
+    "decomposed": 11.39
+   },
+   "points": [
+    {
+     "point": "F04.1",
+     "original": true,
+     "decomposed": true,
+     "multi_agent": true
+    },
+    {
+     "point": "F04.2",
+     "original": false,
+     "decomposed": false,
+     "multi_agent": false
+    }
+   ],
+   "new_ids": [
+    "2501.15067v1_c0022",
+    "2501.15067v1_c0027",
+    "2410.11321v1_c0007",
+    "2501.15067v1_c0029",
+    "2410.11321v1_c0015",
+    "2501.15067v1_c0019"
+   ]
+  },
+  "F05": {
+   "queries": [
+    "Where did the data come from in the real-estate contract extraction study and in the FinBloom Financial Context Dataset, and how did each use that data to adapt a model?",
+    "Where did the data come from in the real-estate contract extraction study and in the FinBloom Financial Context Dataset",
+    "how did each use that data to adapt a model"
+   ],
+   "packet_size": {
+    "original": 8,
+    "decomposed": 14
+   },
+   "original_matches_saved_baseline_packet": true,
+   "original_kept_in_decomposed": 7,
+   "off_paper_passages": {
+    "original": 0,
+    "decomposed": 4
+   },
+   "seconds": {
+    "original": 8.05,
+    "decomposed": 12.82
+   },
+   "points": [
+    {
+     "point": "F05.1",
+     "original": false,
+     "decomposed": true,
+     "multi_agent": true
+    },
+    {
+     "point": "F05.2",
+     "original": false,
+     "decomposed": false,
+     "multi_agent": true
+    },
+    {
+     "point": "F05.3",
+     "original": false,
+     "decomposed": false,
+     "multi_agent": true
+    }
+   ],
+   "new_ids": [
+    "2506.23123v1_c0295",
+    "2404.18043v3_c0000",
+    "2506.23123v1_c0035",
+    "2404.18043v3_c0015",
+    "2404.18043v3_c0006",
+    "2506.23123v1_c0033",
+    "2506.23123v1_c0160"
+   ]
+  },
+  "F06": {
+   "queries": [
+    "In the conversational-grounding study, how can a listener's response distinguish explicit grounding, implicit grounding, and a clarification request?",
+    "In the conversational-grounding study, how can a listener's response distinguish explicit grounding, implicit grounding",
+    "a clarification request"
+   ],
+   "packet_size": {
+    "original": 8,
+    "decomposed": 13
+   },
+   "original_matches_saved_baseline_packet": true,
+   "original_kept_in_decomposed": 8,
+   "off_paper_passages": {
+    "original": 0,
+    "decomposed": 4
+   },
+   "seconds": {
+    "original": 4.55,
+    "decomposed": 12.18
+   },
+   "points": [
+    {
+     "point": "F06.1",
+     "original": true,
+     "decomposed": true,
+     "multi_agent": true
+    },
+    {
+     "point": "F06.2",
+     "original": true,
+     "decomposed": true,
+     "multi_agent": true
+    },
+    {
+     "point": "F06.3",
+     "original": true,
+     "decomposed": true,
+     "multi_agent": true
+    }
+   ],
+   "new_ids": [
+    "2606.04500v1_c0005",
+    "2606.04500v1_c0000",
+    "2403.13313v1_c0078",
+    "2406.01749v1_c0005",
+    "2503.20518v1_c0008"
+   ]
+  },
+  "F07": {
+   "queries": [
+    "How did the systematic review of responsible-AI governance tools build its search vocabulary, and why did it reject studies that use AI for financial auditing?",
+    "How did the systematic review of responsible-AI governance tools build its search vocabulary",
+    "why did it reject studies that use AI for financial auditing"
+   ],
+   "packet_size": {
+    "original": 8,
+    "decomposed": 14
+   },
+   "original_matches_saved_baseline_packet": true,
+   "original_kept_in_decomposed": 7,
+   "off_paper_passages": {
+    "original": 2,
+    "decomposed": 5
+   },
+   "seconds": {
+    "original": 6.0,
+    "decomposed": 12.98
+   },
+   "points": [
+    {
+     "point": "F07.1",
+     "original": true,
+     "decomposed": true,
+     "multi_agent": true
+    },
+    {
+     "point": "F07.2",
+     "original": true,
+     "decomposed": true,
+     "multi_agent": true
+    }
+   ],
+   "new_ids": [
+    "2503.05773v1_c0039",
+    "2502.13294v2_c0005",
+    "2502.13294v2_c0001",
+    "2510.24402v1_c0044",
+    "2502.13294v2_c0009",
+    "2502.13294v2_c0019",
+    "2510.24402v1_c0045"
+   ]
+  },
+  "F08": {
+   "queries": [
+    "What makes it difficult for LLM agents to represent both variation in individual choices and differences between population groups in transportation simulations?"
+   ],
+   "packet_size": {
+    "original": 8,
+    "decomposed": 8
+   },
+   "original_matches_saved_baseline_packet": true,
+   "original_kept_in_decomposed": 8,
+   "off_paper_passages": {
+    "original": 1,
+    "decomposed": 1
+   },
+   "seconds": {
+    "original": 3.8,
+    "decomposed": 3.83
+   },
+   "points": [
+    {
+     "point": "F08.1",
+     "original": false,
+     "decomposed": false,
+     "multi_agent": false
+    },
+    {
+     "point": "F08.2",
+     "original": true,
+     "decomposed": true,
+     "multi_agent": true
+    }
+   ],
+   "new_ids": []
+  },
+  "F09": {
+   "queries": [
+    "Did the robot-versus-chatbot study find that an empathetic tone or physical embodiment increased willingness to help? What did it actually measure as willingness to help?",
+    "Did the robot-versus-chatbot study find that an empathetic tone or physical embodiment increased willingness to help",
+    "What did it actually measure as willingness to help"
+   ],
+   "packet_size": {
+    "original": 8,
+    "decomposed": 13
+   },
+   "original_matches_saved_baseline_packet": true,
+   "original_kept_in_decomposed": 8,
+   "off_paper_passages": {
+    "original": 0,
+    "decomposed": 3
+   },
+   "seconds": {
+    "original": 2.95,
+    "decomposed": 8.43
+   },
+   "points": [
+    {
+     "point": "F09.1",
+     "original": true,
+     "decomposed": true,
+     "multi_agent": true
+    },
+    {
+     "point": "F09.2",
+     "original": true,
+     "decomposed": true,
+     "multi_agent": true
+    }
+   ],
+   "new_ids": [
+    "2503.20518v1_c0009",
+    "2503.20518v1_c0008",
+    "2404.08309v1_c0005",
+    "2404.08309v1_c0008",
+    "2410.16285v1_c0012"
+   ]
+  },
+  "F10": {
+   "queries": [
+    "In SAM-RAG's limitations, what distinct risks do the authors identify for fairness and privacy, and what could give rise to each?",
+    "In SAM-RAG's limitations, what distinct risks do the authors identify for fairness and privacy",
+    "what could give rise to each"
+   ],
+   "packet_size": {
+    "original": 8,
+    "decomposed": 14
+   },
+   "original_matches_saved_baseline_packet": true,
+   "original_kept_in_decomposed": 8,
+   "off_paper_passages": {
+    "original": 5,
+    "decomposed": 10
+   },
+   "seconds": {
+    "original": 11.79,
+    "decomposed": 17.9
+   },
+   "points": [
+    {
+     "point": "F10.1",
+     "original": true,
+     "decomposed": true,
+     "multi_agent": true
+    },
+    {
+     "point": "F10.2",
+     "original": true,
+     "decomposed": true,
+     "multi_agent": true
+    }
+   ],
+   "new_ids": [
+    "2504.01566v1_c0002",
+    "2506.23123v1_c0300",
+    "2412.06681v2_c0011",
+    "2410.16285v1_c0007",
+    "2410.11321v1_c0014",
+    "2410.16285v1_c0006"
+   ]
+  }
+ },
+ "anchored_points": {
+  "original": 15,
+  "decomposed": 18,
+  "multi_agent": 20,
+  "points": 22
+ },
+ "peak_commit_gb": 1.48
+}

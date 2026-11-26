@@ -1,0 +1,142 @@
+{
+ "arms": {
+  "B0": {
+   "points_after_resume": 23.5,
+   "full_answers_after_resume": 1,
+   "points_first_pass_timeouts_zero": 16.0,
+   "full_answers_first_pass": 1,
+   "common_first_pass_questions": [
+    "G01",
+    "G05",
+    "G07",
+    "G09",
+    "G10"
+   ],
+   "points_on_common_first_pass": 10.0,
+   "per_question": {
+    "G01": 3.0,
+    "G02": 4.0,
+    "G03": 0.0,
+    "G04": 3.0,
+    "G05": 0.5,
+    "G06": 2.0,
+    "G07": 3.0,
+    "G08": 4.5,
+    "G09": 2.5,
+    "G10": 1.0
+   },
+   "points_lost_by_cause": {
+    "retrieval": 13.0,
+    "synthesis-omission": 6.5,
+    "retrieval-partial": 1.0
+   },
+   "execution_failures_first_pass": 2,
+   "execution_errors_after_resume": 0,
+   "median_s": 51.5,
+   "p90_s": 189.8,
+   "median_s_incl_failed_attempt": 53.3,
+   "p90_s_incl_failed_attempt": 351.4,
+   "request_tokens_per_q": 18688,
+   "calls": 18
+  },
+  "B1": {
+   "points_after_resume": 33.0,
+   "full_answers_after_resume": 2,
+   "points_first_pass_timeouts_zero": 20.5,
+   "full_answers_first_pass": 0,
+   "common_first_pass_questions": [
+    "G01",
+    "G05",
+    "G07",
+    "G09",
+    "G10"
+   ],
+   "points_on_common_first_pass": 13.0,
+   "per_question": {
+    "G01": 2.5,
+    "G02": 4.0,
+    "G03": 4.5,
+    "G04": 3.5,
+    "G05": 3.5,
+    "G06": 3.0,
+    "G07": 3.0,
+    "G08": 5.0,
+    "G09": 3.0,
+    "G10": 1.0
+   },
+   "points_lost_by_cause": {
+    "synthesis-omission": 2.0,
+    "retrieval": 8.0,
+    "retrieval-partial": 1.0
+   },
+   "execution_failures_first_pass": 3,
+   "execution_errors_after_resume": 0,
+   "median_s": 69.7,
+   "p90_s": 175.9,
+   "median_s_incl_failed_attempt": 171.3,
+   "p90_s_incl_failed_attempt": 381.1,
+   "request_tokens_per_q": 51610,
+   "calls": 23
+  },
+  "M1": {
+   "points_after_resume": 28.0,
+   "full_answers_after_resume": 2,
+   "points_first_pass_timeouts_zero": 13.0,
+   "full_answers_first_pass": 0,
+   "common_first_pass_questions": [
+    "G01",
+    "G05",
+    "G07",
+    "G09",
+    "G10"
+   ],
+   "points_on_common_first_pass": 12.5,
+   "per_question": {
+    "G01": 2.5,
+    "G02": 4.0,
+    "G03": 2.5,
+    "G04": 0.5,
+    "G05": 4.0,
+    "G06": 4.0,
+    "G07": 2.5,
+    "G08": 4.5,
+    "G09": 3.5,
+    "G10": 0.0
+   },
+   "points_lost_by_cause": {
+    "synthesis-omission": 1.5,
+    "retrieval": 4.0,
+    "verification-false-reject": 3.0,
+    "synthesis-overreach": 4.5,
+    "retrieval-partial": 1.0,
+    "synthesis-contract": 2
+   },
+   "execution_failures_first_pass": 4,
+   "execution_errors_after_resume": 0,
+   "median_s": 71.9,
+   "p90_s": 104.2,
+   "median_s_incl_failed_attempt": 156.2,
+   "p90_s_incl_failed_attempt": 423.1,
+   "request_tokens_per_q": 65480,
+   "calls": 38
+  }
+ },
+ "B1_criteria": {
+  "points >= B0 + 3.5": true,
+  "full answers >= B0": true,
+  "median <= 1.5 x B0": true,
+  "p90 <= 120 s": false,
+  "request tokens <= 3 x B0": true
+ },
+ "B1_qualifies": false,
+ "B_star": "B0",
+ "M1_criteria": {
+  "points >= B0 + 4.4": true,
+  "more full answers than B0": true,
+  "median <= 120 s": true,
+  "p90 <= 300 s": true,
+  "<= 1 execution error after one resume": true
+ },
+ "M1_qualifies": true,
+ "latency_note": "Criteria use the runner-recorded wall time of the completed attempt (rules.json). Times including the failed first attempt are reported alongside."
+}

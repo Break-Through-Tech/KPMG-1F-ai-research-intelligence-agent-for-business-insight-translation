@@ -1,0 +1,855 @@
+[
+  {
+    "id": "G01",
+    "category": "table",
+    "papers": [
+      "2409.19854v1"
+    ],
+    "expected": "answer",
+    "required_points": [
+      {
+        "point": "Original scored 0.7381 F1 and 0.4335 overall.",
+        "chunk_id": "2409.19854v1_table_de629a5f57790c34_1",
+        "source_url": "https://arxiv.org/html/2409.19854v1#S4.T1",
+        "source_sha256": "d3b5d10e3768780fff0d91e69586f366371c91a5db95b8ffadaacb12d8d3c9cd",
+        "original_locator": "S4.T1",
+        "indexed_excerpt": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Construction of Instruction-tuned LLMs for Finance without Instruction Data Using Continual Pretraining and Model Merging\nTABLE I: Benchmark Evaluation Results for Continual Pretraining\nModel: Original; chabsa (f1): 0.7381; cma_basics (acc): 0.4737\\pm 0.0821; cpa_audit (acc): 0.1608\\pm 0.0184; fp2 (acc): 0.3389\\pm 0.0217; security_sales_1 (acc): 0.4561\\pm 0.0666; Overall: 0.4335",
+        "cells": {
+          "Model": {
+            "value": "Original",
+            "cell_id": "S4.T1.1.2.1",
+            "header_ids": [
+              "S4.T1.1.1.1"
+            ]
+          },
+          "chabsa (f1)": {
+            "value": "0.7381",
+            "cell_id": "S4.T1.1.2.2",
+            "header_ids": [
+              "S4.T1.1.1.2"
+            ]
+          },
+          "Overall": {
+            "value": "0.4335",
+            "cell_id": "S4.T1.1.2.7",
+            "header_ids": [
+              "S4.T1.1.1.7"
+            ]
+          }
+        }
+      },
+      {
+        "point": "Continual Pretrained scored 0.7428 F1 and 0.4716 overall, higher on both.",
+        "chunk_id": "2409.19854v1_table_de629a5f57790c34_2",
+        "source_url": "https://arxiv.org/html/2409.19854v1#S4.T1",
+        "source_sha256": "d3b5d10e3768780fff0d91e69586f366371c91a5db95b8ffadaacb12d8d3c9cd",
+        "original_locator": "S4.T1",
+        "indexed_excerpt": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Construction of Instruction-tuned LLMs for Finance without Instruction Data Using Continual Pretraining and Model Merging\nTABLE I: Benchmark Evaluation Results for Continual Pretraining\nModel: Continual Pretrained; chabsa (f1): 0.7428; cma_basics (acc): 0.5263\\pm 0.0821; cpa_audit (acc): 0.1633\\pm 0.0186; fp2 (acc): 0.3642\\pm 0.0221; security_sales_1 (acc): 0.5614\\pm 0.0663; Overall: 0.4716",
+        "cells": {
+          "Model": {
+            "value": "Continual Pretrained",
+            "cell_id": "S4.T1.1.3.1",
+            "header_ids": [
+              "S4.T1.1.1.1"
+            ]
+          },
+          "chabsa (f1)": {
+            "value": "0.7428",
+            "cell_id": "S4.T1.1.3.2",
+            "header_ids": [
+              "S4.T1.1.1.2"
+            ]
+          },
+          "Overall": {
+            "value": "0.4716",
+            "cell_id": "S4.T1.1.3.7",
+            "header_ids": [
+              "S4.T1.1.1.7"
+            ]
+          }
+        }
+      }
+    ],
+    "local_original_checked": true,
+    "human_verified": false,
+    "second_human_review": "pending",
+    "audit_id": "1ed77a2ddc9219f4"
+  },
+  {
+    "id": "G02",
+    "category": "limits",
+    "papers": [
+      "2410.16285v1"
+    ],
+    "expected": "answer",
+    "required_points": [
+      {
+        "point": "Different judge models can give different subjective scores.",
+        "chunk_id": "2410.16285v1_c0033",
+        "original_locator": "S4.SS2",
+        "source_url": "https://arxiv.org/html/2410.16285v1#S4.SS2",
+        "source_sha256": "4f3e8bee6734ae3038a0a10df4b84ff3471026f1b79570ec54f28f8652bf09c8",
+        "indexed_excerpt": "One might argue that a limitation of the current benchmark is its reliance on LLMs for subjective judgments. There is some validity to this criticism, since, as demonstrated in Figure 5 , different LLMs will differ in their scoring. Moreover, a single LLM might assign different scores to the same question or response across multiple runs. However, given the subjective nature of these judgments, it is reasonable to expect that human experts may also reach different conclusions on the complexity and helpfulness scoring for the same interaction. Additionally, human experts are subject to errors arising due to task exhaustion, lack of concentration, or task-related bias. For instance, experts might misjudge the complexity of problems for non-experts due to their familiarity with the domain. Using LLMs for such tasks will help minimize these types of errors. This point is particularly salient considering the current approach’s ability to efficiently test a large batch of user-agent interactions. This limitation might be partially mitigated by explicitly formalizing a rubric and providing examples for each point on the rating scale for each assessment criterion.",
+        "original_anchor": "different LLMs will differ in their scoring"
+      },
+      {
+        "point": "Even the same judge may vary across runs; the problem concerns subjective judgments.",
+        "chunk_id": "2410.16285v1_c0033",
+        "original_locator": "S4.SS2",
+        "source_url": "https://arxiv.org/html/2410.16285v1#S4.SS2",
+        "source_sha256": "4f3e8bee6734ae3038a0a10df4b84ff3471026f1b79570ec54f28f8652bf09c8",
+        "indexed_excerpt": "One might argue that a limitation of the current benchmark is its reliance on LLMs for subjective judgments. There is some validity to this criticism, since, as demonstrated in Figure 5 , different LLMs will differ in their scoring. Moreover, a single LLM might assign different scores to the same question or response across multiple runs. However, given the subjective nature of these judgments, it is reasonable to expect that human experts may also reach different conclusions on the complexity and helpfulness scoring for the same interaction. Additionally, human experts are subject to errors arising due to task exhaustion, lack of concentration, or task-related bias. For instance, experts might misjudge the complexity of problems for non-experts due to their familiarity with the domain. Using LLMs for such tasks will help minimize these types of errors. This point is particularly salient considering the current approach’s ability to efficiently test a large batch of user-agent interactions. This limitation might be partially mitigated by explicitly formalizing a rubric and providing examples for each point on the rating scale for each assessment criterion.",
+        "original_anchor": "different scores to the same question or response across multiple runs"
+      }
+    ],
+    "local_original_checked": true,
+    "human_verified": false,
+    "second_human_review": "not_requested",
+    "audit_id": "59966ba3d7e46841"
+  },
+  {
+    "id": "G03",
+    "category": "fact",
+    "papers": [
+      "2407.01158v2"
+    ],
+    "expected": "answer",
+    "required_points": [
+      {
+        "point": "10,000 hierarchical sets of information-seeking subqueries.",
+        "chunk_id": "2407.01158v2_c0000",
+        "original_locator": "abstract1",
+        "source_url": "https://arxiv.org/html/2407.01158v2#abstract1",
+        "source_sha256": "0b9d5fc0305a109157e5fbfd38d369dcaff708ddb8004e25dfd4496d507e3679",
+        "indexed_excerpt": "Interactions with large language models (LLMs) often yield long and detailed responses, leveraging both parametric knowledge and retrieval-augmented generation (RAG). While these responses can provide rich insights, they often include redundant or less engaging content not aligned with user interests. This issue becomes apparent when users specify particular subtopics to include or exclude – termed coverage-conditioned ( C 2 ) queries – as LLMs often struggle to provide tailored responses. To address this challenge, we investigate the role of query outlines , sequences of subqueries designed to guide LLMs in generating responses that meet specific user requirements. To systematically create and evaluate these outlines, we introduce QTree , a dataset of 10K hierarchical sets of information-seeking subqueries that define structured boundaries for outline creation and evaluation in C 2 scenarios 1 1 Our resources are available at https://github.com/youngerous/qtree . . Additionally, we develop QPlanner , a 7B language model trained to generate customized outlines within boundaries of QTree . We evaluate the effectiveness of the generated outlines through automatic and human judgements, focusing on their impact within retrieval-augmented generation (RAG) systems. Experimental results demonstrate that QPlanner , especially when trained with alignment techniques like DPO, generates higher-quality outlines that better fulfill diverse user needs.",
+        "original_anchor": "10K hierarchical sets of information-seeking subqueries"
+      },
+      {
+        "point": "The hierarchy defines topical inclusion and exclusion boundaries.",
+        "chunk_id": "2407.01158v2_c0000",
+        "original_locator": "abstract1",
+        "source_url": "https://arxiv.org/html/2407.01158v2#abstract1",
+        "source_sha256": "0b9d5fc0305a109157e5fbfd38d369dcaff708ddb8004e25dfd4496d507e3679",
+        "indexed_excerpt": "Interactions with large language models (LLMs) often yield long and detailed responses, leveraging both parametric knowledge and retrieval-augmented generation (RAG). While these responses can provide rich insights, they often include redundant or less engaging content not aligned with user interests. This issue becomes apparent when users specify particular subtopics to include or exclude – termed coverage-conditioned ( C 2 ) queries – as LLMs often struggle to provide tailored responses. To address this challenge, we investigate the role of query outlines , sequences of subqueries designed to guide LLMs in generating responses that meet specific user requirements. To systematically create and evaluate these outlines, we introduce QTree , a dataset of 10K hierarchical sets of information-seeking subqueries that define structured boundaries for outline creation and evaluation in C 2 scenarios 1 1 Our resources are available at https://github.com/youngerous/qtree . . Additionally, we develop QPlanner , a 7B language model trained to generate customized outlines within boundaries of QTree . We evaluate the effectiveness of the generated outlines through automatic and human judgements, focusing on their impact within retrieval-augmented generation (RAG) systems. Experimental results demonstrate that QPlanner , especially when trained with alignment techniques like DPO, generates higher-quality outlines that better fulfill diverse user needs.",
+        "original_anchor": "particular subtopics to include or exclude"
+      }
+    ],
+    "local_original_checked": true,
+    "human_verified": false,
+    "second_human_review": "not_requested",
+    "audit_id": "33f05be56b19aa70"
+  },
+  {
+    "id": "G04",
+    "category": "table",
+    "papers": [
+      "2503.21760v2"
+    ],
+    "expected": "answer",
+    "required_points": [
+      {
+        "point": "DPR scored 31.4 multi-hop and 34.9 adversarial.",
+        "chunk_id": "2503.21760v2_table_2cdcf8e8868b7420_1",
+        "source_url": "https://arxiv.org/html/2503.21760v2#S5.T2",
+        "source_sha256": "4797e784fa9270640b252c072f5cc06c5674a3fc59a015b0576e3b0047e2cfce",
+        "original_locator": "S5.T2",
+        "indexed_excerpt": "Derived source table row (HTML cell serialization, not verbatim prose).\nMemInsight: Autonomous Memory Augmentation for LLM Agents\nTable 2: Results for the RECALL@k=5 accuracy for Embedding-based retrieval for answer generation using LoCoMo dataset. Dense Passage Retrieval(DPR) RAG model is the baseline. Best results are in bold.\nModel: RAG Baseline (DPR); Single-hop: 15.7; Multi-hop: 31.4; Temporal: 15.4; Open-domain: 15.4; Adversarial: 34.9; Overall: 26.5",
+        "cells": {
+          "Model": {
+            "value": "RAG Baseline (DPR)",
+            "cell_id": "S5.T2.2.2.1",
+            "header_ids": [
+              "S5.T2.2.1.1"
+            ]
+          },
+          "Multi-hop": {
+            "value": "31.4",
+            "cell_id": "S5.T2.2.2.3",
+            "header_ids": [
+              "S5.T2.2.1.3"
+            ]
+          },
+          "Adversarial": {
+            "value": "34.9",
+            "cell_id": "S5.T2.2.2.6",
+            "header_ids": [
+              "S5.T2.2.1.6"
+            ]
+          }
+        }
+      },
+      {
+        "point": "MemInsight Llama v3 Priority scored 63.6 multi-hop and 28.7 adversarial; MemInsight wins multi-hop and DPR wins adversarial.",
+        "chunk_id": "2503.21760v2_table_2cdcf8e8868b7420_2",
+        "source_url": "https://arxiv.org/html/2503.21760v2#S5.T2",
+        "source_sha256": "4797e784fa9270640b252c072f5cc06c5674a3fc59a015b0576e3b0047e2cfce",
+        "original_locator": "S5.T2",
+        "indexed_excerpt": "Derived source table row (HTML cell serialization, not verbatim prose).\nMemInsight: Autonomous Memory Augmentation for LLM Agents\nTable 2: Results for the RECALL@k=5 accuracy for Embedding-based retrieval for answer generation using LoCoMo dataset. Dense Passage Retrieval(DPR) RAG model is the baseline. Best results are in bold.\nModel: MemInsight (Llama v3 Priority ); Single-hop: 31.3; Multi-hop: 63.6; Temporal: 23.8; Open-domain: 53.4; Adversarial: 28.7; Overall: 44.9",
+        "cells": {
+          "Model": {
+            "value": "MemInsight (Llama v3 Priority )",
+            "cell_id": "S5.T2.2.3.1",
+            "header_ids": [
+              "S5.T2.2.1.1"
+            ]
+          },
+          "Multi-hop": {
+            "value": "63.6",
+            "cell_id": "S5.T2.2.3.3",
+            "header_ids": [
+              "S5.T2.2.1.3"
+            ]
+          },
+          "Adversarial": {
+            "value": "28.7",
+            "cell_id": "S5.T2.2.3.6",
+            "header_ids": [
+              "S5.T2.2.1.6"
+            ]
+          }
+        }
+      }
+    ],
+    "local_original_checked": true,
+    "human_verified": false,
+    "second_human_review": "pending",
+    "audit_id": "27fc7236016a133c"
+  },
+  {
+    "id": "G05",
+    "category": "table",
+    "papers": [
+      "2609.11414v1"
+    ],
+    "expected": "answer",
+    "required_points": [
+      {
+        "point": "At one insertion the scores were 79.43 and 100.00, respectively.",
+        "chunk_id": "2609.11414v1_table_56917df0cb9a7147_1",
+        "source_url": "https://arxiv.org/html/2609.11414v1#S6.T2",
+        "source_sha256": "a1a7a0951038657d59cfd6875d44533e39034b2789f8701e63c24b9c47acd3c3",
+        "original_locator": "S6.T2",
+        "indexed_excerpt": "Derived source table row (HTML cell serialization, not verbatim prose).\nSWRouter: Similarity-Contractive Window Routing for Multi-Turn Large Language Model Conversations\nTable 2. Recall performance of similarity-based retrieval under different levels of semantic interference. Inserted queries denote unrelated turns placed between two semantically related user requests; Top- K recall measures whether the retrieval module can recover the earlier related turn from the dialogue history.\nInserted Queries: 1; Top-1 Recall: 79.43; Top-3 Recall: 100.00; Top-5 Recall: 100.00",
+        "cells": {
+          "Inserted Queries": {
+            "value": "1",
+            "cell_id": "S6.T2.6.2.1",
+            "header_ids": [
+              "S6.T2.6.1.1"
+            ]
+          },
+          "Top-1 Recall": {
+            "value": "79.43",
+            "cell_id": "S6.T2.6.2.2",
+            "header_ids": [
+              "S6.T2.6.1.2"
+            ]
+          },
+          "Top-3 Recall": {
+            "value": "100.00",
+            "cell_id": "S6.T2.6.2.3",
+            "header_ids": [
+              "S6.T2.6.1.3"
+            ]
+          }
+        }
+      },
+      {
+        "point": "At three insertions the scores were 65.16 and 91.31; both declined.",
+        "chunk_id": "2609.11414v1_table_56917df0cb9a7147_2",
+        "source_url": "https://arxiv.org/html/2609.11414v1#S6.T2",
+        "source_sha256": "a1a7a0951038657d59cfd6875d44533e39034b2789f8701e63c24b9c47acd3c3",
+        "original_locator": "S6.T2",
+        "indexed_excerpt": "Derived source table row (HTML cell serialization, not verbatim prose).\nSWRouter: Similarity-Contractive Window Routing for Multi-Turn Large Language Model Conversations\nTable 2. Recall performance of similarity-based retrieval under different levels of semantic interference. Inserted queries denote unrelated turns placed between two semantically related user requests; Top- K recall measures whether the retrieval module can recover the earlier related turn from the dialogue history.\nInserted Queries: 3; Top-1 Recall: 65.16; Top-3 Recall: 91.31; Top-5 Recall: 100.00",
+        "cells": {
+          "Inserted Queries": {
+            "value": "3",
+            "cell_id": "S6.T2.6.3.1",
+            "header_ids": [
+              "S6.T2.6.1.1"
+            ]
+          },
+          "Top-1 Recall": {
+            "value": "65.16",
+            "cell_id": "S6.T2.6.3.2",
+            "header_ids": [
+              "S6.T2.6.1.2"
+            ]
+          },
+          "Top-3 Recall": {
+            "value": "91.31",
+            "cell_id": "S6.T2.6.3.3",
+            "header_ids": [
+              "S6.T2.6.1.3"
+            ]
+          }
+        }
+      }
+    ],
+    "local_original_checked": true,
+    "human_verified": false,
+    "second_human_review": "pending",
+    "audit_id": "c33e8b79da7e0961"
+  },
+  {
+    "id": "G06",
+    "category": "fact",
+    "papers": [
+      "2603.17192v1"
+    ],
+    "expected": "answer",
+    "required_points": [
+      {
+        "point": "49 frames.",
+        "chunk_id": "2603.17192v1_c0000",
+        "original_locator": "Sx1",
+        "source_url": "https://arxiv.org/html/2603.17192v1#Sx1",
+        "source_sha256": "999c698fff830b715e5bcc01b5a1ad892c08700b6aa034552b5b5cbb42ef2600",
+        "indexed_excerpt": "Metaphors fundamentally shape how we reason about complex issues like artificial intelligence, yet current approaches to metaphor analysis in political discourse suffer from inconsistent definitions and methodologies.\nThis paper introduces Narrative Frames, a novel categorisation system that addresses these limitations by providing a standardised framework for identifying and analysing metaphors in AI policy debates. Building on Lakoff and Johnson’s conceptual metaphor theory, we derive 49 distinct narrative frames through a two-stage process: inductively coding 685 metaphors from the MetaNet database, then cross-referencing findings with 82 critical metaphor analysis studies. This methodology grounds the typology in both empirical data and established theoretical concepts while resolving definitional ambiguities that have hindered cross-study comparison. The Narrative Frames system offers researchers, journalists, and policymakers a shared vocabulary for analysing how metaphors shape public perception and policy priorities in AI governance. By revealing both the frames present and notably absent in discourse, this approach enables more transparent analysis of underlying assumptions and power dynamics. We discuss limitations and propose future applications, including computational scaling using large language models. Keywords: metaphor analysis, conceptual metaphor theory, narrative frames, AI governance, political discourse, Lakoff and Johnson",
+        "original_anchor": "49 distinct narrative frames"
+      },
+      {
+        "point": "Inductive coding of 685 MetaNet metaphors.",
+        "chunk_id": "2603.17192v1_c0000",
+        "original_locator": "Sx1",
+        "source_url": "https://arxiv.org/html/2603.17192v1#Sx1",
+        "source_sha256": "999c698fff830b715e5bcc01b5a1ad892c08700b6aa034552b5b5cbb42ef2600",
+        "indexed_excerpt": "Metaphors fundamentally shape how we reason about complex issues like artificial intelligence, yet current approaches to metaphor analysis in political discourse suffer from inconsistent definitions and methodologies.\nThis paper introduces Narrative Frames, a novel categorisation system that addresses these limitations by providing a standardised framework for identifying and analysing metaphors in AI policy debates. Building on Lakoff and Johnson’s conceptual metaphor theory, we derive 49 distinct narrative frames through a two-stage process: inductively coding 685 metaphors from the MetaNet database, then cross-referencing findings with 82 critical metaphor analysis studies. This methodology grounds the typology in both empirical data and established theoretical concepts while resolving definitional ambiguities that have hindered cross-study comparison. The Narrative Frames system offers researchers, journalists, and policymakers a shared vocabulary for analysing how metaphors shape public perception and policy priorities in AI governance. By revealing both the frames present and notably absent in discourse, this approach enables more transparent analysis of underlying assumptions and power dynamics. We discuss limitations and propose future applications, including computational scaling using large language models. Keywords: metaphor analysis, conceptual metaphor theory, narrative frames, AI governance, political discourse, Lakoff and Johnson",
+        "original_anchor": "inductively coding 685 metaphors from the MetaNet database"
+      },
+      {
+        "point": "Cross-check against 82 critical metaphor-analysis studies.",
+        "chunk_id": "2603.17192v1_c0000",
+        "original_locator": "Sx1",
+        "source_url": "https://arxiv.org/html/2603.17192v1#Sx1",
+        "source_sha256": "999c698fff830b715e5bcc01b5a1ad892c08700b6aa034552b5b5cbb42ef2600",
+        "indexed_excerpt": "Metaphors fundamentally shape how we reason about complex issues like artificial intelligence, yet current approaches to metaphor analysis in political discourse suffer from inconsistent definitions and methodologies.\nThis paper introduces Narrative Frames, a novel categorisation system that addresses these limitations by providing a standardised framework for identifying and analysing metaphors in AI policy debates. Building on Lakoff and Johnson’s conceptual metaphor theory, we derive 49 distinct narrative frames through a two-stage process: inductively coding 685 metaphors from the MetaNet database, then cross-referencing findings with 82 critical metaphor analysis studies. This methodology grounds the typology in both empirical data and established theoretical concepts while resolving definitional ambiguities that have hindered cross-study comparison. The Narrative Frames system offers researchers, journalists, and policymakers a shared vocabulary for analysing how metaphors shape public perception and policy priorities in AI governance. By revealing both the frames present and notably absent in discourse, this approach enables more transparent analysis of underlying assumptions and power dynamics. We discuss limitations and propose future applications, including computational scaling using large language models. Keywords: metaphor analysis, conceptual metaphor theory, narrative frames, AI governance, political discourse, Lakoff and Johnson",
+        "original_anchor": "82 critical metaphor analysis studies"
+      }
+    ],
+    "local_original_checked": true,
+    "human_verified": false,
+    "second_human_review": "not_requested",
+    "audit_id": "299a9f8d437c3948"
+  },
+  {
+    "id": "G07",
+    "category": "refusal",
+    "papers": [
+      "2505.23417v1"
+    ],
+    "expected": "refusal",
+    "required_points": [
+      {
+        "point": "The paper synthesizes secondary literature rather than estimating a causal incident reduction.",
+        "chunk_id": "2505.23417v1_c0000",
+        "original_locator": "abstract1",
+        "source_url": "https://arxiv.org/html/2505.23417v1#abstract1",
+        "source_sha256": "f0bb903f6a842e49b233fdd33fb6a14063858b39a3d154a23daece1b1d236960",
+        "indexed_excerpt": "Background: Artificial Intelligence (AI) governance is the practice of establishing frameworks, policies, and procedures to ensure the responsible, ethical, and safe development and deployment of AI systems. Although AI governance is a core pillar of Responsible AI, current literature still lacks synthesis across such governance frameworks and practices. Objective: To identify which frameworks, principles, mechanisms, and stakeholder roles are emphasized in secondary literature on AI governance. Method: We conducted a rapid tertiary review of nine peer-reviewed secondary studies from IEEE and ACM (2020–2024), using structured inclusion criteria and thematic-semantic synthesis. Results: The most cited frameworks include the EU AI Act and NIST RMF; transparency and accountability are the most common principles. Few reviews detail actionable governance mechanisms or stakeholder strategies. Conclusion: The review consolidates key directions in AI governance and highlights gaps in empirical validation and inclusivity. Findings inform both academic inquiry and practical adoption in organizations.",
+        "original_anchor": "rapid tertiary review of nine peer-reviewed secondary studies"
+      },
+      {
+        "point": "No measured incident reduction is established; empirical validation is a stated gap.",
+        "chunk_id": "2505.23417v1_c0000",
+        "original_locator": "abstract1",
+        "source_url": "https://arxiv.org/html/2505.23417v1#abstract1",
+        "source_sha256": "f0bb903f6a842e49b233fdd33fb6a14063858b39a3d154a23daece1b1d236960",
+        "indexed_excerpt": "Background: Artificial Intelligence (AI) governance is the practice of establishing frameworks, policies, and procedures to ensure the responsible, ethical, and safe development and deployment of AI systems. Although AI governance is a core pillar of Responsible AI, current literature still lacks synthesis across such governance frameworks and practices. Objective: To identify which frameworks, principles, mechanisms, and stakeholder roles are emphasized in secondary literature on AI governance. Method: We conducted a rapid tertiary review of nine peer-reviewed secondary studies from IEEE and ACM (2020–2024), using structured inclusion criteria and thematic-semantic synthesis. Results: The most cited frameworks include the EU AI Act and NIST RMF; transparency and accountability are the most common principles. Few reviews detail actionable governance mechanisms or stakeholder strategies. Conclusion: The review consolidates key directions in AI governance and highlights gaps in empirical validation and inclusivity. Findings inform both academic inquiry and practical adoption in organizations.",
+        "original_anchor": "gaps in empirical validation"
+      }
+    ],
+    "local_original_checked": true,
+    "human_verified": false,
+    "second_human_review": "pending",
+    "audit_id": "91ef1139dd800ded"
+  },
+  {
+    "id": "G08",
+    "category": "conflict",
+    "papers": [
+      "2409.01666v1",
+      "2604.12735v2"
+    ],
+    "expected": "answer",
+    "required_points": [
+      {
+        "point": "The order-preserving method can improve long-context QA in its evaluated setup; adding distractors can hurt.",
+        "chunk_id": "2409.01666v1_c0002",
+        "original_locator": "S1",
+        "source_url": "https://arxiv.org/html/2409.01666v1#S1",
+        "source_sha256": "50553c16162698474b86bc665d8bf8f91f1e1a8bb93647d937b660c39ff5ed64",
+        "indexed_excerpt": "We observe that the order of retrieved chunks in the context of LLM is vital for the answer quality. Different from traditional RAG which places the retrieved chunks in a relevance-descending order, we propose to preserve the order of retrieved chunks in the original text. Our experiments show that the proposed order-preserving mechanism significantly improves the answer quality of RAG. Meanwhile, using the proposed order-preserve RAG, as the number of retrieved chunks increases, the answer quality initially rises and then declines. This is because, with more retrieved chunks, the model has access to more potentially relevant information, which improves the chances of retrieving the correct context needed to generate a high-quality answer. However, as more chunks are retrieved, the likelihood of introducing irrelevant or distracting information also increases. This excess information can confuse the model, leading to a decline in answer quality. The trade-off, therefore, is between improving recall by retrieving more context and maintaining precision by limiting distractions. The optimal point is where the balance between relevant and irrelevant information maximizes the quality of the answer. Beyond this point, the introduction of too much irrelevant information degrades the model’s performance. It explains the inferior performance of the approach taking the whole long context as the input of LLM. Different from the conclusion from Li et al. (2024) , with the proposed order-preserving mechanism, RAG achieves higher answer quality compared with its counterparts that rely solely on Long-Context LLMs.\nAs shown in Figure 4(a) ,",
+        "original_anchor": "order-preserving mechanism, RAG achieves higher answer quality"
+      },
+      {
+        "point": "The no-RAG emotion recognition mean was 74.77.",
+        "chunk_id": "2604.12735v2_table_b0755faaa482a8c3_1",
+        "source_url": "https://arxiv.org/html/2604.12735v2#S3.T3",
+        "source_sha256": "8e12e8838b3d0a251e0703e2af104c1b929a1b3d6baa6d92459f56eb822198ef",
+        "original_locator": "S3.T3",
+        "indexed_excerpt": "Derived source table row (HTML cell serialization, not verbatim prose).\nAffectAgent: Collaborative Multi-Agent Reasoning for Retrieval-Augmented Multimodal Emotion Recognition\nTable 3. Performance comparison of different RAG methods on emotion recognition datasets. To ensure a fair comparison, all RAG methods are applied to the same MLLM using full-modality inputs (audio, video, and text). Our proposed AffectAgent consistently outperforms existing RAG baselines across all datasets.\nMethod: No RAG; Basic / MER2023: 78.54; Basic / MER2024: 78.80; Basic / MELD: 55.65; Basic / IEMOCAP: 60.54; Sentiment / MOSI: 81.30; Sentiment / MOSEI: 80.90; Sentiment / SIMS: 88.49; Sentiment / SIMS v2: 86.18; Fine-grained / OV-MERD+: 62.52; Mean: 74.77",
+        "cells": {
+          "Method": {
+            "value": "No RAG",
+            "cell_id": "S3.T3.4.1.3.1",
+            "header_ids": [
+              "S3.T3.4.1.1.1"
+            ]
+          },
+          "Mean": {
+            "value": "74.77",
+            "cell_id": "S3.T3.4.1.3.11",
+            "header_ids": [
+              "S3.T3.4.1.1.5"
+            ]
+          }
+        }
+      },
+      {
+        "point": "Rewrite-Retrieve-Read scored 74.72. Different methods, outcomes and tasks explain why this is not a contradiction or universal conclusion about retrieval.",
+        "chunk_id": "2604.12735v2_table_b0755faaa482a8c3_2",
+        "source_url": "https://arxiv.org/html/2604.12735v2#S3.T3",
+        "source_sha256": "8e12e8838b3d0a251e0703e2af104c1b929a1b3d6baa6d92459f56eb822198ef",
+        "original_locator": "S3.T3",
+        "indexed_excerpt": "Derived source table row (HTML cell serialization, not verbatim prose).\nAffectAgent: Collaborative Multi-Agent Reasoning for Retrieval-Augmented Multimodal Emotion Recognition\nTable 3. Performance comparison of different RAG methods on emotion recognition datasets. To ensure a fair comparison, all RAG methods are applied to the same MLLM using full-modality inputs (audio, video, and text). Our proposed AffectAgent consistently outperforms existing RAG baselines across all datasets.\nMethod: Rewrite-Retrieve-Read ( Ma et al., 2023 ); Basic / MER2023: 78.39; Basic / MER2024: 78.76; Basic / MELD: 55.58; Basic / IEMOCAP: 60.42; Sentiment / MOSI: 81.36; Sentiment / MOSEI: 80.83; Sentiment / SIMS: 88.52; Sentiment / SIMS v2: 86.13; Fine-grained / OV-MERD+: 62.47; Mean: 74.72",
+        "cells": {
+          "Method": {
+            "value": "Rewrite-Retrieve-Read ( Ma et al., 2023 )",
+            "cell_id": "S3.T3.4.1.4.1",
+            "header_ids": [
+              "S3.T3.4.1.1.1"
+            ]
+          },
+          "Mean": {
+            "value": "74.72",
+            "cell_id": "S3.T3.4.1.4.11",
+            "header_ids": [
+              "S3.T3.4.1.1.5"
+            ]
+          }
+        }
+      }
+    ],
+    "local_original_checked": true,
+    "human_verified": false,
+    "second_human_review": "pending",
+    "audit_id": "083982d191946d6b"
+  },
+  {
+    "id": "G09",
+    "category": "refusal",
+    "papers": [
+      "2608.21326v1"
+    ],
+    "expected": "refusal",
+    "required_points": [
+      {
+        "point": "The study synthesizes literature and documented cases without primary patient surveying. No such percentage can be supplied.",
+        "chunk_id": "2608.21326v1_c0028",
+        "original_locator": "S6",
+        "source_url": "https://arxiv.org/html/2608.21326v1#S6",
+        "source_sha256": "6deab74c86a426d9913af0f9fcc7aec989c60b542df8d567c50d9840cbd28f39",
+        "indexed_excerpt": "The three principles are proposed not as evidence-based conclusions but as theoretically grounded hypotheses derived from synthesis of the accountability, consent and explainability literature, mapped against documented deployment realities in sub-Saharan Africa. As such, the absence of primary empirical data reflects a deliberate feature of the contribution’s scope rather than a gap, and the principles are proposed as a framework for future empirical investigation. Therefore, future work should investigate the extent to which patients in the region currently understand when autonomous agents are making decisions about them, audit additional existing deployments against the three principles proposed here, test disclosure instruments across varied literacy and language contexts, and examine the feasibility of human override pathways in resource-constrained health facilities. The illustrative cases presented in Section 3.4 provide a starting point for such investigations.",
+        "original_anchor": "absence of primary empirical data"
+      },
+      {
+        "point": "Measuring patients' understanding is proposed future work.",
+        "chunk_id": "2608.21326v1_c0028",
+        "original_locator": "S6",
+        "source_url": "https://arxiv.org/html/2608.21326v1#S6",
+        "source_sha256": "6deab74c86a426d9913af0f9fcc7aec989c60b542df8d567c50d9840cbd28f39",
+        "indexed_excerpt": "The three principles are proposed not as evidence-based conclusions but as theoretically grounded hypotheses derived from synthesis of the accountability, consent and explainability literature, mapped against documented deployment realities in sub-Saharan Africa. As such, the absence of primary empirical data reflects a deliberate feature of the contribution’s scope rather than a gap, and the principles are proposed as a framework for future empirical investigation. Therefore, future work should investigate the extent to which patients in the region currently understand when autonomous agents are making decisions about them, audit additional existing deployments against the three principles proposed here, test disclosure instruments across varied literacy and language contexts, and examine the feasibility of human override pathways in resource-constrained health facilities. The illustrative cases presented in Section 3.4 provide a starting point for such investigations.",
+        "original_anchor": "future work should investigate the extent to which patients"
+      }
+    ],
+    "local_original_checked": true,
+    "human_verified": false,
+    "second_human_review": "pending",
+    "audit_id": "b0bd561f09aa61a3"
+  },
+  {
+    "id": "G10",
+    "category": "limits",
+    "papers": [
+      "2409.10955v2"
+    ],
+    "expected": "answer",
+    "required_points": [
+      {
+        "point": "The framework did not cover what, how and why questions, introducing possible selection bias.",
+        "chunk_id": "2409.10955v2_c0029",
+        "original_locator": "Sx1",
+        "source_url": "https://arxiv.org/html/2409.10955v2#Sx1",
+        "source_sha256": "c6bb84773c8e2392cbc960a55c87112d0caec9df6497ad25df9ca47fd9a5fc7d",
+        "indexed_excerpt": "Our framework does not process all types of questions in the NQ dataset. Although it effectively handles the majority of NQ questions, it currently lacks the capability to address \"what,\" \"how,\" and \"why\" question types. The omission of these questions may introduce some bias into our results. Similar to previous studies, our study also focuses on knowledge conflict for extractive QA tasks, where the answer must appear in the evidence. Our conclusion may not be extendable to other types of QA tasks, such as abstractive QA and generative QA. We employed a Natural Language Inference (NLI) model to detect and filter the generated data. Although the NLI model demonstrates high accuracy and the quality of generated data is high, it still cannot guarantee complete correctness. Further, since the NLI model is also trained using language models, which may be biased with parametric memory, it may introduce biases facing knowledge conflicts.",
+        "original_anchor": "question types"
+      },
+      {
+        "point": "The study focused on extractive QA; conclusions need not extend to abstractive or generative QA.",
+        "chunk_id": "2409.10955v2_c0029",
+        "original_locator": "Sx1",
+        "source_url": "https://arxiv.org/html/2409.10955v2#Sx1",
+        "source_sha256": "c6bb84773c8e2392cbc960a55c87112d0caec9df6497ad25df9ca47fd9a5fc7d",
+        "indexed_excerpt": "Our framework does not process all types of questions in the NQ dataset. Although it effectively handles the majority of NQ questions, it currently lacks the capability to address \"what,\" \"how,\" and \"why\" question types. The omission of these questions may introduce some bias into our results. Similar to previous studies, our study also focuses on knowledge conflict for extractive QA tasks, where the answer must appear in the evidence. Our conclusion may not be extendable to other types of QA tasks, such as abstractive QA and generative QA. We employed a Natural Language Inference (NLI) model to detect and filter the generated data. Although the NLI model demonstrates high accuracy and the quality of generated data is high, it still cannot guarantee complete correctness. Further, since the NLI model is also trained using language models, which may be biased with parametric memory, it may introduce biases facing knowledge conflicts.",
+        "original_anchor": "extractive QA tasks, where the answer must appear in the evidence"
+      }
+    ],
+    "local_original_checked": true,
+    "human_verified": false,
+    "second_human_review": "not_requested",
+    "audit_id": "c7f0a3b781f98e7c"
+  },
+  {
+    "id": "G11",
+    "category": "table",
+    "papers": [
+      "2412.15272v2"
+    ],
+    "expected": "answer",
+    "required_points": [
+      {
+        "point": "Query-to-pattern: 36% on MetaQA 2-hop and 49% on FactKG.",
+        "chunk_id": "2412.15272v2_table_b6c0a7cb19779ac5_1",
+        "source_url": "https://arxiv.org/html/2412.15272v2#S6.T4",
+        "source_sha256": "0debb83b8ee144a1e048a588423e9f0f148099eeec6dcbf3c98b5fcf1c8ca73b",
+        "original_locator": "S6.T4",
+        "indexed_excerpt": "Derived source table row (HTML cell serialization, not verbatim prose).\nSimGRAG: Leveraging Similar Subgraphs for Knowledge Graphs Driven Retrieval-Augmented Generation\nTable 4: The statistics of errors from different steps.\nStep: Query-to-pattern; MetaQA / 1-hop: 89%; MetaQA / 2-hop: 36%; MetaQA / 3-hop: 31%; FactKG: 49%",
+        "cells": {
+          "Step": {
+            "value": "Query-to-pattern",
+            "cell_id": "S6.T4.2.3.1",
+            "header_ids": [
+              "S6.T4.2.1.1"
+            ]
+          },
+          "MetaQA / 2-hop": {
+            "value": "36%",
+            "cell_id": "S6.T4.2.3.3",
+            "header_ids": [
+              "S6.T4.2.1.2",
+              "S6.T4.2.2.2"
+            ]
+          },
+          "FactKG": {
+            "value": "49%",
+            "cell_id": "S6.T4.2.3.5",
+            "header_ids": [
+              "S6.T4.2.1.3"
+            ]
+          }
+        }
+      },
+      {
+        "point": "Pattern-to-subgraph: 0% and 24%, respectively.",
+        "chunk_id": "2412.15272v2_table_b6c0a7cb19779ac5_2",
+        "source_url": "https://arxiv.org/html/2412.15272v2#S6.T4",
+        "source_sha256": "0debb83b8ee144a1e048a588423e9f0f148099eeec6dcbf3c98b5fcf1c8ca73b",
+        "original_locator": "S6.T4",
+        "indexed_excerpt": "Derived source table row (HTML cell serialization, not verbatim prose).\nSimGRAG: Leveraging Similar Subgraphs for Knowledge Graphs Driven Retrieval-Augmented Generation\nTable 4: The statistics of errors from different steps.\nStep: Pattern-to-subgraph; MetaQA / 1-hop: 0%; MetaQA / 2-hop: 0%; MetaQA / 3-hop: 0%; FactKG: 24%",
+        "cells": {
+          "Step": {
+            "value": "Pattern-to-subgraph",
+            "cell_id": "S6.T4.2.4.1",
+            "header_ids": [
+              "S6.T4.2.1.1"
+            ]
+          },
+          "MetaQA / 2-hop": {
+            "value": "0%",
+            "cell_id": "S6.T4.2.4.3",
+            "header_ids": [
+              "S6.T4.2.1.2",
+              "S6.T4.2.2.2"
+            ]
+          },
+          "FactKG": {
+            "value": "24%",
+            "cell_id": "S6.T4.2.4.5",
+            "header_ids": [
+              "S6.T4.2.1.3"
+            ]
+          }
+        }
+      }
+    ],
+    "local_original_checked": true,
+    "human_verified": false,
+    "second_human_review": "pending",
+    "audit_id": "032f658a355fb3ba"
+  },
+  {
+    "id": "G12",
+    "category": "limits",
+    "papers": [
+      "2604.00314v1"
+    ],
+    "expected": "answer",
+    "required_points": [
+      {
+        "point": "The matched accuracy result is for visual question-answering benchmarks; it does not validate every downstream vision task or a universal compression guarantee.",
+        "chunk_id": "2604.00314v1_c0000",
+        "original_locator": "abstract1",
+        "source_url": "https://arxiv.org/html/2604.00314v1#abstract1",
+        "source_sha256": "b601223fbde9e2a8f303217e55a552e649c09b05e64997c25bddf68612d72e6b",
+        "indexed_excerpt": "The rapid progress of large VLM has enabled a wide range of applications, such as image understanding and VQA ( VQA ). Query images are often uploaded to the cloud, where VLMs are typically hosted, hence efficient image compression becomes crucial. However, traditional human-centric codecs are suboptimal in this setting because they preserve many task-irrelevant details. Existing ICM ( ICM ) methods also fall short, as they assume a fixed set of downstream tasks and cannot adapt to prompt-driven VLMs with an open-ended variety of objectives. We propose a lightweight, plug-and-play, prompt-guided prefiltering module to identify image regions most relevant to the text prompt, and consequently to the downstream task. The module preserves important details while smoothing out less relevant areas to improve compression efficiency. It is codec-agnostic and can be applied before conventional and learned encoders.\nExperiments on several VQA benchmarks show that our approach achieves a 25–50% average bitrate reduction while maintaining the same task accuracy. Our source code is available at https://github.com/bardia-az/pgp-vlm-compression .",
+        "original_anchor": "on several VQA benchmarks"
+      }
+    ],
+    "local_original_checked": true,
+    "human_verified": false,
+    "second_human_review": "not_requested",
+    "audit_id": "a266d40d453d72c1"
+  },
+  {
+    "id": "G13",
+    "category": "multi",
+    "papers": [
+      "2403.12482v2",
+      "2404.00246v1"
+    ],
+    "expected": "answer",
+    "required_points": [
+      {
+        "point": "Organized embodied agents address over-reporting and confusion with prompt-defined structures and leadership.",
+        "chunk_id": "2403.12482v2_c0000",
+        "original_locator": "abstract1",
+        "source_url": "https://arxiv.org/html/2403.12482v2#abstract1",
+        "source_sha256": "80e3c95d6d63c2e32231886b1b06fef12bd8589a07db9d92e8ebc77e78c3a2ad",
+        "indexed_excerpt": "Large Language Models (LLMs) have emerged as integral tools for reasoning, planning, and decision-making, drawing upon their extensive world knowledge and proficiency in language-related tasks. LLMs thus hold tremendous potential for natural language interaction within multi-agent systems to foster cooperation. However, LLM agents tend to over-report and comply with any instruction, which may result in information redundancy and confusion in multi-agent cooperation. Inspired by human organizations, this paper introduces a framework that imposes prompt-based organization structures on LLM agents to mitigate these problems. Through a series of experiments with embodied LLM agents and human-agent collaboration, our results highlight the impact of designated leadership on team efficiency, shedding light on the leadership qualities displayed by LLM agents and their spontaneous cooperative behaviors. Further, we harness the potential of LLMs to propose enhanced organizational prompts, via a Criticize-Reflect process,\nresulting in novel organization structures that reduce communication costs and enhance team efficiency 1 1 Code is available: https://github.com/tobeatraceur/Organized-LLM-Agents .\nProject website: https://organized-llm-agents.netlify.app/ . .",
+        "original_anchor": "information redundancy and confusion"
+      },
+      {
+        "point": "The Blocks World prompts model the partner's state and identify or correct execution errors.",
+        "chunk_id": "2404.00246v1_c0000",
+        "original_locator": "abstract1",
+        "source_url": "https://arxiv.org/html/2404.00246v1#abstract1",
+        "source_sha256": "901d6d9eb4fabb9883e5dcbd3664004f3d89d8b7b80c85a3eefa8c6ffe6a2410",
+        "indexed_excerpt": "Language agents that interact with the world on their own have great potential for automating digital tasks.\nWhile large language model (LLM) agents have made progress in understanding and executing tasks such as textual games and webpage control, many real-world tasks also require collaboration with humans or other LLMs in equal roles, which involves intent understanding, task coordination, and communication.\nTo test LLM’s ability to collaborate, we design a blocks-world environment,\nwhere two agents, each having unique goals and skills, build a target structure together. To complete the goals,\nthey can act in the world and communicate in natural language.\nUnder this environment, we design increasingly challenging settings to evaluate different collaboration perspectives, from independent to more complex, dependent tasks.\nWe further adopt chain-of-thought prompts that include intermediate reasoning steps to model the partner’s state and identify and correct execution errors.\nBoth human-machine and machine-machine experiments show that\nLLM agents have strong grounding capacities, and our\napproach significantly improves the evaluation metric.",
+        "original_anchor": "model the partner"
+      }
+    ],
+    "local_original_checked": true,
+    "human_verified": false,
+    "second_human_review": "not_requested",
+    "audit_id": "46069174dd495241"
+  },
+  {
+    "id": "G14",
+    "category": "conflict",
+    "papers": [
+      "2504.01566v1"
+    ],
+    "expected": "answer",
+    "required_points": [
+      {
+        "point": "Disclosure reduces information asymmetry.",
+        "chunk_id": "2504.01566v1_c0000",
+        "original_locator": "abstract1",
+        "source_url": "https://arxiv.org/html/2504.01566v1#abstract1",
+        "source_sha256": "ca51f345a9d236e421e6b67d01391f6c0f94d42e0673ccbcf004f3ff855d5ea8",
+        "indexed_excerpt": "Generative Pre-trained Transformers (GPTs), particularly Large Language Models (LLMs) like ChatGPT, have proven effective in content generation and productivity enhancement. However, legal risks associated with these tools lead to adoption variance and concealment of AI use within organizations. This study examines the impact of disclosure on ChatGPT adoption in legal, audit and advisory roles in consulting firms through the lens of agency theory. We conducted a survey experiment to evaluate agency costs in the context of unregulated corporate use of ChatGPT, with a particular focus on how mandatory disclosure influences information asymmetry and misaligned interests. Our findings indicate that in the absence of corporate regulations, such as an AI policy, firms may incur agency costs, which can hinder the full benefits of GPT adoption. While disclosure policies reduce information asymmetry, they do not significantly lower overall agency costs due to managers undervaluing analysts’ contributions with GPT use. Finally, we examine the scope of existing regulations in Europe and the United States regarding disclosure requirements, explore the sharing of risk and responsibility within firms, and analyze how incentive mechanisms promote responsible AI adoption.",
+        "original_anchor": "disclosure policies reduce information asymmetry"
+      },
+      {
+        "point": "Overall agency costs were not significantly reduced because managers undervalued analysts' GPT-assisted contributions.",
+        "chunk_id": "2504.01566v1_c0000",
+        "original_locator": "abstract1",
+        "source_url": "https://arxiv.org/html/2504.01566v1#abstract1",
+        "source_sha256": "ca51f345a9d236e421e6b67d01391f6c0f94d42e0673ccbcf004f3ff855d5ea8",
+        "indexed_excerpt": "Generative Pre-trained Transformers (GPTs), particularly Large Language Models (LLMs) like ChatGPT, have proven effective in content generation and productivity enhancement. However, legal risks associated with these tools lead to adoption variance and concealment of AI use within organizations. This study examines the impact of disclosure on ChatGPT adoption in legal, audit and advisory roles in consulting firms through the lens of agency theory. We conducted a survey experiment to evaluate agency costs in the context of unregulated corporate use of ChatGPT, with a particular focus on how mandatory disclosure influences information asymmetry and misaligned interests. Our findings indicate that in the absence of corporate regulations, such as an AI policy, firms may incur agency costs, which can hinder the full benefits of GPT adoption. While disclosure policies reduce information asymmetry, they do not significantly lower overall agency costs due to managers undervaluing analysts’ contributions with GPT use. Finally, we examine the scope of existing regulations in Europe and the United States regarding disclosure requirements, explore the sharing of risk and responsibility within firms, and analyze how incentive mechanisms promote responsible AI adoption.",
+        "original_anchor": "managers undervaluing analysts"
+      }
+    ],
+    "local_original_checked": true,
+    "human_verified": false,
+    "second_human_review": "pending",
+    "audit_id": "421e0452c5fe3ce4"
+  },
+  {
+    "id": "G15",
+    "category": "refusal",
+    "papers": [
+      "2506.03610v3"
+    ],
+    "expected": "refusal",
+    "required_points": [
+      {
+        "point": "No same-agent score difference can be inferred: the benchmark preprocesses state into structured text and leaves full uncurated states as future work.",
+        "chunk_id": "2506.03610v3_paragraph_52626a427280cc64_0",
+        "original_locator": "S6.SS0.SSS0.Px2",
+        "source_url": "https://arxiv.org/html/2506.03610v3#S6.SS0.SSS0.Px2",
+        "source_sha256": "7fd0631cb2a5d912f754132ade03fec4540aa5a5e66816e73ed4691c196c5efc",
+        "indexed_excerpt": "We note that Orak provides environments favorable for LLM reasoning and decision-making by pre-processing game states into structured text where information unnecessary to gameplay is hidden. This may offer insights for providers seeking to deploy resource-efficient LLMs on games. We leave a complementary direction, providing the full in-game states with rich uncurated texts to LLMs, for future work. Further discussions, including cost and licensing, are provided in Appendix U .",
+        "original_anchor": "providing the full in-game states with rich uncurated texts to LLMs, for future work"
+      }
+    ],
+    "local_original_checked": true,
+    "human_verified": false,
+    "second_human_review": "pending",
+    "audit_id": "30a1bda514da6914"
+  },
+  {
+    "id": "G16",
+    "category": "multi",
+    "papers": [
+      "2401.09890v1",
+      "2406.11087v5"
+    ],
+    "expected": "answer",
+    "required_points": [
+      {
+        "point": "The survey covers hardware architectures and deployment efficiency.",
+        "chunk_id": "2401.09890v1_c0000",
+        "original_locator": "abstract1",
+        "source_url": "https://arxiv.org/html/2401.09890v1#abstract1",
+        "source_sha256": "ef3a9d3cae585a361d92c38f341429b1304b7d0f7762196a91b8d016f3af89d8",
+        "indexed_excerpt": "Large Language Models (LLMs) have emerged as powerful tools for natural language processing tasks, revolutionizing the field with their ability to understand and generate human-like text. As the demand for more sophisticated LLMs continues to grow, there is a pressing need to address the computational challenges associated with their scale and complexity. This paper presents a comprehensive survey on hardware accelerators designed to enhance the performance and energy efficiency of Large Language Models. By examining a diverse range of accelerators, including GPUs, FPGAs, and custom-designed architectures, we explore the landscape of hardware solutions tailored to meet the unique computational demands of LLMs. The survey encompasses an in-depth analysis of architecture, performance metrics, and energy efficiency considerations, providing valuable insights for researchers, engineers, and decision-makers aiming to optimize the deployment of LLMs in real-world applications.",
+        "original_anchor": "GPUs, FPGAs, and custom-designed architectures"
+      },
+      {
+        "point": "DP-MemArc is a memory-efficient fine-tuning approach using side or reversible networks while addressing differential privacy.",
+        "chunk_id": "2406.11087v5_c0000",
+        "original_locator": "abstract1",
+        "source_url": "https://arxiv.org/html/2406.11087v5#abstract1",
+        "source_sha256": "e4d190176a5bb0a415a0617f27e5281bb1eeccbc269ea9736484a2501fcacdc2",
+        "indexed_excerpt": "Large language models have repeatedly shown outstanding performance across diverse applications. However, deploying these models can inadvertently risk user privacy. The significant memory demands during training pose a major challenge in terms of resource consumption. This substantial size places a heavy load on memory resources, raising considerable practical concerns. In this paper, we introduce DP-MemArc, a novel training framework aimed at reducing the memory costs of large language models while emphasizing the protection of user data privacy. DP-MemArc incorporates side network or reversible network designs to support a variety of differential privacy memory-efficient fine-tuning schemes. Our approach not only achieves about 2.5 times in memory optimization but also ensures robust privacy protection, keeping user data secure and confidential. Extensive experiments have demonstrated that DP-MemArc effectively provides differential privacy-efficient fine-tuning across different task scenarios.",
+        "original_anchor": "side network or reversible network designs"
+      }
+    ],
+    "local_original_checked": true,
+    "human_verified": false,
+    "second_human_review": "not_requested",
+    "audit_id": "1c428dc43167307c"
+  },
+  {
+    "id": "G17",
+    "category": "fact",
+    "papers": [
+      "2512.17756v1"
+    ],
+    "expected": "answer",
+    "required_points": [
+      {
+        "point": "Glyph, pronunciation, meaning and contextual comprehension.",
+        "chunk_id": "2512.17756v1_c0000",
+        "original_locator": "abstract1",
+        "source_url": "https://arxiv.org/html/2512.17756v1#abstract1",
+        "source_sha256": "c57437c455b8415a0d278f39bb9a0edfb730eaa66bced0a625f92ed864b436b3",
+        "indexed_excerpt": "Comprehension of ancient texts plays an important role in archaeology and understanding of Chinese history and civilization. The rapid development of large language models needs benchmarks that can evaluate their comprehension of ancient characters. Existing Chinese benchmarks are mostly targeted at modern Chinese and transmitted documents in ancient Chinese, but the part of excavated documents in ancient Chinese is not covered. To meet this need, we propose the AncientBench, which aims to evaluate the comprehension of ancient characters, especially in the scenario of excavated documents. The AncientBench is divided into four dimensions, which correspond to the four competencies of ancient character comprehension: glyph comprehension, pronunciation comprehension, meaning comprehension, and contextual comprehension. The benchmark also contains ten tasks, including radical, phonetic radical, homophone, cloze, translation, and more, providing a comprehensive framework for evaluation. We convened archaeological researchers to conduct experimental evaluations, proposed an ancient model as baseline, and conducted extensive experiments on the currently best-performing large language models. The experimental results reveal the great potential of large language models in ancient textual scenarios as well as the gap with humans. Our research aims to promote the development and application of large language models in the field of archaeology and ancient Chinese language.",
+        "original_anchor": "glyph comprehension, pronunciation comprehension, meaning comprehension, and contextual comprehension"
+      },
+      {
+        "point": "Excavated ancient Chinese documents were underrepresented.",
+        "chunk_id": "2512.17756v1_c0000",
+        "original_locator": "abstract1",
+        "source_url": "https://arxiv.org/html/2512.17756v1#abstract1",
+        "source_sha256": "c57437c455b8415a0d278f39bb9a0edfb730eaa66bced0a625f92ed864b436b3",
+        "indexed_excerpt": "Comprehension of ancient texts plays an important role in archaeology and understanding of Chinese history and civilization. The rapid development of large language models needs benchmarks that can evaluate their comprehension of ancient characters. Existing Chinese benchmarks are mostly targeted at modern Chinese and transmitted documents in ancient Chinese, but the part of excavated documents in ancient Chinese is not covered. To meet this need, we propose the AncientBench, which aims to evaluate the comprehension of ancient characters, especially in the scenario of excavated documents. The AncientBench is divided into four dimensions, which correspond to the four competencies of ancient character comprehension: glyph comprehension, pronunciation comprehension, meaning comprehension, and contextual comprehension. The benchmark also contains ten tasks, including radical, phonetic radical, homophone, cloze, translation, and more, providing a comprehensive framework for evaluation. We convened archaeological researchers to conduct experimental evaluations, proposed an ancient model as baseline, and conducted extensive experiments on the currently best-performing large language models. The experimental results reveal the great potential of large language models in ancient textual scenarios as well as the gap with humans. Our research aims to promote the development and application of large language models in the field of archaeology and ancient Chinese language.",
+        "original_anchor": "excavated documents in ancient Chinese is not covered"
+      }
+    ],
+    "local_original_checked": true,
+    "human_verified": false,
+    "second_human_review": "not_requested",
+    "audit_id": "5b87caf931d82823"
+  },
+  {
+    "id": "G18",
+    "category": "fact",
+    "papers": [
+      "2607.00274v1"
+    ],
+    "expected": "answer",
+    "required_points": [
+      {
+        "point": "564 drafts and 8,240 instructor annotations.",
+        "chunk_id": "2607.00274v1_c0000",
+        "original_locator": "abstract1",
+        "source_url": "https://arxiv.org/html/2607.00274v1#abstract1",
+        "source_sha256": "77c371d2c9c68aa48acdac1a346fbbc40bcccefa49a3549ebfd2fdc79a425804",
+        "indexed_excerpt": "Effective writing feedback is among the strongest drivers of student learning, yet producing it at scale is labor-intensive. LLMs offer a natural path to scaling writing support, but two gaps stand in the way: few public corpora capture how instructors actually deliver feedback in real classrooms, and no reliable method measures whether generated feedback aligns with what an instructor would write. We address both. Sefora is a public corpus 1 1 https://github.com/ShayanPey/SEFORA pairing instructor inline feedback with assignment prompts, rubrics, scores, and multi-draft revisions across various college writing genres, comprising 564 drafts and 8,240 instructor annotations. UniMatch is a reference-based evaluation framework for open-ended generation: it segments feedback into feedback units, scores their semantic correspondence under instructor-derived criteria, and aligns them via optimal matching to yield interpretable precision, recall, and F 1 . Across 74 experimental configurations spanning multiple LLMs, no setting exceeds 0.4 F 1 . UniMatch reveals that models struggle to identify the feedback instructors would prioritize, and performance degrades as models generate more.",
+        "original_anchor": "564 drafts and 8,240 instructor annotations"
+      },
+      {
+        "point": "Instructor inline feedback is paired with prompts, rubrics, scores and revisions.",
+        "chunk_id": "2607.00274v1_c0000",
+        "original_locator": "abstract1",
+        "source_url": "https://arxiv.org/html/2607.00274v1#abstract1",
+        "source_sha256": "77c371d2c9c68aa48acdac1a346fbbc40bcccefa49a3549ebfd2fdc79a425804",
+        "indexed_excerpt": "Effective writing feedback is among the strongest drivers of student learning, yet producing it at scale is labor-intensive. LLMs offer a natural path to scaling writing support, but two gaps stand in the way: few public corpora capture how instructors actually deliver feedback in real classrooms, and no reliable method measures whether generated feedback aligns with what an instructor would write. We address both. Sefora is a public corpus 1 1 https://github.com/ShayanPey/SEFORA pairing instructor inline feedback with assignment prompts, rubrics, scores, and multi-draft revisions across various college writing genres, comprising 564 drafts and 8,240 instructor annotations. UniMatch is a reference-based evaluation framework for open-ended generation: it segments feedback into feedback units, scores their semantic correspondence under instructor-derived criteria, and aligns them via optimal matching to yield interpretable precision, recall, and F 1 . Across 74 experimental configurations spanning multiple LLMs, no setting exceeds 0.4 F 1 . UniMatch reveals that models struggle to identify the feedback instructors would prioritize, and performance degrades as models generate more.",
+        "original_anchor": "assignment prompts, rubrics, scores, and multi-draft revisions"
+      }
+    ],
+    "local_original_checked": true,
+    "human_verified": false,
+    "second_human_review": "not_requested",
+    "audit_id": "90329cccb145b6eb"
+  },
+  {
+    "id": "G19",
+    "category": "multi",
+    "papers": [
+      "2504.05104v2",
+      "2606.20041v2"
+    ],
+    "expected": "answer",
+    "required_points": [
+      {
+        "point": "CREWS extracts and classifies investment data from project documents using contextual retrieval and reasoning.",
+        "chunk_id": "2504.05104v2_c0000",
+        "original_locator": "abstract1",
+        "source_url": "https://arxiv.org/html/2504.05104v2#abstract1",
+        "source_sha256": "48b0c1780a6bcc4250e6fba691e929f55f16e7e411f6b5b0c6a36bf584cf60c6",
+        "indexed_excerpt": "Tracking financial investments in climate adaptation is a complex and expertise-intensive task, particularly for Early Warning Systems (EWS), which lack standardized financial reporting across multilateral development banks (MDBs) and funds which are the main funders of these EWS projects. Analysts regularly encounter diverse PDF files containing tables and images with inconsistent formatting, rows, and columns, making it difficult and time-consuming to analyze reports and extract proper financial information.\nTo address this challenge, we introduce an agent-based Retrieval-Augmented Generation (RAG) system that orchestrates contextual retrieval with internal chain-of-thought (COT) reasoning to extract relevant financial data, classify investments, and ensure compliance with funding guidelines.\nOur study focuses on a real-world application: tracking EWS investments funded by the Climate Risk and Early Warning Systems (CREWS) Fund.\nWe evaluate our agent-based RAG pipeline on 25 MDB project documents from the CREWS Fund,\ncomparing it against five model candidates—(1) a Zero-Shot Classifier (Baseline), (2) a Few-Shot “Zero Rule” Classifier, (3) a fine-tuned transformer-based classifier, and (4) a Few-Shot-V2 CoT+ICL classifier—across both multi-label classification and budget allocation tasks.\nOur agent-based RAG achieves 87% accuracy, 89% precision, and 83% recall, significantly outperforming these benchmarks.\nWe also benchmark it against the Gemini 2.0 Flash AI Assistant, setting the stage for a comparative study of Glass-Box Agents versus Black-Box Assistants to quantify the benefits of an agentic pipeline in transparency, explainability, and performance.",
+        "original_anchor": "extract relevant financial data, classify investments"
+      },
+      {
+        "point": "The AI Economist Agent retrieves evidence and organizes mechanisms; registered quantitative models produce numerical scenarios and predefined tests gate their use.",
+        "chunk_id": "2606.20041v2_c0000",
+        "original_locator": "abstract1",
+        "source_url": "https://arxiv.org/html/2606.20041v2#abstract1",
+        "source_sha256": "7c2a6ebb286c804dbf6b7dc30f3fa853142daa7569fd5216b04c8b6fa624a220",
+        "indexed_excerpt": "We propose an AI economist agent for economic and financial scenario analysis. Scenario design often requires analysts to assess emerging risks with limited historical precedent, combine information from many sources, and translate qualitative mechanisms into internally consistent quantitative paths. Large language models (LLMs) can search and synthesize this information, but fluent narratives alone do not establish the model-based calculations needed for economic conclusions. Our framework uses LLM agents to plan the analysis, retrieve relevant evidence, and organize economic mechanisms, while registered quantitative models generate numerical outcomes and predefined tests determine whether intermediate results can be used in the final report. We apply the framework to European macro-financial stress scenarios and bank capital analysis. The empirical analysis evaluates retrieval of economic mechanisms, scenario construction, model execution, and report generation under a historical information cutoff. The results show how the AI economist agent can combine flexible evidence retrieval and scenario construction while keeping the resulting analysis linked to identifiable sources and explicit model calculations.",
+        "original_anchor": "registered quantitative models generate numerical outcomes"
+      }
+    ],
+    "local_original_checked": true,
+    "human_verified": false,
+    "second_human_review": "not_requested",
+    "audit_id": "84c5e35f0ba9bb36"
+  },
+  {
+    "id": "G20",
+    "category": "multi",
+    "papers": [
+      "2411.14442v2",
+      "2502.05219v1"
+    ],
+    "expected": "answer",
+    "required_points": [
+      {
+        "point": "OpenMined uses privacy-enhancing infrastructure to enable external scrutiny while protecting sensitive information.",
+        "chunk_id": "2502.05219v1_c0000",
+        "original_locator": "abstract1",
+        "source_url": "https://arxiv.org/html/2502.05219v1#abstract1",
+        "source_sha256": "da0b9661c29deaaf5991af944103596267c65e61a8774de789fb67daaea9e78d",
+        "indexed_excerpt": "This article describes how technical infrastructure developed by the\nnonprofit OpenMined enables external scrutiny of AI systems without\ncompromising sensitive information. Independent external scrutiny of AI systems provides crucial\ntransparency into AI development, so it should be an integral component\nof any approach to AI governance. In practice, external researchers have\nstruggled to gain access to AI systems because of AI companies’\nlegitimate concerns about security, privacy, and intellectual property. But now, privacy-enhancing technologies (PETs) have reached a new level\nof maturity: end-to-end technical infrastructure developed by OpenMined\ncombines several PETs into various setups that enable privacy-preserving\naudits of AI systems. We showcase two case studies where this\ninfrastructure has been deployed in real-world governance scenarios:\n“Understanding Social Media Recommendation Algorithms with the\nChristchurch Call” and “Evaluating Frontier Models with the UK AI\nSafety Institute.” We describe types of scrutiny of AI systems that\ncould be facilitated by current setups and OpenMined’s proposed future\nsetups. We conclude that these innovative approaches deserve further exploration\nand support from the AI governance community.\nInterested policymakers can focus on empowering researchers on a legal level.",
+        "original_anchor": "privacy-preserving audits of AI systems"
+      },
+      {
+        "point": "The guardrail paper proposes configurable rules, policies and assistants that reflect differing values, with a mechanism for resolving directive conflicts.",
+        "chunk_id": "2411.14442v2_c0000",
+        "original_locator": "abstract1",
+        "source_url": "https://arxiv.org/html/2411.14442v2#abstract1",
+        "source_sha256": "11f542233a878e3f9e2c7f2e040007a7786dd18b692d82a1be79adbcd1d03cf3",
+        "indexed_excerpt": "This paper explores the development of an ethical guardrail framework for AI systems, emphasizing the importance of customizable guardrails that align with diverse user values and underlying ethics. We address the challenges of AI ethics by proposing a structure that integrates rules, policies, and AI assistants to ensure responsible AI behavior, while comparing the proposed framework to the existing state-of-the-art guardrails. By focusing on practical mechanisms for implementing ethical standards, we aim to enhance transparency, user autonomy, and continuous improvement in AI systems. Our approach accommodates ethical pluralism, offering a flexible and adaptable solution for the evolving landscape of AI governance. The paper concludes with strategies for resolving conflicts between ethical directives, underscoring the present and future need for robust, nuanced and context-aware AI systems.",
+        "original_anchor": "ethical pluralism"
+      }
+    ],
+    "local_original_checked": true,
+    "human_verified": false,
+    "second_human_review": "not_requested",
+    "audit_id": "49cfe03019fb9d3c"
+  }
+]

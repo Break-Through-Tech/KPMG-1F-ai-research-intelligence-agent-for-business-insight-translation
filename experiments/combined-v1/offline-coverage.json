@@ -1,0 +1,1289 @@
+{
+ "rule": "SELECTION-RULE.md (frozen before this run)",
+ "baseline_route": {
+  "top8": {
+   "anchored_points": 23,
+   "of": 43,
+   "fully_anchored_questions": 1,
+   "mean_passages": 8.0,
+   "max_passage_tokens": 2489,
+   "p90_request_tokens": 11696,
+   "max_request_tokens": 12175,
+   "max_evidence_tokens": 10557,
+   "split_table_groups": [
+    "G07.2"
+   ]
+  },
+  "top16": {
+   "anchored_points": 27,
+   "of": 43,
+   "fully_anchored_questions": 1,
+   "mean_passages": 16.0,
+   "max_passage_tokens": 4995,
+   "p90_request_tokens": 21407,
+   "max_request_tokens": 21976,
+   "max_evidence_tokens": 20225,
+   "split_table_groups": [
+    "G07.2"
+   ]
+  },
+  "skipfit6k": {
+   "anchored_points": 29,
+   "of": 43,
+   "fully_anchored_questions": 1,
+   "mean_passages": 22.7,
+   "max_passage_tokens": 5991,
+   "p90_request_tokens": 28522,
+   "max_request_tokens": 30941,
+   "max_evidence_tokens": 28880,
+   "split_table_groups": [
+    "G07.2",
+    "G07.3"
+   ]
+  },
+  "prefix8k_reference": {
+   "anchored_points": 32,
+   "of": 43,
+   "fully_anchored_questions": 2,
+   "mean_passages": 28.6,
+   "max_passage_tokens": 7981,
+   "p90_request_tokens": 36911,
+   "max_request_tokens": 37199,
+   "max_evidence_tokens": 35231,
+   "split_table_groups": [
+    "G07.2",
+    "G07.3"
+   ]
+  }
+ },
+ "multiagent_route_initial_packet": {
+  "top8": {
+   "anchored_points": 23,
+   "of": 43,
+   "fully_anchored_questions": 1,
+   "mean_passages": 8.0,
+   "max_passage_tokens": 2489,
+   "p90_request_tokens": 11696,
+   "max_request_tokens": 12175,
+   "max_evidence_tokens": 10557,
+   "split_table_groups": [
+    "G07.2"
+   ]
+  },
+  "top16": {
+   "anchored_points": 27,
+   "of": 43,
+   "fully_anchored_questions": 1,
+   "mean_passages": 16.0,
+   "max_passage_tokens": 4995,
+   "p90_request_tokens": 21407,
+   "max_request_tokens": 21976,
+   "max_evidence_tokens": 20225,
+   "split_table_groups": [
+    "G07.2"
+   ]
+  },
+  "skipfit6k": {
+   "anchored_points": 29,
+   "of": 43,
+   "fully_anchored_questions": 1,
+   "mean_passages": 22.7,
+   "max_passage_tokens": 5991,
+   "p90_request_tokens": 28522,
+   "max_request_tokens": 30941,
+   "max_evidence_tokens": 28880,
+   "split_table_groups": [
+    "G07.2",
+    "G07.3"
+   ]
+  },
+  "prefix8k_reference": {
+   "anchored_points": 32,
+   "of": 43,
+   "fully_anchored_questions": 2,
+   "mean_passages": 28.6,
+   "max_passage_tokens": 7981,
+   "p90_request_tokens": 36911,
+   "max_request_tokens": 37199,
+   "max_evidence_tokens": 35231,
+   "split_table_groups": [
+    "G07.2",
+    "G07.3"
+   ]
+  }
+ },
+ "rule_inputs": {
+  "skipfit_minus_top16_points": 2,
+  "skipfit_within_request_caps": true,
+  "skipfit_new_split_groups": [],
+  "skipfit_splits_not_kept_whole_by_top16": [
+   "G07.3"
+  ]
+ },
+ "selected": "skipfit6k",
+ "per_question": {
+  "baseline": {
+   "G01": {
+    "top8": {
+     "points": [
+      "G01.1",
+      "G01.2",
+      "G01.4"
+     ],
+     "n_points": 3,
+     "of": 4,
+     "passages": 8,
+     "passage_tokens": 2187,
+     "split_table_groups": [],
+     "evidence_tokens": 9255,
+     "request_tokens": 10877
+    },
+    "top16": {
+     "points": [
+      "G01.1",
+      "G01.2",
+      "G01.4"
+     ],
+     "n_points": 3,
+     "of": 4,
+     "passages": 16,
+     "passage_tokens": 4306,
+     "split_table_groups": [],
+     "evidence_tokens": 18879,
+     "request_tokens": 20618
+    },
+    "skipfit6k": {
+     "points": [
+      "G01.1",
+      "G01.2",
+      "G01.4"
+     ],
+     "n_points": 3,
+     "of": 4,
+     "passages": 22,
+     "passage_tokens": 5906,
+     "split_table_groups": [],
+     "evidence_tokens": 26471,
+     "request_tokens": 28311
+    },
+    "prefix8k_reference": {
+     "points": [
+      "G01.1",
+      "G01.2",
+      "G01.4"
+     ],
+     "n_points": 3,
+     "of": 4,
+     "passages": 29,
+     "passage_tokens": 7777,
+     "split_table_groups": [],
+     "evidence_tokens": 35231,
+     "request_tokens": 37199
+    }
+   },
+   "G02": {
+    "top8": {
+     "points": [
+      "G02.1",
+      "G02.2",
+      "G02.3",
+      "G02.4"
+     ],
+     "n_points": 4,
+     "of": 4,
+     "passages": 8,
+     "passage_tokens": 1411,
+     "split_table_groups": [],
+     "evidence_tokens": 7859,
+     "request_tokens": 9509
+    },
+    "top16": {
+     "points": [
+      "G02.1",
+      "G02.2",
+      "G02.3",
+      "G02.4"
+     ],
+     "n_points": 4,
+     "of": 4,
+     "passages": 16,
+     "passage_tokens": 2769,
+     "split_table_groups": [],
+     "evidence_tokens": 15681,
+     "request_tokens": 17486
+    },
+    "skipfit6k": {
+     "points": [
+      "G02.1",
+      "G02.2",
+      "G02.3",
+      "G02.4"
+     ],
+     "n_points": 4,
+     "of": 4,
+     "passages": 30,
+     "passage_tokens": 5024,
+     "split_table_groups": [],
+     "evidence_tokens": 28880,
+     "request_tokens": 30941
+    },
+    "prefix8k_reference": {
+     "points": [
+      "G02.1",
+      "G02.2",
+      "G02.3",
+      "G02.4"
+     ],
+     "n_points": 4,
+     "of": 4,
+     "passages": 30,
+     "passage_tokens": 5024,
+     "split_table_groups": [],
+     "evidence_tokens": 28880,
+     "request_tokens": 30941
+    }
+   },
+   "G03": {
+    "top8": {
+     "points": [
+      "G03.1",
+      "G03.2",
+      "G03.3"
+     ],
+     "n_points": 3,
+     "of": 5,
+     "passages": 8,
+     "passage_tokens": 2062,
+     "split_table_groups": [],
+     "evidence_tokens": 8735,
+     "request_tokens": 10361
+    },
+    "top16": {
+     "points": [
+      "G03.1",
+      "G03.2",
+      "G03.3",
+      "G03.4"
+     ],
+     "n_points": 4,
+     "of": 5,
+     "passages": 16,
+     "passage_tokens": 4032,
+     "split_table_groups": [],
+     "evidence_tokens": 17065,
+     "request_tokens": 18834
+    },
+    "skipfit6k": {
+     "points": [
+      "G03.1",
+      "G03.2",
+      "G03.3",
+      "G03.4"
+     ],
+     "n_points": 4,
+     "of": 5,
+     "passages": 25,
+     "passage_tokens": 5941,
+     "split_table_groups": [],
+     "evidence_tokens": 26440,
+     "request_tokens": 28392
+    },
+    "prefix8k_reference": {
+     "points": [
+      "G03.1",
+      "G03.2",
+      "G03.3",
+      "G03.4"
+     ],
+     "n_points": 4,
+     "of": 5,
+     "passages": 30,
+     "passage_tokens": 7653,
+     "split_table_groups": [],
+     "evidence_tokens": 32310,
+     "request_tokens": 34334
+    }
+   },
+   "G04": {
+    "top8": {
+     "points": [
+      "G04.1",
+      "G04.3"
+     ],
+     "n_points": 2,
+     "of": 5,
+     "passages": 8,
+     "passage_tokens": 2330,
+     "split_table_groups": [],
+     "evidence_tokens": 10062,
+     "request_tokens": 11696
+    },
+    "top16": {
+     "points": [
+      "G04.1",
+      "G04.2",
+      "G04.3"
+     ],
+     "n_points": 3,
+     "of": 5,
+     "passages": 16,
+     "passage_tokens": 4995,
+     "split_table_groups": [],
+     "evidence_tokens": 20225,
+     "request_tokens": 21976
+    },
+    "skipfit6k": {
+     "points": [
+      "G04.1",
+      "G04.2",
+      "G04.3"
+     ],
+     "n_points": 3,
+     "of": 5,
+     "passages": 20,
+     "passage_tokens": 5882,
+     "split_table_groups": [],
+     "evidence_tokens": 24184,
+     "request_tokens": 26006
+    },
+    "prefix8k_reference": {
+     "points": [
+      "G04.1",
+      "G04.2",
+      "G04.3"
+     ],
+     "n_points": 3,
+     "of": 5,
+     "passages": 25,
+     "passage_tokens": 7822,
+     "split_table_groups": [],
+     "evidence_tokens": 29769,
+     "request_tokens": 31665
+    }
+   },
+   "G05": {
+    "top8": {
+     "points": [
+      "G05.2",
+      "G05.3"
+     ],
+     "n_points": 2,
+     "of": 5,
+     "passages": 8,
+     "passage_tokens": 1951,
+     "split_table_groups": [],
+     "evidence_tokens": 8752,
+     "request_tokens": 10354
+    },
+    "top16": {
+     "points": [
+      "G05.2",
+      "G05.3",
+      "G05.5"
+     ],
+     "n_points": 3,
+     "of": 5,
+     "passages": 16,
+     "passage_tokens": 4279,
+     "split_table_groups": [],
+     "evidence_tokens": 18810,
+     "request_tokens": 20529
+    },
+    "skipfit6k": {
+     "points": [
+      "G05.2",
+      "G05.3",
+      "G05.5"
+     ],
+     "n_points": 3,
+     "of": 5,
+     "passages": 21,
+     "passage_tokens": 5728,
+     "split_table_groups": [],
+     "evidence_tokens": 24809,
+     "request_tokens": 26601
+    },
+    "prefix8k_reference": {
+     "points": [
+      "G05.1",
+      "G05.2",
+      "G05.3",
+      "G05.5"
+     ],
+     "n_points": 4,
+     "of": 5,
+     "passages": 27,
+     "passage_tokens": 7694,
+     "split_table_groups": [],
+     "evidence_tokens": 33184,
+     "request_tokens": 35064
+    }
+   },
+   "G06": {
+    "top8": {
+     "points": [
+      "G06.2",
+      "G06.3"
+     ],
+     "n_points": 2,
+     "of": 4,
+     "passages": 8,
+     "passage_tokens": 2209,
+     "split_table_groups": [],
+     "evidence_tokens": 9107,
+     "request_tokens": 10721
+    },
+    "top16": {
+     "points": [
+      "G06.2",
+      "G06.3"
+     ],
+     "n_points": 2,
+     "of": 4,
+     "passages": 16,
+     "passage_tokens": 4322,
+     "split_table_groups": [],
+     "evidence_tokens": 18637,
+     "request_tokens": 20368
+    },
+    "skipfit6k": {
+     "points": [
+      "G06.2",
+      "G06.3"
+     ],
+     "n_points": 2,
+     "of": 4,
+     "passages": 22,
+     "passage_tokens": 5991,
+     "split_table_groups": [],
+     "evidence_tokens": 26015,
+     "request_tokens": 27847
+    },
+    "prefix8k_reference": {
+     "points": [
+      "G06.1",
+      "G06.2",
+      "G06.3",
+      "G06.4"
+     ],
+     "n_points": 4,
+     "of": 4,
+     "passages": 30,
+     "passage_tokens": 7981,
+     "split_table_groups": [],
+     "evidence_tokens": 34923,
+     "request_tokens": 36911
+    }
+   },
+   "G07": {
+    "top8": {
+     "points": [
+      "G07.1",
+      "G07.4"
+     ],
+     "n_points": 2,
+     "of": 4,
+     "passages": 8,
+     "passage_tokens": 2334,
+     "split_table_groups": [
+      "G07.2"
+     ],
+     "evidence_tokens": 9129,
+     "request_tokens": 10736
+    },
+    "top16": {
+     "points": [
+      "G07.1",
+      "G07.4"
+     ],
+     "n_points": 2,
+     "of": 4,
+     "passages": 16,
+     "passage_tokens": 4517,
+     "split_table_groups": [
+      "G07.2"
+     ],
+     "evidence_tokens": 18301,
+     "request_tokens": 20025
+    },
+    "skipfit6k": {
+     "points": [
+      "G07.1",
+      "G07.4"
+     ],
+     "n_points": 2,
+     "of": 4,
+     "passages": 23,
+     "passage_tokens": 5953,
+     "split_table_groups": [
+      "G07.2",
+      "G07.3"
+     ],
+     "evidence_tokens": 24913,
+     "request_tokens": 26751
+    },
+    "prefix8k_reference": {
+     "points": [
+      "G07.1",
+      "G07.4"
+     ],
+     "n_points": 2,
+     "of": 4,
+     "passages": 30,
+     "passage_tokens": 7627,
+     "split_table_groups": [
+      "G07.2",
+      "G07.3"
+     ],
+     "evidence_tokens": 31846,
+     "request_tokens": 33825
+    }
+   },
+   "G08": {
+    "top8": {
+     "points": [
+      "G08.1",
+      "G08.2",
+      "G08.3"
+     ],
+     "n_points": 3,
+     "of": 5,
+     "passages": 8,
+     "passage_tokens": 2286,
+     "split_table_groups": [],
+     "evidence_tokens": 9599,
+     "request_tokens": 11228
+    },
+    "top16": {
+     "points": [
+      "G08.1",
+      "G08.2",
+      "G08.3",
+      "G08.5"
+     ],
+     "n_points": 4,
+     "of": 5,
+     "passages": 16,
+     "passage_tokens": 4856,
+     "split_table_groups": [],
+     "evidence_tokens": 18772,
+     "request_tokens": 20544
+    },
+    "skipfit6k": {
+     "points": [
+      "G08.1",
+      "G08.2",
+      "G08.3",
+      "G08.5"
+     ],
+     "n_points": 4,
+     "of": 5,
+     "passages": 20,
+     "passage_tokens": 5946,
+     "split_table_groups": [],
+     "evidence_tokens": 23310,
+     "request_tokens": 25166
+    },
+    "prefix8k_reference": {
+     "points": [
+      "G08.1",
+      "G08.2",
+      "G08.3",
+      "G08.5"
+     ],
+     "n_points": 4,
+     "of": 5,
+     "passages": 25,
+     "passage_tokens": 7962,
+     "split_table_groups": [],
+     "evidence_tokens": 30266,
+     "request_tokens": 32208
+    }
+   },
+   "G09": {
+    "top8": {
+     "points": [],
+     "n_points": 0,
+     "of": 3,
+     "passages": 8,
+     "passage_tokens": 2466,
+     "split_table_groups": [],
+     "evidence_tokens": 10557,
+     "request_tokens": 12175
+    },
+    "top16": {
+     "points": [],
+     "n_points": 0,
+     "of": 3,
+     "passages": 16,
+     "passage_tokens": 4477,
+     "split_table_groups": [],
+     "evidence_tokens": 19646,
+     "request_tokens": 21407
+    },
+    "skipfit6k": {
+     "points": [
+      "G09.1",
+      "G09.3"
+     ],
+     "n_points": 2,
+     "of": 3,
+     "passages": 24,
+     "passage_tokens": 5949,
+     "split_table_groups": [],
+     "evidence_tokens": 26619,
+     "request_tokens": 28522
+    },
+    "prefix8k_reference": {
+     "points": [
+      "G09.1",
+      "G09.3"
+     ],
+     "n_points": 2,
+     "of": 3,
+     "passages": 30,
+     "passage_tokens": 7324,
+     "split_table_groups": [],
+     "evidence_tokens": 33132,
+     "request_tokens": 35162
+    }
+   },
+   "G10": {
+    "top8": {
+     "points": [
+      "G10.1",
+      "G10.4"
+     ],
+     "n_points": 2,
+     "of": 4,
+     "passages": 8,
+     "passage_tokens": 2489,
+     "split_table_groups": [],
+     "evidence_tokens": 9386,
+     "request_tokens": 11015
+    },
+    "top16": {
+     "points": [
+      "G10.1",
+      "G10.4"
+     ],
+     "n_points": 2,
+     "of": 4,
+     "passages": 16,
+     "passage_tokens": 4664,
+     "split_table_groups": [],
+     "evidence_tokens": 19042,
+     "request_tokens": 20789
+    },
+    "skipfit6k": {
+     "points": [
+      "G10.1",
+      "G10.4"
+     ],
+     "n_points": 2,
+     "of": 4,
+     "passages": 20,
+     "passage_tokens": 5980,
+     "split_table_groups": [],
+     "evidence_tokens": 24421,
+     "request_tokens": 26226
+    },
+    "prefix8k_reference": {
+     "points": [
+      "G10.1",
+      "G10.4"
+     ],
+     "n_points": 2,
+     "of": 4,
+     "passages": 30,
+     "passage_tokens": 7977,
+     "split_table_groups": [],
+     "evidence_tokens": 33729,
+     "request_tokens": 35706
+    }
+   }
+  },
+  "multiagent": {
+   "G01": {
+    "top8": {
+     "points": [
+      "G01.1",
+      "G01.2",
+      "G01.4"
+     ],
+     "n_points": 3,
+     "of": 4,
+     "passages": 8,
+     "passage_tokens": 2187,
+     "split_table_groups": [],
+     "evidence_tokens": 9255,
+     "request_tokens": 10877
+    },
+    "top16": {
+     "points": [
+      "G01.1",
+      "G01.2",
+      "G01.4"
+     ],
+     "n_points": 3,
+     "of": 4,
+     "passages": 16,
+     "passage_tokens": 4306,
+     "split_table_groups": [],
+     "evidence_tokens": 18879,
+     "request_tokens": 20618
+    },
+    "skipfit6k": {
+     "points": [
+      "G01.1",
+      "G01.2",
+      "G01.4"
+     ],
+     "n_points": 3,
+     "of": 4,
+     "passages": 22,
+     "passage_tokens": 5906,
+     "split_table_groups": [],
+     "evidence_tokens": 26471,
+     "request_tokens": 28311
+    },
+    "prefix8k_reference": {
+     "points": [
+      "G01.1",
+      "G01.2",
+      "G01.4"
+     ],
+     "n_points": 3,
+     "of": 4,
+     "passages": 29,
+     "passage_tokens": 7777,
+     "split_table_groups": [],
+     "evidence_tokens": 35231,
+     "request_tokens": 37199
+    }
+   },
+   "G02": {
+    "top8": {
+     "points": [
+      "G02.1",
+      "G02.2",
+      "G02.3",
+      "G02.4"
+     ],
+     "n_points": 4,
+     "of": 4,
+     "passages": 8,
+     "passage_tokens": 1411,
+     "split_table_groups": [],
+     "evidence_tokens": 7859,
+     "request_tokens": 9509
+    },
+    "top16": {
+     "points": [
+      "G02.1",
+      "G02.2",
+      "G02.3",
+      "G02.4"
+     ],
+     "n_points": 4,
+     "of": 4,
+     "passages": 16,
+     "passage_tokens": 2769,
+     "split_table_groups": [],
+     "evidence_tokens": 15681,
+     "request_tokens": 17486
+    },
+    "skipfit6k": {
+     "points": [
+      "G02.1",
+      "G02.2",
+      "G02.3",
+      "G02.4"
+     ],
+     "n_points": 4,
+     "of": 4,
+     "passages": 30,
+     "passage_tokens": 5024,
+     "split_table_groups": [],
+     "evidence_tokens": 28880,
+     "request_tokens": 30941
+    },
+    "prefix8k_reference": {
+     "points": [
+      "G02.1",
+      "G02.2",
+      "G02.3",
+      "G02.4"
+     ],
+     "n_points": 4,
+     "of": 4,
+     "passages": 30,
+     "passage_tokens": 5024,
+     "split_table_groups": [],
+     "evidence_tokens": 28880,
+     "request_tokens": 30941
+    }
+   },
+   "G03": {
+    "top8": {
+     "points": [
+      "G03.1",
+      "G03.2",
+      "G03.3"
+     ],
+     "n_points": 3,
+     "of": 5,
+     "passages": 8,
+     "passage_tokens": 2062,
+     "split_table_groups": [],
+     "evidence_tokens": 8735,
+     "request_tokens": 10361
+    },
+    "top16": {
+     "points": [
+      "G03.1",
+      "G03.2",
+      "G03.3",
+      "G03.4"
+     ],
+     "n_points": 4,
+     "of": 5,
+     "passages": 16,
+     "passage_tokens": 4032,
+     "split_table_groups": [],
+     "evidence_tokens": 17065,
+     "request_tokens": 18834
+    },
+    "skipfit6k": {
+     "points": [
+      "G03.1",
+      "G03.2",
+      "G03.3",
+      "G03.4"
+     ],
+     "n_points": 4,
+     "of": 5,
+     "passages": 25,
+     "passage_tokens": 5941,
+     "split_table_groups": [],
+     "evidence_tokens": 26440,
+     "request_tokens": 28392
+    },
+    "prefix8k_reference": {
+     "points": [
+      "G03.1",
+      "G03.2",
+      "G03.3",
+      "G03.4"
+     ],
+     "n_points": 4,
+     "of": 5,
+     "passages": 30,
+     "passage_tokens": 7653,
+     "split_table_groups": [],
+     "evidence_tokens": 32310,
+     "request_tokens": 34334
+    }
+   },
+   "G04": {
+    "top8": {
+     "points": [
+      "G04.1",
+      "G04.3"
+     ],
+     "n_points": 2,
+     "of": 5,
+     "passages": 8,
+     "passage_tokens": 2330,
+     "split_table_groups": [],
+     "evidence_tokens": 10062,
+     "request_tokens": 11696
+    },
+    "top16": {
+     "points": [
+      "G04.1",
+      "G04.2",
+      "G04.3"
+     ],
+     "n_points": 3,
+     "of": 5,
+     "passages": 16,
+     "passage_tokens": 4995,
+     "split_table_groups": [],
+     "evidence_tokens": 20225,
+     "request_tokens": 21976
+    },
+    "skipfit6k": {
+     "points": [
+      "G04.1",
+      "G04.2",
+      "G04.3"
+     ],
+     "n_points": 3,
+     "of": 5,
+     "passages": 20,
+     "passage_tokens": 5882,
+     "split_table_groups": [],
+     "evidence_tokens": 24184,
+     "request_tokens": 26006
+    },
+    "prefix8k_reference": {
+     "points": [
+      "G04.1",
+      "G04.2",
+      "G04.3"
+     ],
+     "n_points": 3,
+     "of": 5,
+     "passages": 25,
+     "passage_tokens": 7822,
+     "split_table_groups": [],
+     "evidence_tokens": 29769,
+     "request_tokens": 31665
+    }
+   },
+   "G05": {
+    "top8": {
+     "points": [
+      "G05.2",
+      "G05.3"
+     ],
+     "n_points": 2,
+     "of": 5,
+     "passages": 8,
+     "passage_tokens": 1951,
+     "split_table_groups": [],
+     "evidence_tokens": 8752,
+     "request_tokens": 10354
+    },
+    "top16": {
+     "points": [
+      "G05.2",
+      "G05.3",
+      "G05.5"
+     ],
+     "n_points": 3,
+     "of": 5,
+     "passages": 16,
+     "passage_tokens": 4279,
+     "split_table_groups": [],
+     "evidence_tokens": 18810,
+     "request_tokens": 20529
+    },
+    "skipfit6k": {
+     "points": [
+      "G05.2",
+      "G05.3",
+      "G05.5"
+     ],
+     "n_points": 3,
+     "of": 5,
+     "passages": 21,
+     "passage_tokens": 5728,
+     "split_table_groups": [],
+     "evidence_tokens": 24809,
+     "request_tokens": 26601
+    },
+    "prefix8k_reference": {
+     "points": [
+      "G05.1",
+      "G05.2",
+      "G05.3",
+      "G05.5"
+     ],
+     "n_points": 4,
+     "of": 5,
+     "passages": 27,
+     "passage_tokens": 7694,
+     "split_table_groups": [],
+     "evidence_tokens": 33184,
+     "request_tokens": 35064
+    }
+   },
+   "G06": {
+    "top8": {
+     "points": [
+      "G06.2",
+      "G06.3"
+     ],
+     "n_points": 2,
+     "of": 4,
+     "passages": 8,
+     "passage_tokens": 2209,
+     "split_table_groups": [],
+     "evidence_tokens": 9107,
+     "request_tokens": 10721
+    },
+    "top16": {
+     "points": [
+      "G06.2",
+      "G06.3"
+     ],
+     "n_points": 2,
+     "of": 4,
+     "passages": 16,
+     "passage_tokens": 4322,
+     "split_table_groups": [],
+     "evidence_tokens": 18637,
+     "request_tokens": 20368
+    },
+    "skipfit6k": {
+     "points": [
+      "G06.2",
+      "G06.3"
+     ],
+     "n_points": 2,
+     "of": 4,
+     "passages": 22,
+     "passage_tokens": 5991,
+     "split_table_groups": [],
+     "evidence_tokens": 26015,
+     "request_tokens": 27847
+    },
+    "prefix8k_reference": {
+     "points": [
+      "G06.1",
+      "G06.2",
+      "G06.3",
+      "G06.4"
+     ],
+     "n_points": 4,
+     "of": 4,
+     "passages": 30,
+     "passage_tokens": 7981,
+     "split_table_groups": [],
+     "evidence_tokens": 34923,
+     "request_tokens": 36911
+    }
+   },
+   "G07": {
+    "top8": {
+     "points": [
+      "G07.1",
+      "G07.4"
+     ],
+     "n_points": 2,
+     "of": 4,
+     "passages": 8,
+     "passage_tokens": 2334,
+     "split_table_groups": [
+      "G07.2"
+     ],
+     "evidence_tokens": 9129,
+     "request_tokens": 10736
+    },
+    "top16": {
+     "points": [
+      "G07.1",
+      "G07.4"
+     ],
+     "n_points": 2,
+     "of": 4,
+     "passages": 16,
+     "passage_tokens": 4517,
+     "split_table_groups": [
+      "G07.2"
+     ],
+     "evidence_tokens": 18301,
+     "request_tokens": 20025
+    },
+    "skipfit6k": {
+     "points": [
+      "G07.1",
+      "G07.4"
+     ],
+     "n_points": 2,
+     "of": 4,
+     "passages": 23,
+     "passage_tokens": 5953,
+     "split_table_groups": [
+      "G07.2",
+      "G07.3"
+     ],
+     "evidence_tokens": 24913,
+     "request_tokens": 26751
+    },
+    "prefix8k_reference": {
+     "points": [
+      "G07.1",
+      "G07.4"
+     ],
+     "n_points": 2,
+     "of": 4,
+     "passages": 30,
+     "passage_tokens": 7627,
+     "split_table_groups": [
+      "G07.2",
+      "G07.3"
+     ],
+     "evidence_tokens": 31846,
+     "request_tokens": 33825
+    }
+   },
+   "G08": {
+    "top8": {
+     "points": [
+      "G08.1",
+      "G08.2",
+      "G08.3"
+     ],
+     "n_points": 3,
+     "of": 5,
+     "passages": 8,
+     "passage_tokens": 2286,
+     "split_table_groups": [],
+     "evidence_tokens": 9599,
+     "request_tokens": 11228
+    },
+    "top16": {
+     "points": [
+      "G08.1",
+      "G08.2",
+      "G08.3",
+      "G08.5"
+     ],
+     "n_points": 4,
+     "of": 5,
+     "passages": 16,
+     "passage_tokens": 4856,
+     "split_table_groups": [],
+     "evidence_tokens": 18772,
+     "request_tokens": 20544
+    },
+    "skipfit6k": {
+     "points": [
+      "G08.1",
+      "G08.2",
+      "G08.3",
+      "G08.5"
+     ],
+     "n_points": 4,
+     "of": 5,
+     "passages": 20,
+     "passage_tokens": 5946,
+     "split_table_groups": [],
+     "evidence_tokens": 23310,
+     "request_tokens": 25166
+    },
+    "prefix8k_reference": {
+     "points": [
+      "G08.1",
+      "G08.2",
+      "G08.3",
+      "G08.5"
+     ],
+     "n_points": 4,
+     "of": 5,
+     "passages": 25,
+     "passage_tokens": 7962,
+     "split_table_groups": [],
+     "evidence_tokens": 30266,
+     "request_tokens": 32208
+    }
+   },
+   "G09": {
+    "top8": {
+     "points": [],
+     "n_points": 0,
+     "of": 3,
+     "passages": 8,
+     "passage_tokens": 2466,
+     "split_table_groups": [],
+     "evidence_tokens": 10557,
+     "request_tokens": 12175
+    },
+    "top16": {
+     "points": [],
+     "n_points": 0,
+     "of": 3,
+     "passages": 16,
+     "passage_tokens": 4477,
+     "split_table_groups": [],
+     "evidence_tokens": 19646,
+     "request_tokens": 21407
+    },
+    "skipfit6k": {
+     "points": [
+      "G09.1",
+      "G09.3"
+     ],
+     "n_points": 2,
+     "of": 3,
+     "passages": 24,
+     "passage_tokens": 5949,
+     "split_table_groups": [],
+     "evidence_tokens": 26619,
+     "request_tokens": 28522
+    },
+    "prefix8k_reference": {
+     "points": [
+      "G09.1",
+      "G09.3"
+     ],
+     "n_points": 2,
+     "of": 3,
+     "passages": 30,
+     "passage_tokens": 7324,
+     "split_table_groups": [],
+     "evidence_tokens": 33132,
+     "request_tokens": 35162
+    }
+   },
+   "G10": {
+    "top8": {
+     "points": [
+      "G10.1",
+      "G10.4"
+     ],
+     "n_points": 2,
+     "of": 4,
+     "passages": 8,
+     "passage_tokens": 2489,
+     "split_table_groups": [],
+     "evidence_tokens": 9386,
+     "request_tokens": 11015
+    },
+    "top16": {
+     "points": [
+      "G10.1",
+      "G10.4"
+     ],
+     "n_points": 2,
+     "of": 4,
+     "passages": 16,
+     "passage_tokens": 4664,
+     "split_table_groups": [],
+     "evidence_tokens": 19042,
+     "request_tokens": 20789
+    },
+    "skipfit6k": {
+     "points": [
+      "G10.1",
+      "G10.4"
+     ],
+     "n_points": 2,
+     "of": 4,
+     "passages": 20,
+     "passage_tokens": 5980,
+     "split_table_groups": [],
+     "evidence_tokens": 24421,
+     "request_tokens": 26226
+    },
+    "prefix8k_reference": {
+     "points": [
+      "G10.1",
+      "G10.4"
+     ],
+     "n_points": 2,
+     "of": 4,
+     "passages": 30,
+     "passage_tokens": 7977,
+     "split_table_groups": [],
+     "evidence_tokens": 33729,
+     "request_tokens": 35706
+    }
+   }
+  }
+ },
+ "correction": "First computation flagged G07.3 as a new split and selected top16. The frozen rule only disqualifies a split of a pair top-16 keeps whole; top-16 contains neither G07.3 row. Code corrected to the rule text; decision recomputed from the saved packets (no retrieval rerun)."
+}

@@ -1,0 +1,2020 @@
+{
+ "mode": "standard",
+ "question": "A hospital group wants an on-device medical assistant so patient data never leaves the device. What does MedPsy offer, how does its accuracy compare with much larger medical models, what does quantization cost in accuracy and size, and is it ready to support clinical decisions in the group's hospitals?",
+ "summary": {
+  "status": "ok",
+  "claims": [
+   {
+    "text": "MedPsy offers two text-only medical models, MedPsy -1.7B and MedPsy -4B, built on Qwen3 backbones for private on-device use.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02011v2_paragraph_22cd5730a5eed88b_0",
+      "quote": "length-aware alignment and quantization reduce generation and memory costs for private on-device use."
+     },
+     {
+      "chunk_id": "2611.02011v2_paragraph_22cd5730a5eed88b_0",
+      "quote": "family of two text-only medical models, MedPsy -1.7B and MedPsy -4B"
+     },
+     {
+      "chunk_id": "2611.02011v2_paragraph_22cd5730a5eed88b_0",
+      "quote": "on top of Qwen3 backbones"
+     }
+    ],
+    "chunk_ids": [
+     "2611.02011v2_paragraph_22cd5730a5eed88b_0"
+    ],
+    "draft_index": 0,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The quotes establish both text-only models, their Qwen3 backbones and intended private on-device use."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "On a OnePlus 13, fully local execution used 2.22 GB peak RAM for MedPsy -1.7B and 3.98 GB for MedPsy -4B.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02011v2_c0020",
+      "quote": "Measurements on a OnePlus 13 confirm fully local execution at 2.22 GB peak RAM for MedPsy -1.7B and 3.98 GB for MedPsy -4B;"
+     }
+    ],
+    "chunk_ids": [
+     "2611.02011v2_c0020"
+    ],
+    "draft_index": 1,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "Device, local execution and both peak RAM measurements are explicitly stated."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "MedPsy -1.7B reached 62.62 on the closed-ended average, beating MedGemma-1.5-4B-it by +11.42 and matching Qwen3-4B-Thinking-2507 at less than half its size.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02011v2_c0014",
+      "quote": "Average is over seven closed-ended benchmarks;"
+     },
+     {
+      "chunk_id": "2611.02011v2_c0014",
+      "quote": "MedPsy -1.7B reaches 62.62, beating MedGemma-1.5-4B-it by +11.42 and matching Qwen3-4B-Thinking-2507 at less than half its size;"
+     }
+    ],
+    "chunk_ids": [
+     "2611.02011v2_c0014"
+    ],
+    "draft_index": 3,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The quoted passage states the score, improvement, comparator and relative size."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "On HealthBench Standard and Hard, MedPsy -4B ranked first and MedPsy -1.7B second across all three model graders, both surpassing MedGemma-27B-text-it. These evaluations score realistic open-ended clinical responses against physician-authored rubrics.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02011v2_c0015",
+      "quote": "HealthBench complements closed-ended accuracy by evaluating responses to realistic, open-ended clinical scenarios against fixed, conversation-specific physician-authored rubrics."
+     },
+     {
+      "chunk_id": "2611.02011v2_c0015",
+      "quote": "MedPsy -4B ranks first on every (grader, split) cell of Tab. 2 , and MedPsy -1.7B is second-best across the board, surpassing MedGemma-27B-text-it on both Standard and Hard under all three graders."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02011v2_c0015"
+    ],
+    "draft_index": 4,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The rankings are bounded to the reported model comparison, splits and graders; rubric-based evaluation is explicit."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "On LongHealth clinical documents of 5,090–6,754 words, MedPsy -4B scored 0.855/0.875 on Tasks 1/2 versus MedGemma-27B-text-it's 0.828/0.802.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02011v2_c0014",
+      "quote": "on LongHealth [ 36 ] (5,090–6,754-word clinical documents), MedPsy -4B scores 0.855/0.875 on Tasks 1/2, above MedGemma-27B-text-it (0.828/0.802)"
+     }
+    ],
+    "chunk_ids": [
+     "2611.02011v2_c0014"
+    ],
+    "draft_index": 5,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "Document lengths, task ordering and all four comparison scores match the quote."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "The preferred deployment format, Q4_K_M, reduces disk footprint by 68–69% at both sizes while keeping aggregate score within one point of BF16. The aggregate combines HealthBench Overall and the closed-ended average; it is not a hospital clinical-outcome measure.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02011v2_c0018",
+      "quote": "This sweep identifies Q4_K_M as the preferred deployment configuration, offering the strongest observed balance between footprint reduction and full-suite score retention at both model sizes."
+     },
+     {
+      "chunk_id": "2611.02011v2_c0018",
+      "quote": "\\Delta Score is the absolute change in (\\text{HB Overall}+\\text{CE Avg})/2 ."
+     },
+     {
+      "chunk_id": "2611.02011v2_c0018",
+      "quote": "At Q4_K_M , both model sizes reduce disk footprint by 68–69% while keeping aggregate score within one point of BF16"
+     }
+    ],
+    "chunk_ids": [
+     "2611.02011v2_c0018"
+    ],
+    "draft_index": 6,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The preferred format, footprint reduction and score tolerance are explicit. The defined aggregate is a benchmark metric."
+     },
+     "number_grounding": "uncertain",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "At Q4_K_M, MedPsy -4B occupies 2.6 GB with a 0.81-point aggregate-score change.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02011v2_c0018",
+      "quote": "Q4_K_M accuracy and footprint."
+     },
+     {
+      "chunk_id": "2611.02011v2_c0018",
+      "quote": "MedPsy -4B reaches 2.6 GB with a 0.81-point aggregate-score change"
+     }
+    ],
+    "chunk_ids": [
+     "2611.02011v2_c0018"
+    ],
+    "draft_index": 7,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The Q4_K_M heading and model-specific quote establish size and aggregate-score change."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "At Q4_K_M, MedPsy -1.7B occupies 1.2 GB with a 0.73-point aggregate-score change.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02011v2_c0018",
+      "quote": "Q4_K_M accuracy and footprint."
+     },
+     {
+      "chunk_id": "2611.02011v2_c0018",
+      "quote": "MedPsy -1.7B reaches 1.2 GB with a 0.73-point change."
+     },
+     {
+      "chunk_id": "2611.02011v2_c0018",
+      "quote": "MedPsy -4B reaches 2.6 GB with a 0.81-point aggregate-score change, while MedPsy -1.7B reaches 1.2 GB with a 0.73-point change."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02011v2_c0018"
+    ],
+    "draft_index": 8,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "Added sentence context explicitly identifies the 1.7B change as an aggregate-score change."
+     },
+     "number_grounding": "uncertain",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "Q8_0 is reported as near-lossless at both sizes: aggregate-score changes are - 0.15 and 0.00 at roughly half the footprint.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02011v2_c0019",
+      "quote": "Q8_0 is near-lossless at both sizes ( - 0.15 and 0.00 aggregate-score change at roughly half the footprint)."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02011v2_c0019"
+    ],
+    "draft_index": 9,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The claim preserves the reported changes without inventing their model ordering."
+     },
+     "number_grounding": "uncertain",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "For MedPsy at 4B, IQ4_NL and IQ4_XS lose 1.0–1.1 points; IQ3_M occupies 2.0 GB and loses 1.50 while matching the BF16 HealthBench-Hard score of 58.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02011v2_c0019",
+      "quote": "The I-quants trade precision for footprint gracefully at 4B: IQ4_NL and IQ4_XS lose 1.0–1.1 points, and IQ3_M (2.0 GB) loses only 1.50 while exactly matching the BF16 HealthBench-Hard score of 58."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02011v2_c0019"
+    ],
+    "draft_index": 10,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "All formats, losses, size and the BF16 HealthBench-Hard comparison are explicitly stated for 4B."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "IQ3_XXS produces aggregate-score changes of - 5.56 at 4B and - 12.46 at 1.7B. The paper does not recommend any sub-4-bit MedPsy -1.7B variant for medical use.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02011v2_c0019",
+      "quote": "Collapse occurs only at IQ3_XXS ( - 5.56 at 4B, - 12.46 at 1.7B)"
+     },
+     {
+      "chunk_id": "2611.02011v2_c0019",
+      "quote": "We therefore do not recommend any sub-4-bit variant of MedPsy -1.7B for medical use."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02011v2_c0019"
+    ],
+    "draft_index": 11,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The quantization context supports aggregate changes; all flags misread explicit model sizes or conditions."
+     },
+     "number_grounding": "contradicted",
+     "flags_resolved": [
+      {
+       "number": "5.56",
+       "quote": "Collapse occurs only at IQ3_XXS ( - 5.56 at 4B, - 12.46 at 1.7B)",
+       "reason": "The quote explicitly assigns -5.56 to 4B at IQ3_XXS."
+      },
+      {
+       "number": "4",
+       "quote": "We therefore do not recommend any sub-4-bit variant of MedPsy -1.7B for medical use.",
+       "reason": "The quote explicitly states the sub-4-bit condition."
+      },
+      {
+       "number": "1.7",
+       "quote": "We therefore do not recommend any sub-4-bit variant of MedPsy -1.7B for medical use.",
+       "reason": "1.7B is the model size, not a signed change; the recommendation's negation is preserved."
+      }
+     ]
+    }
+   },
+   {
+    "text": "At matched Q4_K_M quantization on the Apple M5 Pro, MedPsy -4B generated 73% fewer tokens than its Qwen3 backbone, with 74.7% lower median end-to-end latency and estimated energy per answer, using 4.29 GB peak RAM. The measurements covered 30 prompts: 20 MedQA and 10 MedXpertQA-Text.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02011v2_c0019",
+      "quote": "At matched Q4_K_M quantization, MedPsy -4B and its Qwen3 backbone have comparable per-token decode rates, while MedPsy -4B generates 73% fewer tokens per answer. This translates to 74.7% lower median end-to-end latency and estimated energy per answer on the Apple M5 Pro, with 4.29 GB peak RAM"
+     },
+     {
+      "chunk_id": "2611.02011v2_c0018",
+      "quote": "Apple M5 Pro measurements at matched Q4_K_M quantization over 30 prompts (20 MedQA and 10 MedXpertQA-Text); time per answer is the median, and energy per answer is estimated as sustained SoC power (26.5 W) times median wall time."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02011v2_c0019",
+     "2611.02011v2_c0018"
+    ],
+    "draft_index": 12,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The quotes establish the matched quantization, comparator, hardware, reductions, RAM and prompt sample."
+     },
+     "number_grounding": "uncertain",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "The paper warns that MedPsy can produce confident but incorrect medical statements and should not be used for autonomous diagnosis or treatment. Real clinical decision support requires additional safety review, IRB-grade evaluation, prospective testing, and regulatory clearance.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02011v2_c0021",
+      "quote": "Like all LLMs, the models can produce confident but incorrect medical statements; they should not be used for autonomous diagnosis or treatment. Real clinical decision support would require additional safety review, IRB-grade evaluation, prospective testing, and regulatory clearance."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02011v2_c0021"
+    ],
+    "draft_index": 13,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The safety warning and every stated clinical decision support prerequisite are quoted verbatim."
+     },
+     "number_grounding": "no_numbers",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "For the hospital group, these results support evaluating MedPsy as a local assistant candidate, but do not justify clinical deployment on benchmark performance alone; the paper's stated clinical validation requirements remain essential.",
+    "kind": "interpretation",
+    "support": [
+     {
+      "chunk_id": "2611.02011v2_c0020",
+      "quote": "Measurements on a OnePlus 13 confirm fully local execution"
+     },
+     {
+      "chunk_id": "2611.02011v2_c0021",
+      "quote": "Real clinical decision support would require additional safety review, IRB-grade evaluation, prospective testing, and regulatory clearance."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02011v2_c0020",
+     "2611.02011v2_c0021"
+    ],
+    "draft_index": 14,
+    "label": "Interpretation: inferred from the cited findings for this decision; not a research result."
+   }
+  ],
+  "held_claims": [
+   {
+    "draft_index": 2,
+    "kind": "finding",
+    "text": "Across seven closed-ended benchmarks, MedPsy -4B scored 70.54 versus MedGemma-27B-text-it's 69.95, a +0.59 difference at 6.75 times smaller scale.",
+    "reasons": [
+     "P5: unresolved number-attribution flag(s): 6.75 unit_mismatch"
+    ]
+   }
+  ],
+  "limitation_support": [
+   {
+    "text": "Local execution was demonstrated on a OnePlus 13; this does not establish a guarantee that the hospital group's complete application keeps all patient data on-device.",
+    "support": [
+     {
+      "chunk_id": "2611.02011v2_c0020",
+      "quote": "Measurements on a OnePlus 13 confirm fully local execution at 2.22 GB peak RAM for MedPsy -1.7B and 3.98 GB for MedPsy -4B;"
+     }
+    ],
+    "chunk_ids": [
+     "2611.02011v2_c0020"
+    ]
+   },
+   {
+    "text": "The models are text-only and their training data is predominantly English.",
+    "support": [
+     {
+      "chunk_id": "2611.02011v2_c0021",
+      "quote": "the models are text-only ; the training data is predominantly English."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02011v2_c0021"
+    ]
+   },
+   {
+    "text": "Quantization score changes measure the average of HealthBench Overall and closed-ended average scores.",
+    "support": [
+     {
+      "chunk_id": "2611.02011v2_c0018",
+      "quote": "\\Delta Score is the absolute change in (\\text{HB Overall}+\\text{CE Avg})/2 ."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02011v2_c0018"
+    ]
+   },
+   {
+    "text": "Confident medical errors remain possible. Autonomous diagnosis or treatment is discouraged, and clinical decision support requires additional safety review, IRB-grade evaluation, prospective testing and regulatory clearance.",
+    "support": [
+     {
+      "chunk_id": "2611.02011v2_c0021",
+      "quote": "Like all LLMs, the models can produce confident but incorrect medical statements; they should not be used for autonomous diagnosis or treatment. Real clinical decision support would require additional safety review, IRB-grade evaluation, prospective testing, and regulatory clearance."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02011v2_c0021"
+    ]
+   },
+   {
+    "text": "The OnePlus 13 measurements used three MedQA prompts per model and Q4_K_M GGUF builds.",
+    "support": [
+     {
+      "chunk_id": "2611.02011v2_table_daa445e9aad2caa9_1",
+      "quote": "Table 31 : OnePlus 13 local-inference measurements (three MedQA prompts per model). Both models use Q4_K_M GGUF builds with Vulkan partial offload ( -ngl 20 ) and six CPU threads."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02011v2_table_daa445e9aad2caa9_1"
+    ]
+   }
+  ],
+  "limitations": [
+   "Local execution was demonstrated on a OnePlus 13; this does not establish a guarantee that the hospital group's complete application keeps all patient data on-device.",
+   "The models are text-only and their training data is predominantly English.",
+   "Quantization score changes measure the average of HealthBench Overall and closed-ended average scores.",
+   "Confident medical errors remain possible. Autonomous diagnosis or treatment is discouraged, and clinical decision support requires additional safety review, IRB-grade evaluation, prospective testing and regulatory clearance.",
+   "The OnePlus 13 measurements used three MedQA prompts per model and Q4_K_M GGUF builds."
+  ],
+  "dropped_limitations": [],
+  "evidence_notes": [
+   "Only 2 of 7 rows of Table 5 : Final Data Mix and Source Licenses (MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment) are in the evidence, so a comparison across that table may be incomplete."
+  ],
+  "answer_scope": "partial",
+  "answer_lead": "The supplied passages do not establish that patient data never leaves the hospital group's complete application or device configuration, or establish readiness in its hospitals. Some drafted findings could not be verified against their attached quotes and are withheld.",
+  "answer_lead_check": null,
+  "support_check": "exact quotes; per-claim number recall against attached quotes; numeric_checks_v2 attribution flags (quote-anchored resolution); model review of quote entailment; not human verification",
+  "component_coverage": [
+   {
+    "component": "What does MedPsy offer?",
+    "status": "answered",
+    "basis": "reviewer-confirmed, published finding(s)",
+    "finding_draft_indices": [
+     0,
+     1,
+     12
+    ]
+   },
+   {
+    "component": "MedPsy how does its accuracy compare with much larger medical models?",
+    "status": "answered",
+    "basis": "reviewer-confirmed, published finding(s)",
+    "finding_draft_indices": [
+     3,
+     4,
+     5
+    ]
+   },
+   {
+    "component": "MedPsy what does quantization cost in accuracy and size?",
+    "status": "answered",
+    "basis": "reviewer-confirmed, published finding(s)",
+    "finding_draft_indices": [
+     6,
+     7,
+     8,
+     9,
+     10,
+     11
+    ]
+   },
+   {
+    "component": "MedPsy is it ready to support clinical decisions in the group's hospitals?",
+    "status": "answered",
+    "basis": "reviewer-confirmed, published finding(s)",
+    "finding_draft_indices": [
+     13
+    ]
+   }
+  ]
+ },
+ "evidence": [
+  {
+   "chunk_id": "2611.02011v2_c0002",
+   "arxiv_id": "2611.02011v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02011v2#S2",
+   "section": "2  related work",
+   "subsection": "",
+   "high_value": false,
+   "text": ". AlphaMed [ 22 ] releases the curated AlphaMed19K medical RL prompt set together with a binary correctness reward and a pass-at- N difficulty annotation procedure. We adopt a two-stage curriculum in the spirit of Fleming-R1 and reuse AlphaMed’s pass-at- N annotation, applied here with each model’s own size-matched SFT-2 policy as the annotator; we switch the optimiser to DAPO [ 23 ] , a GRPO variant that drops the KL anchor, uses asymmetric clip-higher, dynamically filters zero-variance rollout groups, and adds a soft overlong-response penalty. Reasoning-model test-time efficiency. Reasoning models improve difficult tasks by generating explicit intermediate computation, but long traces increase decode latency, KV-cache memory [ 24 ] , and energy use [ 25 ] , all especially costly on edge hardware. MedPsy targets this trade-off in the medical domain, improving accuracy while reducing generated tokens in compact reasoning models. Edge LLMs and quantization. Edge deployment depends jointly on compressed model footprint and generation cost: quantization governs storage and memory requirements, while response length directly affects latency and energy consumption. GGUF and llama.cpp [ 26 ] support practical quantized inference across consumer hardware. Existing medical LLM studies primarily establish BF16 benchmark accuracy. We complement this literature by jointly evaluating quantized medical accuracy and measured on-device efficiency across two model sizes (Sec. 5.6 ; App. A.12 ).",
+   "text_with_context": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment | 2  Related Work\n\n. AlphaMed [ 22 ] releases the curated AlphaMed19K medical RL prompt set together with a binary correctness reward and a pass-at- N difficulty annotation procedure. We adopt a two-stage curriculum in the spirit of Fleming-R1 and reuse AlphaMed’s pass-at- N annotation, applied here with each model’s own size-matched SFT-2 policy as the annotator; we switch the optimiser to DAPO [ 23 ] , a GRPO variant that drops the KL anchor, uses asymmetric clip-higher, dynamically filters zero-variance rollout groups, and adds a soft overlong-response penalty. Reasoning-model test-time efficiency. Reasoning models improve difficult tasks by generating explicit intermediate computation, but long traces increase decode latency, KV-cache memory [ 24 ] , and energy use [ 25 ] , all especially costly on edge hardware. MedPsy targets this trade-off in the medical domain, improving accuracy while reducing generated tokens in compact reasoning models. Edge LLMs and quantization. Edge deployment depends jointly on compressed model footprint and generation cost: quantization governs storage and memory requirements, while response length directly affects latency and energy consumption. GGUF and llama.cpp [ 26 ] support practical quantized inference across consumer hardware. Existing medical LLM studies primarily establish BF16 benchmark accuracy. We complement this literature by jointly evaluating quantized medical accuracy and measured on-device efficiency across two model sizes (Sec. 5.6 ; App. A.12 ).",
+   "title": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02011v2#S2",
+   "pdf_url": "https://arxiv.org/pdf/2611.02011v2",
+   "source_sha256": "6a7e7af853ad37c89abe2dc2be85337d961bd8ab80d67d94f03c9b5e1b68ea2c"
+  },
+  {
+   "chunk_id": "2611.02011v2_c0000",
+   "arxiv_id": "2611.02011v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02011v2#S1",
+   "section": "1  introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": "Capability per parameter: closed-ended average score vs. parameter count (log scale). MedPsy -4B matches 27B–70B medical LLMs at a fraction of the size; the dashed line connects the MedPsy pareto frontier. Scores from Tables 1 and 9 . Medical knowledge and capabilities of language models have advanced rapidly, yet their deployment remains centralized. Among open-weight medical systems, strong models such as MedGemma-27B-text-it [ 1 ] still require substantial accelerator memory for practical deployment, while proprietary medical systems such as Med-PaLM-style models and large GPT-4-based clinical assistants are typically accessed through cloud infrastructure. Both fundamentally conflict with the privacy, latency, and reliability requirements of healthcare. Patient records, symptom descriptions, and clinical notes are protected health information governed by strict regulatory regimes (HIPAA, GDPR, and equivalents). The dominant cloud paradigm requires this data to leave the device, traverse network infrastructure, and be processed remotely, creating attack surfaces, compliance burdens, and a fundamental tension between AI capability and patient privacy.",
+   "text_with_context": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment | 1  Introduction\n\nCapability per parameter: closed-ended average score vs. parameter count (log scale). MedPsy -4B matches 27B–70B medical LLMs at a fraction of the size; the dashed line connects the MedPsy pareto frontier. Scores from Tables 1 and 9 . Medical knowledge and capabilities of language models have advanced rapidly, yet their deployment remains centralized. Among open-weight medical systems, strong models such as MedGemma-27B-text-it [ 1 ] still require substantial accelerator memory for practical deployment, while proprietary medical systems such as Med-PaLM-style models and large GPT-4-based clinical assistants are typically accessed through cloud infrastructure. Both fundamentally conflict with the privacy, latency, and reliability requirements of healthcare. Patient records, symptom descriptions, and clinical notes are protected health information governed by strict regulatory regimes (HIPAA, GDPR, and equivalents). The dominant cloud paradigm requires this data to leave the device, traverse network infrastructure, and be processed remotely, creating attack surfaces, compliance burdens, and a fundamental tension between AI capability and patient privacy.",
+   "title": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02011v2#S1",
+   "pdf_url": "https://arxiv.org/pdf/2611.02011v2",
+   "source_sha256": "6a7e7af853ad37c89abe2dc2be85337d961bd8ab80d67d94f03c9b5e1b68ea2c"
+  },
+  {
+   "chunk_id": "2611.02011v2_paragraph_22cd5730a5eed88b_0",
+   "text": "For compact medical LLMs, medical capability and deployment efficiency can be optimized jointly: high-quality synthetic supervision and staged post-training build accuracy, while length-aware alignment and quantization reduce generation and memory costs for private on-device use. We test this thesis by constructing the MedPsy 1 1 In MedPsy, “Med” denotes the medical specialization, while “Psy” is the shared suffix used across our organization’s model families, inspired by psychohistory in Isaac Asimov’s fiction rather than psychology. family of two text-only medical models, MedPsy -1.7B and MedPsy -4B 2 2 Models and supporting artifacts are available at https://huggingface.co/collections/qvac/medpsy . , on top of Qwen3 backbones [ 3 ] with a four-stage post-training recipe (two Supervised Fine-Tuning (SFT) stages over a synthetic medical corpus built from public Genesis III biology/medicine seed prompts [ 4 ] and newly generated health seeds derived from FineFineWeb [ 5 ] , then two Reinforcement Learning (RL) stages with hard-sample mining inspired by Fleming-R1 [ 6 ] ), and we evaluate them across eight benchmark suites spanning clinical exams (MedQA-USMLE [ 7 ] , MedMCQA [ 8 ] ), health literacy (MMLU-Health, MMLU-Pro Health [ 9 , 10 ] ), expert reasoning (MedXpertQA [ 11 ] ), biomedical research (PubMedQA [ 12 ] ), underserved-region medicine (AfriMedQA [ 13 ] ), and real-world clinical scenarios (HealthBench and HealthBench-Hard [ 14 ] ).",
+   "arxiv_id": "2611.02011v2",
+   "title": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02011v2",
+   "html_url": "https://arxiv.org/html/2611.02011v2#S1.SS0.SSS0.Px2",
+   "source_url": "https://arxiv.org/html/2611.02011v2#S1.SS0.SSS0.Px2",
+   "page_number": null,
+   "source_sha256": "6a7e7af853ad37c89abe2dc2be85337d961bd8ab80d67d94f03c9b5e1b68ea2c",
+   "source_anchor": "S1.SS0.SSS0.Px2",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "1 Introduction",
+   "subsection": "",
+   "section_id": "S1",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "recovered_paragraph",
+   "paragraph_id": "S1.SS0.SSS0.Px2",
+   "paragraph_heading": "Our thesis.",
+   "same_text_in_baseline": false,
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "text_normalization": "html_text_whitespace_and_math_alttext"
+  },
+  {
+   "chunk_id": "2611.02011v2_c0022",
+   "arxiv_id": "2611.02011v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02011v2#S7",
+   "section": "7  conclusion and future work",
+   "subsection": "",
+   "high_value": true,
+   "text": "These limitations point to several directions for future work. The recipe should be extended to multilingual and multimodal medical settings, and evaluation should move beyond the current benchmark suite. In particular, compact medical models need stronger open-ended evaluations, safety benchmarks, and medical error detection tests before their behavior can be understood in higher-risk clinical scenarios. Within this scope, MedPsy shows that compact, text-only medical LLMs (1.7B and 4B) can match or surpass much larger medical models: MedPsy -4B matches MedGemma-27B on closed-ended benchmarks at 6.75 \\times smaller scale, and both sizes surpass it on HealthBench-Hard. Both run fully locally within 5 GB of peak RAM on the tested laptop and smartphone, where shorter generations cut median latency and estimated energy per answer by 75%. A controlled synthetic-data pipeline, a broad-then-focused SFT curriculum, and hard-sample RL deliver strong medical accuracy and improved token efficiency ( 1.7 – 3.2\\times fewer generated tokens) at small scale. The quantization study further shows that Q4_K_M keeps aggregate score within one point of BF16 at a 68–69% smaller footprint, while very low precision exposes a clear capacity-vs-precision trade-off. Overall, MedPsy suggests that for compact medical LLMs, data quality, staged post-training, and alignment design dominate parameter scale, and medical capability and deployment efficiency can be optimized jointly.",
+   "text_with_context": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment | 7  Conclusion And Future Work\n\nThese limitations point to several directions for future work. The recipe should be extended to multilingual and multimodal medical settings, and evaluation should move beyond the current benchmark suite. In particular, compact medical models need stronger open-ended evaluations, safety benchmarks, and medical error detection tests before their behavior can be understood in higher-risk clinical scenarios. Within this scope, MedPsy shows that compact, text-only medical LLMs (1.7B and 4B) can match or surpass much larger medical models: MedPsy -4B matches MedGemma-27B on closed-ended benchmarks at 6.75 \\times smaller scale, and both sizes surpass it on HealthBench-Hard. Both run fully locally within 5 GB of peak RAM on the tested laptop and smartphone, where shorter generations cut median latency and estimated energy per answer by 75%. A controlled synthetic-data pipeline, a broad-then-focused SFT curriculum, and hard-sample RL deliver strong medical accuracy and improved token efficiency ( 1.7 – 3.2\\times fewer generated tokens) at small scale. The quantization study further shows that Q4_K_M keeps aggregate score within one point of BF16 at a 68–69% smaller footprint, while very low precision exposes a clear capacity-vs-precision trade-off. Overall, MedPsy suggests that for compact medical LLMs, data quality, staged post-training, and alignment design dominate parameter scale, and medical capability and deployment efficiency can be optimized jointly.",
+   "title": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02011v2#S7",
+   "pdf_url": "https://arxiv.org/pdf/2611.02011v2",
+   "source_sha256": "6a7e7af853ad37c89abe2dc2be85337d961bd8ab80d67d94f03c9b5e1b68ea2c"
+  },
+  {
+   "chunk_id": "2611.02011v2_c0015",
+   "arxiv_id": "2611.02011v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02011v2#S5.SS3",
+   "section": "5  evaluation",
+   "subsection": "5.3  healthbench results",
+   "high_value": true,
+   "text": "HealthBench complements closed-ended accuracy by evaluating responses to realistic, open-ended clinical scenarios against fixed, conversation-specific physician-authored rubrics. Its seven dimensions cover expertise-tailored communication, response depth, context seeking, emergency referrals, global health, health-data tasks, and responding under uncertainty. Table 2 reports Standard and Hard scores under all three grader families. HealthBench overall scores under three independent model graders, Standard (Std) and Hard splits. Bold marks the best score per column. Per-dimension breakdowns under CompassJudger-2-32B-Instruct are in App. A.9 (Tab. 17 – 18 ). MedPsy -4B ranks first on every (grader, split) cell of Tab. 2 , and MedPsy -1.7B is second-best across the board, surpassing MedGemma-27B-text-it on both Standard and Hard under all three graders. Absolute scores vary with grader strictness, but the complete five-model ordering is identical across all six grader-by-split cells, and the Hard-split lead is uniformly larger than the Standard-split lead under every grader. The gains therefore do not depend on the calibration of a single model grader (cross-grader consistency summary in App. A.8 ). A per-dimension breakdown under CompassJudger-2-32B-Instruct is reported in App. A.9 : MedPsy -4B leads on all seven dimensions in both Standard and Hard evaluations, while MedPsy -1.7B surpasses MedGemma-27B-text-it on all seven HealthBench-Hard dimensions.",
+   "text_with_context": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment | 5  Evaluation > 5.3  Healthbench Results\n\nHealthBench complements closed-ended accuracy by evaluating responses to realistic, open-ended clinical scenarios against fixed, conversation-specific physician-authored rubrics. Its seven dimensions cover expertise-tailored communication, response depth, context seeking, emergency referrals, global health, health-data tasks, and responding under uncertainty. Table 2 reports Standard and Hard scores under all three grader families. HealthBench overall scores under three independent model graders, Standard (Std) and Hard splits. Bold marks the best score per column. Per-dimension breakdowns under CompassJudger-2-32B-Instruct are in App. A.9 (Tab. 17 – 18 ). MedPsy -4B ranks first on every (grader, split) cell of Tab. 2 , and MedPsy -1.7B is second-best across the board, surpassing MedGemma-27B-text-it on both Standard and Hard under all three graders. Absolute scores vary with grader strictness, but the complete five-model ordering is identical across all six grader-by-split cells, and the Hard-split lead is uniformly larger than the Standard-split lead under every grader. The gains therefore do not depend on the calibration of a single model grader (cross-grader consistency summary in App. A.8 ). A per-dimension breakdown under CompassJudger-2-32B-Instruct is reported in App. A.9 : MedPsy -4B leads on all seven dimensions in both Standard and Hard evaluations, while MedPsy -1.7B surpasses MedGemma-27B-text-it on all seven HealthBench-Hard dimensions.",
+   "title": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02011v2#S5.SS3",
+   "pdf_url": "https://arxiv.org/pdf/2611.02011v2",
+   "source_sha256": "6a7e7af853ad37c89abe2dc2be85337d961bd8ab80d67d94f03c9b5e1b68ea2c"
+  },
+  {
+   "chunk_id": "2611.02011v2_c0014",
+   "arxiv_id": "2611.02011v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02011v2#S5.SS2",
+   "section": "5  evaluation",
+   "subsection": "5.2  closed-ended results",
+   "high_value": true,
+   "text": "Closed-ended benchmark results , sorted by average. Average is over seven closed-ended benchmarks; bold marks best per column within each size class. MedPsy -4B matches MedGemma-27B-text-it in aggregate closed-ended performance (70.54 vs. 69.95; +0.59) at 6.75 \\times smaller scale. A matched-instance analysis following Medmarks v0.1.0 [ 35 ] likewise finds near parity across three runs (50.25% versus 49.75%; App. A.11 ). Compared to its own backbone, post-training adds +7.44 average. The lead is not explained by parser choice or train–test overlap: the ranking is stable across three closed-ended parsers and remains after decontamination (App. A.11 ). MedPsy -1.7B reaches 62.62, beating MedGemma-1.5-4B-it by +11.42 and matching Qwen3-4B-Thinking-2507 at less than half its size; the largest gains over MedGemma-1.5-4B are MMLU-Health (+15.03) and MedQA-USMLE (+10.66). PubMedQA is a known ceiling case: the Qwen3-1.7B backbone already scores 72.33, so the 1.7B post-training trades -2.80 on PubMedQA for double-digit gains elsewhere; the 4B model avoids this regression and improves PubMedQA to 75.00. Accuracy also carries over to much longer inputs: on LongHealth [ 36 ] (5,090–6,754-word clinical documents), MedPsy -4B scores 0.855/0.875 on Tasks 1/2, above MedGemma-27B-text-it (0.828/0.802), and MedPsy -1.7B leads MedGemma-1.5-4B-it by up to 30.6 points (App. A.16 ).",
+   "text_with_context": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment | 5  Evaluation > 5.2  Closed-Ended Results\n\nClosed-ended benchmark results , sorted by average. Average is over seven closed-ended benchmarks; bold marks best per column within each size class. MedPsy -4B matches MedGemma-27B-text-it in aggregate closed-ended performance (70.54 vs. 69.95; +0.59) at 6.75 \\times smaller scale. A matched-instance analysis following Medmarks v0.1.0 [ 35 ] likewise finds near parity across three runs (50.25% versus 49.75%; App. A.11 ). Compared to its own backbone, post-training adds +7.44 average. The lead is not explained by parser choice or train–test overlap: the ranking is stable across three closed-ended parsers and remains after decontamination (App. A.11 ). MedPsy -1.7B reaches 62.62, beating MedGemma-1.5-4B-it by +11.42 and matching Qwen3-4B-Thinking-2507 at less than half its size; the largest gains over MedGemma-1.5-4B are MMLU-Health (+15.03) and MedQA-USMLE (+10.66). PubMedQA is a known ceiling case: the Qwen3-1.7B backbone already scores 72.33, so the 1.7B post-training trades -2.80 on PubMedQA for double-digit gains elsewhere; the 4B model avoids this regression and improves PubMedQA to 75.00. Accuracy also carries over to much longer inputs: on LongHealth [ 36 ] (5,090–6,754-word clinical documents), MedPsy -4B scores 0.855/0.875 on Tasks 1/2, above MedGemma-27B-text-it (0.828/0.802), and MedPsy -1.7B leads MedGemma-1.5-4B-it by up to 30.6 points (App. A.16 ).",
+   "title": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02011v2#S5.SS2",
+   "pdf_url": "https://arxiv.org/pdf/2611.02011v2",
+   "source_sha256": "6a7e7af853ad37c89abe2dc2be85337d961bd8ab80d67d94f03c9b5e1b68ea2c"
+  },
+  {
+   "chunk_id": "2611.02011v2_c0004",
+   "arxiv_id": "2611.02011v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02011v2#S3.SS1",
+   "section": "3  data methodology",
+   "subsection": "3.1  training data overview",
+   "high_value": false,
+   "text": "We explored several data mixtures and post-training methodologies before settling on the recipe used for the final MedPsy models. In total, about 10M synthetic rows of medical and healthcare supervision were generated for the final synthetic corpus. The recipe organizes the data into a two-stage curriculum : a broad-coverage corpus (Corpus 1) followed by a smaller, higher-value clinical-QA corpus (Corpus 2). The two corpora play complementary roles in the SFT curriculum (Sec. 4 ). Two principles guided the data construction throughout these ablations: Synthetic datasets. Corpus 1 utilizes broad synthetic prompts derived from two primary sources. First, we extracted the question and answer option fields from four public Genesis III subsets [ 4 ] : college_medicine , professional_medicine , college_biology , and high_school_biology . Second, following [ 4 ] , we use Fleming-R1-32B [ 6 ] to generate four multiple-choice questions (MCQs) for each document in the FineFineWeb health sub-domain [ 5 ] . We selected Fleming-R1-32B as it achieves strong performance on closed-ended medical tasks while offering higher throughput than larger teacher models. Corpus 2 instead utilizes train splits from focused open-source medical QA datasets as higher-value clinical prompts. Together, these broad synthetic and focused public-train prompts are used as seeds to generate the final synthetic training data. A single, controlled SFT target teacher. Every long-form assistant target used for supervision (chain-of-thought traces, extended rationales, decision-oriented answers) is newly generated by Baichuan-M3-235B [ 27 ] , the teacher selected in Sec. 3.2 , rather than taken from open-source assistant traces",
+   "text_with_context": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment | 3  Data Methodology > 3.1  Training Data Overview\n\nWe explored several data mixtures and post-training methodologies before settling on the recipe used for the final MedPsy models. In total, about 10M synthetic rows of medical and healthcare supervision were generated for the final synthetic corpus. The recipe organizes the data into a two-stage curriculum : a broad-coverage corpus (Corpus 1) followed by a smaller, higher-value clinical-QA corpus (Corpus 2). The two corpora play complementary roles in the SFT curriculum (Sec. 4 ). Two principles guided the data construction throughout these ablations: Synthetic datasets. Corpus 1 utilizes broad synthetic prompts derived from two primary sources. First, we extracted the question and answer option fields from four public Genesis III subsets [ 4 ] : college_medicine , professional_medicine , college_biology , and high_school_biology . Second, following [ 4 ] , we use Fleming-R1-32B [ 6 ] to generate four multiple-choice questions (MCQs) for each document in the FineFineWeb health sub-domain [ 5 ] . We selected Fleming-R1-32B as it achieves strong performance on closed-ended medical tasks while offering higher throughput than larger teacher models. Corpus 2 instead utilizes train splits from focused open-source medical QA datasets as higher-value clinical prompts. Together, these broad synthetic and focused public-train prompts are used as seeds to generate the final synthetic training data. A single, controlled SFT target teacher. Every long-form assistant target used for supervision (chain-of-thought traces, extended rationales, decision-oriented answers) is newly generated by Baichuan-M3-235B [ 27 ] , the teacher selected in Sec. 3.2 , rather than taken from open-source assistant traces",
+   "title": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02011v2#S3.SS1",
+   "pdf_url": "https://arxiv.org/pdf/2611.02011v2",
+   "source_sha256": "6a7e7af853ad37c89abe2dc2be85337d961bd8ab80d67d94f03c9b5e1b68ea2c"
+  },
+  {
+   "chunk_id": "2611.02011v2_table_1cd59829220c281a_1",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nMedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment\nTable 35 : LongHealth accuracy on long clinical documents (5,090–6,754 words). Best per size class in bold.\nModel: MedPsy -4B; Task 1: 0.855; Task 2: 0.875",
+   "arxiv_id": "2611.02011v2",
+   "title": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02011v2",
+   "html_url": "https://arxiv.org/html/2611.02011v2#Ax1.T35",
+   "source_url": "https://arxiv.org/html/2611.02011v2#Ax1.T35",
+   "page_number": null,
+   "source_sha256": "6a7e7af853ad37c89abe2dc2be85337d961bd8ab80d67d94f03c9b5e1b68ea2c",
+   "source_anchor": "Ax1.T35",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "",
+   "subsection": "A.16 Long-context accuracy on LongHealth",
+   "section_id": "",
+   "subsection_id": "Ax1.SS16",
+   "appendix_id": "Ax1",
+   "document_region": "appendix",
+   "representation": "linearized_table",
+   "table_id": "Ax1.T35",
+   "table_row": 1,
+   "row_label": "MedPsy -4B",
+   "caption": "Table 35 : LongHealth accuracy on long clinical documents (5,090–6,754 words). Best per size class in bold.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Model",
+     "source_id": "Ax1.T35.6.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Task 1",
+     "source_id": "Ax1.T35.6.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Task 2",
+     "source_id": "Ax1.T35.6.1.3"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 1,
+     "column": 0,
+     "text": "MedPsy -4B",
+     "source_id": "Ax1.T35.6.2.1"
+    },
+    {
+     "row": 1,
+     "column": 1,
+     "text": "0.855",
+     "source_id": "Ax1.T35.6.2.2"
+    },
+    {
+     "row": 1,
+     "column": 2,
+     "text": "0.875",
+     "source_id": "Ax1.T35.6.2.3"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02011v2_table_1cd59829220c281a_2",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nMedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment\nTable 35 : LongHealth accuracy on long clinical documents (5,090–6,754 words). Best per size class in bold.\nModel: MedGemma-27B-text-it; Task 1: 0.828; Task 2: 0.802",
+   "arxiv_id": "2611.02011v2",
+   "title": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02011v2",
+   "html_url": "https://arxiv.org/html/2611.02011v2#Ax1.T35",
+   "source_url": "https://arxiv.org/html/2611.02011v2#Ax1.T35",
+   "page_number": null,
+   "source_sha256": "6a7e7af853ad37c89abe2dc2be85337d961bd8ab80d67d94f03c9b5e1b68ea2c",
+   "source_anchor": "Ax1.T35",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "",
+   "subsection": "A.16 Long-context accuracy on LongHealth",
+   "section_id": "",
+   "subsection_id": "Ax1.SS16",
+   "appendix_id": "Ax1",
+   "document_region": "appendix",
+   "representation": "linearized_table",
+   "table_id": "Ax1.T35",
+   "table_row": 2,
+   "row_label": "MedGemma-27B-text-it",
+   "caption": "Table 35 : LongHealth accuracy on long clinical documents (5,090–6,754 words). Best per size class in bold.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Model",
+     "source_id": "Ax1.T35.6.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Task 1",
+     "source_id": "Ax1.T35.6.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Task 2",
+     "source_id": "Ax1.T35.6.1.3"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 2,
+     "column": 0,
+     "text": "MedGemma-27B-text-it",
+     "source_id": "Ax1.T35.6.3.1"
+    },
+    {
+     "row": 2,
+     "column": 1,
+     "text": "0.828",
+     "source_id": "Ax1.T35.6.3.2"
+    },
+    {
+     "row": 2,
+     "column": 2,
+     "text": "0.802",
+     "source_id": "Ax1.T35.6.3.3"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02011v2_table_1cd59829220c281a_3",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nMedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment\nTable 35 : LongHealth accuracy on long clinical documents (5,090–6,754 words). Best per size class in bold.\nModel: MedPsy -1.7B; Task 1: 0.590; Task 2: 0.670",
+   "arxiv_id": "2611.02011v2",
+   "title": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02011v2",
+   "html_url": "https://arxiv.org/html/2611.02011v2#Ax1.T35",
+   "source_url": "https://arxiv.org/html/2611.02011v2#Ax1.T35",
+   "page_number": null,
+   "source_sha256": "6a7e7af853ad37c89abe2dc2be85337d961bd8ab80d67d94f03c9b5e1b68ea2c",
+   "source_anchor": "Ax1.T35",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "",
+   "subsection": "A.16 Long-context accuracy on LongHealth",
+   "section_id": "",
+   "subsection_id": "Ax1.SS16",
+   "appendix_id": "Ax1",
+   "document_region": "appendix",
+   "representation": "linearized_table",
+   "table_id": "Ax1.T35",
+   "table_row": 3,
+   "row_label": "MedPsy -1.7B",
+   "caption": "Table 35 : LongHealth accuracy on long clinical documents (5,090–6,754 words). Best per size class in bold.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Model",
+     "source_id": "Ax1.T35.6.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Task 1",
+     "source_id": "Ax1.T35.6.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Task 2",
+     "source_id": "Ax1.T35.6.1.3"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 3,
+     "column": 0,
+     "text": "MedPsy -1.7B",
+     "source_id": "Ax1.T35.6.4.1"
+    },
+    {
+     "row": 3,
+     "column": 1,
+     "text": "0.590",
+     "source_id": "Ax1.T35.6.4.2"
+    },
+    {
+     "row": 3,
+     "column": 2,
+     "text": "0.670",
+     "source_id": "Ax1.T35.6.4.3"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02011v2_table_1cd59829220c281a_4",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nMedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment\nTable 35 : LongHealth accuracy on long clinical documents (5,090–6,754 words). Best per size class in bold.\nModel: MedGemma-1.5-4B-it; Task 1: 0.565; Task 2: 0.364",
+   "arxiv_id": "2611.02011v2",
+   "title": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02011v2",
+   "html_url": "https://arxiv.org/html/2611.02011v2#Ax1.T35",
+   "source_url": "https://arxiv.org/html/2611.02011v2#Ax1.T35",
+   "page_number": null,
+   "source_sha256": "6a7e7af853ad37c89abe2dc2be85337d961bd8ab80d67d94f03c9b5e1b68ea2c",
+   "source_anchor": "Ax1.T35",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "",
+   "subsection": "A.16 Long-context accuracy on LongHealth",
+   "section_id": "",
+   "subsection_id": "Ax1.SS16",
+   "appendix_id": "Ax1",
+   "document_region": "appendix",
+   "representation": "linearized_table",
+   "table_id": "Ax1.T35",
+   "table_row": 4,
+   "row_label": "MedGemma-1.5-4B-it",
+   "caption": "Table 35 : LongHealth accuracy on long clinical documents (5,090–6,754 words). Best per size class in bold.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Model",
+     "source_id": "Ax1.T35.6.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Task 1",
+     "source_id": "Ax1.T35.6.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Task 2",
+     "source_id": "Ax1.T35.6.1.3"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 4,
+     "column": 0,
+     "text": "MedGemma-1.5-4B-it",
+     "source_id": "Ax1.T35.6.5.1"
+    },
+    {
+     "row": 4,
+     "column": 1,
+     "text": "0.565",
+     "source_id": "Ax1.T35.6.5.2"
+    },
+    {
+     "row": 4,
+     "column": 2,
+     "text": "0.364",
+     "source_id": "Ax1.T35.6.5.3"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02011v2_paragraph_38cc9dd301c98e45_0",
+   "text": "Our contributions are: State-of-the-Art Efficient Models. MedPsy -4B matches MedGemma-27B on closed-ended accuracy and surpasses on HealthBench suites both MedGemma-4B (+20/+28.33) and 27B (+9.0/+15.3). Similarly, MedPsy -1.7B exceeds MedGemma-4B on closed-ended tasks and outperforms both MedGemma variants on HealthBench, achieving these leads at up to 16 \\times smaller scale (Fig. 1(a) ; Sec. 5 ). Post-training recipe. We combine single-teacher synthetic supervision, broad-to-focused SFT, and easy-to-hard DAPO with deterministic failure mining. Component ablations separate the roles of SFT, DAPO’s drift-enabling changes, the overlong-response penalty, and Stage-2 mining (Sec. 5.4 ; App. A.17 ). Token efficiency for the edge. MedPsy -4B and MedPsy -1.7B achieve 3.2 \\times and 1.7 \\times token reductions over Qwen3 backbones, significantly lowering on-device latency (Sec. 5.5 ). This efficiency stems from RL-side compression, primarily a soft overlong-response penalty that maintains accuracy while ensuring the training curriculum remains Pareto-dominant (App. A.17.2 ). Quantized edge deployment. At Q4_K_M , both model sizes retain aggregate score within one point of BF16 while reducing disk footprint by 68–69%. On-device measurements connect MedPsy -4B’s shorter generations to 75% lower median latency and estimated energy per answer at matched quantization, while peak RAM remains below 5 GB in the tested laptop and smartphone configurations. A broader six-format study identifies a capacity-vs-precision effect at matched footprint (Sec. 5.6 ; App. A.12 ).",
+   "arxiv_id": "2611.02011v2",
+   "title": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02011v2",
+   "html_url": "https://arxiv.org/html/2611.02011v2#S1.SS0.SSS0.Px3",
+   "source_url": "https://arxiv.org/html/2611.02011v2#S1.SS0.SSS0.Px3",
+   "page_number": null,
+   "source_sha256": "6a7e7af853ad37c89abe2dc2be85337d961bd8ab80d67d94f03c9b5e1b68ea2c",
+   "source_anchor": "S1.SS0.SSS0.Px3",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "1 Introduction",
+   "subsection": "",
+   "section_id": "S1",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "recovered_paragraph",
+   "paragraph_id": "S1.SS0.SSS0.Px3",
+   "paragraph_heading": "Contributions.",
+   "same_text_in_baseline": false,
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "text_normalization": "html_text_whitespace_and_math_alttext"
+  },
+  {
+   "chunk_id": "2611.02011v2_c0019",
+   "arxiv_id": "2611.02011v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02011v2#S5.SS6",
+   "section": "5  evaluation",
+   "subsection": "5.6  quantization for mobile deployment",
+   "high_value": true,
+   "text": ". At matched on-disk size, allocating storage to more parameters at lower precision buys more performance than fewer parameters at higher precision. Full quantization landscape. Beyond Q4_K_M , the six-format comparison (Table 4 (a); Fig. 1(b) ) shows that Q8_0 is near-lossless at both sizes ( - 0.15 and 0.00 aggregate-score change at roughly half the footprint). The I-quants trade precision for footprint gracefully at 4B: IQ4_NL and IQ4_XS lose 1.0–1.1 points, and IQ3_M (2.0 GB) loses only 1.50 while exactly matching the BF16 HealthBench-Hard score of 58. Collapse occurs only at IQ3_XXS ( - 5.56 at 4B, - 12.46 at 1.7B), and even this worst configuration (64.42 closed-ended, 69 HealthBench) remains above the unquantized Qwen3-4B-Thinking-2507 backbone (63.10/63) and MedGemma-1.5-4B-it (51.20/54). The 1.7B model degrades roughly twice as fast as the 4B below 4-bit precision, consistent with the intuition that smaller models have less weight redundancy: every channel carries more of the model’s behavior, so precision lost per channel translates more directly into degraded reasoning. We therefore do not recommend any sub-4-bit variant of MedPsy -1.7B for medical use. Real-device deployment. At matched Q4_K_M quantization, MedPsy -4B and its Qwen3 backbone have comparable per-token decode rates, while MedPsy -4B generates 73% fewer tokens per answer. This translates to 74.7% lower median end-to-end latency and estimated energy per answer on the Apple M5 Pro, with 4.29 GB peak RAM (Table 4 (b)). A separate 8K-context stress test records 4.83 GB as the largest laptop peak for MedPsy -4B Q4_K_M (App. A.15 ). Measurements on a OnePlus 13 confirm fully local execution at 2.22 GB peak RAM for MedPsy -1.7B and 3.98 GB for MedPsy -4B; full protocols and measurements are in App",
+   "text_with_context": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment | 5  Evaluation > 5.6  Quantization For Mobile Deployment\n\n. At matched on-disk size, allocating storage to more parameters at lower precision buys more performance than fewer parameters at higher precision. Full quantization landscape. Beyond Q4_K_M , the six-format comparison (Table 4 (a); Fig. 1(b) ) shows that Q8_0 is near-lossless at both sizes ( - 0.15 and 0.00 aggregate-score change at roughly half the footprint). The I-quants trade precision for footprint gracefully at 4B: IQ4_NL and IQ4_XS lose 1.0–1.1 points, and IQ3_M (2.0 GB) loses only 1.50 while exactly matching the BF16 HealthBench-Hard score of 58. Collapse occurs only at IQ3_XXS ( - 5.56 at 4B, - 12.46 at 1.7B), and even this worst configuration (64.42 closed-ended, 69 HealthBench) remains above the unquantized Qwen3-4B-Thinking-2507 backbone (63.10/63) and MedGemma-1.5-4B-it (51.20/54). The 1.7B model degrades roughly twice as fast as the 4B below 4-bit precision, consistent with the intuition that smaller models have less weight redundancy: every channel carries more of the model’s behavior, so precision lost per channel translates more directly into degraded reasoning. We therefore do not recommend any sub-4-bit variant of MedPsy -1.7B for medical use. Real-device deployment. At matched Q4_K_M quantization, MedPsy -4B and its Qwen3 backbone have comparable per-token decode rates, while MedPsy -4B generates 73% fewer tokens per answer. This translates to 74.7% lower median end-to-end latency and estimated energy per answer on the Apple M5 Pro, with 4.29 GB peak RAM (Table 4 (b)). A separate 8K-context stress test records 4.83 GB as the largest laptop peak for MedPsy -4B Q4_K_M (App. A.15 ). Measurements on a OnePlus 13 confirm fully local execution at 2.22 GB peak RAM for MedPsy -1.7B and 3.98 GB for MedPsy -4B; full protocols and measurements are in App",
+   "title": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02011v2#S5.SS6",
+   "pdf_url": "https://arxiv.org/pdf/2611.02011v2",
+   "source_sha256": "6a7e7af853ad37c89abe2dc2be85337d961bd8ab80d67d94f03c9b5e1b68ea2c"
+  },
+  {
+   "chunk_id": "2611.02011v2_c0021",
+   "arxiv_id": "2611.02011v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02011v2#S6",
+   "section": "6  discussion and limitations",
+   "subsection": "",
+   "high_value": true,
+   "text": "The results support our central thesis: for compact medical LLMs, medical capability and deployment efficiency can be optimized jointly. In MedPsy , broad SFT establishes medical coverage, focused SFT improves clinical reasoning, and hard-sample RL sharpens the most reasoning-heavy benchmarks (Sec. 5.4 ). The full curriculum (SFT \\to SFT \\to RL Stage 1 \\to RL Stage 2) is also strictly Pareto-dominant over single-stage hard-only RL on token-vs-accuracy (best performance at \\sim 3 – 4\\times shorter response length) (App. A.17.2 ). The Easy/Moderate Stage 1 leaves the policy already compressed and high-reward before Stage 2 mining targets residual hard items, preserving response compression even in the more challenging scenarios that require longer reasoning. However, these findings should be interpreted within several important boundaries: the models are text-only ; the training data is predominantly English. Like all LLMs, the models can produce confident but incorrect medical statements; they should not be used for autonomous diagnosis or treatment. Real clinical decision support would require additional safety review, IRB-grade evaluation, prospective testing, and regulatory clearance.",
+   "text_with_context": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment | 6  Discussion And Limitations\n\nThe results support our central thesis: for compact medical LLMs, medical capability and deployment efficiency can be optimized jointly. In MedPsy , broad SFT establishes medical coverage, focused SFT improves clinical reasoning, and hard-sample RL sharpens the most reasoning-heavy benchmarks (Sec. 5.4 ). The full curriculum (SFT \\to SFT \\to RL Stage 1 \\to RL Stage 2) is also strictly Pareto-dominant over single-stage hard-only RL on token-vs-accuracy (best performance at \\sim 3 – 4\\times shorter response length) (App. A.17.2 ). The Easy/Moderate Stage 1 leaves the policy already compressed and high-reward before Stage 2 mining targets residual hard items, preserving response compression even in the more challenging scenarios that require longer reasoning. However, these findings should be interpreted within several important boundaries: the models are text-only ; the training data is predominantly English. Like all LLMs, the models can produce confident but incorrect medical statements; they should not be used for autonomous diagnosis or treatment. Real clinical decision support would require additional safety review, IRB-grade evaluation, prospective testing, and regulatory clearance.",
+   "title": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02011v2#S6",
+   "pdf_url": "https://arxiv.org/pdf/2611.02011v2",
+   "source_sha256": "6a7e7af853ad37c89abe2dc2be85337d961bd8ab80d67d94f03c9b5e1b68ea2c"
+  },
+  {
+   "chunk_id": "2611.02011v2_c0006",
+   "arxiv_id": "2611.02011v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02011v2#S3.SS2",
+   "section": "3  data methodology",
+   "subsection": "3.2  teacher selection",
+   "high_value": false,
+   "text": "Because our supervision is the teacher’s output, the teacher’s ceiling directly bounds the student’s. From a literature review and public medical leaderboards, we identified three strong candidates ( Baichuan-M3-235B [ 27 ] , GPT-OSS-120B [ 28 ] , and Fleming-R1-32B [ 6 ] ) and evaluated them on our benchmark suite under three independent model graders (Sec. 5.1 ). The same suite serves teacher selection and final reporting, as it directly measures the supervision quality the student distills. Baichuan-M3-235B leads with 74.83 average closed-ended accuracy (vs. 72.73/72.55), with its largest advantages on the most expert-level benchmarks (MedXpertQA: +5.61/+10.98; MMLU-Pro Health: +5.05/+2.73), and beats both alternatives by 6–12 HealthBench points across all three graders (Tables 6 , 7 ). Since the teacher’s clinical reasoning and communication quality is exactly the signal the student distills, this open-ended advantage was decisive: we use Baichuan-M3-235B as the teacher for all final MedPsy training data. A controlled student-level ablation (App. A.2 ) verifies that this choice transfers when the prompt set, base model, and training pipeline are held fixed.",
+   "text_with_context": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment | 3  Data Methodology > 3.2  Teacher Selection\n\nBecause our supervision is the teacher’s output, the teacher’s ceiling directly bounds the student’s. From a literature review and public medical leaderboards, we identified three strong candidates ( Baichuan-M3-235B [ 27 ] , GPT-OSS-120B [ 28 ] , and Fleming-R1-32B [ 6 ] ) and evaluated them on our benchmark suite under three independent model graders (Sec. 5.1 ). The same suite serves teacher selection and final reporting, as it directly measures the supervision quality the student distills. Baichuan-M3-235B leads with 74.83 average closed-ended accuracy (vs. 72.73/72.55), with its largest advantages on the most expert-level benchmarks (MedXpertQA: +5.61/+10.98; MMLU-Pro Health: +5.05/+2.73), and beats both alternatives by 6–12 HealthBench points across all three graders (Tables 6 , 7 ). Since the teacher’s clinical reasoning and communication quality is exactly the signal the student distills, this open-ended advantage was decisive: we use Baichuan-M3-235B as the teacher for all final MedPsy training data. A controlled student-level ablation (App. A.2 ) verifies that this choice transfers when the prompt set, base model, and training pipeline are held fixed.",
+   "title": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02011v2#S3.SS2",
+   "pdf_url": "https://arxiv.org/pdf/2611.02011v2",
+   "source_sha256": "6a7e7af853ad37c89abe2dc2be85337d961bd8ab80d67d94f03c9b5e1b68ea2c"
+  },
+  {
+   "chunk_id": "2611.02011v2_c0018",
+   "arxiv_id": "2611.02011v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02011v2#S5.SS6",
+   "section": "5  evaluation",
+   "subsection": "5.6  quantization for mobile deployment",
+   "high_value": true,
+   "text": "To meet mobile RAM constraints, we convert both models to GGUF with llama.cpp [ 26 ] and evaluate six quantization formats spanning 8-, 4-, and 3-bit precision. This sweep identifies Q4_K_M as the preferred deployment configuration, offering the strongest observed balance between footprint reduction and full-suite score retention at both model sizes. Table 4 reports the complete per-format comparison together with the real-device profile at Q4_K_M ; the imatrix ablation and per-benchmark details are in App. A.12 . Quantized deployment profile. (a) Complete quantized GGUF variants comparison. \\Delta Size relative to BF16; \\Delta Score is the absolute change in (\\text{HB Overall}+\\text{CE Avg})/2 . (b) Apple M5 Pro measurements at matched Q4_K_M quantization over 30 prompts (20 MedQA and 10 MedXpertQA-Text); time per answer is the median, and energy per answer is estimated as sustained SoC power (26.5 W) times median wall time. Q4_K_M accuracy and footprint. At Q4_K_M , both model sizes reduce disk footprint by 68–69% while keeping aggregate score within one point of BF16 (Table 4 (a)). MedPsy -4B reaches 2.6 GB with a 0.81-point aggregate-score change, while MedPsy -1.7B reaches 1.2 GB with a 0.73-point change. Across the broader six-format study, the 4B model retains strong accuracy through 3-bit quantization, and the matched-footprint comparison reveals a capacity-vs-precision effect: the 2.0 GB IQ3_M 4B model outperforms the 2.1 GB Q8_0 1.7B model (Table 4 (a)). At matched on-disk size, allocating storage to more parameters at lower precision buys more performance than fewer parameters at higher precision. Full quantization landscape. Beyond Q4_K_M , the six-format comparison (Table 4 (a); Fig",
+   "text_with_context": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment | 5  Evaluation > 5.6  Quantization For Mobile Deployment\n\nTo meet mobile RAM constraints, we convert both models to GGUF with llama.cpp [ 26 ] and evaluate six quantization formats spanning 8-, 4-, and 3-bit precision. This sweep identifies Q4_K_M as the preferred deployment configuration, offering the strongest observed balance between footprint reduction and full-suite score retention at both model sizes. Table 4 reports the complete per-format comparison together with the real-device profile at Q4_K_M ; the imatrix ablation and per-benchmark details are in App. A.12 . Quantized deployment profile. (a) Complete quantized GGUF variants comparison. \\Delta Size relative to BF16; \\Delta Score is the absolute change in (\\text{HB Overall}+\\text{CE Avg})/2 . (b) Apple M5 Pro measurements at matched Q4_K_M quantization over 30 prompts (20 MedQA and 10 MedXpertQA-Text); time per answer is the median, and energy per answer is estimated as sustained SoC power (26.5 W) times median wall time. Q4_K_M accuracy and footprint. At Q4_K_M , both model sizes reduce disk footprint by 68–69% while keeping aggregate score within one point of BF16 (Table 4 (a)). MedPsy -4B reaches 2.6 GB with a 0.81-point aggregate-score change, while MedPsy -1.7B reaches 1.2 GB with a 0.73-point change. Across the broader six-format study, the 4B model retains strong accuracy through 3-bit quantization, and the matched-footprint comparison reveals a capacity-vs-precision effect: the 2.0 GB IQ3_M 4B model outperforms the 2.1 GB Q8_0 1.7B model (Table 4 (a)). At matched on-disk size, allocating storage to more parameters at lower precision buys more performance than fewer parameters at higher precision. Full quantization landscape. Beyond Q4_K_M , the six-format comparison (Table 4 (a); Fig",
+   "title": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02011v2#S5.SS6",
+   "pdf_url": "https://arxiv.org/pdf/2611.02011v2",
+   "source_sha256": "6a7e7af853ad37c89abe2dc2be85337d961bd8ab80d67d94f03c9b5e1b68ea2c"
+  },
+  {
+   "chunk_id": "2611.02011v2_c0003",
+   "arxiv_id": "2611.02011v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02011v2#S3",
+   "section": "3  data methodology",
+   "subsection": "",
+   "high_value": false,
+   "text": "In this section we describe at a high level the data used to post-train MedPsy and the teacher-selection process behind it. The training corpus description here reflects the design principles and the recipe used to train the final models that are evaluated in this paper.",
+   "text_with_context": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment | 3  Data Methodology\n\nIn this section we describe at a high level the data used to post-train MedPsy and the teacher-selection process behind it. The training corpus description here reflects the design principles and the recipe used to train the final models that are evaluated in this paper.",
+   "title": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02011v2#S3",
+   "pdf_url": "https://arxiv.org/pdf/2611.02011v2",
+   "source_sha256": "6a7e7af853ad37c89abe2dc2be85337d961bd8ab80d67d94f03c9b5e1b68ea2c"
+  },
+  {
+   "chunk_id": "2611.02011v2_c0017",
+   "arxiv_id": "2611.02011v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02011v2#S5.SS5",
+   "section": "5  evaluation",
+   "subsection": "5.5  token efficiency",
+   "high_value": true,
+   "text": "Sample-weighted across all eight benchmarks, the 4B model achieves a 3.2 \\times reduction in average response length ( 909 vs. 2,953 tokens for Qwen3-4B-Thinking-2507) while improving accuracy, and the 1.7B model a 1.7 \\times reduction ( 1,110 vs. 1,901 tokens for Qwen3-1.7B Thinking). Complementing these observed length reductions, an explicit thinking-budget sweep shows that MedPsy -4B retains 96.6% of its unbounded closed-ended score with a 300-token thinking cap (App. A.14 ). The 1.7B reduction is smaller because its backbone already emits shorter outputs, and on HealthBench MedPsy -1.7B writes slightly longer responses than its backbone, trading tokens for the +17 HealthBench points of Sec. 5.4 . The per-benchmark breakdown is in App. A.10 (Tab. 20 ). We decompose the RL-side compression into three independently controllable mechanisms in App. A.17.2 : vanilla GRPO with a KL anchor compresses by only \\sim 6 – 20 %, switching to DAPO’s drift-enabling modifications (KL-removal and asymmetric clip-higher) brings compression to \\sim 44 – 45 %, and adding the soft overlong-response penalty pushes it to the released-model \\sim 65 – 66 %. The ordering of the RL stages compounds this: Stage 1 trains on items typically answerable with short reasoning, installing a low-token-budget habit; Stage 2 then pushes accuracy on hard items starting from this already-compressed checkpoint and preserves the short-reasoning habit.",
+   "text_with_context": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment | 5  Evaluation > 5.5  Token Efficiency\n\nSample-weighted across all eight benchmarks, the 4B model achieves a 3.2 \\times reduction in average response length ( 909 vs. 2,953 tokens for Qwen3-4B-Thinking-2507) while improving accuracy, and the 1.7B model a 1.7 \\times reduction ( 1,110 vs. 1,901 tokens for Qwen3-1.7B Thinking). Complementing these observed length reductions, an explicit thinking-budget sweep shows that MedPsy -4B retains 96.6% of its unbounded closed-ended score with a 300-token thinking cap (App. A.14 ). The 1.7B reduction is smaller because its backbone already emits shorter outputs, and on HealthBench MedPsy -1.7B writes slightly longer responses than its backbone, trading tokens for the +17 HealthBench points of Sec. 5.4 . The per-benchmark breakdown is in App. A.10 (Tab. 20 ). We decompose the RL-side compression into three independently controllable mechanisms in App. A.17.2 : vanilla GRPO with a KL anchor compresses by only \\sim 6 – 20 %, switching to DAPO’s drift-enabling modifications (KL-removal and asymmetric clip-higher) brings compression to \\sim 44 – 45 %, and adding the soft overlong-response penalty pushes it to the released-model \\sim 65 – 66 %. The ordering of the RL stages compounds this: Stage 1 trains on items typically answerable with short reasoning, installing a low-token-budget habit; Stage 2 then pushes accuracy on hard items starting from this already-compressed checkpoint and preserves the short-reasoning habit.",
+   "title": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02011v2#S5.SS5",
+   "pdf_url": "https://arxiv.org/pdf/2611.02011v2",
+   "source_sha256": "6a7e7af853ad37c89abe2dc2be85337d961bd8ab80d67d94f03c9b5e1b68ea2c"
+  },
+  {
+   "chunk_id": "2611.02011v2_c0016",
+   "arxiv_id": "2611.02011v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02011v2#S5.SS4",
+   "section": "5  evaluation",
+   "subsection": "5.4  stage-wise progression",
+   "high_value": true,
+   "text": "Training stage progression. Comparison of MedPsy -1.7B (1.7B) and MedPsy -4B (4B) across all benchmarks. Avg is the closed-ended mean; HB is HealthBench Standard (CompassJudger-2-32B). Several patterns are consistent across both sizes (Table 3 ). SFT Stage 1 delivers the largest single jump (+7.53 / +4.83), confirming that broad medical exposure from Corpus 1 is the foundation; gains are most dramatic on HealthBench (+17.33 / +11.00) and MedQA-USMLE (+16.79 / +11.47). SFT Stage 2 adds focused reasoning on MedQA-USMLE (+4.79 for 1.7B), MMLU-Pro Health (+3.22 for 1.7B), and MedXpertQA (+2.49 for 4B). The two RL stages together provide the final sharpening , peaking on MedQA-USMLE (+6.29 for 1.7B) and MedMCQA (+5.02 / +2.94), the benchmarks that most reward structured clinical reasoning. Stage 2 hard-mining accounts for essentially all of the released model’s MedXpertQA lift: replacing the mined Stage-2 set with a uniformly-random subset of identical size loses 5.0 pp (4B) and 2.0 pp (1.7B) on MedXpertQA, while easy/medium benchmarks are essentially unchanged (App. A.17.1 ). HealthBench gains are installed early : SFT Stage 1 already lifts HealthBench to its final level, and the RL stages preserve it while improving closed-ended accuracy and token efficiency.",
+   "text_with_context": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment | 5  Evaluation > 5.4  Stage-Wise Progression\n\nTraining stage progression. Comparison of MedPsy -1.7B (1.7B) and MedPsy -4B (4B) across all benchmarks. Avg is the closed-ended mean; HB is HealthBench Standard (CompassJudger-2-32B). Several patterns are consistent across both sizes (Table 3 ). SFT Stage 1 delivers the largest single jump (+7.53 / +4.83), confirming that broad medical exposure from Corpus 1 is the foundation; gains are most dramatic on HealthBench (+17.33 / +11.00) and MedQA-USMLE (+16.79 / +11.47). SFT Stage 2 adds focused reasoning on MedQA-USMLE (+4.79 for 1.7B), MMLU-Pro Health (+3.22 for 1.7B), and MedXpertQA (+2.49 for 4B). The two RL stages together provide the final sharpening , peaking on MedQA-USMLE (+6.29 for 1.7B) and MedMCQA (+5.02 / +2.94), the benchmarks that most reward structured clinical reasoning. Stage 2 hard-mining accounts for essentially all of the released model’s MedXpertQA lift: replacing the mined Stage-2 set with a uniformly-random subset of identical size loses 5.0 pp (4B) and 2.0 pp (1.7B) on MedXpertQA, while easy/medium benchmarks are essentially unchanged (App. A.17.1 ). HealthBench gains are installed early : SFT Stage 1 already lifts HealthBench to its final level, and the RL stages preserve it while improving closed-ended accuracy and token efficiency.",
+   "title": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02011v2#S5.SS4",
+   "pdf_url": "https://arxiv.org/pdf/2611.02011v2",
+   "source_sha256": "6a7e7af853ad37c89abe2dc2be85337d961bd8ab80d67d94f03c9b5e1b68ea2c"
+  },
+  {
+   "chunk_id": "2611.02011v2_c0011",
+   "arxiv_id": "2611.02011v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02011v2#S4.SS2",
+   "section": "4  post-training methodology",
+   "subsection": "4.2  four-stage curriculum",
+   "high_value": false,
+   "text": ". the advantage is identically zero). On top of r_{\\text{task}} in Eq. 1 we apply a soft overlong-response penalty over a L_{\\text{soft}}{=}2{,}048 -token buffer within an L_{\\text{max}}{=}4{,}096 -token response budget: where L is the per-rollout response length in tokens. The total per-rollout reward is r=r_{\\text{task}}+r_{\\text{overlong}} . Sequences that reach L_{\\text{max}} receive the full -\\lambda , while sequences below L_{\\text{soft}} are unpenalised. Per-stage hyperparameters are in App. A.7 ; Algorithm 1 summarises the full pipeline. MedPsy four-stage post-training (one model size). This broad-then-focused design mirrors the SFT curriculum and is especially important in medicine, where strong average accuracy can mask weaknesses on rare or complex cases. Full training configurations/hyperparameters for SFT/RL and compute requirements are reported in Appendix A.7 . The recipe is not Qwen3-specific: applying all four stages to DeepSeek-R1-Distill-Qwen-1.5B [ 30 ] , a Qwen2.5-derived reasoning checkpoint, lifts the seven-task closed-ended average from 28.4 to 52.2 and HealthBench from 7.0 to 58.0 (App. A.5 ).",
+   "text_with_context": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment | 4  Post-Training Methodology > 4.2  Four-Stage Curriculum\n\n. the advantage is identically zero). On top of r_{\\text{task}} in Eq. 1 we apply a soft overlong-response penalty over a L_{\\text{soft}}{=}2{,}048 -token buffer within an L_{\\text{max}}{=}4{,}096 -token response budget: where L is the per-rollout response length in tokens. The total per-rollout reward is r=r_{\\text{task}}+r_{\\text{overlong}} . Sequences that reach L_{\\text{max}} receive the full -\\lambda , while sequences below L_{\\text{soft}} are unpenalised. Per-stage hyperparameters are in App. A.7 ; Algorithm 1 summarises the full pipeline. MedPsy four-stage post-training (one model size). This broad-then-focused design mirrors the SFT curriculum and is especially important in medicine, where strong average accuracy can mask weaknesses on rare or complex cases. Full training configurations/hyperparameters for SFT/RL and compute requirements are reported in Appendix A.7 . The recipe is not Qwen3-specific: applying all four stages to DeepSeek-R1-Distill-Qwen-1.5B [ 30 ] , a Qwen2.5-derived reasoning checkpoint, lifts the seven-task closed-ended average from 28.4 to 52.2 and HealthBench from 7.0 to 58.0 (App. A.5 ).",
+   "title": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02011v2#S4.SS2",
+   "pdf_url": "https://arxiv.org/pdf/2611.02011v2",
+   "source_sha256": "6a7e7af853ad37c89abe2dc2be85337d961bd8ab80d67d94f03c9b5e1b68ea2c"
+  },
+  {
+   "chunk_id": "2611.02011v2_c0020",
+   "arxiv_id": "2611.02011v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02011v2#S5.SS6",
+   "section": "5  evaluation",
+   "subsection": "5.6  quantization for mobile deployment",
+   "high_value": true,
+   "text": ". A.15 ). Measurements on a OnePlus 13 confirm fully local execution at 2.22 GB peak RAM for MedPsy -1.7B and 3.98 GB for MedPsy -4B; full protocols and measurements are in App. A.13 .",
+   "text_with_context": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment | 5  Evaluation > 5.6  Quantization For Mobile Deployment\n\n. A.15 ). Measurements on a OnePlus 13 confirm fully local execution at 2.22 GB peak RAM for MedPsy -1.7B and 3.98 GB for MedPsy -4B; full protocols and measurements are in App. A.13 .",
+   "title": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02011v2#S5.SS6",
+   "pdf_url": "https://arxiv.org/pdf/2611.02011v2",
+   "source_sha256": "6a7e7af853ad37c89abe2dc2be85337d961bd8ab80d67d94f03c9b5e1b68ea2c"
+  },
+  {
+   "chunk_id": "2611.02011v2_c0005",
+   "arxiv_id": "2611.02011v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02011v2#S3.SS1",
+   "section": "3  data methodology",
+   "subsection": "3.1  training data overview",
+   "high_value": false,
+   "text": ". 3.2 , rather than taken from open-source assistant traces. This separation keeps prompt generation and target generation distinct: the seed data controls coverage, while Baichuan-M3-235B provides style adaptation and medical-reasoning knowledge distillation for the SFT targets. The output of this stage is a curated medical and healthcare post-training corpus that combines synthetic expansion, reasoning-focused data, and public medical QA prompts, all paired with teacher-generated reasoning targets; source list, licenses, and prompts are in App. A.1 .",
+   "text_with_context": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment | 3  Data Methodology > 3.1  Training Data Overview\n\n. 3.2 , rather than taken from open-source assistant traces. This separation keeps prompt generation and target generation distinct: the seed data controls coverage, while Baichuan-M3-235B provides style adaptation and medical-reasoning knowledge distillation for the SFT targets. The output of this stage is a curated medical and healthcare post-training corpus that combines synthetic expansion, reasoning-focused data, and public medical QA prompts, all paired with teacher-generated reasoning targets; source list, licenses, and prompts are in App. A.1 .",
+   "title": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02011v2#S3.SS1",
+   "pdf_url": "https://arxiv.org/pdf/2611.02011v2",
+   "source_sha256": "6a7e7af853ad37c89abe2dc2be85337d961bd8ab80d67d94f03c9b5e1b68ea2c"
+  },
+  {
+   "chunk_id": "2611.02011v2_table_daa445e9aad2caa9_1",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nMedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment\nTable 31 : OnePlus 13 local-inference measurements (three MedQA prompts per model). Both models use Q4_K_M GGUF builds with Vulkan partial offload ( -ngl 20 ) and six CPU threads. Energy is from the Android battery charge counter (unplugged device at 49% charge, Wi-Fi debugging).\nModel: MedPsy-1.7B; Peak RAM: 2.22 GB; tok/s: 15.27; tokens/answer: 789; TTFT: 8.90 s; time/answer: 55.6 s; energy/answer: 420 J",
+   "arxiv_id": "2611.02011v2",
+   "title": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02011v2",
+   "html_url": "https://arxiv.org/html/2611.02011v2#Ax1.T31",
+   "source_url": "https://arxiv.org/html/2611.02011v2#Ax1.T31",
+   "page_number": null,
+   "source_sha256": "6a7e7af853ad37c89abe2dc2be85337d961bd8ab80d67d94f03c9b5e1b68ea2c",
+   "source_anchor": "Ax1.T31",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "",
+   "subsection": "A.13 Real-device measurement protocol",
+   "section_id": "",
+   "subsection_id": "Ax1.SS13",
+   "appendix_id": "Ax1",
+   "document_region": "appendix",
+   "representation": "linearized_table",
+   "table_id": "Ax1.T31",
+   "table_row": 1,
+   "row_label": "MedPsy-1.7B",
+   "caption": "Table 31 : OnePlus 13 local-inference measurements (three MedQA prompts per model). Both models use Q4_K_M GGUF builds with Vulkan partial offload ( -ngl 20 ) and six CPU threads. Energy is from the Android battery charge counter (unplugged device at 49% charge, Wi-Fi debugging).",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Model",
+     "source_id": "Ax1.T31.7.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Peak RAM",
+     "source_id": "Ax1.T31.7.1.2"
+    },
+    {
+     "column": 2,
+     "text": "tok/s",
+     "source_id": "Ax1.T31.7.1.3"
+    },
+    {
+     "column": 3,
+     "text": "tokens/answer",
+     "source_id": "Ax1.T31.7.1.4"
+    },
+    {
+     "column": 4,
+     "text": "TTFT",
+     "source_id": "Ax1.T31.7.1.5"
+    },
+    {
+     "column": 5,
+     "text": "time/answer",
+     "source_id": "Ax1.T31.7.1.6"
+    },
+    {
+     "column": 6,
+     "text": "energy/answer",
+     "source_id": "Ax1.T31.7.1.7"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 1,
+     "column": 0,
+     "text": "MedPsy-1.7B",
+     "source_id": "Ax1.T31.7.2.1"
+    },
+    {
+     "row": 1,
+     "column": 1,
+     "text": "2.22 GB",
+     "source_id": "Ax1.T31.7.2.2"
+    },
+    {
+     "row": 1,
+     "column": 2,
+     "text": "15.27",
+     "source_id": "Ax1.T31.7.2.3"
+    },
+    {
+     "row": 1,
+     "column": 3,
+     "text": "789",
+     "source_id": "Ax1.T31.7.2.4"
+    },
+    {
+     "row": 1,
+     "column": 4,
+     "text": "8.90 s",
+     "source_id": "Ax1.T31.7.2.5"
+    },
+    {
+     "row": 1,
+     "column": 5,
+     "text": "55.6 s",
+     "source_id": "Ax1.T31.7.2.6"
+    },
+    {
+     "row": 1,
+     "column": 6,
+     "text": "420 J",
+     "source_id": "Ax1.T31.7.2.7"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02011v2_table_daa445e9aad2caa9_2",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nMedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment\nTable 31 : OnePlus 13 local-inference measurements (three MedQA prompts per model). Both models use Q4_K_M GGUF builds with Vulkan partial offload ( -ngl 20 ) and six CPU threads. Energy is from the Android battery charge counter (unplugged device at 49% charge, Wi-Fi debugging).\nModel: MedPsy-4B; Peak RAM: 3.98 GB; tok/s: 6.63; tokens/answer: 422; TTFT: 15.04 s; time/answer: 105.4 s; energy/answer: 508 J",
+   "arxiv_id": "2611.02011v2",
+   "title": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02011v2",
+   "html_url": "https://arxiv.org/html/2611.02011v2#Ax1.T31",
+   "source_url": "https://arxiv.org/html/2611.02011v2#Ax1.T31",
+   "page_number": null,
+   "source_sha256": "6a7e7af853ad37c89abe2dc2be85337d961bd8ab80d67d94f03c9b5e1b68ea2c",
+   "source_anchor": "Ax1.T31",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "",
+   "subsection": "A.13 Real-device measurement protocol",
+   "section_id": "",
+   "subsection_id": "Ax1.SS13",
+   "appendix_id": "Ax1",
+   "document_region": "appendix",
+   "representation": "linearized_table",
+   "table_id": "Ax1.T31",
+   "table_row": 2,
+   "row_label": "MedPsy-4B",
+   "caption": "Table 31 : OnePlus 13 local-inference measurements (three MedQA prompts per model). Both models use Q4_K_M GGUF builds with Vulkan partial offload ( -ngl 20 ) and six CPU threads. Energy is from the Android battery charge counter (unplugged device at 49% charge, Wi-Fi debugging).",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Model",
+     "source_id": "Ax1.T31.7.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Peak RAM",
+     "source_id": "Ax1.T31.7.1.2"
+    },
+    {
+     "column": 2,
+     "text": "tok/s",
+     "source_id": "Ax1.T31.7.1.3"
+    },
+    {
+     "column": 3,
+     "text": "tokens/answer",
+     "source_id": "Ax1.T31.7.1.4"
+    },
+    {
+     "column": 4,
+     "text": "TTFT",
+     "source_id": "Ax1.T31.7.1.5"
+    },
+    {
+     "column": 5,
+     "text": "time/answer",
+     "source_id": "Ax1.T31.7.1.6"
+    },
+    {
+     "column": 6,
+     "text": "energy/answer",
+     "source_id": "Ax1.T31.7.1.7"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 2,
+     "column": 0,
+     "text": "MedPsy-4B",
+     "source_id": "Ax1.T31.7.3.1"
+    },
+    {
+     "row": 2,
+     "column": 1,
+     "text": "3.98 GB",
+     "source_id": "Ax1.T31.7.3.2"
+    },
+    {
+     "row": 2,
+     "column": 2,
+     "text": "6.63",
+     "source_id": "Ax1.T31.7.3.3"
+    },
+    {
+     "row": 2,
+     "column": 3,
+     "text": "422",
+     "source_id": "Ax1.T31.7.3.4"
+    },
+    {
+     "row": 2,
+     "column": 4,
+     "text": "15.04 s",
+     "source_id": "Ax1.T31.7.3.5"
+    },
+    {
+     "row": 2,
+     "column": 5,
+     "text": "105.4 s",
+     "source_id": "Ax1.T31.7.3.6"
+    },
+    {
+     "row": 2,
+     "column": 6,
+     "text": "508 J",
+     "source_id": "Ax1.T31.7.3.7"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2403.13313v1_c0061",
+   "arxiv_id": "2403.13313v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2403.13313v1#S4.SS6",
+   "section": "specialist support agents",
+   "subsection": "hospital & payor policy specialist",
+   "high_value": false,
+   "text": ". Compliance and Regulations: Hospital compliance with regulations like EMTALA, Joint Commission standards, Medicare conditions of participation, etc. Accommodation: Options for room types, amenities, guest services, accommodation for disabilities, service animals or pets, requesting a different provider, or any other information related to special accommodations at a medical facility. Safety and Security: Topics related to hospital safety like security procedures, restricted areas, emergency codes, power of attorney, accessing medical records, or any other information related to patient safety and patient security. Hospital Care: Policies and information related to medical care like advanced directives, discharge, home care, telehealth, clinical trials, or other information related to a patient’s care in a hospital or medical facility. Contact Information: Information about the means by which patients, their families, or visitors can get in touch with the hospital for things such as general inquiries, scheduling appointments, rescheduling appointments, seeking information, or addressing concerns. Providing phone numbers or email addresses for various points of contacts within the medical facility. Address and Location: Information about the location of the hospital, and nearby facilities such as restaurants, pharmacies, or laboratories, and provides guidance on navigating to the healthcare facility for patients or visitors. It could also offer guidance on public transportation options, and key points of interest in the hospital’s vicinity. The Hospital & Payor Policy Specialist is powered by two specialized LLM models: the Policy Detector and the Policy Retriever",
+   "text_with_context": "Polaris: A Safety-focused LLM Constellation Architecture for Healthcare | Specialist Support Agents > Hospital & Payor Policy Specialist\n\n. Compliance and Regulations: Hospital compliance with regulations like EMTALA, Joint Commission standards, Medicare conditions of participation, etc. Accommodation: Options for room types, amenities, guest services, accommodation for disabilities, service animals or pets, requesting a different provider, or any other information related to special accommodations at a medical facility. Safety and Security: Topics related to hospital safety like security procedures, restricted areas, emergency codes, power of attorney, accessing medical records, or any other information related to patient safety and patient security. Hospital Care: Policies and information related to medical care like advanced directives, discharge, home care, telehealth, clinical trials, or other information related to a patient’s care in a hospital or medical facility. Contact Information: Information about the means by which patients, their families, or visitors can get in touch with the hospital for things such as general inquiries, scheduling appointments, rescheduling appointments, seeking information, or addressing concerns. Providing phone numbers or email addresses for various points of contacts within the medical facility. Address and Location: Information about the location of the hospital, and nearby facilities such as restaurants, pharmacies, or laboratories, and provides guidance on navigating to the healthcare facility for patients or visitors. It could also offer guidance on public transportation options, and key points of interest in the hospital’s vicinity. The Hospital & Payor Policy Specialist is powered by two specialized LLM models: the Policy Detector and the Policy Retriever",
+   "title": "Polaris: A Safety-focused LLM Constellation Architecture for Healthcare",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2403.13313v1#S4.SS6",
+   "pdf_url": "https://arxiv.org/pdf/2403.13313v1",
+   "source_sha256": "5a1f1e296a19bf0224c71f4a9f8db56e883afd810556aca748c5af68d1683ae0"
+  },
+  {
+   "chunk_id": "2504.15330v1_c0018",
+   "arxiv_id": "2504.15330v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2504.15330v1#S8",
+   "section": "ethical considerations",
+   "subsection": "",
+   "high_value": false,
+   "text": "The Med-CoDE framework, designed to assess the reliability and accuracy of medical LLMs, operates within a domain where the potential consequences of errors are particularly significant, given the direct impact on patient care and treatment outcomes. In this work, only the publicly available standard benchmark medical QA datasets are used for training and evaluations. The Med-CoDE framework aims to enhance the evaluation of LLMs to ensure they meet rigorous standards of accuracy and reliability. However, it is essential to recognize that even well-evaluated models are not infallible and should not replace human judgment. Instead, they should be used as tools to support healthcare professionals, who must remain the final arbiters in clinical decision-making. By addressing these ethical considerations, the Med-CoDE framework can contribute to the responsible development and deployment of medical LLMs, ultimately supporting safer and more effective healthcare solutions.",
+   "text_with_context": "Med-CoDE: Medical Critique based Disagreement Evaluation Framework | Ethical Considerations\n\nThe Med-CoDE framework, designed to assess the reliability and accuracy of medical LLMs, operates within a domain where the potential consequences of errors are particularly significant, given the direct impact on patient care and treatment outcomes. In this work, only the publicly available standard benchmark medical QA datasets are used for training and evaluations. The Med-CoDE framework aims to enhance the evaluation of LLMs to ensure they meet rigorous standards of accuracy and reliability. However, it is essential to recognize that even well-evaluated models are not infallible and should not replace human judgment. Instead, they should be used as tools to support healthcare professionals, who must remain the final arbiters in clinical decision-making. By addressing these ethical considerations, the Med-CoDE framework can contribute to the responsible development and deployment of medical LLMs, ultimately supporting safer and more effective healthcare solutions.",
+   "title": "Med-CoDE: Medical Critique based Disagreement Evaluation Framework",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2504.15330v1#S8",
+   "pdf_url": "https://arxiv.org/pdf/2504.15330v1",
+   "source_sha256": "5dd059f2f870547cdb1be4ed34eb6b2c0b58745c86edee0d7e7064a8b63a638f"
+  },
+  {
+   "chunk_id": "2406.09923v2_c0010",
+   "arxiv_id": "2406.09923v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2406.09923v2#S3.SS2",
+   "section": "clibench : multifaceted benchmark for clinical decisions",
+   "subsection": "data processing and clinical data elements extraction",
+   "high_value": false,
+   "text": "We extract clinical data elements as the foundational information units by cross-referencing multiple tables of the hospital and note modules of the MIMIC-IV dataset ( Johnson et al., 2023 ) , which contains hospital-wide Electronic Health Records (EHR) from 2008 to 2019 at the Beth Israel Deaconess Medical Center in Boston.\nFirst, we obtain patient profile , including gender, race, age, insurance category, language and marital status.\nSecond, we obtain the medical record at discharge , including major complaint, history of present illness, past medical history, social history, family history, physical exam data, allergies, and current medications at the hospital admission time. These patient status records are represented in natural language in discharge notes.\nWe then induce the medical record at admission by removing the sections that describe information only available after the clinical decisions (diagnoses, procedures, lab tests, and prescriptions) are made from the medical record at discharge.\nExamples of those sections include discharge physical exam data, updated medication lists, and doctor’s notes/comments.\nThe induction is done by a rule-based NLP pipeline involving section identification, title extraction and keyword-matching. A manual screening process on 1000 sampled records iteratively updates the pipeline rules for coverage.\nThe correctness of all medical records at admission in the evaluation set is manually verified by a clinical NLP expert.\nThird, lab test results within the admission includes lab test item, result value, units, normal range and interpretation flags.\nFourth, we identify radiology results within the admission including indications and findings of patient radiology scans.",
+   "text_with_context": "CliBench: A Multifaceted and Multigranular Evaluation of Large Language Models for Clinical Decision Making | Clibench : Multifaceted Benchmark For Clinical Decisions > Data Processing And Clinical Data Elements Extraction\n\nWe extract clinical data elements as the foundational information units by cross-referencing multiple tables of the hospital and note modules of the MIMIC-IV dataset ( Johnson et al., 2023 ) , which contains hospital-wide Electronic Health Records (EHR) from 2008 to 2019 at the Beth Israel Deaconess Medical Center in Boston.\nFirst, we obtain patient profile , including gender, race, age, insurance category, language and marital status.\nSecond, we obtain the medical record at discharge , including major complaint, history of present illness, past medical history, social history, family history, physical exam data, allergies, and current medications at the hospital admission time. These patient status records are represented in natural language in discharge notes.\nWe then induce the medical record at admission by removing the sections that describe information only available after the clinical decisions (diagnoses, procedures, lab tests, and prescriptions) are made from the medical record at discharge.\nExamples of those sections include discharge physical exam data, updated medication lists, and doctor’s notes/comments.\nThe induction is done by a rule-based NLP pipeline involving section identification, title extraction and keyword-matching. A manual screening process on 1000 sampled records iteratively updates the pipeline rules for coverage.\nThe correctness of all medical records at admission in the evaluation set is manually verified by a clinical NLP expert.\nThird, lab test results within the admission includes lab test item, result value, units, normal range and interpretation flags.\nFourth, we identify radiology results within the admission including indications and findings of patient radiology scans.",
+   "title": "CliBench: A Multifaceted and Multigranular Evaluation of Large Language Models for Clinical Decision Making",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2406.09923v2#S3.SS2",
+   "pdf_url": "https://arxiv.org/pdf/2406.09923v2",
+   "source_sha256": "9e859011765bcb0dafecf6c714720ce9d7be5663f5e95249f17ff363f518558e"
+  },
+  {
+   "chunk_id": "2611.02011v2_table_62160ab72234b1bc_5",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nMedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment\nTable 5 : Final Data Mix and Source Licenses. SFT row counts represent final selected input for assistant target generation; RL counts describe the AlphaMed19K prompt pool used for DAPO.\nRow group: Corpus 2: Focused SFT; Group: SFT-2; Source / Role: MedMCQA Train; Rows: 129,231; License / Note: Apache-2.0",
+   "arxiv_id": "2611.02011v2",
+   "title": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02011v2",
+   "html_url": "https://arxiv.org/html/2611.02011v2#Ax1.T5",
+   "source_url": "https://arxiv.org/html/2611.02011v2#Ax1.T5",
+   "page_number": null,
+   "source_sha256": "6a7e7af853ad37c89abe2dc2be85337d961bd8ab80d67d94f03c9b5e1b68ea2c",
+   "source_anchor": "Ax1.T5",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "",
+   "subsection": "A.1 Data sources and prompts",
+   "section_id": "",
+   "subsection_id": "Ax1.SS1",
+   "appendix_id": "Ax1",
+   "document_region": "appendix",
+   "representation": "linearized_table",
+   "table_id": "Ax1.T5",
+   "table_row": 5,
+   "row_label": "SFT-2",
+   "caption": "Table 5 : Final Data Mix and Source Licenses. SFT row counts represent final selected input for assistant target generation; RL counts describe the AlphaMed19K prompt pool used for DAPO.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Group",
+     "source_id": "Ax1.T5.6.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Source / Role",
+     "source_id": "Ax1.T5.6.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Rows",
+     "source_id": "Ax1.T5.6.1.3"
+    },
+    {
+     "column": 3,
+     "text": "License / Note",
+     "source_id": "Ax1.T5.6.1.4"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 5,
+     "column": 0,
+     "text": "SFT-2",
+     "source_id": "Ax1.T5.6.8.1"
+    },
+    {
+     "row": 5,
+     "column": 1,
+     "text": "MedMCQA Train",
+     "source_id": "Ax1.T5.6.8.2"
+    },
+    {
+     "row": 5,
+     "column": 2,
+     "text": "129,231",
+     "source_id": "Ax1.T5.6.8.3"
+    },
+    {
+     "row": 5,
+     "column": 3,
+     "text": "Apache-2.0",
+     "source_id": "Ax1.T5.6.8.4"
+    }
+   ],
+   "source_notes": [],
+   "row_group": "Corpus 2: Focused SFT"
+  },
+  {
+   "chunk_id": "2611.02011v2_c0009",
+   "arxiv_id": "2611.02011v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02011v2#S4.SS2",
+   "section": "4  post-training methodology",
+   "subsection": "4.2  four-stage curriculum",
+   "high_value": false,
+   "text": ". We adopt the structured <think> / <answer> format and extend the binary correctness signal to a four-tier gated reward (§ 4.2 ); a controlled ablation (App. A.17.1 ) shows the four-tier extension is essentially neutral on accuracy versus a binary reward and provides only a modest token-efficiency benefit at 4B, so we report it as a design choice rather than a primary contribution. Within this scaffolding, our two RL design contributions are: a single-pass deterministic Stage-2 mining procedure (§ 4.2 ), and the integration of all four stages into a single training pipeline targeted at the sub-7B medical reasoning regime. Following AlphaMed, we annotate every training prompt empirically by sampling N{=}5 rollouts at temperature 0.7 from the policy and labelling by the count n_{c} of correct answers, mapped to six difficulty levels L_{1} – L_{6} ( L_{1}{=}5/5 , L_{6}{=}0/5 ); the coarser Easy/Moderate/Difficult split groups L_{1} alone, L_{2} – L_{5} together, and L_{6} alone. The Stage-1 training set follows AlphaMed’s data recipe: all of MedQA plus per-level stratified sampling of MedMCQA (capped at 1,600 per L_{i} ), with PubMedQA omitted following AlphaMed’s finding that it harms reasoning transfer. From this, \\sim 16K items at the Easy/Moderate levels form the actual Stage-1 corpus. The model is required to emit reasoning inside <think>...</think> tags and a final answer letter inside <answer>...</answer> [ 29 , 30 ] . Let c\\in\\{0,1\\} indicate answer correctness (matching ground truth) and t\\in\\{0,1\\} indicate the presence of a non-trivial reasoning block. Our task reward generalises the binary correctness/format scheme of Med-U1 to a four-tier function that gates jointly on c and t : The 0.5 vs",
+   "text_with_context": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment | 4  Post-Training Methodology > 4.2  Four-Stage Curriculum\n\n. We adopt the structured <think> / <answer> format and extend the binary correctness signal to a four-tier gated reward (§ 4.2 ); a controlled ablation (App. A.17.1 ) shows the four-tier extension is essentially neutral on accuracy versus a binary reward and provides only a modest token-efficiency benefit at 4B, so we report it as a design choice rather than a primary contribution. Within this scaffolding, our two RL design contributions are: a single-pass deterministic Stage-2 mining procedure (§ 4.2 ), and the integration of all four stages into a single training pipeline targeted at the sub-7B medical reasoning regime. Following AlphaMed, we annotate every training prompt empirically by sampling N{=}5 rollouts at temperature 0.7 from the policy and labelling by the count n_{c} of correct answers, mapped to six difficulty levels L_{1} – L_{6} ( L_{1}{=}5/5 , L_{6}{=}0/5 ); the coarser Easy/Moderate/Difficult split groups L_{1} alone, L_{2} – L_{5} together, and L_{6} alone. The Stage-1 training set follows AlphaMed’s data recipe: all of MedQA plus per-level stratified sampling of MedMCQA (capped at 1,600 per L_{i} ), with PubMedQA omitted following AlphaMed’s finding that it harms reasoning transfer. From this, \\sim 16K items at the Easy/Moderate levels form the actual Stage-1 corpus. The model is required to emit reasoning inside <think>...</think> tags and a final answer letter inside <answer>...</answer> [ 29 , 30 ] . Let c\\in\\{0,1\\} indicate answer correctness (matching ground truth) and t\\in\\{0,1\\} indicate the presence of a non-trivial reasoning block. Our task reward generalises the binary correctness/format scheme of Med-U1 to a four-tier function that gates jointly on c and t : The 0.5 vs",
+   "title": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02011v2#S4.SS2",
+   "pdf_url": "https://arxiv.org/pdf/2611.02011v2",
+   "source_sha256": "6a7e7af853ad37c89abe2dc2be85337d961bd8ab80d67d94f03c9b5e1b68ea2c"
+  },
+  {
+   "chunk_id": "2611.02011v2_table_62160ab72234b1bc_2",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nMedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment\nTable 5 : Final Data Mix and Source Licenses. SFT row counts represent final selected input for assistant target generation; RL counts describe the AlphaMed19K prompt pool used for DAPO.\nRow group: Corpus 1: Broad SFT & Seeds; Group: Seeds; Source / Role: FineFineWeb (Health); Rows: 2,133,642; License / Note: Apache-2.0",
+   "arxiv_id": "2611.02011v2",
+   "title": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02011v2",
+   "html_url": "https://arxiv.org/html/2611.02011v2#Ax1.T5",
+   "source_url": "https://arxiv.org/html/2611.02011v2#Ax1.T5",
+   "page_number": null,
+   "source_sha256": "6a7e7af853ad37c89abe2dc2be85337d961bd8ab80d67d94f03c9b5e1b68ea2c",
+   "source_anchor": "Ax1.T5",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "",
+   "subsection": "A.1 Data sources and prompts",
+   "section_id": "",
+   "subsection_id": "Ax1.SS1",
+   "appendix_id": "Ax1",
+   "document_region": "appendix",
+   "representation": "linearized_table",
+   "table_id": "Ax1.T5",
+   "table_row": 2,
+   "row_label": "Seeds",
+   "caption": "Table 5 : Final Data Mix and Source Licenses. SFT row counts represent final selected input for assistant target generation; RL counts describe the AlphaMed19K prompt pool used for DAPO.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Group",
+     "source_id": "Ax1.T5.6.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Source / Role",
+     "source_id": "Ax1.T5.6.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Rows",
+     "source_id": "Ax1.T5.6.1.3"
+    },
+    {
+     "column": 3,
+     "text": "License / Note",
+     "source_id": "Ax1.T5.6.1.4"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 2,
+     "column": 0,
+     "text": "Seeds",
+     "source_id": "Ax1.T5.6.4.1"
+    },
+    {
+     "row": 2,
+     "column": 1,
+     "text": "FineFineWeb (Health)",
+     "source_id": "Ax1.T5.6.4.2"
+    },
+    {
+     "row": 2,
+     "column": 2,
+     "text": "2,133,642",
+     "source_id": "Ax1.T5.6.4.3"
+    },
+    {
+     "row": 2,
+     "column": 3,
+     "text": "Apache-2.0",
+     "source_id": "Ax1.T5.6.4.4"
+    }
+   ],
+   "source_notes": [],
+   "row_group": "Corpus 1: Broad SFT & Seeds"
+  }
+ ],
+ "evidence_management": {
+  "protected_ids": [
+   "2611.02011v2_c0002",
+   "2611.02011v2_c0000",
+   "2611.02011v2_paragraph_22cd5730a5eed88b_0",
+   "2611.02011v2_c0022",
+   "2611.02011v2_c0015",
+   "2611.02011v2_c0014",
+   "2611.02011v2_c0004",
+   "2611.02011v2_table_1cd59829220c281a_1",
+   "2611.02011v2_table_1cd59829220c281a_2",
+   "2611.02011v2_table_1cd59829220c281a_3",
+   "2611.02011v2_table_1cd59829220c281a_4",
+   "2611.02011v2_paragraph_38cc9dd301c98e45_0",
+   "2611.02011v2_c0019",
+   "2611.02011v2_c0021",
+   "2611.02011v2_c0006",
+   "2611.02011v2_c0018",
+   "2611.02011v2_c0003",
+   "2611.02011v2_c0017",
+   "2611.02011v2_c0016",
+   "2611.02011v2_c0011",
+   "2611.02011v2_c0020",
+   "2611.02011v2_c0005",
+   "2611.02011v2_table_daa445e9aad2caa9_1",
+   "2611.02011v2_table_daa445e9aad2caa9_2",
+   "2403.13313v1_c0061",
+   "2504.15330v1_c0018",
+   "2406.09923v2_c0010",
+   "2611.02011v2_table_62160ab72234b1bc_5",
+   "2611.02011v2_c0009",
+   "2611.02011v2_table_62160ab72234b1bc_2"
+  ],
+  "supplementary_ids": [],
+  "searches": [
+   {
+    "query": "A hospital group wants an on-device medical assistant so patient data never leaves the device. What does MedPsy offer, how does its accuracy compare with much larger medical models, what does quantization cost in accuracy and size, and is it ready to support clinical decisions in the group's hospitals?",
+    "purpose": "original question",
+    "role": "original",
+    "chunk_ids": [
+     "2611.02011v2_c0002",
+     "2611.02011v2_c0000",
+     "2611.02011v2_paragraph_22cd5730a5eed88b_0",
+     "2611.02011v2_c0022",
+     "2611.02011v2_c0004",
+     "2611.02011v2_c0015",
+     "2611.02011v2_c0014",
+     "2611.02011v2_paragraph_38cc9dd301c98e45_0",
+     "2611.02011v2_c0019",
+     "2611.02011v2_table_1cd59829220c281a_3",
+     "2611.02011v2_c0018",
+     "2611.02011v2_c0021",
+     "2611.02011v2_table_1cd59829220c281a_1",
+     "2611.02011v2_table_62160ab72234b1bc_5",
+     "2611.02011v2_table_1cd59829220c281a_2",
+     "2611.02011v2_table_62160ab72234b1bc_2",
+     "2611.02011v2_c0005",
+     "2611.02011v2_table_62160ab72234b1bc_7",
+     "2611.02011v2_c0006",
+     "2611.02011v2_table_1cd59829220c281a_4",
+     "2403.13313v1_c0061",
+     "2504.15330v1_c0018",
+     "2503.05773v1_c0035",
+     "2611.02011v2_c0003",
+     "2406.09923v2_c0001",
+     "2611.02011v2_table_62160ab72234b1bc_3",
+     "2402.09742v4_c0020",
+     "2406.09923v2_c0010",
+     "2402.09742v4_c0007",
+     "2611.02011v2_table_daa445e9aad2caa9_1"
+    ],
+    "error": null
+   },
+   {
+    "query": "What does MedPsy offer?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02011v2_c0022",
+     "2611.02011v2_c0003",
+     "2611.02011v2_c0004",
+     "2611.02011v2_paragraph_22cd5730a5eed88b_0",
+     "2611.02011v2_c0015",
+     "2611.02011v2_c0000",
+     "2611.02011v2_c0021",
+     "2611.02011v2_c0019",
+     "2611.02011v2_c0011",
+     "2611.02011v2_c0006",
+     "2611.02011v2_c0009",
+     "2611.02011v2_table_daa445e9aad2caa9_1",
+     "2611.02011v2_paragraph_38cc9dd301c98e45_0",
+     "2611.02011v2_c0017",
+     "2611.02011v2_c0005",
+     "2611.02011v2_table_1cd59829220c281a_3",
+     "2611.02011v2_table_daa445e9aad2caa9_2",
+     "2611.02011v2_c0014",
+     "2611.02011v2_table_1cd59829220c281a_1",
+     "2611.02011v2_c0020",
+     "2611.02011v2_table_681a4ca4f6cbb97d_2",
+     "2611.02011v2_c0010",
+     "2611.02011v2_table_681a4ca4f6cbb97d_3",
+     "2611.02011v2_table_681a4ca4f6cbb97d_1",
+     "2611.02011v2_c0016",
+     "2611.02011v2_table_f02d3931aad01d02_2",
+     "2611.02011v2_table_f02d3931aad01d02_3",
+     "2611.02011v2_table_e30bda1a04d8bd0d_1",
+     "2611.02011v2_table_80327f2ea0c7b296_3",
+     "2611.02011v2_table_1cd59829220c281a_2"
+    ],
+    "error": null
+   },
+   {
+    "query": "MedPsy how does its accuracy compare with much larger medical models?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02011v2_c0022",
+     "2611.02011v2_c0001",
+     "2611.02011v2_c0014",
+     "2611.02011v2_paragraph_9355b9cb6c4917c2_0",
+     "2611.02011v2_c0018",
+     "2611.02011v2_c0017",
+     "2611.02011v2_c0016",
+     "2611.02011v2_c0015",
+     "2611.02011v2_table_1cd59829220c281a_3",
+     "2611.02011v2_paragraph_22cd5730a5eed88b_0",
+     "2611.02011v2_paragraph_38cc9dd301c98e45_0",
+     "2611.02011v2_c0006",
+     "2611.02011v2_table_1cd59829220c281a_1",
+     "2611.02011v2_c0012",
+     "2611.02011v2_table_1cd59829220c281a_4",
+     "2611.02011v2_c0002",
+     "2611.02011v2_c0000",
+     "2611.02011v2_table_1cd59829220c281a_2",
+     "2611.02011v2_c0011",
+     "2611.02011v2_c0019",
+     "2611.02011v2_c0021",
+     "2611.02011v2_c0004",
+     "2611.02011v2_c0020",
+     "2611.02011v2_c0003",
+     "2504.15330v1_c0014",
+     "2611.02011v2_table_18033612f098619f_1",
+     "2611.02011v2_table_daa445e9aad2caa9_1",
+     "2611.02011v2_table_daa445e9aad2caa9_2",
+     "2611.02011v2_table_e30bda1a04d8bd0d_1",
+     "2611.02011v2_table_e30bda1a04d8bd0d_2"
+    ],
+    "error": null
+   },
+   {
+    "query": "MedPsy what does quantization cost in accuracy and size?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02011v2_c0002",
+     "2611.02011v2_c0018",
+     "2611.02011v2_c0019",
+     "2611.02011v2_c0022",
+     "2611.02011v2_paragraph_22cd5730a5eed88b_0",
+     "2611.02011v2_paragraph_38cc9dd301c98e45_0",
+     "2611.02011v2_table_1cd59829220c281a_3",
+     "2611.02011v2_table_1cd59829220c281a_1",
+     "2611.02011v2_c0017",
+     "2611.02011v2_c0011",
+     "2611.02011v2_c0014",
+     "2611.02011v2_table_1cd59829220c281a_4",
+     "2611.02011v2_table_1cd59829220c281a_2",
+     "2611.02011v2_c0016",
+     "2611.02011v2_c0015",
+     "2611.02011v2_c0012",
+     "2611.02011v2_c0020",
+     "2611.02011v2_c0000",
+     "2611.02011v2_table_e30bda1a04d8bd0d_1",
+     "2611.02011v2_c0006",
+     "2611.02011v2_table_18033612f098619f_2",
+     "2611.02011v2_table_18033612f098619f_1",
+     "2611.02011v2_table_18033612f098619f_4",
+     "2611.02011v2_table_2863fb3888cf7d44_1",
+     "2611.02011v2_table_18033612f098619f_5",
+     "2611.02011v2_table_18033612f098619f_3",
+     "2611.02011v2_table_2863fb3888cf7d44_6",
+     "2611.02011v2_table_2863fb3888cf7d44_2",
+     "2611.02011v2_c0009",
+     "2611.02011v2_c0007"
+    ],
+    "error": null
+   },
+   {
+    "query": "MedPsy is it ready to support clinical decisions in the group's hospitals?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02011v2_c0021",
+     "2611.02011v2_paragraph_22cd5730a5eed88b_0",
+     "2611.02011v2_c0000",
+     "2611.02011v2_c0022",
+     "2406.09923v2_c0006",
+     "2402.09742v4_c0021",
+     "2611.02011v2_c0015",
+     "2611.02011v2_c0004",
+     "2406.09923v2_c0010",
+     "2611.02011v2_c0006",
+     "2504.15330v1_c0018",
+     "2403.13313v1_c0090",
+     "2403.13313v1_c0061",
+     "2406.09923v2_c0020",
+     "2406.09923v2_c0013",
+     "2406.09923v2_c0000",
+     "2611.02011v2_table_1cd59829220c281a_3",
+     "2611.02011v2_c0014",
+     "2611.02011v2_c0013",
+     "2611.02011v2_c0016",
+     "2611.02011v2_table_1cd59829220c281a_1",
+     "2403.13313v1_c0060",
+     "2403.13313v1_c0003",
+     "2611.02011v2_c0008",
+     "2611.02011v2_c0003",
+     "2402.09742v4_c0020",
+     "2406.09923v2_c0011",
+     "2406.09923v2_c0028",
+     "2406.09923v2_c0008",
+     "2403.13313v1_c0062"
+    ],
+    "error": null
+   }
+  ],
+  "tokens": 7948,
+  "base_tokens": 7948,
+  "base_budget": 8000,
+  "conclusion_tokens": 0,
+  "conclusion_allowance": 800,
+  "conclusion_ids": [],
+  "conclusion_considered": [
+   {
+    "paper": "2611.02011v2",
+    "conclusion": null,
+    "rank": null
+   }
+  ],
+  "trimmed_for_request_size": [],
+  "notes": [
+   {
+    "kind": "incomplete_table",
+    "table": "2611.02011v2_table_62160ab72234b1bc",
+    "rows_in_evidence": [
+     2,
+     5
+    ],
+    "rows_in_table": 7,
+    "caption": "Table 5 : Final Data Mix and Source Licenses",
+    "text": "Only 2 of 7 rows of Table 5 : Final Data Mix and Source Licenses (MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment) are in the evidence, so a comparison across that table may be incomplete."
+   }
+  ],
+  "component_searches": [
+   {
+    "query": "What does MedPsy offer?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02011v2_c0022",
+     "2611.02011v2_c0003",
+     "2611.02011v2_c0004",
+     "2611.02011v2_paragraph_22cd5730a5eed88b_0",
+     "2611.02011v2_c0015",
+     "2611.02011v2_c0000",
+     "2611.02011v2_c0021",
+     "2611.02011v2_c0019",
+     "2611.02011v2_c0011",
+     "2611.02011v2_c0006",
+     "2611.02011v2_c0009",
+     "2611.02011v2_table_daa445e9aad2caa9_1",
+     "2611.02011v2_paragraph_38cc9dd301c98e45_0",
+     "2611.02011v2_c0017",
+     "2611.02011v2_c0005",
+     "2611.02011v2_table_1cd59829220c281a_3",
+     "2611.02011v2_table_daa445e9aad2caa9_2",
+     "2611.02011v2_c0014",
+     "2611.02011v2_table_1cd59829220c281a_1",
+     "2611.02011v2_c0020",
+     "2611.02011v2_table_681a4ca4f6cbb97d_2",
+     "2611.02011v2_c0010",
+     "2611.02011v2_table_681a4ca4f6cbb97d_3",
+     "2611.02011v2_table_681a4ca4f6cbb97d_1",
+     "2611.02011v2_c0016",
+     "2611.02011v2_table_f02d3931aad01d02_2",
+     "2611.02011v2_table_f02d3931aad01d02_3",
+     "2611.02011v2_table_e30bda1a04d8bd0d_1",
+     "2611.02011v2_table_80327f2ea0c7b296_3",
+     "2611.02011v2_table_1cd59829220c281a_2"
+    ],
+    "error": null
+   },
+   {
+    "query": "MedPsy how does its accuracy compare with much larger medical models?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02011v2_c0022",
+     "2611.02011v2_c0001",
+     "2611.02011v2_c0014",
+     "2611.02011v2_paragraph_9355b9cb6c4917c2_0",
+     "2611.02011v2_c0018",
+     "2611.02011v2_c0017",
+     "2611.02011v2_c0016",
+     "2611.02011v2_c0015",
+     "2611.02011v2_table_1cd59829220c281a_3",
+     "2611.02011v2_paragraph_22cd5730a5eed88b_0",
+     "2611.02011v2_paragraph_38cc9dd301c98e45_0",
+     "2611.02011v2_c0006",
+     "2611.02011v2_table_1cd59829220c281a_1",
+     "2611.02011v2_c0012",
+     "2611.02011v2_table_1cd59829220c281a_4",
+     "2611.02011v2_c0002",
+     "2611.02011v2_c0000",
+     "2611.02011v2_table_1cd59829220c281a_2",
+     "2611.02011v2_c0011",
+     "2611.02011v2_c0019",
+     "2611.02011v2_c0021",
+     "2611.02011v2_c0004",
+     "2611.02011v2_c0020",
+     "2611.02011v2_c0003",
+     "2504.15330v1_c0014",
+     "2611.02011v2_table_18033612f098619f_1",
+     "2611.02011v2_table_daa445e9aad2caa9_1",
+     "2611.02011v2_table_daa445e9aad2caa9_2",
+     "2611.02011v2_table_e30bda1a04d8bd0d_1",
+     "2611.02011v2_table_e30bda1a04d8bd0d_2"
+    ],
+    "error": null
+   },
+   {
+    "query": "MedPsy what does quantization cost in accuracy and size?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02011v2_c0002",
+     "2611.02011v2_c0018",
+     "2611.02011v2_c0019",
+     "2611.02011v2_c0022",
+     "2611.02011v2_paragraph_22cd5730a5eed88b_0",
+     "2611.02011v2_paragraph_38cc9dd301c98e45_0",
+     "2611.02011v2_table_1cd59829220c281a_3",
+     "2611.02011v2_table_1cd59829220c281a_1",
+     "2611.02011v2_c0017",
+     "2611.02011v2_c0011",
+     "2611.02011v2_c0014",
+     "2611.02011v2_table_1cd59829220c281a_4",
+     "2611.02011v2_table_1cd59829220c281a_2",
+     "2611.02011v2_c0016",
+     "2611.02011v2_c0015",
+     "2611.02011v2_c0012",
+     "2611.02011v2_c0020",
+     "2611.02011v2_c0000",
+     "2611.02011v2_table_e30bda1a04d8bd0d_1",
+     "2611.02011v2_c0006",
+     "2611.02011v2_table_18033612f098619f_2",
+     "2611.02011v2_table_18033612f098619f_1",
+     "2611.02011v2_table_18033612f098619f_4",
+     "2611.02011v2_table_2863fb3888cf7d44_1",
+     "2611.02011v2_table_18033612f098619f_5",
+     "2611.02011v2_table_18033612f098619f_3",
+     "2611.02011v2_table_2863fb3888cf7d44_6",
+     "2611.02011v2_table_2863fb3888cf7d44_2",
+     "2611.02011v2_c0009",
+     "2611.02011v2_c0007"
+    ],
+    "error": null
+   },
+   {
+    "query": "MedPsy is it ready to support clinical decisions in the group's hospitals?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02011v2_c0021",
+     "2611.02011v2_paragraph_22cd5730a5eed88b_0",
+     "2611.02011v2_c0000",
+     "2611.02011v2_c0022",
+     "2406.09923v2_c0006",
+     "2402.09742v4_c0021",
+     "2611.02011v2_c0015",
+     "2611.02011v2_c0004",
+     "2406.09923v2_c0010",
+     "2611.02011v2_c0006",
+     "2504.15330v1_c0018",
+     "2403.13313v1_c0090",
+     "2403.13313v1_c0061",
+     "2406.09923v2_c0020",
+     "2406.09923v2_c0013",
+     "2406.09923v2_c0000",
+     "2611.02011v2_table_1cd59829220c281a_3",
+     "2611.02011v2_c0014",
+     "2611.02011v2_c0013",
+     "2611.02011v2_c0016",
+     "2611.02011v2_table_1cd59829220c281a_1",
+     "2403.13313v1_c0060",
+     "2403.13313v1_c0003",
+     "2611.02011v2_c0008",
+     "2611.02011v2_c0003",
+     "2402.09742v4_c0020",
+     "2406.09923v2_c0011",
+     "2406.09923v2_c0028",
+     "2406.09923v2_c0008",
+     "2403.13313v1_c0062"
+    ],
+    "error": null
+   }
+  ]
+ },
+ "assistance": {
+  "mode": "standard",
+  "activated": false,
+  "route": null
+ },
+ "plan": null,
+ "synthesis_report": {
+  "schema_errors": [],
+  "dropped": [],
+  "contract_repairs": [],
+  "component_map_errors": []
+ },
+ "review_report": {
+  "withheld_no_decision": [],
+  "invalid_decisions": [],
+  "duplicate_decisions": [],
+  "repairs": [],
+  "dropped_limitations": [],
+  "component_check_errors": []
+ },
+ "precheck_flags": {
+  "2": [
+   {
+    "number": "6.75",
+    "issues": [
+     "unit_mismatch"
+    ]
+   }
+  ],
+  "11": [
+   {
+    "number": "5.56",
+    "issues": [
+     "missing_condition"
+    ]
+   },
+   {
+    "number": "4",
+    "issues": [
+     "missing_condition"
+    ]
+   },
+   {
+    "number": "1.7",
+    "issues": [
+     "negation_mismatch",
+     "sign_flip"
+    ]
+   }
+  ]
+ },
+ "review": {
+  "coverage": "partial",
+  "gap": "The supplied passages do not establish that patient data never leaves the hospital group's complete application or device configuration, or establish readiness in its hospitals."
+ },
+ "attempts": [
+  {
+   "attempt": 1,
+   "mode": "standard",
+   "resumed_from": [],
+   "status": "complete",
+   "seconds": 141.407,
+   "timings": {
+    "evidence": 15.471,
+    "synthesis": 69.484,
+    "review": 56.371,
+    "publication": 0.038
+   }
+  }
+ ],
+ "human_review": {
+  "status": "pending",
+  "reviewer": null
+ },
+ "approved": false,
+ "engine": "s3-standard",
+ "components": [
+  "What does MedPsy offer?",
+  "MedPsy how does its accuracy compare with much larger medical models?",
+  "MedPsy what does quantization cost in accuracy and size?",
+  "MedPsy is it ready to support clinical decisions in the group's hospitals?"
+ ]
+}

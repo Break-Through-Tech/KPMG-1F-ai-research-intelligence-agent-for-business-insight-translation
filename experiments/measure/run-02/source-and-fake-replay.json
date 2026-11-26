@@ -1,0 +1,433 @@
+{
+  "source_anchor_checks": [
+    {
+      "question": "Q2",
+      "point": "Q2-P1",
+      "chunk_id": "2412.14470v2_c0000",
+      "source_url": "https://arxiv.org/html/2412.14470v2#abstract1",
+      "origin_path": "D:\\KPMG-library-data\\html-cache\\2412.14470v2.html.gz",
+      "source_sha256": "d75e5fb230a89a9ffa0484fbfe694ac609b7b5de3aa59204cadf73b473737338",
+      "anchor": null,
+      "scope": "whole paper",
+      "literal_terms": [
+        {
+          "text": "349",
+          "found": true
+        },
+        {
+          "text": "2,000",
+          "found": true
+        },
+        {
+          "text": "8",
+          "found": true
+        },
+        {
+          "text": "10",
+          "found": true
+        }
+      ],
+      "exact_indexed_text_present_in_source": false,
+      "reviewed": false
+    },
+    {
+      "question": "Q2",
+      "point": "Q2-P2",
+      "chunk_id": "2412.14470v2_c0000",
+      "source_url": "https://arxiv.org/html/2412.14470v2#abstract1",
+      "origin_path": "D:\\KPMG-library-data\\html-cache\\2412.14470v2.html.gz",
+      "source_sha256": "d75e5fb230a89a9ffa0484fbfe694ac609b7b5de3aa59204cadf73b473737338",
+      "anchor": null,
+      "scope": "whole paper",
+      "literal_terms": [
+        {
+          "text": "16",
+          "found": true
+        },
+        {
+          "text": "60%",
+          "found": true
+        }
+      ],
+      "exact_indexed_text_present_in_source": false,
+      "reviewed": false
+    },
+    {
+      "question": "Q2",
+      "point": "Q2-P2",
+      "chunk_id": "2412.14470v2_c0004",
+      "source_url": "https://arxiv.org/html/2412.14470v2#S1",
+      "origin_path": "D:\\KPMG-library-data\\html-cache\\2412.14470v2.html.gz",
+      "source_sha256": "d75e5fb230a89a9ffa0484fbfe694ac609b7b5de3aa59204cadf73b473737338",
+      "anchor": null,
+      "scope": "whole paper",
+      "literal_terms": [
+        {
+          "text": "16",
+          "found": true
+        },
+        {
+          "text": "60%",
+          "found": true
+        }
+      ],
+      "exact_indexed_text_present_in_source": false,
+      "reviewed": false
+    },
+    {
+      "question": "Q2",
+      "point": "Q2-P2",
+      "chunk_id": "2412.14470v2_c0025",
+      "source_url": "https://arxiv.org/html/2412.14470v2#S5",
+      "origin_path": "D:\\KPMG-library-data\\html-cache\\2412.14470v2.html.gz",
+      "source_sha256": "d75e5fb230a89a9ffa0484fbfe694ac609b7b5de3aa59204cadf73b473737338",
+      "anchor": null,
+      "scope": "whole paper",
+      "literal_terms": [
+        {
+          "text": "16",
+          "found": true
+        },
+        {
+          "text": "60%",
+          "found": true
+        }
+      ],
+      "exact_indexed_text_present_in_source": true,
+      "reviewed": false
+    },
+    {
+      "question": "Q2",
+      "point": "Q2-P3",
+      "chunk_id": "2402.01622v4_c0000",
+      "source_url": "https://arxiv.org/html/2402.01622v4#abstract1",
+      "origin_path": "D:\\KPMG-library-data\\html-cache\\2402.01622v4.html.gz",
+      "source_sha256": "5b5569437acd6f010d6ca71b0958c15a92ecdc3c5e90e8ecc13966d9ebdd7699",
+      "anchor": null,
+      "scope": "whole paper",
+      "literal_terms": [
+        {
+          "text": "1,225",
+          "found": true
+        }
+      ],
+      "exact_indexed_text_present_in_source": true,
+      "reviewed": false
+    },
+    {
+      "question": "Q2",
+      "point": "Q2-P3",
+      "chunk_id": "2402.01622v4_c0012",
+      "source_url": "https://arxiv.org/html/2402.01622v4#S3.SS3",
+      "origin_path": "D:\\KPMG-library-data\\html-cache\\2402.01622v4.html.gz",
+      "source_sha256": "5b5569437acd6f010d6ca71b0958c15a92ecdc3c5e90e8ecc13966d9ebdd7699",
+      "anchor": null,
+      "scope": "whole paper",
+      "literal_terms": [
+        {
+          "text": "1,225",
+          "found": true
+        }
+      ],
+      "exact_indexed_text_present_in_source": false,
+      "reviewed": false
+    },
+    {
+      "question": "Q2",
+      "point": "Q2-P4",
+      "chunk_id": "2402.01622v4_c0000",
+      "source_url": "https://arxiv.org/html/2402.01622v4#abstract1",
+      "origin_path": "D:\\KPMG-library-data\\html-cache\\2402.01622v4.html.gz",
+      "source_sha256": "5b5569437acd6f010d6ca71b0958c15a92ecdc3c5e90e8ecc13966d9ebdd7699",
+      "anchor": null,
+      "scope": "whole paper",
+      "literal_terms": [
+        {
+          "text": "0.6",
+          "found": true
+        }
+      ],
+      "exact_indexed_text_present_in_source": true,
+      "reviewed": false
+    },
+    {
+      "question": "Q2",
+      "point": "Q2-P4",
+      "chunk_id": "2402.01622v4_c0018",
+      "source_url": "https://arxiv.org/html/2402.01622v4#S4.SS2",
+      "origin_path": "D:\\KPMG-library-data\\html-cache\\2402.01622v4.html.gz",
+      "source_sha256": "5b5569437acd6f010d6ca71b0958c15a92ecdc3c5e90e8ecc13966d9ebdd7699",
+      "anchor": null,
+      "scope": "whole paper",
+      "literal_terms": [
+        {
+          "text": "0.6",
+          "found": true
+        }
+      ],
+      "exact_indexed_text_present_in_source": true,
+      "reviewed": false
+    },
+    {
+      "question": "Q2",
+      "point": "Q2-P4",
+      "chunk_id": "2402.01622v4_c0024",
+      "source_url": "https://arxiv.org/html/2402.01622v4#S6",
+      "origin_path": "D:\\KPMG-library-data\\html-cache\\2402.01622v4.html.gz",
+      "source_sha256": "5b5569437acd6f010d6ca71b0958c15a92ecdc3c5e90e8ecc13966d9ebdd7699",
+      "anchor": null,
+      "scope": "whole paper",
+      "literal_terms": [
+        {
+          "text": "0.6",
+          "found": true
+        }
+      ],
+      "exact_indexed_text_present_in_source": true,
+      "reviewed": false
+    },
+    {
+      "question": "ev05",
+      "point": "ev05-f01",
+      "chunk_id": "2602.00931v2_c0022",
+      "source_url": "https://arxiv.org/html/2602.00931v2#S4.SS4",
+      "origin_path": "C:\\Users\\ngkho\\KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation\\data\\html\\2602.00931v2.html",
+      "source_sha256": "f4048f31e3a129c36cb209fee67dc76f15c63aae7543b524ef38d5f2d2b98fa8",
+      "anchor": null,
+      "scope": "whole paper",
+      "literal_terms": [
+        {
+          "text": "Under data scarcity (25%), binary DPO holds a slight advantage",
+          "found": true
+        }
+      ],
+      "exact_indexed_text_present_in_source": true,
+      "reviewed": false
+    },
+    {
+      "question": "ev05",
+      "point": "ev05-f02",
+      "chunk_id": "2602.00931v2_c0022",
+      "source_url": "https://arxiv.org/html/2602.00931v2#S4.SS4",
+      "origin_path": "C:\\Users\\ngkho\\KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation\\data\\html\\2602.00931v2.html",
+      "source_sha256": "f4048f31e3a129c36cb209fee67dc76f15c63aae7543b524ef38d5f2d2b98fa8",
+      "anchor": null,
+      "scope": "whole paper",
+      "literal_terms": [
+        {
+          "text": "CU- DPO overtakes binary DPO at 50% data",
+          "found": true
+        }
+      ],
+      "exact_indexed_text_present_in_source": true,
+      "reviewed": false
+    },
+    {
+      "question": "ev05",
+      "point": "ev05-f03",
+      "chunk_id": "2602.00931v2_c0022",
+      "source_url": "https://arxiv.org/html/2602.00931v2#S4.SS4",
+      "origin_path": "C:\\Users\\ngkho\\KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation\\data\\html\\2602.00931v2.html",
+      "source_sha256": "f4048f31e3a129c36cb209fee67dc76f15c63aae7543b524ef38d5f2d2b98fa8",
+      "anchor": null,
+      "scope": "whole paper",
+      "literal_terms": [
+        {
+          "text": "We use win rate rather than Pass@1 to isolate optimization efficiency",
+          "found": true
+        }
+      ],
+      "exact_indexed_text_present_in_source": true,
+      "reviewed": false
+    },
+    {
+      "question": "ev06",
+      "point": "ev06-f01",
+      "chunk_id": "2602.00933v3_c0001",
+      "source_url": "https://arxiv.org/html/2602.00933v3#abstract1",
+      "origin_path": "C:\\Users\\ngkho\\KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation\\data\\html\\2602.00933v3.html",
+      "source_sha256": "31773889b23d68e964581966a9d13b89d7ffae23542bbce757876cb30e140d2c",
+      "anchor": null,
+      "scope": "whole paper",
+      "literal_terms": [
+        {
+          "text": "measuring tool-use competency against production MCP servers",
+          "found": true
+        }
+      ],
+      "exact_indexed_text_present_in_source": true,
+      "reviewed": false
+    },
+    {
+      "question": "ev06",
+      "point": "ev06-f01",
+      "chunk_id": "2602.00933v3_c0002",
+      "source_url": "https://arxiv.org/html/2602.00933v3#S1",
+      "origin_path": "C:\\Users\\ngkho\\KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation\\data\\html\\2602.00933v3.html",
+      "source_sha256": "31773889b23d68e964581966a9d13b89d7ffae23542bbce757876cb30e140d2c",
+      "anchor": null,
+      "scope": "whole paper",
+      "literal_terms": [
+        {
+          "text": "large-scale real-server benchmark",
+          "found": true
+        }
+      ],
+      "exact_indexed_text_present_in_source": true,
+      "reviewed": false
+    },
+    {
+      "question": "ev06",
+      "point": "ev06-f02",
+      "chunk_id": "2602.00933v3_c0001",
+      "source_url": "https://arxiv.org/html/2602.00933v3#abstract1",
+      "origin_path": "C:\\Users\\ngkho\\KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation\\data\\html\\2602.00933v3.html",
+      "source_sha256": "31773889b23d68e964581966a9d13b89d7ffae23542bbce757876cb30e140d2c",
+      "anchor": null,
+      "scope": "whole paper",
+      "literal_terms": [
+        {
+          "text": "1,000 natural-language tasks written and verified by human experts spanning 36 real MCP servers and 220 tools",
+          "found": true
+        }
+      ],
+      "exact_indexed_text_present_in_source": true,
+      "reviewed": false
+    },
+    {
+      "question": "ev06",
+      "point": "ev06-f02",
+      "chunk_id": "2602.00933v3_c0003",
+      "source_url": "https://arxiv.org/html/2602.00933v3#S1",
+      "origin_path": "C:\\Users\\ngkho\\KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation\\data\\html\\2602.00933v3.html",
+      "source_sha256": "31773889b23d68e964581966a9d13b89d7ffae23542bbce757876cb30e140d2c",
+      "anchor": null,
+      "scope": "whole paper",
+      "literal_terms": [
+        {
+          "text": "1,000 tasks across 36 production MCP servers and 220 tools",
+          "found": true
+        },
+        {
+          "text": "1,000 tasks across 36 production MCP servers and 220 tools",
+          "found": true
+        }
+      ],
+      "exact_indexed_text_present_in_source": false,
+      "reviewed": false
+    },
+    {
+      "question": "ev06",
+      "point": "ev06-f02",
+      "chunk_id": "2602.00933v3_c0004",
+      "source_url": "https://arxiv.org/html/2602.00933v3#S1",
+      "origin_path": "C:\\Users\\ngkho\\KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation\\data\\html\\2602.00933v3.html",
+      "source_sha256": "31773889b23d68e964581966a9d13b89d7ffae23542bbce757876cb30e140d2c",
+      "anchor": null,
+      "scope": "whole paper",
+      "literal_terms": [
+        {
+          "text": "1,000 tasks across 36 production MCP servers and 220 tools",
+          "found": true
+        },
+        {
+          "text": "1,000 tasks across 36 production MCP servers and 220 tools",
+          "found": true
+        }
+      ],
+      "exact_indexed_text_present_in_source": false,
+      "reviewed": false
+    },
+    {
+      "question": "ev06",
+      "point": "ev06-f03",
+      "chunk_id": "2602.00933v3_c0001",
+      "source_url": "https://arxiv.org/html/2602.00933v3#abstract1",
+      "origin_path": "C:\\Users\\ngkho\\KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation\\data\\html\\2602.00933v3.html",
+      "source_sha256": "31773889b23d68e964581966a9d13b89d7ffae23542bbce757876cb30e140d2c",
+      "anchor": null,
+      "scope": "whole paper",
+      "literal_terms": [
+        {
+          "text": "This answer-centric scoring permits valid alternative tool-call trajectories to receive credit",
+          "found": true
+        }
+      ],
+      "exact_indexed_text_present_in_source": true,
+      "reviewed": false
+    },
+    {
+      "question": "ev06",
+      "point": "ev06-f03",
+      "chunk_id": "2602.00933v3_c0002",
+      "source_url": "https://arxiv.org/html/2602.00933v3#S1",
+      "origin_path": "C:\\Users\\ngkho\\KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation\\data\\html\\2602.00933v3.html",
+      "source_sha256": "31773889b23d68e964581966a9d13b89d7ffae23542bbce757876cb30e140d2c",
+      "anchor": null,
+      "scope": "whole paper",
+      "literal_terms": [
+        {
+          "text": "alternative tool-call paths that yield the same factual claims receive full credit",
+          "found": true
+        }
+      ],
+      "exact_indexed_text_present_in_source": true,
+      "reviewed": false
+    }
+  ],
+  "fake_verifier_replay": [
+    {
+      "case": "correct paired ranges",
+      "pinned_source": "2602.00931v2_c0000",
+      "expected_supported": true,
+      "held": false,
+      "retained": [
+        "Strategy selection accuracy improved from 35–46% to 68–78% across seven base models."
+      ],
+      "provider": "permissive deterministic fake",
+      "reviewed": true
+    },
+    {
+      "case": "reversed ranges",
+      "pinned_source": "2602.00931v2_c0000",
+      "expected_supported": false,
+      "held": false,
+      "retained": [
+        "Strategy selection accuracy improved from 68–78% to 35–46% across seven base models."
+      ],
+      "provider": "permissive deterministic fake",
+      "reviewed": true
+    },
+    {
+      "case": "regrouped endpoints",
+      "pinned_source": "2602.00931v2_c0000",
+      "expected_supported": false,
+      "held": false,
+      "retained": [
+        "Strategy selection accuracy improved from 35–78% to 46–68% across seven base models."
+      ],
+      "provider": "permissive deterministic fake",
+      "reviewed": true
+    },
+    {
+      "case": "collapsed endpoints",
+      "pinned_source": "2602.00931v2_c0000",
+      "expected_supported": false,
+      "held": false,
+      "retained": [
+        "Strategy selection accuracy improved from 35% to 78% across seven base models."
+      ],
+      "provider": "permissive deterministic fake",
+      "reviewed": true
+    },
+    {
+      "case": "equivalent under-18 qualifier",
+      "pinned_source": "frozen-audit-33",
+      "expected_supported": true,
+      "held": true,
+      "retained": [],
+      "provider": "permissive deterministic fake",
+      "reviewed": true
+    }
+  ]
+}

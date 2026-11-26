@@ -1,0 +1,245 @@
+{
+  "archive_sha256": "cb7c0625b23b09f9c0656efe81f6c17eba8c82c27d7dd5024b9a773bb33871a5",
+  "parents_sha256": "78d8efd7c9df075be09ffa5f3a9c7ca79c54efa2d7caf75c8f0329ea72ff41aa",
+  "provider_calls": 0,
+  "cases": [
+    {
+      "name": "e5a8c4c460134444ad0b3e7da476fa44",
+      "cohort": "retained Baseline range",
+      "reviewed": false,
+      "expected": "accept",
+      "original_claim": {
+        "chunk_ids": [
+          "2602.00931v2_c0000"
+        ],
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.00931v2_c0000",
+            "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+          }
+        ],
+        "text": "On mathematical reasoning benchmarks, CU-DPO improved strategy-selection accuracy from 35–46% to 68–78% across seven base models."
+      },
+      "typed_claim": {
+        "scope": {
+          "subject": "CU-DPO",
+          "metric": "strategy selection accuracy",
+          "setting": "mathematical reasoning benchmarks",
+          "population": "seven base models"
+        },
+        "before": {
+          "value": {
+            "lower": "35",
+            "upper": "46",
+            "unit": "percent",
+            "form": "range"
+          },
+          "locators": [
+            {
+              "chunk_id": "2602.00931v2_c0000",
+              "selector": [
+                1056,
+                1062
+              ]
+            }
+          ]
+        },
+        "after": {
+          "value": {
+            "lower": "68",
+            "upper": "78",
+            "unit": "percent",
+            "form": "range"
+          },
+          "locators": [
+            {
+              "chunk_id": "2602.00931v2_c0000",
+              "selector": [
+                1066,
+                1072
+              ]
+            }
+          ]
+        }
+      },
+      "current": "review",
+      "current_detail": {
+        "status": "uncertain",
+        "contradictions": [],
+        "uncertain": [
+          "subject_unconfirmed"
+        ],
+        "mentions": [
+          {
+            "number": "35",
+            "status": "uncertain",
+            "issues": [
+              "subject_unconfirmed"
+            ],
+            "subject": "CU-DPO",
+            "metric": "accuracy",
+            "unit": null
+          },
+          {
+            "number": "46",
+            "status": "uncertain",
+            "issues": [
+              "subject_unconfirmed"
+            ],
+            "subject": "CU-DPO",
+            "metric": "accuracy",
+            "unit": "percent"
+          },
+          {
+            "number": "68",
+            "status": "uncertain",
+            "issues": [
+              "subject_unconfirmed"
+            ],
+            "subject": "CU-DPO",
+            "metric": "accuracy",
+            "unit": null
+          },
+          {
+            "number": "78",
+            "status": "uncertain",
+            "issues": [
+              "subject_unconfirmed"
+            ],
+            "subject": "CU-DPO",
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "candidate": "accept",
+      "reason": "scope, role, value, and exact delivered evidence agree",
+      "delivered_chunk_ids": [
+        "2602.00931v2_c0000"
+      ],
+      "rendered": "For strategy selection accuracy (CU-DPO, mathematical reasoning benchmarks, seven base models), the before-training range was 35–46% and the after-training range was 68–78%."
+    },
+    {
+      "name": "39b20c7e451a4d2b9c5579a6b3767d34",
+      "cohort": "retained Baseline range",
+      "reviewed": false,
+      "expected": "accept",
+      "original_claim": {
+        "chunk_ids": [
+          "2602.00931v2_c0000"
+        ],
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.00931v2_c0000",
+            "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+          }
+        ],
+        "text": "CU-DPO improved strategy-selection accuracy from 35–46% to 68–78% across seven base models on mathematical reasoning benchmarks."
+      },
+      "typed_claim": {
+        "scope": {
+          "subject": "CU-DPO",
+          "metric": "strategy selection accuracy",
+          "setting": "mathematical reasoning benchmarks",
+          "population": "seven base models"
+        },
+        "before": {
+          "value": {
+            "lower": "35",
+            "upper": "46",
+            "unit": "percent",
+            "form": "range"
+          },
+          "locators": [
+            {
+              "chunk_id": "2602.00931v2_c0000",
+              "selector": [
+                1056,
+                1062
+              ]
+            }
+          ]
+        },
+        "after": {
+          "value": {
+            "lower": "68",
+            "upper": "78",
+            "unit": "percent",
+            "form": "range"
+          },
+          "locators": [
+            {
+              "chunk_id": "2602.00931v2_c0000",
+              "selector": [
+                1066,
+                1072
+              ]
+            }
+          ]
+        }
+      },
+      "current": "review",
+      "current_detail": {
+        "status": "uncertain",
+        "contradictions": [],
+        "uncertain": [
+          "subject_unconfirmed"
+        ],
+        "mentions": [
+          {
+            "number": "35",
+            "status": "uncertain",
+            "issues": [
+              "subject_unconfirmed"
+            ],
+            "subject": "CU-DPO",
+            "metric": "accuracy",
+            "unit": null
+          },
+          {
+            "number": "46",
+            "status": "uncertain",
+            "issues": [
+              "subject_unconfirmed"
+            ],
+            "subject": "CU-DPO",
+            "metric": "accuracy",
+            "unit": "percent"
+          },
+          {
+            "number": "68",
+            "status": "uncertain",
+            "issues": [
+              "subject_unconfirmed"
+            ],
+            "subject": "CU-DPO",
+            "metric": "accuracy",
+            "unit": null
+          },
+          {
+            "number": "78",
+            "status": "uncertain",
+            "issues": [
+              "subject_unconfirmed"
+            ],
+            "subject": "CU-DPO",
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "candidate": "accept",
+      "reason": "scope, role, value, and exact delivered evidence agree",
+      "delivered_chunk_ids": [
+        "2602.00931v2_c0000"
+      ],
+      "rendered": "For strategy selection accuracy (CU-DPO, mathematical reasoning benchmarks, seven base models), the before-training range was 35–46% and the after-training range was 68–78%."
+    }
+  ],
+  "counts": {
+    "accept": 2
+  },
+  "gate_mismatches": []
+}

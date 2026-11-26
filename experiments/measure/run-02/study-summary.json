@@ -1,0 +1,123 @@
+{
+  "retrieval_totals": {
+    "8": {
+      "A": {
+        "required_papers": 4,
+        "papers_found": 3,
+        "gold_passages": 12,
+        "gold_found": 5,
+        "parts": 10,
+        "parts_found": 6,
+        "returned": 24,
+        "off_target_paper": 2,
+        "unlabelled_passages": 19
+      },
+      "B": {
+        "required_papers": 4,
+        "papers_found": 3,
+        "gold_passages": 12,
+        "gold_found": 5,
+        "parts": 10,
+        "parts_found": 6,
+        "returned": 24,
+        "off_target_paper": 2,
+        "unlabelled_passages": 19
+      },
+      "C": {
+        "required_papers": 4,
+        "papers_found": 4,
+        "gold_passages": 12,
+        "gold_found": 4,
+        "parts": 10,
+        "parts_found": 8,
+        "returned": 24,
+        "off_target_paper": 3,
+        "unlabelled_passages": 20
+      },
+      "D": {
+        "required_papers": 4,
+        "papers_found": 4,
+        "gold_passages": 12,
+        "gold_found": 5,
+        "parts": 10,
+        "parts_found": 8,
+        "returned": 24,
+        "off_target_paper": 2,
+        "unlabelled_passages": 19
+      }
+    },
+    "14": {
+      "A": {
+        "required_papers": 4,
+        "papers_found": 3,
+        "gold_passages": 12,
+        "gold_found": 5,
+        "parts": 10,
+        "parts_found": 6,
+        "returned": 42,
+        "off_target_paper": 2,
+        "unlabelled_passages": 37
+      },
+      "B": {
+        "required_papers": 4,
+        "papers_found": 3,
+        "gold_passages": 12,
+        "gold_found": 5,
+        "parts": 10,
+        "parts_found": 6,
+        "returned": 42,
+        "off_target_paper": 2,
+        "unlabelled_passages": 37
+      },
+      "C": {
+        "required_papers": 4,
+        "papers_found": 4,
+        "gold_passages": 12,
+        "gold_found": 6,
+        "parts": 10,
+        "parts_found": 8,
+        "returned": 42,
+        "off_target_paper": 4,
+        "unlabelled_passages": 36
+      },
+      "D": {
+        "required_papers": 4,
+        "papers_found": 4,
+        "gold_passages": 12,
+        "gold_found": 7,
+        "parts": 10,
+        "parts_found": 8,
+        "returned": 42,
+        "off_target_paper": 3,
+        "unlabelled_passages": 35
+      }
+    }
+  },
+  "table_row_alignment": {
+    "linked_to_same_row": 485
+  },
+  "alignment_problems": [],
+  "q3_cell_status": [
+    {
+      "table": "S3.T2",
+      "status": "agrees",
+      "count": 80
+    },
+    {
+      "table": "S4.T4.fig1",
+      "status": "agrees",
+      "count": 84
+    }
+  ],
+  "input_files": {
+    "chunk-boundaries.json": "d9b0e4b89f6ebcace2e1ba18ede0c08db135b7dcef25f6d1fe1361fc0c39c323",
+    "eligibility.json": "7a2e5f9cee767f34b5e0e29cee63a19226787f91e98de36f8b993799a6ee1c2c",
+    "environment.json": "aa58074b0df7cbc890efeac9f28bb66dc7a1f605876c88f41cfc8c82324190b8",
+    "historical-retrieval.json": "4362ba874fa1f7e441dabda2447bdefcb92e14ab78b783892da84b77f39975b4",
+    "retrieval.json": "30d02ebce9334ba36fb6c3f0ee65f3530edf24d07f4a770a345a945ed5685456",
+    "saved-traces.json": "cb7c0625b23b09f9c0656efe81f6c17eba8c82c27d7dd5024b9a773bb33871a5",
+    "source-and-fake-replay.json": "758da1d063074081e86397a03b64a3a5a4328a5436af2006e80a1ba9353bc828",
+    "tables-dom-normalized.json": "2e14f710711f7593c5f7cbb2d543f90c90061270b06f517c29b4400ed680cc7f",
+    "verification.json": "ef6fec148257ea6217a458e1694bceeea6e779e8f4295fa3cd5077830b1604a9"
+  }
+}

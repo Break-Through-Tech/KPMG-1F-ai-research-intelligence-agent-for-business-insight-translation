@@ -57,6 +57,27 @@ import numpy as np
 class FakeModel:
     def encode(self,queries,**kw):return np.zeros((len(queries),2),dtype=np.float32)
 class FacetTests(unittest.TestCase):
+    def test_opt_in_keeps_two_requested_rows_in_the_same_budget(self):
+        idx = index()
+        first = idx.parents[1]
+        second = {**first, 'chunk_id': 'w', 'row_label': 'Sensor C', 'text': 'Sensor C data',
+                  'table_cells': [{'text': 'Sensor C'}, {'text': '14'}]}
+        idx.parents.append(second)
+        idx.views.append({'parent_chunk_id': 'w', 'view_id': 'wv', 'text': second['text']})
+        idx.vectors = np.vstack((idx.vectors, [[3, 3]]))
+        ranker = FakeReranker()
+        ranker.predict = lambda pairs, **kwargs: np.array(
+            [20 if 'laboratory' in text or 'wave' in text else -20 for _, text in pairs])
+        question = 'Compare the temperature values for Sensor B and Sensor C.'
+        baseline = FacetRetriever(idx, ranker, FakeModel())
+        enabled = FacetRetriever(idx, ranker, FakeModel(), table_comparisons=True)
+        before, _ = baseline.rank_facets(question, np.zeros(2))
+        after, debug = enabled.rank_facets(question, np.zeros(2))
+        self.assertNotEqual(set(before[:2]), {'y', 'w'})
+        self.assertEqual(set(after[:2]), {'y', 'w'})
+        self.assertEqual(set(debug['comparison_pair']), {'y', 'w'})
+        self.assertEqual(enabled.resolve(after, 2), [enabled.byid[i] for i in after[:2]])
+
     def test_split_multiple_parts_but_not_model_names(self):
         self.assertEqual(facets('Compare Sensor A and Sensor B.'),[])
         self.assertEqual(facets('Compare sensors, and what limitations apply?'),['what limitations apply'])

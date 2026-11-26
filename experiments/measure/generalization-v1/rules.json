@@ -1,0 +1,23 @@
+{
+  "seed": "kpmg-demo100-generalization-v1",
+  "quotas": {"fact": 4, "table": 4, "multi": 4, "limits": 3, "conflict": 2, "refusal": 3},
+  "primary_complete": "All required points correct, semantically supported and cited to the correct version and locator, with zero unsupported published claims. On refusal: explicit source-bounded insufficiency, correct missing requirement, and no invented outcome.",
+  "point_scores": ["correct", "partial", "incorrect", "omitted", "inconclusive"],
+  "minimum_net_complete_successes": 3,
+  "maximum_net_unsupported_answer_cases": 0,
+  "minimum_categories_with_positive_net_successes": 2,
+  "maximum_incremental_median_paired_seconds": 20,
+  "maximum_improved_p90_seconds": 90,
+  "maximum_extra_actual_invocations_per_net_complete_success": 8,
+  "latency_definition": "Warm end-to-end wall time, including all searches, stages and failures. Use all attempted matched pairs, take median of B minus A per pair, and nearest-rank p90 for B. A systemic early stop is inconclusive.",
+  "invocation_definition": "All application-stage attempts, including failures, times any actual attempts beyond A divided by net B-minus-A primary successes. A nonpositive gain does not qualify.",
+  "inconclusive_rule": "Source judgments stay separate from operational failures. If a disputed reference or publication score can change a default gate under either defensible scoring, the default decision is inconclusive. Show both bounds; keep full 20 scheduled pairs visible.",
+  "decision": "Default to B only if all thresholds pass. Keep A default with optional deep research when benefits concentrate in difficult cases or added cost exceeds the threshold. Keep manual selection when the evidence is mixed or inconclusive.",
+  "stage_slots": {"A": ["synthesis", "quality-review"], "B": ["plan", "synthesis", "verification"]},
+  "pairs": 20,
+  "max_application_invocations": 100,
+  "application_retries": 0,
+  "synthesis_passages": 8,
+  "top_k_per_query": 8,
+  "synthesis_rounds": 1
+}

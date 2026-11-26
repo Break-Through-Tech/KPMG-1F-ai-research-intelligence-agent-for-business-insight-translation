@@ -1,0 +1,77 @@
+[
+ {
+  "id": "C01",
+  "category": "numeric / risk",
+  "question": "A client wants to roll out AI coding assistants. How reliably do mainstream LLMs refuse malicious code-generation requests, how do jailbreak techniques change that, and which models resisted best in the MalwareBench study?"
+ },
+ {
+  "id": "C02",
+  "category": "governance / cost",
+  "question": "For role-based access to sensitive answers, how does sudoLLM behave when it is unsure, does it hurt normal task performance, how well does it hold up against an adversary who knows the mechanism, and what did the experiments cost?"
+ },
+ {
+  "id": "C03",
+  "category": "qualitative / risk",
+  "question": "What did the Ctrl data-curation study find about protecting LLMs from harmful content in training data and from malicious fine-tuning, and what trade-offs or residual risks did it report?"
+ },
+ {
+  "id": "C04",
+  "category": "numeric / limitations",
+  "question": "How much did adding knowledge graphs improve LLM numerical reasoning on financial documents, and what limits how far a finance team could rely on that result?"
+ },
+ {
+  "id": "C05",
+  "category": "cost-performance",
+  "question": "What cost-performance trade-off did the Aviary study report for a small trained open-source agent versus a frontier model and human experts on scientific tasks, and what caveats apply?"
+ },
+ {
+  "id": "C06",
+  "category": "numeric / robustness",
+  "question": "When source data are sparse or contradictory, how robust was MultiRAG compared with the ChatKBQA baseline?"
+ },
+ {
+  "id": "C07",
+  "category": "cross-paper",
+  "question": "KG²RAG and MultiRAG both use knowledge graphs to make retrieval-augmented answers more reliable. What problem does each target, how does each work, and what gains did each report?"
+ },
+ {
+  "id": "C08",
+  "category": "qualitative / limitations",
+  "question": "What did the Financial Bias Indicators (FBI) study find about irrational financial biases in LLMs, how did model size and bias-mitigation prompts affect them, and how far do the findings generalize?"
+ },
+ {
+  "id": "C09",
+  "category": "numeric / applications",
+  "question": "What is the LLM Pro Finance Suite, how did it perform on financial tasks across languages, and what gap remained?"
+ },
+ {
+  "id": "C10",
+  "category": "qualitative / adoption",
+  "question": "According to the overview of LLMs in finance, where are LLMs strongest, where are they limited, and what role do the authors see for them in computational finance?"
+ },
+ {
+  "id": "C11",
+  "category": "numeric / governance",
+  "question": "For vendor due diligence, what did the Foundation Model Transparency Index find about how transparent major foundation-model developers are, and where is transparency weakest?"
+ },
+ {
+  "id": "C12",
+  "category": "limitations / risk",
+  "question": "What challenges does the survey of reasoning LLMs in medicine identify for safely deploying them in clinical settings?"
+ },
+ {
+  "id": "C13",
+  "category": "qualitative / customer experience",
+  "question": "What trade-off do proactive LLM agents face between completing tasks and involving users, and what did BAO achieve?"
+ },
+ {
+  "id": "C14",
+  "category": "table / business implications",
+  "question": "For an accounting firm choosing between a commercial reranker and an in-house reranker in the metadata-driven financial RAG study, what quality and latency trade-off does Table 1 show, and what business implications do the authors themselves draw?"
+ },
+ {
+  "id": "C15",
+  "category": "cross-paper / business implications",
+  "question": "A bank is considering a finance-specialized LLM. What do the LLM Pro Finance and Financial Bias Indicators studies each report about domain-specific financial training?"
+ }
+]

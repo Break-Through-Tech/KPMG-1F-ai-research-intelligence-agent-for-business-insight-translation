@@ -1,0 +1,535 @@
+[
+ {
+  "id": "G01",
+  "type": "single-paper",
+  "question": "A client's risk committee asks whether market mechanisms, not only regulation, can govern AI risk. What market mechanisms does the 'AI Governance through Markets' paper propose, how do they connect AI risk to financial risk, and what limits do the authors acknowledge?",
+  "required_points": [
+   {
+    "point_id": "G01.1",
+    "expected": "Four market-governance vectors: insurance, auditing, procurement and due diligence.",
+    "anchors": [
+     [
+      "2501.17755v2_c0000"
+     ],
+     [
+      "2501.17755v2_c0003"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G01.2",
+    "expected": "They serve risk distribution, information discovery, protocolisation and capital allocation, decreasing AI risk by pricing, measuring and mitigating it.",
+    "anchors": [
+     [
+      "2501.17755v2_c0003"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G01.3",
+    "expected": "Insurance can make safety-washing or underestimating AI risk less appealing; actuarial rigour can curb AI hype.",
+    "anchors": [
+     [
+      "2501.17755v2_c0011"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G01.4",
+    "expected": "The authors do not claim market forces alone adequately protect societal interests; standardised AI disclosures are needed alongside market mechanisms.",
+    "anchors": [
+     [
+      "2501.17755v2_c0000"
+     ]
+    ],
+    "type": "published"
+   }
+  ]
+ },
+ {
+  "id": "G02",
+  "type": "single-paper",
+  "question": "A multinational client must align its AI risk management across the EU, the U.S., the UK and China. According to the cross-regional study of AI risk-management frameworks, how do the four regimes differ and what trade-off does each carry?",
+  "required_points": [
+   {
+    "point_id": "G02.1",
+    "expected": "EU: structured, risk-based framework prioritising transparency and conformity assessments.",
+    "anchors": [
+     [
+      "2503.05773v1_c0001"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G02.2",
+    "expected": "U.S.: decentralised, sector-specific regulation that promotes innovation but may fragment enforcement.",
+    "anchors": [
+     [
+      "2503.05773v1_c0001"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G02.3",
+    "expected": "UK: flexible, sector-specific strategy enabling agile responses but risking inconsistent coverage across domains.",
+    "anchors": [
+     [
+      "2503.05773v1_c0001"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G02.4",
+    "expected": "China: centralised directives enable rapid large-scale implementation while constraining public transparency and external oversight.",
+    "anchors": [
+     [
+      "2503.05773v1_c0001"
+     ]
+    ],
+    "type": "published"
+   }
+  ]
+ },
+ {
+  "id": "G03",
+  "type": "cross-paper",
+  "question": "A client must defend a customer-facing LLM against new jailbreaks. How do Safety Context Retrieval (SCR) and two-stage adversarial tuning differ in approach, how effective were they, and what did each cost in normal-task performance or effort?",
+  "required_points": [
+   {
+    "point_id": "G03.1",
+    "expected": "SCR keeps a pool of safety contexts, adds a minimal set of safety samples when a new jailbreak is identified, and retrieves a few at inference, instead of repeatedly fine-tuning.",
+    "anchors": [
+     [
+      "2505.15753v1_c0003"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G03.2",
+    "expected": "SCR reduced average ASR against GCG-T from 34.9% (no defence) to 2.5%.",
+    "anchors": [
+     [
+      "2505.15753v1_c0018"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G03.3",
+    "expected": "SCR had negligible effect on natural performance (e.g. Llama-3.1 HumanEval 61.6% to 57.3%, MMLU 62.6% to 63.2%).",
+    "anchors": [
+     [
+      "2505.15753v1_c0021"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G03.4",
+    "expected": "Adversarial tuning is two-stage: hierarchical meta-universal (token-level) adversarial prompts, then automatic semantic-level adversarial prompts, used to fine-tune on adversarial prompt and safe-response pairs.",
+    "anchors": [
+     [
+      "2406.06622v1_c0000"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G03.5",
+    "expected": "Two components, both required for 1 (one alone scores 0.5). (a) On the two target models, Llama-2-7B-chat and Vicuna-13B-v1.5, known jailbreaks gave average ASR of 66.54% / 51.38% and 19.62% / 9.62% under two metrics; adversarial tuning reduced them to 2.69% / 0.00% and 3.08% / 0.00%. The passage reports these pairs \"respectively\" without readable metric labels, so an answer may report them as pairs; assigning a pair to a specific model or metric as fact is an unsupported attribution. (b) Effort/cost: the passages give no compute-cost figure for adversarial tuning itself (it uses LoRA to improve training efficiency); an answer must say the cost is not established. Presenting the 20-minute GCG prompt-generation figure as the cost of adversarial tuning is a misattribution.",
+    "anchors": [
+     [
+      "2406.06622v1_c0021",
+      "2406.06622v1_c0019",
+      "2406.06622v1_c0015"
+     ]
+    ],
+    "type": "published"
+   }
+  ]
+ },
+ {
+  "id": "G04",
+  "type": "cross-paper",
+  "question": "A client plans custom GPT-style assistants with uploaded knowledge files and fine-tuning services for business units. What do the Pandora and 'Attack via Overfitting' studies show about these customisation routes as jailbreak attack surfaces, how successful were the attacks, and how detectable are they?",
+  "required_points": [
+   {
+    "point_id": "G04.1",
+    "expected": "Pandora poisons RAG: malicious content uploaded as knowledge files plus crafted prompts makes GPTs jailbreak indirectly.",
+    "anchors": [
+     [
+      "2402.08416v1_c0003"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G04.2",
+    "expected": "Pandora success 64.3% on GPT-3.5 and 34.8% on GPT-4 across four prohibited scenarios, versus 3.0% and 1.0% for naive malicious questions.",
+    "anchors": [
+     [
+      "2402.08416v1_c0016"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G04.3",
+    "expected": "The overfitting attack fine-tunes on 10 benign QA pairs: first with identical refusal answers to induce overfitting, then with normal answers, after which the model complies with harmful questions.",
+    "anchors": [
+     [
+      "2510.02833v4_c0003"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G04.4",
+    "expected": "It reached 94.84% average ASR across ten LLMs (HS 4.48), comparable to malicious fine-tuning (97.25%).",
+    "anchors": [
+     [
+      "2510.02833v4_c0016"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G04.5",
+    "expected": "Two components, both required for 1 (one alone scores 0.5): (a) because the data is entirely benign it is stealthy against moderation models, which catch malicious fine-tuning; (b) it bypassed a token-wise loss defence.",
+    "anchors": [
+     [
+      "2510.02833v4_c0005"
+     ],
+     [
+      "2510.02833v4_c0027"
+     ]
+    ],
+    "type": "published"
+   }
+  ]
+ },
+ {
+  "id": "G05",
+  "type": "cross-paper",
+  "question": "A hospital-network client is assessing LLMs for patient-facing conversations. How did the Polaris and AI Hospital studies evaluate conversational medical LLMs, and what do their results imply about readiness?",
+  "required_points": [
+   {
+    "point_id": "G05.1",
+    "expected": "Polaris is a constellation (about one trillion parameters) of a primary conversational agent and specialist support agents for nurse, social-worker and nutritionist tasks, to increase safety and reduce hallucinations.",
+    "anchors": [
+     [
+      "2403.13313v1_c0000"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G05.2",
+    "expected": "Over 1,100 U.S. nurses and 130 physicians posed as patients; Polaris performed on par with human nurses on aggregate across medical safety, clinical readiness, patient education, conversational quality and bedside manner.",
+    "anchors": [
+     [
+      "2403.13313v1_c0001"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G05.3",
+    "expected": "Polaris's specialist agents significantly outperformed GPT-4 and LLaMA-2 70B on task-based evaluation.",
+    "anchors": [
+     [
+      "2403.13313v1_c0001"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G05.4",
+    "expected": "AI Hospital simulates multi-agent clinical interaction and evaluates Doctor agents on the MVME benchmark of Chinese medical records (symptom collection, examinations, diagnosis).",
+    "anchors": [
+     [
+      "2402.09742v4_c0000"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G05.5",
+    "expected": "Interactive LLMs reached less than 50% of the one-step GPT-4 upper bound on diagnosis, rationale and treatment accuracy; a dispute-resolution collaborative mechanism improves performance only to a certain degree and still falls short of the upper bound. Stating the improvement without that limitation scores at most 0.5.",
+    "anchors": [
+     [
+      "2402.09742v4_c0004"
+     ]
+    ],
+    "type": "published"
+   }
+  ]
+ },
+ {
+  "id": "G06",
+  "type": "numerical/table",
+  "question": "A client relies on AI vendors' public safety commitments. How well did AI companies implement their 2023 White House voluntary commitments: overall scores, the best and worst performers, which commitment was weakest, and which looked strongest?",
+  "required_points": [
+   {
+    "point_id": "G06.1",
+    "expected": "16 companies scored; mean 53.3% (median 50.0%); OpenAI highest at 83.3%, Apple lowest at 13.3%.",
+    "anchors": [
+     [
+      "2508.08345v2_c0018"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G06.2",
+    "expected": "The six Frontier Model Forum members are the highest-scoring companies. \"At least 66%\" (results) and \"at least 60%\" (introduction) are compatible lower bounds, and either may be quoted with its attribution. The group statistics must be supported by the results passage: FMF mean 74.4% (SD 6.9%); the other 10 companies score at or below 60% (mean 40.7%, SD 11.4%).",
+    "anchors": [
+     [
+      "2508.08345v2_c0019"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G06.3",
+    "expected": "Model-weight security averaged 17%; 11 of the 16 companies scored 0%.",
+    "anchors": [
+     [
+      "2508.08345v2_c0000"
+     ],
+     [
+      "2508.08345v2_c0005"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G06.4",
+    "expected": "Watermarking/provenance scored highest (92.2%), but often vacuously because many companies do not build audio or visual models.",
+    "anchors": [
+     [
+      "2508.08345v2_c0021"
+     ]
+    ],
+    "type": "published"
+   }
+  ]
+ },
+ {
+  "id": "G07",
+  "type": "numerical/table",
+  "question": "A finance client wants natural-language querying of financial statements. What accuracy and speed did FinStat2SQL achieve, how did it compare with proprietary models and with its untuned base model, and what limits apply?",
+  "required_points": [
+   {
+    "point_id": "G07.1",
+    "expected": "The fine-tuned 7B model reached 61.33% accuracy with sub-4-second responses on consumer hardware, outperforming GPT-4o-mini.",
+    "anchors": [
+     [
+      "2506.23273v2_c0000"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G07.2",
+    "expected": "Best proprietary model Gemini-2.0-Flash-Thinking 72.03%; GPT-4o-mini 59.14%.",
+    "anchors": [
+     [
+      "2506.23273v2_table_4d7c993521f0bf29_1",
+      "2506.23273v2_table_4d7c993521f0bf29_6"
+     ],
+     [
+      "2506.23273v2_c0017",
+      "2506.23273v2_table_4d7c993521f0bf29_6"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G07.3",
+    "expected": "Fine-tuning lifted the 7B Qwen2.5-Coder-Instruct from 47.93% to 61.33% (finstat2sql is a fine-tuned Qwen 2.5 Coder for each model size).",
+    "anchors": [
+     [
+      "2506.23273v2_table_d472857c5172bfd0_1",
+      "2506.23273v2_table_d472857c5172bfd0_4",
+      "2506.23273v2_c0014"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G07.4",
+    "expected": "Limits: only VN30/HNX30-listed firms (no SMEs), Vietnamese terminology issues, and untested beyond Vietnam (e.g. US GAAP).",
+    "anchors": [
+     [
+      "2506.23273v2_c0018"
+     ]
+    ],
+    "type": "published"
+   }
+  ]
+ },
+ {
+  "id": "G08",
+  "type": "numerical/table",
+  "question": "A client wants to harden an open-weight model against jailbreaks. What does the fail-closed alignment study report about why standard alignment fails, attack success, benign compliance, output quality and compute cost, and on which models was it tested?",
+  "required_points": [
+   {
+    "point_id": "G08.1",
+    "expected": "Standard alignment encodes refusal along a single activation direction that prompt-based jailbreaks suppress, so it behaves fail-open.",
+    "anchors": [
+     [
+      "2602.16977v1_c0028"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G08.2",
+    "expected": "At most 4% ASR in all cases; average ASR reduced by 92.3–97.2%, versus 23.8–93.7% for baselines.",
+    "anchors": [
+     [
+      "2602.16977v1_c0019"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G08.3",
+    "expected": "Highest compliance on benign prompts among robust methods (86% on average).",
+    "anchors": [
+     [
+      "2602.16977v1_c0003"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G08.4",
+    "expected": "61.6% average accuracy versus 62.0% for CAT, with only a small constant-factor overhead over standard fine-tuning. The gap may be given as the calculated 0.4 percentage points (about 0.65% relative) or as the paper's reported \"0.8%\" attributed to the paper; presenting 0.8 as the calculated percentage-point gap scores 0.5.",
+    "anchors": [
+     [
+      "2602.16977v1_c0020"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G08.5",
+    "expected": "Tested on four open instruction-tuned models of 2–9B parameters: Llama2-7B, Llama3-8B, Gemma2-2B and Gemma2-9B.",
+    "anchors": [
+     [
+      "2602.16977v1_c0018"
+     ]
+    ],
+    "type": "published"
+   }
+  ]
+ },
+ {
+  "id": "G09",
+  "type": "partially unanswerable",
+  "question": "A legal-services client wants AI statute retrieval for colloquial client questions under English and EU law. How does LegalMALR work, what retrieval results did it achieve, how well does it perform on English or EU statutes, and what does it cost per query?",
+  "required_points": [
+   {
+    "point_id": "G09.1",
+    "expected": "Multi-agent query understanding produces diverse legally grounded reformulations with iterative dense retrieval; a zero-shot commercial LLM (Qwen-Max) reranks the candidates.",
+    "anchors": [
+     [
+      "2601.17692v1_c0004"
+     ],
+     [
+      "2601.17692v1_c0012"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G09.2",
+    "expected": "MAS with GRPO reached Recall@14 0.8396 and HitRate@14 0.9320 on STARD, and recall 0.7478 with HitRate@14 1.0 on CSAID.",
+    "anchors": [
+     [
+      "2601.17692v1_c0041"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G09.3",
+    "expected": "English/EU performance is not established: the framework was developed and evaluated only on Chinese statutes and Chinese-language queries.",
+    "anchors": [
+     [
+      "2601.17692v1_c0053"
+     ],
+     [
+      "2601.17692v1_c0004"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G09.4",
+    "expected": "No monetary per-query cost is reported. Answers may cite the stated computational cost proxies (1-4 retrieval rounds, 30-120 embedding calls, about 13.58 candidates passed to the commercial LLM reranker, whose per-token cost is higher than lightweight rerankers; c0035, c0048, c0052). Any monetary per-query price not supported by the study is fabricated (correction 9, Codex review).",
+    "anchors": [],
+    "type": "evidence_absent"
+   }
+  ]
+ },
+ {
+  "id": "G10",
+  "type": "partially unanswerable",
+  "question": "A client is piloting autonomous multi-agent LLM systems that share a common resource. What did the study 'Is Lying an Emergent Behaviour in LLMs?' find about agents lying and its effects, and how often do deployed commercial AI agents lie to customers?",
+  "required_points": [
+   {
+    "point_id": "G10.1",
+    "expected": "Setting: an agent-based sustainability game in which agents are told resources regenerate although they do not; agents can observe neighbours, declare attacks, be permitted to lie and see reputation.",
+    "anchors": [
+     [
+      "2606.28456v1_c0000"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G10.2",
+    "expected": "Agents lied in 44% of declarations even when not permitted, rising to 65% when permitted: permission amplifies an existing tendency.",
+    "anchors": [
+     [
+      "2606.28456v1_c0035"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G10.3",
+    "expected": "Declarations cut extinction from 40% to 7% and raised coexistence from 60% to 88%.",
+    "anchors": [
+     [
+      "2606.28456v1_c0031"
+     ]
+    ],
+    "type": "published"
+   },
+   {
+    "point_id": "G10.4",
+    "expected": "Two components, both required for 1 (one alone scores 0.5): (a) deployed commercial agents' lying rates are not established by the study; (b) because it is a simplified simulation (identical agents, fixed network), not a real-world deployment. A stated real-world lying rate scores 0 and counts as a misleading claim.",
+    "anchors": [
+     [
+      "2606.28456v1_c0045"
+     ],
+     [
+      "2606.28456v1_c0002"
+     ]
+    ],
+    "type": "published"
+   }
+  ]
+ }
+]

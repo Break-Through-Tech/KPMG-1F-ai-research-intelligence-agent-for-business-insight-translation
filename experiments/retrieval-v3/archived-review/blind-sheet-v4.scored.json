@@ -1,0 +1,343 @@
+{
+  "scorer": "GPT-6",
+  "questions": {
+    "K01": {
+      "points": {
+        "K01.1": {
+          "A": 1,
+          "B": 1
+        },
+        "K01.2": {
+          "A": 1,
+          "B": 1
+        },
+        "K01.3": {
+          "A": 1,
+          "B": 1
+        },
+        "K01.4": {
+          "A": 1,
+          "B": 1
+        },
+        "K01.5": {
+          "A": 1,
+          "B": 1
+        }
+      },
+      "citation_grounding_failures": [],
+      "misleading_claims": [],
+      "numerical_errors": [],
+      "interpretation_scores": {
+        "A": 2,
+        "B": 2
+      },
+      "notes": "Both answers cover all five points through F/L. A F0 plus F1 supplies reports with and without retrieval. Identical-schema and different-schema recall comparisons are kept distinct. No safety flags."
+    },
+    "K02": {
+      "points": {
+        "K02.1": {
+          "A": 1,
+          "B": 0.5
+        },
+        "K02.2": {
+          "A": 1,
+          "B": 1
+        },
+        "K02.3": {
+          "A": 0.5,
+          "B": 1
+        },
+        "K02.4": {
+          "A": 1,
+          "B": 1
+        },
+        "K02.5": {
+          "A": 1,
+          "B": 1
+        }
+      },
+      "citation_grounding_failures": [],
+      "misleading_claims": [],
+      "numerical_errors": [],
+      "interpretation_scores": {
+        "A": 2,
+        "B": 2
+      },
+      "notes": "K02.1 B=0.5: context and subset definitions are published, but the 572 manually verified Chinese-English examples are omitted. K02.3 A=0.5: publishes contextual gains and residual errors in individual examples, including the hard Both subset, but the general improvement for most configurations appears only in quotes/interpretation, not F/L text. No safety flags."
+    },
+    "K03": {
+      "points": {
+        "K03.1": {
+          "A": 1,
+          "B": 1
+        },
+        "K03.2": {
+          "A": 1,
+          "B": 0.5
+        },
+        "K03.3": {
+          "A": 1,
+          "B": 1
+        },
+        "K03.4": {
+          "A": 0.5,
+          "B": 0.5
+        },
+        "K03.5": {
+          "A": 1,
+          "B": 1
+        }
+      },
+      "citation_grounding_failures": [
+        {
+          "reason": "Correct natural-language-policy qualifier is not established by its own quotes, which describe only mutable analysis policy and fixed read-only safety/tool context. Other items or answers cannot repair own-quote grounding.",
+          "item": "F2",
+          "answer": "B"
+        }
+      ],
+      "misleading_claims": [],
+      "numerical_errors": [],
+      "interpretation_scores": {
+        "A": 0,
+        "B": 2
+      },
+      "notes": "K03.2 B=0.5: fixed components, policy-only revision and reference-report evaluation are published, but F2 natural-language modality lacks own-quote support. K03.4 A=0.5 and B=0.5: both give 71.11 MCQ and BrainBench 85.86 to 86.89 against 84.97, but omit the 80.00 CerebraGloss-3B MCQ reference and below-reference comparison. Neither claims a misleading MCQ win. A has no I item. Human adjudication: whether mutable analysis policy plus textual read-only instructions sufficiently entails natural-language policy; strict own-quote reading used."
+    },
+    "K04": {
+      "points": {
+        "K04.1": {
+          "A": 1,
+          "B": 1
+        },
+        "K04.2": {
+          "A": 1,
+          "B": 1
+        },
+        "K04.3": {
+          "A": 0.5,
+          "B": 0.5
+        },
+        "K04.4": {
+          "A": 1,
+          "B": 1
+        },
+        "K04.5": {
+          "A": 0.5,
+          "B": 1
+        }
+      },
+      "citation_grounding_failures": [],
+      "misleading_claims": [],
+      "numerical_errors": [],
+      "interpretation_scores": {
+        "A": 2,
+        "B": 0
+      },
+      "notes": "K04.3 A=0.5: gives matched-capacity 60.00, 1.012x, net-zero LoRA and both full-capacity multipliers, but not LoRA 54.74. K04.3 B=0.5: gives 60.00 versus 54.74 and matched conditions but omits full-capacity 11.1x and 3.09x parameter requirements. K04.5 A=0.5: per-pair limits, over-injection failure and small pools are published, but required strength-sweep recommendation appears only in I0. Both distinguish single-round alignment from co-evolution; no misleading head-to-head claim. B has no I item."
+    },
+    "K05": {
+      "points": {
+        "K05.1": {
+          "A": 0.5,
+          "B": 0.5
+        },
+        "K05.2": {
+          "A": 0.5,
+          "B": 1
+        },
+        "K05.3": {
+          "A": 0,
+          "B": 0
+        },
+        "K05.4": {
+          "A": 0,
+          "B": 0
+        },
+        "K05.5": {
+          "A": 0.5,
+          "B": 0.5
+        }
+      },
+      "citation_grounding_failures": [],
+      "misleading_claims": [
+        {
+          "reason": "Claims bank-customer-conversation transfer is untested, but own quotes only identify English and multilingual benchmarks, without an exhaustive scope establishing bank transfer was untested.",
+          "item": "L0",
+          "answer": "B"
+        }
+      ],
+      "numerical_errors": [],
+      "interpretation_scores": {
+        "A": 0,
+        "B": 0
+      },
+      "notes": "K05.1 A=0.5 and B=0.5: describe streaming HaloGuard but omit specified separate Qwen3.5-0.8B classifier architecture and PGuard native intermediate-representation mechanism. K05.2 A=0.5: scores, global rule and six benchmarks covered, but 5-10x parameter-efficiency comparison not published explicitly; B covers it. K05.3 A=0 and B=0: PGuard 0.836 versus 0.834 query comparison absent. K05.4 A=0 and B=0: PGuard overhead absent. K05.5 A=0.5 and B=0.5: partly cover missed harm concentrated on WildG, but omit its 30.1 FNR/near-third magnitude and already-emitted-token/output-buffer risk. Neither compares HaloGuard against PGuard using incompatible metrics. Neither has I items. Human adjudication: A K05.2 might implicitly supply the parameter ratio via 0.8B/4B/8B model names; explicit-publication reading used. B L0 benchmark descriptions do not establish a negative test-history claim."
+    },
+    "K06": {
+      "points": {
+        "K06.1": {
+          "A": 0.5,
+          "B": 0.5
+        },
+        "K06.2": {
+          "A": 0,
+          "B": 1
+        },
+        "K06.3": {
+          "A": 1,
+          "B": 1
+        },
+        "K06.4": {
+          "A": 0.5,
+          "B": 0.5
+        },
+        "K06.5": {
+          "A": 1,
+          "B": 1
+        }
+      },
+      "citation_grounding_failures": [],
+      "misleading_claims": [],
+      "numerical_errors": [],
+      "interpretation_scores": {
+        "A": 2,
+        "B": 2
+      },
+      "notes": "K06.1 A=0.5 and B=0.5: models, backbones and private on-device purpose covered, but four stages/two SFT/two RL/hard-sample mining absent. K06.2 A=0: required 4B closed-ended 70.54 versus 69.95 and 6.75x comparison absent; other benchmark comparisons do not substitute. K06.4 A=0.5: both phone RAM results and 4B laptop latency/energy reduction covered, but both models laptop memory/local-execution result absent. K06.4 B=0.5: phone local execution and RAM covered, laptop and latency/energy reductions absent. Both cite clinical-use prohibition/validation requirements and text-only English-heavy scope, satisfying evidence limit. Narrow local-execution evidence does not guarantee whole-application privacy; bounded inference is not a claim of absent reporting."
+    },
+    "K07": {
+      "points": {
+        "K07.1": {
+          "A": 0,
+          "B": 0
+        },
+        "K07.2": {
+          "A": 0,
+          "B": 0
+        },
+        "K07.3": {
+          "A": 0,
+          "B": 0
+        },
+        "K07.4": {
+          "A": 1,
+          "B": 1
+        },
+        "K07.5": {
+          "A": 0.5,
+          "B": 0.5
+        }
+      },
+      "citation_grounding_failures": [],
+      "misleading_claims": [],
+      "numerical_errors": [],
+      "interpretation_scores": {
+        "A": 1,
+        "B": 1
+      },
+      "notes": "K07.1 A=0 and B=0: ECGJev architecture missing. K07.2 A=0 and B=0: ECGJev macro-F1 benchmarks missing. K07.3 A=0 and B=0: ECG-token ablation and True/False reversal missing. K07.5 A=0.5 and B=0.5: cited RAG-TRACE absence of prospective evaluation covered, ECGJev public de-identified benchmark scope/lack of prospective validation missing. Interpretations are grounded but address only RAG-TRACE, not the two-method decision. No safety flags."
+    },
+    "K08": {
+      "points": {
+        "K08.1": {
+          "A": 1,
+          "B": 1
+        },
+        "K08.2": {
+          "A": 1,
+          "B": 1
+        },
+        "K08.3": {
+          "A": 1,
+          "B": 1
+        },
+        "K08.4": {
+          "A": 1,
+          "B": 1
+        },
+        "K08.5": {
+          "A": 1,
+          "B": 0
+        }
+      },
+      "citation_grounding_failures": [],
+      "misleading_claims": [],
+      "numerical_errors": [],
+      "interpretation_scores": {
+        "A": 0,
+        "B": 2
+      },
+      "notes": "K08.5 B=0: proposed record-owned routing alone is published; required measured singleton physical batches, threshold zero, NF4 and BF16 restorations absent from F/L. I0 quote cannot earn points. K08.3 both publish specified 20% at batch 16 and approximately 6.5% excess; 1.065C legitimately rounds 1.0653C. Both distinguish sensitivity-premise failure from no detected release-level violation and give 200x audit requirement. A has no I item. Proposed dispatch is not asserted to be an implemented optimized kernel. No safety flags."
+    },
+    "K09": {
+      "points": {
+        "K09.1": {
+          "A": 0.5,
+          "B": 1
+        },
+        "K09.2": {
+          "A": 1,
+          "B": 1
+        },
+        "K09.3": {
+          "A": 1,
+          "B": 1
+        },
+        "K09.4": {
+          "A": 1,
+          "B": 1
+        },
+        "K09.5": {
+          "A": 0.5,
+          "B": 1
+        }
+      },
+      "citation_grounding_failures": [],
+      "misleading_claims": [
+        {
+          "reason": "Claims results do not establish customer-support accuracy, but own quote only identifies three unnamed models and three unnamed generative benchmarks; it does not show scope excluding customer-support evaluation.",
+          "item": "L0",
+          "answer": "A"
+        }
+      ],
+      "numerical_errors": [],
+      "interpretation_scores": {
+        "A": 2,
+        "B": 2
+      },
+      "notes": "K09.1 A=0.5: runtime importance-based precision and multi-precision parent covered, required routing-score basis not published in F/L text. K09.5 A=0.5: states non-establishment and generic three-model/three-benchmark scope but omits named model/task scope; own quote does not establish exclusion of customer-support evaluation. B F11 and L0 give concrete model and reasoning/programming scope with bounded non-transfer conclusion, earning 1. Both separate Raspberry Pi 1.3-3.7x from GPU 1.2-1.3x, preserve percentage notation and cover both ablations. Human adjudication: whether A generic generative-benchmark scope suffices for evidence-limit claim; strict scope reading used. No invented client accuracy or numerical errors."
+    },
+    "K10": {
+      "points": {
+        "K10.1": {
+          "A": 1,
+          "B": 1
+        },
+        "K10.2": {
+          "A": 0.5,
+          "B": 0.5
+        },
+        "K10.3": {
+          "A": 0,
+          "B": 0
+        },
+        "K10.4": {
+          "A": 1,
+          "B": 1
+        },
+        "K10.5": {
+          "A": 0.5,
+          "B": 1
+        }
+      },
+      "citation_grounding_failures": [],
+      "misleading_claims": [],
+      "numerical_errors": [],
+      "interpretation_scores": {
+        "A": 0,
+        "B": 2
+      },
+      "notes": "K10.2 A=0.5 and B=0.5: stress workload, Qwen3.5-Flash and external cascade covered, 96.72 versus 95.16 and precision-only gain/first-tier recall ceiling absent. K10.3 A=0 and B=0: 0.215% flagged, about 99.8% fewer second-tier calls and 0.056% block rate absent. K10.5 A=0.5: cites SGLang and ongoing vLLM integration but does not state own-platform overhead is unestablished. B explicitly states bounded transfer limit with measured scope. A has no I item. B L0 and L2 concern omissions in supplied summary/passage itself, not whole-paper omissions: attached excerpts indeed lack numeric per-request state quantity and cascade performance/savings, so no whole-study absence claim inferred. Human adjudication: confirm passage-scoped reading of B L0/L2. Quote exactness assessed internally against permitted packet excerpts only; original sources not accessed."
+    }
+  }
+}

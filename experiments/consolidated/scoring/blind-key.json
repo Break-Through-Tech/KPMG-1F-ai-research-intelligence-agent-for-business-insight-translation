@@ -1,0 +1,38 @@
+{
+ "warning": "Do not give this file to the blind scorer.",
+ "packet_sha256": "85b55f75b2bc3ec076cc2186eef39abc6ea5ac308a23854096013a43aac76e7b",
+ "labels": {
+  "H01": {
+   "A": "D",
+   "B": "S"
+  },
+  "H02": {
+   "A": "S",
+   "B": "D"
+  },
+  "H03": {
+   "A": "S",
+   "B": "D"
+  },
+  "H04": {
+   "A": "D",
+   "B": "S"
+  },
+  "H05": {
+   "A": "D",
+   "B": "S"
+  },
+  "H06": {
+   "A": "S",
+   "B": "D"
+  },
+  "H07": {
+   "A": "D",
+   "B": "S"
+  },
+  "H08": {
+   "A": "S",
+   "B": "D"
+  }
+ }
+}

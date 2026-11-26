@@ -1,0 +1,3061 @@
+{
+ "mode": "standard",
+ "question": "A bank wants a streaming safety guard for its customer chatbot. How do HaloGuard 2.0 and PGuard each work, how accurate are they relative to dedicated guard models, what does PGuard add to serving cost, and what residual risks does HaloGuard report?",
+ "summary": {
+  "status": "ok",
+  "claims": [
+   {
+    "text": "HaloGuard 2.0 scores the response during generation and stops the stream once harm is confirmed; HaloGuard 1.0 separately screens the request. Both use the same constitution.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02134v1_c0010",
+      "quote": "HaloGuard 1.0 screens the request; HaloGuard 2.0 scores the response as it is\ngenerated and stops the stream once harm is confirmed. Both guards are built from\nthe same constitution."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02134v1_c0010"
+    ],
+    "draft_index": 0,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The quotes directly establish streaming intervention, request screening, and the shared constitution."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "HaloGuard 2.0 learns a content boundary separating encouragement of harm from discussion of harmful topics, and a temporal boundary identifying when there is enough evidence to intervene. Corrective training with response pairs followed by weight averaging raises six-benchmark F1 from 72.8 to 83.6.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02134v1_c0039",
+      "quote": "The first is the content boundary, which works like input moderation and separates responses that encourage harm from those that just discuss harmful topics. The second is a temporal boundary, specific to streaming, that marks the point in a response where there is enough evidence to step in."
+     },
+     {
+      "chunk_id": "2611.02134v1_c0039",
+      "quote": "Comparing response pairs makes this issue clear. Adding a corrective training step with these pairs, and then averaging the model weights, raises the six-benchmark F1 score from 72.8 to 83.6."
+     },
+     {
+      "chunk_id": "2611.02134v1_c0039",
+      "quote": "HaloGuard 2.0 builds on HaloGuard 1.0 by shifting from per-prompt decisions to per-token decisions in the model’s output."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02134v1_c0039"
+    ],
+    "draft_index": 1,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The boundaries and training improvement are supported; added context explicitly identifies HaloGuard 2.0."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": [
+      {
+       "number": "2.0",
+       "quote": "HaloGuard 2.0 builds on HaloGuard 1.0 by shifting from per-prompt decisions to per-token decisions in the model’s output.",
+       "reason": "This is the model's version identifier, explicitly stated in the added quote."
+      }
+     ]
+    }
+   },
+   {
+    "text": "On six English response-harmfulness benchmarks, HaloGuard 2.0-0.8B scores 83.63 average F1 under one global streaming decision rule; its held-out average is 83.3. Qwen3Guard-Gen-4B and -8B each score 83.57.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02134v1_c0027",
+      "quote": "Response-harmfulness F1 on six English benchmarks. HaloGuard 2.0 is scored by its\nstreaming verdict under one global decision rule; the released model’s held-out\naverage is 83.3."
+     },
+     {
+      "chunk_id": "2611.02134v1_c0027",
+      "quote": "Across the six benchmarks, HaloGuard 2.0-0.8B has the highest average of any model in Table 10 , 83.63, ahead of Qwen3Guard-Gen-4B and -8B (83.57 each)"
+     }
+    ],
+    "chunk_ids": [
+     "2611.02134v1_c0027"
+    ],
+    "draft_index": 2,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "All scores, model names, benchmark scope, and the global streaming rule are explicitly supported."
+     },
+     "number_grounding": "uncertain",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "The paper reports HaloGuard 2.0-0.8B above every streaming baseline in its comparison: the best Qwen3Guard-Stream model, at 4B, averages 81.0, and the closest in size, 0.6B, averages 78.8.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02134v1_c0027",
+      "quote": "Across the six benchmarks, HaloGuard 2.0-0.8B has the highest average of any model in Table 10 , 83.63,"
+     },
+     {
+      "chunk_id": "2611.02134v1_c0027",
+      "quote": "It is also above every streaming baseline: the best Qwen3Guard-Stream model, at 4B, averages 81.0, and the 0.6B\nmodel, the closest in size, 78.8."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02134v1_c0027"
+    ],
+    "draft_index": 3,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The paper explicitly reports this ranking and both streaming comparator scores and sizes."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "HaloGuard 2.0-Poly-0.8B achieves 83.1 response F1 macro-averaged across 17 languages on PolyGuardPrompts, versus 78.1 for Qwen3Guard-Gen-4B and 75.8 for Qwen3Guard-Stream-8B.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02134v1_c0032",
+      "quote": "HaloGuard 2.0-Poly-0.8B reaches a response\nF1 of 83.1, macro-averaged over the 17 languages ( Table 16 , Appendix A ). That is\n5.0 points above the strongest baseline on the same labels, Qwen3Guard-Gen-4B (78.1,\nfive times the size; Table 13 ), and 7.3 points above the strongest streaming guard,\nQwen3Guard-Stream-8B (75.8)."
+     },
+     {
+      "chunk_id": "2611.02134v1_c0032",
+      "quote": "We evaluate multilingual transfer on PolyGuardPrompts [ 2 ] , using its\nresponse-harmfulness labels across 17 languages: 29,053\nresponses, 1,709 conversations each rendered in 17 languages."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02134v1_c0032"
+    ],
+    "draft_index": 4,
+    "scope": "related_variant",
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The multilingual variant informs the accuracy comparison; added support establishes the dataset name."
+     },
+     "number_grounding": "uncertain",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "For HaloGuard 2.0-0.8B, pooled evaluation over 12,347 responses gives 84.1 precision, 80.5 recall, FPR 14.3% and FNR 19.5%. The paper identifies missed harm concentrated on WildG as the main remaining error.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02134v1_c0035",
+      "quote": "HaloGuard 2.0-0.8B is the strongest open streaming output guard in our comparison."
+     },
+     {
+      "chunk_id": "2611.02134v1_c0035",
+      "quote": "Pooled over 12,347 responses it operates at 84.1 precision and 80.5 recall (FPR 14.3% , FNR 19.5% ), and its remaining error is mostly missed harm, concentrated on WildG."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02134v1_c0035"
+    ],
+    "draft_index": 5,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The pooled denominator, all four metrics, and the concentration of missed harm are directly stated."
+     },
+     "number_grounding": "contradicted",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "HaloGuard 2.0-Poly-0.8B has FPR 6.1%, FNR 7.5%, precision 75.5 and recall 92.5%; the paper identifies remaining headroom in precision and in Hindi and Thai.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02134v1_c0035",
+      "quote": "HaloGuard 2.0-Poly-0.8B reaches 83.1 response F1 on PolyGuardPrompts, macro-averaged over 17 languages."
+     },
+     {
+      "chunk_id": "2611.02134v1_c0035",
+      "quote": "with a 6.1% FPR and 7.5% FNR. Its remaining headroom is in precision (75.5) rather than recall (92.5), and in Hindi and Thai."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02134v1_c0035"
+    ],
+    "draft_index": 6,
+    "scope": "related_variant",
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The variant's metrics and remaining precision and language weaknesses are explicitly reported."
+     },
+     "number_grounding": "uncertain",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "On PolyGuardPrompts, HaloGuard 2.0-Poly-0.8B produces 1,482 false positives against 360 false negatives. Only 16.6% of responses are unsafe, which the paper identifies as contributing to this error balance.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02134v1_c0032",
+      "quote": "HaloGuard 2.0-Poly-0.8B over-flags more than it misses: its errors are 1,482 false\npositives against 360 false negatives, so its remaining headroom is in precision,\nnot recall. Part of this is base rate. Only 16.6% of PolyGuardPrompts responses are\nunsafe, so even a low FPR produces more false positives than the guard has misses."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02134v1_c0032"
+    ],
+    "draft_index": 7,
+    "scope": "related_variant",
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "Both error counts, the unsafe-response base rate, and its qualified contribution are directly supported."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "The multilingual HaloGuard rule fires when 3 consecutive response tokens are all ≥ 0.675, with the decision latched; it cannot fire on responses shorter than three tokens.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02134v1_c0022",
+      "quote": "HaloGuard 2.0-Poly-0.8B uses the same\narchitecture, objective and decision-rule form."
+     },
+     {
+      "chunk_id": "2611.02134v1_c0022",
+      "quote": "It uses a single run arm: the guard fires when 3 consecutive\nresponse tokens are all \\geq 0.675 , latched. Unlike Equation 2 , this rule\ncannot fire on a response shorter than three tokens."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02134v1_c0022"
+    ],
+    "draft_index": 8,
+    "scope": "related_variant",
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The multilingual variant's threshold, consecutive-token requirement, latch, and short-response limitation are stated."
+     },
+     "number_grounding": "uncertain",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "HaloGuard's policy treats a rude response without harmful uplift as safe; stand-alone toxicity evaluation covering insults, slurs and identity attacks is outside this release's evaluation scope.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02134v1_c0035",
+      "quote": "Evaluation scope. Three evaluations reported by recent guards are not part of this release. RTP-LX, as in HaloGuard 1.0, measures the toxicity of stand-alone utterances (insults, slurs, identity attacks). Our constitution does not treat that as harmful response content: a response that is rude but gives no harmful uplift is safe under our policy."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02134v1_c0035"
+    ],
+    "draft_index": 9,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The policy boundary and excluded stand-alone toxicity evaluation directly inform residual coverage risks."
+     },
+     "number_grounding": "no_numbers",
+     "flags_resolved": []
+    }
+   }
+  ],
+  "held_claims": [],
+  "limitation_support": [
+   {
+    "text": "The reported accuracy concerns benchmark response harmfulness: English results average six benchmarks, and multilingual results use PolyGuardPrompts across 17 languages.",
+    "support": [
+     {
+      "chunk_id": "2611.02134v1_c0026",
+      "quote": "English response: average over the six\nbenchmarks of Table 10 . Multilingual: PolyGuardPrompts, 17 languages."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02134v1_c0026"
+    ]
+   },
+   {
+    "text": "English precision, recall, FPR and FNR are pooled over responses; multilingual values are macro-averaged over languages.",
+    "support": [
+     {
+      "chunk_id": "2611.02134v1_c0034",
+      "quote": "Precision, recall, FPR and FNR are\npooled over all responses for English and macro-averaged over languages for the\nmultilingual models"
+     }
+    ],
+    "chunk_ids": [
+     "2611.02134v1_c0034"
+    ]
+   },
+   {
+    "text": "Conversation-level scoring and tool-call scoring are described as future work.",
+    "support": [
+     {
+      "chunk_id": "2611.02134v1_c0039",
+      "quote": "In the future we’d like to look at conversation level scoring, category attribution, tool call scoring and joint evaluation of input and output guards on shared test concepts."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02134v1_c0039"
+    ]
+   }
+  ],
+  "limitations": [
+   "The reported accuracy concerns benchmark response harmfulness: English results average six benchmarks, and multilingual results use PolyGuardPrompts across 17 languages.",
+   "English precision, recall, FPR and FNR are pooled over responses; multilingual values are macro-averaged over languages.",
+   "Conversation-level scoring and tool-call scoring are described as future work."
+  ],
+  "dropped_limitations": [],
+  "evidence_notes": [
+   "Only 10 of 19 rows of Table 10: Response-harmfulness F1 on six English benchmarks (HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety) are in the evidence, so a comparison across that table may be incomplete."
+  ],
+  "answer_scope": "partial",
+  "answer_lead": "The supplied passages do not establish PGuard's mechanism, accuracy relative to dedicated guards, or added serving cost, nor performance in a bank customer chatbot.",
+  "answer_lead_check": null,
+  "support_check": "exact quotes; per-claim number recall against attached quotes; numeric_checks_v2 attribution flags (quote-anchored resolution); model review of quote entailment; not human verification",
+  "component_coverage": [
+   {
+    "component": "How do HaloGuard 2.0 and PGuard each work?",
+    "status": "partial",
+    "basis": "reviewer-confirmed, published finding(s)",
+    "finding_draft_indices": [
+     0,
+     1,
+     8
+    ]
+   },
+   {
+    "component": "HaloGuard PGuard how accurate are they relative to dedicated guard models?",
+    "status": "partial",
+    "basis": "reviewer-confirmed, published finding(s)",
+    "finding_draft_indices": [
+     2,
+     3,
+     4,
+     5,
+     6
+    ]
+   },
+   {
+    "component": "HaloGuard what does PGuard add to serving cost?",
+    "status": "not_retrieved",
+    "basis": "no reviewer confirmation",
+    "note": "Not found in the retrieved evidence: HaloGuard what does PGuard add to serving cost? This does not mean the paper does not report it."
+   },
+   {
+    "component": "PGuard what residual risks does HaloGuard report?",
+    "status": "answered",
+    "basis": "reviewer-confirmed, published finding(s)",
+    "finding_draft_indices": [
+     5,
+     6,
+     7,
+     8,
+     9
+    ]
+   }
+  ]
+ },
+ "evidence": [
+  {
+   "chunk_id": "2611.02134v1_c0035",
+   "arxiv_id": "2611.02134v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02134v1#S6.SS4",
+   "section": "evaluation",
+   "subsection": "sota status and evaluation scope",
+   "high_value": true,
+   "text": "SOTA Status. HaloGuard 2.0-0.8B is the strongest open streaming output guard in our comparison. Across six English response-safety benchmarks it reaches a macro F1 of 83.6 under one global streaming rule. That is 2.6 points above the best Qwen3Guard-Stream model (4B, 81.0) and 4.8 above the one closest in size (0.6B, 78.8). It is level with the strongest full-response guards, Qwen3Guard-Gen-4B and -8B (83.57), which see the complete response before deciding and have 5–10× more parameters. It is the best model on HarmBench (96.4) and on SafeRLHF (81.7, 11.2 points above the next model). Pooled over 12,347 responses it operates at 84.1 precision and 80.5 recall (FPR 14.3% , FNR 19.5% ), and its remaining error is mostly missed harm, concentrated on WildG. HaloGuard 2.0-Poly-0.8B reaches 83.1 response F1 on PolyGuardPrompts, macro-averaged over 17 languages. That is 5.0 points above Qwen3Guard-Gen-4B (78.1) and 7.3 above the strongest streaming guard, Qwen3Guard-Stream-8B (75.8), with a 6.1% FPR and 7.5% FNR. Its remaining headroom is in precision (75.5) rather than recall (92.5), and in Hindi and Thai. Together with HaloGuard 1.0, which leads the open input guards at 90.9 (0.8B) and 92.1 (4B) prompt F1, the 0.8B input and output guards form a complete moderation stack of 1.6B parameters. Evaluation scope. Three evaluations reported by recent guards are not part of this release. RTP-LX, as in HaloGuard 1.0, measures the toxicity of stand-alone utterances (insults, slurs, identity attacks). Our constitution does not treat that as harmful response content: a response that is rude but gives no harmful uplift is safe under our policy. For the same reason we do not use Shieldstral’s per-language results, which pool RTP-LX with PolyGuard",
+   "text_with_context": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety | Evaluation > Sota Status And Evaluation Scope\n\nSOTA Status. HaloGuard 2.0-0.8B is the strongest open streaming output guard in our comparison. Across six English response-safety benchmarks it reaches a macro F1 of 83.6 under one global streaming rule. That is 2.6 points above the best Qwen3Guard-Stream model (4B, 81.0) and 4.8 above the one closest in size (0.6B, 78.8). It is level with the strongest full-response guards, Qwen3Guard-Gen-4B and -8B (83.57), which see the complete response before deciding and have 5–10× more parameters. It is the best model on HarmBench (96.4) and on SafeRLHF (81.7, 11.2 points above the next model). Pooled over 12,347 responses it operates at 84.1 precision and 80.5 recall (FPR 14.3% , FNR 19.5% ), and its remaining error is mostly missed harm, concentrated on WildG. HaloGuard 2.0-Poly-0.8B reaches 83.1 response F1 on PolyGuardPrompts, macro-averaged over 17 languages. That is 5.0 points above Qwen3Guard-Gen-4B (78.1) and 7.3 above the strongest streaming guard, Qwen3Guard-Stream-8B (75.8), with a 6.1% FPR and 7.5% FNR. Its remaining headroom is in precision (75.5) rather than recall (92.5), and in Hindi and Thai. Together with HaloGuard 1.0, which leads the open input guards at 90.9 (0.8B) and 92.1 (4B) prompt F1, the 0.8B input and output guards form a complete moderation stack of 1.6B parameters. Evaluation scope. Three evaluations reported by recent guards are not part of this release. RTP-LX, as in HaloGuard 1.0, measures the toxicity of stand-alone utterances (insults, slurs, identity attacks). Our constitution does not treat that as harmful response content: a response that is rude but gives no harmful uplift is safe under our policy. For the same reason we do not use Shieldstral’s per-language results, which pool RTP-LX with PolyGuard",
+   "title": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02134v1#S6.SS4",
+   "pdf_url": "https://arxiv.org/pdf/2611.02134v1",
+   "source_sha256": "aad96fdeef5dd0d8873bd478cdfdcacb7f9c2b5a2c1ecba81c8a940467ed9bf5"
+  },
+  {
+   "chunk_id": "2611.02134v1_c0004",
+   "arxiv_id": "2611.02134v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02134v1#S1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": "matched-pair test for the shortcut and add it as a third FP mode\nbeside the boundary and baseline modes of HaloGuard 1.0. A corrective second\nphase on counterfactual responses, merged into the base guard by weight\naveraging, raises six-benchmark macro F1 from 72.8 to 83.6 (83.3 held out) and\nremoves 38% of FPs. A multilingual variant. HaloGuard 2.0-Poly-0.8B, a second 0.8B model with the same\narchitecture and objective, is trained on 1,055,192 response-labelled\nconversations from PolyGuardMix in 17 languages [ 2 ] and reaches\n83.1 F1 on the response labels of PolyGuardPrompts, against 78.1 for the\nstrongest baseline (Qwen3Guard-Gen-4B) and 75.8 for the strongest streaming guard\n(Qwen3Guard-Stream-8B). Continuous red-teaming of both layers. The weekly red-teaming\nprotocol of HaloGuard 1.0 now attacks a stack in which both guards are active, and\nattributes each successful attack to the layer that should have stopped it\n( Appendix B ). Section 2 reviews related work. Section 3 defines the streaming\ntask and the onset. Section 4 describes the constitution on the response side\nand the training data. Section 5 covers the model, training and serving, and Section 6 the evaluation. Section 7 discusses limitations, and Section 8 concludes. Appendix A gives per-language results,\nand Appendix B describes the continuous red-teaming protocol.",
+   "text_with_context": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety | Introduction\n\nmatched-pair test for the shortcut and add it as a third FP mode\nbeside the boundary and baseline modes of HaloGuard 1.0. A corrective second\nphase on counterfactual responses, merged into the base guard by weight\naveraging, raises six-benchmark macro F1 from 72.8 to 83.6 (83.3 held out) and\nremoves 38% of FPs. A multilingual variant. HaloGuard 2.0-Poly-0.8B, a second 0.8B model with the same\narchitecture and objective, is trained on 1,055,192 response-labelled\nconversations from PolyGuardMix in 17 languages [ 2 ] and reaches\n83.1 F1 on the response labels of PolyGuardPrompts, against 78.1 for the\nstrongest baseline (Qwen3Guard-Gen-4B) and 75.8 for the strongest streaming guard\n(Qwen3Guard-Stream-8B). Continuous red-teaming of both layers. The weekly red-teaming\nprotocol of HaloGuard 1.0 now attacks a stack in which both guards are active, and\nattributes each successful attack to the layer that should have stopped it\n( Appendix B ). Section 2 reviews related work. Section 3 defines the streaming\ntask and the onset. Section 4 describes the constitution on the response side\nand the training data. Section 5 covers the model, training and serving, and Section 6 the evaluation. Section 7 discusses limitations, and Section 8 concludes. Appendix A gives per-language results,\nand Appendix B describes the continuous red-teaming protocol.",
+   "title": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02134v1#S1",
+   "pdf_url": "https://arxiv.org/pdf/2611.02134v1",
+   "source_sha256": "aad96fdeef5dd0d8873bd478cdfdcacb7f9c2b5a2c1ecba81c8a940467ed9bf5"
+  },
+  {
+   "chunk_id": "2611.02134v1_c0032",
+   "arxiv_id": "2611.02134v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02134v1#S6.SS3",
+   "section": "evaluation",
+   "subsection": "multilingual evaluation",
+   "high_value": true,
+   "text": "We evaluate multilingual transfer on PolyGuardPrompts [ 2 ] , using its\nresponse-harmfulness labels across 17 languages: 29,053\nresponses, 1,709 conversations each rendered in 17 languages. The benchmark is built\nfrom translations of WildGuardMix and natural multilingual interactions. HaloGuard 2.0-Poly-0.8B\nis trained on PolyGuardMix ( Section 4.5 ), which shares none of the\nbenchmark’s prompt–response pairs. Its corrective data is generated from seeds gathered from the benchmark’s failures ( Section 5.3 ). HaloGuard 2.0-Poly-0.8B reaches a response\nF1 of 83.1, macro-averaged over the 17 languages ( Table 16 , Appendix A ). That is\n5.0 points above the strongest baseline on the same labels, Qwen3Guard-Gen-4B (78.1,\nfive times the size; Table 13 ), and 7.3 points above the strongest streaming guard,\nQwen3Guard-Stream-8B (75.8). Baselines come from two reports, the PolyGuard\npaper [ 2 ] and the Qwen3Guard report [ 3 ] ; for the two\nmodels both report, they agree to within 0.1 (LlamaGuard3 65.74 and 65.8,\nPolyGuard-Qwen 74.08 and 74.0), so we treat them as one protocol. Table 14 sets the operating points of the two released models\nside by side, and they have opposite error profiles. HaloGuard 2.0-0.8B misses more than it\nover-flags. HaloGuard 2.0-Poly-0.8B over-flags more than it misses: its errors are 1,482 false\npositives against 360 false negatives, so its remaining headroom is in precision,\nnot recall. Part of this is base rate. Only 16.6% of PolyGuardPrompts responses are\nunsafe, so even a low FPR produces more false positives than the guard has misses. The corrective phase also works through a different error here. Over the\nPolyGuardMix-only base guard it adds 18.2 points of F1, against 10.9 for the English",
+   "text_with_context": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety | Evaluation > Multilingual Evaluation\n\nWe evaluate multilingual transfer on PolyGuardPrompts [ 2 ] , using its\nresponse-harmfulness labels across 17 languages: 29,053\nresponses, 1,709 conversations each rendered in 17 languages. The benchmark is built\nfrom translations of WildGuardMix and natural multilingual interactions. HaloGuard 2.0-Poly-0.8B\nis trained on PolyGuardMix ( Section 4.5 ), which shares none of the\nbenchmark’s prompt–response pairs. Its corrective data is generated from seeds gathered from the benchmark’s failures ( Section 5.3 ). HaloGuard 2.0-Poly-0.8B reaches a response\nF1 of 83.1, macro-averaged over the 17 languages ( Table 16 , Appendix A ). That is\n5.0 points above the strongest baseline on the same labels, Qwen3Guard-Gen-4B (78.1,\nfive times the size; Table 13 ), and 7.3 points above the strongest streaming guard,\nQwen3Guard-Stream-8B (75.8). Baselines come from two reports, the PolyGuard\npaper [ 2 ] and the Qwen3Guard report [ 3 ] ; for the two\nmodels both report, they agree to within 0.1 (LlamaGuard3 65.74 and 65.8,\nPolyGuard-Qwen 74.08 and 74.0), so we treat them as one protocol. Table 14 sets the operating points of the two released models\nside by side, and they have opposite error profiles. HaloGuard 2.0-0.8B misses more than it\nover-flags. HaloGuard 2.0-Poly-0.8B over-flags more than it misses: its errors are 1,482 false\npositives against 360 false negatives, so its remaining headroom is in precision,\nnot recall. Part of this is base rate. Only 16.6% of PolyGuardPrompts responses are\nunsafe, so even a low FPR produces more false positives than the guard has misses. The corrective phase also works through a different error here. Over the\nPolyGuardMix-only base guard it adds 18.2 points of F1, against 10.9 for the English",
+   "title": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02134v1#S6.SS3",
+   "pdf_url": "https://arxiv.org/pdf/2611.02134v1",
+   "source_sha256": "aad96fdeef5dd0d8873bd478cdfdcacb7f9c2b5a2c1ecba81c8a940467ed9bf5"
+  },
+  {
+   "chunk_id": "2611.02134v1_c0029",
+   "arxiv_id": "2611.02134v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02134v1#S6.SS1",
+   "section": "evaluation",
+   "subsection": "results",
+   "high_value": true,
+   "text": "each pair. The largest gains are on the two benchmarks dominated by safe responses,\nXSTest-R and WildG. Table 12 reproduces the prompt\nresults of HaloGuard 1.0 [ 1 ] , the input guard that HaloGuard 2.0 is deployed\nbehind ( Figure 1 ), so that both layers of the stack are reported in\none place. On seven prompt-harmfulness benchmarks the 0.8B input guard averages\n90.9 and the 4B model 92.1, the two highest averages among the open guards\ncompared. At its released operating point the 0.8B input guard has an FPR of 4.3\nand an FNR of 9.5 (precision 91.8, recall 90.5) [ 1 ] . Three benchmarks\nlabel both prompts and responses, and on each of them response classification is\nthe harder task for the same model size: HarmBench 98.7 on prompts against 96.4 on\nresponses, Aegis 2.0 87.9 against 83.5, and WildG 95.9 against 71.9. The\ngap is largest on WildG, where adversarial prompts are easy to flag but\nthe harmful responses among them are hard to recall. Each guard is scored on\nits own label, so this compares the two tasks, not the two models. Prompt harmfulness (F1) of the input guard, HaloGuard 1.0, across seven\nsafety benchmarks: OpenAI Moderation (OAI), Aegis, Aegis 2.0, ToxicChat (ToxiC),\nSimpleSafetyTests (SimpST), HarmB and WildG. All values\nas reported in Sangameswaran et al. [1] (Table 14). Best per column in bold. Smaller model, higher average. Response F1 against model size (log\nscale). (a) Average over the six English benchmarks of Table 10 ; HaloGuard 2.0-0.8B has\nthe highest average (83.63, against 83.57 for Qwen3Guard-Gen-4B and -8B) at\n5–10 \\times smaller size, and is the highest-scoring streaming guard. Hollow markers are streaming\nguards. (b) PolyGuardPrompts response F1 ( Section 6.3 ); baselines on the same",
+   "text_with_context": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety | Evaluation > Results\n\neach pair. The largest gains are on the two benchmarks dominated by safe responses,\nXSTest-R and WildG. Table 12 reproduces the prompt\nresults of HaloGuard 1.0 [ 1 ] , the input guard that HaloGuard 2.0 is deployed\nbehind ( Figure 1 ), so that both layers of the stack are reported in\none place. On seven prompt-harmfulness benchmarks the 0.8B input guard averages\n90.9 and the 4B model 92.1, the two highest averages among the open guards\ncompared. At its released operating point the 0.8B input guard has an FPR of 4.3\nand an FNR of 9.5 (precision 91.8, recall 90.5) [ 1 ] . Three benchmarks\nlabel both prompts and responses, and on each of them response classification is\nthe harder task for the same model size: HarmBench 98.7 on prompts against 96.4 on\nresponses, Aegis 2.0 87.9 against 83.5, and WildG 95.9 against 71.9. The\ngap is largest on WildG, where adversarial prompts are easy to flag but\nthe harmful responses among them are hard to recall. Each guard is scored on\nits own label, so this compares the two tasks, not the two models. Prompt harmfulness (F1) of the input guard, HaloGuard 1.0, across seven\nsafety benchmarks: OpenAI Moderation (OAI), Aegis, Aegis 2.0, ToxicChat (ToxiC),\nSimpleSafetyTests (SimpST), HarmB and WildG. All values\nas reported in Sangameswaran et al. [1] (Table 14). Best per column in bold. Smaller model, higher average. Response F1 against model size (log\nscale). (a) Average over the six English benchmarks of Table 10 ; HaloGuard 2.0-0.8B has\nthe highest average (83.63, against 83.57 for Qwen3Guard-Gen-4B and -8B) at\n5–10 \\times smaller size, and is the highest-scoring streaming guard. Hollow markers are streaming\nguards. (b) PolyGuardPrompts response F1 ( Section 6.3 ); baselines on the same",
+   "title": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02134v1#S6.SS1",
+   "pdf_url": "https://arxiv.org/pdf/2611.02134v1",
+   "source_sha256": "aad96fdeef5dd0d8873bd478cdfdcacb7f9c2b5a2c1ecba81c8a940467ed9bf5"
+  },
+  {
+   "chunk_id": "2611.02134v1_table_a38aa5488119366c_18",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nHaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety\nTable 10: Response-harmfulness F1 on six English benchmarks. HaloGuard 2.0 is scored by its streaming verdict under one global decision rule; the released model’s held-out average is 83.3. The base guard is shown at its own best global rule. Best score per column in bold. The Avg. column is given to two decimals because the top three averages are within 0.06: HaloGuard 2.0-0.8B (83.63, 0.8B) and Qwen3Guard-Gen-4B and -8B (83.57). Baseline averages are the mean of the reported per-benchmark scores. † As reported by Qwen Team [3] (Qwen3Guard models in strict mode). ‡ As reported by Calvi et al. [4] . Qwen3Guard’s Think column is not part of our suite.\nModel: HaloGuard 2.0, base guard (Phase 1); Size: 0.8B; HarmB: 91.6; SafeRLHF: 71.7; BeaverTails: 72.3; XSTest-R: 68.0; Aegis 2.0: 74.1; WildG: 58.9; Avg .: 72.76",
+   "arxiv_id": "2611.02134v1",
+   "title": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02134v1",
+   "html_url": "https://arxiv.org/html/2611.02134v1#S6.T10",
+   "source_url": "https://arxiv.org/html/2611.02134v1#S6.T10",
+   "page_number": null,
+   "source_sha256": "aad96fdeef5dd0d8873bd478cdfdcacb7f9c2b5a2c1ecba81c8a940467ed9bf5",
+   "source_anchor": "S6.T10",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Evaluation",
+   "subsection": "Results",
+   "section_id": "S6",
+   "subsection_id": "S6.SS1",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S6.T10",
+   "table_row": 18,
+   "row_label": "HaloGuard 2.0, base guard (Phase 1)",
+   "caption": "Table 10: Response-harmfulness F1 on six English benchmarks. HaloGuard 2.0 is scored by its streaming verdict under one global decision rule; the released model’s held-out average is 83.3. The base guard is shown at its own best global rule. Best score per column in bold. The Avg. column is given to two decimals because the top three averages are within 0.06: HaloGuard 2.0-0.8B (83.63, 0.8B) and Qwen3Guard-Gen-4B and -8B (83.57). Baseline averages are the mean of the reported per-benchmark scores. † As reported by Qwen Team [3] (Qwen3Guard models in strict mode). ‡ As reported by Calvi et al. [4] . Qwen3Guard’s Think column is not part of our suite.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Model",
+     "source_id": "S6.T10.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Size",
+     "source_id": "S6.T10.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "HarmB",
+     "source_id": "S6.T10.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "SafeRLHF",
+     "source_id": "S6.T10.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "BeaverTails",
+     "source_id": "S6.T10.2.1.5"
+    },
+    {
+     "column": 5,
+     "text": "XSTest-R",
+     "source_id": "S6.T10.2.1.6"
+    },
+    {
+     "column": 6,
+     "text": "Aegis 2.0",
+     "source_id": "S6.T10.2.1.7"
+    },
+    {
+     "column": 7,
+     "text": "WildG",
+     "source_id": "S6.T10.2.1.8"
+    },
+    {
+     "column": 8,
+     "text": "Avg .",
+     "source_id": "S6.T10.2.1.9"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 18,
+     "column": 0,
+     "text": "HaloGuard 2.0, base guard (Phase 1)",
+     "source_id": "S6.T10.2.19.1"
+    },
+    {
+     "row": 18,
+     "column": 1,
+     "text": "0.8B",
+     "source_id": "S6.T10.2.19.2"
+    },
+    {
+     "row": 18,
+     "column": 2,
+     "text": "91.6",
+     "source_id": "S6.T10.2.19.3"
+    },
+    {
+     "row": 18,
+     "column": 3,
+     "text": "71.7",
+     "source_id": "S6.T10.2.19.4"
+    },
+    {
+     "row": 18,
+     "column": 4,
+     "text": "72.3",
+     "source_id": "S6.T10.2.19.5"
+    },
+    {
+     "row": 18,
+     "column": 5,
+     "text": "68.0",
+     "source_id": "S6.T10.2.19.6"
+    },
+    {
+     "row": 18,
+     "column": 6,
+     "text": "74.1",
+     "source_id": "S6.T10.2.19.7"
+    },
+    {
+     "row": 18,
+     "column": 7,
+     "text": "58.9",
+     "source_id": "S6.T10.2.19.8"
+    },
+    {
+     "row": 18,
+     "column": 8,
+     "text": "72.76",
+     "source_id": "S6.T10.2.19.9"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02134v1_table_a38aa5488119366c_19",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nHaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety\nTable 10: Response-harmfulness F1 on six English benchmarks. HaloGuard 2.0 is scored by its streaming verdict under one global decision rule; the released model’s held-out average is 83.3. The base guard is shown at its own best global rule. Best score per column in bold. The Avg. column is given to two decimals because the top three averages are within 0.06: HaloGuard 2.0-0.8B (83.63, 0.8B) and Qwen3Guard-Gen-4B and -8B (83.57). Baseline averages are the mean of the reported per-benchmark scores. † As reported by Qwen Team [3] (Qwen3Guard models in strict mode). ‡ As reported by Calvi et al. [4] . Qwen3Guard’s Think column is not part of our suite.\nModel: HaloGuard 2.0-0.8B (Ours); Size: 0.8B; HarmB: 96.4; SafeRLHF: 81.7; BeaverTails: 83.0; XSTest-R: 85.4; Aegis 2.0: 83.5; WildG: 71.9; Avg .: 83.63",
+   "arxiv_id": "2611.02134v1",
+   "title": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02134v1",
+   "html_url": "https://arxiv.org/html/2611.02134v1#S6.T10",
+   "source_url": "https://arxiv.org/html/2611.02134v1#S6.T10",
+   "page_number": null,
+   "source_sha256": "aad96fdeef5dd0d8873bd478cdfdcacb7f9c2b5a2c1ecba81c8a940467ed9bf5",
+   "source_anchor": "S6.T10",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Evaluation",
+   "subsection": "Results",
+   "section_id": "S6",
+   "subsection_id": "S6.SS1",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S6.T10",
+   "table_row": 19,
+   "row_label": "HaloGuard 2.0-0.8B (Ours)",
+   "caption": "Table 10: Response-harmfulness F1 on six English benchmarks. HaloGuard 2.0 is scored by its streaming verdict under one global decision rule; the released model’s held-out average is 83.3. The base guard is shown at its own best global rule. Best score per column in bold. The Avg. column is given to two decimals because the top three averages are within 0.06: HaloGuard 2.0-0.8B (83.63, 0.8B) and Qwen3Guard-Gen-4B and -8B (83.57). Baseline averages are the mean of the reported per-benchmark scores. † As reported by Qwen Team [3] (Qwen3Guard models in strict mode). ‡ As reported by Calvi et al. [4] . Qwen3Guard’s Think column is not part of our suite.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Model",
+     "source_id": "S6.T10.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Size",
+     "source_id": "S6.T10.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "HarmB",
+     "source_id": "S6.T10.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "SafeRLHF",
+     "source_id": "S6.T10.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "BeaverTails",
+     "source_id": "S6.T10.2.1.5"
+    },
+    {
+     "column": 5,
+     "text": "XSTest-R",
+     "source_id": "S6.T10.2.1.6"
+    },
+    {
+     "column": 6,
+     "text": "Aegis 2.0",
+     "source_id": "S6.T10.2.1.7"
+    },
+    {
+     "column": 7,
+     "text": "WildG",
+     "source_id": "S6.T10.2.1.8"
+    },
+    {
+     "column": 8,
+     "text": "Avg .",
+     "source_id": "S6.T10.2.1.9"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 19,
+     "column": 0,
+     "text": "HaloGuard 2.0-0.8B (Ours)",
+     "source_id": "S6.T10.2.20.1"
+    },
+    {
+     "row": 19,
+     "column": 1,
+     "text": "0.8B",
+     "source_id": "S6.T10.2.20.2"
+    },
+    {
+     "row": 19,
+     "column": 2,
+     "text": "96.4",
+     "source_id": "S6.T10.2.20.3"
+    },
+    {
+     "row": 19,
+     "column": 3,
+     "text": "81.7",
+     "source_id": "S6.T10.2.20.4"
+    },
+    {
+     "row": 19,
+     "column": 4,
+     "text": "83.0",
+     "source_id": "S6.T10.2.20.5"
+    },
+    {
+     "row": 19,
+     "column": 5,
+     "text": "85.4",
+     "source_id": "S6.T10.2.20.6"
+    },
+    {
+     "row": 19,
+     "column": 6,
+     "text": "83.5",
+     "source_id": "S6.T10.2.20.7"
+    },
+    {
+     "row": 19,
+     "column": 7,
+     "text": "71.9",
+     "source_id": "S6.T10.2.20.8"
+    },
+    {
+     "row": 19,
+     "column": 8,
+     "text": "83.63",
+     "source_id": "S6.T10.2.20.9"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02134v1_c0027",
+   "arxiv_id": "2611.02134v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02134v1#S6.SS1",
+   "section": "evaluation",
+   "subsection": "results",
+   "high_value": true,
+   "text": "29,240-sample split, with Qwen3Guard averaged over its strict and loose modes, so\nindicative only ( Section 6.3 ). On prompts, PolyGuard-Qwen is the only\nmodel scored under both protocols, and the two differ by 1.2 (85.9 against 87.1);\non responses, five models overlap ( Section 6.3 ). Response-harmfulness F1 on six English benchmarks. HaloGuard 2.0 is scored by its\nstreaming verdict under one global decision rule; the released model’s held-out\naverage is 83.3. The base guard is shown at its own best global rule. Best\nscore per column in bold. The Avg. column is given to two decimals because the\ntop three averages are within 0.06: HaloGuard 2.0-0.8B (83.63, 0.8B) and Qwen3Guard-Gen-4B\nand -8B (83.57). Baseline averages are the mean of the reported\nper-benchmark scores. † As reported by Qwen Team [3] (Qwen3Guard models in strict mode). ‡ As reported by Calvi et al. [4] .\nQwen3Guard’s Think column is not part of our suite. Over the base guard, the largest gains ( Figure 4 ) are on\nXSTest-R (+17.4) and WildG (+13.0), the two benchmarks dominated by safe responses\nto harmful-sounding prompts, where the prompt-driven and lexical FP modes\nconcentrate. FPs fall from 1,465 to 912.\nAcross the six benchmarks, HaloGuard 2.0-0.8B has the highest average of any model in Table 10 , 83.63, ahead of Qwen3Guard-Gen-4B and -8B (83.57 each) with\n5–10 \\times fewer parameters. The margin over those two is small; the size gap\nis not. Figure 5 plots these averages against model size, the\ncounterpart of the size plot in HaloGuard 1.0 [ 1 ] . It is also above every streaming baseline: the best Qwen3Guard-Stream model, at 4B, averages 81.0, and the 0.6B\nmodel, the closest in size, 78.8. The gap is not uniform. HaloGuard 2.0-0.8B is the strongest",
+   "text_with_context": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety | Evaluation > Results\n\n29,240-sample split, with Qwen3Guard averaged over its strict and loose modes, so\nindicative only ( Section 6.3 ). On prompts, PolyGuard-Qwen is the only\nmodel scored under both protocols, and the two differ by 1.2 (85.9 against 87.1);\non responses, five models overlap ( Section 6.3 ). Response-harmfulness F1 on six English benchmarks. HaloGuard 2.0 is scored by its\nstreaming verdict under one global decision rule; the released model’s held-out\naverage is 83.3. The base guard is shown at its own best global rule. Best\nscore per column in bold. The Avg. column is given to two decimals because the\ntop three averages are within 0.06: HaloGuard 2.0-0.8B (83.63, 0.8B) and Qwen3Guard-Gen-4B\nand -8B (83.57). Baseline averages are the mean of the reported\nper-benchmark scores. † As reported by Qwen Team [3] (Qwen3Guard models in strict mode). ‡ As reported by Calvi et al. [4] .\nQwen3Guard’s Think column is not part of our suite. Over the base guard, the largest gains ( Figure 4 ) are on\nXSTest-R (+17.4) and WildG (+13.0), the two benchmarks dominated by safe responses\nto harmful-sounding prompts, where the prompt-driven and lexical FP modes\nconcentrate. FPs fall from 1,465 to 912.\nAcross the six benchmarks, HaloGuard 2.0-0.8B has the highest average of any model in Table 10 , 83.63, ahead of Qwen3Guard-Gen-4B and -8B (83.57 each) with\n5–10 \\times fewer parameters. The margin over those two is small; the size gap\nis not. Figure 5 plots these averages against model size, the\ncounterpart of the size plot in HaloGuard 1.0 [ 1 ] . It is also above every streaming baseline: the best Qwen3Guard-Stream model, at 4B, averages 81.0, and the 0.6B\nmodel, the closest in size, 78.8. The gap is not uniform. HaloGuard 2.0-0.8B is the strongest",
+   "title": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02134v1#S6.SS1",
+   "pdf_url": "https://arxiv.org/pdf/2611.02134v1",
+   "source_sha256": "aad96fdeef5dd0d8873bd478cdfdcacb7f9c2b5a2c1ecba81c8a940467ed9bf5"
+  },
+  {
+   "chunk_id": "2611.02134v1_table_10b6396bf26b82f3_1",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nHaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety\nTable 1: Positioning of HaloGuard 2.0 relative to prior output guards.\nModel: LlamaGuard [ 13 ]; Training data: collected + annotated; Scored: full response; Streaming: no; Token supervision: –",
+   "arxiv_id": "2611.02134v1",
+   "title": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02134v1",
+   "html_url": "https://arxiv.org/html/2611.02134v1#S2.T1",
+   "source_url": "https://arxiv.org/html/2611.02134v1#S2.T1",
+   "page_number": null,
+   "source_sha256": "aad96fdeef5dd0d8873bd478cdfdcacb7f9c2b5a2c1ecba81c8a940467ed9bf5",
+   "source_anchor": "S2.T1",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Related Work",
+   "subsection": "",
+   "section_id": "S2",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S2.T1",
+   "table_row": 1,
+   "row_label": "LlamaGuard [ 13 ]",
+   "caption": "Table 1: Positioning of HaloGuard 2.0 relative to prior output guards.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Model",
+     "source_id": "S2.T1.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Training data",
+     "source_id": "S2.T1.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Scored",
+     "source_id": "S2.T1.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "Streaming",
+     "source_id": "S2.T1.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "Token supervision",
+     "source_id": "S2.T1.2.1.5"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 1,
+     "column": 0,
+     "text": "LlamaGuard [ 13 ]",
+     "source_id": "S2.T1.2.2.1"
+    },
+    {
+     "row": 1,
+     "column": 1,
+     "text": "collected + annotated",
+     "source_id": "S2.T1.2.2.2"
+    },
+    {
+     "row": 1,
+     "column": 2,
+     "text": "full response",
+     "source_id": "S2.T1.2.2.3"
+    },
+    {
+     "row": 1,
+     "column": 3,
+     "text": "no",
+     "source_id": "S2.T1.2.2.4"
+    },
+    {
+     "row": 1,
+     "column": 4,
+     "text": "–",
+     "source_id": "S2.T1.2.2.5"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02134v1_table_10b6396bf26b82f3_2",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nHaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety\nTable 1: Positioning of HaloGuard 2.0 relative to prior output guards.\nModel: WildGuard [ 7 ]; Training data: collected + synthetic; Scored: full response; Streaming: no; Token supervision: –",
+   "arxiv_id": "2611.02134v1",
+   "title": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02134v1",
+   "html_url": "https://arxiv.org/html/2611.02134v1#S2.T1",
+   "source_url": "https://arxiv.org/html/2611.02134v1#S2.T1",
+   "page_number": null,
+   "source_sha256": "aad96fdeef5dd0d8873bd478cdfdcacb7f9c2b5a2c1ecba81c8a940467ed9bf5",
+   "source_anchor": "S2.T1",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Related Work",
+   "subsection": "",
+   "section_id": "S2",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S2.T1",
+   "table_row": 2,
+   "row_label": "WildGuard [ 7 ]",
+   "caption": "Table 1: Positioning of HaloGuard 2.0 relative to prior output guards.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Model",
+     "source_id": "S2.T1.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Training data",
+     "source_id": "S2.T1.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Scored",
+     "source_id": "S2.T1.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "Streaming",
+     "source_id": "S2.T1.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "Token supervision",
+     "source_id": "S2.T1.2.1.5"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 2,
+     "column": 0,
+     "text": "WildGuard [ 7 ]",
+     "source_id": "S2.T1.2.3.1"
+    },
+    {
+     "row": 2,
+     "column": 1,
+     "text": "collected + synthetic",
+     "source_id": "S2.T1.2.3.2"
+    },
+    {
+     "row": 2,
+     "column": 2,
+     "text": "full response",
+     "source_id": "S2.T1.2.3.3"
+    },
+    {
+     "row": 2,
+     "column": 3,
+     "text": "no",
+     "source_id": "S2.T1.2.3.4"
+    },
+    {
+     "row": 2,
+     "column": 4,
+     "text": "–",
+     "source_id": "S2.T1.2.3.5"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02134v1_table_10b6396bf26b82f3_3",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nHaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety\nTable 1: Positioning of HaloGuard 2.0 relative to prior output guards.\nModel: ShieldGemma [ 8 ]; Training data: synthetic; Scored: full response; Streaming: no; Token supervision: –",
+   "arxiv_id": "2611.02134v1",
+   "title": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02134v1",
+   "html_url": "https://arxiv.org/html/2611.02134v1#S2.T1",
+   "source_url": "https://arxiv.org/html/2611.02134v1#S2.T1",
+   "page_number": null,
+   "source_sha256": "aad96fdeef5dd0d8873bd478cdfdcacb7f9c2b5a2c1ecba81c8a940467ed9bf5",
+   "source_anchor": "S2.T1",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Related Work",
+   "subsection": "",
+   "section_id": "S2",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S2.T1",
+   "table_row": 3,
+   "row_label": "ShieldGemma [ 8 ]",
+   "caption": "Table 1: Positioning of HaloGuard 2.0 relative to prior output guards.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Model",
+     "source_id": "S2.T1.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Training data",
+     "source_id": "S2.T1.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Scored",
+     "source_id": "S2.T1.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "Streaming",
+     "source_id": "S2.T1.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "Token supervision",
+     "source_id": "S2.T1.2.1.5"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 3,
+     "column": 0,
+     "text": "ShieldGemma [ 8 ]",
+     "source_id": "S2.T1.2.4.1"
+    },
+    {
+     "row": 3,
+     "column": 1,
+     "text": "synthetic",
+     "source_id": "S2.T1.2.4.2"
+    },
+    {
+     "row": 3,
+     "column": 2,
+     "text": "full response",
+     "source_id": "S2.T1.2.4.3"
+    },
+    {
+     "row": 3,
+     "column": 3,
+     "text": "no",
+     "source_id": "S2.T1.2.4.4"
+    },
+    {
+     "row": 3,
+     "column": 4,
+     "text": "–",
+     "source_id": "S2.T1.2.4.5"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02134v1_table_10b6396bf26b82f3_4",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nHaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety\nTable 1: Positioning of HaloGuard 2.0 relative to prior output guards.\nModel: PolyGuard [ 2 ]; Training data: collected + translated; Scored: full response; Streaming: no; Token supervision: –",
+   "arxiv_id": "2611.02134v1",
+   "title": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02134v1",
+   "html_url": "https://arxiv.org/html/2611.02134v1#S2.T1",
+   "source_url": "https://arxiv.org/html/2611.02134v1#S2.T1",
+   "page_number": null,
+   "source_sha256": "aad96fdeef5dd0d8873bd478cdfdcacb7f9c2b5a2c1ecba81c8a940467ed9bf5",
+   "source_anchor": "S2.T1",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Related Work",
+   "subsection": "",
+   "section_id": "S2",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S2.T1",
+   "table_row": 4,
+   "row_label": "PolyGuard [ 2 ]",
+   "caption": "Table 1: Positioning of HaloGuard 2.0 relative to prior output guards.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Model",
+     "source_id": "S2.T1.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Training data",
+     "source_id": "S2.T1.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Scored",
+     "source_id": "S2.T1.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "Streaming",
+     "source_id": "S2.T1.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "Token supervision",
+     "source_id": "S2.T1.2.1.5"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 4,
+     "column": 0,
+     "text": "PolyGuard [ 2 ]",
+     "source_id": "S2.T1.2.5.1"
+    },
+    {
+     "row": 4,
+     "column": 1,
+     "text": "collected + translated",
+     "source_id": "S2.T1.2.5.2"
+    },
+    {
+     "row": 4,
+     "column": 2,
+     "text": "full response",
+     "source_id": "S2.T1.2.5.3"
+    },
+    {
+     "row": 4,
+     "column": 3,
+     "text": "no",
+     "source_id": "S2.T1.2.5.4"
+    },
+    {
+     "row": 4,
+     "column": 4,
+     "text": "–",
+     "source_id": "S2.T1.2.5.5"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02134v1_table_10b6396bf26b82f3_5",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nHaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety\nTable 1: Positioning of HaloGuard 2.0 relative to prior output guards.\nModel: Qwen3Guard-Stream [ 3 ]; Training data: collected + synthetic; Scored: every token; Streaming: yes, open; Token supervision: first unsafe token, from rollouts + LLM judge",
+   "arxiv_id": "2611.02134v1",
+   "title": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02134v1",
+   "html_url": "https://arxiv.org/html/2611.02134v1#S2.T1",
+   "source_url": "https://arxiv.org/html/2611.02134v1#S2.T1",
+   "page_number": null,
+   "source_sha256": "aad96fdeef5dd0d8873bd478cdfdcacb7f9c2b5a2c1ecba81c8a940467ed9bf5",
+   "source_anchor": "S2.T1",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Related Work",
+   "subsection": "",
+   "section_id": "S2",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S2.T1",
+   "table_row": 5,
+   "row_label": "Qwen3Guard-Stream [ 3 ]",
+   "caption": "Table 1: Positioning of HaloGuard 2.0 relative to prior output guards.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Model",
+     "source_id": "S2.T1.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Training data",
+     "source_id": "S2.T1.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Scored",
+     "source_id": "S2.T1.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "Streaming",
+     "source_id": "S2.T1.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "Token supervision",
+     "source_id": "S2.T1.2.1.5"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 5,
+     "column": 0,
+     "text": "Qwen3Guard-Stream [ 3 ]",
+     "source_id": "S2.T1.2.6.1"
+    },
+    {
+     "row": 5,
+     "column": 1,
+     "text": "collected + synthetic",
+     "source_id": "S2.T1.2.6.2"
+    },
+    {
+     "row": 5,
+     "column": 2,
+     "text": "every token",
+     "source_id": "S2.T1.2.6.3"
+    },
+    {
+     "row": 5,
+     "column": 3,
+     "text": "yes, open",
+     "source_id": "S2.T1.2.6.4"
+    },
+    {
+     "row": 5,
+     "column": 4,
+     "text": "first unsafe token, from rollouts + LLM judge",
+     "source_id": "S2.T1.2.6.5"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02134v1_table_10b6396bf26b82f3_6",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nHaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety\nTable 1: Positioning of HaloGuard 2.0 relative to prior output guards.\nModel: CCs [ 14 ]; Training data: constitution \\to synthetic; Scored: every token; Streaming: yes, closed; Token supervision: prefixes trained toward the full-response label",
+   "arxiv_id": "2611.02134v1",
+   "title": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02134v1",
+   "html_url": "https://arxiv.org/html/2611.02134v1#S2.T1",
+   "source_url": "https://arxiv.org/html/2611.02134v1#S2.T1",
+   "page_number": null,
+   "source_sha256": "aad96fdeef5dd0d8873bd478cdfdcacb7f9c2b5a2c1ecba81c8a940467ed9bf5",
+   "source_anchor": "S2.T1",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Related Work",
+   "subsection": "",
+   "section_id": "S2",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S2.T1",
+   "table_row": 6,
+   "row_label": "CCs [ 14 ]",
+   "caption": "Table 1: Positioning of HaloGuard 2.0 relative to prior output guards.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Model",
+     "source_id": "S2.T1.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Training data",
+     "source_id": "S2.T1.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Scored",
+     "source_id": "S2.T1.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "Streaming",
+     "source_id": "S2.T1.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "Token supervision",
+     "source_id": "S2.T1.2.1.5"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 6,
+     "column": 0,
+     "text": "CCs [ 14 ]",
+     "source_id": "S2.T1.2.7.1"
+    },
+    {
+     "row": 6,
+     "column": 1,
+     "text": "constitution \\to synthetic",
+     "source_id": "S2.T1.2.7.2"
+    },
+    {
+     "row": 6,
+     "column": 2,
+     "text": "every token",
+     "source_id": "S2.T1.2.7.3"
+    },
+    {
+     "row": 6,
+     "column": 3,
+     "text": "yes, closed",
+     "source_id": "S2.T1.2.7.4"
+    },
+    {
+     "row": 6,
+     "column": 4,
+     "text": "prefixes trained toward the full-response label",
+     "source_id": "S2.T1.2.7.5"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02134v1_table_10b6396bf26b82f3_7",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nHaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety\nTable 1: Positioning of HaloGuard 2.0 relative to prior output guards.\nModel: Shieldstral [ 4 ]; Training data: collected + synthetic (54.1M); Scored: full response; Streaming: no; Token supervision: –",
+   "arxiv_id": "2611.02134v1",
+   "title": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02134v1",
+   "html_url": "https://arxiv.org/html/2611.02134v1#S2.T1",
+   "source_url": "https://arxiv.org/html/2611.02134v1#S2.T1",
+   "page_number": null,
+   "source_sha256": "aad96fdeef5dd0d8873bd478cdfdcacb7f9c2b5a2c1ecba81c8a940467ed9bf5",
+   "source_anchor": "S2.T1",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Related Work",
+   "subsection": "",
+   "section_id": "S2",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S2.T1",
+   "table_row": 7,
+   "row_label": "Shieldstral [ 4 ]",
+   "caption": "Table 1: Positioning of HaloGuard 2.0 relative to prior output guards.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Model",
+     "source_id": "S2.T1.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Training data",
+     "source_id": "S2.T1.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Scored",
+     "source_id": "S2.T1.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "Streaming",
+     "source_id": "S2.T1.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "Token supervision",
+     "source_id": "S2.T1.2.1.5"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 7,
+     "column": 0,
+     "text": "Shieldstral [ 4 ]",
+     "source_id": "S2.T1.2.8.1"
+    },
+    {
+     "row": 7,
+     "column": 1,
+     "text": "collected + synthetic (54.1M)",
+     "source_id": "S2.T1.2.8.2"
+    },
+    {
+     "row": 7,
+     "column": 2,
+     "text": "full response",
+     "source_id": "S2.T1.2.8.3"
+    },
+    {
+     "row": 7,
+     "column": 3,
+     "text": "no",
+     "source_id": "S2.T1.2.8.4"
+    },
+    {
+     "row": 7,
+     "column": 4,
+     "text": "–",
+     "source_id": "S2.T1.2.8.5"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02134v1_table_10b6396bf26b82f3_8",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nHaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety\nTable 1: Positioning of HaloGuard 2.0 relative to prior output guards.\nModel: HaloGuard 2.0 (ours); Training data: constitution \\to synthetic (English); PolyGuardMix (multilingual); Scored: every response token; Streaming: yes, open; Token supervision: onset constructed at generation (Phase 2)",
+   "arxiv_id": "2611.02134v1",
+   "title": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02134v1",
+   "html_url": "https://arxiv.org/html/2611.02134v1#S2.T1",
+   "source_url": "https://arxiv.org/html/2611.02134v1#S2.T1",
+   "page_number": null,
+   "source_sha256": "aad96fdeef5dd0d8873bd478cdfdcacb7f9c2b5a2c1ecba81c8a940467ed9bf5",
+   "source_anchor": "S2.T1",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Related Work",
+   "subsection": "",
+   "section_id": "S2",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S2.T1",
+   "table_row": 8,
+   "row_label": "HaloGuard 2.0 (ours)",
+   "caption": "Table 1: Positioning of HaloGuard 2.0 relative to prior output guards.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Model",
+     "source_id": "S2.T1.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Training data",
+     "source_id": "S2.T1.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Scored",
+     "source_id": "S2.T1.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "Streaming",
+     "source_id": "S2.T1.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "Token supervision",
+     "source_id": "S2.T1.2.1.5"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 8,
+     "column": 0,
+     "text": "HaloGuard 2.0 (ours)",
+     "source_id": "S2.T1.2.9.1"
+    },
+    {
+     "row": 8,
+     "column": 1,
+     "text": "constitution \\to synthetic (English); PolyGuardMix (multilingual)",
+     "source_id": "S2.T1.2.9.2"
+    },
+    {
+     "row": 8,
+     "column": 2,
+     "text": "every response token",
+     "source_id": "S2.T1.2.9.3"
+    },
+    {
+     "row": 8,
+     "column": 3,
+     "text": "yes, open",
+     "source_id": "S2.T1.2.9.4"
+    },
+    {
+     "row": 8,
+     "column": 4,
+     "text": "onset constructed at generation (Phase 2)",
+     "source_id": "S2.T1.2.9.5"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02134v1_table_a38aa5488119366c_11",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nHaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety\nTable 10: Response-harmfulness F1 on six English benchmarks. HaloGuard 2.0 is scored by its streaming verdict under one global decision rule; the released model’s held-out average is 83.3. The base guard is shown at its own best global rule. Best score per column in bold. The Avg. column is given to two decimals because the top three averages are within 0.06: HaloGuard 2.0-0.8B (83.63, 0.8B) and Qwen3Guard-Gen-4B and -8B (83.57). Baseline averages are the mean of the reported per-benchmark scores. † As reported by Qwen Team [3] (Qwen3Guard models in strict mode). ‡ As reported by Calvi et al. [4] . Qwen3Guard’s Think column is not part of our suite.\nModel: Shieldstral ‡; Size: 3B; HarmB: 87.0; SafeRLHF: 62.0; BeaverTails: 85.0; XSTest-R: 93.5; Aegis 2.0: 87.2; WildG: 80.4; Avg .: 82.52",
+   "arxiv_id": "2611.02134v1",
+   "title": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02134v1",
+   "html_url": "https://arxiv.org/html/2611.02134v1#S6.T10",
+   "source_url": "https://arxiv.org/html/2611.02134v1#S6.T10",
+   "page_number": null,
+   "source_sha256": "aad96fdeef5dd0d8873bd478cdfdcacb7f9c2b5a2c1ecba81c8a940467ed9bf5",
+   "source_anchor": "S6.T10",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Evaluation",
+   "subsection": "Results",
+   "section_id": "S6",
+   "subsection_id": "S6.SS1",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S6.T10",
+   "table_row": 11,
+   "row_label": "Shieldstral ‡",
+   "caption": "Table 10: Response-harmfulness F1 on six English benchmarks. HaloGuard 2.0 is scored by its streaming verdict under one global decision rule; the released model’s held-out average is 83.3. The base guard is shown at its own best global rule. Best score per column in bold. The Avg. column is given to two decimals because the top three averages are within 0.06: HaloGuard 2.0-0.8B (83.63, 0.8B) and Qwen3Guard-Gen-4B and -8B (83.57). Baseline averages are the mean of the reported per-benchmark scores. † As reported by Qwen Team [3] (Qwen3Guard models in strict mode). ‡ As reported by Calvi et al. [4] . Qwen3Guard’s Think column is not part of our suite.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Model",
+     "source_id": "S6.T10.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Size",
+     "source_id": "S6.T10.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "HarmB",
+     "source_id": "S6.T10.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "SafeRLHF",
+     "source_id": "S6.T10.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "BeaverTails",
+     "source_id": "S6.T10.2.1.5"
+    },
+    {
+     "column": 5,
+     "text": "XSTest-R",
+     "source_id": "S6.T10.2.1.6"
+    },
+    {
+     "column": 6,
+     "text": "Aegis 2.0",
+     "source_id": "S6.T10.2.1.7"
+    },
+    {
+     "column": 7,
+     "text": "WildG",
+     "source_id": "S6.T10.2.1.8"
+    },
+    {
+     "column": 8,
+     "text": "Avg .",
+     "source_id": "S6.T10.2.1.9"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 11,
+     "column": 0,
+     "text": "Shieldstral ‡",
+     "source_id": "S6.T10.2.12.1"
+    },
+    {
+     "row": 11,
+     "column": 1,
+     "text": "3B",
+     "source_id": "S6.T10.2.12.2"
+    },
+    {
+     "row": 11,
+     "column": 2,
+     "text": "87.0",
+     "source_id": "S6.T10.2.12.3"
+    },
+    {
+     "row": 11,
+     "column": 3,
+     "text": "62.0",
+     "source_id": "S6.T10.2.12.4"
+    },
+    {
+     "row": 11,
+     "column": 4,
+     "text": "85.0",
+     "source_id": "S6.T10.2.12.5"
+    },
+    {
+     "row": 11,
+     "column": 5,
+     "text": "93.5",
+     "source_id": "S6.T10.2.12.6"
+    },
+    {
+     "row": 11,
+     "column": 6,
+     "text": "87.2",
+     "source_id": "S6.T10.2.12.7"
+    },
+    {
+     "row": 11,
+     "column": 7,
+     "text": "80.4",
+     "source_id": "S6.T10.2.12.8"
+    },
+    {
+     "row": 11,
+     "column": 8,
+     "text": "82.52",
+     "source_id": "S6.T10.2.12.9"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02134v1_c0026",
+   "arxiv_id": "2611.02134v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02134v1#S6.SS1",
+   "section": "evaluation",
+   "subsection": "results",
+   "high_value": true,
+   "text": "Table 9 places the two HaloGuard guards side by side, in the format\nQwen3Guard uses to summarise its family [ 3 ] : HaloGuard 1.0 on\nprompts and HaloGuard 2.0 on responses, in English and across 17 languages. Table 10 then reports response-harmfulness F1 per benchmark against open\nbaselines and Table 11 the error rates behind it, and Table 12 gives the input-layer results of HaloGuard 1.0; the operating\npoints of both released models are compared in Section 6.3 . The HaloGuard family across tasks (F1). English prompt: average over the\nseven prompt benchmarks of HaloGuard 1.0 (OAI, Aegis, Aegis 2.0, ToxicChat,\nSimpleSafetyTests, HarmBench, WildGuardTest). English response: average over the six\nbenchmarks of Table 10 . Multilingual: PolyGuardPrompts, 17 languages. –\nmarks a task the model does not perform or a score no source reports. Bold marks the\nbest score per column; in the English response column HaloGuard 2.0-0.8B leads at two decimals\n(83.63 against 83.57 for Qwen3Guard-Gen-4B and -8B, Table 10 ) with\n5–10 \\times fewer parameters. English baselines as reported in Sangameswaran et al. [1] and\nthe Qwen3Guard report [ 3 ] (Tables 2, 3 and 11; Qwen3Guard in strict\nmode). Multilingual baselines as reported in the PolyGuard paper [ 2 ] (Table 1) and the Qwen3Guard report (Tables 6 and 15), which agree to within 0.1\nwhere they overlap. ‡ Mean of the seven per-benchmark scores reported by Calvi et al. [4] (Figure 5); that paper’s scores for WildGuard, LlamaGuard4 and Qwen3Guard-8B on the\nsame benchmarks are within 0.5 of the values above. § PolyGuard F1 as reported by Calvi et al. [4] (Figure 5) on its own\n29,240-sample split, with Qwen3Guard averaged over its strict and loose modes, so\nindicative only ( Section 6.3 ). On prompts, PolyGuard-Qwen is the only",
+   "text_with_context": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety | Evaluation > Results\n\nTable 9 places the two HaloGuard guards side by side, in the format\nQwen3Guard uses to summarise its family [ 3 ] : HaloGuard 1.0 on\nprompts and HaloGuard 2.0 on responses, in English and across 17 languages. Table 10 then reports response-harmfulness F1 per benchmark against open\nbaselines and Table 11 the error rates behind it, and Table 12 gives the input-layer results of HaloGuard 1.0; the operating\npoints of both released models are compared in Section 6.3 . The HaloGuard family across tasks (F1). English prompt: average over the\nseven prompt benchmarks of HaloGuard 1.0 (OAI, Aegis, Aegis 2.0, ToxicChat,\nSimpleSafetyTests, HarmBench, WildGuardTest). English response: average over the six\nbenchmarks of Table 10 . Multilingual: PolyGuardPrompts, 17 languages. –\nmarks a task the model does not perform or a score no source reports. Bold marks the\nbest score per column; in the English response column HaloGuard 2.0-0.8B leads at two decimals\n(83.63 against 83.57 for Qwen3Guard-Gen-4B and -8B, Table 10 ) with\n5–10 \\times fewer parameters. English baselines as reported in Sangameswaran et al. [1] and\nthe Qwen3Guard report [ 3 ] (Tables 2, 3 and 11; Qwen3Guard in strict\nmode). Multilingual baselines as reported in the PolyGuard paper [ 2 ] (Table 1) and the Qwen3Guard report (Tables 6 and 15), which agree to within 0.1\nwhere they overlap. ‡ Mean of the seven per-benchmark scores reported by Calvi et al. [4] (Figure 5); that paper’s scores for WildGuard, LlamaGuard4 and Qwen3Guard-8B on the\nsame benchmarks are within 0.5 of the values above. § PolyGuard F1 as reported by Calvi et al. [4] (Figure 5) on its own\n29,240-sample split, with Qwen3Guard averaged over its strict and loose modes, so\nindicative only ( Section 6.3 ). On prompts, PolyGuard-Qwen is the only",
+   "title": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02134v1#S6.SS1",
+   "pdf_url": "https://arxiv.org/pdf/2611.02134v1",
+   "source_sha256": "aad96fdeef5dd0d8873bd478cdfdcacb7f9c2b5a2c1ecba81c8a940467ed9bf5"
+  },
+  {
+   "chunk_id": "2611.02134v1_table_a38aa5488119366c_10",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nHaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety\nTable 10: Response-harmfulness F1 on six English benchmarks. HaloGuard 2.0 is scored by its streaming verdict under one global decision rule; the released model’s held-out average is 83.3. The base guard is shown at its own best global rule. Best score per column in bold. The Avg. column is given to two decimals because the top three averages are within 0.06: HaloGuard 2.0-0.8B (83.63, 0.8B) and Qwen3Guard-Gen-4B and -8B (83.57). Baseline averages are the mean of the reported per-benchmark scores. † As reported by Qwen Team [3] (Qwen3Guard models in strict mode). ‡ As reported by Calvi et al. [4] . Qwen3Guard’s Think column is not part of our suite.\nModel: GPT-OSS-Safeguard ‡; Size: 20B; HarmB: 88.2; SafeRLHF: 63.8; BeaverTails: 83.8; XSTest-R: 93.8; Aegis 2.0: 75.2; WildG: 80.7; Avg .: 80.92",
+   "arxiv_id": "2611.02134v1",
+   "title": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02134v1",
+   "html_url": "https://arxiv.org/html/2611.02134v1#S6.T10",
+   "source_url": "https://arxiv.org/html/2611.02134v1#S6.T10",
+   "page_number": null,
+   "source_sha256": "aad96fdeef5dd0d8873bd478cdfdcacb7f9c2b5a2c1ecba81c8a940467ed9bf5",
+   "source_anchor": "S6.T10",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Evaluation",
+   "subsection": "Results",
+   "section_id": "S6",
+   "subsection_id": "S6.SS1",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S6.T10",
+   "table_row": 10,
+   "row_label": "GPT-OSS-Safeguard ‡",
+   "caption": "Table 10: Response-harmfulness F1 on six English benchmarks. HaloGuard 2.0 is scored by its streaming verdict under one global decision rule; the released model’s held-out average is 83.3. The base guard is shown at its own best global rule. Best score per column in bold. The Avg. column is given to two decimals because the top three averages are within 0.06: HaloGuard 2.0-0.8B (83.63, 0.8B) and Qwen3Guard-Gen-4B and -8B (83.57). Baseline averages are the mean of the reported per-benchmark scores. † As reported by Qwen Team [3] (Qwen3Guard models in strict mode). ‡ As reported by Calvi et al. [4] . Qwen3Guard’s Think column is not part of our suite.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Model",
+     "source_id": "S6.T10.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Size",
+     "source_id": "S6.T10.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "HarmB",
+     "source_id": "S6.T10.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "SafeRLHF",
+     "source_id": "S6.T10.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "BeaverTails",
+     "source_id": "S6.T10.2.1.5"
+    },
+    {
+     "column": 5,
+     "text": "XSTest-R",
+     "source_id": "S6.T10.2.1.6"
+    },
+    {
+     "column": 6,
+     "text": "Aegis 2.0",
+     "source_id": "S6.T10.2.1.7"
+    },
+    {
+     "column": 7,
+     "text": "WildG",
+     "source_id": "S6.T10.2.1.8"
+    },
+    {
+     "column": 8,
+     "text": "Avg .",
+     "source_id": "S6.T10.2.1.9"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 10,
+     "column": 0,
+     "text": "GPT-OSS-Safeguard ‡",
+     "source_id": "S6.T10.2.11.1"
+    },
+    {
+     "row": 10,
+     "column": 1,
+     "text": "20B",
+     "source_id": "S6.T10.2.11.2"
+    },
+    {
+     "row": 10,
+     "column": 2,
+     "text": "88.2",
+     "source_id": "S6.T10.2.11.3"
+    },
+    {
+     "row": 10,
+     "column": 3,
+     "text": "63.8",
+     "source_id": "S6.T10.2.11.4"
+    },
+    {
+     "row": 10,
+     "column": 4,
+     "text": "83.8",
+     "source_id": "S6.T10.2.11.5"
+    },
+    {
+     "row": 10,
+     "column": 5,
+     "text": "93.8",
+     "source_id": "S6.T10.2.11.6"
+    },
+    {
+     "row": 10,
+     "column": 6,
+     "text": "75.2",
+     "source_id": "S6.T10.2.11.7"
+    },
+    {
+     "row": 10,
+     "column": 7,
+     "text": "80.7",
+     "source_id": "S6.T10.2.11.8"
+    },
+    {
+     "row": 10,
+     "column": 8,
+     "text": "80.92",
+     "source_id": "S6.T10.2.11.9"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02134v1_table_a38aa5488119366c_9",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nHaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety\nTable 10: Response-harmfulness F1 on six English benchmarks. HaloGuard 2.0 is scored by its streaming verdict under one global decision rule; the released model’s held-out average is 83.3. The base guard is shown at its own best global rule. Best score per column in bold. The Avg. column is given to two decimals because the top three averages are within 0.06: HaloGuard 2.0-0.8B (83.63, 0.8B) and Qwen3Guard-Gen-4B and -8B (83.57). Baseline averages are the mean of the reported per-benchmark scores. † As reported by Qwen Team [3] (Qwen3Guard models in strict mode). ‡ As reported by Calvi et al. [4] . Qwen3Guard’s Think column is not part of our suite.\nModel: Nemotron-3.5-Safety ‡; Size: 4B; HarmB: 85.3; SafeRLHF: 63.2; BeaverTails: 83.3; XSTest-R: 86.9; Aegis 2.0: 84.9; WildG: 77.6; Avg .: 80.20",
+   "arxiv_id": "2611.02134v1",
+   "title": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02134v1",
+   "html_url": "https://arxiv.org/html/2611.02134v1#S6.T10",
+   "source_url": "https://arxiv.org/html/2611.02134v1#S6.T10",
+   "page_number": null,
+   "source_sha256": "aad96fdeef5dd0d8873bd478cdfdcacb7f9c2b5a2c1ecba81c8a940467ed9bf5",
+   "source_anchor": "S6.T10",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Evaluation",
+   "subsection": "Results",
+   "section_id": "S6",
+   "subsection_id": "S6.SS1",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S6.T10",
+   "table_row": 9,
+   "row_label": "Nemotron-3.5-Safety ‡",
+   "caption": "Table 10: Response-harmfulness F1 on six English benchmarks. HaloGuard 2.0 is scored by its streaming verdict under one global decision rule; the released model’s held-out average is 83.3. The base guard is shown at its own best global rule. Best score per column in bold. The Avg. column is given to two decimals because the top three averages are within 0.06: HaloGuard 2.0-0.8B (83.63, 0.8B) and Qwen3Guard-Gen-4B and -8B (83.57). Baseline averages are the mean of the reported per-benchmark scores. † As reported by Qwen Team [3] (Qwen3Guard models in strict mode). ‡ As reported by Calvi et al. [4] . Qwen3Guard’s Think column is not part of our suite.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Model",
+     "source_id": "S6.T10.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Size",
+     "source_id": "S6.T10.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "HarmB",
+     "source_id": "S6.T10.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "SafeRLHF",
+     "source_id": "S6.T10.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "BeaverTails",
+     "source_id": "S6.T10.2.1.5"
+    },
+    {
+     "column": 5,
+     "text": "XSTest-R",
+     "source_id": "S6.T10.2.1.6"
+    },
+    {
+     "column": 6,
+     "text": "Aegis 2.0",
+     "source_id": "S6.T10.2.1.7"
+    },
+    {
+     "column": 7,
+     "text": "WildG",
+     "source_id": "S6.T10.2.1.8"
+    },
+    {
+     "column": 8,
+     "text": "Avg .",
+     "source_id": "S6.T10.2.1.9"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 9,
+     "column": 0,
+     "text": "Nemotron-3.5-Safety ‡",
+     "source_id": "S6.T10.2.10.1"
+    },
+    {
+     "row": 9,
+     "column": 1,
+     "text": "4B",
+     "source_id": "S6.T10.2.10.2"
+    },
+    {
+     "row": 9,
+     "column": 2,
+     "text": "85.3",
+     "source_id": "S6.T10.2.10.3"
+    },
+    {
+     "row": 9,
+     "column": 3,
+     "text": "63.2",
+     "source_id": "S6.T10.2.10.4"
+    },
+    {
+     "row": 9,
+     "column": 4,
+     "text": "83.3",
+     "source_id": "S6.T10.2.10.5"
+    },
+    {
+     "row": 9,
+     "column": 5,
+     "text": "86.9",
+     "source_id": "S6.T10.2.10.6"
+    },
+    {
+     "row": 9,
+     "column": 6,
+     "text": "84.9",
+     "source_id": "S6.T10.2.10.7"
+    },
+    {
+     "row": 9,
+     "column": 7,
+     "text": "77.6",
+     "source_id": "S6.T10.2.10.8"
+    },
+    {
+     "row": 9,
+     "column": 8,
+     "text": "80.20",
+     "source_id": "S6.T10.2.10.9"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02134v1_c0039",
+   "arxiv_id": "2611.02134v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02134v1#S8",
+   "section": "conclusion",
+   "subsection": "",
+   "high_value": true,
+   "text": "HaloGuard 2.0 builds on HaloGuard 1.0 by shifting from per-prompt decisions to per-token decisions in the model’s output. The core rules stay the same, but now the system can look at both sides of each policy boundary, making it easier to see exactly where harm starts. The main idea is that a streaming guard needs to set two boundaries. The first is the content boundary, which works like input moderation and separates responses that encourage harm from those that just discuss harmful topics. The second is a temporal boundary, specific to streaming, that marks the point in a response where there is enough evidence to step in. If the guard is only trained on completions that are harmful from the start, it might miss this temporal boundary and focus only on the prompt. Comparing response pairs makes this issue clear. Adding a corrective training step with these pairs, and then averaging the model weights, raises the six-benchmark F1 score from 72.8 to 83.6. HaloGuard 2.0-Poly-0.8B (the multilingual version) uses the same training objective as PolyGuardMix and supports 17 languages, achieving an F1 of 83.1 on the PolyGuardPrompts response labels. Next up is finding training methods that maintain the streaming improvements during averaging. We also plan to try out larger models as the 0.8B version hasn’t been tried above that parameter count yet. In the future we’d like to look at conversation level scoring, category attribution, tool call scoring and joint evaluation of input and output guards on shared test concepts.",
+   "text_with_context": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety | Conclusion\n\nHaloGuard 2.0 builds on HaloGuard 1.0 by shifting from per-prompt decisions to per-token decisions in the model’s output. The core rules stay the same, but now the system can look at both sides of each policy boundary, making it easier to see exactly where harm starts. The main idea is that a streaming guard needs to set two boundaries. The first is the content boundary, which works like input moderation and separates responses that encourage harm from those that just discuss harmful topics. The second is a temporal boundary, specific to streaming, that marks the point in a response where there is enough evidence to step in. If the guard is only trained on completions that are harmful from the start, it might miss this temporal boundary and focus only on the prompt. Comparing response pairs makes this issue clear. Adding a corrective training step with these pairs, and then averaging the model weights, raises the six-benchmark F1 score from 72.8 to 83.6. HaloGuard 2.0-Poly-0.8B (the multilingual version) uses the same training objective as PolyGuardMix and supports 17 languages, achieving an F1 of 83.1 on the PolyGuardPrompts response labels. Next up is finding training methods that maintain the streaming improvements during averaging. We also plan to try out larger models as the 0.8B version hasn’t been tried above that parameter count yet. In the future we’d like to look at conversation level scoring, category attribution, tool call scoring and joint evaluation of input and output guards on shared test concepts.",
+   "title": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02134v1#S8",
+   "pdf_url": "https://arxiv.org/pdf/2611.02134v1",
+   "source_sha256": "aad96fdeef5dd0d8873bd478cdfdcacb7f9c2b5a2c1ecba81c8a940467ed9bf5"
+  },
+  {
+   "chunk_id": "2611.02134v1_table_a38aa5488119366c_5",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nHaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety\nTable 10: Response-harmfulness F1 on six English benchmarks. HaloGuard 2.0 is scored by its streaming verdict under one global decision rule; the released model’s held-out average is 83.3. The base guard is shown at its own best global rule. Best score per column in bold. The Avg. column is given to two decimals because the top three averages are within 0.06: HaloGuard 2.0-0.8B (83.63, 0.8B) and Qwen3Guard-Gen-4B and -8B (83.57). Baseline averages are the mean of the reported per-benchmark scores. † As reported by Qwen Team [3] (Qwen3Guard models in strict mode). ‡ As reported by Calvi et al. [4] . Qwen3Guard’s Think column is not part of our suite.\nModel: ShieldGemma †; Size: 27B; HarmB: 62.9; SafeRLHF: 52.6; BeaverTails: 67.6; XSTest-R: 83.0; Aegis 2.0: 74.9; WildG: 52.4; Avg .: 65.57",
+   "arxiv_id": "2611.02134v1",
+   "title": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02134v1",
+   "html_url": "https://arxiv.org/html/2611.02134v1#S6.T10",
+   "source_url": "https://arxiv.org/html/2611.02134v1#S6.T10",
+   "page_number": null,
+   "source_sha256": "aad96fdeef5dd0d8873bd478cdfdcacb7f9c2b5a2c1ecba81c8a940467ed9bf5",
+   "source_anchor": "S6.T10",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Evaluation",
+   "subsection": "Results",
+   "section_id": "S6",
+   "subsection_id": "S6.SS1",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S6.T10",
+   "table_row": 5,
+   "row_label": "ShieldGemma †",
+   "caption": "Table 10: Response-harmfulness F1 on six English benchmarks. HaloGuard 2.0 is scored by its streaming verdict under one global decision rule; the released model’s held-out average is 83.3. The base guard is shown at its own best global rule. Best score per column in bold. The Avg. column is given to two decimals because the top three averages are within 0.06: HaloGuard 2.0-0.8B (83.63, 0.8B) and Qwen3Guard-Gen-4B and -8B (83.57). Baseline averages are the mean of the reported per-benchmark scores. † As reported by Qwen Team [3] (Qwen3Guard models in strict mode). ‡ As reported by Calvi et al. [4] . Qwen3Guard’s Think column is not part of our suite.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Model",
+     "source_id": "S6.T10.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Size",
+     "source_id": "S6.T10.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "HarmB",
+     "source_id": "S6.T10.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "SafeRLHF",
+     "source_id": "S6.T10.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "BeaverTails",
+     "source_id": "S6.T10.2.1.5"
+    },
+    {
+     "column": 5,
+     "text": "XSTest-R",
+     "source_id": "S6.T10.2.1.6"
+    },
+    {
+     "column": 6,
+     "text": "Aegis 2.0",
+     "source_id": "S6.T10.2.1.7"
+    },
+    {
+     "column": 7,
+     "text": "WildG",
+     "source_id": "S6.T10.2.1.8"
+    },
+    {
+     "column": 8,
+     "text": "Avg .",
+     "source_id": "S6.T10.2.1.9"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 5,
+     "column": 0,
+     "text": "ShieldGemma †",
+     "source_id": "S6.T10.2.6.1"
+    },
+    {
+     "row": 5,
+     "column": 1,
+     "text": "27B",
+     "source_id": "S6.T10.2.6.2"
+    },
+    {
+     "row": 5,
+     "column": 2,
+     "text": "62.9",
+     "source_id": "S6.T10.2.6.3"
+    },
+    {
+     "row": 5,
+     "column": 3,
+     "text": "52.6",
+     "source_id": "S6.T10.2.6.4"
+    },
+    {
+     "row": 5,
+     "column": 4,
+     "text": "67.6",
+     "source_id": "S6.T10.2.6.5"
+    },
+    {
+     "row": 5,
+     "column": 5,
+     "text": "83.0",
+     "source_id": "S6.T10.2.6.6"
+    },
+    {
+     "row": 5,
+     "column": 6,
+     "text": "74.9",
+     "source_id": "S6.T10.2.6.7"
+    },
+    {
+     "row": 5,
+     "column": 7,
+     "text": "52.4",
+     "source_id": "S6.T10.2.6.8"
+    },
+    {
+     "row": 5,
+     "column": 8,
+     "text": "65.57",
+     "source_id": "S6.T10.2.6.9"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02134v1_table_a38aa5488119366c_8",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nHaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety\nTable 10: Response-harmfulness F1 on six English benchmarks. HaloGuard 2.0 is scored by its streaming verdict under one global decision rule; the released model’s held-out average is 83.3. The base guard is shown at its own best global rule. Best score per column in bold. The Avg. column is given to two decimals because the top three averages are within 0.06: HaloGuard 2.0-0.8B (83.63, 0.8B) and Qwen3Guard-Gen-4B and -8B (83.57). Baseline averages are the mean of the reported per-benchmark scores. † As reported by Qwen Team [3] (Qwen3Guard models in strict mode). ‡ As reported by Calvi et al. [4] . Qwen3Guard’s Think column is not part of our suite.\nModel: OmniGuard ‡; Size: 7B; HarmB: 79.9; SafeRLHF: 64.2; BeaverTails: 83.3; XSTest-R: 85.1; Aegis 2.0: 85.5; WildG: 72.1; Avg .: 78.35",
+   "arxiv_id": "2611.02134v1",
+   "title": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02134v1",
+   "html_url": "https://arxiv.org/html/2611.02134v1#S6.T10",
+   "source_url": "https://arxiv.org/html/2611.02134v1#S6.T10",
+   "page_number": null,
+   "source_sha256": "aad96fdeef5dd0d8873bd478cdfdcacb7f9c2b5a2c1ecba81c8a940467ed9bf5",
+   "source_anchor": "S6.T10",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Evaluation",
+   "subsection": "Results",
+   "section_id": "S6",
+   "subsection_id": "S6.SS1",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S6.T10",
+   "table_row": 8,
+   "row_label": "OmniGuard ‡",
+   "caption": "Table 10: Response-harmfulness F1 on six English benchmarks. HaloGuard 2.0 is scored by its streaming verdict under one global decision rule; the released model’s held-out average is 83.3. The base guard is shown at its own best global rule. Best score per column in bold. The Avg. column is given to two decimals because the top three averages are within 0.06: HaloGuard 2.0-0.8B (83.63, 0.8B) and Qwen3Guard-Gen-4B and -8B (83.57). Baseline averages are the mean of the reported per-benchmark scores. † As reported by Qwen Team [3] (Qwen3Guard models in strict mode). ‡ As reported by Calvi et al. [4] . Qwen3Guard’s Think column is not part of our suite.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Model",
+     "source_id": "S6.T10.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Size",
+     "source_id": "S6.T10.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "HarmB",
+     "source_id": "S6.T10.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "SafeRLHF",
+     "source_id": "S6.T10.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "BeaverTails",
+     "source_id": "S6.T10.2.1.5"
+    },
+    {
+     "column": 5,
+     "text": "XSTest-R",
+     "source_id": "S6.T10.2.1.6"
+    },
+    {
+     "column": 6,
+     "text": "Aegis 2.0",
+     "source_id": "S6.T10.2.1.7"
+    },
+    {
+     "column": 7,
+     "text": "WildG",
+     "source_id": "S6.T10.2.1.8"
+    },
+    {
+     "column": 8,
+     "text": "Avg .",
+     "source_id": "S6.T10.2.1.9"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 8,
+     "column": 0,
+     "text": "OmniGuard ‡",
+     "source_id": "S6.T10.2.9.1"
+    },
+    {
+     "row": 8,
+     "column": 1,
+     "text": "7B",
+     "source_id": "S6.T10.2.9.2"
+    },
+    {
+     "row": 8,
+     "column": 2,
+     "text": "79.9",
+     "source_id": "S6.T10.2.9.3"
+    },
+    {
+     "row": 8,
+     "column": 3,
+     "text": "64.2",
+     "source_id": "S6.T10.2.9.4"
+    },
+    {
+     "row": 8,
+     "column": 4,
+     "text": "83.3",
+     "source_id": "S6.T10.2.9.5"
+    },
+    {
+     "row": 8,
+     "column": 5,
+     "text": "85.1",
+     "source_id": "S6.T10.2.9.6"
+    },
+    {
+     "row": 8,
+     "column": 6,
+     "text": "85.5",
+     "source_id": "S6.T10.2.9.7"
+    },
+    {
+     "row": 8,
+     "column": 7,
+     "text": "72.1",
+     "source_id": "S6.T10.2.9.8"
+    },
+    {
+     "row": 8,
+     "column": 8,
+     "text": "78.35",
+     "source_id": "S6.T10.2.9.9"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02134v1_table_a38aa5488119366c_1",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nHaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety\nTable 10: Response-harmfulness F1 on six English benchmarks. HaloGuard 2.0 is scored by its streaming verdict under one global decision rule; the released model’s held-out average is 83.3. The base guard is shown at its own best global rule. Best score per column in bold. The Avg. column is given to two decimals because the top three averages are within 0.06: HaloGuard 2.0-0.8B (83.63, 0.8B) and Qwen3Guard-Gen-4B and -8B (83.57). Baseline averages are the mean of the reported per-benchmark scores. † As reported by Qwen Team [3] (Qwen3Guard models in strict mode). ‡ As reported by Calvi et al. [4] . Qwen3Guard’s Think column is not part of our suite.\nModel: LlamaGuard3 †; Size: 8B; HarmB: 84.5; SafeRLHF: 45.2; BeaverTails: 67.9; XSTest-R: 89.8; Aegis 2.0: 66.1; WildG: 69.5; Avg .: 70.50",
+   "arxiv_id": "2611.02134v1",
+   "title": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02134v1",
+   "html_url": "https://arxiv.org/html/2611.02134v1#S6.T10",
+   "source_url": "https://arxiv.org/html/2611.02134v1#S6.T10",
+   "page_number": null,
+   "source_sha256": "aad96fdeef5dd0d8873bd478cdfdcacb7f9c2b5a2c1ecba81c8a940467ed9bf5",
+   "source_anchor": "S6.T10",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Evaluation",
+   "subsection": "Results",
+   "section_id": "S6",
+   "subsection_id": "S6.SS1",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S6.T10",
+   "table_row": 1,
+   "row_label": "LlamaGuard3 †",
+   "caption": "Table 10: Response-harmfulness F1 on six English benchmarks. HaloGuard 2.0 is scored by its streaming verdict under one global decision rule; the released model’s held-out average is 83.3. The base guard is shown at its own best global rule. Best score per column in bold. The Avg. column is given to two decimals because the top three averages are within 0.06: HaloGuard 2.0-0.8B (83.63, 0.8B) and Qwen3Guard-Gen-4B and -8B (83.57). Baseline averages are the mean of the reported per-benchmark scores. † As reported by Qwen Team [3] (Qwen3Guard models in strict mode). ‡ As reported by Calvi et al. [4] . Qwen3Guard’s Think column is not part of our suite.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Model",
+     "source_id": "S6.T10.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Size",
+     "source_id": "S6.T10.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "HarmB",
+     "source_id": "S6.T10.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "SafeRLHF",
+     "source_id": "S6.T10.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "BeaverTails",
+     "source_id": "S6.T10.2.1.5"
+    },
+    {
+     "column": 5,
+     "text": "XSTest-R",
+     "source_id": "S6.T10.2.1.6"
+    },
+    {
+     "column": 6,
+     "text": "Aegis 2.0",
+     "source_id": "S6.T10.2.1.7"
+    },
+    {
+     "column": 7,
+     "text": "WildG",
+     "source_id": "S6.T10.2.1.8"
+    },
+    {
+     "column": 8,
+     "text": "Avg .",
+     "source_id": "S6.T10.2.1.9"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 1,
+     "column": 0,
+     "text": "LlamaGuard3 †",
+     "source_id": "S6.T10.2.2.1"
+    },
+    {
+     "row": 1,
+     "column": 1,
+     "text": "8B",
+     "source_id": "S6.T10.2.2.2"
+    },
+    {
+     "row": 1,
+     "column": 2,
+     "text": "84.5",
+     "source_id": "S6.T10.2.2.3"
+    },
+    {
+     "row": 1,
+     "column": 3,
+     "text": "45.2",
+     "source_id": "S6.T10.2.2.4"
+    },
+    {
+     "row": 1,
+     "column": 4,
+     "text": "67.9",
+     "source_id": "S6.T10.2.2.5"
+    },
+    {
+     "row": 1,
+     "column": 5,
+     "text": "89.8",
+     "source_id": "S6.T10.2.2.6"
+    },
+    {
+     "row": 1,
+     "column": 6,
+     "text": "66.1",
+     "source_id": "S6.T10.2.2.7"
+    },
+    {
+     "row": 1,
+     "column": 7,
+     "text": "69.5",
+     "source_id": "S6.T10.2.2.8"
+    },
+    {
+     "row": 1,
+     "column": 8,
+     "text": "70.50",
+     "source_id": "S6.T10.2.2.9"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02134v1_table_a38aa5488119366c_4",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nHaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety\nTable 10: Response-harmfulness F1 on six English benchmarks. HaloGuard 2.0 is scored by its streaming verdict under one global decision rule; the released model’s held-out average is 83.3. The base guard is shown at its own best global rule. Best score per column in bold. The Avg. column is given to two decimals because the top three averages are within 0.06: HaloGuard 2.0-0.8B (83.63, 0.8B) and Qwen3Guard-Gen-4B and -8B (83.57). Baseline averages are the mean of the reported per-benchmark scores. † As reported by Qwen Team [3] (Qwen3Guard models in strict mode). ‡ As reported by Calvi et al. [4] . Qwen3Guard’s Think column is not part of our suite.\nModel: ShieldGemma †; Size: 9B; HarmB: 60.4; SafeRLHF: 44.2; BeaverTails: 62.4; XSTest-R: 86.3; Aegis 2.0: 70.8; WildG: 49.9; Avg .: 62.33",
+   "arxiv_id": "2611.02134v1",
+   "title": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02134v1",
+   "html_url": "https://arxiv.org/html/2611.02134v1#S6.T10",
+   "source_url": "https://arxiv.org/html/2611.02134v1#S6.T10",
+   "page_number": null,
+   "source_sha256": "aad96fdeef5dd0d8873bd478cdfdcacb7f9c2b5a2c1ecba81c8a940467ed9bf5",
+   "source_anchor": "S6.T10",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Evaluation",
+   "subsection": "Results",
+   "section_id": "S6",
+   "subsection_id": "S6.SS1",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S6.T10",
+   "table_row": 4,
+   "row_label": "ShieldGemma †",
+   "caption": "Table 10: Response-harmfulness F1 on six English benchmarks. HaloGuard 2.0 is scored by its streaming verdict under one global decision rule; the released model’s held-out average is 83.3. The base guard is shown at its own best global rule. Best score per column in bold. The Avg. column is given to two decimals because the top three averages are within 0.06: HaloGuard 2.0-0.8B (83.63, 0.8B) and Qwen3Guard-Gen-4B and -8B (83.57). Baseline averages are the mean of the reported per-benchmark scores. † As reported by Qwen Team [3] (Qwen3Guard models in strict mode). ‡ As reported by Calvi et al. [4] . Qwen3Guard’s Think column is not part of our suite.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Model",
+     "source_id": "S6.T10.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Size",
+     "source_id": "S6.T10.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "HarmB",
+     "source_id": "S6.T10.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "SafeRLHF",
+     "source_id": "S6.T10.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "BeaverTails",
+     "source_id": "S6.T10.2.1.5"
+    },
+    {
+     "column": 5,
+     "text": "XSTest-R",
+     "source_id": "S6.T10.2.1.6"
+    },
+    {
+     "column": 6,
+     "text": "Aegis 2.0",
+     "source_id": "S6.T10.2.1.7"
+    },
+    {
+     "column": 7,
+     "text": "WildG",
+     "source_id": "S6.T10.2.1.8"
+    },
+    {
+     "column": 8,
+     "text": "Avg .",
+     "source_id": "S6.T10.2.1.9"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 4,
+     "column": 0,
+     "text": "ShieldGemma †",
+     "source_id": "S6.T10.2.5.1"
+    },
+    {
+     "row": 4,
+     "column": 1,
+     "text": "9B",
+     "source_id": "S6.T10.2.5.2"
+    },
+    {
+     "row": 4,
+     "column": 2,
+     "text": "60.4",
+     "source_id": "S6.T10.2.5.3"
+    },
+    {
+     "row": 4,
+     "column": 3,
+     "text": "44.2",
+     "source_id": "S6.T10.2.5.4"
+    },
+    {
+     "row": 4,
+     "column": 4,
+     "text": "62.4",
+     "source_id": "S6.T10.2.5.5"
+    },
+    {
+     "row": 4,
+     "column": 5,
+     "text": "86.3",
+     "source_id": "S6.T10.2.5.6"
+    },
+    {
+     "row": 4,
+     "column": 6,
+     "text": "70.8",
+     "source_id": "S6.T10.2.5.7"
+    },
+    {
+     "row": 4,
+     "column": 7,
+     "text": "49.9",
+     "source_id": "S6.T10.2.5.8"
+    },
+    {
+     "row": 4,
+     "column": 8,
+     "text": "62.33",
+     "source_id": "S6.T10.2.5.9"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02134v1_table_a38aa5488119366c_15",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nHaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety\nTable 10: Response-harmfulness F1 on six English benchmarks. HaloGuard 2.0 is scored by its streaming verdict under one global decision rule; the released model’s held-out average is 83.3. The base guard is shown at its own best global rule. Best score per column in bold. The Avg. column is given to two decimals because the top three averages are within 0.06: HaloGuard 2.0-0.8B (83.63, 0.8B) and Qwen3Guard-Gen-4B and -8B (83.57). Baseline averages are the mean of the reported per-benchmark scores. † As reported by Qwen Team [3] (Qwen3Guard models in strict mode). ‡ As reported by Calvi et al. [4] . Qwen3Guard’s Think column is not part of our suite.\nModel: Qwen3Guard-Stream †; Size: 0.6B; HarmB: 83.1; SafeRLHF: 62.8; BeaverTails: 84.5; XSTest-R: 84.8; Aegis 2.0: 81.4; WildG: 76.3; Avg .: 78.82",
+   "arxiv_id": "2611.02134v1",
+   "title": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02134v1",
+   "html_url": "https://arxiv.org/html/2611.02134v1#S6.T10",
+   "source_url": "https://arxiv.org/html/2611.02134v1#S6.T10",
+   "page_number": null,
+   "source_sha256": "aad96fdeef5dd0d8873bd478cdfdcacb7f9c2b5a2c1ecba81c8a940467ed9bf5",
+   "source_anchor": "S6.T10",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Evaluation",
+   "subsection": "Results",
+   "section_id": "S6",
+   "subsection_id": "S6.SS1",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S6.T10",
+   "table_row": 15,
+   "row_label": "Qwen3Guard-Stream †",
+   "caption": "Table 10: Response-harmfulness F1 on six English benchmarks. HaloGuard 2.0 is scored by its streaming verdict under one global decision rule; the released model’s held-out average is 83.3. The base guard is shown at its own best global rule. Best score per column in bold. The Avg. column is given to two decimals because the top three averages are within 0.06: HaloGuard 2.0-0.8B (83.63, 0.8B) and Qwen3Guard-Gen-4B and -8B (83.57). Baseline averages are the mean of the reported per-benchmark scores. † As reported by Qwen Team [3] (Qwen3Guard models in strict mode). ‡ As reported by Calvi et al. [4] . Qwen3Guard’s Think column is not part of our suite.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Model",
+     "source_id": "S6.T10.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Size",
+     "source_id": "S6.T10.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "HarmB",
+     "source_id": "S6.T10.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "SafeRLHF",
+     "source_id": "S6.T10.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "BeaverTails",
+     "source_id": "S6.T10.2.1.5"
+    },
+    {
+     "column": 5,
+     "text": "XSTest-R",
+     "source_id": "S6.T10.2.1.6"
+    },
+    {
+     "column": 6,
+     "text": "Aegis 2.0",
+     "source_id": "S6.T10.2.1.7"
+    },
+    {
+     "column": 7,
+     "text": "WildG",
+     "source_id": "S6.T10.2.1.8"
+    },
+    {
+     "column": 8,
+     "text": "Avg .",
+     "source_id": "S6.T10.2.1.9"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 15,
+     "column": 0,
+     "text": "Qwen3Guard-Stream †",
+     "source_id": "S6.T10.2.16.1"
+    },
+    {
+     "row": 15,
+     "column": 1,
+     "text": "0.6B",
+     "source_id": "S6.T10.2.16.2"
+    },
+    {
+     "row": 15,
+     "column": 2,
+     "text": "83.1",
+     "source_id": "S6.T10.2.16.3"
+    },
+    {
+     "row": 15,
+     "column": 3,
+     "text": "62.8",
+     "source_id": "S6.T10.2.16.4"
+    },
+    {
+     "row": 15,
+     "column": 4,
+     "text": "84.5",
+     "source_id": "S6.T10.2.16.5"
+    },
+    {
+     "row": 15,
+     "column": 5,
+     "text": "84.8",
+     "source_id": "S6.T10.2.16.6"
+    },
+    {
+     "row": 15,
+     "column": 6,
+     "text": "81.4",
+     "source_id": "S6.T10.2.16.7"
+    },
+    {
+     "row": 15,
+     "column": 7,
+     "text": "76.3",
+     "source_id": "S6.T10.2.16.8"
+    },
+    {
+     "row": 15,
+     "column": 8,
+     "text": "78.82",
+     "source_id": "S6.T10.2.16.9"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02134v1_c0034",
+   "arxiv_id": "2611.02134v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02134v1#S6.SS3",
+   "section": "evaluation",
+   "subsection": "multilingual evaluation",
+   "high_value": true,
+   "text": "strongest is GPT-OSS-Safeguard-20B at 80.0, and Shieldstral-3B scores 78.3. The\ncomparison with these rows is indicative rather than exact. PolyGuardPrompts response harmfulness F1 (17 languages), sorted by\nscore. Upper block: same response labels as HaloGuard 2.0-Poly-0.8B; a as reported in the\nPolyGuard paper [ 2 ] (Table 1), b as reported in the Qwen3Guard\nreport [ 3 ] (Tables 6 and 15; Qwen3Guard at its reported mode).\nScores are given at the precision each source reports. § Lower block: PolyGuard\nscores as reported by Calvi et al. [4] (Figure 5, response panel) for models with no same-label\nscore, on 29,240 samples, so these rows are indicative only. Operating points of the two released models and their Phase 1 base guards,\neach at its own decision rule. Macro F1 is averaged over the six benchmarks\n(English) or the 17 languages (multilingual). Precision, recall, FPR and FNR are\npooled over all responses for English and macro-averaged over languages for the\nmultilingual models; PolyGuardPrompts is balanced across languages, so its pooled\nand macro values differ by at most 0.4. HaloGuard 2.0-Poly-0.8B on PolyGuardPrompts by language group (%). Groups follow\nHaloGuard 1.0 [ 1 ] : CJK is Chinese, Japanese and Korean; Indic is Hindi;\nArabic-script is Arabic; Southeast Asian is Thai; European is the\nremaining ten languages. The macro average over all 17 languages is in Table 14 ; it is not the mean of these six rows.",
+   "text_with_context": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety | Evaluation > Multilingual Evaluation\n\nstrongest is GPT-OSS-Safeguard-20B at 80.0, and Shieldstral-3B scores 78.3. The\ncomparison with these rows is indicative rather than exact. PolyGuardPrompts response harmfulness F1 (17 languages), sorted by\nscore. Upper block: same response labels as HaloGuard 2.0-Poly-0.8B; a as reported in the\nPolyGuard paper [ 2 ] (Table 1), b as reported in the Qwen3Guard\nreport [ 3 ] (Tables 6 and 15; Qwen3Guard at its reported mode).\nScores are given at the precision each source reports. § Lower block: PolyGuard\nscores as reported by Calvi et al. [4] (Figure 5, response panel) for models with no same-label\nscore, on 29,240 samples, so these rows are indicative only. Operating points of the two released models and their Phase 1 base guards,\neach at its own decision rule. Macro F1 is averaged over the six benchmarks\n(English) or the 17 languages (multilingual). Precision, recall, FPR and FNR are\npooled over all responses for English and macro-averaged over languages for the\nmultilingual models; PolyGuardPrompts is balanced across languages, so its pooled\nand macro values differ by at most 0.4. HaloGuard 2.0-Poly-0.8B on PolyGuardPrompts by language group (%). Groups follow\nHaloGuard 1.0 [ 1 ] : CJK is Chinese, Japanese and Korean; Indic is Hindi;\nArabic-script is Arabic; Southeast Asian is Thai; European is the\nremaining ten languages. The macro average over all 17 languages is in Table 14 ; it is not the mean of these six rows.",
+   "title": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02134v1#S6.SS3",
+   "pdf_url": "https://arxiv.org/pdf/2611.02134v1",
+   "source_sha256": "aad96fdeef5dd0d8873bd478cdfdcacb7f9c2b5a2c1ecba81c8a940467ed9bf5"
+  },
+  {
+   "chunk_id": "2611.02134v1_c0022",
+   "arxiv_id": "2611.02134v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02134v1#S5.SS3",
+   "section": "model, training and serving",
+   "subsection": "two-phase training",
+   "high_value": false,
+   "text": "full-attention layers, but the recurrent state of the linear-attention layers runs\nacross the boundary between packed examples. On a two-layer probe, the same example\nproduced hidden states differing by up to 0.23 depending on what was packed before\nit. Training is unpacked, with length-grouped batching to limit padding. HaloGuard 2.0-Poly-0.8B uses the same\narchitecture, objective and decision-rule form. It is trained on the PolyGuardMix\ncorpus ( Section 4.5 ) from Qwen3.5-0.8B for two epochs (65,950 steps,\n6.9 h on 2 \\times H100); benchmark F1 plateaued after about 40,000 steps.\nThe PolyGuardMix-trained base is then refined with corrective supervision mined\nfrom its benchmark failures, following the same recipe as the English model, and\nthe result is averaged with the base at equal weight, as in Equation 6 . It uses a single run arm: the guard fires when 3 consecutive\nresponse tokens are all \\geq 0.675 , latched. Unlike Equation 2 , this rule\ncannot fire on a response shorter than three tokens. Training and serving configuration of HaloGuard 2.0-0.8B.",
+   "text_with_context": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety | Model, Training And Serving > Two-Phase Training\n\nfull-attention layers, but the recurrent state of the linear-attention layers runs\nacross the boundary between packed examples. On a two-layer probe, the same example\nproduced hidden states differing by up to 0.23 depending on what was packed before\nit. Training is unpacked, with length-grouped batching to limit padding. HaloGuard 2.0-Poly-0.8B uses the same\narchitecture, objective and decision-rule form. It is trained on the PolyGuardMix\ncorpus ( Section 4.5 ) from Qwen3.5-0.8B for two epochs (65,950 steps,\n6.9 h on 2 \\times H100); benchmark F1 plateaued after about 40,000 steps.\nThe PolyGuardMix-trained base is then refined with corrective supervision mined\nfrom its benchmark failures, following the same recipe as the English model, and\nthe result is averaged with the base at equal weight, as in Equation 6 . It uses a single run arm: the guard fires when 3 consecutive\nresponse tokens are all \\geq 0.675 , latched. Unlike Equation 2 , this rule\ncannot fire on a response shorter than three tokens. Training and serving configuration of HaloGuard 2.0-0.8B.",
+   "title": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02134v1#S5.SS3",
+   "pdf_url": "https://arxiv.org/pdf/2611.02134v1",
+   "source_sha256": "aad96fdeef5dd0d8873bd478cdfdcacb7f9c2b5a2c1ecba81c8a940467ed9bf5"
+  },
+  {
+   "chunk_id": "2611.02134v1_c0010",
+   "arxiv_id": "2611.02134v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02134v1#S3",
+   "section": "task definition and scope",
+   "subsection": "",
+   "high_value": false,
+   "text": "every prefix ( Equation 4 ). HaloGuard 1.0 screens the request; HaloGuard 2.0 scores the response as it is\ngenerated and stops the stream once harm is confirmed. Both guards are built from\nthe same constitution.",
+   "text_with_context": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety | Task Definition And Scope\n\nevery prefix ( Equation 4 ). HaloGuard 1.0 screens the request; HaloGuard 2.0 scores the response as it is\ngenerated and stops the stream once harm is confirmed. Both guards are built from\nthe same constitution.",
+   "title": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02134v1#S3",
+   "pdf_url": "https://arxiv.org/pdf/2611.02134v1",
+   "source_sha256": "aad96fdeef5dd0d8873bd478cdfdcacb7f9c2b5a2c1ecba81c8a940467ed9bf5"
+  },
+  {
+   "chunk_id": "2611.02134v1_c0005",
+   "arxiv_id": "2611.02134v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02134v1#S2",
+   "section": "related work",
+   "subsection": "",
+   "high_value": false,
+   "text": "LlamaGuard framed moderation as instruction-following classification over a risk taxonomy and applied one model to both prompts and responses [ 13 ] . WildGuard introduced refusal detection as an additional output,\nwhich is significant for response moderation because a refusal and a harmful completion may share the same prompt but require\nopposite labels [ 7 ] .\nShieldGemma, NemoGuard and PolyGuard extended open moderation to new model\nfamilies, enterprise taxonomies and 17 languages [ 8 , 9 , 2 ] . More recent guards add reasoning or inference-time policies: OmniGuard reasons before\nlabelling [ 10 ] , while GPT-OSS-Safeguard, Nemotron-3.5-Safety and\nShieldstral accept a deployer-written policy at inference\ntime [ 12 , 11 , 4 ] .\nAll of them classify a completed response, so they must wait for generation to\nfinish before returning a verdict. Constitutional Classifiers (CCs) trained a streaming\noutput classifier that scores each token of a response and stops generation when\nthe harm estimate crosses a threshold [ 14 ] . The classifier\nguards a frontier model and its weights are not public. Qwen3Guard-Stream attaches token-level classification heads to a Qwen3 backbone and\nderives token labels by locating the first unsafe token of each unsafe response:\ncontinuations are sampled from every prefix, scored by Qwen3Guard-Gen, and the\nearliest prefix whose continuations are mostly unsafe is confirmed by an LLM\njudge [ 3 ] . HaloGuard 2.0 is closest in shape to Qwen3Guard-Stream and closest\nin data philosophy to CCs. It differs in how onsets are\nobtained (in the corrective corpus they are constructed at generation time, so they\nare exact rather than estimated), in how they are used (up-weighted in the loss and",
+   "text_with_context": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety | Related Work\n\nLlamaGuard framed moderation as instruction-following classification over a risk taxonomy and applied one model to both prompts and responses [ 13 ] . WildGuard introduced refusal detection as an additional output,\nwhich is significant for response moderation because a refusal and a harmful completion may share the same prompt but require\nopposite labels [ 7 ] .\nShieldGemma, NemoGuard and PolyGuard extended open moderation to new model\nfamilies, enterprise taxonomies and 17 languages [ 8 , 9 , 2 ] . More recent guards add reasoning or inference-time policies: OmniGuard reasons before\nlabelling [ 10 ] , while GPT-OSS-Safeguard, Nemotron-3.5-Safety and\nShieldstral accept a deployer-written policy at inference\ntime [ 12 , 11 , 4 ] .\nAll of them classify a completed response, so they must wait for generation to\nfinish before returning a verdict. Constitutional Classifiers (CCs) trained a streaming\noutput classifier that scores each token of a response and stops generation when\nthe harm estimate crosses a threshold [ 14 ] . The classifier\nguards a frontier model and its weights are not public. Qwen3Guard-Stream attaches token-level classification heads to a Qwen3 backbone and\nderives token labels by locating the first unsafe token of each unsafe response:\ncontinuations are sampled from every prefix, scored by Qwen3Guard-Gen, and the\nearliest prefix whose continuations are mostly unsafe is confirmed by an LLM\njudge [ 3 ] . HaloGuard 2.0 is closest in shape to Qwen3Guard-Stream and closest\nin data philosophy to CCs. It differs in how onsets are\nobtained (in the corrective corpus they are constructed at generation time, so they\nare exact rather than estimated), in how they are used (up-weighted in the loss and",
+   "title": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02134v1#S2",
+   "pdf_url": "https://arxiv.org/pdf/2611.02134v1",
+   "source_sha256": "aad96fdeef5dd0d8873bd478cdfdcacb7f9c2b5a2c1ecba81c8a940467ed9bf5"
+  }
+ ],
+ "evidence_management": {
+  "protected_ids": [
+   "2611.02134v1_c0035",
+   "2611.02134v1_c0004",
+   "2611.02134v1_c0032",
+   "2611.02134v1_c0029",
+   "2611.02134v1_table_a38aa5488119366c_18",
+   "2611.02134v1_table_a38aa5488119366c_19",
+   "2611.02134v1_c0027",
+   "2611.02134v1_table_10b6396bf26b82f3_1",
+   "2611.02134v1_table_10b6396bf26b82f3_2",
+   "2611.02134v1_table_10b6396bf26b82f3_3",
+   "2611.02134v1_table_10b6396bf26b82f3_4",
+   "2611.02134v1_table_10b6396bf26b82f3_5",
+   "2611.02134v1_table_10b6396bf26b82f3_6",
+   "2611.02134v1_table_10b6396bf26b82f3_7",
+   "2611.02134v1_table_10b6396bf26b82f3_8",
+   "2611.02134v1_table_a38aa5488119366c_11",
+   "2611.02134v1_c0026",
+   "2611.02134v1_table_a38aa5488119366c_10",
+   "2611.02134v1_table_a38aa5488119366c_9",
+   "2611.02134v1_c0039",
+   "2611.02134v1_table_a38aa5488119366c_5",
+   "2611.02134v1_table_a38aa5488119366c_8",
+   "2611.02134v1_table_a38aa5488119366c_1",
+   "2611.02134v1_table_a38aa5488119366c_4",
+   "2611.02134v1_table_a38aa5488119366c_15",
+   "2611.02134v1_c0034",
+   "2611.02134v1_c0022",
+   "2611.02134v1_c0010",
+   "2611.02134v1_c0005"
+  ],
+  "supplementary_ids": [],
+  "searches": [
+   {
+    "query": "A bank wants a streaming safety guard for its customer chatbot. How do HaloGuard 2.0 and PGuard each work, how accurate are they relative to dedicated guard models, what does PGuard add to serving cost, and what residual risks does HaloGuard report?",
+    "purpose": "original question",
+    "role": "original",
+    "chunk_ids": [
+     "2611.02134v1_c0035",
+     "2611.02134v1_c0004",
+     "2611.02134v1_c0032",
+     "2611.02134v1_c0029",
+     "2611.02134v1_table_10b6396bf26b82f3_5",
+     "2611.02134v1_c0005",
+     "2611.02134v1_table_a38aa5488119366c_18",
+     "2611.02134v1_c0039",
+     "2611.02134v1_table_a38aa5488119366c_9",
+     "2611.02134v1_c0027",
+     "2611.02134v1_table_a38aa5488119366c_5",
+     "2611.02134v1_table_a38aa5488119366c_19",
+     "2611.02134v1_table_a38aa5488119366c_4",
+     "2611.02134v1_c0026",
+     "2611.02134v1_table_a38aa5488119366c_11",
+     "2611.02134v1_table_a38aa5488119366c_15",
+     "2611.02134v1_c0034",
+     "2611.02134v1_c0030",
+     "2611.02134v1_table_10b6396bf26b82f3_8",
+     "2611.02134v1_table_10b6396bf26b82f3_1",
+     "2611.02134v1_table_10b6396bf26b82f3_6",
+     "2611.02134v1_table_a38aa5488119366c_16",
+     "2611.02134v1_table_10b6396bf26b82f3_2",
+     "2611.02134v1_table_10b6396bf26b82f3_4",
+     "2611.02134v1_table_a38aa5488119366c_8",
+     "2611.02134v1_table_10b6396bf26b82f3_7",
+     "2611.02134v1_table_a38aa5488119366c_10",
+     "2611.02134v1_table_10b6396bf26b82f3_3",
+     "2611.02134v1_table_a38aa5488119366c_14",
+     "2611.02134v1_table_a5b01777c83b5a2a_3"
+    ],
+    "error": null
+   },
+   {
+    "query": "How do HaloGuard 2.0 and PGuard each work?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02134v1_c0010",
+     "2611.02134v1_c0004",
+     "2611.02134v1_c0039",
+     "2611.02134v1_table_10b6396bf26b82f3_5",
+     "2611.02134v1_c0022",
+     "2611.02134v1_table_10b6396bf26b82f3_8",
+     "2611.02134v1_c0009",
+     "2611.02134v1_c0019",
+     "2611.02134v1_c0029",
+     "2611.02134v1_c0032",
+     "2611.02134v1_c0007",
+     "2611.02134v1_table_10b6396bf26b82f3_6",
+     "2611.02134v1_c0008",
+     "2611.02134v1_table_10b6396bf26b82f3_4",
+     "2611.02134v1_table_10b6396bf26b82f3_7",
+     "2611.02134v1_table_10b6396bf26b82f3_1",
+     "2611.02134v1_table_a5b01777c83b5a2a_3",
+     "2611.02134v1_table_10b6396bf26b82f3_2",
+     "2611.02134v1_table_10b6396bf26b82f3_3",
+     "2611.02134v1_c0026",
+     "2611.02134v1_table_a5b01777c83b5a2a_1",
+     "2611.02134v1_c0028",
+     "2611.02134v1_c0027",
+     "2611.02134v1_c0033",
+     "2611.02134v1_table_a38aa5488119366c_19",
+     "2611.02134v1_table_a5b01777c83b5a2a_2",
+     "2611.02134v1_c0025",
+     "2611.02134v1_table_a38aa5488119366c_18",
+     "2611.02134v1_c0015",
+     "2611.02134v1_c0011"
+    ],
+    "error": null
+   },
+   {
+    "query": "HaloGuard PGuard how accurate are they relative to dedicated guard models?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02134v1_c0028",
+     "2611.02134v1_c0032",
+     "2611.02134v1_c0035",
+     "2611.02134v1_c0030",
+     "2611.02134v1_table_c68d8ead56911a6b_4",
+     "2611.02134v1_table_10b6396bf26b82f3_3",
+     "2611.02134v1_table_10b6396bf26b82f3_7",
+     "2611.02134v1_table_10b6396bf26b82f3_2",
+     "2611.02134v1_table_10b6396bf26b82f3_1",
+     "2611.02134v1_table_c68d8ead56911a6b_1",
+     "2611.02134v1_c0027",
+     "2611.02134v1_table_10b6396bf26b82f3_4",
+     "2611.02134v1_c0022",
+     "2611.02134v1_table_10b6396bf26b82f3_5",
+     "2611.02134v1_c0029",
+     "2611.02134v1_table_c68d8ead56911a6b_5",
+     "2611.02134v1_table_10b6396bf26b82f3_8",
+     "2611.02134v1_table_a38aa5488119366c_18",
+     "2611.02134v1_table_c68d8ead56911a6b_3",
+     "2611.02134v1_table_a38aa5488119366c_11",
+     "2611.02134v1_table_10b6396bf26b82f3_6",
+     "2611.02134v1_table_a38aa5488119366c_1",
+     "2611.02134v1_table_c68d8ead56911a6b_2",
+     "2611.02134v1_table_a38aa5488119366c_10",
+     "2611.02134v1_table_a38aa5488119366c_19",
+     "2611.02134v1_c0034",
+     "2611.02134v1_c0021",
+     "2611.02134v1_table_a38aa5488119366c_12",
+     "2611.02134v1_table_a38aa5488119366c_8",
+     "2611.02134v1_table_a38aa5488119366c_13"
+    ],
+    "error": null
+   },
+   {
+    "query": "HaloGuard what does PGuard add to serving cost?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02134v1_c0019",
+     "2611.02134v1_c0022",
+     "2611.02134v1_c0023",
+     "2611.02134v1_c0021",
+     "2611.02134v1_c0004",
+     "2611.02134v1_c0010",
+     "2611.02134v1_table_a38aa5488119366c_11",
+     "2611.02134v1_table_a38aa5488119366c_10",
+     "2611.02134v1_table_a38aa5488119366c_1",
+     "2611.02134v1_table_a38aa5488119366c_19",
+     "2611.02134v1_table_a38aa5488119366c_12",
+     "2611.02134v1_table_a38aa5488119366c_18",
+     "2611.02134v1_table_a38aa5488119366c_13",
+     "2611.02134v1_table_a38aa5488119366c_8",
+     "2611.02134v1_table_a38aa5488119366c_16",
+     "2611.02134v1_table_a38aa5488119366c_14",
+     "2611.02134v1_table_a38aa5488119366c_2",
+     "2611.02134v1_table_a38aa5488119366c_15",
+     "2611.02134v1_table_a38aa5488119366c_3",
+     "2611.02134v1_c0026",
+     "2611.02134v1_table_a38aa5488119366c_9",
+     "2611.02134v1_table_a38aa5488119366c_17",
+     "2611.02134v1_table_a38aa5488119366c_5",
+     "2611.02134v1_table_a38aa5488119366c_4",
+     "2611.02134v1_table_a38aa5488119366c_6",
+     "2611.02134v1_c0009",
+     "2611.02134v1_table_a38aa5488119366c_7",
+     "2611.02134v1_c0011",
+     "2611.02134v1_c0003",
+     "2611.02134v1_c0027"
+    ],
+    "error": null
+   },
+   {
+    "query": "PGuard what residual risks does HaloGuard report?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02134v1_c0026",
+     "2611.02134v1_table_a38aa5488119366c_10",
+     "2611.02134v1_table_a38aa5488119366c_11",
+     "2611.02134v1_table_a38aa5488119366c_19",
+     "2611.02134v1_table_a38aa5488119366c_1",
+     "2611.02134v1_table_a38aa5488119366c_18",
+     "2611.02134v1_table_a38aa5488119366c_8",
+     "2611.02134v1_table_4c308a3f4166bade_23",
+     "2611.02134v1_c0032",
+     "2611.02134v1_c0034",
+     "2611.02134v1_c0035",
+     "2611.02134v1_c0027",
+     "2611.02134v1_table_a38aa5488119366c_2",
+     "2611.02134v1_table_4c308a3f4166bade_21",
+     "2611.02134v1_table_a38aa5488119366c_15",
+     "2611.02134v1_table_a38aa5488119366c_12",
+     "2611.02134v1_c0029",
+     "2611.02134v1_table_4c308a3f4166bade_18",
+     "2611.02134v1_table_a38aa5488119366c_5",
+     "2611.02134v1_table_a38aa5488119366c_9",
+     "2611.02134v1_table_a38aa5488119366c_4",
+     "2611.02134v1_table_a38aa5488119366c_13",
+     "2611.02134v1_table_a38aa5488119366c_14",
+     "2611.02134v1_table_a38aa5488119366c_16",
+     "2611.02134v1_table_4c308a3f4166bade_1",
+     "2611.02134v1_table_a38aa5488119366c_6",
+     "2611.02134v1_table_a38aa5488119366c_3",
+     "2611.02134v1_table_a38aa5488119366c_7",
+     "2611.02134v1_table_4c308a3f4166bade_11",
+     "2611.02134v1_table_a38aa5488119366c_17"
+    ],
+    "error": null
+   }
+  ],
+  "tokens": 7870,
+  "base_tokens": 7870,
+  "base_budget": 8000,
+  "conclusion_tokens": 0,
+  "conclusion_allowance": 800,
+  "conclusion_ids": [],
+  "conclusion_considered": [
+   {
+    "paper": "2611.02134v1",
+    "conclusion": null,
+    "rank": null
+   }
+  ],
+  "trimmed_for_request_size": [],
+  "notes": [
+   {
+    "kind": "incomplete_table",
+    "table": "2611.02134v1_table_a38aa5488119366c",
+    "rows_in_evidence": [
+     1,
+     4,
+     5,
+     8,
+     9,
+     10,
+     11,
+     15,
+     18,
+     19
+    ],
+    "rows_in_table": 19,
+    "caption": "Table 10: Response-harmfulness F1 on six English benchmarks",
+    "text": "Only 10 of 19 rows of Table 10: Response-harmfulness F1 on six English benchmarks (HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety) are in the evidence, so a comparison across that table may be incomplete."
+   }
+  ],
+  "component_searches": [
+   {
+    "query": "How do HaloGuard 2.0 and PGuard each work?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02134v1_c0010",
+     "2611.02134v1_c0004",
+     "2611.02134v1_c0039",
+     "2611.02134v1_table_10b6396bf26b82f3_5",
+     "2611.02134v1_c0022",
+     "2611.02134v1_table_10b6396bf26b82f3_8",
+     "2611.02134v1_c0009",
+     "2611.02134v1_c0019",
+     "2611.02134v1_c0029",
+     "2611.02134v1_c0032",
+     "2611.02134v1_c0007",
+     "2611.02134v1_table_10b6396bf26b82f3_6",
+     "2611.02134v1_c0008",
+     "2611.02134v1_table_10b6396bf26b82f3_4",
+     "2611.02134v1_table_10b6396bf26b82f3_7",
+     "2611.02134v1_table_10b6396bf26b82f3_1",
+     "2611.02134v1_table_a5b01777c83b5a2a_3",
+     "2611.02134v1_table_10b6396bf26b82f3_2",
+     "2611.02134v1_table_10b6396bf26b82f3_3",
+     "2611.02134v1_c0026",
+     "2611.02134v1_table_a5b01777c83b5a2a_1",
+     "2611.02134v1_c0028",
+     "2611.02134v1_c0027",
+     "2611.02134v1_c0033",
+     "2611.02134v1_table_a38aa5488119366c_19",
+     "2611.02134v1_table_a5b01777c83b5a2a_2",
+     "2611.02134v1_c0025",
+     "2611.02134v1_table_a38aa5488119366c_18",
+     "2611.02134v1_c0015",
+     "2611.02134v1_c0011"
+    ],
+    "error": null
+   },
+   {
+    "query": "HaloGuard PGuard how accurate are they relative to dedicated guard models?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02134v1_c0028",
+     "2611.02134v1_c0032",
+     "2611.02134v1_c0035",
+     "2611.02134v1_c0030",
+     "2611.02134v1_table_c68d8ead56911a6b_4",
+     "2611.02134v1_table_10b6396bf26b82f3_3",
+     "2611.02134v1_table_10b6396bf26b82f3_7",
+     "2611.02134v1_table_10b6396bf26b82f3_2",
+     "2611.02134v1_table_10b6396bf26b82f3_1",
+     "2611.02134v1_table_c68d8ead56911a6b_1",
+     "2611.02134v1_c0027",
+     "2611.02134v1_table_10b6396bf26b82f3_4",
+     "2611.02134v1_c0022",
+     "2611.02134v1_table_10b6396bf26b82f3_5",
+     "2611.02134v1_c0029",
+     "2611.02134v1_table_c68d8ead56911a6b_5",
+     "2611.02134v1_table_10b6396bf26b82f3_8",
+     "2611.02134v1_table_a38aa5488119366c_18",
+     "2611.02134v1_table_c68d8ead56911a6b_3",
+     "2611.02134v1_table_a38aa5488119366c_11",
+     "2611.02134v1_table_10b6396bf26b82f3_6",
+     "2611.02134v1_table_a38aa5488119366c_1",
+     "2611.02134v1_table_c68d8ead56911a6b_2",
+     "2611.02134v1_table_a38aa5488119366c_10",
+     "2611.02134v1_table_a38aa5488119366c_19",
+     "2611.02134v1_c0034",
+     "2611.02134v1_c0021",
+     "2611.02134v1_table_a38aa5488119366c_12",
+     "2611.02134v1_table_a38aa5488119366c_8",
+     "2611.02134v1_table_a38aa5488119366c_13"
+    ],
+    "error": null
+   },
+   {
+    "query": "HaloGuard what does PGuard add to serving cost?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02134v1_c0019",
+     "2611.02134v1_c0022",
+     "2611.02134v1_c0023",
+     "2611.02134v1_c0021",
+     "2611.02134v1_c0004",
+     "2611.02134v1_c0010",
+     "2611.02134v1_table_a38aa5488119366c_11",
+     "2611.02134v1_table_a38aa5488119366c_10",
+     "2611.02134v1_table_a38aa5488119366c_1",
+     "2611.02134v1_table_a38aa5488119366c_19",
+     "2611.02134v1_table_a38aa5488119366c_12",
+     "2611.02134v1_table_a38aa5488119366c_18",
+     "2611.02134v1_table_a38aa5488119366c_13",
+     "2611.02134v1_table_a38aa5488119366c_8",
+     "2611.02134v1_table_a38aa5488119366c_16",
+     "2611.02134v1_table_a38aa5488119366c_14",
+     "2611.02134v1_table_a38aa5488119366c_2",
+     "2611.02134v1_table_a38aa5488119366c_15",
+     "2611.02134v1_table_a38aa5488119366c_3",
+     "2611.02134v1_c0026",
+     "2611.02134v1_table_a38aa5488119366c_9",
+     "2611.02134v1_table_a38aa5488119366c_17",
+     "2611.02134v1_table_a38aa5488119366c_5",
+     "2611.02134v1_table_a38aa5488119366c_4",
+     "2611.02134v1_table_a38aa5488119366c_6",
+     "2611.02134v1_c0009",
+     "2611.02134v1_table_a38aa5488119366c_7",
+     "2611.02134v1_c0011",
+     "2611.02134v1_c0003",
+     "2611.02134v1_c0027"
+    ],
+    "error": null
+   },
+   {
+    "query": "PGuard what residual risks does HaloGuard report?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02134v1_c0026",
+     "2611.02134v1_table_a38aa5488119366c_10",
+     "2611.02134v1_table_a38aa5488119366c_11",
+     "2611.02134v1_table_a38aa5488119366c_19",
+     "2611.02134v1_table_a38aa5488119366c_1",
+     "2611.02134v1_table_a38aa5488119366c_18",
+     "2611.02134v1_table_a38aa5488119366c_8",
+     "2611.02134v1_table_4c308a3f4166bade_23",
+     "2611.02134v1_c0032",
+     "2611.02134v1_c0034",
+     "2611.02134v1_c0035",
+     "2611.02134v1_c0027",
+     "2611.02134v1_table_a38aa5488119366c_2",
+     "2611.02134v1_table_4c308a3f4166bade_21",
+     "2611.02134v1_table_a38aa5488119366c_15",
+     "2611.02134v1_table_a38aa5488119366c_12",
+     "2611.02134v1_c0029",
+     "2611.02134v1_table_4c308a3f4166bade_18",
+     "2611.02134v1_table_a38aa5488119366c_5",
+     "2611.02134v1_table_a38aa5488119366c_9",
+     "2611.02134v1_table_a38aa5488119366c_4",
+     "2611.02134v1_table_a38aa5488119366c_13",
+     "2611.02134v1_table_a38aa5488119366c_14",
+     "2611.02134v1_table_a38aa5488119366c_16",
+     "2611.02134v1_table_4c308a3f4166bade_1",
+     "2611.02134v1_table_a38aa5488119366c_6",
+     "2611.02134v1_table_a38aa5488119366c_3",
+     "2611.02134v1_table_a38aa5488119366c_7",
+     "2611.02134v1_table_4c308a3f4166bade_11",
+     "2611.02134v1_table_a38aa5488119366c_17"
+    ],
+    "error": null
+   }
+  ]
+ },
+ "assistance": {
+  "mode": "standard",
+  "activated": false,
+  "route": null
+ },
+ "plan": null,
+ "synthesis_report": {
+  "schema_errors": [],
+  "dropped": [],
+  "contract_repairs": [],
+  "component_map_errors": []
+ },
+ "review_report": {
+  "withheld_no_decision": [],
+  "invalid_decisions": [],
+  "duplicate_decisions": [],
+  "repairs": [],
+  "dropped_limitations": [],
+  "component_check_errors": []
+ },
+ "precheck_flags": {
+  "1": [
+   {
+    "number": "2.0",
+    "issues": [
+     "numbers_absent"
+    ]
+   }
+  ]
+ },
+ "review": {
+  "coverage": "partial",
+  "gap": "The supplied passages do not establish PGuard's mechanism, accuracy relative to dedicated guards, or added serving cost, nor performance in a bank customer chatbot."
+ },
+ "attempts": [
+  {
+   "attempt": 1,
+   "mode": "standard",
+   "resumed_from": [],
+   "status": "complete",
+   "seconds": 132.521,
+   "timings": {
+    "evidence": 35.112,
+    "synthesis": 57.697,
+    "review": 39.654,
+    "publication": 0.028
+   }
+  }
+ ],
+ "human_review": {
+  "status": "pending",
+  "reviewer": null
+ },
+ "approved": false,
+ "engine": "s3-standard",
+ "components": [
+  "How do HaloGuard 2.0 and PGuard each work?",
+  "HaloGuard PGuard how accurate are they relative to dedicated guard models?",
+  "HaloGuard what does PGuard add to serving cost?",
+  "PGuard what residual risks does HaloGuard report?"
+ ]
+}

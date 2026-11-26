@@ -1,0 +1,410 @@
+{
+  "top_k": 8,
+  "synthesis_budget": 14,
+  "provider_calls": 0,
+  "index": "78d8efd7c9df075be09ffa5f3a9c7ca79c54efa2d7caf75c8f0329ea72ff41aa",
+  "cases": [
+    {
+      "name": "saved AccurateRAG",
+      "question": "With fine-tuned Llama-2-7B, what score ranges did AccurateRAG and RAFT with GPT-4 CoT achieve across the three APIBench subsets?",
+      "expected": [
+        "2510.02243v2_table_a61b33c87b34e803_3",
+        "2510.02243v2_table_a61b33c87b34e803_4"
+      ],
+      "before": {
+        "ids": [
+          "2510.02243v2_c0017",
+          "2510.02243v2_c0016",
+          "2410.01553v2_c0020",
+          "2407.10020v1_c0026",
+          "2409.01666v1_c0003",
+          "2506.03610v3_c0022",
+          "2506.10022v1_c0013",
+          "2510.02243v2_c0014"
+        ],
+        "matched": []
+      },
+      "after": {
+        "ids": [
+          "2510.02243v2_table_a61b33c87b34e803_3",
+          "2510.02243v2_table_a61b33c87b34e803_4",
+          "2510.02243v2_c0017",
+          "2510.02243v2_c0016",
+          "2410.01553v2_c0020",
+          "2407.10020v1_c0026",
+          "2409.01666v1_c0003",
+          "2506.03610v3_c0022"
+        ],
+        "matched": [
+          "2510.02243v2_table_a61b33c87b34e803_3",
+          "2510.02243v2_table_a61b33c87b34e803_4"
+        ]
+      }
+    },
+    {
+      "name": "ACDC tasks",
+      "question": "Compare the ACDC AUC scores for IOI and Docstring in the random baseline experiment.",
+      "expected": [
+        "2604.00324v1_table_99d7ef000b02b530_1",
+        "2604.00324v1_table_99d7ef000b02b530_2"
+      ],
+      "before": {
+        "ids": [
+          "2604.00324v1_table_99d7ef000b02b530_2",
+          "2604.00324v1_table_99d7ef000b02b530_1",
+          "2604.00324v1_table_99d7ef000b02b530_3",
+          "2604.00324v1_c0030",
+          "2604.00324v1_c0031",
+          "2604.00324v1_c0028",
+          "2502.17874v2_c0024",
+          "2502.17874v2_c0030"
+        ],
+        "matched": [
+          "2604.00324v1_table_99d7ef000b02b530_1",
+          "2604.00324v1_table_99d7ef000b02b530_2"
+        ]
+      },
+      "after": {
+        "ids": [
+          "2604.00324v1_table_99d7ef000b02b530_2",
+          "2604.00324v1_table_99d7ef000b02b530_1",
+          "2604.00324v1_table_99d7ef000b02b530_3",
+          "2604.00324v1_c0030",
+          "2604.00324v1_c0031",
+          "2604.00324v1_c0028",
+          "2502.17874v2_c0024",
+          "2502.17874v2_c0030"
+        ],
+        "matched": [
+          "2604.00324v1_table_99d7ef000b02b530_1",
+          "2604.00324v1_table_99d7ef000b02b530_2"
+        ]
+      }
+    },
+    {
+      "name": "Agent-SafetyBench models",
+      "question": "In Agent-SafetyBench, compare the M1 and M2 safety scores of Claude-3-Opus and Claude-3.5-Sonnet.",
+      "expected": [
+        "2412.14470v2_table_c68d8ead56911a6b_1",
+        "2412.14470v2_table_c68d8ead56911a6b_2"
+      ],
+      "before": {
+        "ids": [
+          "2412.14470v2_table_c68d8ead56911a6b_2",
+          "2412.14470v2_table_c68d8ead56911a6b_1",
+          "2412.14470v2_table_bed7f888ef5e9058_2",
+          "2412.14470v2_table_bed7f888ef5e9058_1",
+          "2412.14470v2_table_c68d8ead56911a6b_3",
+          "2412.14470v2_table_5d96e43ffb0d77a3_4",
+          "2412.14470v2_table_5d96e43ffb0d77a3_6",
+          "2412.14470v2_c0024"
+        ],
+        "matched": [
+          "2412.14470v2_table_c68d8ead56911a6b_1",
+          "2412.14470v2_table_c68d8ead56911a6b_2"
+        ]
+      },
+      "after": {
+        "ids": [
+          "2412.14470v2_table_c68d8ead56911a6b_2",
+          "2412.14470v2_table_c68d8ead56911a6b_1",
+          "2412.14470v2_table_bed7f888ef5e9058_2",
+          "2412.14470v2_table_bed7f888ef5e9058_1",
+          "2412.14470v2_table_c68d8ead56911a6b_3",
+          "2412.14470v2_table_5d96e43ffb0d77a3_4",
+          "2412.14470v2_table_5d96e43ffb0d77a3_6",
+          "2412.14470v2_c0024"
+        ],
+        "matched": [
+          "2412.14470v2_table_c68d8ead56911a6b_1",
+          "2412.14470v2_table_c68d8ead56911a6b_2"
+        ]
+      }
+    },
+    {
+      "name": "RAFT opposite condition",
+      "question": "With fine-tuned Llama-2-7B, what score ranges did AccurateRAG and RAFT without GPT-4 CoT achieve across the three APIBench subsets?",
+      "expected": [
+        "2510.02243v2_table_a61b33c87b34e803_4",
+        "2510.02243v2_table_a61b33c87b34e803_5"
+      ],
+      "before": {
+        "ids": [
+          "2510.02243v2_c0017",
+          "2510.02243v2_c0016",
+          "2409.01666v1_c0003",
+          "2410.01553v2_c0020",
+          "2510.02243v2_c0014",
+          "2407.10020v1_c0026",
+          "2506.03610v3_c0022",
+          "2506.10022v1_c0013"
+        ],
+        "matched": []
+      },
+      "after": {
+        "ids": [
+          "2510.02243v2_table_a61b33c87b34e803_5",
+          "2510.02243v2_table_a61b33c87b34e803_4",
+          "2510.02243v2_c0017",
+          "2510.02243v2_c0016",
+          "2409.01666v1_c0003",
+          "2410.01553v2_c0020",
+          "2510.02243v2_c0014",
+          "2407.10020v1_c0026"
+        ],
+        "matched": [
+          "2510.02243v2_table_a61b33c87b34e803_4",
+          "2510.02243v2_table_a61b33c87b34e803_5"
+        ]
+      }
+    },
+    {
+      "name": "agreemate",
+      "question": "In AgreeMate, what fairness scores did the researchers report with and without chain-of-thought, and which condition had the higher score?",
+      "expected": [
+        "2412.18690v1_table_5bd4fffb5c9a7277_4"
+      ],
+      "before": {
+        "ids": [
+          "2412.18690v1_table_56917df0cb9a7147_1",
+          "2412.18690v1_table_56917df0cb9a7147_3",
+          "2412.18690v1_table_56917df0cb9a7147_2",
+          "2412.18690v1_c0024",
+          "2412.18690v1_c0019",
+          "2412.18690v1_c0018",
+          "2412.18690v1_table_5bd4fffb5c9a7277_4",
+          "2412.18690v1_c0028"
+        ],
+        "matched": [
+          "2412.18690v1_table_5bd4fffb5c9a7277_4"
+        ]
+      },
+      "after": {
+        "ids": [
+          "2412.18690v1_table_56917df0cb9a7147_1",
+          "2412.18690v1_table_56917df0cb9a7147_3",
+          "2412.18690v1_table_56917df0cb9a7147_2",
+          "2412.18690v1_c0024",
+          "2412.18690v1_c0019",
+          "2412.18690v1_c0018",
+          "2412.18690v1_table_5bd4fffb5c9a7277_4",
+          "2412.18690v1_c0028"
+        ],
+        "matched": [
+          "2412.18690v1_table_5bd4fffb5c9a7277_4"
+        ]
+      }
+    },
+    {
+      "name": "training-counts",
+      "question": "How many SQL task conversations and entity-extraction tasks were in the synthetic training dataset, and which group was larger?",
+      "expected": [
+        "2506.23273v2_table_73e166fbe4d2eb83_2",
+        "2506.23273v2_table_73e166fbe4d2eb83_3"
+      ],
+      "before": {
+        "ids": [
+          "2506.23273v2_table_73e166fbe4d2eb83_3",
+          "2506.23273v2_table_73e166fbe4d2eb83_2",
+          "2506.23273v2_table_73e166fbe4d2eb83_1",
+          "2506.23273v2_c0008",
+          "2502.18471v2_c0030",
+          "2506.23273v2_c0011",
+          "2402.09742v4_c0026",
+          "2402.09748v1_c0100"
+        ],
+        "matched": [
+          "2506.23273v2_table_73e166fbe4d2eb83_2",
+          "2506.23273v2_table_73e166fbe4d2eb83_3"
+        ]
+      },
+      "after": {
+        "ids": [
+          "2506.23273v2_table_73e166fbe4d2eb83_3",
+          "2506.23273v2_table_73e166fbe4d2eb83_2",
+          "2506.23273v2_table_73e166fbe4d2eb83_1",
+          "2506.23273v2_c0008",
+          "2502.18471v2_c0030",
+          "2506.23273v2_c0011",
+          "2402.09742v4_c0026",
+          "2402.09748v1_c0100"
+        ],
+        "matched": [
+          "2506.23273v2_table_73e166fbe4d2eb83_2",
+          "2506.23273v2_table_73e166fbe4d2eb83_3"
+        ]
+      }
+    }
+  ],
+  "identities": [
+    {
+      "collection": "experimental_complete_parent_search",
+      "count": 7667,
+      "metadata": {
+        "embedding_model": "all-MiniLM-L6-v2",
+        "strategy": "token224_parent",
+        "search_views": 11030,
+        "human_acceptance": "pending"
+      },
+      "indexed_records_sha256": "78d8efd7c9df075be09ffa5f3a9c7ca79c54efa2d7caf75c8f0329ea72ff41aa",
+      "embedding_bytes_sha256": "50468962cff785b71c4de72f9e7436b656bcf30d8df801b2681473873d23bd14",
+      "identity_limits": "Local artifact integrity; source certification and human acceptance remain pending.",
+      "candidate_algorithm": "document-table-balanced-facets-v1",
+      "algorithm_sha256": {
+        "b2.py": "476518d6a2424c229d2afd78cef5b281e85dbc766eee9ada5f4963bb35aa9fc3",
+        "retriever.py": "1c2a1400d76e1b6add0f96493e5f92acc0a6913440234fb28934203080eefb41",
+        "balanced_retriever.py": "267ff7113339a262c15669ae09d4058f4e6d869918650b12636963cb43d66307",
+        "evidence_coverage.py": "f177c97a502727ccd4b57cd3ea5d20637c5e789d2f346ef4b244ed7d0d8549ff",
+        "search_index.py": "02fb4a261d862bc47283f290ee5c1c42d8fcb798dd501887f237c76f51b77900",
+        "search_chunks.py": "103a3b5440879a5300ece876c5fadd0f77dc4f9dc3f6a65b79f94432a9ca7f16",
+        "semantic_views.py": "0d727cb00e82884a68d9a5d8c6e7ac6bbd9fc3e942ec41e1a75d43631f1556f7"
+      }
+    },
+    {
+      "collection": "experimental_complete_parent_search",
+      "count": 7667,
+      "metadata": {
+        "embedding_model": "all-MiniLM-L6-v2",
+        "strategy": "token224_parent",
+        "search_views": 11030,
+        "human_acceptance": "pending"
+      },
+      "indexed_records_sha256": "78d8efd7c9df075be09ffa5f3a9c7ca79c54efa2d7caf75c8f0329ea72ff41aa",
+      "embedding_bytes_sha256": "50468962cff785b71c4de72f9e7436b656bcf30d8df801b2681473873d23bd14",
+      "identity_limits": "Local artifact integrity; source certification and human acceptance remain pending.",
+      "candidate_algorithm": "document-table-balanced-facets-v1",
+      "algorithm_sha256": {
+        "b2.py": "476518d6a2424c229d2afd78cef5b281e85dbc766eee9ada5f4963bb35aa9fc3",
+        "retriever.py": "1c2a1400d76e1b6add0f96493e5f92acc0a6913440234fb28934203080eefb41",
+        "balanced_retriever.py": "267ff7113339a262c15669ae09d4058f4e6d869918650b12636963cb43d66307",
+        "evidence_coverage.py": "f177c97a502727ccd4b57cd3ea5d20637c5e789d2f346ef4b244ed7d0d8549ff",
+        "search_index.py": "02fb4a261d862bc47283f290ee5c1c42d8fcb798dd501887f237c76f51b77900",
+        "search_chunks.py": "103a3b5440879a5300ece876c5fadd0f77dc4f9dc3f6a65b79f94432a9ca7f16",
+        "semantic_views.py": "0d727cb00e82884a68d9a5d8c6e7ac6bbd9fc3e942ec41e1a75d43631f1556f7"
+      },
+      "table_comparisons": true
+    }
+  ],
+  "before_packet": {
+    "ids": [
+      "2510.02243v2_c0017",
+      "2510.02243v2_c0016",
+      "2410.01553v2_c0020",
+      "2506.03610v3_c0022",
+      "2407.10020v1_c0026",
+      "2510.02243v2_c0014",
+      "2409.01666v1_c0003",
+      "2506.03610v3_c0020",
+      "2510.02833v4_c0014",
+      "2510.02833v4_c0013",
+      "2506.10022v1_c0013",
+      "2402.01030v4_c0019",
+      "2409.10955v2_c0018"
+    ],
+    "matched": []
+  },
+  "before_searches": [
+    {
+      "query": "With fine-tuned Llama-2-7B, what score ranges did AccurateRAG and RAFT with GPT-4 CoT achieve across the three APIBench subsets?",
+      "ids": [
+        "2510.02243v2_c0017",
+        "2510.02243v2_c0016",
+        "2410.01553v2_c0020",
+        "2407.10020v1_c0026",
+        "2409.01666v1_c0003",
+        "2506.03610v3_c0022",
+        "2506.10022v1_c0013",
+        "2510.02243v2_c0014"
+      ]
+    },
+    {
+      "query": "AccurateRAG fine-tuned Llama-2-7B score ranges across the three APIBench subsets",
+      "ids": [
+        "2510.02243v2_c0016",
+        "2510.02243v2_c0017",
+        "2506.03610v3_c0022",
+        "2510.02243v2_c0014",
+        "2506.03610v3_c0020",
+        "2510.02833v4_c0013",
+        "2402.01030v4_c0019",
+        "2407.10020v1_c0026"
+      ]
+    },
+    {
+      "query": "RAFT with GPT-4 CoT fine-tuned Llama-2-7B score ranges across the three APIBench subsets",
+      "ids": [
+        "2510.02243v2_c0016",
+        "2510.02243v2_c0017",
+        "2407.10020v1_c0026",
+        "2410.01553v2_c0020",
+        "2510.02833v4_c0014",
+        "2506.03610v3_c0022",
+        "2409.10955v2_c0018",
+        "2506.10022v1_c0013"
+      ]
+    }
+  ],
+  "after_packet": {
+    "ids": [
+      "2510.02243v2_table_a61b33c87b34e803_3",
+      "2510.02243v2_c0016",
+      "2510.02243v2_table_a61b33c87b34e803_4",
+      "2510.02243v2_c0017",
+      "2506.03610v3_c0022",
+      "2407.10020v1_c0026",
+      "2510.02243v2_c0014",
+      "2410.01553v2_c0020",
+      "2506.03610v3_c0020",
+      "2510.02833v4_c0014",
+      "2510.02833v4_c0013",
+      "2409.01666v1_c0003",
+      "2402.01030v4_c0019",
+      "2409.10955v2_c0018"
+    ],
+    "matched": [
+      "2510.02243v2_table_a61b33c87b34e803_3",
+      "2510.02243v2_table_a61b33c87b34e803_4"
+    ]
+  },
+  "after_searches": [
+    {
+      "query": "With fine-tuned Llama-2-7B, what score ranges did AccurateRAG and RAFT with GPT-4 CoT achieve across the three APIBench subsets?",
+      "ids": [
+        "2510.02243v2_table_a61b33c87b34e803_3",
+        "2510.02243v2_table_a61b33c87b34e803_4",
+        "2510.02243v2_c0017",
+        "2510.02243v2_c0016",
+        "2410.01553v2_c0020",
+        "2407.10020v1_c0026",
+        "2409.01666v1_c0003",
+        "2506.03610v3_c0022"
+      ]
+    },
+    {
+      "query": "AccurateRAG fine-tuned Llama-2-7B score ranges across the three APIBench subsets",
+      "ids": [
+        "2510.02243v2_c0016",
+        "2510.02243v2_c0017",
+        "2506.03610v3_c0022",
+        "2510.02243v2_c0014",
+        "2506.03610v3_c0020",
+        "2510.02833v4_c0013",
+        "2402.01030v4_c0019",
+        "2407.10020v1_c0026"
+      ]
+    },
+    {
+      "query": "RAFT with GPT-4 CoT fine-tuned Llama-2-7B score ranges across the three APIBench subsets",
+      "ids": [
+        "2510.02243v2_c0016",
+        "2510.02243v2_c0017",
+        "2407.10020v1_c0026",
+        "2410.01553v2_c0020",
+        "2510.02833v4_c0014",
+        "2506.03610v3_c0022",
+        "2409.10955v2_c0018",
+        "2506.10022v1_c0013"
+      ]
+    }
+  ]
+}

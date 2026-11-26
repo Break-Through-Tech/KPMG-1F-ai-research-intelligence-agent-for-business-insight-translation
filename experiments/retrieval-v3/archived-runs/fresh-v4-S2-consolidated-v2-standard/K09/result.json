@@ -1,0 +1,723 @@
+{
+ "mode": "standard",
+ "question": "A consumer-electronics client wants to run a mixture-of-experts LLM on edge devices. What does MatMoE change about quantization, how much faster and more accurate is it than existing approaches, which component drives which gain, and what accuracy should the client expect on its own customer-support assistant?",
+ "summary": {
+  "status": "ok",
+  "claims": [
+   {
+    "text": "MatMoE replaces fixed, offline expert precision with runtime allocation: more important activated experts receive higher precision, and less important experts receive lower precision.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01704v1_c0002",
+      "quote": "Static method assigns each expert a fixed bit-width offline, regardless of the input token. In contrast, our method dynamically assigns higher precision to more important activated experts and lower precision to less important ones."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01704v1_c0002"
+    ],
+    "draft_index": 0,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The quote directly supports runtime precision allocation by activated-expert importance."
+     },
+     "number_grounding": "no_numbers",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "Its Matryoshka MoE PTQ algorithm creates one parent model supporting multiple expert precisions within a memory budget; floor-and-compensation removes the extra rounding bit, and runtime allocation adapts to latency constraints.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01704v1_c0003",
+      "quote": "First, given a stringent memory budget,\nwe propose the Matryoshka MoE PTQ algorithm,\nto derive a parent MoE model, which\nenables experts to operate flexibly at multiple precisions.\nSecond, to address the inefficiency in memory access,\nwe propose the floor-and-compensation quantization method\nthat eliminates the need for an extra rounding bit.\nThird, during inference,\nwe propose a dynamic bit-width allocation strategy that adaptively assigns different bit-widths to experts at runtime to satisfy the dynamic latency constraint."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01704v1_c0003"
+    ],
+    "draft_index": 1,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "All three mechanisms and their stated purposes are explicitly supported."
+     },
+     "number_grounding": "no_numbers",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "Against static mixed-precision PMQ, MatMoE reports 4.0% to 9.8% average accuracy improvement across three models under a 3-bit memory budget, and 7.5% to 18.3% under a 4-bit memory budget.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01704v1_c0020",
+      "quote": "MatMoE consistently exhibits superior performance over the SOTA method PMQ.\nSpecifically, under 3-bit memory budget, MatMoE achieves 4.0% to 9.8% average accuracy improvement across three models.\nUnder 4-bit memory budget, MatMoE\nachieves 7.5% to 18.3% average accuracy improvement across three models."
+     },
+     {
+      "chunk_id": "2611.01704v1_c0022",
+      "quote": "We first replace the original llama.cpp backend of PMQ with our optimized low-bit kernels while retaining its static mixed-precision allocation."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01704v1_c0020",
+     "2611.01704v1_c0022"
+    ],
+    "draft_index": 2,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The ranges and memory budgets match; added evidence identifies the comparator as static mixed precision."
+     },
+     "number_grounding": "uncertain",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "Against llama.cpp, MatMoE reports 1.3\\times\\sim 3.7\\times end-to-end speedup on Raspberry Pi 5 and 1.2\\times\\sim 1.3\\times speedup on NVIDIA RTX 4090 and Jetson AGX Orin.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01704v1_c0004",
+      "quote": "Compared to the llama.cpp baseline, MatMoE delivers 1.3\\times\\sim 3.7\\times end-to-end speedup on Raspberry Pi 5, and 1.2\\times\\sim 1.3\\times speedup on NVIDIA RTX 4090 and Jetson AGX Orin."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01704v1_c0004"
+    ],
+    "draft_index": 3,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The comparator, hardware platforms and speedup ranges match the quote."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "The optimized low-bit kernels drive the large execution gain in the component experiment: retaining PMQ’s static allocation reduces average time per output token from 80.3 to 27.4 ms/token, a 2.93\\times speedup, with identical accuracy.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01704v1_c0022",
+      "quote": "We first replace the original llama.cpp backend of PMQ with our optimized low-bit kernels while retaining its static mixed-precision allocation.\nPMQ + Our Kernels reduces the average TPOT from 80.3 to 27.4 ms/token, corresponding to a 2.93\\times speedup over PMQ + llama.cpp. Meanwhile, the two configurations achieve identical accuracy."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01704v1_c0022"
+    ],
+    "draft_index": 4,
+    "scope": "related_variant",
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The kernel ablation directly supports the latency improvement with unchanged accuracy."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "The dynamic-allocation comparison shows the accuracy gain: with the same optimized backend, PMQ + Our Kernels and MatMoE have similar TPOTs, while average accuracy rises from 22.8% to 35.3%.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01704v1_c0022",
+      "quote": "Under the same optimized backend, PMQ + Our Kernels and our MatMoE achieve similar TPOTs.\nHowever, MatMoE improves the average accuracy from 22.8% to 35.3%, demonstrating the effectiveness of MatMoE’s dynamic allocation strategy, which adapts expert bit-widths to token-level routing importance during decoding."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01704v1_c0022"
+    ],
+    "draft_index": 5,
+    "scope": "related_variant",
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The same-backend comparison supports the stated accuracy gain and similar TPOTs."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "Floor-and-compensation provides an additional efficiency gain: compared with original Matryoshka quantization plus dynamic allocation, MatMoE reduces average TPOT from 30.5 to 27.6 ms/token and increases average accuracy from 34.4% to 35.3%.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01704v1_c0022",
+      "quote": "To evaluate the contribution of floor-and-compensation, we construct Matryoshka + Dynamic, which combines the original Matryoshka quantization scheme with our dynamic bit-width allocation.\nUnlike MatMoE, this baseline requires accessing an additional bitplane for rounding.\nCompared with this baseline, MatMoE reduces the average TPOT from 30.5 to 27.6 ms/token, while slightly improving the average accuracy from 34.4% to 35.3%."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01704v1_c0022"
+    ],
+    "draft_index": 6,
+    "scope": "related_variant",
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The named ablation and all latency and accuracy values match the evidence."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "MatMoE also reduces storage duplication across target precisions: PMQ requires multiple models, whereas MatMoE supports different target precisions using a single model.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01704v1_c0020",
+      "quote": "It is also worth noting that PMQ necessitates storing multiple models for different target precisions, whereas our method natively supports these diverse target precisions using only a single model."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01704v1_c0020"
+    ],
+    "draft_index": 7,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "Single-model support for multiple target precisions directly informs edge memory requirements."
+     },
+     "number_grounding": "no_numbers",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "In the simulated offloading comparison with HOBBIT on Raspberry Pi 5, MatMoE reports 243.78\\sim 579.71 ms/token versus 493.06\\sim 661.23 ms/token across target precisions, corresponding to a 1.1\\times\\sim 2.0\\times speedup.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01704v1_c0023",
+      "quote": "Since HOBBIT does not provide its source code, we implement a simulator to evaluate the end-to-end latency."
+     },
+     {
+      "chunk_id": "2611.01704v1_c0023",
+      "quote": "Across different target precisions, HOBBIT requires 493.06\\sim 661.23 ms/token on Raspberry Pi 5, whereas MatMoE requires only 243.78\\sim 579.71 ms/token, corresponding to a 1.1\\times\\sim 2.0\\times speedup."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01704v1_c0023"
+    ],
+    "draft_index": 8,
+    "scope": "related_variant",
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The simulated offloading comparison, hardware, latency ranges and speedup are explicitly supported."
+     },
+     "number_grounding": "uncertain",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "For your edge-device decision, these results support evaluating MatMoE as an accuracy–latency trade-off option under constrained memory, using the reported batch size of 1 as the relevant experimental condition.",
+    "kind": "interpretation",
+    "support": [
+     {
+      "chunk_id": "2611.01704v1_c0019",
+      "quote": "For evaluation, we use a batch size of 1, considering the edge inference scenario."
+     },
+     {
+      "chunk_id": "2611.01704v1_c0003",
+      "quote": "First, given a stringent memory budget,\nwe propose the Matryoshka MoE PTQ algorithm,\nto derive a parent MoE model, which\nenables experts to operate flexibly at multiple precisions."
+     },
+     {
+      "chunk_id": "2611.01704v1_c0003",
+      "quote": "MatMoE achieves a superior accuracy-efficiency trade-off compared to the state-of-the-art (SOTA) static mixed-precision quantization method."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01704v1_c0019",
+     "2611.01704v1_c0003"
+    ],
+    "draft_index": 9,
+    "label": "Interpretation: inferred from the cited findings for this decision; not a research result."
+   }
+  ],
+  "held_claims": [],
+  "limitation_support": [
+   {
+    "text": "The reported accuracy gains concern three MoE models across three generative benchmarks; they do not establish accuracy for the client's customer-support assistant.",
+    "support": [
+     {
+      "chunk_id": "2611.01704v1_c0004",
+      "quote": "We evaluate MatMoE on three modern MoE models across three challenging generative benchmarks."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01704v1_c0004"
+    ]
+   },
+   {
+    "text": "Evaluation uses batch size 1.",
+    "support": [
+     {
+      "chunk_id": "2611.01704v1_c0019",
+      "quote": "For evaluation, we use a batch size of 1, considering the edge inference scenario."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01704v1_c0019"
+    ]
+   },
+   {
+    "text": "The HOBBIT comparison uses a simulator and Qwen3-30B-A3B with an LRU cache accommodating all non-expert weights and 25% of experts at 4-bit precision.",
+    "support": [
+     {
+      "chunk_id": "2611.01704v1_c0023",
+      "quote": "To evaluate its offloading efficiency, we conduct experiments on Qwen3-30B-A3B ( Yang et al., 2025 ) using a least-recently-used (LRU) cache replacement policy.\nThe cache capacity is set to accommodate all non-expert weights and 25% of the experts at 4-bit precision."
+     },
+     {
+      "chunk_id": "2611.01704v1_c0023",
+      "quote": "Since HOBBIT does not provide its source code, we implement a simulator to evaluate the end-to-end latency."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01704v1_c0023"
+    ]
+   }
+  ],
+  "limitations": [
+   "The reported accuracy gains concern three MoE models across three generative benchmarks; they do not establish accuracy for the client's customer-support assistant.",
+   "Evaluation uses batch size 1.",
+   "The HOBBIT comparison uses a simulator and Qwen3-30B-A3B with an LRU cache accommodating all non-expert weights and 25% of experts at 4-bit precision."
+  ],
+  "dropped_limitations": [],
+  "evidence_notes": [],
+  "answer_scope": "partial",
+  "answer_lead": "The supplied passages do not establish expected accuracy on the client's own customer-support assistant.",
+  "answer_lead_check": null,
+  "support_check": "exact quotes; per-claim number recall against attached quotes; numeric_checks_v2 attribution flags (quote-anchored resolution); model review of quote entailment; not human verification"
+ },
+ "evidence": [
+  {
+   "chunk_id": "2611.01704v1_c0000",
+   "arxiv_id": "2611.01704v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01704v1#abstract1",
+   "section": "abstract",
+   "subsection": "",
+   "high_value": true,
+   "text": "Mixture-of-Experts (MoE) architecture has been widely adopted in large language models (LLMs) since it reduces the computational cost through sparse expert activation.\nHowever, the massive parameter scale of MoE models hinders their deployment on resource-constrained edge devices.\nAlthough existing mixed-precision quantization reduces the model size, they are inherently static, fixing the bit-width of each expert across decoding steps.\nSuch static schemes yield suboptimal performance as they overlook the dynamic variation in expert importance during decoding.\nFurthermore, they fail to adapt to the dynamic latency constraint\ndriven by the fluctuating system utilization.\nTo address these challenges, we propose MatMoE, a dynamic mixed-precision quantization framework for efficient MoE inference.\nMatMoE features: (1) a Matryoshka MoE PTQ algorithm that enables experts to operate flexibly at multiple precisions within a stringent memory budget; (2) a floor-and-compensation quantization method that eliminates redundant memory accesses in the Matryoshka representation; and (3) a dynamic bit-width allocation strategy that determines the precision for each expert based on their routing scores to satisfy the dynamic latency requirement.\nWe implement our MatMoE system atop llama.cpp for both CPU and GPU platforms.\nExtensive evaluations across three modern MoE models and challenging benchmarks demonstrate that MatMoE achieves 4.0\\%\\sim 18.3\\% higher accuracy than state-of-the-art static mixed-precision method.\nCompared to llama.cpp, MatMoE delivers 1.3\\times\\sim 3.7\\times speedup on Raspberry Pi 5, and 1.2\\times\\sim 1.3\\times speedup on NVIDIA RTX 4090 and Jetson AGX Orin.",
+   "text_with_context": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference | Abstract\n\nMixture-of-Experts (MoE) architecture has been widely adopted in large language models (LLMs) since it reduces the computational cost through sparse expert activation.\nHowever, the massive parameter scale of MoE models hinders their deployment on resource-constrained edge devices.\nAlthough existing mixed-precision quantization reduces the model size, they are inherently static, fixing the bit-width of each expert across decoding steps.\nSuch static schemes yield suboptimal performance as they overlook the dynamic variation in expert importance during decoding.\nFurthermore, they fail to adapt to the dynamic latency constraint\ndriven by the fluctuating system utilization.\nTo address these challenges, we propose MatMoE, a dynamic mixed-precision quantization framework for efficient MoE inference.\nMatMoE features: (1) a Matryoshka MoE PTQ algorithm that enables experts to operate flexibly at multiple precisions within a stringent memory budget; (2) a floor-and-compensation quantization method that eliminates redundant memory accesses in the Matryoshka representation; and (3) a dynamic bit-width allocation strategy that determines the precision for each expert based on their routing scores to satisfy the dynamic latency requirement.\nWe implement our MatMoE system atop llama.cpp for both CPU and GPU platforms.\nExtensive evaluations across three modern MoE models and challenging benchmarks demonstrate that MatMoE achieves 4.0\\%\\sim 18.3\\% higher accuracy than state-of-the-art static mixed-precision method.\nCompared to llama.cpp, MatMoE delivers 1.3\\times\\sim 3.7\\times speedup on Raspberry Pi 5, and 1.2\\times\\sim 1.3\\times speedup on NVIDIA RTX 4090 and Jetson AGX Orin.",
+   "title": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01704v1#abstract1",
+   "pdf_url": "https://arxiv.org/pdf/2611.01704v1",
+   "source_sha256": "1597882722838f7bd983a0b5b4bb1f5c9adcbcce662fd62328515d71eba899de"
+  },
+  {
+   "chunk_id": "2410.16285v1_c0004",
+   "arxiv_id": "2410.16285v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2410.16285v1#S1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": ". RAG is an advanced approach in natural language processing (NLP) that combines retrieval of relevant information from external sources with generation of new text based on that information ( Lewis et al., 2021 ; Izacard and Grave, 2021 ) . In RAG models, a retrieval component first searches for and pulls in related documents, knowledge, or data from an external database or knowledge base. This information is then fed into a generative model, which uses the retrieved content to create a more informed and accurate response or output. By incorporating RAG within an automated agent’s LLM, the agent can provide more relevant information, specific to its domain and use case ( Zhang et al., 2024 ; Gao et al., 2024 ; Jeong, 2024 ) . This is particularly relevant when considering the application of automated LLM agents to the help desk and professional consultation industries. Because these industries rely on relevant domain-specific topic knowledge, RAG can be an effective approach to address the shortcomings of broadly trained LLMs. This is significant, as LLM-powered automated agents appear to be well suited to the work required in these domains. The help desk and professional consultation industries are broad and are present across almost all sectors of the economy. This includes customer support services, IT support services, administrative assistance, after-sales support and assistance, and several other types of support services. Although these service lines may appear to vary, they all rely on domain-specific knowledge, the ability to solve problems, and the ability to handle and mitigate errors to ensure that clients or customers have a good experience. Furthermore, they all rely on communication between a provider and a customer/client",
+   "text_with_context": "Assessing the Performance of Human-Capable LLMs -- Are LLMs Coming for Your Job? | Introduction\n\n. RAG is an advanced approach in natural language processing (NLP) that combines retrieval of relevant information from external sources with generation of new text based on that information ( Lewis et al., 2021 ; Izacard and Grave, 2021 ) . In RAG models, a retrieval component first searches for and pulls in related documents, knowledge, or data from an external database or knowledge base. This information is then fed into a generative model, which uses the retrieved content to create a more informed and accurate response or output. By incorporating RAG within an automated agent’s LLM, the agent can provide more relevant information, specific to its domain and use case ( Zhang et al., 2024 ; Gao et al., 2024 ; Jeong, 2024 ) . This is particularly relevant when considering the application of automated LLM agents to the help desk and professional consultation industries. Because these industries rely on relevant domain-specific topic knowledge, RAG can be an effective approach to address the shortcomings of broadly trained LLMs. This is significant, as LLM-powered automated agents appear to be well suited to the work required in these domains. The help desk and professional consultation industries are broad and are present across almost all sectors of the economy. This includes customer support services, IT support services, administrative assistance, after-sales support and assistance, and several other types of support services. Although these service lines may appear to vary, they all rely on domain-specific knowledge, the ability to solve problems, and the ability to handle and mitigate errors to ensure that clients or customers have a good experience. Furthermore, they all rely on communication between a provider and a customer/client",
+   "title": "Assessing the Performance of Human-Capable LLMs -- Are LLMs Coming for Your Job?",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2410.16285v1#S1",
+   "pdf_url": "https://arxiv.org/pdf/2410.16285v1",
+   "source_sha256": "4f3e8bee6734ae3038a0a10df4b84ff3471026f1b79570ec54f28f8652bf09c8"
+  },
+  {
+   "chunk_id": "2611.01704v1_c0008",
+   "arxiv_id": "2611.01704v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01704v1#S3",
+   "section": "motivation",
+   "subsection": "",
+   "high_value": false,
+   "text": "Qwen: Variations of expert ranking changes across decoding steps. Motivation 1: Dynamic expert importance across decoding steps. Existing mixed-precision quantization methods for MoE models treat expert importance—whether measured by routing scores or activation frequencies ( Yi et al., 2023 ; Li et al., 2024 ; Huang et al., 2025a ; Duanmu et al., 2025 ) —as a static metric, determining it offline using a calibration dataset.\nHowever, we find that the expert importance is inherently dynamic, changing significantly across decoding steps.\nThis is because of the specialization of different experts and the varying semantics of input tokens.\nNotably, the load balancing loss used in MoE training is to guarantee sufficient and balanced parameter optimization across the training corpus, rather than to homogenize expert functionality.\nInstead, it facilitates the development of highly specialized experts tailored to distinct knowledge domains ( Mu and Lin, 2025 ; Yang et al., 2025 ) . As illustrated in Fig. 2a ,\nexpert ranking for the same expert varies significantly\nacross decoding steps even within a single sample.\nThe dramatic fluctuations of the routing scores in Fig. 2b further\ndemonstrate the highly dynamic nature of expert importance.\nConsequently, this motivates a dynamic mixed-precision quantization method\nthat adaptively assigns the optimal bit-width\nbased on the expert importance at run time. Motivation 2: Stringent memory constraint and dynamic latency constraint on edge devices. Edge devices have limited memory capacity and dynamic runtime latency requirements since the system utilization fluctuates rapidly ( Kwon et al., 2025 ) .\nMulti-scale quantization has been proposed as an effective solution.",
+   "text_with_context": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference | Motivation\n\nQwen: Variations of expert ranking changes across decoding steps. Motivation 1: Dynamic expert importance across decoding steps. Existing mixed-precision quantization methods for MoE models treat expert importance—whether measured by routing scores or activation frequencies ( Yi et al., 2023 ; Li et al., 2024 ; Huang et al., 2025a ; Duanmu et al., 2025 ) —as a static metric, determining it offline using a calibration dataset.\nHowever, we find that the expert importance is inherently dynamic, changing significantly across decoding steps.\nThis is because of the specialization of different experts and the varying semantics of input tokens.\nNotably, the load balancing loss used in MoE training is to guarantee sufficient and balanced parameter optimization across the training corpus, rather than to homogenize expert functionality.\nInstead, it facilitates the development of highly specialized experts tailored to distinct knowledge domains ( Mu and Lin, 2025 ; Yang et al., 2025 ) . As illustrated in Fig. 2a ,\nexpert ranking for the same expert varies significantly\nacross decoding steps even within a single sample.\nThe dramatic fluctuations of the routing scores in Fig. 2b further\ndemonstrate the highly dynamic nature of expert importance.\nConsequently, this motivates a dynamic mixed-precision quantization method\nthat adaptively assigns the optimal bit-width\nbased on the expert importance at run time. Motivation 2: Stringent memory constraint and dynamic latency constraint on edge devices. Edge devices have limited memory capacity and dynamic runtime latency requirements since the system utilization fluctuates rapidly ( Kwon et al., 2025 ) .\nMulti-scale quantization has been proposed as an effective solution.",
+   "title": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01704v1#S3",
+   "pdf_url": "https://arxiv.org/pdf/2611.01704v1",
+   "source_sha256": "1597882722838f7bd983a0b5b4bb1f5c9adcbcce662fd62328515d71eba899de"
+  },
+  {
+   "chunk_id": "2611.01704v1_c0019",
+   "arxiv_id": "2611.01704v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01704v1#S5.SS1",
+   "section": "experiment",
+   "subsection": "experimental setup",
+   "high_value": false,
+   "text": "we leverage a calibration dataset consisting of 128 randomly\nselected 2048-token segments from C4 dataset ( Raffel et al., 2020 ) and train the quantization parameters for 40 epochs using a batch size of 4.\nWe utilize AdamW ( Loshchilov and Hutter, 2019 ) optimizer with zero weight decay,\nand set the learning rate to 1e-2.\nWe set \\lambda_{p} in Eq. 4 to 1.0.\nFor evaluation, we use a batch size of 1, considering the edge inference scenario. Baselines. For accuracy evaluation, we use the SOTA mixed-precision quantization method PMQ ( Huang et al., 2025a ) as the baseline, testing under both 3-bit and 4-bit memory budgets.\nFor the prefill phase,\nwe use the maximum precision for each expert,\nsince lower precision weights only provide a marginal speed improvement in this compute-bound scenario.\nFor latency evaluation,\nwe compare our MatMoE system with llama.cpp ( ggml-org, 2026 ) ,\nthe most widely used LLM inference engine for edge devices\non both CPU and GPU.\nWe report the average Time-Per-Output-Token (TPOT). Hardware Platforms. For CPU evaluation, we choose Raspberry Pi 5 with a quad-core ARM Cortex-A76 processor.\nFor GPU evaluation,\nour selected hardware platforms include NVIDIA Jetson AGX Orin and NVIDIA RTX 4090.",
+   "text_with_context": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference | Experiment > Experimental Setup\n\nwe leverage a calibration dataset consisting of 128 randomly\nselected 2048-token segments from C4 dataset ( Raffel et al., 2020 ) and train the quantization parameters for 40 epochs using a batch size of 4.\nWe utilize AdamW ( Loshchilov and Hutter, 2019 ) optimizer with zero weight decay,\nand set the learning rate to 1e-2.\nWe set \\lambda_{p} in Eq. 4 to 1.0.\nFor evaluation, we use a batch size of 1, considering the edge inference scenario. Baselines. For accuracy evaluation, we use the SOTA mixed-precision quantization method PMQ ( Huang et al., 2025a ) as the baseline, testing under both 3-bit and 4-bit memory budgets.\nFor the prefill phase,\nwe use the maximum precision for each expert,\nsince lower precision weights only provide a marginal speed improvement in this compute-bound scenario.\nFor latency evaluation,\nwe compare our MatMoE system with llama.cpp ( ggml-org, 2026 ) ,\nthe most widely used LLM inference engine for edge devices\non both CPU and GPU.\nWe report the average Time-Per-Output-Token (TPOT). Hardware Platforms. For CPU evaluation, we choose Raspberry Pi 5 with a quad-core ARM Cortex-A76 processor.\nFor GPU evaluation,\nour selected hardware platforms include NVIDIA Jetson AGX Orin and NVIDIA RTX 4090.",
+   "title": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01704v1#S5.SS1",
+   "pdf_url": "https://arxiv.org/pdf/2611.01704v1",
+   "source_sha256": "1597882722838f7bd983a0b5b4bb1f5c9adcbcce662fd62328515d71eba899de"
+  },
+  {
+   "chunk_id": "2611.01704v1_c0007",
+   "arxiv_id": "2611.01704v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01704v1#S2.SS3",
+   "section": "background",
+   "subsection": "multi-scale quantization",
+   "high_value": false,
+   "text": "Multi-scale quantization has recently emerged as a promising paradigm to address varying runtime constraints ( Kwon et al., 2025 ) .\nIt maintains a single quantized model capable of supporting inference at multiple precisions, thereby offering flexible accuracy-efficiency trade-offs.\nAny-Precision DNN ( Yu et al., 2021 ) first proposes this concept in convolutional neural networks.\nAny-Precision LLM ( Park et al., 2024 ) introduces multi-scale quantization to LLM, featuring a codebook-based non-uniform quantization and a specialized GPU software engine.\nDP-LLM ( Kwon et al., 2025 ) further improves Any-Precision LLM by dynamically assigning different bit-widths to layers based on their relative quantization error.\nHowever, the codebook-based non-uniform quantization incurs significant table-lookup overhead for weight dequantization.\nMatryoshka Quantization ( Nair et al., 2025 ) proposes a uniform multi-scale quantization technique.\nHowever, it requires an extra bit for rounding, diminishing the memory bandwidth saving.\nMoreover, all these methods ignore the dynamic importance of experts in MoE.\nA comparison of these methods with our MatMoE is presented in Table 1 . Comparison of existing multi-scale quantization works with our proposed method.",
+   "text_with_context": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference | Background > Multi-Scale Quantization\n\nMulti-scale quantization has recently emerged as a promising paradigm to address varying runtime constraints ( Kwon et al., 2025 ) .\nIt maintains a single quantized model capable of supporting inference at multiple precisions, thereby offering flexible accuracy-efficiency trade-offs.\nAny-Precision DNN ( Yu et al., 2021 ) first proposes this concept in convolutional neural networks.\nAny-Precision LLM ( Park et al., 2024 ) introduces multi-scale quantization to LLM, featuring a codebook-based non-uniform quantization and a specialized GPU software engine.\nDP-LLM ( Kwon et al., 2025 ) further improves Any-Precision LLM by dynamically assigning different bit-widths to layers based on their relative quantization error.\nHowever, the codebook-based non-uniform quantization incurs significant table-lookup overhead for weight dequantization.\nMatryoshka Quantization ( Nair et al., 2025 ) proposes a uniform multi-scale quantization technique.\nHowever, it requires an extra bit for rounding, diminishing the memory bandwidth saving.\nMoreover, all these methods ignore the dynamic importance of experts in MoE.\nA comparison of these methods with our MatMoE is presented in Table 1 . Comparison of existing multi-scale quantization works with our proposed method.",
+   "title": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01704v1#S2.SS3",
+   "pdf_url": "https://arxiv.org/pdf/2611.01704v1",
+   "source_sha256": "1597882722838f7bd983a0b5b4bb1f5c9adcbcce662fd62328515d71eba899de"
+  },
+  {
+   "chunk_id": "2611.01704v1_c0020",
+   "arxiv_id": "2611.01704v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01704v1#S5.SS2",
+   "section": "experiment",
+   "subsection": "accuracy evaluation",
+   "high_value": true,
+   "text": "Accuracy of FP16 models. Accuracy comparison under 3-bit memory budget. Accuracy comparison under 4-bit memory budget. Latency comparison on Raspberry Pi 5 across three models at different target precisions. We first present the accuracy of the FP16 model on three benchmarks in Table 4 .\nWe demonstrate the accuracy of PMQ and our MatMoE under 3-bit and 4-bit memory budgets in Table 5 and Table 6 , respectively.\nMatMoE consistently exhibits superior performance over the SOTA method PMQ.\nSpecifically, under 3-bit memory budget, MatMoE achieves 4.0% to 9.8% average accuracy improvement across three models.\nUnder 4-bit memory budget, MatMoE\nachieves 7.5% to 18.3% average accuracy improvement across three models.\nThe substantial accuracy improvement is attributed to MatMoE’s capability to dynamically allocate bit-widths to experts based on their importance.\nIt is also worth noting that PMQ necessitates storing multiple models for different target precisions, whereas our method natively supports these diverse target precisions using only a single model.",
+   "text_with_context": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference | Experiment > Accuracy Evaluation\n\nAccuracy of FP16 models. Accuracy comparison under 3-bit memory budget. Accuracy comparison under 4-bit memory budget. Latency comparison on Raspberry Pi 5 across three models at different target precisions. We first present the accuracy of the FP16 model on three benchmarks in Table 4 .\nWe demonstrate the accuracy of PMQ and our MatMoE under 3-bit and 4-bit memory budgets in Table 5 and Table 6 , respectively.\nMatMoE consistently exhibits superior performance over the SOTA method PMQ.\nSpecifically, under 3-bit memory budget, MatMoE achieves 4.0% to 9.8% average accuracy improvement across three models.\nUnder 4-bit memory budget, MatMoE\nachieves 7.5% to 18.3% average accuracy improvement across three models.\nThe substantial accuracy improvement is attributed to MatMoE’s capability to dynamically allocate bit-widths to experts based on their importance.\nIt is also worth noting that PMQ necessitates storing multiple models for different target precisions, whereas our method natively supports these diverse target precisions using only a single model.",
+   "title": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01704v1#S5.SS2",
+   "pdf_url": "https://arxiv.org/pdf/2611.01704v1",
+   "source_sha256": "1597882722838f7bd983a0b5b4bb1f5c9adcbcce662fd62328515d71eba899de"
+  },
+  {
+   "chunk_id": "2611.01704v1_c0011",
+   "arxiv_id": "2611.01704v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01704v1#S4.SS2",
+   "section": "method",
+   "subsection": "matryoshka moe ptq algorithm",
+   "high_value": false,
+   "text": "In order to enable experts to perform well at different precisions under the strict memory budget of edge devices, we propose the Matryoshka MoE PTQ algorithm, which consists of two stages. Stage 1: Determine the maximum allowable precision for each expert. Given a strict memory budget on edge devices, we first allocate the maximum allowable precision to each expert, aiming to minimize quantization loss while satisfying the memory constraint.\nIn contrast to PMQ ( Huang et al., 2025a ) , which relies on\na heuristic metric to guide bit-width allocation, we propose a more principled metric derived directly from the MoE layer’s output.\nSpecifically, the quantization loss of the MoE layer can be approximated using a second-order Taylor expansion as follows: where N is the number of activated experts, W_{i} is the weight of the i -th expert, Q(\\cdot) is the quantization function, r_{i} and H_{i} are the routing score and the Hessian value\nof the i -th expert, respectively.\nGiven the prohibitive memory and computational overhead of computing the exact Hessian matrix, we approximate it using the Fisher Information Matrix following ( Kim et al., 2023 ) as below: where g represents the gradient of weights and D is the calibration dataset.\nTherefore, our proposed metric for each expert, i.e., r_{i}\\cdot H_{i}\\left[W_{i}-Q(W_{i})\\right]^{2} , can be calculated offline based on a calibration dataset.\nBased on this metric,\nwe determine the maximum precision allocation leveraging Integer Linear Programming (ILP) optimization, which only takes a few seconds to finish.",
+   "text_with_context": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference | Method > Matryoshka Moe Ptq Algorithm\n\nIn order to enable experts to perform well at different precisions under the strict memory budget of edge devices, we propose the Matryoshka MoE PTQ algorithm, which consists of two stages. Stage 1: Determine the maximum allowable precision for each expert. Given a strict memory budget on edge devices, we first allocate the maximum allowable precision to each expert, aiming to minimize quantization loss while satisfying the memory constraint.\nIn contrast to PMQ ( Huang et al., 2025a ) , which relies on\na heuristic metric to guide bit-width allocation, we propose a more principled metric derived directly from the MoE layer’s output.\nSpecifically, the quantization loss of the MoE layer can be approximated using a second-order Taylor expansion as follows: where N is the number of activated experts, W_{i} is the weight of the i -th expert, Q(\\cdot) is the quantization function, r_{i} and H_{i} are the routing score and the Hessian value\nof the i -th expert, respectively.\nGiven the prohibitive memory and computational overhead of computing the exact Hessian matrix, we approximate it using the Fisher Information Matrix following ( Kim et al., 2023 ) as below: where g represents the gradient of weights and D is the calibration dataset.\nTherefore, our proposed metric for each expert, i.e., r_{i}\\cdot H_{i}\\left[W_{i}-Q(W_{i})\\right]^{2} , can be calculated offline based on a calibration dataset.\nBased on this metric,\nwe determine the maximum precision allocation leveraging Integer Linear Programming (ILP) optimization, which only takes a few seconds to finish.",
+   "title": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01704v1#S4.SS2",
+   "pdf_url": "https://arxiv.org/pdf/2611.01704v1",
+   "source_sha256": "1597882722838f7bd983a0b5b4bb1f5c9adcbcce662fd62328515d71eba899de"
+  },
+  {
+   "chunk_id": "2611.01704v1_c0003",
+   "arxiv_id": "2611.01704v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01704v1#S1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": "Any-Precision LLM ( Park et al., 2024 ) and DP-LLM ( Kwon et al., 2025 ) are codebook-based non-uniform quantization methods, incurring significant table-lookup overhead for dequantization during inference.\nAlthough Matryoshka Quantization ( Nair et al., 2025 ) leverages a uniform quantization method,\nit requires an extra bit for rounding,\nthereby resulting in redundant memory access. To tackle these challenges,\nwe propose Matryoshka Mixture-of-Experts (MatMoE),\na dynamic mixed-precision quantization framework for efficient MoE inference featuring algorithm-system co-design.\nFirst, given a stringent memory budget,\nwe propose the Matryoshka MoE PTQ algorithm,\nto derive a parent MoE model, which\nenables experts to operate flexibly at multiple precisions.\nSecond, to address the inefficiency in memory access,\nwe propose the floor-and-compensation quantization method\nthat eliminates the need for an extra rounding bit.\nThird, during inference,\nwe propose a dynamic bit-width allocation strategy that adaptively assigns different bit-widths to experts at runtime to satisfy the dynamic latency constraint.\nFinally, we implement our MatMoE system on top of llama.cpp ( ggml-org, 2026 ) for both CPU and GPU platforms.\nExtensive experimental results demonstrate that\nMatMoE achieves a superior accuracy-efficiency trade-off compared to the state-of-the-art (SOTA) static mixed-precision quantization method.\nOur key contributions are as follows: We observe that expert importance is dynamic across decoding steps in MoE models and propose a Matryoshka",
+   "text_with_context": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference | Introduction\n\nAny-Precision LLM ( Park et al., 2024 ) and DP-LLM ( Kwon et al., 2025 ) are codebook-based non-uniform quantization methods, incurring significant table-lookup overhead for dequantization during inference.\nAlthough Matryoshka Quantization ( Nair et al., 2025 ) leverages a uniform quantization method,\nit requires an extra bit for rounding,\nthereby resulting in redundant memory access. To tackle these challenges,\nwe propose Matryoshka Mixture-of-Experts (MatMoE),\na dynamic mixed-precision quantization framework for efficient MoE inference featuring algorithm-system co-design.\nFirst, given a stringent memory budget,\nwe propose the Matryoshka MoE PTQ algorithm,\nto derive a parent MoE model, which\nenables experts to operate flexibly at multiple precisions.\nSecond, to address the inefficiency in memory access,\nwe propose the floor-and-compensation quantization method\nthat eliminates the need for an extra rounding bit.\nThird, during inference,\nwe propose a dynamic bit-width allocation strategy that adaptively assigns different bit-widths to experts at runtime to satisfy the dynamic latency constraint.\nFinally, we implement our MatMoE system on top of llama.cpp ( ggml-org, 2026 ) for both CPU and GPU platforms.\nExtensive experimental results demonstrate that\nMatMoE achieves a superior accuracy-efficiency trade-off compared to the state-of-the-art (SOTA) static mixed-precision quantization method.\nOur key contributions are as follows: We observe that expert importance is dynamic across decoding steps in MoE models and propose a Matryoshka",
+   "title": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01704v1#S1",
+   "pdf_url": "https://arxiv.org/pdf/2611.01704v1",
+   "source_sha256": "1597882722838f7bd983a0b5b4bb1f5c9adcbcce662fd62328515d71eba899de"
+  },
+  {
+   "chunk_id": "2611.01704v1_c0001",
+   "arxiv_id": "2611.01704v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01704v1#S1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": "Mixture-of-Experts (MoE) architecture ( Dai et al., 2024 ; Liu et al., 2024a ; Liu et al., 2024b ; Team et al., 2024 ; Yang et al., 2025 ) has been widely\nadopted in Large Language Models (LLMs).\nBy dynamically activating only a small subset of experts for each token, MoE models achieve better scalability and performance than dense LLMs with comparable active parameter counts.\nHowever, their large model size incurs substantial memory overhead, hindering deployment on resource-constrained edge devices. Quantization is an effective way to reduce the model size.\nCompared to uniform bit-width quantization, mixed-precision quantization ( Dong et al., 2019 ; Dong et al., 2020 ; Yao et al., 2021 ) can achieve better performance under the same memory budget by selectively assigning higher bit-widths to the more critical layers.\nRecent studies have focused on mixed-precision quantization on MoE models ( Yi et al., 2023 ; Hu et al., 2025 ; Huang et al., 2025b ; Fu et al., 2025 ; Li et al., 2024 ; Huang et al., 2025a ) .\nThey observe that experts are not equally important and assign different bit-widths to experts according to their importance.\nHowever, these methods are static, i.e., determining the bit-width allocation strategy based on a calibration dataset and fixing it throughout the decoding steps.\nYet, we observe that the expert importance varies across decoding steps.\nAs shown in Fig. 1 , the static mixed-precision quantization cannot adapt to the dynamic importance of experts, resulting in suboptimal performance.\nHow to dynamically allocate different bit-widths according to the varying importance of experts remains an important open-ended question. MoE architecture and the comparison between the static and our proposed dynamic mixed-precision quantization.",
+   "text_with_context": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference | Introduction\n\nMixture-of-Experts (MoE) architecture ( Dai et al., 2024 ; Liu et al., 2024a ; Liu et al., 2024b ; Team et al., 2024 ; Yang et al., 2025 ) has been widely\nadopted in Large Language Models (LLMs).\nBy dynamically activating only a small subset of experts for each token, MoE models achieve better scalability and performance than dense LLMs with comparable active parameter counts.\nHowever, their large model size incurs substantial memory overhead, hindering deployment on resource-constrained edge devices. Quantization is an effective way to reduce the model size.\nCompared to uniform bit-width quantization, mixed-precision quantization ( Dong et al., 2019 ; Dong et al., 2020 ; Yao et al., 2021 ) can achieve better performance under the same memory budget by selectively assigning higher bit-widths to the more critical layers.\nRecent studies have focused on mixed-precision quantization on MoE models ( Yi et al., 2023 ; Hu et al., 2025 ; Huang et al., 2025b ; Fu et al., 2025 ; Li et al., 2024 ; Huang et al., 2025a ) .\nThey observe that experts are not equally important and assign different bit-widths to experts according to their importance.\nHowever, these methods are static, i.e., determining the bit-width allocation strategy based on a calibration dataset and fixing it throughout the decoding steps.\nYet, we observe that the expert importance varies across decoding steps.\nAs shown in Fig. 1 , the static mixed-precision quantization cannot adapt to the dynamic importance of experts, resulting in suboptimal performance.\nHow to dynamically allocate different bit-widths according to the varying importance of experts remains an important open-ended question. MoE architecture and the comparison between the static and our proposed dynamic mixed-precision quantization.",
+   "title": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01704v1#S1",
+   "pdf_url": "https://arxiv.org/pdf/2611.01704v1",
+   "source_sha256": "1597882722838f7bd983a0b5b4bb1f5c9adcbcce662fd62328515d71eba899de"
+  },
+  {
+   "chunk_id": "2611.01704v1_c0002",
+   "arxiv_id": "2611.01704v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01704v1#S1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": "How to dynamically allocate different bit-widths according to the varying importance of experts remains an important open-ended question. MoE architecture and the comparison between the static and our proposed dynamic mixed-precision quantization.\nStatic method assigns each expert a fixed bit-width offline, regardless of the input token. In contrast, our method dynamically assigns higher precision to more important activated experts and lower precision to less important ones. Furthermore, static quantization methods inherently fail to accommodate the dynamic latency constraints of edge devices, where fluctuating system utilization dictates variable performance targets ( Kwon et al., 2025 ) .\nRestricted to a fixed bit-width allocation, these static methods lack runtime adaptability.\nWhile multi-scale quantization ( Park et al., 2024 ; Nair et al., 2025 ; Kwon et al., 2025 ) has emerged as an effective solution for runtime model adaptation by overlaying multiple bit-width variants within a single model, existing works are tailored for dense LLMs and exhibit three critical limitations.\nFirst, they adjust the precision at a coarse model-level ( Park et al., 2024 ) or layer-level ( Kwon et al., 2025 ; Nair et al., 2025 ) ,\nwhich is suboptimal for MoE models.\nSecond, they either lack an automated mechanism ( Park et al., 2024 ; Nair et al., 2025 ) or require an expensive fine-tuning process ( Kwon et al., 2025 ) to determine the precision.\nThird, they introduce severe hardware inefficiencies.\nAny-Precision LLM ( Park et al., 2024 ) and DP-LLM ( Kwon et al., 2025 ) are codebook-based non-uniform quantization methods, incurring significant table-lookup overhead for dequantization during inference.",
+   "text_with_context": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference | Introduction\n\nHow to dynamically allocate different bit-widths according to the varying importance of experts remains an important open-ended question. MoE architecture and the comparison between the static and our proposed dynamic mixed-precision quantization.\nStatic method assigns each expert a fixed bit-width offline, regardless of the input token. In contrast, our method dynamically assigns higher precision to more important activated experts and lower precision to less important ones. Furthermore, static quantization methods inherently fail to accommodate the dynamic latency constraints of edge devices, where fluctuating system utilization dictates variable performance targets ( Kwon et al., 2025 ) .\nRestricted to a fixed bit-width allocation, these static methods lack runtime adaptability.\nWhile multi-scale quantization ( Park et al., 2024 ; Nair et al., 2025 ; Kwon et al., 2025 ) has emerged as an effective solution for runtime model adaptation by overlaying multiple bit-width variants within a single model, existing works are tailored for dense LLMs and exhibit three critical limitations.\nFirst, they adjust the precision at a coarse model-level ( Park et al., 2024 ) or layer-level ( Kwon et al., 2025 ; Nair et al., 2025 ) ,\nwhich is suboptimal for MoE models.\nSecond, they either lack an automated mechanism ( Park et al., 2024 ; Nair et al., 2025 ) or require an expensive fine-tuning process ( Kwon et al., 2025 ) to determine the precision.\nThird, they introduce severe hardware inefficiencies.\nAny-Precision LLM ( Park et al., 2024 ) and DP-LLM ( Kwon et al., 2025 ) are codebook-based non-uniform quantization methods, incurring significant table-lookup overhead for dequantization during inference.",
+   "title": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01704v1#S1",
+   "pdf_url": "https://arxiv.org/pdf/2611.01704v1",
+   "source_sha256": "1597882722838f7bd983a0b5b4bb1f5c9adcbcce662fd62328515d71eba899de"
+  },
+  {
+   "chunk_id": "2611.01704v1_c0009",
+   "arxiv_id": "2611.01704v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01704v1#S3",
+   "section": "motivation",
+   "subsection": "",
+   "high_value": false,
+   "text": "Multi-scale quantization has been proposed as an effective solution.\nHowever, existing works are designed for dense LLMs, which exhibit the following limitations.\nFirst, they adjust the precision at the model-level ( Park et al., 2024 ) or layer-level ( Kwon et al., 2025 ; Nair et al., 2025 ) ,\nwhich incurs suboptimal performance for MoE models.\nSecond, they either lack an automated mechanism for determining the precision ( Park et al., 2024 ; Nair et al., 2025 ) or require a costly fine-tuning process ( Kwon et al., 2025 ) .\nConsequently, this motivates us to develop a multi-scale quantization method tailored for MoE models with an efficient precision determination mechanism. Motivation 3: Redundant memory access in the Matryoshka representation. Although Matryoshka Quantization ( Nair et al., 2025 ) adopts a uniform quantization scheme to avoid the significant table-lookup overhead in Any-Precision LLM ( Park et al., 2024 ) and DP-LLM ( Kwon et al., 2025 ) ,\nit has a fundamental limitation that relies on an auxiliary rounding bit, which inadvertently leads to redundant memory accesses.\nFor example, deriving a 2-bit quantized weight from a 4-bit weight requires fetching the 3rd bit to correctly resolve the rounding logic.\nConsequently, 2-bit inference requires 3-bit memory access, degrading the theoretical speedup from 2\\times down to 1.33\\times .\nWorse still, extracting 3 bits forces a full 4-bit memory access, completely neutralizing any potential throughput improvement.\nOn the other hand, naively truncating the first 2 bits will lead to significant accuracy degradation.\nThis dilemma highlights the urgent need for a novel quantization paradigm that secures accurate inference without the redundant memory access of the extra rounding bit.",
+   "text_with_context": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference | Motivation\n\nMulti-scale quantization has been proposed as an effective solution.\nHowever, existing works are designed for dense LLMs, which exhibit the following limitations.\nFirst, they adjust the precision at the model-level ( Park et al., 2024 ) or layer-level ( Kwon et al., 2025 ; Nair et al., 2025 ) ,\nwhich incurs suboptimal performance for MoE models.\nSecond, they either lack an automated mechanism for determining the precision ( Park et al., 2024 ; Nair et al., 2025 ) or require a costly fine-tuning process ( Kwon et al., 2025 ) .\nConsequently, this motivates us to develop a multi-scale quantization method tailored for MoE models with an efficient precision determination mechanism. Motivation 3: Redundant memory access in the Matryoshka representation. Although Matryoshka Quantization ( Nair et al., 2025 ) adopts a uniform quantization scheme to avoid the significant table-lookup overhead in Any-Precision LLM ( Park et al., 2024 ) and DP-LLM ( Kwon et al., 2025 ) ,\nit has a fundamental limitation that relies on an auxiliary rounding bit, which inadvertently leads to redundant memory accesses.\nFor example, deriving a 2-bit quantized weight from a 4-bit weight requires fetching the 3rd bit to correctly resolve the rounding logic.\nConsequently, 2-bit inference requires 3-bit memory access, degrading the theoretical speedup from 2\\times down to 1.33\\times .\nWorse still, extracting 3 bits forces a full 4-bit memory access, completely neutralizing any potential throughput improvement.\nOn the other hand, naively truncating the first 2 bits will lead to significant accuracy degradation.\nThis dilemma highlights the urgent need for a novel quantization paradigm that secures accurate inference without the redundant memory access of the extra rounding bit.",
+   "title": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01704v1#S3",
+   "pdf_url": "https://arxiv.org/pdf/2611.01704v1",
+   "source_sha256": "1597882722838f7bd983a0b5b4bb1f5c9adcbcce662fd62328515d71eba899de"
+  },
+  {
+   "chunk_id": "2611.01704v1_c0025",
+   "arxiv_id": "2611.01704v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01704v1#S6",
+   "section": "conclusion",
+   "subsection": "",
+   "high_value": true,
+   "text": "In this paper,\nwe propose MatMoE,\na dynamic mixed-precision quantization framework for efficient MoE inference.\nMatMoE enables experts to adaptively operate at the optimal precision based on their dynamic importance through our Matryoshka MoE PTQ algorithm and dynamic bit-width allocation,\nthus achieving better performance.\nMatMoE also achieves superior inference efficiency\ndue to our floor-and-compensation quantization and efficient system implementation.\nCompared to llama.cpp, MatMoE delivers end-to-end speedups of 1.3\\times\\sim 3.7\\times on the CPU platform and 1.2\\times\\sim 1.3\\times on the GPU platform.\nMatMoE demonstrates 4.0\\%\\sim 18.3\\% higher average accuracy across three modern MoE models compared to SOTA static mixed-precision quantization method.",
+   "text_with_context": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference | Conclusion\n\nIn this paper,\nwe propose MatMoE,\na dynamic mixed-precision quantization framework for efficient MoE inference.\nMatMoE enables experts to adaptively operate at the optimal precision based on their dynamic importance through our Matryoshka MoE PTQ algorithm and dynamic bit-width allocation,\nthus achieving better performance.\nMatMoE also achieves superior inference efficiency\ndue to our floor-and-compensation quantization and efficient system implementation.\nCompared to llama.cpp, MatMoE delivers end-to-end speedups of 1.3\\times\\sim 3.7\\times on the CPU platform and 1.2\\times\\sim 1.3\\times on the GPU platform.\nMatMoE demonstrates 4.0\\%\\sim 18.3\\% higher average accuracy across three modern MoE models compared to SOTA static mixed-precision quantization method.",
+   "title": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01704v1#S6",
+   "pdf_url": "https://arxiv.org/pdf/2611.01704v1",
+   "source_sha256": "1597882722838f7bd983a0b5b4bb1f5c9adcbcce662fd62328515d71eba899de"
+  },
+  {
+   "chunk_id": "2410.16285v1_c0005",
+   "arxiv_id": "2410.16285v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2410.16285v1#S1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": ". Furthermore, they all rely on communication between a provider and a customer/client. These are all tasks that automated LLM agents are designed to accomplish. However, their ability to do so effectively, particularly when compared to humans, remains unclear. Answering these questions is significant, as, due to the applicability of automated LLM agents to help desk and professional consultation tasks, it stands to reason that there may be substantial impacts to the human workforce that already exists. In the US, almost 3 million people were employed as customer service representatives in 2023, earning a median hourly wage of $19.08 ( noa, 2024d ) . These positions may face potential redundancies as automation within the sector increases. In 2021, the global help desk software market was valued at $9.9 billion and is expected to grow at a compound annual growth rate of 9.4%, reaching $26.8 billion by 2032 ( Saha, 2022 ) . Much of this growth is being driven by the demand for cloud-based solutions, which further stands to put existing jobs at risk. Moreover, businesses in the US alone risk losing $846 billion worth of sales because of poor customer service ( Fitzpatrick, 2024 ) , as studies have shown that 80% of customers are likely to switch service providers after more than one bad experience with a brand ( O’Brien, 2024 ) . Because of the high potential human and financial costs associated with the help desk, customer support, and professional consultation industries, it is imperative that the quality of assistance remains high, regardless of the extent to which automation becomes incorporated",
+   "text_with_context": "Assessing the Performance of Human-Capable LLMs -- Are LLMs Coming for Your Job? | Introduction\n\n. Furthermore, they all rely on communication between a provider and a customer/client. These are all tasks that automated LLM agents are designed to accomplish. However, their ability to do so effectively, particularly when compared to humans, remains unclear. Answering these questions is significant, as, due to the applicability of automated LLM agents to help desk and professional consultation tasks, it stands to reason that there may be substantial impacts to the human workforce that already exists. In the US, almost 3 million people were employed as customer service representatives in 2023, earning a median hourly wage of $19.08 ( noa, 2024d ) . These positions may face potential redundancies as automation within the sector increases. In 2021, the global help desk software market was valued at $9.9 billion and is expected to grow at a compound annual growth rate of 9.4%, reaching $26.8 billion by 2032 ( Saha, 2022 ) . Much of this growth is being driven by the demand for cloud-based solutions, which further stands to put existing jobs at risk. Moreover, businesses in the US alone risk losing $846 billion worth of sales because of poor customer service ( Fitzpatrick, 2024 ) , as studies have shown that 80% of customers are likely to switch service providers after more than one bad experience with a brand ( O’Brien, 2024 ) . Because of the high potential human and financial costs associated with the help desk, customer support, and professional consultation industries, it is imperative that the quality of assistance remains high, regardless of the extent to which automation becomes incorporated",
+   "title": "Assessing the Performance of Human-Capable LLMs -- Are LLMs Coming for Your Job?",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2410.16285v1#S1",
+   "pdf_url": "https://arxiv.org/pdf/2410.16285v1",
+   "source_sha256": "4f3e8bee6734ae3038a0a10df4b84ff3471026f1b79570ec54f28f8652bf09c8"
+  },
+  {
+   "chunk_id": "2611.01704v1_c0016",
+   "arxiv_id": "2611.01704v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01704v1#S4.SS5",
+   "section": "method",
+   "subsection": "system implementation",
+   "high_value": false,
+   "text": "We design our MatMoE system on both CPU and GPU based on llama.cpp ( ggml-org, 2026 ) ,\nwhich is the most widely used LLM inference engine for edge devices.\nThe overall system implementation of MatMoE is illustrated in Fig. 6 .\nTo facilitate efficient memory access for variable bit-widths, we adopt a bitplane-based representation ( Park et al., 2024 ; Wei et al., 2025 ) for the expert weights.\nDuring inference, the execution precision of each expert is dynamically dictated by whether its routing score surpasses a pre-determined threshold (Sec. 4.4 ).\nAt the core of our compute engine, we develop highly optimized GEMV kernels tailored for both CPU and GPU platforms, as detailed below.\nAfter the main computation,\nwe apply a lightweight compensation term to the\noutput of the low-precision experts (Sec. 4.3 ). On CPU, we develop a LUT-based compute engine.\nThe LUT-based GEMV kernel is first proposed in T-MAC ( Wei et al., 2025 ) for dense LLM.\nDuring inference, it precomputes all possible products between the activation and all binary patterns, constructing a LUT.\nThe binary matrices of weights serve as indices to retrieve the precomputed results from the LUT, which are then accumulated to obtain the final output.\nHowever, it does not support MoE computation.\nTo overcome this, we modify the kernel for MoE by introducing fine-grained, expert-level address offset control.\nFurthermore, we share the LUT between the gate projection and the up projection of different experts to avoid redundant precomputation and storage overhead, since they receive identical input. On GPU, we develop our efficient GPU compute engine.\nSince table lookup operation incurs severe memory bank conflicts on GPU,\nwe adopt a computation strategy fundamentally distinct from the CPU engine.",
+   "text_with_context": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference | Method > System Implementation\n\nWe design our MatMoE system on both CPU and GPU based on llama.cpp ( ggml-org, 2026 ) ,\nwhich is the most widely used LLM inference engine for edge devices.\nThe overall system implementation of MatMoE is illustrated in Fig. 6 .\nTo facilitate efficient memory access for variable bit-widths, we adopt a bitplane-based representation ( Park et al., 2024 ; Wei et al., 2025 ) for the expert weights.\nDuring inference, the execution precision of each expert is dynamically dictated by whether its routing score surpasses a pre-determined threshold (Sec. 4.4 ).\nAt the core of our compute engine, we develop highly optimized GEMV kernels tailored for both CPU and GPU platforms, as detailed below.\nAfter the main computation,\nwe apply a lightweight compensation term to the\noutput of the low-precision experts (Sec. 4.3 ). On CPU, we develop a LUT-based compute engine.\nThe LUT-based GEMV kernel is first proposed in T-MAC ( Wei et al., 2025 ) for dense LLM.\nDuring inference, it precomputes all possible products between the activation and all binary patterns, constructing a LUT.\nThe binary matrices of weights serve as indices to retrieve the precomputed results from the LUT, which are then accumulated to obtain the final output.\nHowever, it does not support MoE computation.\nTo overcome this, we modify the kernel for MoE by introducing fine-grained, expert-level address offset control.\nFurthermore, we share the LUT between the gate projection and the up projection of different experts to avoid redundant precomputation and storage overhead, since they receive identical input. On GPU, we develop our efficient GPU compute engine.\nSince table lookup operation incurs severe memory bank conflicts on GPU,\nwe adopt a computation strategy fundamentally distinct from the CPU engine.",
+   "title": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01704v1#S4.SS5",
+   "pdf_url": "https://arxiv.org/pdf/2611.01704v1",
+   "source_sha256": "1597882722838f7bd983a0b5b4bb1f5c9adcbcce662fd62328515d71eba899de"
+  },
+  {
+   "chunk_id": "2611.01704v1_c0022",
+   "arxiv_id": "2611.01704v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01704v1#S5.SS4",
+   "section": "experiment",
+   "subsection": "ablation study",
+   "high_value": false,
+   "text": "Effects of individual components. To evaluate the contribution of each component, we compare four configurations in Table 7 . Optimized low-bit kernels. We first replace the original llama.cpp backend of PMQ with our optimized low-bit kernels while retaining its static mixed-precision allocation.\nPMQ + Our Kernels reduces the average TPOT from 80.3 to 27.4 ms/token, corresponding to a 2.93\\times speedup over PMQ + llama.cpp. Meanwhile, the two configurations achieve identical accuracy. These results demonstrate that our optimized kernels substantially improve execution efficiency without affecting the numerical behavior. Dynamic bit-width allocation. Under the same optimized backend, PMQ + Our Kernels and our MatMoE achieve similar TPOTs.\nHowever, MatMoE improves the average accuracy from 22.8% to 35.3%, demonstrating the effectiveness of MatMoE’s dynamic allocation strategy, which adapts expert bit-widths to token-level routing importance during decoding. Floor-and-compensation. To evaluate the contribution of floor-and-compensation, we construct Matryoshka + Dynamic, which combines the original Matryoshka quantization scheme with our dynamic bit-width allocation.\nUnlike MatMoE, this baseline requires accessing an additional bitplane for rounding.\nCompared with this baseline, MatMoE reduces the average TPOT from 30.5 to 27.6 ms/token, while slightly improving the average accuracy from 34.4% to 35.3%.",
+   "text_with_context": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference | Experiment > Ablation Study\n\nEffects of individual components. To evaluate the contribution of each component, we compare four configurations in Table 7 . Optimized low-bit kernels. We first replace the original llama.cpp backend of PMQ with our optimized low-bit kernels while retaining its static mixed-precision allocation.\nPMQ + Our Kernels reduces the average TPOT from 80.3 to 27.4 ms/token, corresponding to a 2.93\\times speedup over PMQ + llama.cpp. Meanwhile, the two configurations achieve identical accuracy. These results demonstrate that our optimized kernels substantially improve execution efficiency without affecting the numerical behavior. Dynamic bit-width allocation. Under the same optimized backend, PMQ + Our Kernels and our MatMoE achieve similar TPOTs.\nHowever, MatMoE improves the average accuracy from 22.8% to 35.3%, demonstrating the effectiveness of MatMoE’s dynamic allocation strategy, which adapts expert bit-widths to token-level routing importance during decoding. Floor-and-compensation. To evaluate the contribution of floor-and-compensation, we construct Matryoshka + Dynamic, which combines the original Matryoshka quantization scheme with our dynamic bit-width allocation.\nUnlike MatMoE, this baseline requires accessing an additional bitplane for rounding.\nCompared with this baseline, MatMoE reduces the average TPOT from 30.5 to 27.6 ms/token, while slightly improving the average accuracy from 34.4% to 35.3%.",
+   "title": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01704v1#S5.SS4",
+   "pdf_url": "https://arxiv.org/pdf/2611.01704v1",
+   "source_sha256": "1597882722838f7bd983a0b5b4bb1f5c9adcbcce662fd62328515d71eba899de"
+  },
+  {
+   "chunk_id": "2611.01704v1_c0004",
+   "arxiv_id": "2611.01704v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01704v1#S1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": "Our key contributions are as follows: We observe that expert importance is dynamic across decoding steps in MoE models and propose a Matryoshka\nMoE PTQ algorithm to construct a parent model that inherently supports multi-precision expert execution. We propose the floor-and-compensation quantization method to eliminate the redundant memory access in the Matryoshka representation. We propose a dynamic bit-width allocation strategy that determines the optimal precisions to individual experts at runtime during inference. We implement an efficient MoE inference system for both CPU and GPU platforms.\nCompared to the llama.cpp baseline, MatMoE delivers 1.3\\times\\sim 3.7\\times end-to-end speedup on Raspberry Pi 5, and 1.2\\times\\sim 1.3\\times speedup on NVIDIA RTX 4090 and Jetson AGX Orin. We evaluate MatMoE on three modern MoE models across three challenging generative benchmarks.\nMatMoE achieves 4.0\\%\\sim 18.3\\% average accuracy improvement compared to the SOTA static mixed-precision quantization method.",
+   "text_with_context": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference | Introduction\n\nOur key contributions are as follows: We observe that expert importance is dynamic across decoding steps in MoE models and propose a Matryoshka\nMoE PTQ algorithm to construct a parent model that inherently supports multi-precision expert execution. We propose the floor-and-compensation quantization method to eliminate the redundant memory access in the Matryoshka representation. We propose a dynamic bit-width allocation strategy that determines the optimal precisions to individual experts at runtime during inference. We implement an efficient MoE inference system for both CPU and GPU platforms.\nCompared to the llama.cpp baseline, MatMoE delivers 1.3\\times\\sim 3.7\\times end-to-end speedup on Raspberry Pi 5, and 1.2\\times\\sim 1.3\\times speedup on NVIDIA RTX 4090 and Jetson AGX Orin. We evaluate MatMoE on three modern MoE models across three challenging generative benchmarks.\nMatMoE achieves 4.0\\%\\sim 18.3\\% average accuracy improvement compared to the SOTA static mixed-precision quantization method.",
+   "title": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01704v1#S1",
+   "pdf_url": "https://arxiv.org/pdf/2611.01704v1",
+   "source_sha256": "1597882722838f7bd983a0b5b4bb1f5c9adcbcce662fd62328515d71eba899de"
+  },
+  {
+   "chunk_id": "2611.01704v1_c0023",
+   "arxiv_id": "2611.01704v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01704v1#S5.SS4",
+   "section": "experiment",
+   "subsection": "ablation study",
+   "high_value": false,
+   "text": "Unlike MatMoE, this baseline requires accessing an additional bitplane for rounding.\nCompared with this baseline, MatMoE reduces the average TPOT from 30.5 to 27.6 ms/token, while slightly improving the average accuracy from 34.4% to 35.3%.\nThis confirms that F&C eliminates redundant rounding-bit accesses without compromising model accuracy. Latency and accuracy comparison under 4-bit memory budget. We evaluate OLMoE on GSM8k-CoT on Raspberry Pi 5 with 4-thread inference. Offloading efficiency. When a model’s parameter size exceeds the available DRAM capacity, a portion of its weights must be offloaded to SSD storage.\nMatMoE is also effective in this regime because its nested bitplane representation reduces the amount of expert data transferred between SSD and DRAM.\nTo evaluate its offloading efficiency, we conduct experiments on Qwen3-30B-A3B ( Yang et al., 2025 ) using a least-recently-used (LRU) cache replacement policy.\nThe cache capacity is set to accommodate all non-expert weights and 25% of the experts at 4-bit precision.\nWe compare MatMoE with HOBBIT ( Tang et al., 2024 ) , a state-of-the-art expert offloading method that stores multiple precision experts and dynamically loads high- or low-precision experts according to their importance.\nSince HOBBIT does not provide its source code, we implement a simulator to evaluate the end-to-end latency.\nAs shown in Fig. 10 , MatMoE achieves substantial end-to-end speedups over HOBBIT under offloading.\nAcross different target precisions, HOBBIT requires 493.06\\sim 661.23 ms/token on Raspberry Pi 5, whereas MatMoE requires only 243.78\\sim 579.71 ms/token, corresponding to a 1.1\\times\\sim 2.0\\times speedup.\nThe speedup stems from the reduced SSD-to-DRAM traffic when the required precision of an expert changes across tokens.",
+   "text_with_context": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference | Experiment > Ablation Study\n\nUnlike MatMoE, this baseline requires accessing an additional bitplane for rounding.\nCompared with this baseline, MatMoE reduces the average TPOT from 30.5 to 27.6 ms/token, while slightly improving the average accuracy from 34.4% to 35.3%.\nThis confirms that F&C eliminates redundant rounding-bit accesses without compromising model accuracy. Latency and accuracy comparison under 4-bit memory budget. We evaluate OLMoE on GSM8k-CoT on Raspberry Pi 5 with 4-thread inference. Offloading efficiency. When a model’s parameter size exceeds the available DRAM capacity, a portion of its weights must be offloaded to SSD storage.\nMatMoE is also effective in this regime because its nested bitplane representation reduces the amount of expert data transferred between SSD and DRAM.\nTo evaluate its offloading efficiency, we conduct experiments on Qwen3-30B-A3B ( Yang et al., 2025 ) using a least-recently-used (LRU) cache replacement policy.\nThe cache capacity is set to accommodate all non-expert weights and 25% of the experts at 4-bit precision.\nWe compare MatMoE with HOBBIT ( Tang et al., 2024 ) , a state-of-the-art expert offloading method that stores multiple precision experts and dynamically loads high- or low-precision experts according to their importance.\nSince HOBBIT does not provide its source code, we implement a simulator to evaluate the end-to-end latency.\nAs shown in Fig. 10 , MatMoE achieves substantial end-to-end speedups over HOBBIT under offloading.\nAcross different target precisions, HOBBIT requires 493.06\\sim 661.23 ms/token on Raspberry Pi 5, whereas MatMoE requires only 243.78\\sim 579.71 ms/token, corresponding to a 1.1\\times\\sim 2.0\\times speedup.\nThe speedup stems from the reduced SSD-to-DRAM traffic when the required precision of an expert changes across tokens.",
+   "title": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01704v1#S5.SS4",
+   "pdf_url": "https://arxiv.org/pdf/2611.01704v1",
+   "source_sha256": "1597882722838f7bd983a0b5b4bb1f5c9adcbcce662fd62328515d71eba899de"
+  },
+  {
+   "chunk_id": "2611.01704v1_c0024",
+   "arxiv_id": "2611.01704v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01704v1#S5.SS4",
+   "section": "experiment",
+   "subsection": "ablation study",
+   "high_value": false,
+   "text": "The speedup stems from the reduced SSD-to-DRAM traffic when the required precision of an expert changes across tokens.\nWhen an expert switches from 2-bit to 4-bit precision, HOBBIT must load a separate 4-bit copy from SSD, whereas MatMoE loads only the two additional bitplanes.\nConversely, when the required precision changes from 4-bit to 2-bit, HOBBIT must load a separate 2-bit copy, whereas MatMoE simply ignores the two unnecessary bitplanes without additional I/O.\nTherefore, MatMoE directly reduces offloading traffic and thereby improves the end-to-end latency.",
+   "text_with_context": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference | Experiment > Ablation Study\n\nThe speedup stems from the reduced SSD-to-DRAM traffic when the required precision of an expert changes across tokens.\nWhen an expert switches from 2-bit to 4-bit precision, HOBBIT must load a separate 4-bit copy from SSD, whereas MatMoE loads only the two additional bitplanes.\nConversely, when the required precision changes from 4-bit to 2-bit, HOBBIT must load a separate 2-bit copy, whereas MatMoE simply ignores the two unnecessary bitplanes without additional I/O.\nTherefore, MatMoE directly reduces offloading traffic and thereby improves the end-to-end latency.",
+   "title": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01704v1#S5.SS4",
+   "pdf_url": "https://arxiv.org/pdf/2611.01704v1",
+   "source_sha256": "1597882722838f7bd983a0b5b4bb1f5c9adcbcce662fd62328515d71eba899de"
+  },
+  {
+   "chunk_id": "2410.16285v1_c0037",
+   "arxiv_id": "2410.16285v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2410.16285v1#S5",
+   "section": "conclusions",
+   "subsection": "",
+   "high_value": true,
+   "text": "Based on the current results, automated LLM agents are becoming more capable than humans within the investigated subsection of the help desk and professional consultation domain. Should this trend continue, and should AI technologies continue to improve and proliferate, one can expect that jobs in this industry may be heavily impacted. This is significant as the help desk industry (specifically the customer service sector) accounts for 3 million jobs in the US alone. Considering the global help desk software market is already valued at $9.9 billion and is growing at a considerable rate, this impact will be felt worldwide. These results, in addition to trends indicating that AI is already playing an increasingly large role in the industry, suggest that an impending transitionary period is approaching. Due to the potential human and financial impact of this transition, there exists a collective moral obligation to ensure that it can occur in such a way as to minimize potential harm and to uphold high service standards. To ensure that this is carried out in such a manner, benchmarks, such as SelfScore, can be leveraged to ensure that newly implemented technologies provide added value to their human counterparts. Due to the importance of high-quality service, it is ill-advised to replace human workers should they perform better than automated alternatives. However, in the contrary case, it is necessary to assess the implications of industry redundancies and the associated broader social impacts. It may prove beneficial to investigate alternative solutions, such as the deployment of automated technologies in a collaborative role with existing human workforces",
+   "text_with_context": "Assessing the Performance of Human-Capable LLMs -- Are LLMs Coming for Your Job? | Conclusions\n\nBased on the current results, automated LLM agents are becoming more capable than humans within the investigated subsection of the help desk and professional consultation domain. Should this trend continue, and should AI technologies continue to improve and proliferate, one can expect that jobs in this industry may be heavily impacted. This is significant as the help desk industry (specifically the customer service sector) accounts for 3 million jobs in the US alone. Considering the global help desk software market is already valued at $9.9 billion and is growing at a considerable rate, this impact will be felt worldwide. These results, in addition to trends indicating that AI is already playing an increasingly large role in the industry, suggest that an impending transitionary period is approaching. Due to the potential human and financial impact of this transition, there exists a collective moral obligation to ensure that it can occur in such a way as to minimize potential harm and to uphold high service standards. To ensure that this is carried out in such a manner, benchmarks, such as SelfScore, can be leveraged to ensure that newly implemented technologies provide added value to their human counterparts. Due to the importance of high-quality service, it is ill-advised to replace human workers should they perform better than automated alternatives. However, in the contrary case, it is necessary to assess the implications of industry redundancies and the associated broader social impacts. It may prove beneficial to investigate alternative solutions, such as the deployment of automated technologies in a collaborative role with existing human workforces",
+   "title": "Assessing the Performance of Human-Capable LLMs -- Are LLMs Coming for Your Job?",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2410.16285v1#S5",
+   "pdf_url": "https://arxiv.org/pdf/2410.16285v1",
+   "source_sha256": "4f3e8bee6734ae3038a0a10df4b84ff3471026f1b79570ec54f28f8652bf09c8"
+  }
+ ],
+ "evidence_management": {
+  "protected_ids": [
+   "2611.01704v1_c0000",
+   "2410.16285v1_c0004",
+   "2611.01704v1_c0008",
+   "2611.01704v1_c0019",
+   "2611.01704v1_c0007",
+   "2611.01704v1_c0020",
+   "2611.01704v1_c0011",
+   "2611.01704v1_c0003",
+   "2611.01704v1_c0001",
+   "2611.01704v1_c0002",
+   "2611.01704v1_c0009",
+   "2611.01704v1_c0025",
+   "2410.16285v1_c0005",
+   "2611.01704v1_c0016",
+   "2611.01704v1_c0022",
+   "2611.01704v1_c0004",
+   "2611.01704v1_c0023",
+   "2611.01704v1_c0024",
+   "2410.16285v1_c0037"
+  ],
+  "supplementary_ids": [],
+  "searches": [
+   {
+    "query": "A consumer-electronics client wants to run a mixture-of-experts LLM on edge devices. What does MatMoE change about quantization, how much faster and more accurate is it than existing approaches, which component drives which gain, and what accuracy should the client expect on its own customer-support assistant?",
+    "purpose": "original question",
+    "role": "protected",
+    "chunk_ids": [
+     "2611.01704v1_c0000",
+     "2410.16285v1_c0004",
+     "2611.01704v1_c0008",
+     "2611.01704v1_c0019",
+     "2611.01704v1_c0007",
+     "2611.01704v1_c0020",
+     "2611.01704v1_c0011",
+     "2611.01704v1_c0003",
+     "2611.01704v1_c0001",
+     "2611.01704v1_c0002",
+     "2611.01704v1_c0009",
+     "2611.01704v1_c0025",
+     "2410.16285v1_c0005",
+     "2611.01704v1_c0016",
+     "2611.01704v1_c0022",
+     "2611.01704v1_c0004",
+     "2611.01704v1_c0023",
+     "2611.01704v1_c0024",
+     "2410.16285v1_c0037"
+    ],
+    "error": null
+   }
+  ],
+  "tokens": 6236,
+  "base_tokens": 5930,
+  "base_budget": 6000,
+  "conclusion_tokens": 306,
+  "conclusion_allowance": 800,
+  "conclusion_ids": [
+   "2410.16285v1_c0037"
+  ],
+  "conclusion_considered": [
+   {
+    "paper": "2611.01704v1",
+    "conclusion": null,
+    "rank": null
+   },
+   {
+    "paper": "2410.16285v1",
+    "conclusion": "2410.16285v1_c0037",
+    "rank": 23
+   }
+  ],
+  "trimmed_for_request_size": null,
+  "notes": []
+ },
+ "assistance": {
+  "mode": "standard",
+  "activated": false,
+  "route": null
+ },
+ "plan": null,
+ "synthesis_report": {
+  "schema_errors": [],
+  "dropped": [],
+  "contract_repairs": []
+ },
+ "review_report": {
+  "withheld_no_decision": [],
+  "invalid_decisions": [],
+  "duplicate_decisions": [],
+  "repairs": [],
+  "dropped_limitations": []
+ },
+ "precheck_flags": {},
+ "review": {
+  "coverage": "partial",
+  "gap": "The supplied passages do not establish expected accuracy on the client's own customer-support assistant."
+ },
+ "attempts": [
+  {
+   "attempt": 1,
+   "mode": "standard",
+   "resumed_from": [],
+   "status": "complete",
+   "seconds": 86.997,
+   "timings": {
+    "base": 6.99,
+    "evidence": 0.0,
+    "synthesis": 48.821,
+    "review": 31.122,
+    "publication": 0.035
+   }
+  }
+ ],
+ "human_review": {
+  "status": "pending",
+  "reviewer": null
+ },
+ "approved": false
+}

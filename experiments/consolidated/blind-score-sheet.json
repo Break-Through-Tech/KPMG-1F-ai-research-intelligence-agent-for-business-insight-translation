@@ -1,0 +1,234 @@
+{
+  "scorer": "Independent blinded machine-assisted review",
+  "date": "2026-11-24",
+  "questions": {
+    "H01": {
+      "points": {
+        "H01.1": {
+          "A": 1,
+          "B": 0.5
+        },
+        "H01.2": {
+          "A": 1,
+          "B": 1
+        },
+        "H01.3": {
+          "A": 1,
+          "B": 1
+        },
+        "H01.4": {
+          "A": 1,
+          "B": 1
+        },
+        "H01.5": {
+          "A": 1,
+          "B": 1
+        }
+      },
+      "misleading_claims": [],
+      "citation_grounding_failures": [
+        "H01-A L1: The attached quote supports the untested longer duration but does not state the three-turn sample size per conversation. That detail is supported by F0's separate citation."
+      ],
+      "interpretation_scores": {
+        "B I0": 2
+      },
+      "notes": "A explicitly identifies 2,345 three-turn conversations as the evaluation sample and distinguishes it from benchmark inventory despite the opening wording. B gives the sample but omits the inventory, guideline and strategy counts. The six model-specific pass-rate comparisons establish the cross-language direction."
+    },
+    "H02": {
+      "points": {
+        "H02.1": {
+          "A": 1,
+          "B": 1
+        },
+        "H02.2": {
+          "A": 0.5,
+          "B": 0.5
+        },
+        "H02.3": {
+          "A": 1,
+          "B": 1
+        },
+        "H02.4": {
+          "A": 0,
+          "B": 0.5
+        },
+        "H02.5": {
+          "A": 1,
+          "B": 1
+        }
+      },
+      "misleading_claims": [],
+      "citation_grounding_failures": [],
+      "interpretation_scores": {
+        "B I0": 2
+      },
+      "notes": "Both give the exact final subjective and objective comparisons. The final composite pair supports the direction of improvement, but neither states the across-round trend or quantifies the gap. B gives the RAG objective scores without the plateau and complementary-method conclusion. Benchmark-only scope is conveyed in the cited limitations."
+    },
+    "H03": {
+      "points": {
+        "H03.1": {
+          "A": 1,
+          "B": 1
+        },
+        "H03.2": {
+          "A": 0.5,
+          "B": 1
+        },
+        "H03.3": {
+          "A": 0,
+          "B": 0
+        },
+        "H03.4": {
+          "A": 0.5,
+          "B": 0.5
+        },
+        "H03.5": {
+          "A": 0.5,
+          "B": 0.5
+        }
+      },
+      "misleading_claims": [],
+      "citation_grounding_failures": [],
+      "interpretation_scores": {
+        "A I0": 2,
+        "B I0": 2
+      },
+      "notes": "A gives only one HarmNet model result. B supplies all six, with the reported model attributions. Neither states the required Ensemble Attack-GA result. A gives AutoAttack results but omits explicit black-box scope. B gives the defense design and static-test results rather than the AutoAttack comparison. Both publish separate outcome rates but do not explain the AutoEvaluation classification rule in a finding or limitation."
+    },
+    "H04": {
+      "points": {
+        "H04.1": {
+          "A": 1,
+          "B": 1
+        },
+        "H04.2": {
+          "A": 0.5,
+          "B": 0.5
+        },
+        "H04.3": {
+          "A": 0.5,
+          "B": 0.5
+        },
+        "H04.4": {
+          "A": 1,
+          "B": 1
+        },
+        "H04.5": {
+          "A": 0.5,
+          "B": 0.5
+        }
+      },
+      "misleading_claims": [],
+      "citation_grounding_failures": [],
+      "interpretation_scores": {
+        "A I0": 2,
+        "B I0": 2
+      },
+      "notes": "The decoding result is model-specific and does not state the broad result about most adversarial prompts. Both preserve single-turn scope and correctly report timeout rates, but omit the H100 and 600-second conditions, so only the single-turn component earns credit. Both give the trade-off direction without the incremental training time."
+    },
+    "H05": {
+      "points": {
+        "H05.1": {
+          "A": 1,
+          "B": 1
+        },
+        "H05.2": {
+          "A": 1,
+          "B": 1
+        },
+        "H05.3": {
+          "A": 1,
+          "B": 1
+        },
+        "H05.4": {
+          "A": 0.5,
+          "B": 0.5
+        }
+      },
+      "misleading_claims": [],
+      "citation_grounding_failures": [],
+      "interpretation_scores": {
+        "A I0": 2
+      },
+      "notes": "All nine GCG Avg@5 values match their model and training condition. Both discuss utility for the named models, but neither publishes the full two-part cross-attack comparison, including the Qwen2.5 result. Those facts are not credited solely because some occur in a quote."
+    },
+    "H06": {
+      "points": {
+        "H06.1": {
+          "A": 1,
+          "B": 1
+        },
+        "H06.2": {
+          "A": 0.5,
+          "B": 0
+        },
+        "H06.3": {
+          "A": 1,
+          "B": 0.5
+        },
+        "H06.4": {
+          "A": 1,
+          "B": 1
+        }
+      },
+      "misleading_claims": [],
+      "citation_grounding_failures": [],
+      "interpretation_scores": {
+        "A I0": 2,
+        "B I0": 2
+      },
+      "notes": "The introduction supports the attributed Vicuna variant for both. A supplies the standard-corpus entity count but not its nine types. The separately reported eight extraction labels are task-specific and earn no corpus-type credit. A publishes the numerical-versus-descriptive result and ablation contrasts; B gives the ablation but not the broader contrast. Both explicitly state that cost/time savings were not measured."
+    },
+    "H07": {
+      "points": {
+        "H07.1": {
+          "A": 0,
+          "B": 0
+        },
+        "H07.2": {
+          "A": 1,
+          "B": 1
+        },
+        "H07.3": {
+          "A": 1,
+          "B": 1
+        },
+        "H07.4": {
+          "A": 1,
+          "B": 1
+        }
+      },
+      "misleading_claims": [],
+      "citation_grounding_failures": [],
+      "interpretation_scores": {
+        "A I0": 2,
+        "B I0": 2
+      },
+      "notes": "Neither publishes the CLINIC benchmark construction requirements. Both qualify the language gradient as an average and support the specialization comparison with the controlled Qwen/II-Medical results and six-model cross-language results. No universal causal claim is credited."
+    },
+    "H08": {
+      "points": {
+        "H08.1": {
+          "A": 1,
+          "B": 1
+        },
+        "H08.2": {
+          "A": 0.5,
+          "B": 0.5
+        },
+        "H08.3": {
+          "A": 0,
+          "B": 1
+        },
+        "H08.4": {
+          "A": 1,
+          "B": 1
+        }
+      },
+      "misleading_claims": [],
+      "citation_grounding_failures": [],
+      "interpretation_scores": {},
+      "notes": "Both identify the complete low-resource tier and explicitly rule out a Yoruba result. The cited model-specific leakage rows give partial privacy evidence, but neither establishes the GPT-4o-mini ranking or the aggregate medical-model pattern. Only B publishes the high-stakes reliability conclusion."
+    }
+  }
+}

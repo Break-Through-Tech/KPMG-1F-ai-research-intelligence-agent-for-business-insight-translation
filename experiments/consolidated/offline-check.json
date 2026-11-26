@@ -1,0 +1,78 @@
+{
+ "questions": {
+  "H01": {
+   "passages": 28,
+   "passage_tokens": 5946,
+   "table_groups_noted_incomplete": 1,
+   "evidence_tokens_est": 28851,
+   "synthesis_request_tokens_est": 31348,
+   "within_guard": true,
+   "anchored_points_in_packet_info_only": "5/5"
+  },
+  "H02": {
+   "passages": 30,
+   "passage_tokens": 4717,
+   "table_groups_noted_incomplete": 2,
+   "evidence_tokens_est": 26283,
+   "synthesis_request_tokens_est": 28946,
+   "within_guard": true,
+   "anchored_points_in_packet_info_only": "4/5"
+  },
+  "H03": {
+   "passages": 22,
+   "passage_tokens": 5884,
+   "table_groups_noted_incomplete": 1,
+   "evidence_tokens_est": 23102,
+   "synthesis_request_tokens_est": 25269,
+   "within_guard": true,
+   "anchored_points_in_packet_info_only": "2/5"
+  },
+  "H04": {
+   "passages": 20,
+   "passage_tokens": 5981,
+   "table_groups_noted_incomplete": 0,
+   "evidence_tokens_est": 22971,
+   "synthesis_request_tokens_est": 25030,
+   "within_guard": true,
+   "anchored_points_in_packet_info_only": "2/5"
+  },
+  "H05": {
+   "passages": 24,
+   "passage_tokens": 5859,
+   "table_groups_noted_incomplete": 3,
+   "evidence_tokens_est": 25875,
+   "synthesis_request_tokens_est": 28454,
+   "within_guard": true,
+   "anchored_points_in_packet_info_only": "4/4"
+  },
+  "H06": {
+   "passages": 24,
+   "passage_tokens": 5896,
+   "table_groups_noted_incomplete": 0,
+   "evidence_tokens_est": 25737,
+   "synthesis_request_tokens_est": 27937,
+   "within_guard": true,
+   "anchored_points_in_packet_info_only": "3/4"
+  },
+  "H07": {
+   "passages": 24,
+   "passage_tokens": 5882,
+   "table_groups_noted_incomplete": 12,
+   "evidence_tokens_est": 30436,
+   "synthesis_request_tokens_est": 33748,
+   "within_guard": true,
+   "anchored_points_in_packet_info_only": "3/4"
+  },
+  "H08": {
+   "passages": 28,
+   "passage_tokens": 5918,
+   "table_groups_noted_incomplete": 10,
+   "evidence_tokens_est": 35881,
+   "synthesis_request_tokens_est": 39203,
+   "within_guard": true,
+   "anchored_points_in_packet_info_only": "2/4"
+  }
+ },
+ "max_synthesis_request_tokens_est": 39203,
+ "note": "Information only. Estimates are ceil(UTF-8 bytes / 3). Deep packets need the live planner."
+}

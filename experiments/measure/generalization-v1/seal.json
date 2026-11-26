@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "files": {
+    "questions.json": "d3ffa47962c18fd2649bd3d39ec903437d3cf360c147187336809cb04f4eaa2f",
+    "references.json": "10c36435bff7596eaa28e8ba4b7ab2d602fb522c08adc58cb3aa17bf890e3fd0",
+    "sampling-audit.json": "b1f545d41c5c96c2e8220b846a24b3c0040e53321cbe843425e1f9b9d1e4b220",
+    "schedule.json": "a93939603dee19073f4d2c397cf74dc1c72d243a50c59ac391a52b1f728d9f5a",
+    "rules.json": "4635602389e203e77940c640bf14ed6815ec651df07ffc78bfef2f8a210a7a4f",
+    "candidates.jsonl": "b3ee21d498fab7fc344be0bd4f2dc2468476a141b7726b3dd52276a45b8ef9fd",
+    "prepare.py": "0c931a2721b96d221fb9c7bc2b0283d3bfa1796665057614b87f297bcd845aee",
+    "offline_harness.py": "548fc49ffb2ac73f35b319bb719203e1b1be9c6eae84e6312a0610f72cce186b",
+    "test_harness.py": "aa1a70babf7c6927539493338353aa43eee31f5fb5693850dac02e0206988ffe",
+    "execution-assets.json": "06ed77c4d7f1c4f3456926efe23c750a859c5a93dec4f6de4b6e5850b1bace4b"
+  },
+  "preselection_snapshot": "4a6f6b52d2b8d9314ad601656d74ae3cc0255de2fb3c59cee09db53c409f104e",
+  "corpus_parent_sha256": "78d8efd7c9df075be09ffa5f3a9c7ca79c54efa2d7caf75c8f0329ea72ff41aa",
+  "provider_invocations": 0
+}

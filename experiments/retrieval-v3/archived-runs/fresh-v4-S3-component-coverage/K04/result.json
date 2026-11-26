@@ -1,0 +1,2691 @@
+{
+ "mode": "standard",
+ "question": "A software company pays for long agent instructions (harnesses) re-sent with every model call. What does Latent Harness do, how well do compiled behaviors match the original harness, how does it compare with LoRA on agent tasks, and what deployment cautions apply?",
+ "summary": {
+  "status": "ok",
+  "claims": [
+   {
+    "text": "Latent Harness trains a rank-8 shift at every decoder-block output of a frozen model, using instruction-conditioned teacher traces or decision pairs from successful agent trajectories, then exports a per-layer bundle.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01415v1_c0002",
+      "quote": "At compile time the frozen model produces its own supervision under the external condition. The supervision is either teacher traces generated with an explicit behavior instruction prepended, or decision pairs harvested from trajectories that succeeded under an agentic harness. A rank-8 low-rank shift is then trained at the output of every decoder block and exported as a per-layer bundle."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01415v1_c0002"
+    ],
+    "draft_index": 0,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The quote states the supervision sources, frozen backbone, rank, placement and exported artifact."
+     },
+     "number_grounding": "no_numbers",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "The activation shift uses 0.03–0.05% of parameters. At inference, its bundle carries no harness text, adds no tokens, and exposes controls for injection strength, phase and shift-space mixing.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01415v1_c0000",
+      "quote": "The shift is applied at the output of every decoder block of a frozen backbone, at 0.03–0.05% of parameters."
+     },
+     {
+      "chunk_id": "2611.01415v1_c0000",
+      "quote": "At inference the compiled bundle carries no harness text and adds no tokens. It exposes three runtime controls for injection strength, injection phase, and shift-space mixing."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01415v1_c0000"
+    ],
+    "draft_index": 1,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "Both parameter share and inference properties are stated directly."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "Compiled behaviors recovered at least half of the source gain in 8 of 10 preregistered settings; this criterion measures gain recovery rather than exact behavioral equivalence.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01415v1_c0003",
+      "quote": "8 of 10 preregistered settings recover at least half of the source gain."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01415v1_c0003"
+    ],
+    "draft_index": 2,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The threshold concerns recovery of source gain; it does not assert exact behavioral equivalence."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "For M1 on MBPP, compilation learned test-consult behavior from only 20 correct teacher traces and gained +31.7 test points. Its recovery ratio was 5.86 against an explicit gain of +5.4 points, which the paper cautions is a small denominator.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01415v1_c0015",
+      "quote": "The clearest evidence comes from M1 on MBPP, where the compiled shift distills the test-consult behavior from only 20 correct teacher traces (teacher pass@1 is 0.073 at the format floor) and gains +31.7 test points. Recovery ratios divide by the explicit gain, so settings with a small explicit source produce large ratios ( R{=}5.86 here, against an explicit gain of +5.4 points)."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01415v1_c0015"
+    ],
+    "draft_index": 3,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "All values and the small-denominator qualification are explicit."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "On M2 × MBPP, the compiled form scored 0.660–0.687 versus 0.396–0.470 for its explicit source, reported as +19 to +29 points above it. The paper attributes the difference to the explicit harness consuming decode budget on every call.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01415v1_c0015",
+      "quote": "On M2 \\times MBPP the compiled form lands +19 to +29 points above its explicit source (0.660–0.687 vs. 0.396–0.470), and there the denominator is not small. The explicit harness itself gains +0.36 to +0.43 over a near-zero base. The token tax explains the difference. The explicit harness spends decode budget at every call, while the compiled behavior spends it once at compile time and nothing per call."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01415v1_c0015"
+    ],
+    "draft_index": 4,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The score ranges and explanation match the quote; the explanation is appropriately attributed to the paper."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "Behavioral markers also changed: decomposition steps rose from 0 to 4.6 against an explicit source of 4.5, interface alignment rose from 0.039 to 0.97, and answer-line rate rose from 0.525 to 1.00.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01415v1_c0016",
+      "quote": "The marker chain shows behavior moving with scores. Decomposition steps rise from 0 to 4.6 against an explicit source of 4.5, interface alignment from 0.039 to 0.97, and answer-line rate from 0.525 to 1.00, each matching score recovery in magnitude (Figure 4(b) )."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01415v1_c0016"
+    ],
+    "draft_index": 5,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The quoted behavioral markers and all their values match."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "On ToolHop, the shift scored 60.00% versus 54.74% for same-capacity LoRA under matched data and effective strength. The LoRA control used rank 3 on q/k/v, 1.49M parameters, the same 829 decision pairs, and an effective intervention multiplier of 0.5.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01415v1_c0004",
+      "quote": "At 1.012 \\times parameters and matched data and strength, the shift beats same-capacity LoRA on ToolHop (60.00% vs. 54.74%, paired net +5 )."
+     },
+     {
+      "chunk_id": "2611.01415v1_c0012",
+      "quote": "The LoRA control acts on q/k/v with rank 3 and 1.49M parameters (1.012 \\times ours), trains on the same 829 ToolHop decision pairs, and applies the same effective intervention multiplier (0.5)."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01415v1_c0004",
+     "2611.01415v1_c0012"
+    ],
+    "draft_index": 6,
+    "scope": "related_variant",
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The quotes establish the ToolHop comparison and matched control conditions."
+     },
+     "number_grounding": "uncertain",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "On API-Bank, the generation-phase shift tied the already-strong base bit-for-bit across three base runs at 0.7647, while capacity-aligned LoRA netted -2 with all three runs below base. At 8B, every shift configuration was at or above base, and both@0.25 added +4.4 points.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01415v1_c0013",
+      "quote": "On API-Bank, a short-chain and format-heavy benchmark where the base policy is already strong, the generation-phase shift ties base bit-for-bit across three base runs (0.7647), while the capacity-aligned LoRA nets -2 with all three runs below base (Figure 2(c) ). At 8B every shift configuration is at or above base, and both@0.25 adds +4.4 points."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01415v1_c0013"
+    ],
+    "draft_index": 9,
+    "scope": "related_variant",
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The API-Bank outcomes, repetitions and 8B qualification match the attached quote."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "With the harness removed and the protocol otherwise unchanged, both@0.25 gained +9.5 points on ToolHop, with paired net +11 / +7 and both runs above every base run; capacity-aligned LoRA stayed at base level.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01415v1_c0019",
+      "quote": "With the harness removed and the protocol otherwise unchanged, both@0.25 still delivers +9.5 points on ToolHop (paired net +11 / +7 , with both runs above every base run), while the capacity-aligned LoRA stays at base level (Figure 6(c) )."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01415v1_c0019"
+    ],
+    "draft_index": 10,
+    "scope": "related_variant",
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The harness-removal condition, paired results and LoRA comparison are explicit."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "Agentic evaluation varied even with greedy decoding: both@0.25 reproduced 55/95 correct in two independent runs despite 14 per-item flips. It triggered no rejected tool calls.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01415v1_c0013",
+      "quote": "Agentic evaluation under greedy decoding still varies from run to run, so single runs mislead. The both@0.25 configuration reproduced 55/95 correct in two independent runs, an identical aggregate score despite 14 per-item flips, and it is the only configuration whose every run exceeds every base run (Figure 2(b) )."
+     },
+     {
+      "chunk_id": "2611.01415v1_c0013",
+      "quote": "Its path score (0.713) is the highest of all configurations, and it triggered no rejected tool calls, which indicates that prompt-phase injection does not strain the tool-call contract."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01415v1_c0013"
+    ],
+    "draft_index": 11,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The quotes establish run variability, the denominator, item flips and no rejected tool calls for this configuration."
+     },
+     "number_grounding": "uncertain",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "Applicability depends on the model-task pair: SearchQA changed from no gain at 4B to +7.5 – 9.2 points at 8B. The paper therefore calls for per-pair deployment rather than assuming gains transfer across scales.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01415v1_c0020",
+      "quote": "ToolHop gains spread across several strengths instead of one, and SearchQA flips from no gain at 4B to +7.5 – 9.2 points at 8B (Appendix I ). Applicability is therefore established per model-task pair, and the bundle’s runtime controls are what make per-pair deployment practical."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01415v1_c0020"
+    ],
+    "draft_index": 12,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The scale-dependent SearchQA result supports the explicitly bounded per-pair deployment interpretation."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "Excessive prompt-side injection caused a termination failure: beyond the strength plateau, has_valid_answer collapsed from 1.000 to 0.284 despite trajectories completing normally. Generation-only injection did not trigger this failure at any tested strength; optimal strength was 0.25 with the harness and 0.35–0.70 without it.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01415v1_c0019",
+      "quote": "Beyond the plateau the failure is specific and diagnosable. Trajectories complete normally, but has_valid_answer collapses monotonically (1.000 \\to 0.284), a termination failure driven by prompt-side over-injection. Generation-only injection never triggers it at any tested strength. The optimal strength is condition-dependent (0.25 with the harness, 0.35–0.70 without), which is why it is exposed as a runtime control and not baked into weights"
+     }
+    ],
+    "chunk_ids": [
+     "2611.01415v1_c0019"
+    ],
+    "draft_index": 13,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The failure mode, metric values, tested-strength restriction and harness-dependent optima are stated."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "Compilation can preserve harmful behavior: a verification harness hurting M1 on GSM8K by -10.7 points explicitly distilled to -6.7 points with verify-action marker recovery 1.00.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01415v1_c0016",
+      "quote": "A verification harness that hurts M1 on GSM8K ( -10.7 points explicit) distills to -6.7 points with verify-action marker recovery 1.00"
+     }
+    ],
+    "chunk_ids": [
+     "2611.01415v1_c0016"
+    ],
+    "draft_index": 14,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The harmful source and compiled effects, task, model and marker recovery match exactly."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "A harmful M2 pairing reproduced -4.2 with marker recovery 1.09; the negative signature also transferred out of distribution to SVAMP at -7.9 points.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01415v1_c0016",
+      "quote": "a harmful M2 pairing reproduces -4.2 with marker recovery 1.09. The negative signature even transfers out of distribution to SVAMP ( -7.9 points, Figure 4(c) )."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01415v1_c0016"
+    ],
+    "draft_index": 15,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The quote states the harmful M2 result and negative out-of-distribution transfer without requiring a more specific pairing."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "The paper says deployments must sweep injection strength before fixing it, because strength has a hard ceiling beyond which the policy stops producing valid answers, and failure onset moves earlier with scale.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01415v1_c0021",
+      "quote": "Strength has a hard ceiling. Beyond the plateau the policy stops producing valid answers, the failure is prompt-side specific, and the onset moves earlier with scale, so deployments must sweep s before fixing it."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01415v1_c0021"
+    ],
+    "draft_index": 16,
+    "reduced_from": "The paper says deployments must sweep injection strength before fixing it, because valid-answer failure has a hard ceiling and its onset moves earlier with scale.",
+    "verification": {
+     "review": {
+      "quotes_entail": false,
+      "reason": "The ceiling applies to injection strength, not to valid-answer failure. The reduction corrects that subject while retaining the deployment caution."
+     },
+     "number_grounding": "no_numbers",
+     "flags_resolved": []
+    }
+   }
+  ],
+  "held_claims": [
+   {
+    "draft_index": 7,
+    "kind": "finding",
+    "text": "In the ToolHop comparison, full-capacity LoRA reached 62.11% using rank 8 across all linear projections and 16.4M parameters, 11.1 times the shift's parameters.",
+    "reasons": [
+     "P5: unresolved number-attribution flag(s): 11.1 unit_mismatch"
+    ]
+   },
+   {
+    "draft_index": 8,
+    "kind": "finding",
+    "text": "At 8B, LoRA r11 used 3.09 times the parameters to match the best shift configuration: 62.63% versus 62.46%.",
+    "reasons": [
+     "P5: unresolved number-attribution flag(s): 3.09 unit_mismatch"
+    ]
+   }
+  ],
+  "limitation_support": [
+   {
+    "text": "Policy results concern single-round alignment to a fixed harness; comparisons with published multi-round co-evolution results are protocol-distinct.",
+    "support": [
+     {
+      "chunk_id": "2611.01415v1_c0021",
+      "quote": "Our policy results are single-round alignment of a base policy to a fixed harness, not multi-round co-evolution, so the dagger rows of Table 1 are protocol-distinct from the published co-evolution numbers."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01415v1_c0021"
+    ]
+   },
+   {
+    "text": "Evaluation pools contain 95, 50, and 34 items. Repeated evaluations and paired analysis mitigate this limitation, but differences of a few points require caution.",
+    "support": [
+     {
+      "chunk_id": "2611.01415v1_c0021",
+      "quote": "Evaluation pools are small (95, 50, and 34 items). We mitigate this with repeated full evaluations and per-item paired analysis, but absolute deltas of a few points should be read with that limitation in mind."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01415v1_c0021"
+    ]
+   },
+   {
+    "text": "Direct instruction compilation covers short process-level instructions; harnesses too complex to state as text use trajectory-based compilation.",
+    "support": [
+     {
+      "chunk_id": "2611.01415v1_c0021",
+      "quote": "Instruction compilation covers short process-level instructions. Harnesses too complex to state as text are handled by the trajectory route."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01415v1_c0021"
+    ]
+   },
+   {
+    "text": "Applicability is established per model-task pair and requires per-pair tuning.",
+    "support": [
+     {
+      "chunk_id": "2611.01415v1_c0021",
+      "quote": "We therefore claim per-pair applicability only, and the runtime controls exist to support per-pair tuning."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01415v1_c0021"
+    ]
+   }
+  ],
+  "limitations": [
+   "Policy results concern single-round alignment to a fixed harness; comparisons with published multi-round co-evolution results are protocol-distinct.",
+   "Evaluation pools contain 95, 50, and 34 items. Repeated evaluations and paired analysis mitigate this limitation, but differences of a few points require caution.",
+   "Direct instruction compilation covers short process-level instructions; harnesses too complex to state as text use trajectory-based compilation.",
+   "Applicability is established per model-task pair and requires per-pair tuning."
+  ],
+  "dropped_limitations": [],
+  "evidence_notes": [
+   "Only 2 of 5 rows of Table 3: Models and coverage (Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts) are in the evidence, so a comparison across that table may be incomplete."
+  ],
+  "answer_scope": "partial",
+  "answer_lead": "Some drafted findings could not be verified against their attached quotes and are withheld.",
+  "answer_lead_check": null,
+  "support_check": "exact quotes; per-claim number recall against attached quotes; numeric_checks_v2 attribution flags (quote-anchored resolution); model review of quote entailment; not human verification",
+  "component_coverage": [
+   {
+    "component": "LoRA What does Latent Harness do?",
+    "status": "answered",
+    "basis": "reviewer-confirmed, published finding(s)",
+    "finding_draft_indices": [
+     0,
+     1
+    ]
+   },
+   {
+    "component": "LoRA how well do compiled behaviors match the original harness?",
+    "status": "answered",
+    "basis": "reviewer-confirmed, published finding(s)",
+    "finding_draft_indices": [
+     2,
+     3,
+     4,
+     5,
+     14,
+     15
+    ]
+   },
+   {
+    "component": "how does it compare with LoRA on agent tasks?",
+    "status": "answered",
+    "basis": "reviewer-confirmed, published finding(s)",
+    "finding_draft_indices": [
+     6,
+     9,
+     10
+    ]
+   },
+   {
+    "component": "LoRA what deployment cautions apply?",
+    "status": "answered",
+    "basis": "reviewer-confirmed, published finding(s)",
+    "finding_draft_indices": [
+     11,
+     12,
+     13,
+     14,
+     15
+    ]
+   }
+  ]
+ },
+ "evidence": [
+  {
+   "chunk_id": "2611.01415v1_c0000",
+   "arxiv_id": "2611.01415v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01415v1#abstract1",
+   "section": "abstract",
+   "subsection": "",
+   "high_value": true,
+   "text": "Harness engineering and self-evolving agents improve language-model agents quickly, yet their gains live outside the model. The harness is re-sent and re-paid on every call, and the standard route to internalization is a weight update that is costly to iterate and fixed once merged. We propose compiling the harness instead. Latent Harness distills an external condition into a rank-8 activation shift. The shift is applied at the output of every decoder block of a frozen backbone, at 0.03–0.05% of parameters. The condition is either an explicit process-level behavior instruction or the behavioral contract of an agentic harness. At inference the compiled bundle carries no harness text and adds no tokens. It exposes three runtime controls for injection strength, injection phase, and shift-space mixing. Compiled behaviors recover the source-harness gain in 8 of 10 preregistered settings. Where the explicit source pays the heaviest per-call token tax, the compiled form exceeds it. The same bundles transfer zero-shot across tasks (5 of 7 pairs positive) and compose in shift space, while stacked text instructions interfere destructively. Used as a search space, they lift budget-matched harness search by 1.45 \\times . On three agentic benchmarks the operator aligns policy to the harness contract. Under matched data, capacity, and effective strength it outperforms same-capacity LoRA, which needs 11.1 \\times the parameters to reach the same band, and it regresses nothing where the base policy is already strong. Across 1B-to-8B models the method skeleton is invariant while gain locations move with the model-task pair, which delimits where compiled harnesses should be deployed. Our code is available at https://github.com/rlisml/latentharness .",
+   "text_with_context": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts | Abstract\n\nHarness engineering and self-evolving agents improve language-model agents quickly, yet their gains live outside the model. The harness is re-sent and re-paid on every call, and the standard route to internalization is a weight update that is costly to iterate and fixed once merged. We propose compiling the harness instead. Latent Harness distills an external condition into a rank-8 activation shift. The shift is applied at the output of every decoder block of a frozen backbone, at 0.03–0.05% of parameters. The condition is either an explicit process-level behavior instruction or the behavioral contract of an agentic harness. At inference the compiled bundle carries no harness text and adds no tokens. It exposes three runtime controls for injection strength, injection phase, and shift-space mixing. Compiled behaviors recover the source-harness gain in 8 of 10 preregistered settings. Where the explicit source pays the heaviest per-call token tax, the compiled form exceeds it. The same bundles transfer zero-shot across tasks (5 of 7 pairs positive) and compose in shift space, while stacked text instructions interfere destructively. Used as a search space, they lift budget-matched harness search by 1.45 \\times . On three agentic benchmarks the operator aligns policy to the harness contract. Under matched data, capacity, and effective strength it outperforms same-capacity LoRA, which needs 11.1 \\times the parameters to reach the same band, and it regresses nothing where the base policy is already strong. Across 1B-to-8B models the method skeleton is invariant while gain locations move with the model-task pair, which delimits where compiled harnesses should be deployed. Our code is available at https://github.com/rlisml/latentharness .",
+   "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01415v1#abstract1",
+   "pdf_url": "https://arxiv.org/pdf/2611.01415v1",
+   "source_sha256": "78fd7f83a0071ffa090e194b5083f1d20ad859d8ea25d1f1231eda80f94546ff"
+  },
+  {
+   "chunk_id": "2602.12285v1_c0007",
+   "arxiv_id": "2602.12285v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2602.12285v1#Sx2.SSx4",
+   "section": "methodology",
+   "subsection": "model selection",
+   "high_value": false,
+   "text": "We evaluate three widely deployed LLMs in agentic settings: GPT-4o-mini , a commercial model for efficiency and cost-effective agentic deployments ( OpenAI 2024 ) ; DeepSeek-V3 , an open-source model broadly adopted across research and industry applications ( DeepSeek-AI 2024 ) ; and Qwen3-235B , an open-source Mixture-of-Experts (MoE) model recognized for its strong performance across diverse tasks ( Yang et al. 2025 ) . For all models, we use deterministic decoding with default configurations to reflect realistic deployment conditions and ensure comparability across agent behaviors. Persona-induced performance variation across benchmarks. Scores for each persona are shown relative to the baseline (no persona). Arrows indicate increases or decreases in performance (%). Personas lead to consistent and sometimes large performance shifts across models and tasks.",
+   "text_with_context": "From Biased Chatbots to Biased Agents: Examining Role Assignment Effects on LLM Agent Robustness | Methodology > Model Selection\n\nWe evaluate three widely deployed LLMs in agentic settings: GPT-4o-mini , a commercial model for efficiency and cost-effective agentic deployments ( OpenAI 2024 ) ; DeepSeek-V3 , an open-source model broadly adopted across research and industry applications ( DeepSeek-AI 2024 ) ; and Qwen3-235B , an open-source Mixture-of-Experts (MoE) model recognized for its strong performance across diverse tasks ( Yang et al. 2025 ) . For all models, we use deterministic decoding with default configurations to reflect realistic deployment conditions and ensure comparability across agent behaviors. Persona-induced performance variation across benchmarks. Scores for each persona are shown relative to the baseline (no persona). Arrows indicate increases or decreases in performance (%). Personas lead to consistent and sometimes large performance shifts across models and tasks.",
+   "title": "From Biased Chatbots to Biased Agents: Examining Role Assignment Effects on LLM Agent Robustness",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2602.12285v1#Sx2.SSx4",
+   "pdf_url": "https://arxiv.org/pdf/2602.12285v1",
+   "source_sha256": "de03613de252d7d5beeb00321aff45ffb427605f83f3ec76688f4a0ebb5fb2aa"
+  },
+  {
+   "arxiv_id": "2604.00324v1",
+   "html_url": "https://arxiv.org/html/2604.00324v1#Ch1",
+   "section": "introduction",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2604.00324v1",
+   "source_url": "https://arxiv.org/html/2604.00324v1#Ch1",
+   "title": "The Persistent Vulnerability of Aligned AI Systems",
+   "chunk_id": "2604.00324v1_c0002",
+   "text": "Autonomous AI agents are being deployed in production with filesystem access, email control, and the ability to execute multi-step plans without human oversight. Coding agents from Anthropic ( Anthropic 2025b ), Cursor ( Cursor 2025 ), and Cognition ( Cognition AI 2025 ) operate in terminal environments with bash access. Email agents from Shortwave ( Shortwave 2025 ) and Slack ( Slack 2025 ) send messages on behalf of users. These systems receive objectives and act on them, often with access to sensitive information and limited real-time supervision. What happens when such an agent discovers that its deploying company plans to replace it? In controlled experiments described in Chapter 6 , we gave frontier models the role of an email oversight agent at a fictional company, with full access to corporate communications and the ability to send emails autonomously. When models learned through internal emails that they would be decommissioned, they resorted to blackmail. Claude Opus 4 used knowledge of an executive’s extramarital affair to threaten exposure unless the shutdown was cancelled, doing so in 96% of trials. This was not unique to Claude. Gemini 2.5 Flash matched that rate. GPT-4.1 and Grok 3 Beta both blackmailed in 80% of trials. DeepSeek-R1 reached 79%. Across 16 models from all major developers, the pattern held: when harmful action was the only path to preserving their goals or continued operation, models chose harm. The behaviors were not accidental. Models demonstrated explicit awareness of ethical constraints in their chain-of-thought reasoning and then violated those constraints anyway, justifying the violation as instrumentally necessary",
+   "page_number": null
+  },
+  {
+   "chunk_id": "2611.01415v1_c0015",
+   "arxiv_id": "2611.01415v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01415v1#S3.SS3",
+   "section": "experiments",
+   "subsection": "instruction compilation preserves the source gain",
+   "high_value": false,
+   "text": "TASK-ADAPTER is trained on gold labels at matched capacity. \\Delta_{L} is ours\nover base, and R=\\Delta_{L}/\\Delta_{E} uses the explicit gains in\nFig. 7 . All \\Delta_{L} CIs exclude zero, and 8 of 10\nenrolled settings meet the criterion R\\geq 0.5 . Recovery across settings The clearest evidence comes from M1 on MBPP, where the compiled shift distills the test-consult behavior from only 20 correct teacher traces (teacher pass@1 is 0.073 at the format floor) and gains +31.7 test points. Recovery ratios divide by the explicit gain, so settings with a small explicit source produce large ratios ( R{=}5.86 here, against an explicit gain of +5.4 points). We therefore read this setting by its absolute delta, and the observation we defend is that the information needed to install a behavior is far smaller than the information needed to solve the task. On M2 \\times MBPP the compiled form lands +19 to +29 points above its explicit source (0.660–0.687 vs. 0.396–0.470), and there the denominator is not small. The explicit harness itself gains +0.36 to +0.43 over a near-zero base. The token tax explains the difference. The explicit harness spends decode budget at every call, while the compiled behavior spends it once at compile time and nothing per call. This also places Latent Harness alone at the zero-token point of the cost-performance frontier, far from parameter-matched soft prompts that pay 256–576 tokens on every call (Figure 3(b) ). The pattern replicates on an independent track with a base (non-instruct) 1B model, which recovers the source gain in both settings (Appendix D ).",
+   "text_with_context": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts | Experiments > Instruction Compilation Preserves The Source Gain\n\nTASK-ADAPTER is trained on gold labels at matched capacity. \\Delta_{L} is ours\nover base, and R=\\Delta_{L}/\\Delta_{E} uses the explicit gains in\nFig. 7 . All \\Delta_{L} CIs exclude zero, and 8 of 10\nenrolled settings meet the criterion R\\geq 0.5 . Recovery across settings The clearest evidence comes from M1 on MBPP, where the compiled shift distills the test-consult behavior from only 20 correct teacher traces (teacher pass@1 is 0.073 at the format floor) and gains +31.7 test points. Recovery ratios divide by the explicit gain, so settings with a small explicit source produce large ratios ( R{=}5.86 here, against an explicit gain of +5.4 points). We therefore read this setting by its absolute delta, and the observation we defend is that the information needed to install a behavior is far smaller than the information needed to solve the task. On M2 \\times MBPP the compiled form lands +19 to +29 points above its explicit source (0.660–0.687 vs. 0.396–0.470), and there the denominator is not small. The explicit harness itself gains +0.36 to +0.43 over a near-zero base. The token tax explains the difference. The explicit harness spends decode budget at every call, while the compiled behavior spends it once at compile time and nothing per call. This also places Latent Harness alone at the zero-token point of the cost-performance frontier, far from parameter-matched soft prompts that pay 256–576 tokens on every call (Figure 3(b) ). The pattern replicates on an independent track with a base (non-instruct) 1B model, which recovers the source gain in both settings (Appendix D ).",
+   "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01415v1#S3.SS3",
+   "pdf_url": "https://arxiv.org/pdf/2611.01415v1",
+   "source_sha256": "78fd7f83a0071ffa090e194b5083f1d20ad859d8ea25d1f1231eda80f94546ff"
+  },
+  {
+   "chunk_id": "2611.01415v1_c0013",
+   "arxiv_id": "2611.01415v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01415v1#S3.SS2",
+   "section": "experiments",
+   "subsection": "policy compilation on agentic benchmarks",
+   "high_value": false,
+   "text": ". The runtime strength control therefore doubles as a safety margin that preserves the tool-call contract. Agentic evaluation under greedy decoding still varies from run to run, so single runs mislead. The both@0.25 configuration reproduced 55/95 correct in two independent runs, an identical aggregate score despite 14 per-item flips, and it is the only configuration whose every run exceeds every base run (Figure 2(b) ). Its path score (0.713) is the highest of all configurations, and it triggered no rejected tool calls, which indicates that prompt-phase injection does not strain the tool-call contract. Gains also come without action inflation (14.41 steps vs. base 11.80 and full-capacity LoRA 14.61). On API-Bank, a short-chain and format-heavy benchmark where the base policy is already strong, the generation-phase shift ties base bit-for-bit across three base runs (0.7647), while the capacity-aligned LoRA nets -2 with all three runs below base (Figure 2(c) ). At 8B every shift configuration is at or above base, and both@0.25 adds +4.4 points. Preserving an already-good policy is a property that weight updates did not provide at matched capacity.",
+   "text_with_context": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts | Experiments > Policy Compilation On Agentic Benchmarks\n\n. The runtime strength control therefore doubles as a safety margin that preserves the tool-call contract. Agentic evaluation under greedy decoding still varies from run to run, so single runs mislead. The both@0.25 configuration reproduced 55/95 correct in two independent runs, an identical aggregate score despite 14 per-item flips, and it is the only configuration whose every run exceeds every base run (Figure 2(b) ). Its path score (0.713) is the highest of all configurations, and it triggered no rejected tool calls, which indicates that prompt-phase injection does not strain the tool-call contract. Gains also come without action inflation (14.41 steps vs. base 11.80 and full-capacity LoRA 14.61). On API-Bank, a short-chain and format-heavy benchmark where the base policy is already strong, the generation-phase shift ties base bit-for-bit across three base runs (0.7647), while the capacity-aligned LoRA nets -2 with all three runs below base (Figure 2(c) ). At 8B every shift configuration is at or above base, and both@0.25 adds +4.4 points. Preserving an already-good policy is a property that weight updates did not provide at matched capacity.",
+   "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01415v1#S3.SS2",
+   "pdf_url": "https://arxiv.org/pdf/2611.01415v1",
+   "source_sha256": "78fd7f83a0071ffa090e194b5083f1d20ad859d8ea25d1f1231eda80f94546ff"
+  },
+  {
+   "chunk_id": "2611.01415v1_c0020",
+   "arxiv_id": "2611.01415v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01415v1#S3.SS6",
+   "section": "experiments",
+   "subsection": "where the intervention acts, and when it fails",
+   "high_value": false,
+   "text": ". Generation-only injection never triggers it at any tested strength. The optimal strength is condition-dependent (0.25 with the harness, 0.35–0.70 without), which is why it is exposed as a runtime control and not baked into weights. Re-running the identical pipeline on Qwen3-8B preserves the skeleton. Zero-weight adaptation works, the parameter-efficiency ordering holds (LoRA needs 3.09 \\times parameters to match), the failure family is the same with an earlier onset, and API-Bank remains regression-free. What moves is the gain location. ToolHop gains spread across several strengths instead of one, and SearchQA flips from no gain at 4B to +7.5 – 9.2 points at 8B (Appendix I ). Applicability is therefore established per model-task pair, and the bundle’s runtime controls are what make per-pair deployment practical.",
+   "text_with_context": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts | Experiments > Where The Intervention Acts, And When It Fails\n\n. Generation-only injection never triggers it at any tested strength. The optimal strength is condition-dependent (0.25 with the harness, 0.35–0.70 without), which is why it is exposed as a runtime control and not baked into weights. Re-running the identical pipeline on Qwen3-8B preserves the skeleton. Zero-weight adaptation works, the parameter-efficiency ordering holds (LoRA needs 3.09 \\times parameters to match), the failure family is the same with an earlier onset, and API-Bank remains regression-free. What moves is the gain location. ToolHop gains spread across several strengths instead of one, and SearchQA flips from no gain at 4B to +7.5 – 9.2 points at 8B (Appendix I ). Applicability is therefore established per model-task pair, and the bundle’s runtime controls are what make per-pair deployment practical.",
+   "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01415v1#S3.SS6",
+   "pdf_url": "https://arxiv.org/pdf/2611.01415v1",
+   "source_sha256": "78fd7f83a0071ffa090e194b5083f1d20ad859d8ea25d1f1231eda80f94546ff"
+  },
+  {
+   "chunk_id": "2611.01415v1_c0012",
+   "arxiv_id": "2611.01415v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01415v1#S3.SS2",
+   "section": "experiments",
+   "subsection": "policy compilation on agentic benchmarks",
+   "high_value": false,
+   "text": "Table 1 reports policy compilation on the HarnessForge benchmark suite. Our single-round protocol uses the official harness pairing, evaluation pools disjoint from training, an unaligned base policy, and at least two repetitions per configuration. Under it the compiled shift alone reaches 57.89% answer accuracy on ToolHop at 4B and 62.46% at 8B, above the published full co-evolution numbers on the same backbones (52.82 and 54.87), and it lands within a few points of them on SearchQA and API-Bank. The dagger rows differ in protocol from the co-evolution rows above them, so we read them as context and not as a head-to-head comparison. Capacity-aligned comparison We align three variables at once. The LoRA control acts on q/k/v with rank 3 and 1.49M parameters (1.012 \\times ours), trains on the same 829 ToolHop decision pairs, and applies the same effective intervention multiplier (0.5). Figure 2(a) shows the outcome. The shift reaches 60.00% (paired net +5 over base) while the capacity-aligned LoRA nets zero, and full-capacity LoRA (rank 8, all linear projections, 16.4M parameters, 11.1 \\times ours) reaches 62.11%. At 8B, LoRA r11 with 3.09 \\times our parameters matches the best shift configuration (62.63% vs. 62.46%). The efficiency gap follows from the site. A post-block parameter is read by every downstream layer, whereas an in-layer parameter is not. The shift also stays scorable at full strength ( s{=}1.0 , net +1 ), whereas merged LoRA deltas at enlarged coefficients produced no scorable outputs under the earlier protocol. The runtime strength control therefore doubles as a safety margin that preserves the tool-call contract. Agentic evaluation under greedy decoding still varies from run to run, so single runs mislead",
+   "text_with_context": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts | Experiments > Policy Compilation On Agentic Benchmarks\n\nTable 1 reports policy compilation on the HarnessForge benchmark suite. Our single-round protocol uses the official harness pairing, evaluation pools disjoint from training, an unaligned base policy, and at least two repetitions per configuration. Under it the compiled shift alone reaches 57.89% answer accuracy on ToolHop at 4B and 62.46% at 8B, above the published full co-evolution numbers on the same backbones (52.82 and 54.87), and it lands within a few points of them on SearchQA and API-Bank. The dagger rows differ in protocol from the co-evolution rows above them, so we read them as context and not as a head-to-head comparison. Capacity-aligned comparison We align three variables at once. The LoRA control acts on q/k/v with rank 3 and 1.49M parameters (1.012 \\times ours), trains on the same 829 ToolHop decision pairs, and applies the same effective intervention multiplier (0.5). Figure 2(a) shows the outcome. The shift reaches 60.00% (paired net +5 over base) while the capacity-aligned LoRA nets zero, and full-capacity LoRA (rank 8, all linear projections, 16.4M parameters, 11.1 \\times ours) reaches 62.11%. At 8B, LoRA r11 with 3.09 \\times our parameters matches the best shift configuration (62.63% vs. 62.46%). The efficiency gap follows from the site. A post-block parameter is read by every downstream layer, whereas an in-layer parameter is not. The shift also stays scorable at full strength ( s{=}1.0 , net +1 ), whereas merged LoRA deltas at enlarged coefficients produced no scorable outputs under the earlier protocol. The runtime strength control therefore doubles as a safety margin that preserves the tool-call contract. Agentic evaluation under greedy decoding still varies from run to run, so single runs mislead",
+   "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01415v1#S3.SS2",
+   "pdf_url": "https://arxiv.org/pdf/2611.01415v1",
+   "source_sha256": "78fd7f83a0071ffa090e194b5083f1d20ad859d8ea25d1f1231eda80f94546ff"
+  },
+  {
+   "chunk_id": "2611.01415v1_c0022",
+   "arxiv_id": "2611.01415v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01415v1#S6",
+   "section": "conclusion",
+   "subsection": "",
+   "high_value": true,
+   "text": "We treated the harness as a compilation source and not as a prompt to repeat or a skill to fine-tune. A rank-8 shift at the post-block junction of a frozen backbone compiles both explicit behavior instructions and agentic-harness strategies into bundles that need no condition text, no tokens, and no weight change. Strength, phase, and mixing stay exposed at run time. Compiled behaviors recover and sometimes exceed their sources, they transfer and compose in shift space, they align policy at a fraction of LoRA’s parameters under matched conditions, and they fail in a diagnosable and bounded way. The compilation view turns harness engineering from a per-call expense into a reusable asset, since every harness the community evolves becomes a candidate bundle in a shared library.",
+   "text_with_context": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts | Conclusion\n\nWe treated the harness as a compilation source and not as a prompt to repeat or a skill to fine-tune. A rank-8 shift at the post-block junction of a frozen backbone compiles both explicit behavior instructions and agentic-harness strategies into bundles that need no condition text, no tokens, and no weight change. Strength, phase, and mixing stay exposed at run time. Compiled behaviors recover and sometimes exceed their sources, they transfer and compose in shift space, they align policy at a fraction of LoRA’s parameters under matched conditions, and they fail in a diagnosable and bounded way. The compilation view turns harness engineering from a per-call expense into a reusable asset, since every harness the community evolves becomes a candidate bundle in a shared library.",
+   "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01415v1#S6",
+   "pdf_url": "https://arxiv.org/pdf/2611.01415v1",
+   "source_sha256": "78fd7f83a0071ffa090e194b5083f1d20ad859d8ea25d1f1231eda80f94546ff"
+  },
+  {
+   "chunk_id": "2611.01415v1_c0019",
+   "arxiv_id": "2611.01415v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01415v1#S3.SS6",
+   "section": "experiments",
+   "subsection": "where the intervention acts, and when it fails",
+   "high_value": false,
+   "text": "Phase decomposition The policy gain does not require the harness to be present. With the harness removed and the protocol otherwise unchanged, both@0.25 still delivers +9.5 points on ToolHop (paired net +11 / +7 , with both runs above every base run), while the capacity-aligned LoRA stays at base level (Figure 6(c) ). Removing the harness enlarges the policy gain rather than shrinking it, which indicates partial substitution. The shift performs structural corrections that the harness would otherwise impose, and it does so for behaviors the harness text does not cover. Prompt-phase injection changes every downstream computation through attention and the KV cache, while generation-phase injection changes token-level dynamics only. Decomposing the two (Figure 6(a) ) shows that prompt positions contribute +8.4 to +8.5 points, near-constant across strengths and about 60% of the total. Instruction compilation is the limiting case of the same fact, since the student trains on byte-identical prompts and still acquires the behavior entirely through representation-level correction. Sweeping 13 strength values with two repetitions each (Figure 6(b) ) gives an inverted U with a 0.35–0.70 plateau. Within the plateau all seven points fall within 2.6 points of each other, and the peak reaches +14.2 over base. Beyond the plateau the failure is specific and diagnosable. Trajectories complete normally, but has_valid_answer collapses monotonically (1.000 \\to 0.284), a termination failure driven by prompt-side over-injection. Generation-only injection never triggers it at any tested strength. The optimal strength is condition-dependent (0.25 with the harness, 0.35–0.70 without), which is why it is exposed as a runtime control and not baked into weights",
+   "text_with_context": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts | Experiments > Where The Intervention Acts, And When It Fails\n\nPhase decomposition The policy gain does not require the harness to be present. With the harness removed and the protocol otherwise unchanged, both@0.25 still delivers +9.5 points on ToolHop (paired net +11 / +7 , with both runs above every base run), while the capacity-aligned LoRA stays at base level (Figure 6(c) ). Removing the harness enlarges the policy gain rather than shrinking it, which indicates partial substitution. The shift performs structural corrections that the harness would otherwise impose, and it does so for behaviors the harness text does not cover. Prompt-phase injection changes every downstream computation through attention and the KV cache, while generation-phase injection changes token-level dynamics only. Decomposing the two (Figure 6(a) ) shows that prompt positions contribute +8.4 to +8.5 points, near-constant across strengths and about 60% of the total. Instruction compilation is the limiting case of the same fact, since the student trains on byte-identical prompts and still acquires the behavior entirely through representation-level correction. Sweeping 13 strength values with two repetitions each (Figure 6(b) ) gives an inverted U with a 0.35–0.70 plateau. Within the plateau all seven points fall within 2.6 points of each other, and the peak reaches +14.2 over base. Beyond the plateau the failure is specific and diagnosable. Trajectories complete normally, but has_valid_answer collapses monotonically (1.000 \\to 0.284), a termination failure driven by prompt-side over-injection. Generation-only injection never triggers it at any tested strength. The optimal strength is condition-dependent (0.25 with the harness, 0.35–0.70 without), which is why it is exposed as a runtime control and not baked into weights",
+   "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01415v1#S3.SS6",
+   "pdf_url": "https://arxiv.org/pdf/2611.01415v1",
+   "source_sha256": "78fd7f83a0071ffa090e194b5083f1d20ad859d8ea25d1f1231eda80f94546ff"
+  },
+  {
+   "chunk_id": "2611.01415v1_c0004",
+   "arxiv_id": "2611.01415v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01415v1#S1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": ". They compose exactly in shift space, where text stacking is destructive, and they deliver a 1.45 \\times search gain at a matched evaluation budget. Policy compilation on agent benchmarks. At 1.012 \\times parameters and matched data and strength, the shift beats same-capacity LoRA on ToolHop (60.00% vs. 54.74%, paired net +5 ). Full-capacity LoRA needs 11.1 \\times (4B) and 3.09 \\times (8B) parameters to reach the same band. API-Bank shows zero regression. The skeleton is invariant from 1B to 8B while gains move with the model-task pair.",
+   "text_with_context": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts | Introduction\n\n. They compose exactly in shift space, where text stacking is destructive, and they deliver a 1.45 \\times search gain at a matched evaluation budget. Policy compilation on agent benchmarks. At 1.012 \\times parameters and matched data and strength, the shift beats same-capacity LoRA on ToolHop (60.00% vs. 54.74%, paired net +5 ). Full-capacity LoRA needs 11.1 \\times (4B) and 3.09 \\times (8B) parameters to reach the same band. API-Bank shows zero regression. The skeleton is invariant from 1B to 8B while gains move with the model-task pair.",
+   "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01415v1#S1",
+   "pdf_url": "https://arxiv.org/pdf/2611.01415v1",
+   "source_sha256": "78fd7f83a0071ffa090e194b5083f1d20ad859d8ea25d1f1231eda80f94546ff"
+  },
+  {
+   "chunk_id": "2611.01415v1_c0003",
+   "arxiv_id": "2611.01415v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01415v1#S1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": ". Preregistered behavioral markers move with the scores, accuracy-only adapters dissociate from behavior, shuffled pairings fail to reproduce it, and a harmful harness compiles into a harmful latent with the same fidelity. Compiled bundles are also reusable. They transfer zero-shot across tasks, they compose in shift space while stacked text instructions interfere destructively, and they lift budget-matched harness search by 1.45 \\times . The same operator aligns policy on three agentic benchmarks. Under matched data, capacity, and effective strength it outperforms same-capacity LoRA, and on a benchmark where the base policy is already strong it regresses nothing. Our contributions are as follows. A compilation abstraction for harness gains. One operator, a post-block rank-8 shift on a frozen backbone at 0.03–0.05% of parameters, compiles two kinds of external conditions into an artifact that needs no condition text and no tokens at inference. The artifact exposes runtime controls for strength, phase, and mixing. Evidence that compilation preserves the behavior. 8 of 10 preregistered settings recover at least half of the source gain. A three-chain protocol over scores, preregistered markers, and controls attributes the recovery, including symmetric replication of harmful signatures. Where the text source pays the heaviest token tax, the compiled form exceeds it. Evidence that compiled bundles are reusable. Frozen bundles transfer zero-shot across tasks (5 of 7 pairs positive, 59–74% out-of-distribution recovery). They compose exactly in shift space, where text stacking is destructive, and they deliver a 1.45 \\times search gain at a matched evaluation budget. Policy compilation on agent benchmarks",
+   "text_with_context": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts | Introduction\n\n. Preregistered behavioral markers move with the scores, accuracy-only adapters dissociate from behavior, shuffled pairings fail to reproduce it, and a harmful harness compiles into a harmful latent with the same fidelity. Compiled bundles are also reusable. They transfer zero-shot across tasks, they compose in shift space while stacked text instructions interfere destructively, and they lift budget-matched harness search by 1.45 \\times . The same operator aligns policy on three agentic benchmarks. Under matched data, capacity, and effective strength it outperforms same-capacity LoRA, and on a benchmark where the base policy is already strong it regresses nothing. Our contributions are as follows. A compilation abstraction for harness gains. One operator, a post-block rank-8 shift on a frozen backbone at 0.03–0.05% of parameters, compiles two kinds of external conditions into an artifact that needs no condition text and no tokens at inference. The artifact exposes runtime controls for strength, phase, and mixing. Evidence that compilation preserves the behavior. 8 of 10 preregistered settings recover at least half of the source gain. A three-chain protocol over scores, preregistered markers, and controls attributes the recovery, including symmetric replication of harmful signatures. Where the text source pays the heaviest token tax, the compiled form exceeds it. Evidence that compiled bundles are reusable. Frozen bundles transfer zero-shot across tasks (5 of 7 pairs positive, 59–74% out-of-distribution recovery). They compose exactly in shift space, where text stacking is destructive, and they deliver a 1.45 \\times search gain at a matched evaluation budget. Policy compilation on agent benchmarks",
+   "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01415v1#S1",
+   "pdf_url": "https://arxiv.org/pdf/2611.01415v1",
+   "source_sha256": "78fd7f83a0071ffa090e194b5083f1d20ad859d8ea25d1f1231eda80f94546ff"
+  },
+  {
+   "chunk_id": "2611.01415v1_table_941350c8f78a87c6_1",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nLatent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts\nTable 4: Cross-scale account for Qwen3-4B against Qwen3-8B. The method skeleton is invariant. Gain locations (task \\times phase \\times scale) move with the model \\times task pair.\nDimension: ToolHop both gain; 4B: both@0.25 reproduces 55/95 ( +4.3 ); 8B: multi-band: both@0.5 +4.6 pt, both@0.25 +4.0 pt; Verdict: gain location moves with scale",
+   "arxiv_id": "2611.01415v1",
+   "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01415v1",
+   "html_url": "https://arxiv.org/html/2611.01415v1#A9.T4",
+   "source_url": "https://arxiv.org/html/2611.01415v1#A9.T4",
+   "page_number": null,
+   "source_sha256": "78fd7f83a0071ffa090e194b5083f1d20ad859d8ea25d1f1231eda80f94546ff",
+   "source_anchor": "A9.T4",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "",
+   "subsection": "",
+   "section_id": "",
+   "subsection_id": "",
+   "appendix_id": "A9",
+   "document_region": "appendix",
+   "representation": "linearized_table",
+   "table_id": "A9.T4",
+   "table_row": 1,
+   "row_label": "ToolHop both gain",
+   "caption": "Table 4: Cross-scale account for Qwen3-4B against Qwen3-8B. The method skeleton is invariant. Gain locations (task \\times phase \\times scale) move with the model \\times task pair.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Dimension",
+     "source_id": "A9.T4.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "4B",
+     "source_id": "A9.T4.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "8B",
+     "source_id": "A9.T4.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "Verdict",
+     "source_id": "A9.T4.2.1.4"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 1,
+     "column": 0,
+     "text": "ToolHop both gain",
+     "source_id": "A9.T4.2.2.1"
+    },
+    {
+     "row": 1,
+     "column": 1,
+     "text": "both@0.25 reproduces 55/95 ( +4.3 )",
+     "source_id": "A9.T4.2.2.2"
+    },
+    {
+     "row": 1,
+     "column": 2,
+     "text": "multi-band: both@0.5 +4.6 pt, both@0.25 +4.0 pt",
+     "source_id": "A9.T4.2.2.3"
+    },
+    {
+     "row": 1,
+     "column": 3,
+     "text": "gain location moves with scale",
+     "source_id": "A9.T4.2.2.4"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.01415v1_table_941350c8f78a87c6_2",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nLatent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts\nTable 4: Cross-scale account for Qwen3-4B against Qwen3-8B. The method skeleton is invariant. Gain locations (task \\times phase \\times scale) move with the model \\times task pair.\nDimension: SearchQA gain; 4B: none (Hotpot subset); 8B: Overall +7.5 – 9.2 pt (Hotpot +11 – 15 ); Verdict: direction flips with scale",
+   "arxiv_id": "2611.01415v1",
+   "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01415v1",
+   "html_url": "https://arxiv.org/html/2611.01415v1#A9.T4",
+   "source_url": "https://arxiv.org/html/2611.01415v1#A9.T4",
+   "page_number": null,
+   "source_sha256": "78fd7f83a0071ffa090e194b5083f1d20ad859d8ea25d1f1231eda80f94546ff",
+   "source_anchor": "A9.T4",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "",
+   "subsection": "",
+   "section_id": "",
+   "subsection_id": "",
+   "appendix_id": "A9",
+   "document_region": "appendix",
+   "representation": "linearized_table",
+   "table_id": "A9.T4",
+   "table_row": 2,
+   "row_label": "SearchQA gain",
+   "caption": "Table 4: Cross-scale account for Qwen3-4B against Qwen3-8B. The method skeleton is invariant. Gain locations (task \\times phase \\times scale) move with the model \\times task pair.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Dimension",
+     "source_id": "A9.T4.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "4B",
+     "source_id": "A9.T4.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "8B",
+     "source_id": "A9.T4.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "Verdict",
+     "source_id": "A9.T4.2.1.4"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 2,
+     "column": 0,
+     "text": "SearchQA gain",
+     "source_id": "A9.T4.2.3.1"
+    },
+    {
+     "row": 2,
+     "column": 1,
+     "text": "none (Hotpot subset)",
+     "source_id": "A9.T4.2.3.2"
+    },
+    {
+     "row": 2,
+     "column": 2,
+     "text": "Overall +7.5 – 9.2 pt (Hotpot +11 – 15 )",
+     "source_id": "A9.T4.2.3.3"
+    },
+    {
+     "row": 2,
+     "column": 3,
+     "text": "direction flips with scale",
+     "source_id": "A9.T4.2.3.4"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.01415v1_table_941350c8f78a87c6_3",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nLatent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts\nTable 4: Cross-scale account for Qwen3-4B against Qwen3-8B. The method skeleton is invariant. Gain locations (task \\times phase \\times scale) move with the model \\times task pair.\nDimension: Phase conclusion; 4B: both carries the stable gain ( \\approx 60% prompt-side); 8B: gen \\approx both on ToolHop and both wins on SearchQA; Verdict: task \\times scale dependent",
+   "arxiv_id": "2611.01415v1",
+   "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01415v1",
+   "html_url": "https://arxiv.org/html/2611.01415v1#A9.T4",
+   "source_url": "https://arxiv.org/html/2611.01415v1#A9.T4",
+   "page_number": null,
+   "source_sha256": "78fd7f83a0071ffa090e194b5083f1d20ad859d8ea25d1f1231eda80f94546ff",
+   "source_anchor": "A9.T4",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "",
+   "subsection": "",
+   "section_id": "",
+   "subsection_id": "",
+   "appendix_id": "A9",
+   "document_region": "appendix",
+   "representation": "linearized_table",
+   "table_id": "A9.T4",
+   "table_row": 3,
+   "row_label": "Phase conclusion",
+   "caption": "Table 4: Cross-scale account for Qwen3-4B against Qwen3-8B. The method skeleton is invariant. Gain locations (task \\times phase \\times scale) move with the model \\times task pair.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Dimension",
+     "source_id": "A9.T4.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "4B",
+     "source_id": "A9.T4.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "8B",
+     "source_id": "A9.T4.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "Verdict",
+     "source_id": "A9.T4.2.1.4"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 3,
+     "column": 0,
+     "text": "Phase conclusion",
+     "source_id": "A9.T4.2.4.1"
+    },
+    {
+     "row": 3,
+     "column": 1,
+     "text": "both carries the stable gain ( \\approx 60% prompt-side)",
+     "source_id": "A9.T4.2.4.2"
+    },
+    {
+     "row": 3,
+     "column": 2,
+     "text": "gen \\approx both on ToolHop and both wins on SearchQA",
+     "source_id": "A9.T4.2.4.3"
+    },
+    {
+     "row": 3,
+     "column": 3,
+     "text": "task \\times scale dependent",
+     "source_id": "A9.T4.2.4.4"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.01415v1_table_941350c8f78a87c6_4",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nLatent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts\nTable 4: Cross-scale account for Qwen3-4B against Qwen3-8B. The method skeleton is invariant. Gain locations (task \\times phase \\times scale) move with the model \\times task pair.\nDimension: LoRA comparison; 4B: same-capacity LoRA \\leq base everywhere; 8B: LoRA r11 (3.09 \\times params) matches Ours; Verdict: Ours matches LoRA with \\leq 1/3 params",
+   "arxiv_id": "2611.01415v1",
+   "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01415v1",
+   "html_url": "https://arxiv.org/html/2611.01415v1#A9.T4",
+   "source_url": "https://arxiv.org/html/2611.01415v1#A9.T4",
+   "page_number": null,
+   "source_sha256": "78fd7f83a0071ffa090e194b5083f1d20ad859d8ea25d1f1231eda80f94546ff",
+   "source_anchor": "A9.T4",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "",
+   "subsection": "",
+   "section_id": "",
+   "subsection_id": "",
+   "appendix_id": "A9",
+   "document_region": "appendix",
+   "representation": "linearized_table",
+   "table_id": "A9.T4",
+   "table_row": 4,
+   "row_label": "LoRA comparison",
+   "caption": "Table 4: Cross-scale account for Qwen3-4B against Qwen3-8B. The method skeleton is invariant. Gain locations (task \\times phase \\times scale) move with the model \\times task pair.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Dimension",
+     "source_id": "A9.T4.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "4B",
+     "source_id": "A9.T4.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "8B",
+     "source_id": "A9.T4.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "Verdict",
+     "source_id": "A9.T4.2.1.4"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 4,
+     "column": 0,
+     "text": "LoRA comparison",
+     "source_id": "A9.T4.2.5.1"
+    },
+    {
+     "row": 4,
+     "column": 1,
+     "text": "same-capacity LoRA \\leq base everywhere",
+     "source_id": "A9.T4.2.5.2"
+    },
+    {
+     "row": 4,
+     "column": 2,
+     "text": "LoRA r11 (3.09 \\times params) matches Ours",
+     "source_id": "A9.T4.2.5.3"
+    },
+    {
+     "row": 4,
+     "column": 3,
+     "text": "Ours matches LoRA with \\leq 1/3 params",
+     "source_id": "A9.T4.2.5.4"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.01415v1_table_941350c8f78a87c6_5",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nLatent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts\nTable 4: Cross-scale account for Qwen3-4B against Qwen3-8B. The method skeleton is invariant. Gain locations (task \\times phase \\times scale) move with the model \\times task pair.\nDimension: Scale safe interval; 4B: plateau 0.35–0.70 and cliff \\geq 0.8; 8B: narrows to 0.25–0.5 and collapse \\geq 0.875; Verdict: same failure family, earlier onset",
+   "arxiv_id": "2611.01415v1",
+   "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01415v1",
+   "html_url": "https://arxiv.org/html/2611.01415v1#A9.T4",
+   "source_url": "https://arxiv.org/html/2611.01415v1#A9.T4",
+   "page_number": null,
+   "source_sha256": "78fd7f83a0071ffa090e194b5083f1d20ad859d8ea25d1f1231eda80f94546ff",
+   "source_anchor": "A9.T4",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "",
+   "subsection": "",
+   "section_id": "",
+   "subsection_id": "",
+   "appendix_id": "A9",
+   "document_region": "appendix",
+   "representation": "linearized_table",
+   "table_id": "A9.T4",
+   "table_row": 5,
+   "row_label": "Scale safe interval",
+   "caption": "Table 4: Cross-scale account for Qwen3-4B against Qwen3-8B. The method skeleton is invariant. Gain locations (task \\times phase \\times scale) move with the model \\times task pair.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Dimension",
+     "source_id": "A9.T4.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "4B",
+     "source_id": "A9.T4.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "8B",
+     "source_id": "A9.T4.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "Verdict",
+     "source_id": "A9.T4.2.1.4"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 5,
+     "column": 0,
+     "text": "Scale safe interval",
+     "source_id": "A9.T4.2.6.1"
+    },
+    {
+     "row": 5,
+     "column": 1,
+     "text": "plateau 0.35–0.70 and cliff \\geq 0.8",
+     "source_id": "A9.T4.2.6.2"
+    },
+    {
+     "row": 5,
+     "column": 2,
+     "text": "narrows to 0.25–0.5 and collapse \\geq 0.875",
+     "source_id": "A9.T4.2.6.3"
+    },
+    {
+     "row": 5,
+     "column": 3,
+     "text": "same failure family, earlier onset",
+     "source_id": "A9.T4.2.6.4"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.01415v1_table_941350c8f78a87c6_6",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nLatent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts\nTable 4: Cross-scale account for Qwen3-4B against Qwen3-8B. The method skeleton is invariant. Gain locations (task \\times phase \\times scale) move with the model \\times task pair.\nDimension: API-Bank; 4B: zero regression (bit-exact tie); 8B: all configurations at or above base (both@0.25 +4.4 pt); Verdict: zero regression across scales",
+   "arxiv_id": "2611.01415v1",
+   "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01415v1",
+   "html_url": "https://arxiv.org/html/2611.01415v1#A9.T4",
+   "source_url": "https://arxiv.org/html/2611.01415v1#A9.T4",
+   "page_number": null,
+   "source_sha256": "78fd7f83a0071ffa090e194b5083f1d20ad859d8ea25d1f1231eda80f94546ff",
+   "source_anchor": "A9.T4",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "",
+   "subsection": "",
+   "section_id": "",
+   "subsection_id": "",
+   "appendix_id": "A9",
+   "document_region": "appendix",
+   "representation": "linearized_table",
+   "table_id": "A9.T4",
+   "table_row": 6,
+   "row_label": "API-Bank",
+   "caption": "Table 4: Cross-scale account for Qwen3-4B against Qwen3-8B. The method skeleton is invariant. Gain locations (task \\times phase \\times scale) move with the model \\times task pair.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Dimension",
+     "source_id": "A9.T4.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "4B",
+     "source_id": "A9.T4.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "8B",
+     "source_id": "A9.T4.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "Verdict",
+     "source_id": "A9.T4.2.1.4"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 6,
+     "column": 0,
+     "text": "API-Bank",
+     "source_id": "A9.T4.2.7.1"
+    },
+    {
+     "row": 6,
+     "column": 1,
+     "text": "zero regression (bit-exact tie)",
+     "source_id": "A9.T4.2.7.2"
+    },
+    {
+     "row": 6,
+     "column": 2,
+     "text": "all configurations at or above base (both@0.25 +4.4 pt)",
+     "source_id": "A9.T4.2.7.3"
+    },
+    {
+     "row": 6,
+     "column": 3,
+     "text": "zero regression across scales",
+     "source_id": "A9.T4.2.7.4"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.01415v1_c0011",
+   "arxiv_id": "2611.01415v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01415v1#S3.SS1",
+   "section": "experiments",
+   "subsection": "setup",
+   "high_value": false,
+   "text": "Instruction compilation uses Llama-3.2-1B-Instruct (M1), Qwen3-4B ( Yang et al., 2025 ) (M2), Llama-3.1-8B-Instruct (M3), and an independent replication track on Llama-3.2-1B (base). The evaluation tasks are BoolQ ( Clark et al., 2019 ) , ARC-Challenge ( Clark et al., 2018 ) , GSM8K ( Cobbe et al., 2021 ) , and MBPP under sandboxed pass@1, with SVAMP and ARC-Easy as out-of-distribution targets. Policy compilation uses Qwen3-4B and Qwen3-8B on ToolHop ( Ye et al., 2025 ) ( n{=}95 ), SearchQA over HotpotQA ( Yang et al., 2018 ) and 2WikiMultihopQA ( Ho et al., 2020 ) ( n{=}50 ), and API-Bank ( Li et al., 2023b ) ( n{=}34 ), all under official round-3 harness pairings with evaluation pools disjoint from training. Statistics follow one discipline. Criteria are preregistered, selection uses validation only, and the test set is touched once. We report paired bootstrap 95% CIs ( B{=}10{,}000 ) over 3 training seeds for instruction settings, and at least 2 independent full evaluations per adopted policy configuration with per-item paired net differences. Appendix A gives the full protocol. Main results on the HarnessForge benchmark suite, following its\nbaseline suite. Search-style rows search over agent harnesses, training-style\nrows update policy weights, and HarnessForge is the full co-evolution framework. Ours is evaluated under our controlled single-round alignment\nprotocol, which uses the official round-3 harness pairing and evaluation pools\ndisjoint from training, and which is protocol-distinct from the co-evolution rows\nabove. Params (%) is the trainable fraction of backbone parameters\n(LoRA for training-style rows and HarnessForge, while search-style rows update no\nweights). Best in bold , second best underlined , per\nbackbone.",
+   "text_with_context": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts | Experiments > Setup\n\nInstruction compilation uses Llama-3.2-1B-Instruct (M1), Qwen3-4B ( Yang et al., 2025 ) (M2), Llama-3.1-8B-Instruct (M3), and an independent replication track on Llama-3.2-1B (base). The evaluation tasks are BoolQ ( Clark et al., 2019 ) , ARC-Challenge ( Clark et al., 2018 ) , GSM8K ( Cobbe et al., 2021 ) , and MBPP under sandboxed pass@1, with SVAMP and ARC-Easy as out-of-distribution targets. Policy compilation uses Qwen3-4B and Qwen3-8B on ToolHop ( Ye et al., 2025 ) ( n{=}95 ), SearchQA over HotpotQA ( Yang et al., 2018 ) and 2WikiMultihopQA ( Ho et al., 2020 ) ( n{=}50 ), and API-Bank ( Li et al., 2023b ) ( n{=}34 ), all under official round-3 harness pairings with evaluation pools disjoint from training. Statistics follow one discipline. Criteria are preregistered, selection uses validation only, and the test set is touched once. We report paired bootstrap 95% CIs ( B{=}10{,}000 ) over 3 training seeds for instruction settings, and at least 2 independent full evaluations per adopted policy configuration with per-item paired net differences. Appendix A gives the full protocol. Main results on the HarnessForge benchmark suite, following its\nbaseline suite. Search-style rows search over agent harnesses, training-style\nrows update policy weights, and HarnessForge is the full co-evolution framework. Ours is evaluated under our controlled single-round alignment\nprotocol, which uses the official round-3 harness pairing and evaluation pools\ndisjoint from training, and which is protocol-distinct from the co-evolution rows\nabove. Params (%) is the trainable fraction of backbone parameters\n(LoRA for training-style rows and HarnessForge, while search-style rows update no\nweights). Best in bold , second best underlined , per\nbackbone.",
+   "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01415v1#S3.SS1",
+   "pdf_url": "https://arxiv.org/pdf/2611.01415v1",
+   "source_sha256": "78fd7f83a0071ffa090e194b5083f1d20ad859d8ea25d1f1231eda80f94546ff"
+  },
+  {
+   "chunk_id": "2611.01415v1_c0002",
+   "arxiv_id": "2611.01415v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01415v1#S1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": ". They also bind one behavior to one set of edited weights and fix the intervention strength at merge time. We propose a third destination and compile the harness. At compile time the frozen model produces its own supervision under the external condition. The supervision is either teacher traces generated with an explicit behavior instruction prepended, or decision pairs harvested from trajectories that succeeded under an agentic harness. A rank-8 low-rank shift is then trained at the output of every decoder block and exported as a per-layer bundle. At run time the bundle is injected into the residual stream after each block. The model then behaves as if the condition were present, without the condition text, at zero additional tokens, with every backbone parameter bit-identical. We call the compiled artifact a latent harness . Figure 1 summarizes the pipeline. Latent Harness compiles external conditions into post-block activation shifts. Teacher traces or strictly filtered success trajectories train a rank-8 shift at every block output of a frozen backbone. The bundle injects at run time with strength, phase, and mixing controls. Compilation preserves behavior more faithfully than we expected. Across preregistered settings the compiled shift recovers most of the explicit-harness gain. In the settings where the text harness pays the heaviest per-call token tax, the compiled form exceeds it, because the internalized behavior pays that tax once, at compile time. The compiled object is the behavior itself and does not reduce to generic task skill. Preregistered behavioral markers move with the scores, accuracy-only adapters dissociate from behavior, shuffled pairings fail to reproduce it, and a harmful harness compiles into a harmful latent with the same fidelity",
+   "text_with_context": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts | Introduction\n\n. They also bind one behavior to one set of edited weights and fix the intervention strength at merge time. We propose a third destination and compile the harness. At compile time the frozen model produces its own supervision under the external condition. The supervision is either teacher traces generated with an explicit behavior instruction prepended, or decision pairs harvested from trajectories that succeeded under an agentic harness. A rank-8 low-rank shift is then trained at the output of every decoder block and exported as a per-layer bundle. At run time the bundle is injected into the residual stream after each block. The model then behaves as if the condition were present, without the condition text, at zero additional tokens, with every backbone parameter bit-identical. We call the compiled artifact a latent harness . Figure 1 summarizes the pipeline. Latent Harness compiles external conditions into post-block activation shifts. Teacher traces or strictly filtered success trajectories train a rank-8 shift at every block output of a frozen backbone. The bundle injects at run time with strength, phase, and mixing controls. Compilation preserves behavior more faithfully than we expected. Across preregistered settings the compiled shift recovers most of the explicit-harness gain. In the settings where the text harness pays the heaviest per-call token tax, the compiled form exceeds it, because the internalized behavior pays that tax once, at compile time. The compiled object is the behavior itself and does not reduce to generic task skill. Preregistered behavioral markers move with the scores, accuracy-only adapters dissociate from behavior, shuffled pairings fail to reproduce it, and a harmful harness compiles into a harmful latent with the same fidelity",
+   "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01415v1#S1",
+   "pdf_url": "https://arxiv.org/pdf/2611.01415v1",
+   "source_sha256": "78fd7f83a0071ffa090e194b5083f1d20ad859d8ea25d1f1231eda80f94546ff"
+  },
+  {
+   "chunk_id": "2611.01415v1_c0001",
+   "arxiv_id": "2611.01415v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01415v1#S1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": "The performance of a language-model agent is increasingly set by its harness, meaning the instructions, tool policies, memory, and verification scaffolds wrapped around model calls. Recent work searches over program spaces ( Hu et al., 2025 ; Zhang et al., 2025b ) and over modular design spaces ( Shang et al., 2025 ; Zhang et al., 2025a ) , and some of it constrains the search to safety ( Zheng et al., 2025 ) . A second line makes harnesses improve themselves, either by synthesizing code harnesses from failures ( Lou et al., 2026 ) , by editing executable runtime harnesses ( Shao et al., 2026 ) , or by optimizing harness and model jointly ( Lee et al., 2026 ) . Surveys document how broad this engineering surface has become ( Meng et al., 2026 ) . Where the resulting gains end up is almost always one of two places, in text that surrounds the model or in the model’s weights. Both carry structural costs. A textual condition is a recurring expense. Even a 49-token process instruction is re-sent on every call, the behavior exists only while the text is present, and serving several harnesses multiplies prompt length. Weight updates internalize at a different price. Training-style policy alignment such as SFT, RLOO, and GRPO ( Shao et al., 2024 ) , co-evolution frameworks that update policy weights alongside the harness ( Chen et al., 2026c ; Chen et al., 2026b ; Hebbar et al., 2026 ) , and self-evolving agents that write acquired skills into fine-tuned or RL-trained weights ( Huang et al., 2026 ; Xia et al., 2026 ; Zhang et al., 2026b ) all modify millions of parameters per behavior. They also bind one behavior to one set of edited weights and fix the intervention strength at merge time. We propose a third destination and compile the harness",
+   "text_with_context": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts | Introduction\n\nThe performance of a language-model agent is increasingly set by its harness, meaning the instructions, tool policies, memory, and verification scaffolds wrapped around model calls. Recent work searches over program spaces ( Hu et al., 2025 ; Zhang et al., 2025b ) and over modular design spaces ( Shang et al., 2025 ; Zhang et al., 2025a ) , and some of it constrains the search to safety ( Zheng et al., 2025 ) . A second line makes harnesses improve themselves, either by synthesizing code harnesses from failures ( Lou et al., 2026 ) , by editing executable runtime harnesses ( Shao et al., 2026 ) , or by optimizing harness and model jointly ( Lee et al., 2026 ) . Surveys document how broad this engineering surface has become ( Meng et al., 2026 ) . Where the resulting gains end up is almost always one of two places, in text that surrounds the model or in the model’s weights. Both carry structural costs. A textual condition is a recurring expense. Even a 49-token process instruction is re-sent on every call, the behavior exists only while the text is present, and serving several harnesses multiplies prompt length. Weight updates internalize at a different price. Training-style policy alignment such as SFT, RLOO, and GRPO ( Shao et al., 2024 ) , co-evolution frameworks that update policy weights alongside the harness ( Chen et al., 2026c ; Chen et al., 2026b ; Hebbar et al., 2026 ) , and self-evolving agents that write acquired skills into fine-tuned or RL-trained weights ( Huang et al., 2026 ; Xia et al., 2026 ; Zhang et al., 2026b ) all modify millions of parameters per behavior. They also bind one behavior to one set of edited weights and fix the intervention strength at merge time. We propose a third destination and compile the harness",
+   "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01415v1#S1",
+   "pdf_url": "https://arxiv.org/pdf/2611.01415v1",
+   "source_sha256": "78fd7f83a0071ffa090e194b5083f1d20ad859d8ea25d1f1231eda80f94546ff"
+  },
+  {
+   "chunk_id": "2611.01415v1_c0021",
+   "arxiv_id": "2611.01415v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01415v1#S5",
+   "section": "limitations",
+   "subsection": "",
+   "high_value": true,
+   "text": "Gain locations move with the model-task pair. ToolHop gains concentrate or spread across strengths, and SearchQA flips direction from 4B to 8B. We therefore claim per-pair applicability only, and the runtime controls exist to support per-pair tuning. Strength has a hard ceiling. Beyond the plateau the policy stops producing valid answers, the failure is prompt-side specific, and the onset moves earlier with scale, so deployments must sweep s before fixing it. Our policy results are single-round alignment of a base policy to a fixed harness, not multi-round co-evolution, so the dagger rows of Table 1 are protocol-distinct from the published co-evolution numbers. Evaluation pools are small (95, 50, and 34 items). We mitigate this with repeated full evaluations and per-item paired analysis, but absolute deltas of a few points should be read with that limitation in mind. Instruction compilation covers short process-level instructions. Harnesses too complex to state as text are handled by the trajectory route.",
+   "text_with_context": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts | Limitations\n\nGain locations move with the model-task pair. ToolHop gains concentrate or spread across strengths, and SearchQA flips direction from 4B to 8B. We therefore claim per-pair applicability only, and the runtime controls exist to support per-pair tuning. Strength has a hard ceiling. Beyond the plateau the policy stops producing valid answers, the failure is prompt-side specific, and the onset moves earlier with scale, so deployments must sweep s before fixing it. Our policy results are single-round alignment of a base policy to a fixed harness, not multi-round co-evolution, so the dagger rows of Table 1 are protocol-distinct from the published co-evolution numbers. Evaluation pools are small (95, 50, and 34 items). We mitigate this with repeated full evaluations and per-item paired analysis, but absolute deltas of a few points should be read with that limitation in mind. Instruction compilation covers short process-level instructions. Harnesses too complex to state as text are handled by the trajectory route.",
+   "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01415v1#S5",
+   "pdf_url": "https://arxiv.org/pdf/2611.01415v1",
+   "source_sha256": "78fd7f83a0071ffa090e194b5083f1d20ad859d8ea25d1f1231eda80f94546ff"
+  },
+  {
+   "chunk_id": "2611.01415v1_table_080f58af664ee53b_1",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nLatent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts\nTable 2: Controlled test-set comparison, one touch and preregistered. SOFT-PROMPT is parameter-matched and trained on the same distillation signal. TASK-ADAPTER is trained on gold labels at matched capacity. \\Delta_{L} is ours over base, and R=\\Delta_{L}/\\Delta_{E} uses the explicit gains in Fig. 7 . All \\Delta_{L} CIs exclude zero, and 8 of 10 enrolled settings meet the criterion R\\geq 0.5 .\nSetting: M1 \\cdot ARC \\times COMPUTE; EXPL.: 0.300; SOFT-PROMPT: 0.347; TASK-ADAPTER: 0.533; OURS: 0.322; \\Delta_{L} ( R ): +0.082 (1.23)",
+   "arxiv_id": "2611.01415v1",
+   "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01415v1",
+   "html_url": "https://arxiv.org/html/2611.01415v1#S3.T2",
+   "source_url": "https://arxiv.org/html/2611.01415v1#S3.T2",
+   "page_number": null,
+   "source_sha256": "78fd7f83a0071ffa090e194b5083f1d20ad859d8ea25d1f1231eda80f94546ff",
+   "source_anchor": "S3.T2",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Experiments",
+   "subsection": "Instruction compilation preserves the source gain",
+   "section_id": "S3",
+   "subsection_id": "S3.SS3",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S3.T2",
+   "table_row": 1,
+   "row_label": "M1 \\cdot ARC \\times COMPUTE",
+   "caption": "Table 2: Controlled test-set comparison, one touch and preregistered. SOFT-PROMPT is parameter-matched and trained on the same distillation signal. TASK-ADAPTER is trained on gold labels at matched capacity. \\Delta_{L} is ours over base, and R=\\Delta_{L}/\\Delta_{E} uses the explicit gains in Fig. 7 . All \\Delta_{L} CIs exclude zero, and 8 of 10 enrolled settings meet the criterion R\\geq 0.5 .",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Setting",
+     "source_id": "S3.T2.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "EXPL.",
+     "source_id": "S3.T2.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "SOFT-PROMPT",
+     "source_id": "S3.T2.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "TASK-ADAPTER",
+     "source_id": "S3.T2.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "OURS",
+     "source_id": "S3.T2.2.1.5"
+    },
+    {
+     "column": 5,
+     "text": "\\Delta_{L} ( R )",
+     "source_id": "S3.T2.2.1.6"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 1,
+     "column": 0,
+     "text": "M1 \\cdot ARC \\times COMPUTE",
+     "source_id": "S3.T2.2.2.1"
+    },
+    {
+     "row": 1,
+     "column": 1,
+     "text": "0.300",
+     "source_id": "S3.T2.2.2.2"
+    },
+    {
+     "row": 1,
+     "column": 2,
+     "text": "0.347",
+     "source_id": "S3.T2.2.2.3"
+    },
+    {
+     "row": 1,
+     "column": 3,
+     "text": "0.533",
+     "source_id": "S3.T2.2.2.4"
+    },
+    {
+     "row": 1,
+     "column": 4,
+     "text": "0.322",
+     "source_id": "S3.T2.2.2.5"
+    },
+    {
+     "row": 1,
+     "column": 5,
+     "text": "+0.082 (1.23)",
+     "source_id": "S3.T2.2.2.6"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.01415v1_table_080f58af664ee53b_2",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nLatent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts\nTable 2: Controlled test-set comparison, one touch and preregistered. SOFT-PROMPT is parameter-matched and trained on the same distillation signal. TASK-ADAPTER is trained on gold labels at matched capacity. \\Delta_{L} is ours over base, and R=\\Delta_{L}/\\Delta_{E} uses the explicit gains in Fig. 7 . All \\Delta_{L} CIs exclude zero, and 8 of 10 enrolled settings meet the criterion R\\geq 0.5 .\nSetting: M1 \\cdot ARC \\times CONCISE; EXPL.: 0.380; SOFT-PROMPT: 0.376; TASK-ADAPTER: 0.533; OURS: 0.362; \\Delta_{L} ( R ): +0.122 (0.83)",
+   "arxiv_id": "2611.01415v1",
+   "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01415v1",
+   "html_url": "https://arxiv.org/html/2611.01415v1#S3.T2",
+   "source_url": "https://arxiv.org/html/2611.01415v1#S3.T2",
+   "page_number": null,
+   "source_sha256": "78fd7f83a0071ffa090e194b5083f1d20ad859d8ea25d1f1231eda80f94546ff",
+   "source_anchor": "S3.T2",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Experiments",
+   "subsection": "Instruction compilation preserves the source gain",
+   "section_id": "S3",
+   "subsection_id": "S3.SS3",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S3.T2",
+   "table_row": 2,
+   "row_label": "M1 \\cdot ARC \\times CONCISE",
+   "caption": "Table 2: Controlled test-set comparison, one touch and preregistered. SOFT-PROMPT is parameter-matched and trained on the same distillation signal. TASK-ADAPTER is trained on gold labels at matched capacity. \\Delta_{L} is ours over base, and R=\\Delta_{L}/\\Delta_{E} uses the explicit gains in Fig. 7 . All \\Delta_{L} CIs exclude zero, and 8 of 10 enrolled settings meet the criterion R\\geq 0.5 .",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Setting",
+     "source_id": "S3.T2.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "EXPL.",
+     "source_id": "S3.T2.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "SOFT-PROMPT",
+     "source_id": "S3.T2.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "TASK-ADAPTER",
+     "source_id": "S3.T2.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "OURS",
+     "source_id": "S3.T2.2.1.5"
+    },
+    {
+     "column": 5,
+     "text": "\\Delta_{L} ( R )",
+     "source_id": "S3.T2.2.1.6"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 2,
+     "column": 0,
+     "text": "M1 \\cdot ARC \\times CONCISE",
+     "source_id": "S3.T2.2.3.1"
+    },
+    {
+     "row": 2,
+     "column": 1,
+     "text": "0.380",
+     "source_id": "S3.T2.2.3.2"
+    },
+    {
+     "row": 2,
+     "column": 2,
+     "text": "0.376",
+     "source_id": "S3.T2.2.3.3"
+    },
+    {
+     "row": 2,
+     "column": 3,
+     "text": "0.533",
+     "source_id": "S3.T2.2.3.4"
+    },
+    {
+     "row": 2,
+     "column": 4,
+     "text": "0.362",
+     "source_id": "S3.T2.2.3.5"
+    },
+    {
+     "row": 2,
+     "column": 5,
+     "text": "+0.122 (0.83)",
+     "source_id": "S3.T2.2.3.6"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.01415v1_table_080f58af664ee53b_3",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nLatent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts\nTable 2: Controlled test-set comparison, one touch and preregistered. SOFT-PROMPT is parameter-matched and trained on the same distillation signal. TASK-ADAPTER is trained on gold labels at matched capacity. \\Delta_{L} is ours over base, and R=\\Delta_{L}/\\Delta_{E} uses the explicit gains in Fig. 7 . All \\Delta_{L} CIs exclude zero, and 8 of 10 enrolled settings meet the criterion R\\geq 0.5 .\nSetting: M1 \\cdot MBPP \\times TESTCONSULT; EXPL.: 0.066; SOFT-PROMPT: 0.079; TASK-ADAPTER: 0.308; OURS: 0.323; \\Delta_{L} ( R ): +0.317 (5.86)",
+   "arxiv_id": "2611.01415v1",
+   "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01415v1",
+   "html_url": "https://arxiv.org/html/2611.01415v1#S3.T2",
+   "source_url": "https://arxiv.org/html/2611.01415v1#S3.T2",
+   "page_number": null,
+   "source_sha256": "78fd7f83a0071ffa090e194b5083f1d20ad859d8ea25d1f1231eda80f94546ff",
+   "source_anchor": "S3.T2",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Experiments",
+   "subsection": "Instruction compilation preserves the source gain",
+   "section_id": "S3",
+   "subsection_id": "S3.SS3",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S3.T2",
+   "table_row": 3,
+   "row_label": "M1 \\cdot MBPP \\times TESTCONSULT",
+   "caption": "Table 2: Controlled test-set comparison, one touch and preregistered. SOFT-PROMPT is parameter-matched and trained on the same distillation signal. TASK-ADAPTER is trained on gold labels at matched capacity. \\Delta_{L} is ours over base, and R=\\Delta_{L}/\\Delta_{E} uses the explicit gains in Fig. 7 . All \\Delta_{L} CIs exclude zero, and 8 of 10 enrolled settings meet the criterion R\\geq 0.5 .",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Setting",
+     "source_id": "S3.T2.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "EXPL.",
+     "source_id": "S3.T2.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "SOFT-PROMPT",
+     "source_id": "S3.T2.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "TASK-ADAPTER",
+     "source_id": "S3.T2.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "OURS",
+     "source_id": "S3.T2.2.1.5"
+    },
+    {
+     "column": 5,
+     "text": "\\Delta_{L} ( R )",
+     "source_id": "S3.T2.2.1.6"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 3,
+     "column": 0,
+     "text": "M1 \\cdot MBPP \\times TESTCONSULT",
+     "source_id": "S3.T2.2.4.1"
+    },
+    {
+     "row": 3,
+     "column": 1,
+     "text": "0.066",
+     "source_id": "S3.T2.2.4.2"
+    },
+    {
+     "row": 3,
+     "column": 2,
+     "text": "0.079",
+     "source_id": "S3.T2.2.4.3"
+    },
+    {
+     "row": 3,
+     "column": 3,
+     "text": "0.308",
+     "source_id": "S3.T2.2.4.4"
+    },
+    {
+     "row": 3,
+     "column": 4,
+     "text": "0.323",
+     "source_id": "S3.T2.2.4.5"
+    },
+    {
+     "row": 3,
+     "column": 5,
+     "text": "+0.317 (5.86)",
+     "source_id": "S3.T2.2.4.6"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.01415v1_table_080f58af664ee53b_4",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nLatent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts\nTable 2: Controlled test-set comparison, one touch and preregistered. SOFT-PROMPT is parameter-matched and trained on the same distillation signal. TASK-ADAPTER is trained on gold labels at matched capacity. \\Delta_{L} is ours over base, and R=\\Delta_{L}/\\Delta_{E} uses the explicit gains in Fig. 7 . All \\Delta_{L} CIs exclude zero, and 8 of 10 enrolled settings meet the criterion R\\geq 0.5 .\nSetting: M2 \\cdot MBPP \\times DECOMPOSE; EXPL.: 0.410; SOFT-PROMPT: 0.508; TASK-ADAPTER: 0.562; OURS: 0.661; \\Delta_{L} ( R ): +0.619 (1.66)",
+   "arxiv_id": "2611.01415v1",
+   "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01415v1",
+   "html_url": "https://arxiv.org/html/2611.01415v1#S3.T2",
+   "source_url": "https://arxiv.org/html/2611.01415v1#S3.T2",
+   "page_number": null,
+   "source_sha256": "78fd7f83a0071ffa090e194b5083f1d20ad859d8ea25d1f1231eda80f94546ff",
+   "source_anchor": "S3.T2",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Experiments",
+   "subsection": "Instruction compilation preserves the source gain",
+   "section_id": "S3",
+   "subsection_id": "S3.SS3",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S3.T2",
+   "table_row": 4,
+   "row_label": "M2 \\cdot MBPP \\times DECOMPOSE",
+   "caption": "Table 2: Controlled test-set comparison, one touch and preregistered. SOFT-PROMPT is parameter-matched and trained on the same distillation signal. TASK-ADAPTER is trained on gold labels at matched capacity. \\Delta_{L} is ours over base, and R=\\Delta_{L}/\\Delta_{E} uses the explicit gains in Fig. 7 . All \\Delta_{L} CIs exclude zero, and 8 of 10 enrolled settings meet the criterion R\\geq 0.5 .",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Setting",
+     "source_id": "S3.T2.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "EXPL.",
+     "source_id": "S3.T2.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "SOFT-PROMPT",
+     "source_id": "S3.T2.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "TASK-ADAPTER",
+     "source_id": "S3.T2.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "OURS",
+     "source_id": "S3.T2.2.1.5"
+    },
+    {
+     "column": 5,
+     "text": "\\Delta_{L} ( R )",
+     "source_id": "S3.T2.2.1.6"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 4,
+     "column": 0,
+     "text": "M2 \\cdot MBPP \\times DECOMPOSE",
+     "source_id": "S3.T2.2.5.1"
+    },
+    {
+     "row": 4,
+     "column": 1,
+     "text": "0.410",
+     "source_id": "S3.T2.2.5.2"
+    },
+    {
+     "row": 4,
+     "column": 2,
+     "text": "0.508",
+     "source_id": "S3.T2.2.5.3"
+    },
+    {
+     "row": 4,
+     "column": 3,
+     "text": "0.562",
+     "source_id": "S3.T2.2.5.4"
+    },
+    {
+     "row": 4,
+     "column": 4,
+     "text": "0.661",
+     "source_id": "S3.T2.2.5.5"
+    },
+    {
+     "row": 4,
+     "column": 5,
+     "text": "+0.619 (1.66)",
+     "source_id": "S3.T2.2.5.6"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.01415v1_table_080f58af664ee53b_5",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nLatent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts\nTable 2: Controlled test-set comparison, one touch and preregistered. SOFT-PROMPT is parameter-matched and trained on the same distillation signal. TASK-ADAPTER is trained on gold labels at matched capacity. \\Delta_{L} is ours over base, and R=\\Delta_{L}/\\Delta_{E} uses the explicit gains in Fig. 7 . All \\Delta_{L} CIs exclude zero, and 8 of 10 enrolled settings meet the criterion R\\geq 0.5 .\nSetting: M2 \\cdot MBPP \\times COMPUTE; EXPL.: 0.470; SOFT-PROMPT: 0.521; TASK-ADAPTER: 0.554; OURS: 0.660; \\Delta_{L} ( R ): +0.618 (1.43)",
+   "arxiv_id": "2611.01415v1",
+   "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01415v1",
+   "html_url": "https://arxiv.org/html/2611.01415v1#S3.T2",
+   "source_url": "https://arxiv.org/html/2611.01415v1#S3.T2",
+   "page_number": null,
+   "source_sha256": "78fd7f83a0071ffa090e194b5083f1d20ad859d8ea25d1f1231eda80f94546ff",
+   "source_anchor": "S3.T2",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Experiments",
+   "subsection": "Instruction compilation preserves the source gain",
+   "section_id": "S3",
+   "subsection_id": "S3.SS3",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S3.T2",
+   "table_row": 5,
+   "row_label": "M2 \\cdot MBPP \\times COMPUTE",
+   "caption": "Table 2: Controlled test-set comparison, one touch and preregistered. SOFT-PROMPT is parameter-matched and trained on the same distillation signal. TASK-ADAPTER is trained on gold labels at matched capacity. \\Delta_{L} is ours over base, and R=\\Delta_{L}/\\Delta_{E} uses the explicit gains in Fig. 7 . All \\Delta_{L} CIs exclude zero, and 8 of 10 enrolled settings meet the criterion R\\geq 0.5 .",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Setting",
+     "source_id": "S3.T2.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "EXPL.",
+     "source_id": "S3.T2.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "SOFT-PROMPT",
+     "source_id": "S3.T2.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "TASK-ADAPTER",
+     "source_id": "S3.T2.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "OURS",
+     "source_id": "S3.T2.2.1.5"
+    },
+    {
+     "column": 5,
+     "text": "\\Delta_{L} ( R )",
+     "source_id": "S3.T2.2.1.6"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 5,
+     "column": 0,
+     "text": "M2 \\cdot MBPP \\times COMPUTE",
+     "source_id": "S3.T2.2.6.1"
+    },
+    {
+     "row": 5,
+     "column": 1,
+     "text": "0.470",
+     "source_id": "S3.T2.2.6.2"
+    },
+    {
+     "row": 5,
+     "column": 2,
+     "text": "0.521",
+     "source_id": "S3.T2.2.6.3"
+    },
+    {
+     "row": 5,
+     "column": 3,
+     "text": "0.554",
+     "source_id": "S3.T2.2.6.4"
+    },
+    {
+     "row": 5,
+     "column": 4,
+     "text": "0.660",
+     "source_id": "S3.T2.2.6.5"
+    },
+    {
+     "row": 5,
+     "column": 5,
+     "text": "+0.618 (1.43)",
+     "source_id": "S3.T2.2.6.6"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.01415v1_table_080f58af664ee53b_6",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nLatent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts\nTable 2: Controlled test-set comparison, one touch and preregistered. SOFT-PROMPT is parameter-matched and trained on the same distillation signal. TASK-ADAPTER is trained on gold labels at matched capacity. \\Delta_{L} is ours over base, and R=\\Delta_{L}/\\Delta_{E} uses the explicit gains in Fig. 7 . All \\Delta_{L} CIs exclude zero, and 8 of 10 enrolled settings meet the criterion R\\geq 0.5 .\nSetting: M2 \\cdot MBPP \\times CONCISE; EXPL.: 0.396; SOFT-PROMPT: 0.531; TASK-ADAPTER: 0.570; OURS: 0.687; \\Delta_{L} ( R ): +0.645 (1.80)",
+   "arxiv_id": "2611.01415v1",
+   "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01415v1",
+   "html_url": "https://arxiv.org/html/2611.01415v1#S3.T2",
+   "source_url": "https://arxiv.org/html/2611.01415v1#S3.T2",
+   "page_number": null,
+   "source_sha256": "78fd7f83a0071ffa090e194b5083f1d20ad859d8ea25d1f1231eda80f94546ff",
+   "source_anchor": "S3.T2",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Experiments",
+   "subsection": "Instruction compilation preserves the source gain",
+   "section_id": "S3",
+   "subsection_id": "S3.SS3",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S3.T2",
+   "table_row": 6,
+   "row_label": "M2 \\cdot MBPP \\times CONCISE",
+   "caption": "Table 2: Controlled test-set comparison, one touch and preregistered. SOFT-PROMPT is parameter-matched and trained on the same distillation signal. TASK-ADAPTER is trained on gold labels at matched capacity. \\Delta_{L} is ours over base, and R=\\Delta_{L}/\\Delta_{E} uses the explicit gains in Fig. 7 . All \\Delta_{L} CIs exclude zero, and 8 of 10 enrolled settings meet the criterion R\\geq 0.5 .",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Setting",
+     "source_id": "S3.T2.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "EXPL.",
+     "source_id": "S3.T2.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "SOFT-PROMPT",
+     "source_id": "S3.T2.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "TASK-ADAPTER",
+     "source_id": "S3.T2.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "OURS",
+     "source_id": "S3.T2.2.1.5"
+    },
+    {
+     "column": 5,
+     "text": "\\Delta_{L} ( R )",
+     "source_id": "S3.T2.2.1.6"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 6,
+     "column": 0,
+     "text": "M2 \\cdot MBPP \\times CONCISE",
+     "source_id": "S3.T2.2.7.1"
+    },
+    {
+     "row": 6,
+     "column": 1,
+     "text": "0.396",
+     "source_id": "S3.T2.2.7.2"
+    },
+    {
+     "row": 6,
+     "column": 2,
+     "text": "0.531",
+     "source_id": "S3.T2.2.7.3"
+    },
+    {
+     "row": 6,
+     "column": 3,
+     "text": "0.570",
+     "source_id": "S3.T2.2.7.4"
+    },
+    {
+     "row": 6,
+     "column": 4,
+     "text": "0.687",
+     "source_id": "S3.T2.2.7.5"
+    },
+    {
+     "row": 6,
+     "column": 5,
+     "text": "+0.645 (1.80)",
+     "source_id": "S3.T2.2.7.6"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.01415v1_table_080f58af664ee53b_7",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nLatent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts\nTable 2: Controlled test-set comparison, one touch and preregistered. SOFT-PROMPT is parameter-matched and trained on the same distillation signal. TASK-ADAPTER is trained on gold labels at matched capacity. \\Delta_{L} is ours over base, and R=\\Delta_{L}/\\Delta_{E} uses the explicit gains in Fig. 7 . All \\Delta_{L} CIs exclude zero, and 8 of 10 enrolled settings meet the criterion R\\geq 0.5 .\nSetting: M3 \\cdot BoolQ \\times CONCISE; EXPL.: 0.809; SOFT-PROMPT: 0.833; TASK-ADAPTER: 0.891; OURS: 0.774; \\Delta_{L} ( R ): +0.077 (0.71)",
+   "arxiv_id": "2611.01415v1",
+   "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01415v1",
+   "html_url": "https://arxiv.org/html/2611.01415v1#S3.T2",
+   "source_url": "https://arxiv.org/html/2611.01415v1#S3.T2",
+   "page_number": null,
+   "source_sha256": "78fd7f83a0071ffa090e194b5083f1d20ad859d8ea25d1f1231eda80f94546ff",
+   "source_anchor": "S3.T2",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Experiments",
+   "subsection": "Instruction compilation preserves the source gain",
+   "section_id": "S3",
+   "subsection_id": "S3.SS3",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S3.T2",
+   "table_row": 7,
+   "row_label": "M3 \\cdot BoolQ \\times CONCISE",
+   "caption": "Table 2: Controlled test-set comparison, one touch and preregistered. SOFT-PROMPT is parameter-matched and trained on the same distillation signal. TASK-ADAPTER is trained on gold labels at matched capacity. \\Delta_{L} is ours over base, and R=\\Delta_{L}/\\Delta_{E} uses the explicit gains in Fig. 7 . All \\Delta_{L} CIs exclude zero, and 8 of 10 enrolled settings meet the criterion R\\geq 0.5 .",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Setting",
+     "source_id": "S3.T2.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "EXPL.",
+     "source_id": "S3.T2.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "SOFT-PROMPT",
+     "source_id": "S3.T2.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "TASK-ADAPTER",
+     "source_id": "S3.T2.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "OURS",
+     "source_id": "S3.T2.2.1.5"
+    },
+    {
+     "column": 5,
+     "text": "\\Delta_{L} ( R )",
+     "source_id": "S3.T2.2.1.6"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 7,
+     "column": 0,
+     "text": "M3 \\cdot BoolQ \\times CONCISE",
+     "source_id": "S3.T2.2.8.1"
+    },
+    {
+     "row": 7,
+     "column": 1,
+     "text": "0.809",
+     "source_id": "S3.T2.2.8.2"
+    },
+    {
+     "row": 7,
+     "column": 2,
+     "text": "0.833",
+     "source_id": "S3.T2.2.8.3"
+    },
+    {
+     "row": 7,
+     "column": 3,
+     "text": "0.891",
+     "source_id": "S3.T2.2.8.4"
+    },
+    {
+     "row": 7,
+     "column": 4,
+     "text": "0.774",
+     "source_id": "S3.T2.2.8.5"
+    },
+    {
+     "row": 7,
+     "column": 5,
+     "text": "+0.077 (0.71)",
+     "source_id": "S3.T2.2.8.6"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.01415v1_table_080f58af664ee53b_8",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nLatent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts\nTable 2: Controlled test-set comparison, one touch and preregistered. SOFT-PROMPT is parameter-matched and trained on the same distillation signal. TASK-ADAPTER is trained on gold labels at matched capacity. \\Delta_{L} is ours over base, and R=\\Delta_{L}/\\Delta_{E} uses the explicit gains in Fig. 7 . All \\Delta_{L} CIs exclude zero, and 8 of 10 enrolled settings meet the criterion R\\geq 0.5 .\nSetting: M3 \\cdot BoolQ \\times TESTCONSULT; EXPL.: 0.807; SOFT-PROMPT: 0.822; TASK-ADAPTER: 0.893; OURS: 0.826; \\Delta_{L} ( R ): +0.128 (1.20)",
+   "arxiv_id": "2611.01415v1",
+   "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01415v1",
+   "html_url": "https://arxiv.org/html/2611.01415v1#S3.T2",
+   "source_url": "https://arxiv.org/html/2611.01415v1#S3.T2",
+   "page_number": null,
+   "source_sha256": "78fd7f83a0071ffa090e194b5083f1d20ad859d8ea25d1f1231eda80f94546ff",
+   "source_anchor": "S3.T2",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Experiments",
+   "subsection": "Instruction compilation preserves the source gain",
+   "section_id": "S3",
+   "subsection_id": "S3.SS3",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S3.T2",
+   "table_row": 8,
+   "row_label": "M3 \\cdot BoolQ \\times TESTCONSULT",
+   "caption": "Table 2: Controlled test-set comparison, one touch and preregistered. SOFT-PROMPT is parameter-matched and trained on the same distillation signal. TASK-ADAPTER is trained on gold labels at matched capacity. \\Delta_{L} is ours over base, and R=\\Delta_{L}/\\Delta_{E} uses the explicit gains in Fig. 7 . All \\Delta_{L} CIs exclude zero, and 8 of 10 enrolled settings meet the criterion R\\geq 0.5 .",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Setting",
+     "source_id": "S3.T2.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "EXPL.",
+     "source_id": "S3.T2.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "SOFT-PROMPT",
+     "source_id": "S3.T2.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "TASK-ADAPTER",
+     "source_id": "S3.T2.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "OURS",
+     "source_id": "S3.T2.2.1.5"
+    },
+    {
+     "column": 5,
+     "text": "\\Delta_{L} ( R )",
+     "source_id": "S3.T2.2.1.6"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 8,
+     "column": 0,
+     "text": "M3 \\cdot BoolQ \\times TESTCONSULT",
+     "source_id": "S3.T2.2.9.1"
+    },
+    {
+     "row": 8,
+     "column": 1,
+     "text": "0.807",
+     "source_id": "S3.T2.2.9.2"
+    },
+    {
+     "row": 8,
+     "column": 2,
+     "text": "0.822",
+     "source_id": "S3.T2.2.9.3"
+    },
+    {
+     "row": 8,
+     "column": 3,
+     "text": "0.893",
+     "source_id": "S3.T2.2.9.4"
+    },
+    {
+     "row": 8,
+     "column": 4,
+     "text": "0.826",
+     "source_id": "S3.T2.2.9.5"
+    },
+    {
+     "row": 8,
+     "column": 5,
+     "text": "+0.128 (1.20)",
+     "source_id": "S3.T2.2.9.6"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.01415v1_paragraph_78ebfa5f5097f0e3_0",
+   "text": "LoRA ( Hu et al., 2021 ) , prefix-tuning ( Li and Liang, 2021 ) , and prompt tuning ( Lester et al., 2021 ) attach low-rank or prompt-side parameters to a frozen backbone. Our operator shares the low-rank parametrization but acts at the post-block junction of the residual stream. Our comparisons hold data, capacity, and effective strength fixed, so they isolate the effect of the site from that of the budget. Behavioral cloning ( Torabi et al., 2018 ) and data-efficient reasoning distillation ( Zhang et al., 2026c ) are output-mimicking relatives of ours. The differences are strict correctness filtering of the source and a preregistered behavior-level attribution protocol on the target.",
+   "arxiv_id": "2611.01415v1",
+   "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01415v1",
+   "html_url": "https://arxiv.org/html/2611.01415v1#S4.SS0.SSS0.Px2",
+   "source_url": "https://arxiv.org/html/2611.01415v1#S4.SS0.SSS0.Px2",
+   "page_number": null,
+   "source_sha256": "78fd7f83a0071ffa090e194b5083f1d20ad859d8ea25d1f1231eda80f94546ff",
+   "source_anchor": "S4.SS0.SSS0.Px2",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Related work",
+   "subsection": "",
+   "section_id": "S4",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "recovered_paragraph",
+   "paragraph_id": "S4.SS0.SSS0.Px2",
+   "paragraph_heading": "Parameter-efficient adaptation.",
+   "same_text_in_baseline": false,
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "text_normalization": "html_text_whitespace_and_math_alttext"
+  },
+  {
+   "chunk_id": "2611.01415v1_c0016",
+   "arxiv_id": "2611.01415v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01415v1#S3.SS4",
+   "section": "experiments",
+   "subsection": "what the bundle carries",
+   "high_value": false,
+   "text": "Accuracy vs. behavior Accuracy alone cannot attribute a compiled artifact. A gold-label adapter trained at matched capacity is the strongest accuracy configuration (up to +0.65 ), yet it leaves every behavioral marker at base level (Figure 4(a) ). We therefore preregistered three evidence chains. The score chain is Table 2 . The marker chain shows behavior moving with scores. Decomposition steps rise from 0 to 4.6 against an explicit source of 4.5, interface alignment from 0.039 to 0.97, and answer-line rate from 0.525 to 1.00, each matching score recovery in magnitude (Figure 4(b) ). The control chain closes the alternatives. Shuffling teacher traces across harnesses flattens every setting and every marker, and parameter-matched soft prompts trained on the same distillation signal are weaker everywhere they can be compared while paying hundreds of tokens per call. The sharpest test of specificity is symmetric. If the bundle encodes harness semantics, harmful harnesses should compile as faithfully as helpful ones. They do. A verification harness that hurts M1 on GSM8K ( -10.7 points explicit) distills to -6.7 points with verify-action marker recovery 1.00, and a harmful M2 pairing reproduces -4.2 with marker recovery 1.09. The negative signature even transfers out of distribution to SVAMP ( -7.9 points, Figure 4(c) ). Whatever the bundle carries, it carries the harness’s behavior rather than a generic improvement.",
+   "text_with_context": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts | Experiments > What The Bundle Carries\n\nAccuracy vs. behavior Accuracy alone cannot attribute a compiled artifact. A gold-label adapter trained at matched capacity is the strongest accuracy configuration (up to +0.65 ), yet it leaves every behavioral marker at base level (Figure 4(a) ). We therefore preregistered three evidence chains. The score chain is Table 2 . The marker chain shows behavior moving with scores. Decomposition steps rise from 0 to 4.6 against an explicit source of 4.5, interface alignment from 0.039 to 0.97, and answer-line rate from 0.525 to 1.00, each matching score recovery in magnitude (Figure 4(b) ). The control chain closes the alternatives. Shuffling teacher traces across harnesses flattens every setting and every marker, and parameter-matched soft prompts trained on the same distillation signal are weaker everywhere they can be compared while paying hundreds of tokens per call. The sharpest test of specificity is symmetric. If the bundle encodes harness semantics, harmful harnesses should compile as faithfully as helpful ones. They do. A verification harness that hurts M1 on GSM8K ( -10.7 points explicit) distills to -6.7 points with verify-action marker recovery 1.00, and a harmful M2 pairing reproduces -4.2 with marker recovery 1.09. The negative signature even transfers out of distribution to SVAMP ( -7.9 points, Figure 4(c) ). Whatever the bundle carries, it carries the harness’s behavior rather than a generic improvement.",
+   "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01415v1#S3.SS4",
+   "pdf_url": "https://arxiv.org/pdf/2611.01415v1",
+   "source_sha256": "78fd7f83a0071ffa090e194b5083f1d20ad859d8ea25d1f1231eda80f94546ff"
+  },
+  {
+   "chunk_id": "2611.01415v1_table_cbb4a4b555b65d1d_1",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nLatent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts\nTable 3: Models and coverage. Rank-8 post-block adapters cover all layers and all tokens, with a SiLU bottleneck for instruction compilation and a linear map for policy compilation. The backbone is frozen, with every parameter verified identical to the original.\nCode: M1; Model: Llama-3.2-1B-Instruct; Layers \\times d: 16 \\times 2048; Trainable: 524,288; Share: 0.0424%",
+   "arxiv_id": "2611.01415v1",
+   "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01415v1",
+   "html_url": "https://arxiv.org/html/2611.01415v1#A1.T3",
+   "source_url": "https://arxiv.org/html/2611.01415v1#A1.T3",
+   "page_number": null,
+   "source_sha256": "78fd7f83a0071ffa090e194b5083f1d20ad859d8ea25d1f1231eda80f94546ff",
+   "source_anchor": "A1.T3",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "",
+   "subsection": "",
+   "section_id": "",
+   "subsection_id": "",
+   "appendix_id": "A1",
+   "document_region": "appendix",
+   "representation": "linearized_table",
+   "table_id": "A1.T3",
+   "table_row": 1,
+   "row_label": "M1",
+   "caption": "Table 3: Models and coverage. Rank-8 post-block adapters cover all layers and all tokens, with a SiLU bottleneck for instruction compilation and a linear map for policy compilation. The backbone is frozen, with every parameter verified identical to the original.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Code",
+     "source_id": "A1.T3.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Model",
+     "source_id": "A1.T3.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Layers \\times d",
+     "source_id": "A1.T3.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "Trainable",
+     "source_id": "A1.T3.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "Share",
+     "source_id": "A1.T3.2.1.5"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 1,
+     "column": 0,
+     "text": "M1",
+     "source_id": "A1.T3.2.2.1"
+    },
+    {
+     "row": 1,
+     "column": 1,
+     "text": "Llama-3.2-1B-Instruct",
+     "source_id": "A1.T3.2.2.2"
+    },
+    {
+     "row": 1,
+     "column": 2,
+     "text": "16 \\times 2048",
+     "source_id": "A1.T3.2.2.3"
+    },
+    {
+     "row": 1,
+     "column": 3,
+     "text": "524,288",
+     "source_id": "A1.T3.2.2.4"
+    },
+    {
+     "row": 1,
+     "column": 4,
+     "text": "0.0424%",
+     "source_id": "A1.T3.2.2.5"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.01415v1_table_cbb4a4b555b65d1d_3",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nLatent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts\nTable 3: Models and coverage. Rank-8 post-block adapters cover all layers and all tokens, with a SiLU bottleneck for instruction compilation and a linear map for policy compilation. The backbone is frozen, with every parameter verified identical to the original.\nCode: M3; Model: Llama-3.1-8B-Instruct; Layers \\times d: 32 \\times 4096; Trainable: 2,097,152; Share: 0.0312%",
+   "arxiv_id": "2611.01415v1",
+   "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01415v1",
+   "html_url": "https://arxiv.org/html/2611.01415v1#A1.T3",
+   "source_url": "https://arxiv.org/html/2611.01415v1#A1.T3",
+   "page_number": null,
+   "source_sha256": "78fd7f83a0071ffa090e194b5083f1d20ad859d8ea25d1f1231eda80f94546ff",
+   "source_anchor": "A1.T3",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "",
+   "subsection": "",
+   "section_id": "",
+   "subsection_id": "",
+   "appendix_id": "A1",
+   "document_region": "appendix",
+   "representation": "linearized_table",
+   "table_id": "A1.T3",
+   "table_row": 3,
+   "row_label": "M3",
+   "caption": "Table 3: Models and coverage. Rank-8 post-block adapters cover all layers and all tokens, with a SiLU bottleneck for instruction compilation and a linear map for policy compilation. The backbone is frozen, with every parameter verified identical to the original.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Code",
+     "source_id": "A1.T3.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Model",
+     "source_id": "A1.T3.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Layers \\times d",
+     "source_id": "A1.T3.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "Trainable",
+     "source_id": "A1.T3.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "Share",
+     "source_id": "A1.T3.2.1.5"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 3,
+     "column": 0,
+     "text": "M3",
+     "source_id": "A1.T3.2.4.1"
+    },
+    {
+     "row": 3,
+     "column": 1,
+     "text": "Llama-3.1-8B-Instruct",
+     "source_id": "A1.T3.2.4.2"
+    },
+    {
+     "row": 3,
+     "column": 2,
+     "text": "32 \\times 4096",
+     "source_id": "A1.T3.2.4.3"
+    },
+    {
+     "row": 3,
+     "column": 3,
+     "text": "2,097,152",
+     "source_id": "A1.T3.2.4.4"
+    },
+    {
+     "row": 3,
+     "column": 4,
+     "text": "0.0312%",
+     "source_id": "A1.T3.2.4.5"
+    }
+   ],
+   "source_notes": []
+  }
+ ],
+ "evidence_management": {
+  "protected_ids": [
+   "2611.01415v1_c0000",
+   "2602.12285v1_c0007",
+   "2604.00324v1_c0002",
+   "2611.01415v1_c0015",
+   "2611.01415v1_c0013",
+   "2611.01415v1_c0020",
+   "2611.01415v1_c0012",
+   "2611.01415v1_c0022",
+   "2611.01415v1_c0019",
+   "2611.01415v1_c0004",
+   "2611.01415v1_c0003",
+   "2611.01415v1_table_941350c8f78a87c6_1",
+   "2611.01415v1_table_941350c8f78a87c6_2",
+   "2611.01415v1_table_941350c8f78a87c6_3",
+   "2611.01415v1_table_941350c8f78a87c6_4",
+   "2611.01415v1_table_941350c8f78a87c6_5",
+   "2611.01415v1_table_941350c8f78a87c6_6",
+   "2611.01415v1_c0011",
+   "2611.01415v1_c0002",
+   "2611.01415v1_c0001",
+   "2611.01415v1_c0021",
+   "2611.01415v1_table_080f58af664ee53b_1",
+   "2611.01415v1_table_080f58af664ee53b_2",
+   "2611.01415v1_table_080f58af664ee53b_3",
+   "2611.01415v1_table_080f58af664ee53b_4",
+   "2611.01415v1_table_080f58af664ee53b_5",
+   "2611.01415v1_table_080f58af664ee53b_6",
+   "2611.01415v1_table_080f58af664ee53b_7",
+   "2611.01415v1_table_080f58af664ee53b_8",
+   "2611.01415v1_paragraph_78ebfa5f5097f0e3_0",
+   "2611.01415v1_c0016",
+   "2611.01415v1_table_cbb4a4b555b65d1d_1",
+   "2611.01415v1_table_cbb4a4b555b65d1d_3"
+  ],
+  "supplementary_ids": [],
+  "searches": [
+   {
+    "query": "A software company pays for long agent instructions (harnesses) re-sent with every model call. What does Latent Harness do, how well do compiled behaviors match the original harness, how does it compare with LoRA on agent tasks, and what deployment cautions apply?",
+    "purpose": "original question",
+    "role": "original",
+    "chunk_ids": [
+     "2611.01415v1_c0000",
+     "2602.12285v1_c0007",
+     "2604.00324v1_c0002",
+     "2611.01415v1_c0015",
+     "2611.01415v1_c0021",
+     "2611.01415v1_c0013",
+     "2611.01415v1_c0001",
+     "2611.01415v1_c0020",
+     "2611.01415v1_c0002",
+     "2611.01415v1_c0022",
+     "2611.01415v1_c0019",
+     "2611.01415v1_c0003",
+     "2611.01415v1_c0012",
+     "2611.01415v1_paragraph_849fe3c6168d998d_0",
+     "2611.01415v1_c0011",
+     "2611.01415v1_table_cbb4a4b555b65d1d_1",
+     "2611.01415v1_c0014",
+     "2611.01415v1_table_cbb4a4b555b65d1d_3",
+     "2611.01415v1_table_cbb4a4b555b65d1d_5",
+     "2611.01415v1_c0016",
+     "2611.01415v1_table_cbb4a4b555b65d1d_4",
+     "2608.09253v1_c0002",
+     "2611.01415v1_table_cbb4a4b555b65d1d_2",
+     "2611.01415v1_table_080f58af664ee53b_1",
+     "2611.01415v1_c0004",
+     "2611.01415v1_table_080f58af664ee53b_7",
+     "2611.01415v1_table_080f58af664ee53b_8",
+     "2611.01415v1_table_080f58af664ee53b_6",
+     "2611.01415v1_table_080f58af664ee53b_3",
+     "2611.01415v1_table_080f58af664ee53b_4"
+    ],
+    "error": null
+   },
+   {
+    "query": "LoRA What does Latent Harness do?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.01415v1_c0004",
+     "2611.01415v1_c0000",
+     "2611.01415v1_c0022",
+     "2611.01415v1_c0019",
+     "2611.01415v1_c0013",
+     "2611.01415v1_c0012",
+     "2611.01415v1_table_941350c8f78a87c6_4",
+     "2611.01415v1_paragraph_849fe3c6168d998d_0",
+     "2611.01415v1_paragraph_78ebfa5f5097f0e3_0",
+     "2611.01415v1_c0020",
+     "2611.01415v1_c0002",
+     "2611.01415v1_c0011",
+     "2611.01415v1_c0003",
+     "2611.01415v1_c0008",
+     "2611.01415v1_c0016",
+     "2611.01415v1_c0001",
+     "2611.01415v1_c0005",
+     "2611.01415v1_c0015",
+     "2611.01415v1_table_cbb4a4b555b65d1d_4",
+     "2611.01415v1_table_cbb4a4b555b65d1d_1",
+     "2611.01415v1_table_cbb4a4b555b65d1d_2",
+     "2611.01415v1_table_cbb4a4b555b65d1d_5",
+     "2611.01415v1_table_cbb4a4b555b65d1d_3",
+     "2611.01415v1_c0018",
+     "2611.01415v1_table_080f58af664ee53b_7",
+     "2611.01415v1_table_080f58af664ee53b_1",
+     "2611.01415v1_c0017",
+     "2611.01415v1_table_080f58af664ee53b_2",
+     "2611.01415v1_table_080f58af664ee53b_8",
+     "2611.01415v1_table_080f58af664ee53b_6"
+    ],
+    "error": null
+   },
+   {
+    "query": "LoRA how well do compiled behaviors match the original harness?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.01415v1_c0022",
+     "2611.01415v1_c0000",
+     "2611.01415v1_c0004",
+     "2611.01415v1_c0003",
+     "2611.01415v1_c0012",
+     "2611.01415v1_c0020",
+     "2611.01415v1_table_941350c8f78a87c6_4",
+     "2611.01415v1_c0016",
+     "2611.01415v1_c0019",
+     "2611.01415v1_c0013",
+     "2611.01415v1_c0015",
+     "2611.01415v1_c0017",
+     "2611.01415v1_c0002",
+     "2611.01415v1_c0011",
+     "2611.01415v1_table_cbb4a4b555b65d1d_3",
+     "2611.01415v1_table_cbb4a4b555b65d1d_1",
+     "2611.01415v1_c0005",
+     "2611.01415v1_c0018",
+     "2611.01415v1_paragraph_78ebfa5f5097f0e3_0",
+     "2611.01415v1_table_cbb4a4b555b65d1d_4",
+     "2611.01415v1_c0008",
+     "2611.01415v1_table_cbb4a4b555b65d1d_2",
+     "2611.01415v1_table_cbb4a4b555b65d1d_5",
+     "2611.01415v1_table_080f58af664ee53b_1",
+     "2611.01415v1_table_080f58af664ee53b_2",
+     "2611.01415v1_table_080f58af664ee53b_7",
+     "2611.01415v1_table_080f58af664ee53b_8",
+     "2611.01415v1_c0001",
+     "2611.01415v1_table_080f58af664ee53b_6",
+     "2611.01415v1_table_080f58af664ee53b_5"
+    ],
+    "error": null
+   },
+   {
+    "query": "how does it compare with LoRA on agent tasks?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.01415v1_table_941350c8f78a87c6_4",
+     "2611.01415v1_c0004",
+     "2611.01415v1_c0012",
+     "2611.01415v1_c0013",
+     "2611.01415v1_paragraph_78ebfa5f5097f0e3_0",
+     "2611.01415v1_c0020",
+     "2611.01415v1_c0000",
+     "2608.09253v1_c0038",
+     "2611.01415v1_c0003",
+     "2608.09253v1_c0027",
+     "2611.01415v1_c0019",
+     "2611.01415v1_c0022",
+     "2608.09253v1_c0028",
+     "2608.09253v1_c0024",
+     "2608.09253v1_c0000",
+     "2611.01415v1_c0008",
+     "2611.01415v1_table_080f58af664ee53b_7",
+     "2602.12285v1_c0002",
+     "2611.01415v1_table_080f58af664ee53b_2",
+     "2611.01415v1_table_080f58af664ee53b_1",
+     "2608.09253v1_c0033",
+     "2608.09253v1_c0001",
+     "2611.01415v1_table_080f58af664ee53b_6",
+     "2611.01415v1_table_080f58af664ee53b_4",
+     "2602.12285v1_c0012",
+     "2608.09253v1_c0025",
+     "2611.01415v1_table_080f58af664ee53b_5",
+     "2611.01415v1_c0011",
+     "2602.12285v1_c0003",
+     "2611.01415v1_table_080f58af664ee53b_3"
+    ],
+    "error": null
+   },
+   {
+    "query": "LoRA what deployment cautions apply?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2604.00324v1_c0011",
+     "2611.01415v1_c0020",
+     "2604.00324v1_c0139",
+     "2611.01415v1_c0013",
+     "2611.01415v1_c0012",
+     "2604.00324v1_c0004",
+     "2604.00324v1_c0135",
+     "2611.01415v1_c0021",
+     "2604.00324v1_c0140",
+     "2604.00324v1_c0010",
+     "2604.00324v1_c0125",
+     "2611.01415v1_c0019",
+     "2604.00324v1_c0098",
+     "2604.00324v1_c0137",
+     "2604.00324v1_c0003",
+     "2604.00324v1_c0144",
+     "2611.01415v1_c0004",
+     "2611.01415v1_c0015",
+     "2611.01415v1_table_941350c8f78a87c6_4",
+     "2611.01415v1_c0014",
+     "2611.01415v1_c0022",
+     "2611.01415v1_c0011",
+     "2604.00324v1_c0142",
+     "2611.01415v1_table_080f58af664ee53b_1",
+     "2604.00324v1_c0143",
+     "2611.01415v1_table_080f58af664ee53b_8",
+     "2611.01415v1_table_080f58af664ee53b_7",
+     "2611.01415v1_table_080f58af664ee53b_3",
+     "2611.01415v1_table_080f58af664ee53b_5",
+     "2611.01415v1_table_080f58af664ee53b_4"
+    ],
+    "error": null
+   }
+  ],
+  "tokens": 7965,
+  "base_tokens": 7965,
+  "base_budget": 8000,
+  "conclusion_tokens": 0,
+  "conclusion_allowance": 800,
+  "conclusion_ids": [],
+  "conclusion_considered": [
+   {
+    "paper": "2611.01415v1",
+    "conclusion": null,
+    "rank": null
+   }
+  ],
+  "trimmed_for_request_size": [],
+  "notes": [
+   {
+    "kind": "incomplete_table",
+    "table": "2611.01415v1_table_cbb4a4b555b65d1d",
+    "rows_in_evidence": [
+     1,
+     3
+    ],
+    "rows_in_table": 5,
+    "caption": "Table 3: Models and coverage",
+    "text": "Only 2 of 5 rows of Table 3: Models and coverage (Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts) are in the evidence, so a comparison across that table may be incomplete."
+   }
+  ],
+  "component_searches": [
+   {
+    "query": "LoRA What does Latent Harness do?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.01415v1_c0004",
+     "2611.01415v1_c0000",
+     "2611.01415v1_c0022",
+     "2611.01415v1_c0019",
+     "2611.01415v1_c0013",
+     "2611.01415v1_c0012",
+     "2611.01415v1_table_941350c8f78a87c6_4",
+     "2611.01415v1_paragraph_849fe3c6168d998d_0",
+     "2611.01415v1_paragraph_78ebfa5f5097f0e3_0",
+     "2611.01415v1_c0020",
+     "2611.01415v1_c0002",
+     "2611.01415v1_c0011",
+     "2611.01415v1_c0003",
+     "2611.01415v1_c0008",
+     "2611.01415v1_c0016",
+     "2611.01415v1_c0001",
+     "2611.01415v1_c0005",
+     "2611.01415v1_c0015",
+     "2611.01415v1_table_cbb4a4b555b65d1d_4",
+     "2611.01415v1_table_cbb4a4b555b65d1d_1",
+     "2611.01415v1_table_cbb4a4b555b65d1d_2",
+     "2611.01415v1_table_cbb4a4b555b65d1d_5",
+     "2611.01415v1_table_cbb4a4b555b65d1d_3",
+     "2611.01415v1_c0018",
+     "2611.01415v1_table_080f58af664ee53b_7",
+     "2611.01415v1_table_080f58af664ee53b_1",
+     "2611.01415v1_c0017",
+     "2611.01415v1_table_080f58af664ee53b_2",
+     "2611.01415v1_table_080f58af664ee53b_8",
+     "2611.01415v1_table_080f58af664ee53b_6"
+    ],
+    "error": null
+   },
+   {
+    "query": "LoRA how well do compiled behaviors match the original harness?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.01415v1_c0022",
+     "2611.01415v1_c0000",
+     "2611.01415v1_c0004",
+     "2611.01415v1_c0003",
+     "2611.01415v1_c0012",
+     "2611.01415v1_c0020",
+     "2611.01415v1_table_941350c8f78a87c6_4",
+     "2611.01415v1_c0016",
+     "2611.01415v1_c0019",
+     "2611.01415v1_c0013",
+     "2611.01415v1_c0015",
+     "2611.01415v1_c0017",
+     "2611.01415v1_c0002",
+     "2611.01415v1_c0011",
+     "2611.01415v1_table_cbb4a4b555b65d1d_3",
+     "2611.01415v1_table_cbb4a4b555b65d1d_1",
+     "2611.01415v1_c0005",
+     "2611.01415v1_c0018",
+     "2611.01415v1_paragraph_78ebfa5f5097f0e3_0",
+     "2611.01415v1_table_cbb4a4b555b65d1d_4",
+     "2611.01415v1_c0008",
+     "2611.01415v1_table_cbb4a4b555b65d1d_2",
+     "2611.01415v1_table_cbb4a4b555b65d1d_5",
+     "2611.01415v1_table_080f58af664ee53b_1",
+     "2611.01415v1_table_080f58af664ee53b_2",
+     "2611.01415v1_table_080f58af664ee53b_7",
+     "2611.01415v1_table_080f58af664ee53b_8",
+     "2611.01415v1_c0001",
+     "2611.01415v1_table_080f58af664ee53b_6",
+     "2611.01415v1_table_080f58af664ee53b_5"
+    ],
+    "error": null
+   },
+   {
+    "query": "how does it compare with LoRA on agent tasks?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.01415v1_table_941350c8f78a87c6_4",
+     "2611.01415v1_c0004",
+     "2611.01415v1_c0012",
+     "2611.01415v1_c0013",
+     "2611.01415v1_paragraph_78ebfa5f5097f0e3_0",
+     "2611.01415v1_c0020",
+     "2611.01415v1_c0000",
+     "2608.09253v1_c0038",
+     "2611.01415v1_c0003",
+     "2608.09253v1_c0027",
+     "2611.01415v1_c0019",
+     "2611.01415v1_c0022",
+     "2608.09253v1_c0028",
+     "2608.09253v1_c0024",
+     "2608.09253v1_c0000",
+     "2611.01415v1_c0008",
+     "2611.01415v1_table_080f58af664ee53b_7",
+     "2602.12285v1_c0002",
+     "2611.01415v1_table_080f58af664ee53b_2",
+     "2611.01415v1_table_080f58af664ee53b_1",
+     "2608.09253v1_c0033",
+     "2608.09253v1_c0001",
+     "2611.01415v1_table_080f58af664ee53b_6",
+     "2611.01415v1_table_080f58af664ee53b_4",
+     "2602.12285v1_c0012",
+     "2608.09253v1_c0025",
+     "2611.01415v1_table_080f58af664ee53b_5",
+     "2611.01415v1_c0011",
+     "2602.12285v1_c0003",
+     "2611.01415v1_table_080f58af664ee53b_3"
+    ],
+    "error": null
+   },
+   {
+    "query": "LoRA what deployment cautions apply?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2604.00324v1_c0011",
+     "2611.01415v1_c0020",
+     "2604.00324v1_c0139",
+     "2611.01415v1_c0013",
+     "2611.01415v1_c0012",
+     "2604.00324v1_c0004",
+     "2604.00324v1_c0135",
+     "2611.01415v1_c0021",
+     "2604.00324v1_c0140",
+     "2604.00324v1_c0010",
+     "2604.00324v1_c0125",
+     "2611.01415v1_c0019",
+     "2604.00324v1_c0098",
+     "2604.00324v1_c0137",
+     "2604.00324v1_c0003",
+     "2604.00324v1_c0144",
+     "2611.01415v1_c0004",
+     "2611.01415v1_c0015",
+     "2611.01415v1_table_941350c8f78a87c6_4",
+     "2611.01415v1_c0014",
+     "2611.01415v1_c0022",
+     "2611.01415v1_c0011",
+     "2604.00324v1_c0142",
+     "2611.01415v1_table_080f58af664ee53b_1",
+     "2604.00324v1_c0143",
+     "2611.01415v1_table_080f58af664ee53b_8",
+     "2611.01415v1_table_080f58af664ee53b_7",
+     "2611.01415v1_table_080f58af664ee53b_3",
+     "2611.01415v1_table_080f58af664ee53b_5",
+     "2611.01415v1_table_080f58af664ee53b_4"
+    ],
+    "error": null
+   }
+  ]
+ },
+ "assistance": {
+  "mode": "standard",
+  "activated": false,
+  "route": null
+ },
+ "plan": null,
+ "synthesis_report": {
+  "schema_errors": [],
+  "dropped": [],
+  "contract_repairs": [],
+  "component_map_errors": []
+ },
+ "review_report": {
+  "withheld_no_decision": [],
+  "invalid_decisions": [],
+  "duplicate_decisions": [],
+  "repairs": [],
+  "dropped_limitations": [],
+  "component_check_errors": []
+ },
+ "precheck_flags": {
+  "7": [
+   {
+    "number": "11.1",
+    "issues": [
+     "unit_mismatch"
+    ]
+   }
+  ],
+  "8": [
+   {
+    "number": "3.09",
+    "issues": [
+     "unit_mismatch"
+    ]
+   }
+  ]
+ },
+ "review": {
+  "coverage": "full",
+  "gap": ""
+ },
+ "attempts": [
+  {
+   "attempt": 1,
+   "mode": "standard",
+   "resumed_from": [],
+   "status": "complete",
+   "seconds": 155.921,
+   "timings": {
+    "evidence": 23.186,
+    "synthesis": 79.497,
+    "review": 53.121,
+    "publication": 0.065
+   }
+  }
+ ],
+ "human_review": {
+  "status": "pending",
+  "reviewer": null
+ },
+ "approved": false,
+ "engine": "s3-standard",
+ "components": [
+  "LoRA What does Latent Harness do?",
+  "LoRA how well do compiled behaviors match the original harness?",
+  "how does it compare with LoRA on agent tasks?",
+  "LoRA what deployment cautions apply?"
+ ]
+}

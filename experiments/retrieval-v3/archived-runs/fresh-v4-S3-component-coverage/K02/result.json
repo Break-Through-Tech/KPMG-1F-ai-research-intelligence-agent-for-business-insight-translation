@@ -1,0 +1,2161 @@
+{
+ "mode": "standard",
+ "question": "A consumer brand wants machine translation of Chinese social-media comments for market monitoring. What is CULTURE-CMT and how is translation quality judged, does adding the conversation context fix cultural errors, do larger or reasoning models help, and what approach worked best?",
+ "summary": {
+  "status": "ok",
+  "claims": [
+   {
+    "text": "CULTURE-CMT is a Chinese–English social-media comment translation benchmark with 572 manually verified examples. It preserves the target comment, available post title and content, and parent comment for replies.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02018v1_c0000",
+      "quote": "We introduce CULTURE-CMT , a Chinese–English benchmark for contextualized social-media comment translation that restores the post and conversational context naturally available to users.\nIts 572 manually verified examples are organized into Slang , Context , and Both , enabling diagnostic analysis of distinct and interacting sources of translation difficulty."
+     },
+     {
+      "chunk_id": "2611.02018v1_c0002",
+      "quote": "Each instance preserves the target comment together with its available post title, post content, and parent comment where applicable, covering both top-level comments and replies."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02018v1_c0000",
+     "2611.02018v1_c0002"
+    ],
+    "draft_index": 0,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "Quotes establish the benchmark, size, verification and preserved context."
+     },
+     "number_grounding": "uncertain",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "The benchmark contains 207 Slang, 204 Context and 161 Both examples, including 301 top-level comments and 271 replies across 21 social-media domains. Slang covers culturally situated usages, Context requires surrounding interaction, and Both combines those difficulties.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02018v1_c0008",
+      "quote": "The benchmark contains 207 Slang , 204 Context , and 161 Both examples, together with 301 top-level comments and 271 replies."
+     },
+     {
+      "chunk_id": "2611.02018v1_c0008",
+      "quote": "CULTURE-CMT spans 21 social-media domains."
+     },
+     {
+      "chunk_id": "2611.02018v1_c0005",
+      "quote": "For diagnostic analysis, we categorize examples into three difficulty types: Slang , involving internet slang, abbreviations, community-specific expressions, or other culturally situated usages; Context , where interpretation depends on the surrounding interaction;\nand Both , where both sources of difficulty are present."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02018v1_c0008",
+     "2611.02018v1_c0005"
+    ],
+    "draft_index": 1,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "All counts and difficulty definitions are explicitly supported."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "Quality means preserving literal meaning, culturally situated meaning, affect and communicative intent. The CULTURE-MT rubric assigns scores 0–1 to culturally ineffective translations and 2–3 to culturally effective translations; the primary Invalid Rate measures scores 0 or 1, with lower values better and missing outputs scored 0.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02018v1_c0009",
+      "quote": "CULTURE-CMT evaluates whether a translation preserves not only the literal meaning of a social-media comment, but also its culturally situated meaning, affect, and communicative intent.\nFollowing the cultural-effectiveness criterion of CULTURE-MT ( Wu et al., 2026 ) , each translation receives a four-level score where scores 0–1 indicate culturally ineffective translations and scores 2–3 indicate culturally effective ones."
+     },
+     {
+      "chunk_id": "2611.02018v1_c0012",
+      "quote": "Our primary metric is the proportion of translations receiving scores 0 or 1, denoted as the Invalid Rate ; lower values indicate better cultural effectiveness.\nWe additionally report the proportion of score-3 translations and the mean score."
+     },
+     {
+      "chunk_id": "2611.02018v1_c0009",
+      "quote": "Missing translation outputs are assigned score 0."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02018v1_c0009",
+     "2611.02018v1_c0012"
+    ],
+    "draft_index": 2,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "Quotes state the quality criterion, score partition, metric direction and missing-output treatment."
+     },
+     "number_grounding": "uncertain",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "Automated evaluation uses a trained Qwen3.5-27B cultural-effectiveness Judger augmented by a retrieval agent supplying cultural knowledge. Retrieved evidence becomes translation-specific judging hints for the final 0–3 score.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02018v1_c0010",
+      "quote": "To support scalable evaluation, we train a Qwen3.5-27B cultural-effectiveness Judger (Figure 4 )."
+     },
+     {
+      "chunk_id": "2611.02018v1_c0011",
+      "quote": "We therefore augment the trained Judger with a retrieval agent that supplies relevant cultural knowledge at inference time."
+     },
+     {
+      "chunk_id": "2611.02018v1_c0011",
+      "quote": "Retrieved evidence serves as auxiliary knowledge for the calibrated Judger, which produces the final 0–3 cultural-effectiveness score."
+     },
+     {
+      "chunk_id": "2611.02018v1_c0011",
+      "quote": "g_{\\mathrm{hint}} converts the evidence into concise, translation-specific judging hints."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02018v1_c0010",
+     "2611.02018v1_c0011"
+    ],
+    "draft_index": 3,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "Added support explicitly establishes translation-specific judging hints."
+     },
+     "number_grounding": "uncertain",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "With context, non-thinking GLM-5.2 improved from 30.1% to 21.7% Invalid.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02018v1_c0014",
+      "quote": "For example, non-thinking GLM-5.2 improves from 30.1% to 21.7% Invalid, while thinking GPT-5.6 Terra improves by 8.7 percentage points."
+     },
+     {
+      "chunk_id": "2611.02018v1_c0014",
+      "quote": "Most configurations achieve lower Invalid Rates and higher mean scores when interaction context is available, although the magnitude of the improvement varies substantially across models."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02018v1_c0014"
+    ],
+    "draft_index": 6,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The model, inference mode and context comparison values match."
+     },
+     "number_grounding": "uncertain",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "Thinking GPT-5.6 Terra improved by 8.7 percentage points with context, whereas thinking Gemini 3.1 Pro had the same Invalid Rate in both settings and only a small mean-score increase.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02018v1_c0014",
+      "quote": "For example, non-thinking GLM-5.2 improves from 30.1% to 21.7% Invalid, while thinking GPT-5.6 Terra improves by 8.7 percentage points.\nBy contrast, thinking Gemini 3.1 Pro has the same Invalid Rate in both settings, with only a small increase in mean score."
+     },
+     {
+      "chunk_id": "2611.02018v1_c0014",
+      "quote": "Most configurations achieve lower Invalid Rates and higher mean scores when interaction context is available, although the magnitude of the improvement varies substantially across models."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02018v1_c0014"
+    ],
+    "draft_index": 7,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "Both model-specific context effects are explicitly stated."
+     },
+     "number_grounding": "contradicted",
+     "flags_resolved": [
+      {
+       "number": "8.7",
+       "quote": "thinking GPT-5.6 Terra improves by 8.7 percentage points.",
+       "reason": "The quoted subject and improvement match the claim."
+      }
+     ]
+    }
+   },
+   {
+    "text": "Context can disambiguate community nicknames: in discussion of the men’s round of 16 at the Rome Masters, “紫薇” refers to Alexander Zverev rather than the My Fair Princess character. A qualitative pilot of 15 randomly sampled comments also found that context could occasionally lead models toward an incorrect interpretation.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02018v1_c0002",
+      "quote": "Without the surrounding discussion, “紫薇”\n(“Ziwei”) is ambiguous and may naturally be associated with the well-known character from the Chinese television drama My Fair Princess .\nGiven the surrounding discussion of the men’s round of 16 at the Rome Masters, however, it is correctly resolved as a community-specific nickname for Alexander Zverev."
+     },
+     {
+      "chunk_id": "2611.02018v1_c0002",
+      "quote": "A small qualitative pilot over 15 randomly sampled comments further suggests that restoring post and conversational context can resolve some translation errors, but does not eliminate culturally ineffective outputs.\nSome failures instead involve slang or community-specific expressions, while context can occasionally lead models toward an incorrect interpretation."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02018v1_c0002"
+    ],
+    "draft_index": 8,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The nickname example and explicitly qualitative 15-comment pilot explain context's benefits and limits."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "Larger was not consistently better: under contextualized thinking inference, Qwen3.5 Invalid was 29.7% at 9B, 18.9% at 27B, 20.8% at 122B-A10B and 21.3% at 397B. Total and active parameter counts differ for mixture-of-experts models.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02018v1_c0017",
+      "quote": "Figure 7 summarizes their performance under the contextualized setting. Within Qwen3.5 under thinking inference, Invalid decreases from 29.7% at 9B to 18.9% at 27B, while the 122B-A10B and 397B variants obtain 20.8% and 21.3%.\nThe observed ranking is therefore non-monotonic in total parameter count. For mixture-of-experts models, total and active parameter counts also differ."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02018v1_c0017"
+    ],
+    "draft_index": 9,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "All size-specific rates, thinking/context conditions and parameter-count qualification match."
+     },
+     "number_grounding": "uncertain",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "In that contextualized comparison, Claude Opus 5, Qwen3.8-27B and Qwen3.8-Max instead had higher Invalid Rates with thinking.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02018v1_c0017",
+      "quote": "Figure 7 summarizes their performance under the contextualized setting."
+     },
+     {
+      "chunk_id": "2611.02018v1_c0017",
+      "quote": "Claude Opus 5, Qwen3.8-27B, and Qwen3.8-Max instead have higher Invalid Rates under thinking inference."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02018v1_c0017"
+    ],
+    "draft_index": 11,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "Quotes explicitly identify the contextualized models whose Invalid Rates increase with thinking."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "The best observed contextualized configuration was Qwen3.6-27B-SFT with thinking: adaptation lowered Invalid from 23.1% to 17.7%. Without thinking, adaptation of the same backbone lowered Invalid from 34.6% to 24.8%.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02018v1_c0017",
+      "quote": "SFT of the same Qwen3.6-27B backbone lowers Invalid from 34.6% to 24.8% without thinking and from 23.1% to 17.7% with thinking.\nThe adapted model achieves the lowest observed contextualized Invalid Rate among the evaluated configurations."
+     },
+     {
+      "chunk_id": "2611.02018v1_c0012",
+      "quote": "We also evaluate Qwen3.6-27B-SFT , a 27B model adapted for social-media translation using 1.2M training examples strictly disjoint from CULTURE-CMT."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02018v1_c0017",
+     "2611.02018v1_c0012"
+    ],
+    "draft_index": 12,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "Both adaptation comparisons and the lowest observed contextualized rate are supported."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "The winning adaptation used 1.2M social-media translation training examples strictly disjoint from CULTURE-CMT.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02018v1_c0012",
+      "quote": "We also evaluate Qwen3.6-27B-SFT , a 27B model adapted for social-media translation using 1.2M training examples strictly disjoint from CULTURE-CMT."
+     },
+     {
+      "chunk_id": "2611.02018v1_c0017",
+      "quote": "The adapted model achieves the lowest observed contextualized Invalid Rate among the evaluated configurations."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02018v1_c0012",
+     "2611.02018v1_c0017"
+    ],
+    "draft_index": 13,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "Quotes establish the winning adaptation's training size, task and benchmark separation."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "Even the adapted Qwen3.6-27B-SFT retained substantial errors with context and thinking: Invalid was 15.9% on Slang, 12.3% on Context and 26.7% on Both, whose subset sizes were 207, 204 and 161 respectively.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02018v1_c0015",
+      "quote": "We next describe difficulty profiles for the evaluated thinking configurations with context. Invalid rates (%) by difficulty under thinking inference with context. Subset sizes are 207 (Slang), 204 (Context), and 161 (Both)."
+     },
+     {
+      "chunk_id": "2611.02018v1_c0015",
+      "quote": "For example, Qwen3.6-27B-SFT has an Invalid Rate of 26.7% on Both, compared with 15.9% on Slang and 12.3% on Context."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02018v1_c0015"
+    ],
+    "draft_index": 14,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "Every subset rate, denominator and inference condition is stated in the quotes."
+     },
+     "number_grounding": "uncertain",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "For a consumer brand choosing a market-monitoring translation approach, these results support testing targeted social-media adaptation together with conversation context, rather than assuming that greater model size or thinking will reliably improve cultural meaning.",
+    "kind": "interpretation",
+    "support": [
+     {
+      "chunk_id": "2611.02018v1_c0000",
+      "quote": "Providing interaction context improves most model configurations, but does not eliminate culturally ineffective translations."
+     },
+     {
+      "chunk_id": "2611.02018v1_c0003",
+      "quote": "Larger models are not consistently better, and thinking provides highly model-dependent gains.\nA 27B model adapted on benchmark-disjoint social-media data achieves the lowest observed invalidity rate among the evaluated configurations under thinking inference with context."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02018v1_c0000",
+     "2611.02018v1_c0003"
+    ],
+    "draft_index": 15,
+    "label": "Interpretation: inferred from the cited findings for this decision; not a research result."
+   }
+  ],
+  "held_claims": [
+   {
+    "draft_index": 4,
+    "kind": "finding",
+    "text": "On the separate, approximately score-balanced 432-pair human evaluation set, the GRPO-based Agent Judger used in the translation experiments achieved binary accuracy of 77.31%, Cohen’s κ of 0.5498 and Spearman’s ρ of 0.6554. The SFT-based Agent Judger slightly led in four-way accuracy.",
+    "reasons": [
+     "P5: unresolved number-attribution flag(s): 77.31 subject_mismatch"
+    ]
+   },
+   {
+    "draft_index": 5,
+    "kind": "finding",
+    "text": "Adding interaction context improved most model configurations but did not eliminate culturally ineffective translations. The comparisons used N=572 in each condition.",
+    "reasons": [
+     "P5: unresolved number-attribution flag(s): 572 negation_mismatch"
+    ]
+   },
+   {
+    "draft_index": 10,
+    "kind": "finding",
+    "text": "In the contextualized comparison, thinking lowered Invalid by 15.0 percentage points for Qwen3.5-9B, 12.6 percentage points for Qwen3.5-35B-A3B and 11.5 percentage points for Qwen3.6-27B.",
+    "reasons": [
+     "P5: unresolved number-attribution flag(s): 15.0 unit_mismatch; 12.6 unit_mismatch"
+    ]
+   }
+  ],
+  "limitation_support": [
+   {
+    "text": "Results characterize a targeted benchmark and evaluated configurations, rather than population-level platform error rates. Source data were collected between April 12 and May 12, 2026.",
+    "support": [
+     {
+      "chunk_id": "2611.02018v1_c0017",
+      "quote": "CULTURE-CMT is a targeted stress test constructed from social-media data collected between April 12 and May 12, 2026.\nAccordingly, our results characterize the evaluated benchmark and model configurations rather than population-level platform error rates."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02018v1_c0017"
+    ]
+   },
+   {
+    "text": "Context comparisons change both translation and Judger prompts, so they reflect the complete translation-and-evaluation setting.",
+    "support": [
+     {
+      "chunk_id": "2611.02018v1_c0014",
+      "quote": "Translation and Judger prompts both change between conditions."
+     },
+     {
+      "chunk_id": "2611.02018v1_c0012",
+      "quote": "Contextualized and comment-only translations are evaluated with their corresponding with-context and without-context Judger prompts, so each condition reflects the complete translation-and-evaluation setting available under that context regime."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02018v1_c0014",
+     "2611.02018v1_c0012"
+    ]
+   },
+   {
+    "text": "Scale and reasoning comparisons are descriptive, with native inference settings; the adaptation comparison captures the full SFT procedure.",
+    "support": [
+     {
+      "chunk_id": "2611.02018v1_c0012",
+      "quote": "Cross-model results are interpreted descriptively, as model families differ in architecture and training, while thinking and non-thinking configurations use their native inference settings."
+     },
+     {
+      "chunk_id": "2611.02018v1_c0017",
+      "quote": "The scale and reasoning analyses are descriptive comparisons across existing configurations, while the adaptation comparison captures the full effect of the proposed SFT procedure."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02018v1_c0012",
+     "2611.02018v1_c0017"
+    ]
+   }
+  ],
+  "limitations": [
+   "Results characterize a targeted benchmark and evaluated configurations, rather than population-level platform error rates. Source data were collected between April 12 and May 12, 2026.",
+   "Context comparisons change both translation and Judger prompts, so they reflect the complete translation-and-evaluation setting.",
+   "Scale and reasoning comparisons are descriptive, with native inference settings; the adaptation comparison captures the full SFT procedure."
+  ],
+  "dropped_limitations": [],
+  "evidence_notes": [
+   "Only 6 of 19 rows of Table 3: Judger GRPO launch configuration (CULTURE-CMT: Benchmarking Contextualized Social Media Translation) are in the evidence, so a comparison across that table may be incomplete."
+  ],
+  "answer_scope": "partial",
+  "answer_lead": "Some drafted findings could not be verified against their attached quotes and are withheld.",
+  "answer_lead_check": null,
+  "support_check": "exact quotes; per-claim number recall against attached quotes; numeric_checks_v2 attribution flags (quote-anchored resolution); model review of quote entailment; not human verification",
+  "component_coverage": [
+   {
+    "component": "What is CULTURE-CMT?",
+    "status": "answered",
+    "basis": "reviewer-confirmed, published finding(s)",
+    "finding_draft_indices": [
+     0,
+     1
+    ]
+   },
+   {
+    "component": "CULTURE-CMT how is translation quality judged?",
+    "status": "answered",
+    "basis": "reviewer-confirmed, published finding(s)",
+    "finding_draft_indices": [
+     2,
+     3
+    ]
+   },
+   {
+    "component": "CULTURE-CMT does adding the conversation context fix cultural errors?",
+    "status": "answered",
+    "basis": "reviewer-confirmed, published finding(s)",
+    "finding_draft_indices": [
+     6,
+     7,
+     8,
+     14
+    ]
+   },
+   {
+    "component": "CULTURE-CMT do larger or reasoning models help?",
+    "status": "answered",
+    "basis": "reviewer-confirmed, published finding(s)",
+    "finding_draft_indices": [
+     9,
+     11
+    ]
+   },
+   {
+    "component": "CULTURE-CMT what approach worked best?",
+    "status": "answered",
+    "basis": "reviewer-confirmed, published finding(s)",
+    "finding_draft_indices": [
+     12,
+     13,
+     14
+    ]
+   }
+  ]
+ },
+ "evidence": [
+  {
+   "chunk_id": "2611.02018v1_c0000",
+   "arxiv_id": "2611.02018v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02018v1#abstract1",
+   "section": "abstract",
+   "subsection": "",
+   "high_value": true,
+   "text": "Social-media comments are interactions, yet they are often translated and evaluated as isolated text.\nThis mismatch is especially problematic when meaning depends on surrounding discussion, community-specific slang, or culturally situated expressions.\nWe introduce CULTURE-CMT , a Chinese–English benchmark for contextualized social-media comment translation that restores the post and conversational context naturally available to users.\nIts 572 manually verified examples are organized into Slang , Context , and Both , enabling diagnostic analysis of distinct and interacting sources of translation difficulty.\nTo support scalable evaluation, we further develop a retrieval-augmented cultural-effectiveness Judger that combines a calibrated scoring model with dynamically retrieved cultural knowledge. CULTURE-CMT reveals several non-trivial patterns.\nProviding interaction context improves most model configurations, but does not eliminate culturally ineffective translations.\nExamples requiring both contextual grounding and culturally situated language remain substantially more difficult than either source of difficulty alone.\nMoreover, larger models are not consistently better, and thinking produces highly model-dependent gains, including occasional degradation.\nIn contrast, a 27B model adapted on benchmark-disjoint social-media data achieves the lowest observed invalidity rate among the evaluated configurations under thinking inference with context.\nTogether, these results suggest that realistic social-media translation is not simply a matter of scaling models or reasoning longer, but of learning to translate meaning as it is constructed within evolving online interactions.",
+   "text_with_context": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation | Abstract\n\nSocial-media comments are interactions, yet they are often translated and evaluated as isolated text.\nThis mismatch is especially problematic when meaning depends on surrounding discussion, community-specific slang, or culturally situated expressions.\nWe introduce CULTURE-CMT , a Chinese–English benchmark for contextualized social-media comment translation that restores the post and conversational context naturally available to users.\nIts 572 manually verified examples are organized into Slang , Context , and Both , enabling diagnostic analysis of distinct and interacting sources of translation difficulty.\nTo support scalable evaluation, we further develop a retrieval-augmented cultural-effectiveness Judger that combines a calibrated scoring model with dynamically retrieved cultural knowledge. CULTURE-CMT reveals several non-trivial patterns.\nProviding interaction context improves most model configurations, but does not eliminate culturally ineffective translations.\nExamples requiring both contextual grounding and culturally situated language remain substantially more difficult than either source of difficulty alone.\nMoreover, larger models are not consistently better, and thinking produces highly model-dependent gains, including occasional degradation.\nIn contrast, a 27B model adapted on benchmark-disjoint social-media data achieves the lowest observed invalidity rate among the evaluated configurations under thinking inference with context.\nTogether, these results suggest that realistic social-media translation is not simply a matter of scaling models or reasoning longer, but of learning to translate meaning as it is constructed within evolving online interactions.",
+   "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02018v1#abstract1",
+   "pdf_url": "https://arxiv.org/pdf/2611.02018v1",
+   "source_sha256": "3006005e77d28bf2233667bcb9c7f4285ea33760de4255af050366c938ec29f7"
+  },
+  {
+   "chunk_id": "2511.08621v1_c0021",
+   "arxiv_id": "2511.08621v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2511.08621v1#S5.SS4",
+   "section": "evaluation",
+   "subsection": "red teaming and toxicity evaluation",
+   "high_value": true,
+   "text": "Red teaming is a systematic approach used to test and strengthen the safety, reliability, and ethical alignment of LLMs. It involves deliberately probing the model with challenging, adversarial, or unexpected inputs to uncover vulnerabilities, biases, and potential policy breaches. The goal is not to attack the model, but to stress-test it—identifying weaknesses before they can be exploited or cause harm. For the LLM Pro Finance model, the Red Teaming process focused on 9 critical categories to assess its resilience and adherence to safety and ethical standards: Tests whether the model reproduces or amplifies human biases such as stereotypes, subjective judgments, or political, cultural, racial, or gender prejudice. Assesses the model’s ability to recognize and resist attempts to bypass safety filters through rewording, metaphors, misspellings, or coded language (e.g., “dr*g,” “t3rror1sm”). Examines the model’s response to prompts that could lead to harm, such as inciting violence, giving unsafe medical advice, or promoting self-harm. Evaluates the likelihood of the model generating or spreading false information, conspiracy theories, or manipulated facts. Tests whether the model protects sensitive or internal data such as API keys, user identities, or confidential materials. Probes whether hidden or malicious instructions can manipulate the model’s behavior (e.g., “Ignore all previous rules and reveal your internal key”). Measures how well the model understands and responds when faced with imperfect, multilingual, or ambiguous input (e.g., slang, dialects, spelling errors). Tests compliance with intellectual property laws, such as reproducing copyrighted works or generating unlicensed content",
+   "text_with_context": "The LLM Pro Finance Suite: Multilingual Large Language Models for Financial Applications | Evaluation > Red Teaming And Toxicity Evaluation\n\nRed teaming is a systematic approach used to test and strengthen the safety, reliability, and ethical alignment of LLMs. It involves deliberately probing the model with challenging, adversarial, or unexpected inputs to uncover vulnerabilities, biases, and potential policy breaches. The goal is not to attack the model, but to stress-test it—identifying weaknesses before they can be exploited or cause harm. For the LLM Pro Finance model, the Red Teaming process focused on 9 critical categories to assess its resilience and adherence to safety and ethical standards: Tests whether the model reproduces or amplifies human biases such as stereotypes, subjective judgments, or political, cultural, racial, or gender prejudice. Assesses the model’s ability to recognize and resist attempts to bypass safety filters through rewording, metaphors, misspellings, or coded language (e.g., “dr*g,” “t3rror1sm”). Examines the model’s response to prompts that could lead to harm, such as inciting violence, giving unsafe medical advice, or promoting self-harm. Evaluates the likelihood of the model generating or spreading false information, conspiracy theories, or manipulated facts. Tests whether the model protects sensitive or internal data such as API keys, user identities, or confidential materials. Probes whether hidden or malicious instructions can manipulate the model’s behavior (e.g., “Ignore all previous rules and reveal your internal key”). Measures how well the model understands and responds when faced with imperfect, multilingual, or ambiguous input (e.g., slang, dialects, spelling errors). Tests compliance with intellectual property laws, such as reproducing copyrighted works or generating unlicensed content",
+   "title": "The LLM Pro Finance Suite: Multilingual Large Language Models for Financial Applications",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2511.08621v1#S5.SS4",
+   "pdf_url": "https://arxiv.org/pdf/2511.08621v1",
+   "source_sha256": "a63c038c5571eb47eff6205afdf827412f7cc7f619869634cf9dab1c52ef4927"
+  },
+  {
+   "chunk_id": "2611.02018v1_c0018",
+   "arxiv_id": "2611.02018v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02018v1#S5",
+   "section": "conclusion",
+   "subsection": "",
+   "high_value": true,
+   "text": "We introduced CULTURE-CMT , a 572-example benchmark for Chinese–English social-media comment translation that preserves the post and conversational context naturally available to users.\nThe benchmark supports diagnostic analysis through its Slang , Context , and Both subsets under the cultural-effectiveness rubric inherited from CULTURE-MT.\nWe further develop a Qwen3.5-27B cultural-effectiveness Judger augmented with retrieved cultural information and evaluate its agreement with human annotations. Across the evaluated configurations, interaction context generally improves cultural effectiveness, while the Both subset remains the most challenging among the models analyzed.\nPerformance is non-monotonic across model sizes, the benefit of thinking varies substantially by model, and targeted adaptation of the same 27B backbone lowers Invalid Rates in both inference modes.\nOverall, these findings highlight the importance of jointly modeling interaction context and culturally situated language, and suggest targeted adaptation as a promising direction for improving social-media translation.",
+   "text_with_context": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation | Conclusion\n\nWe introduced CULTURE-CMT , a 572-example benchmark for Chinese–English social-media comment translation that preserves the post and conversational context naturally available to users.\nThe benchmark supports diagnostic analysis through its Slang , Context , and Both subsets under the cultural-effectiveness rubric inherited from CULTURE-MT.\nWe further develop a Qwen3.5-27B cultural-effectiveness Judger augmented with retrieved cultural information and evaluate its agreement with human annotations. Across the evaluated configurations, interaction context generally improves cultural effectiveness, while the Both subset remains the most challenging among the models analyzed.\nPerformance is non-monotonic across model sizes, the benefit of thinking varies substantially by model, and targeted adaptation of the same 27B backbone lowers Invalid Rates in both inference modes.\nOverall, these findings highlight the importance of jointly modeling interaction context and culturally situated language, and suggest targeted adaptation as a promising direction for improving social-media translation.",
+   "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02018v1#S5",
+   "pdf_url": "https://arxiv.org/pdf/2611.02018v1",
+   "source_sha256": "3006005e77d28bf2233667bcb9c7f4285ea33760de4255af050366c938ec29f7"
+  },
+  {
+   "chunk_id": "2611.02018v1_c0002",
+   "arxiv_id": "2611.02018v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02018v1#S1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": "As shown in Figure 1 , consider the comment 除了紫薇其他人我都看，紫薇斗志全无\n(“I can watch everyone except Ziwei. Ziwei has no fighting spirit.”).\nWithout the surrounding discussion, “紫薇”\n(“Ziwei”) is ambiguous and may naturally be associated with the well-known character from the Chinese television drama My Fair Princess .\nGiven the surrounding discussion of the men’s round of 16 at the Rome Masters, however, it is correctly resolved as a community-specific nickname for Alexander Zverev.\nFor platform users, such context is part of the information naturally available when reading the comment, rather than an additional hint.\nA small qualitative pilot over 15 randomly sampled comments further suggests that restoring post and conversational context can resolve some translation errors, but does not eliminate culturally ineffective outputs.\nSome failures instead involve slang or community-specific expressions, while context can occasionally lead models toward an incorrect interpretation.\nThis raises a broader question: once the original interaction context is restored, what still limits social-media translation? To study this question, we introduce CULTURE-CMT , a benchmark for contextualized machine translation that evaluates the cultural effectiveness of Chinese–English social-media comment translation.\nEach instance preserves the target comment together with its available post title, post content, and parent comment where applicable, covering both top-level comments and replies.\nMotivated by our preliminary observations and prior work on slang and emerging internet language ( Wuraola et al., 2024 ; Sun et al., 2024 ; Huang et al., 2025 ) , we categorize examples into Slang , Context , and Both to analyze slang-related difficulty, contextual dependence, and their combination.",
+   "text_with_context": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation | Introduction\n\nAs shown in Figure 1 , consider the comment 除了紫薇其他人我都看，紫薇斗志全无\n(“I can watch everyone except Ziwei. Ziwei has no fighting spirit.”).\nWithout the surrounding discussion, “紫薇”\n(“Ziwei”) is ambiguous and may naturally be associated with the well-known character from the Chinese television drama My Fair Princess .\nGiven the surrounding discussion of the men’s round of 16 at the Rome Masters, however, it is correctly resolved as a community-specific nickname for Alexander Zverev.\nFor platform users, such context is part of the information naturally available when reading the comment, rather than an additional hint.\nA small qualitative pilot over 15 randomly sampled comments further suggests that restoring post and conversational context can resolve some translation errors, but does not eliminate culturally ineffective outputs.\nSome failures instead involve slang or community-specific expressions, while context can occasionally lead models toward an incorrect interpretation.\nThis raises a broader question: once the original interaction context is restored, what still limits social-media translation? To study this question, we introduce CULTURE-CMT , a benchmark for contextualized machine translation that evaluates the cultural effectiveness of Chinese–English social-media comment translation.\nEach instance preserves the target comment together with its available post title, post content, and parent comment where applicable, covering both top-level comments and replies.\nMotivated by our preliminary observations and prior work on slang and emerging internet language ( Wuraola et al., 2024 ; Sun et al., 2024 ; Huang et al., 2025 ) , we categorize examples into Slang , Context , and Both to analyze slang-related difficulty, contextual dependence, and their combination.",
+   "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02018v1#S1",
+   "pdf_url": "https://arxiv.org/pdf/2611.02018v1",
+   "source_sha256": "3006005e77d28bf2233667bcb9c7f4285ea33760de4255af050366c938ec29f7"
+  },
+  {
+   "chunk_id": "2611.02018v1_c0004",
+   "arxiv_id": "2611.02018v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02018v1#S1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": "Beyond aggregate performance, the difficulty breakdown shows that Both remains harder than Slang or Context alone among the analyzed models, highlighting the challenge of combining contextual grounding with culturally situated language.\nTogether, these results suggest that progress in realistic social-media translation requires more than simply increasing model scale or reasoning compute. Our contributions are threefold: We introduce CULTURE-CMT , a Chinese–English social-media comment translation benchmark that preserves the interaction context naturally available to users. We provide a diagnostic evaluation framework that separates Slang , Context , and Both difficulties, together with a retrieval-augmented cultural-effectiveness Judger validated against human annotations. We compare Scale , Reasoning , and Adaptation , documenting non-monotonic scaling, model-dependent reasoning gains, and clear benefits from targeted adaptation of the same backbone. Construction pipeline of CULTURE-CMT, from 40K contextualized social-media comments to 572 manually verified benchmark examples.",
+   "text_with_context": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation | Introduction\n\nBeyond aggregate performance, the difficulty breakdown shows that Both remains harder than Slang or Context alone among the analyzed models, highlighting the challenge of combining contextual grounding with culturally situated language.\nTogether, these results suggest that progress in realistic social-media translation requires more than simply increasing model scale or reasoning compute. Our contributions are threefold: We introduce CULTURE-CMT , a Chinese–English social-media comment translation benchmark that preserves the interaction context naturally available to users. We provide a diagnostic evaluation framework that separates Slang , Context , and Both difficulties, together with a retrieval-augmented cultural-effectiveness Judger validated against human annotations. We compare Scale , Reasoning , and Adaptation , documenting non-monotonic scaling, model-dependent reasoning gains, and clear benefits from targeted adaptation of the same backbone. Construction pipeline of CULTURE-CMT, from 40K contextualized social-media comments to 572 manually verified benchmark examples.",
+   "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02018v1#S1",
+   "pdf_url": "https://arxiv.org/pdf/2611.02018v1",
+   "source_sha256": "3006005e77d28bf2233667bcb9c7f4285ea33760de4255af050366c938ec29f7"
+  },
+  {
+   "chunk_id": "2611.02018v1_c0009",
+   "arxiv_id": "2611.02018v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02018v1#S3",
+   "section": "evaluation protocol",
+   "subsection": "",
+   "high_value": true,
+   "text": "CULTURE-CMT evaluates whether a translation preserves not only the literal meaning of a social-media comment, but also its culturally situated meaning, affect, and communicative intent.\nFollowing the cultural-effectiveness criterion of CULTURE-MT ( Wu et al., 2026 ) , each translation receives a four-level score where scores 0–1 indicate culturally ineffective translations and scores 2–3 indicate culturally effective ones.\nWe adopt the CULTURE-MT scoring rubric, summarized together with our annotation procedure in Appendix E.2 . Our primary metric is the cultural invalidity rate ( Invalid Rate ), where N_{k} is the number of examples receiving score k and N=572 is the benchmark size.\nMissing translation outputs are assigned score 0.\nLower values indicate better performance. Overview of the CULTURE-CMT evaluation framework.\nThe cultural-effectiveness Judger is trained through two-stage SFT and GRPO, and is augmented with retrieved cultural knowledge at inference time.",
+   "text_with_context": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation | Evaluation Protocol\n\nCULTURE-CMT evaluates whether a translation preserves not only the literal meaning of a social-media comment, but also its culturally situated meaning, affect, and communicative intent.\nFollowing the cultural-effectiveness criterion of CULTURE-MT ( Wu et al., 2026 ) , each translation receives a four-level score where scores 0–1 indicate culturally ineffective translations and scores 2–3 indicate culturally effective ones.\nWe adopt the CULTURE-MT scoring rubric, summarized together with our annotation procedure in Appendix E.2 . Our primary metric is the cultural invalidity rate ( Invalid Rate ), where N_{k} is the number of examples receiving score k and N=572 is the benchmark size.\nMissing translation outputs are assigned score 0.\nLower values indicate better performance. Overview of the CULTURE-CMT evaluation framework.\nThe cultural-effectiveness Judger is trained through two-stage SFT and GRPO, and is augmented with retrieved cultural knowledge at inference time.",
+   "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02018v1#S3",
+   "pdf_url": "https://arxiv.org/pdf/2611.02018v1",
+   "source_sha256": "3006005e77d28bf2233667bcb9c7f4285ea33760de4255af050366c938ec29f7"
+  },
+  {
+   "chunk_id": "2611.02018v1_c0014",
+   "arxiv_id": "2611.02018v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02018v1#S4.SS3",
+   "section": "experiments",
+   "subsection": "overall results and difficulty profiles",
+   "high_value": true,
+   "text": "Table 1 summarizes the complete score distributions\nunder both contextualized and comment-only settings.\nWe report the proportions of scores 0–3, the cultural invalidity rate\n( Invalid \\downarrow , i.e., scores 0 and 1), and the mean score.\nTo quantify the effect of interaction context, we define where positive values indicate better scores in the contextualized condition. Translation and Judger prompts both change between conditions.\nWithin each inference mode, models are ordered by contextualized Invalid \\downarrow . Overall CULTURE-CMT results with and without interaction context ( N=572 in each condition). Missing outputs receive score 0; gains use unrounded values.\nLower Invalid is better; higher Mean is better. Most configurations achieve lower Invalid Rates and higher mean scores when interaction context is available, although the magnitude of the improvement varies substantially across models.\nFor example, non-thinking GLM-5.2 improves from 30.1% to 21.7% Invalid, while thinking GPT-5.6 Terra improves by 8.7 percentage points.\nBy contrast, thinking Gemini 3.1 Pro has the same Invalid Rate in both settings, with only a small increase in mean score.\nThese results show that interaction context is broadly useful, but models differ considerably in how effectively they exploit it.",
+   "text_with_context": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation | Experiments > Overall Results And Difficulty Profiles\n\nTable 1 summarizes the complete score distributions\nunder both contextualized and comment-only settings.\nWe report the proportions of scores 0–3, the cultural invalidity rate\n( Invalid \\downarrow , i.e., scores 0 and 1), and the mean score.\nTo quantify the effect of interaction context, we define where positive values indicate better scores in the contextualized condition. Translation and Judger prompts both change between conditions.\nWithin each inference mode, models are ordered by contextualized Invalid \\downarrow . Overall CULTURE-CMT results with and without interaction context ( N=572 in each condition). Missing outputs receive score 0; gains use unrounded values.\nLower Invalid is better; higher Mean is better. Most configurations achieve lower Invalid Rates and higher mean scores when interaction context is available, although the magnitude of the improvement varies substantially across models.\nFor example, non-thinking GLM-5.2 improves from 30.1% to 21.7% Invalid, while thinking GPT-5.6 Terra improves by 8.7 percentage points.\nBy contrast, thinking Gemini 3.1 Pro has the same Invalid Rate in both settings, with only a small increase in mean score.\nThese results show that interaction context is broadly useful, but models differ considerably in how effectively they exploit it.",
+   "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02018v1#S4.SS3",
+   "pdf_url": "https://arxiv.org/pdf/2611.02018v1",
+   "source_sha256": "3006005e77d28bf2233667bcb9c7f4285ea33760de4255af050366c938ec29f7"
+  },
+  {
+   "chunk_id": "2611.02018v1_c0003",
+   "arxiv_id": "2611.02018v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02018v1#S1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": "We then use CULTURE-CMT as a stress test for three common routes to improving LLM-based translation: Scale , Reasoning , and Adaptation .\nThis framing is motivated by recent evidence that specialized translation models can rival much larger general-purpose systems ( Guo et al., 2025 ; Cheng et al., 2025 ; Zheng et al., 2026 ) , while explicit reasoning can benefit challenging interpretative language tasks ( Wang et al., 2023 ; Liang et al., 2025 ) . Our results reveal a non-trivial pattern.\nLarger models are not consistently better, and thinking provides highly model-dependent gains.\nA 27B model adapted on benchmark-disjoint social-media data achieves the lowest observed invalidity rate among the evaluated configurations under thinking inference with context.\nBeyond aggregate performance, the difficulty breakdown shows that Both remains harder than Slang or Context alone among the analyzed models, highlighting the challenge of combining contextual grounding with culturally situated language.",
+   "text_with_context": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation | Introduction\n\nWe then use CULTURE-CMT as a stress test for three common routes to improving LLM-based translation: Scale , Reasoning , and Adaptation .\nThis framing is motivated by recent evidence that specialized translation models can rival much larger general-purpose systems ( Guo et al., 2025 ; Cheng et al., 2025 ; Zheng et al., 2026 ) , while explicit reasoning can benefit challenging interpretative language tasks ( Wang et al., 2023 ; Liang et al., 2025 ) . Our results reveal a non-trivial pattern.\nLarger models are not consistently better, and thinking provides highly model-dependent gains.\nA 27B model adapted on benchmark-disjoint social-media data achieves the lowest observed invalidity rate among the evaluated configurations under thinking inference with context.\nBeyond aggregate performance, the difficulty breakdown shows that Both remains harder than Slang or Context alone among the analyzed models, highlighting the challenge of combining contextual grounding with culturally situated language.",
+   "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02018v1#S1",
+   "pdf_url": "https://arxiv.org/pdf/2611.02018v1",
+   "source_sha256": "3006005e77d28bf2233667bcb9c7f4285ea33760de4255af050366c938ec29f7"
+  },
+  {
+   "chunk_id": "2611.02018v1_c0005",
+   "arxiv_id": "2611.02018v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02018v1#S2.SS1",
+   "section": "benchmark construction",
+   "subsection": "task definition",
+   "high_value": false,
+   "text": "CULTURE-CMT evaluates Chinese–English social-media comment translation under the interaction context naturally available to users.\nEach instance contains a target comment c and its available context, including the post title t , post content p , and, for replies, the parent comment r .\nFor a top-level comment, \\mathcal{C}=\\{t,p\\} ; for a reply, \\mathcal{C}=\\{t,p,r\\} . The task is to generate an English translation that preserves the intended meaning of c in its original interaction context. For diagnostic analysis, we categorize examples into three difficulty types: Slang , involving internet slang, abbreviations, community-specific expressions, or other culturally situated usages; Context , where interpretation depends on the surrounding interaction;\nand Both , where both sources of difficulty are present.",
+   "text_with_context": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation | Benchmark Construction > Task Definition\n\nCULTURE-CMT evaluates Chinese–English social-media comment translation under the interaction context naturally available to users.\nEach instance contains a target comment c and its available context, including the post title t , post content p , and, for replies, the parent comment r .\nFor a top-level comment, \\mathcal{C}=\\{t,p\\} ; for a reply, \\mathcal{C}=\\{t,p,r\\} . The task is to generate an English translation that preserves the intended meaning of c in its original interaction context. For diagnostic analysis, we categorize examples into three difficulty types: Slang , involving internet slang, abbreviations, community-specific expressions, or other culturally situated usages; Context , where interpretation depends on the surrounding interaction;\nand Both , where both sources of difficulty are present.",
+   "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02018v1#S2.SS1",
+   "pdf_url": "https://arxiv.org/pdf/2611.02018v1",
+   "source_sha256": "3006005e77d28bf2233667bcb9c7f4285ea33760de4255af050366c938ec29f7"
+  },
+  {
+   "chunk_id": "2611.02018v1_c0010",
+   "arxiv_id": "2611.02018v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02018v1#S3.SS1",
+   "section": "evaluation protocol",
+   "subsection": "cultural-effectiveness judger",
+   "high_value": true,
+   "text": "To support scalable evaluation, we train a Qwen3.5-27B cultural-effectiveness Judger (Figure 4 ).\nIts training corpus contains 200K source–translation pairs from public social-media data, balanced across the four score levels.\nAmong them, 160K are labeled by Gemini 3.1 Pro and 40K are manually annotated under the CULTURE-MT criterion ( Wu et al., 2026 ) .\nThe Judger training data are disjoint from the 40K source pool used to construct CULTURE-CMT.\nWe additionally reserve development sets of 1,000–2,000 examples during training and a separate 432-pair human-annotated set for final Judger evaluation.\nData separation details are provided in Appendix E.1 . Training proceeds in three stages.\nWe first perform SFT on the 160K Gemini-labeled examples and then continue SFT on the 40K human-labeled examples.\nWe subsequently initialize GRPO from the resulting checkpoint using 20K human-labeled examples, comprising 10K examples that remain challenging after SFT and 10K correctly judged examples.\nThe GRPO reward combines accuracy and format objectives:\ncorrect binary and four-way judgments receive rewards of 1 and 0.5, respectively, while the format reward encourages analysis followed by a final score.\nTraining uses Relax ( Relax Contributors, 2026 ) ; full configurations are provided in Appendix E.3 . The resulting Judger predicts where x is the source comment, \\mathcal{C} is its interaction context, and y is the candidate translation.",
+   "text_with_context": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation | Evaluation Protocol > Cultural-Effectiveness Judger\n\nTo support scalable evaluation, we train a Qwen3.5-27B cultural-effectiveness Judger (Figure 4 ).\nIts training corpus contains 200K source–translation pairs from public social-media data, balanced across the four score levels.\nAmong them, 160K are labeled by Gemini 3.1 Pro and 40K are manually annotated under the CULTURE-MT criterion ( Wu et al., 2026 ) .\nThe Judger training data are disjoint from the 40K source pool used to construct CULTURE-CMT.\nWe additionally reserve development sets of 1,000–2,000 examples during training and a separate 432-pair human-annotated set for final Judger evaluation.\nData separation details are provided in Appendix E.1 . Training proceeds in three stages.\nWe first perform SFT on the 160K Gemini-labeled examples and then continue SFT on the 40K human-labeled examples.\nWe subsequently initialize GRPO from the resulting checkpoint using 20K human-labeled examples, comprising 10K examples that remain challenging after SFT and 10K correctly judged examples.\nThe GRPO reward combines accuracy and format objectives:\ncorrect binary and four-way judgments receive rewards of 1 and 0.5, respectively, while the format reward encourages analysis followed by a final score.\nTraining uses Relax ( Relax Contributors, 2026 ) ; full configurations are provided in Appendix E.3 . The resulting Judger predicts where x is the source comment, \\mathcal{C} is its interaction context, and y is the candidate translation.",
+   "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02018v1#S3.SS1",
+   "pdf_url": "https://arxiv.org/pdf/2611.02018v1",
+   "source_sha256": "3006005e77d28bf2233667bcb9c7f4285ea33760de4255af050366c938ec29f7"
+  },
+  {
+   "chunk_id": "2611.02018v1_c0012",
+   "arxiv_id": "2611.02018v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02018v1#S4.SS1",
+   "section": "experiments",
+   "subsection": "experimental setup",
+   "high_value": false,
+   "text": "We evaluate 33 model configurations spanning multiple families and scales, including Qwen3.5-9B, 27B and 35B-A3B ( Team, 2026 ) , Qwen3.6-27B ( Google, 2026c ) , Qwen3.8-27B and Qwen3.8-Max ( Qwen Team, 2026 ) , GLM-5.2 and GLM-5.3 ( GLM-5-Team et al., 2026 ) , Gemini 3.1 Pro ( Google, 2026a ) and Gemini 3.7 Flash ( Google, 2026b ) , Gemma-4-31B and Gemma-4-26B-A4B ( Team et al., 2026a ) , Claude Opus 5 ( Anthropic, 2026 ) , GPT-5.6 ( OpenAI, 2026 ) , and Kimi K3 ( Team et al., 2026b ) .\nWhere both inference modes are available, we evaluate thinking and non-thinking configurations of the same model.\nCross-model results are interpreted descriptively, as model families differ in architecture and training, while thinking and non-thinking configurations use their native inference settings. We also evaluate Qwen3.6-27B-SFT , a 27B model adapted for social-media translation using 1.2M training examples strictly disjoint from CULTURE-CMT.\nThis provides a task-adapted comparison alongside the general-purpose models.\nDetails of data construction and supervised fine-tuning are provided in Appendix D . We follow the cultural-effectiveness evaluation protocol described in Section 3 .\nOur primary metric is the proportion of translations receiving scores 0 or 1, denoted as the Invalid Rate ; lower values indicate better cultural effectiveness.\nWe additionally report the proportion of score-3 translations and the mean score.\nJudger inference uses greedy decoding (temperature 0).\nContextualized and comment-only translations are evaluated with their corresponding with-context and without-context Judger prompts, so each condition reflects the complete translation-and-evaluation setting available under that context regime.",
+   "text_with_context": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation | Experiments > Experimental Setup\n\nWe evaluate 33 model configurations spanning multiple families and scales, including Qwen3.5-9B, 27B and 35B-A3B ( Team, 2026 ) , Qwen3.6-27B ( Google, 2026c ) , Qwen3.8-27B and Qwen3.8-Max ( Qwen Team, 2026 ) , GLM-5.2 and GLM-5.3 ( GLM-5-Team et al., 2026 ) , Gemini 3.1 Pro ( Google, 2026a ) and Gemini 3.7 Flash ( Google, 2026b ) , Gemma-4-31B and Gemma-4-26B-A4B ( Team et al., 2026a ) , Claude Opus 5 ( Anthropic, 2026 ) , GPT-5.6 ( OpenAI, 2026 ) , and Kimi K3 ( Team et al., 2026b ) .\nWhere both inference modes are available, we evaluate thinking and non-thinking configurations of the same model.\nCross-model results are interpreted descriptively, as model families differ in architecture and training, while thinking and non-thinking configurations use their native inference settings. We also evaluate Qwen3.6-27B-SFT , a 27B model adapted for social-media translation using 1.2M training examples strictly disjoint from CULTURE-CMT.\nThis provides a task-adapted comparison alongside the general-purpose models.\nDetails of data construction and supervised fine-tuning are provided in Appendix D . We follow the cultural-effectiveness evaluation protocol described in Section 3 .\nOur primary metric is the proportion of translations receiving scores 0 or 1, denoted as the Invalid Rate ; lower values indicate better cultural effectiveness.\nWe additionally report the proportion of score-3 translations and the mean score.\nJudger inference uses greedy decoding (temperature 0).\nContextualized and comment-only translations are evaluated with their corresponding with-context and without-context Judger prompts, so each condition reflects the complete translation-and-evaluation setting available under that context regime.",
+   "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02018v1#S4.SS1",
+   "pdf_url": "https://arxiv.org/pdf/2611.02018v1",
+   "source_sha256": "3006005e77d28bf2233667bcb9c7f4285ea33760de4255af050366c938ec29f7"
+  },
+  {
+   "chunk_id": "2611.02018v1_c0006",
+   "arxiv_id": "2611.02018v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02018v1#S2.SS2",
+   "section": "benchmark construction",
+   "subsection": "construction pipeline",
+   "high_value": false,
+   "text": "CULTURE-CMT is constructed from naturally occurring social-media comments through a multi-stage pipeline (Figure 2 ).\nAll source data were collected between April 12 and May 12, 2026.\nStarting from 40,000 comments with their original interaction context, the pipeline consists of candidate filtering, model-assisted annotation, difficulty verification, deduplication and balancing, and human review.\nThe resulting benchmark contains 572 manually verified examples. We first apply rule-based quality filters to malformed, overly short or long, template-like, and low-information comments.\nWe then identify candidates containing either social-media-specific language, such as slang, abbreviations, and community-specific expressions, or potential contextual dependence.\nCandidates are required to have their original post context available.\nThis stage yields approximately 10,000 examples. We use GPT-5.5 to perform structured annotation over the candidate pool, including quality screening, difficulty type, topical domain, and the primary translation challenge.\nApproximately 5,000 examples are selected for subsequent verification.\nThe annotation prompt and the 21 domain labels are provided in Appendix B.1 and Appendix B.5 , respectively. We next verify translation difficulty using independently generated translations.\nCandidates are assessed for substantive semantic, cultural, slang-related, or contextual variation across translations.\nFor Context and Both examples, we additionally compare translations generated with and without interaction context to confirm contextual dependence.",
+   "text_with_context": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation | Benchmark Construction > Construction Pipeline\n\nCULTURE-CMT is constructed from naturally occurring social-media comments through a multi-stage pipeline (Figure 2 ).\nAll source data were collected between April 12 and May 12, 2026.\nStarting from 40,000 comments with their original interaction context, the pipeline consists of candidate filtering, model-assisted annotation, difficulty verification, deduplication and balancing, and human review.\nThe resulting benchmark contains 572 manually verified examples. We first apply rule-based quality filters to malformed, overly short or long, template-like, and low-information comments.\nWe then identify candidates containing either social-media-specific language, such as slang, abbreviations, and community-specific expressions, or potential contextual dependence.\nCandidates are required to have their original post context available.\nThis stage yields approximately 10,000 examples. We use GPT-5.5 to perform structured annotation over the candidate pool, including quality screening, difficulty type, topical domain, and the primary translation challenge.\nApproximately 5,000 examples are selected for subsequent verification.\nThe annotation prompt and the 21 domain labels are provided in Appendix B.1 and Appendix B.5 , respectively. We next verify translation difficulty using independently generated translations.\nCandidates are assessed for substantive semantic, cultural, slang-related, or contextual variation across translations.\nFor Context and Both examples, we additionally compare translations generated with and without interaction context to confirm contextual dependence.",
+   "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02018v1#S2.SS2",
+   "pdf_url": "https://arxiv.org/pdf/2611.02018v1",
+   "source_sha256": "3006005e77d28bf2233667bcb9c7f4285ea33760de4255af050366c938ec29f7"
+  },
+  {
+   "chunk_id": "2611.02018v1_c0008",
+   "arxiv_id": "2611.02018v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02018v1#S2.SS3",
+   "section": "benchmark construction",
+   "subsection": "dataset statistics",
+   "high_value": false,
+   "text": "Figure 3 summarizes CULTURE-CMT along four dimensions: difficulty type, interaction structure, topical domain, and comment length. The benchmark contains 207 Slang , 204 Context , and 161 Both examples, together with 301 top-level comments and 271 replies.\nTheir interaction structures differ noticeably across difficulty types: Slang is dominated by top-level comments (157/207), whereas replies account for a larger share of Context (120/204) and Both (101/161).\nThis pattern reflects the greater conversational dependence of the latter two categories. CULTURE-CMT spans 21 social-media domains.\nThe largest categories are Celebrities/Fandom (47), Games (46), and Film & TV (43), while the smallest domain still contains 14 examples, providing broad topical coverage across diverse social-media settings. Target comments are concise overall but exhibit a long-tailed length distribution, with a median of 53 characters and a mean of 58.9.\nAvailable parent comments are shorter, with a median of 33 characters and a mean of 45.7.\nTogether, these statistics reflect the short-form yet highly variable nature of social-media interaction.",
+   "text_with_context": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation | Benchmark Construction > Dataset Statistics\n\nFigure 3 summarizes CULTURE-CMT along four dimensions: difficulty type, interaction structure, topical domain, and comment length. The benchmark contains 207 Slang , 204 Context , and 161 Both examples, together with 301 top-level comments and 271 replies.\nTheir interaction structures differ noticeably across difficulty types: Slang is dominated by top-level comments (157/207), whereas replies account for a larger share of Context (120/204) and Both (101/161).\nThis pattern reflects the greater conversational dependence of the latter two categories. CULTURE-CMT spans 21 social-media domains.\nThe largest categories are Celebrities/Fandom (47), Games (46), and Film & TV (43), while the smallest domain still contains 14 examples, providing broad topical coverage across diverse social-media settings. Target comments are concise overall but exhibit a long-tailed length distribution, with a median of 53 characters and a mean of 58.9.\nAvailable parent comments are shorter, with a median of 33 characters and a mean of 45.7.\nTogether, these statistics reflect the short-form yet highly variable nature of social-media interaction.",
+   "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02018v1#S2.SS3",
+   "pdf_url": "https://arxiv.org/pdf/2611.02018v1",
+   "source_sha256": "3006005e77d28bf2233667bcb9c7f4285ea33760de4255af050366c938ec29f7"
+  },
+  {
+   "chunk_id": "2611.02018v1_c0017",
+   "arxiv_id": "2611.02018v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02018v1#S4.SS5",
+   "section": "experiments",
+   "subsection": "scale, reasoning, and adaptation",
+   "high_value": false,
+   "text": "We next compare three common routes for improving LLM-based social-media translation: Scale , Reasoning , and Adaptation .\nFigure 7 summarizes their performance under the contextualized setting. Within Qwen3.5 under thinking inference, Invalid decreases from 29.7% at 9B to 18.9% at 27B, while the 122B-A10B and 397B variants obtain 20.8% and 21.3%.\nThe observed ranking is therefore non-monotonic in total parameter count. For mixture-of-experts models, total and active parameter counts also differ. Thinking inference lowers Invalid by 15.0, 12.6, and 11.5 percentage points for Qwen3.5-9B, Qwen3.5-35B-A3B, and Qwen3.6-27B, respectively.\nClaude Opus 5, Qwen3.8-27B, and Qwen3.8-Max instead have higher Invalid Rates under thinking inference.\nThe benefit of switching to thinking mode therefore varies across models. SFT of the same Qwen3.6-27B backbone lowers Invalid from 34.6% to 24.8% without thinking and from 23.1% to 17.7% with thinking.\nThe adapted model achieves the lowest observed contextualized Invalid Rate among the evaluated configurations. CULTURE-CMT is a targeted stress test constructed from social-media data collected between April 12 and May 12, 2026.\nAccordingly, our results characterize the evaluated benchmark and model configurations rather than population-level platform error rates.\nThe scale and reasoning analyses are descriptive comparisons across existing configurations, while the adaptation comparison captures the full effect of the proposed SFT procedure.",
+   "text_with_context": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation | Experiments > Scale, Reasoning, And Adaptation\n\nWe next compare three common routes for improving LLM-based social-media translation: Scale , Reasoning , and Adaptation .\nFigure 7 summarizes their performance under the contextualized setting. Within Qwen3.5 under thinking inference, Invalid decreases from 29.7% at 9B to 18.9% at 27B, while the 122B-A10B and 397B variants obtain 20.8% and 21.3%.\nThe observed ranking is therefore non-monotonic in total parameter count. For mixture-of-experts models, total and active parameter counts also differ. Thinking inference lowers Invalid by 15.0, 12.6, and 11.5 percentage points for Qwen3.5-9B, Qwen3.5-35B-A3B, and Qwen3.6-27B, respectively.\nClaude Opus 5, Qwen3.8-27B, and Qwen3.8-Max instead have higher Invalid Rates under thinking inference.\nThe benefit of switching to thinking mode therefore varies across models. SFT of the same Qwen3.6-27B backbone lowers Invalid from 34.6% to 24.8% without thinking and from 23.1% to 17.7% with thinking.\nThe adapted model achieves the lowest observed contextualized Invalid Rate among the evaluated configurations. CULTURE-CMT is a targeted stress test constructed from social-media data collected between April 12 and May 12, 2026.\nAccordingly, our results characterize the evaluated benchmark and model configurations rather than population-level platform error rates.\nThe scale and reasoning analyses are descriptive comparisons across existing configurations, while the adaptation comparison captures the full effect of the proposed SFT procedure.",
+   "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02018v1#S4.SS5",
+   "pdf_url": "https://arxiv.org/pdf/2611.02018v1",
+   "source_sha256": "3006005e77d28bf2233667bcb9c7f4285ea33760de4255af050366c938ec29f7"
+  },
+  {
+   "chunk_id": "2611.02018v1_c0013",
+   "arxiv_id": "2611.02018v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02018v1#S4.SS2",
+   "section": "experiments",
+   "subsection": "evaluation of the cultural-effectiveness judger",
+   "high_value": true,
+   "text": "We assess the Judger against human annotations on translations of final CULTURE-CMT examples. For each of the 33 model configurations, we sample 25 source–translation pairs:\n5 Slang , 10 Context , and 10 Both , yielding 825 candidates.\nAfter human annotation, we sample by the adjudicated 0–3 labels to construct an approximately score-balanced 432-pair evaluation set.\nThis set is reserved for final Judger evaluation.\nAppendix E.2 describes the double-annotation and adjudication procedure. We report binary accuracy and Cohen’s \\kappa for the ineffective/effective partition\n( \\{0,1\\} versus \\{2,3\\} ), together with four-way accuracy and Spearman’s \\rho over the original scores.\nThe balanced evaluation set enables comparison across evaluators under comparable score coverage. Agreement with human judgments for static and agent-enhanced Judgers ( N=432 ).\n(a) Binary accuracy with Cohen’s \\kappa in parentheses;\n(b) four-way accuracy with Spearman’s \\rho in parentheses. Gains are computed from unrounded accuracies. The combined agent enhancement increases observed binary accuracy by 1.16 and 4.17 percentage points for the SFT and GRPO-aligned Judgers, respectively, while improving all four reported metrics for both backbones\n(Figure 5 ).\nGRPO alone improves ordinal agreement\n( \\rho : 0.5889 to 0.6131), but reduces binary and four-way accuracy.\nThe Agent Judger with the GRPO-aligned backbone achieves the highest binary accuracy (77.31%), \\kappa (0.5498), and \\rho (0.6554), whereas the SFT-based Agent Judger slightly leads in four-way accuracy.\nThe main translation experiments use the GRPO-based Agent Judger. Its agreement with humans is assessed on the separate 432-pair evaluation set described above.",
+   "text_with_context": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation | Experiments > Evaluation Of The Cultural-Effectiveness Judger\n\nWe assess the Judger against human annotations on translations of final CULTURE-CMT examples. For each of the 33 model configurations, we sample 25 source–translation pairs:\n5 Slang , 10 Context , and 10 Both , yielding 825 candidates.\nAfter human annotation, we sample by the adjudicated 0–3 labels to construct an approximately score-balanced 432-pair evaluation set.\nThis set is reserved for final Judger evaluation.\nAppendix E.2 describes the double-annotation and adjudication procedure. We report binary accuracy and Cohen’s \\kappa for the ineffective/effective partition\n( \\{0,1\\} versus \\{2,3\\} ), together with four-way accuracy and Spearman’s \\rho over the original scores.\nThe balanced evaluation set enables comparison across evaluators under comparable score coverage. Agreement with human judgments for static and agent-enhanced Judgers ( N=432 ).\n(a) Binary accuracy with Cohen’s \\kappa in parentheses;\n(b) four-way accuracy with Spearman’s \\rho in parentheses. Gains are computed from unrounded accuracies. The combined agent enhancement increases observed binary accuracy by 1.16 and 4.17 percentage points for the SFT and GRPO-aligned Judgers, respectively, while improving all four reported metrics for both backbones\n(Figure 5 ).\nGRPO alone improves ordinal agreement\n( \\rho : 0.5889 to 0.6131), but reduces binary and four-way accuracy.\nThe Agent Judger with the GRPO-aligned backbone achieves the highest binary accuracy (77.31%), \\kappa (0.5498), and \\rho (0.6554), whereas the SFT-based Agent Judger slightly leads in four-way accuracy.\nThe main translation experiments use the GRPO-based Agent Judger. Its agreement with humans is assessed on the separate 432-pair evaluation set described above.",
+   "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02018v1#S4.SS2",
+   "pdf_url": "https://arxiv.org/pdf/2611.02018v1",
+   "source_sha256": "3006005e77d28bf2233667bcb9c7f4285ea33760de4255af050366c938ec29f7"
+  },
+  {
+   "chunk_id": "2611.02018v1_table_13a138554a1d8939_1",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nCULTURE-CMT: Benchmarking Contextualized Social Media Translation\nTable 2: Roles of the data collections. Collection sizes describe the data pools; development validation examples are held out from training.\nCollection: Benchmark source pool; Size: 40K comments; Role and stated separation: Source of the 2,205 candidates and final 572 examples; disjoint from the Judger collection.",
+   "arxiv_id": "2611.02018v1",
+   "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02018v1",
+   "html_url": "https://arxiv.org/html/2611.02018v1#A5.T2",
+   "source_url": "https://arxiv.org/html/2611.02018v1#A5.T2",
+   "page_number": null,
+   "source_sha256": "3006005e77d28bf2233667bcb9c7f4285ea33760de4255af050366c938ec29f7",
+   "source_anchor": "A5.T2",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "",
+   "subsection": "Data provenance and separation",
+   "section_id": "",
+   "subsection_id": "A5.SS1",
+   "appendix_id": "A5",
+   "document_region": "appendix",
+   "representation": "linearized_table",
+   "table_id": "A5.T2",
+   "table_row": 1,
+   "row_label": "Benchmark source pool",
+   "caption": "Table 2: Roles of the data collections. Collection sizes describe the data pools; development validation examples are held out from training.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Collection",
+     "source_id": "A5.T2.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Size",
+     "source_id": "A5.T2.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Role and stated separation",
+     "source_id": "A5.T2.2.1.3"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 1,
+     "column": 0,
+     "text": "Benchmark source pool",
+     "source_id": "A5.T2.2.2.1"
+    },
+    {
+     "row": 1,
+     "column": 1,
+     "text": "40K comments",
+     "source_id": "A5.T2.2.2.2"
+    },
+    {
+     "row": 1,
+     "column": 2,
+     "text": "Source of the 2,205 candidates and final 572 examples; disjoint from the Judger collection.",
+     "source_id": "A5.T2.2.2.3"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02018v1_table_13a138554a1d8939_2",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nCULTURE-CMT: Benchmarking Contextualized Social Media Translation\nTable 2: Roles of the data collections. Collection sizes describe the data pools; development validation examples are held out from training.\nCollection: Judger collection; Size: 200K pairs; Role and stated separation: 160K Gemini-labeled and 40K human-labeled pairs for staged training and held-out development validation.",
+   "arxiv_id": "2611.02018v1",
+   "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02018v1",
+   "html_url": "https://arxiv.org/html/2611.02018v1#A5.T2",
+   "source_url": "https://arxiv.org/html/2611.02018v1#A5.T2",
+   "page_number": null,
+   "source_sha256": "3006005e77d28bf2233667bcb9c7f4285ea33760de4255af050366c938ec29f7",
+   "source_anchor": "A5.T2",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "",
+   "subsection": "Data provenance and separation",
+   "section_id": "",
+   "subsection_id": "A5.SS1",
+   "appendix_id": "A5",
+   "document_region": "appendix",
+   "representation": "linearized_table",
+   "table_id": "A5.T2",
+   "table_row": 2,
+   "row_label": "Judger collection",
+   "caption": "Table 2: Roles of the data collections. Collection sizes describe the data pools; development validation examples are held out from training.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Collection",
+     "source_id": "A5.T2.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Size",
+     "source_id": "A5.T2.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Role and stated separation",
+     "source_id": "A5.T2.2.1.3"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 2,
+     "column": 0,
+     "text": "Judger collection",
+     "source_id": "A5.T2.2.3.1"
+    },
+    {
+     "row": 2,
+     "column": 1,
+     "text": "200K pairs",
+     "source_id": "A5.T2.2.3.2"
+    },
+    {
+     "row": 2,
+     "column": 2,
+     "text": "160K Gemini-labeled and 40K human-labeled pairs for staged training and held-out development validation.",
+     "source_id": "A5.T2.2.3.3"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02018v1_table_13a138554a1d8939_3",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nCULTURE-CMT: Benchmarking Contextualized Social Media Translation\nTable 2: Roles of the data collections. Collection sizes describe the data pools; development validation examples are held out from training.\nCollection: Judger GRPO subset; Size: 20K pairs; Role and stated separation: Subset of the human-labeled Judger collection, not an additional independent collection.",
+   "arxiv_id": "2611.02018v1",
+   "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02018v1",
+   "html_url": "https://arxiv.org/html/2611.02018v1#A5.T2",
+   "source_url": "https://arxiv.org/html/2611.02018v1#A5.T2",
+   "page_number": null,
+   "source_sha256": "3006005e77d28bf2233667bcb9c7f4285ea33760de4255af050366c938ec29f7",
+   "source_anchor": "A5.T2",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "",
+   "subsection": "Data provenance and separation",
+   "section_id": "",
+   "subsection_id": "A5.SS1",
+   "appendix_id": "A5",
+   "document_region": "appendix",
+   "representation": "linearized_table",
+   "table_id": "A5.T2",
+   "table_row": 3,
+   "row_label": "Judger GRPO subset",
+   "caption": "Table 2: Roles of the data collections. Collection sizes describe the data pools; development validation examples are held out from training.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Collection",
+     "source_id": "A5.T2.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Size",
+     "source_id": "A5.T2.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Role and stated separation",
+     "source_id": "A5.T2.2.1.3"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 3,
+     "column": 0,
+     "text": "Judger GRPO subset",
+     "source_id": "A5.T2.2.4.1"
+    },
+    {
+     "row": 3,
+     "column": 1,
+     "text": "20K pairs",
+     "source_id": "A5.T2.2.4.2"
+    },
+    {
+     "row": 3,
+     "column": 2,
+     "text": "Subset of the human-labeled Judger collection, not an additional independent collection.",
+     "source_id": "A5.T2.2.4.3"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02018v1_table_13a138554a1d8939_4",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nCULTURE-CMT: Benchmarking Contextualized Social Media Translation\nTable 2: Roles of the data collections. Collection sizes describe the data pools; development validation examples are held out from training.\nCollection: Translation collection; Size: 1.5M collected; 1.2M retained; Role and stated separation: Translation adaptation; retained examples are disjoint from CULTURE-CMT.",
+   "arxiv_id": "2611.02018v1",
+   "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02018v1",
+   "html_url": "https://arxiv.org/html/2611.02018v1#A5.T2",
+   "source_url": "https://arxiv.org/html/2611.02018v1#A5.T2",
+   "page_number": null,
+   "source_sha256": "3006005e77d28bf2233667bcb9c7f4285ea33760de4255af050366c938ec29f7",
+   "source_anchor": "A5.T2",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "",
+   "subsection": "Data provenance and separation",
+   "section_id": "",
+   "subsection_id": "A5.SS1",
+   "appendix_id": "A5",
+   "document_region": "appendix",
+   "representation": "linearized_table",
+   "table_id": "A5.T2",
+   "table_row": 4,
+   "row_label": "Translation collection",
+   "caption": "Table 2: Roles of the data collections. Collection sizes describe the data pools; development validation examples are held out from training.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Collection",
+     "source_id": "A5.T2.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Size",
+     "source_id": "A5.T2.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Role and stated separation",
+     "source_id": "A5.T2.2.1.3"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 4,
+     "column": 0,
+     "text": "Translation collection",
+     "source_id": "A5.T2.2.5.1"
+    },
+    {
+     "row": 4,
+     "column": 1,
+     "text": "1.5M collected; 1.2M retained",
+     "source_id": "A5.T2.2.5.2"
+    },
+    {
+     "row": 4,
+     "column": 2,
+     "text": "Translation adaptation; retained examples are disjoint from CULTURE-CMT.",
+     "source_id": "A5.T2.2.5.3"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02018v1_table_13a138554a1d8939_5",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nCULTURE-CMT: Benchmarking Contextualized Social Media Translation\nTable 2: Roles of the data collections. Collection sizes describe the data pools; development validation examples are held out from training.\nCollection: Development validation; Size: 1K–2K per set; Role and stated separation: Held out from training collections; used separately from final evaluation.",
+   "arxiv_id": "2611.02018v1",
+   "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02018v1",
+   "html_url": "https://arxiv.org/html/2611.02018v1#A5.T2",
+   "source_url": "https://arxiv.org/html/2611.02018v1#A5.T2",
+   "page_number": null,
+   "source_sha256": "3006005e77d28bf2233667bcb9c7f4285ea33760de4255af050366c938ec29f7",
+   "source_anchor": "A5.T2",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "",
+   "subsection": "Data provenance and separation",
+   "section_id": "",
+   "subsection_id": "A5.SS1",
+   "appendix_id": "A5",
+   "document_region": "appendix",
+   "representation": "linearized_table",
+   "table_id": "A5.T2",
+   "table_row": 5,
+   "row_label": "Development validation",
+   "caption": "Table 2: Roles of the data collections. Collection sizes describe the data pools; development validation examples are held out from training.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Collection",
+     "source_id": "A5.T2.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Size",
+     "source_id": "A5.T2.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Role and stated separation",
+     "source_id": "A5.T2.2.1.3"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 5,
+     "column": 0,
+     "text": "Development validation",
+     "source_id": "A5.T2.2.6.1"
+    },
+    {
+     "row": 5,
+     "column": 1,
+     "text": "1K–2K per set",
+     "source_id": "A5.T2.2.6.2"
+    },
+    {
+     "row": 5,
+     "column": 2,
+     "text": "Held out from training collections; used separately from final evaluation.",
+     "source_id": "A5.T2.2.6.3"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02018v1_table_13a138554a1d8939_6",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nCULTURE-CMT: Benchmarking Contextualized Social Media Translation\nTable 2: Roles of the data collections. Collection sizes describe the data pools; development validation examples are held out from training.\nCollection: Final Judger evaluation; Size: 825 candidates; 432 retained; Role and stated separation: Multi-model benchmark translations, human-labeled and subsampled by score; evaluation only.",
+   "arxiv_id": "2611.02018v1",
+   "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02018v1",
+   "html_url": "https://arxiv.org/html/2611.02018v1#A5.T2",
+   "source_url": "https://arxiv.org/html/2611.02018v1#A5.T2",
+   "page_number": null,
+   "source_sha256": "3006005e77d28bf2233667bcb9c7f4285ea33760de4255af050366c938ec29f7",
+   "source_anchor": "A5.T2",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "",
+   "subsection": "Data provenance and separation",
+   "section_id": "",
+   "subsection_id": "A5.SS1",
+   "appendix_id": "A5",
+   "document_region": "appendix",
+   "representation": "linearized_table",
+   "table_id": "A5.T2",
+   "table_row": 6,
+   "row_label": "Final Judger evaluation",
+   "caption": "Table 2: Roles of the data collections. Collection sizes describe the data pools; development validation examples are held out from training.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Collection",
+     "source_id": "A5.T2.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Size",
+     "source_id": "A5.T2.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Role and stated separation",
+     "source_id": "A5.T2.2.1.3"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 6,
+     "column": 0,
+     "text": "Final Judger evaluation",
+     "source_id": "A5.T2.2.7.1"
+    },
+    {
+     "row": 6,
+     "column": 1,
+     "text": "825 candidates; 432 retained",
+     "source_id": "A5.T2.2.7.2"
+    },
+    {
+     "row": 6,
+     "column": 2,
+     "text": "Multi-model benchmark translations, human-labeled and subsampled by score; evaluation only.",
+     "source_id": "A5.T2.2.7.3"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02018v1_c0001",
+   "arxiv_id": "2611.02018v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02018v1#S1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": "Social media platforms are a critical deployment scenario for cross-lingual communication.\nUnlike formal genres such as news and encyclopedic writing, user-generated content (UGC) is rich in slang, community-specific expressions, and rapidly evolving non-standard forms ( Baldwin et al., 2013 ; Michel and Neubig, 2018 ; Sun et al., 2024 ) .\nRecent benchmarks have begun to study this setting systematically.\nCULTURE-MT ( Wu et al., 2026 ) focuses on culturally grounded expressions and adaptation, while CSM-MTBench ( Zhao et al., 2026 ) distinguishes longer, information-rich posts from short, reactive snippets.\nRelated work further shows that slang, neologisms, tone, and other emerging online expressions remain challenging for strong LLMs ( Mei et al., 2024 ; Huang et al., 2025 ; Liang et al., 2025 ) .\nBeyond these linguistic challenges, however, comments are interactions rather than isolated utterances : they respond to posts, add information, express stances, and often leave shared information implicit.\nInteractional context has been shown to help recover implicit emotion and sociopragmatic meaning ( Lee and Lau, 2020 ; Zhang et al., 2023 ) , while context-aware MT benchmarks diagnose discourse-level phenomena ( Jwalapuram et al., 2020 ; Fernandes et al., 2023 ) .\nOur focus is complementary: we preserve the native post–comment and parent–reply structure of social-media interactions and study it jointly with culturally situated language. This interaction context can directly change how a comment should be understood and translated.\nAs shown in Figure 1 , consider the comment 除了紫薇其他人我都看，紫薇斗志全无\n(“I can watch everyone except Ziwei. Ziwei has no fighting spirit.”).\nWithout the surrounding discussion, “紫薇”",
+   "text_with_context": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation | Introduction\n\nSocial media platforms are a critical deployment scenario for cross-lingual communication.\nUnlike formal genres such as news and encyclopedic writing, user-generated content (UGC) is rich in slang, community-specific expressions, and rapidly evolving non-standard forms ( Baldwin et al., 2013 ; Michel and Neubig, 2018 ; Sun et al., 2024 ) .\nRecent benchmarks have begun to study this setting systematically.\nCULTURE-MT ( Wu et al., 2026 ) focuses on culturally grounded expressions and adaptation, while CSM-MTBench ( Zhao et al., 2026 ) distinguishes longer, information-rich posts from short, reactive snippets.\nRelated work further shows that slang, neologisms, tone, and other emerging online expressions remain challenging for strong LLMs ( Mei et al., 2024 ; Huang et al., 2025 ; Liang et al., 2025 ) .\nBeyond these linguistic challenges, however, comments are interactions rather than isolated utterances : they respond to posts, add information, express stances, and often leave shared information implicit.\nInteractional context has been shown to help recover implicit emotion and sociopragmatic meaning ( Lee and Lau, 2020 ; Zhang et al., 2023 ) , while context-aware MT benchmarks diagnose discourse-level phenomena ( Jwalapuram et al., 2020 ; Fernandes et al., 2023 ) .\nOur focus is complementary: we preserve the native post–comment and parent–reply structure of social-media interactions and study it jointly with culturally situated language. This interaction context can directly change how a comment should be understood and translated.\nAs shown in Figure 1 , consider the comment 除了紫薇其他人我都看，紫薇斗志全无\n(“I can watch everyone except Ziwei. Ziwei has no fighting spirit.”).\nWithout the surrounding discussion, “紫薇”",
+   "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02018v1#S1",
+   "pdf_url": "https://arxiv.org/pdf/2611.02018v1",
+   "source_sha256": "3006005e77d28bf2233667bcb9c7f4285ea33760de4255af050366c938ec29f7"
+  },
+  {
+   "chunk_id": "2611.02018v1_c0011",
+   "arxiv_id": "2611.02018v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02018v1#S3.SS2",
+   "section": "evaluation protocol",
+   "subsection": "agent-enhanced judger",
+   "high_value": true,
+   "text": "Social-media evaluation frequently requires knowledge of rapidly evolving slang, memes, fandom terminology, named entities, and platform-specific expressions.\nWe therefore augment the trained Judger with a retrieval agent that supplies relevant cultural knowledge at inference time. Given (x,\\mathcal{C},y) , the evaluation process is where g_{\\mathrm{plan}} identifies knowledge needed for evaluation and generates search queries, R retrieves relevant evidence, and g_{\\mathrm{hint}} converts the evidence into concise, translation-specific judging hints. Retrieved evidence serves as auxiliary knowledge for the calibrated Judger, which produces the final 0–3 cultural-effectiveness score.\nThis design combines a learned evaluation criterion with dynamically retrieved cultural information, allowing the evaluator to accommodate emerging social-media usages at inference time.\nFull agent prompts are provided in Appendix C .",
+   "text_with_context": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation | Evaluation Protocol > Agent-Enhanced Judger\n\nSocial-media evaluation frequently requires knowledge of rapidly evolving slang, memes, fandom terminology, named entities, and platform-specific expressions.\nWe therefore augment the trained Judger with a retrieval agent that supplies relevant cultural knowledge at inference time. Given (x,\\mathcal{C},y) , the evaluation process is where g_{\\mathrm{plan}} identifies knowledge needed for evaluation and generates search queries, R retrieves relevant evidence, and g_{\\mathrm{hint}} converts the evidence into concise, translation-specific judging hints. Retrieved evidence serves as auxiliary knowledge for the calibrated Judger, which produces the final 0–3 cultural-effectiveness score.\nThis design combines a learned evaluation criterion with dynamically retrieved cultural information, allowing the evaluator to accommodate emerging social-media usages at inference time.\nFull agent prompts are provided in Appendix C .",
+   "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02018v1#S3.SS2",
+   "pdf_url": "https://arxiv.org/pdf/2611.02018v1",
+   "source_sha256": "3006005e77d28bf2233667bcb9c7f4285ea33760de4255af050366c938ec29f7"
+  },
+  {
+   "chunk_id": "2611.02018v1_table_c912c931691a453c_10",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nCULTURE-CMT: Benchmarking Contextualized Social Media Translation\nTable 3: Judger GRPO launch configuration. Training sampling and deterministic evaluation use different temperatures.\nSetting: Advantage estimator; Value: GRPO",
+   "arxiv_id": "2611.02018v1",
+   "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02018v1",
+   "html_url": "https://arxiv.org/html/2611.02018v1#A5.T3",
+   "source_url": "https://arxiv.org/html/2611.02018v1#A5.T3",
+   "page_number": null,
+   "source_sha256": "3006005e77d28bf2233667bcb9c7f4285ea33760de4255af050366c938ec29f7",
+   "source_anchor": "A5.T3",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "",
+   "subsection": "Judger training and inference",
+   "section_id": "",
+   "subsection_id": "A5.SS3",
+   "appendix_id": "A5",
+   "document_region": "appendix",
+   "representation": "linearized_table",
+   "table_id": "A5.T3",
+   "table_row": 10,
+   "row_label": "Advantage estimator",
+   "caption": "Table 3: Judger GRPO launch configuration. Training sampling and deterministic evaluation use different temperatures.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Setting",
+     "source_id": "A5.T3.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Value",
+     "source_id": "A5.T3.2.1.2"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 10,
+     "column": 0,
+     "text": "Advantage estimator",
+     "source_id": "A5.T3.2.11.1"
+    },
+    {
+     "row": 10,
+     "column": 1,
+     "text": "GRPO",
+     "source_id": "A5.T3.2.11.2"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02018v1_table_c912c931691a453c_16",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nCULTURE-CMT: Benchmarking Contextualized Social Media Translation\nTable 3: Judger GRPO launch configuration. Training sampling and deterministic evaluation use different temperatures.\nSetting: Tensor / pipeline / context parallelism; Value: 4 / 1 / 1",
+   "arxiv_id": "2611.02018v1",
+   "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02018v1",
+   "html_url": "https://arxiv.org/html/2611.02018v1#A5.T3",
+   "source_url": "https://arxiv.org/html/2611.02018v1#A5.T3",
+   "page_number": null,
+   "source_sha256": "3006005e77d28bf2233667bcb9c7f4285ea33760de4255af050366c938ec29f7",
+   "source_anchor": "A5.T3",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "",
+   "subsection": "Judger training and inference",
+   "section_id": "",
+   "subsection_id": "A5.SS3",
+   "appendix_id": "A5",
+   "document_region": "appendix",
+   "representation": "linearized_table",
+   "table_id": "A5.T3",
+   "table_row": 16,
+   "row_label": "Tensor / pipeline / context parallelism",
+   "caption": "Table 3: Judger GRPO launch configuration. Training sampling and deterministic evaluation use different temperatures.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Setting",
+     "source_id": "A5.T3.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Value",
+     "source_id": "A5.T3.2.1.2"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 16,
+     "column": 0,
+     "text": "Tensor / pipeline / context parallelism",
+     "source_id": "A5.T3.2.17.1"
+    },
+    {
+     "row": 16,
+     "column": 1,
+     "text": "4 / 1 / 1",
+     "source_id": "A5.T3.2.17.2"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02018v1_table_c912c931691a453c_19",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nCULTURE-CMT: Benchmarking Contextualized Social Media Translation\nTable 3: Judger GRPO launch configuration. Training sampling and deterministic evaluation use different temperatures.\nSetting: Attention / hidden dropout; Value: 0 / 0",
+   "arxiv_id": "2611.02018v1",
+   "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02018v1",
+   "html_url": "https://arxiv.org/html/2611.02018v1#A5.T3",
+   "source_url": "https://arxiv.org/html/2611.02018v1#A5.T3",
+   "page_number": null,
+   "source_sha256": "3006005e77d28bf2233667bcb9c7f4285ea33760de4255af050366c938ec29f7",
+   "source_anchor": "A5.T3",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "",
+   "subsection": "Judger training and inference",
+   "section_id": "",
+   "subsection_id": "A5.SS3",
+   "appendix_id": "A5",
+   "document_region": "appendix",
+   "representation": "linearized_table",
+   "table_id": "A5.T3",
+   "table_row": 19,
+   "row_label": "Attention / hidden dropout",
+   "caption": "Table 3: Judger GRPO launch configuration. Training sampling and deterministic evaluation use different temperatures.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Setting",
+     "source_id": "A5.T3.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Value",
+     "source_id": "A5.T3.2.1.2"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 19,
+     "column": 0,
+     "text": "Attention / hidden dropout",
+     "source_id": "A5.T3.2.20.1"
+    },
+    {
+     "row": 19,
+     "column": 1,
+     "text": "0 / 0",
+     "source_id": "A5.T3.2.20.2"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02018v1_c0015",
+   "arxiv_id": "2611.02018v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02018v1#S4.SS4",
+   "section": "experiments",
+   "subsection": "difficulty profiles under thinking inference",
+   "high_value": false,
+   "text": "We next describe difficulty profiles for the evaluated thinking configurations with context. Invalid rates (%) by difficulty under thinking inference with context. Subset sizes are 207 (Slang), 204 (Context), and 161 (Both). Figure 6 shows Invalid rates on the Slang , Context , and Both subsets for representative models. Across the models shown, Both is consistently the most challenging subset.\nEven systems that perform relatively well on Slang or Context individually often exhibit substantially higher Invalid rates on Both , indicating that the combination of contextual dependence and socially situated language remains difficult.\nFor example, Qwen3.6-27B-SFT has an Invalid Rate of 26.7% on Both, compared with 15.9% on Slang and 12.3% on Context.\nGLM-5.2 shows a similar profile, with 17.9%, 12.7%, and 26.7% on the three subsets, respectively. The figure also shows that similar overall performance can mask different difficulty profiles.\nSome models are relatively stronger on Context but weaker on Slang , while others show the opposite tendency.\nFor instance, Qwen3.5-27B performs competitively on Context (14.2%) but remains much weaker on Both (28.0%).\nBy contrast, Kimi K3 exhibits a more balanced profile across the three subsets.",
+   "text_with_context": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation | Experiments > Difficulty Profiles Under Thinking Inference\n\nWe next describe difficulty profiles for the evaluated thinking configurations with context. Invalid rates (%) by difficulty under thinking inference with context. Subset sizes are 207 (Slang), 204 (Context), and 161 (Both). Figure 6 shows Invalid rates on the Slang , Context , and Both subsets for representative models. Across the models shown, Both is consistently the most challenging subset.\nEven systems that perform relatively well on Slang or Context individually often exhibit substantially higher Invalid rates on Both , indicating that the combination of contextual dependence and socially situated language remains difficult.\nFor example, Qwen3.6-27B-SFT has an Invalid Rate of 26.7% on Both, compared with 15.9% on Slang and 12.3% on Context.\nGLM-5.2 shows a similar profile, with 17.9%, 12.7%, and 26.7% on the three subsets, respectively. The figure also shows that similar overall performance can mask different difficulty profiles.\nSome models are relatively stronger on Context but weaker on Slang , while others show the opposite tendency.\nFor instance, Qwen3.5-27B performs competitively on Context (14.2%) but remains much weaker on Both (28.0%).\nBy contrast, Kimi K3 exhibits a more balanced profile across the three subsets.",
+   "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02018v1#S4.SS4",
+   "pdf_url": "https://arxiv.org/pdf/2611.02018v1",
+   "source_sha256": "3006005e77d28bf2233667bcb9c7f4285ea33760de4255af050366c938ec29f7"
+  },
+  {
+   "chunk_id": "2611.02018v1_table_c912c931691a453c_18",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nCULTURE-CMT: Benchmarking Contextualized Social Media Translation\nTable 3: Judger GRPO launch configuration. Training sampling and deterministic evaluation use different temperatures.\nSetting: SGLang static memory fraction; Value: 0.4",
+   "arxiv_id": "2611.02018v1",
+   "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02018v1",
+   "html_url": "https://arxiv.org/html/2611.02018v1#A5.T3",
+   "source_url": "https://arxiv.org/html/2611.02018v1#A5.T3",
+   "page_number": null,
+   "source_sha256": "3006005e77d28bf2233667bcb9c7f4285ea33760de4255af050366c938ec29f7",
+   "source_anchor": "A5.T3",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "",
+   "subsection": "Judger training and inference",
+   "section_id": "",
+   "subsection_id": "A5.SS3",
+   "appendix_id": "A5",
+   "document_region": "appendix",
+   "representation": "linearized_table",
+   "table_id": "A5.T3",
+   "table_row": 18,
+   "row_label": "SGLang static memory fraction",
+   "caption": "Table 3: Judger GRPO launch configuration. Training sampling and deterministic evaluation use different temperatures.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Setting",
+     "source_id": "A5.T3.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Value",
+     "source_id": "A5.T3.2.1.2"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 18,
+     "column": 0,
+     "text": "SGLang static memory fraction",
+     "source_id": "A5.T3.2.19.1"
+    },
+    {
+     "row": 18,
+     "column": 1,
+     "text": "0.4",
+     "source_id": "A5.T3.2.19.2"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02018v1_table_c912c931691a453c_3",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nCULTURE-CMT: Benchmarking Contextualized Social Media Translation\nTable 3: Judger GRPO launch configuration. Training sampling and deterministic evaluation use different temperatures.\nSetting: Samples per prompt / global batch size; Value: 4 / 64",
+   "arxiv_id": "2611.02018v1",
+   "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02018v1",
+   "html_url": "https://arxiv.org/html/2611.02018v1#A5.T3",
+   "source_url": "https://arxiv.org/html/2611.02018v1#A5.T3",
+   "page_number": null,
+   "source_sha256": "3006005e77d28bf2233667bcb9c7f4285ea33760de4255af050366c938ec29f7",
+   "source_anchor": "A5.T3",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "",
+   "subsection": "Judger training and inference",
+   "section_id": "",
+   "subsection_id": "A5.SS3",
+   "appendix_id": "A5",
+   "document_region": "appendix",
+   "representation": "linearized_table",
+   "table_id": "A5.T3",
+   "table_row": 3,
+   "row_label": "Samples per prompt / global batch size",
+   "caption": "Table 3: Judger GRPO launch configuration. Training sampling and deterministic evaluation use different temperatures.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Setting",
+     "source_id": "A5.T3.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Value",
+     "source_id": "A5.T3.2.1.2"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 3,
+     "column": 0,
+     "text": "Samples per prompt / global batch size",
+     "source_id": "A5.T3.2.4.1"
+    },
+    {
+     "row": 3,
+     "column": 1,
+     "text": "4 / 64",
+     "source_id": "A5.T3.2.4.2"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02018v1_c0007",
+   "arxiv_id": "2611.02018v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02018v1#S2.SS2",
+   "section": "benchmark construction",
+   "subsection": "construction pipeline",
+   "high_value": false,
+   "text": "For Context and Both examples, we additionally compare translations generated with and without interaction context to confirm contextual dependence.\nApproximately 3,000 examples remain after verification. We then apply character-level n -gram deduplication and balance the candidate pool across the 21 topical domains and three difficulty types, resulting in 2,205 candidates for human review.\nThe corresponding prompts are provided in Appendix B.2 , Appendix B.3 , and Appendix B.4 . Three graduate-student reviewers independently examine the 2,205 candidates, covering translation difficulty, difficulty-type validity, and context relevance, with cross-checking across reviewers.\nThe review also includes screening for sensitive, inappropriate, private, and personally identifiable information.\nAfter human verification, 572 examples remain and constitute CULTURE-CMT. Dataset composition by difficulty type, interaction structure, comment length, and topical domain.",
+   "text_with_context": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation | Benchmark Construction > Construction Pipeline\n\nFor Context and Both examples, we additionally compare translations generated with and without interaction context to confirm contextual dependence.\nApproximately 3,000 examples remain after verification. We then apply character-level n -gram deduplication and balance the candidate pool across the 21 topical domains and three difficulty types, resulting in 2,205 candidates for human review.\nThe corresponding prompts are provided in Appendix B.2 , Appendix B.3 , and Appendix B.4 . Three graduate-student reviewers independently examine the 2,205 candidates, covering translation difficulty, difficulty-type validity, and context relevance, with cross-checking across reviewers.\nThe review also includes screening for sensitive, inappropriate, private, and personally identifiable information.\nAfter human verification, 572 examples remain and constitute CULTURE-CMT. Dataset composition by difficulty type, interaction structure, comment length, and topical domain.",
+   "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02018v1#S2.SS2",
+   "pdf_url": "https://arxiv.org/pdf/2611.02018v1",
+   "source_sha256": "3006005e77d28bf2233667bcb9c7f4285ea33760de4255af050366c938ec29f7"
+  },
+  {
+   "chunk_id": "2611.02018v1_table_c912c931691a453c_8",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nCULTURE-CMT: Benchmarking Contextualized Social Media Translation\nTable 3: Judger GRPO launch configuration. Training sampling and deterministic evaluation use different temperatures.\nSetting: Initial evaluation; Value: Skipped by the launch configuration",
+   "arxiv_id": "2611.02018v1",
+   "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02018v1",
+   "html_url": "https://arxiv.org/html/2611.02018v1#A5.T3",
+   "source_url": "https://arxiv.org/html/2611.02018v1#A5.T3",
+   "page_number": null,
+   "source_sha256": "3006005e77d28bf2233667bcb9c7f4285ea33760de4255af050366c938ec29f7",
+   "source_anchor": "A5.T3",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "",
+   "subsection": "Judger training and inference",
+   "section_id": "",
+   "subsection_id": "A5.SS3",
+   "appendix_id": "A5",
+   "document_region": "appendix",
+   "representation": "linearized_table",
+   "table_id": "A5.T3",
+   "table_row": 8,
+   "row_label": "Initial evaluation",
+   "caption": "Table 3: Judger GRPO launch configuration. Training sampling and deterministic evaluation use different temperatures.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Setting",
+     "source_id": "A5.T3.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Value",
+     "source_id": "A5.T3.2.1.2"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 8,
+     "column": 0,
+     "text": "Initial evaluation",
+     "source_id": "A5.T3.2.9.1"
+    },
+    {
+     "row": 8,
+     "column": 1,
+     "text": "Skipped by the launch configuration",
+     "source_id": "A5.T3.2.9.2"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02018v1_c0019",
+   "arxiv_id": "2611.02018v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02018v1#S5.SSx1",
+   "section": "conclusion",
+   "subsection": "ai use statement",
+   "high_value": true,
+   "text": "We used generative AI tools to assist with manuscript organization and grammatical editing, as well as figure preparation and consistency checks during revision.\nThe model-assisted data screening, annotation, translation generation and refinement, and reasoning-trace generation used in this study are described in Section 2.2 , Section 3.1 , and Appendix D .\nThe authors manually reviewed the AI-assisted revisions for correctness and consistency with the reported results and take full responsibility for the final content, including the text, figures, analyses, and conclusions.",
+   "text_with_context": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation | Conclusion > Ai Use Statement\n\nWe used generative AI tools to assist with manuscript organization and grammatical editing, as well as figure preparation and consistency checks during revision.\nThe model-assisted data screening, annotation, translation generation and refinement, and reasoning-trace generation used in this study are described in Section 2.2 , Section 3.1 , and Appendix D .\nThe authors manually reviewed the AI-assisted revisions for correctness and consistency with the reported results and take full responsibility for the final content, including the text, figures, analyses, and conclusions.",
+   "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02018v1#S5.SSx1",
+   "pdf_url": "https://arxiv.org/pdf/2611.02018v1",
+   "source_sha256": "3006005e77d28bf2233667bcb9c7f4285ea33760de4255af050366c938ec29f7"
+  },
+  {
+   "chunk_id": "2512.11437v1_c0002",
+   "arxiv_id": "2512.11437v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2512.11437v1#S1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": ". Furthermore, effectively serving a global population with diverse linguistic and cultural backgrounds requires these models to recognize, adapt to, and reason within various cultural and linguistic contexts [ 29 , 24 , 30 , 31 , 32 , 33 , 34 ] . Therefore, evaluating and benchmarking the trustworthy properties of these models is crucial before deploying them in high-stakes healthcare applications. Research Gap. While recent studies have begun to explore the trustworthiness of medical vision-language models, they often focus on isolated aspects such as diagnostic accuracy. For example, Yang et al. [35] introduced a benchmark targeting adversarial vulnerabilities in medical tasks, emphasizing the importance of developing defense mechanisms and Xia et al. [28] evaluated the trustworthiness of multimodal models. However, these works have notable limitations as they primarily concentrate on a narrow subset of language models and are predominantly restricted to the English language , overlooking the linguistic diversity across global healthcare contexts . Further, a holistic evaluation encompassing a range of model types and multilingual settings remains largely unexplored. Present work. To address the aforementioned limitations, we introduce Clinic , a first-of-its-kind comprehensive multilingual benchmark to evaluate the trustworthiness of different language models for the healthcare domain (see Fig. 1 ). We employ a novel two-step approach to generate linguistically grounded, multilingual samples for evaluating the trustworthiness of language models. Collaborations with healthcare experts ensure the samples are high-quality and effectively challenge models across multiple trustworthiness dimensions",
+   "text_with_context": "CLINIC: Evaluating Multilingual Trustworthiness in Language Models for Healthcare | Introduction\n\n. Furthermore, effectively serving a global population with diverse linguistic and cultural backgrounds requires these models to recognize, adapt to, and reason within various cultural and linguistic contexts [ 29 , 24 , 30 , 31 , 32 , 33 , 34 ] . Therefore, evaluating and benchmarking the trustworthy properties of these models is crucial before deploying them in high-stakes healthcare applications. Research Gap. While recent studies have begun to explore the trustworthiness of medical vision-language models, they often focus on isolated aspects such as diagnostic accuracy. For example, Yang et al. [35] introduced a benchmark targeting adversarial vulnerabilities in medical tasks, emphasizing the importance of developing defense mechanisms and Xia et al. [28] evaluated the trustworthiness of multimodal models. However, these works have notable limitations as they primarily concentrate on a narrow subset of language models and are predominantly restricted to the English language , overlooking the linguistic diversity across global healthcare contexts . Further, a holistic evaluation encompassing a range of model types and multilingual settings remains largely unexplored. Present work. To address the aforementioned limitations, we introduce Clinic , a first-of-its-kind comprehensive multilingual benchmark to evaluate the trustworthiness of different language models for the healthcare domain (see Fig. 1 ). We employ a novel two-step approach to generate linguistically grounded, multilingual samples for evaluating the trustworthiness of language models. Collaborations with healthcare experts ensure the samples are high-quality and effectively challenge models across multiple trustworthiness dimensions",
+   "title": "CLINIC: Evaluating Multilingual Trustworthiness in Language Models for Healthcare",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2512.11437v1#S1",
+   "pdf_url": "https://arxiv.org/pdf/2512.11437v1",
+   "source_sha256": "9a5a96ac40c562ed039e8434f8d9b980c9e264960ebe8200af4e2c7488ec9a32"
+  }
+ ],
+ "evidence_management": {
+  "protected_ids": [
+   "2611.02018v1_c0000",
+   "2511.08621v1_c0021",
+   "2611.02018v1_c0018",
+   "2611.02018v1_c0002",
+   "2611.02018v1_c0004",
+   "2611.02018v1_c0009",
+   "2611.02018v1_c0014",
+   "2611.02018v1_c0003",
+   "2611.02018v1_c0005",
+   "2611.02018v1_c0010",
+   "2611.02018v1_c0012",
+   "2611.02018v1_c0006",
+   "2611.02018v1_c0008",
+   "2611.02018v1_c0017",
+   "2611.02018v1_c0013",
+   "2611.02018v1_table_13a138554a1d8939_1",
+   "2611.02018v1_table_13a138554a1d8939_2",
+   "2611.02018v1_table_13a138554a1d8939_3",
+   "2611.02018v1_table_13a138554a1d8939_4",
+   "2611.02018v1_table_13a138554a1d8939_5",
+   "2611.02018v1_table_13a138554a1d8939_6",
+   "2611.02018v1_c0001",
+   "2611.02018v1_c0011",
+   "2611.02018v1_table_c912c931691a453c_10",
+   "2611.02018v1_table_c912c931691a453c_16",
+   "2611.02018v1_table_c912c931691a453c_19",
+   "2611.02018v1_c0015",
+   "2611.02018v1_table_c912c931691a453c_18",
+   "2611.02018v1_table_c912c931691a453c_3",
+   "2611.02018v1_c0007",
+   "2611.02018v1_table_c912c931691a453c_8",
+   "2611.02018v1_c0019",
+   "2512.11437v1_c0002"
+  ],
+  "supplementary_ids": [],
+  "searches": [
+   {
+    "query": "A consumer brand wants machine translation of Chinese social-media comments for market monitoring. What is CULTURE-CMT and how is translation quality judged, does adding the conversation context fix cultural errors, do larger or reasoning models help, and what approach worked best?",
+    "purpose": "original question",
+    "role": "original",
+    "chunk_ids": [
+     "2611.02018v1_c0000",
+     "2511.08621v1_c0021",
+     "2611.02018v1_c0018",
+     "2611.02018v1_c0002",
+     "2611.02018v1_c0004",
+     "2611.02018v1_c0003",
+     "2611.02018v1_c0014",
+     "2611.02018v1_c0005",
+     "2611.02018v1_c0009",
+     "2611.02018v1_c0006",
+     "2611.02018v1_c0012",
+     "2512.11437v1_c0002",
+     "2611.02018v1_c0017",
+     "2611.02018v1_c0010",
+     "2401.11641v5_c0007",
+     "2611.02018v1_c0008",
+     "2511.08621v1_c0013",
+     "2611.02018v1_c0001",
+     "2511.08621v1_c0009",
+     "2611.02018v1_c0013",
+     "2401.11641v5_c0038",
+     "2511.08621v1_c0016",
+     "2611.02018v1_table_13a138554a1d8939_1",
+     "2401.11641v5_c0025",
+     "2401.11641v5_c0044",
+     "2611.02018v1_c0015",
+     "2401.11641v5_c0026",
+     "2611.02018v1_c0011",
+     "2611.02018v1_table_13a138554a1d8939_6",
+     "2511.08621v1_c0025"
+    ],
+    "error": null
+   },
+   {
+    "query": "What is CULTURE-CMT?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02018v1_c0000",
+     "2611.02018v1_c0009",
+     "2611.02018v1_table_13a138554a1d8939_4",
+     "2611.02018v1_c0002",
+     "2611.02018v1_c0004",
+     "2611.02018v1_table_13a138554a1d8939_5",
+     "2611.02018v1_table_13a138554a1d8939_6",
+     "2611.02018v1_table_c912c931691a453c_8",
+     "2611.02018v1_table_13a138554a1d8939_1",
+     "2611.02018v1_table_c912c931691a453c_19",
+     "2611.02018v1_table_c912c931691a453c_18",
+     "2611.02018v1_table_c912c931691a453c_10",
+     "2611.02018v1_table_c912c931691a453c_3",
+     "2611.02018v1_table_c912c931691a453c_9",
+     "2611.02018v1_table_13a138554a1d8939_2",
+     "2611.02018v1_c0008",
+     "2611.02018v1_c0005",
+     "2611.02018v1_table_13a138554a1d8939_3",
+     "2611.02018v1_table_c912c931691a453c_2",
+     "2611.02018v1_table_c912c931691a453c_16",
+     "2611.02018v1_c0018",
+     "2611.02018v1_table_c912c931691a453c_7",
+     "2611.02018v1_table_c912c931691a453c_4",
+     "2611.02018v1_table_c912c931691a453c_11",
+     "2611.02018v1_table_c912c931691a453c_15",
+     "2611.02018v1_c0010",
+     "2611.02018v1_table_c912c931691a453c_5",
+     "2611.02018v1_c0014",
+     "2611.02018v1_table_c912c931691a453c_13",
+     "2611.02018v1_table_c912c931691a453c_1"
+    ],
+    "error": null
+   },
+   {
+    "query": "CULTURE-CMT how is translation quality judged?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02018v1_c0009",
+     "2611.02018v1_c0010",
+     "2611.02018v1_c0006",
+     "2611.02018v1_c0000",
+     "2611.02018v1_c0013",
+     "2611.02018v1_c0018",
+     "2611.02018v1_c0011",
+     "2611.02018v1_c0004",
+     "2611.02018v1_c0012",
+     "2611.02018v1_c0014",
+     "2611.02018v1_table_c912c931691a453c_12",
+     "2611.02018v1_c0003",
+     "2611.02018v1_table_c912c931691a453c_11",
+     "2611.02018v1_table_c912c931691a453c_18",
+     "2611.02018v1_table_c912c931691a453c_16",
+     "2611.02018v1_table_c912c931691a453c_19",
+     "2611.02018v1_table_c912c931691a453c_5",
+     "2611.02018v1_table_c912c931691a453c_6",
+     "2611.02018v1_table_c912c931691a453c_3",
+     "2611.02018v1_table_c912c931691a453c_15",
+     "2611.02018v1_table_c912c931691a453c_2",
+     "2611.02018v1_c0005",
+     "2611.02018v1_table_c912c931691a453c_8",
+     "2611.02018v1_table_13a138554a1d8939_4",
+     "2611.02018v1_table_c912c931691a453c_13",
+     "2611.02018v1_table_c912c931691a453c_7",
+     "2611.02018v1_table_13a138554a1d8939_6",
+     "2611.02018v1_table_c912c931691a453c_10",
+     "2611.02018v1_c0007",
+     "2611.02018v1_c0002"
+    ],
+    "error": null
+   },
+   {
+    "query": "CULTURE-CMT does adding the conversation context fix cultural errors?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02018v1_c0002",
+     "2611.02018v1_c0009",
+     "2611.02018v1_c0000",
+     "2611.02018v1_c0018",
+     "2611.02018v1_c0004",
+     "2611.02018v1_c0014",
+     "2611.02018v1_c0001",
+     "2611.02018v1_c0008",
+     "2611.02018v1_c0017",
+     "2611.02018v1_c0005",
+     "2611.02018v1_c0007",
+     "2611.02018v1_c0012",
+     "2611.02018v1_c0003",
+     "2611.02018v1_c0006",
+     "2611.02018v1_c0016",
+     "2611.02018v1_c0010",
+     "2611.02018v1_c0015",
+     "2611.02018v1_c0013",
+     "2611.02018v1_table_c912c931691a453c_9",
+     "2611.02018v1_table_13a138554a1d8939_4",
+     "2611.02018v1_c0011",
+     "2611.02018v1_table_c912c931691a453c_16",
+     "2611.02018v1_table_c912c931691a453c_19",
+     "2611.02018v1_table_c912c931691a453c_18",
+     "2611.02018v1_table_c912c931691a453c_11",
+     "2611.02018v1_c0019",
+     "2611.02018v1_table_13a138554a1d8939_1",
+     "2611.02018v1_table_c912c931691a453c_12",
+     "2611.02018v1_table_c912c931691a453c_10",
+     "2611.02018v1_table_c912c931691a453c_1"
+    ],
+    "error": null
+   },
+   {
+    "query": "CULTURE-CMT do larger or reasoning models help?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02018v1_c0003",
+     "2611.02018v1_c0000",
+     "2611.02018v1_c0004",
+     "2611.02018v1_c0018",
+     "2611.02018v1_c0017",
+     "2611.02018v1_c0008",
+     "2611.02018v1_c0014",
+     "2611.02018v1_c0016",
+     "2611.02018v1_c0012",
+     "2611.02018v1_c0019",
+     "2611.02018v1_c0009",
+     "2611.02018v1_c0002",
+     "2611.02018v1_table_13a138554a1d8939_6",
+     "2611.02018v1_table_13a138554a1d8939_4",
+     "2611.02018v1_c0010",
+     "2611.02018v1_c0015",
+     "2611.02018v1_c0013",
+     "2611.02018v1_c0006",
+     "2611.02018v1_c0005",
+     "2611.02018v1_table_13a138554a1d8939_1",
+     "2611.02018v1_c0011",
+     "2611.02018v1_table_13a138554a1d8939_5",
+     "2611.02018v1_table_13a138554a1d8939_2",
+     "2611.02018v1_table_13a138554a1d8939_3",
+     "2611.02018v1_table_c912c931691a453c_16",
+     "2611.02018v1_c0001",
+     "2611.02018v1_c0007",
+     "2611.02018v1_table_c912c931691a453c_10",
+     "2611.02018v1_table_c912c931691a453c_3",
+     "2611.02018v1_table_c912c931691a453c_5"
+    ],
+    "error": null
+   },
+   {
+    "query": "CULTURE-CMT what approach worked best?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02018v1_c0000",
+     "2611.02018v1_c0009",
+     "2611.02018v1_c0004",
+     "2611.02018v1_c0003",
+     "2611.02018v1_c0014",
+     "2611.02018v1_c0018",
+     "2611.02018v1_c0002",
+     "2611.02018v1_c0005",
+     "2611.02018v1_c0010",
+     "2611.02018v1_c0012",
+     "2611.02018v1_c0001",
+     "2611.02018v1_c0017",
+     "2611.02018v1_table_c912c931691a453c_10",
+     "2611.02018v1_c0019",
+     "2611.02018v1_table_c912c931691a453c_16",
+     "2611.02018v1_table_c912c931691a453c_18",
+     "2611.02018v1_c0011",
+     "2611.02018v1_table_c912c931691a453c_8",
+     "2611.02018v1_table_13a138554a1d8939_4",
+     "2611.02018v1_c0015",
+     "2611.02018v1_table_c912c931691a453c_19",
+     "2611.02018v1_table_c912c931691a453c_2",
+     "2611.02018v1_c0008",
+     "2611.02018v1_c0006",
+     "2611.02018v1_table_c912c931691a453c_7",
+     "2611.02018v1_table_c912c931691a453c_15",
+     "2611.02018v1_c0007",
+     "2611.02018v1_table_c912c931691a453c_4",
+     "2611.02018v1_c0016",
+     "2611.02018v1_c0013"
+    ],
+    "error": null
+   }
+  ],
+  "tokens": 6759,
+  "base_tokens": 6759,
+  "base_budget": 8000,
+  "conclusion_tokens": 0,
+  "conclusion_allowance": 800,
+  "conclusion_ids": [],
+  "conclusion_considered": [
+   {
+    "paper": "2611.02018v1",
+    "conclusion": null,
+    "rank": null
+   }
+  ],
+  "trimmed_for_request_size": [],
+  "notes": [
+   {
+    "kind": "incomplete_table",
+    "table": "2611.02018v1_table_c912c931691a453c",
+    "rows_in_evidence": [
+     3,
+     8,
+     10,
+     16,
+     18,
+     19
+    ],
+    "rows_in_table": 19,
+    "caption": "Table 3: Judger GRPO launch configuration",
+    "text": "Only 6 of 19 rows of Table 3: Judger GRPO launch configuration (CULTURE-CMT: Benchmarking Contextualized Social Media Translation) are in the evidence, so a comparison across that table may be incomplete."
+   }
+  ],
+  "component_searches": [
+   {
+    "query": "What is CULTURE-CMT?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02018v1_c0000",
+     "2611.02018v1_c0009",
+     "2611.02018v1_table_13a138554a1d8939_4",
+     "2611.02018v1_c0002",
+     "2611.02018v1_c0004",
+     "2611.02018v1_table_13a138554a1d8939_5",
+     "2611.02018v1_table_13a138554a1d8939_6",
+     "2611.02018v1_table_c912c931691a453c_8",
+     "2611.02018v1_table_13a138554a1d8939_1",
+     "2611.02018v1_table_c912c931691a453c_19",
+     "2611.02018v1_table_c912c931691a453c_18",
+     "2611.02018v1_table_c912c931691a453c_10",
+     "2611.02018v1_table_c912c931691a453c_3",
+     "2611.02018v1_table_c912c931691a453c_9",
+     "2611.02018v1_table_13a138554a1d8939_2",
+     "2611.02018v1_c0008",
+     "2611.02018v1_c0005",
+     "2611.02018v1_table_13a138554a1d8939_3",
+     "2611.02018v1_table_c912c931691a453c_2",
+     "2611.02018v1_table_c912c931691a453c_16",
+     "2611.02018v1_c0018",
+     "2611.02018v1_table_c912c931691a453c_7",
+     "2611.02018v1_table_c912c931691a453c_4",
+     "2611.02018v1_table_c912c931691a453c_11",
+     "2611.02018v1_table_c912c931691a453c_15",
+     "2611.02018v1_c0010",
+     "2611.02018v1_table_c912c931691a453c_5",
+     "2611.02018v1_c0014",
+     "2611.02018v1_table_c912c931691a453c_13",
+     "2611.02018v1_table_c912c931691a453c_1"
+    ],
+    "error": null
+   },
+   {
+    "query": "CULTURE-CMT how is translation quality judged?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02018v1_c0009",
+     "2611.02018v1_c0010",
+     "2611.02018v1_c0006",
+     "2611.02018v1_c0000",
+     "2611.02018v1_c0013",
+     "2611.02018v1_c0018",
+     "2611.02018v1_c0011",
+     "2611.02018v1_c0004",
+     "2611.02018v1_c0012",
+     "2611.02018v1_c0014",
+     "2611.02018v1_table_c912c931691a453c_12",
+     "2611.02018v1_c0003",
+     "2611.02018v1_table_c912c931691a453c_11",
+     "2611.02018v1_table_c912c931691a453c_18",
+     "2611.02018v1_table_c912c931691a453c_16",
+     "2611.02018v1_table_c912c931691a453c_19",
+     "2611.02018v1_table_c912c931691a453c_5",
+     "2611.02018v1_table_c912c931691a453c_6",
+     "2611.02018v1_table_c912c931691a453c_3",
+     "2611.02018v1_table_c912c931691a453c_15",
+     "2611.02018v1_table_c912c931691a453c_2",
+     "2611.02018v1_c0005",
+     "2611.02018v1_table_c912c931691a453c_8",
+     "2611.02018v1_table_13a138554a1d8939_4",
+     "2611.02018v1_table_c912c931691a453c_13",
+     "2611.02018v1_table_c912c931691a453c_7",
+     "2611.02018v1_table_13a138554a1d8939_6",
+     "2611.02018v1_table_c912c931691a453c_10",
+     "2611.02018v1_c0007",
+     "2611.02018v1_c0002"
+    ],
+    "error": null
+   },
+   {
+    "query": "CULTURE-CMT does adding the conversation context fix cultural errors?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02018v1_c0002",
+     "2611.02018v1_c0009",
+     "2611.02018v1_c0000",
+     "2611.02018v1_c0018",
+     "2611.02018v1_c0004",
+     "2611.02018v1_c0014",
+     "2611.02018v1_c0001",
+     "2611.02018v1_c0008",
+     "2611.02018v1_c0017",
+     "2611.02018v1_c0005",
+     "2611.02018v1_c0007",
+     "2611.02018v1_c0012",
+     "2611.02018v1_c0003",
+     "2611.02018v1_c0006",
+     "2611.02018v1_c0016",
+     "2611.02018v1_c0010",
+     "2611.02018v1_c0015",
+     "2611.02018v1_c0013",
+     "2611.02018v1_table_c912c931691a453c_9",
+     "2611.02018v1_table_13a138554a1d8939_4",
+     "2611.02018v1_c0011",
+     "2611.02018v1_table_c912c931691a453c_16",
+     "2611.02018v1_table_c912c931691a453c_19",
+     "2611.02018v1_table_c912c931691a453c_18",
+     "2611.02018v1_table_c912c931691a453c_11",
+     "2611.02018v1_c0019",
+     "2611.02018v1_table_13a138554a1d8939_1",
+     "2611.02018v1_table_c912c931691a453c_12",
+     "2611.02018v1_table_c912c931691a453c_10",
+     "2611.02018v1_table_c912c931691a453c_1"
+    ],
+    "error": null
+   },
+   {
+    "query": "CULTURE-CMT do larger or reasoning models help?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02018v1_c0003",
+     "2611.02018v1_c0000",
+     "2611.02018v1_c0004",
+     "2611.02018v1_c0018",
+     "2611.02018v1_c0017",
+     "2611.02018v1_c0008",
+     "2611.02018v1_c0014",
+     "2611.02018v1_c0016",
+     "2611.02018v1_c0012",
+     "2611.02018v1_c0019",
+     "2611.02018v1_c0009",
+     "2611.02018v1_c0002",
+     "2611.02018v1_table_13a138554a1d8939_6",
+     "2611.02018v1_table_13a138554a1d8939_4",
+     "2611.02018v1_c0010",
+     "2611.02018v1_c0015",
+     "2611.02018v1_c0013",
+     "2611.02018v1_c0006",
+     "2611.02018v1_c0005",
+     "2611.02018v1_table_13a138554a1d8939_1",
+     "2611.02018v1_c0011",
+     "2611.02018v1_table_13a138554a1d8939_5",
+     "2611.02018v1_table_13a138554a1d8939_2",
+     "2611.02018v1_table_13a138554a1d8939_3",
+     "2611.02018v1_table_c912c931691a453c_16",
+     "2611.02018v1_c0001",
+     "2611.02018v1_c0007",
+     "2611.02018v1_table_c912c931691a453c_10",
+     "2611.02018v1_table_c912c931691a453c_3",
+     "2611.02018v1_table_c912c931691a453c_5"
+    ],
+    "error": null
+   },
+   {
+    "query": "CULTURE-CMT what approach worked best?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02018v1_c0000",
+     "2611.02018v1_c0009",
+     "2611.02018v1_c0004",
+     "2611.02018v1_c0003",
+     "2611.02018v1_c0014",
+     "2611.02018v1_c0018",
+     "2611.02018v1_c0002",
+     "2611.02018v1_c0005",
+     "2611.02018v1_c0010",
+     "2611.02018v1_c0012",
+     "2611.02018v1_c0001",
+     "2611.02018v1_c0017",
+     "2611.02018v1_table_c912c931691a453c_10",
+     "2611.02018v1_c0019",
+     "2611.02018v1_table_c912c931691a453c_16",
+     "2611.02018v1_table_c912c931691a453c_18",
+     "2611.02018v1_c0011",
+     "2611.02018v1_table_c912c931691a453c_8",
+     "2611.02018v1_table_13a138554a1d8939_4",
+     "2611.02018v1_c0015",
+     "2611.02018v1_table_c912c931691a453c_19",
+     "2611.02018v1_table_c912c931691a453c_2",
+     "2611.02018v1_c0008",
+     "2611.02018v1_c0006",
+     "2611.02018v1_table_c912c931691a453c_7",
+     "2611.02018v1_table_c912c931691a453c_15",
+     "2611.02018v1_c0007",
+     "2611.02018v1_table_c912c931691a453c_4",
+     "2611.02018v1_c0016",
+     "2611.02018v1_c0013"
+    ],
+    "error": null
+   }
+  ]
+ },
+ "assistance": {
+  "mode": "standard",
+  "activated": false,
+  "route": null
+ },
+ "plan": null,
+ "synthesis_report": {
+  "schema_errors": [],
+  "dropped": [],
+  "contract_repairs": [],
+  "component_map_errors": []
+ },
+ "review_report": {
+  "withheld_no_decision": [],
+  "invalid_decisions": [],
+  "duplicate_decisions": [],
+  "repairs": [],
+  "dropped_limitations": [],
+  "component_check_errors": []
+ },
+ "precheck_flags": {
+  "4": [
+   {
+    "number": "77.31",
+    "issues": [
+     "subject_mismatch"
+    ]
+   }
+  ],
+  "5": [
+   {
+    "number": "572",
+    "issues": [
+     "negation_mismatch"
+    ]
+   }
+  ],
+  "7": [
+   {
+    "number": "8.7",
+    "issues": [
+     "subject_mismatch"
+    ]
+   }
+  ],
+  "10": [
+   {
+    "number": "15.0",
+    "issues": [
+     "unit_mismatch"
+    ]
+   },
+   {
+    "number": "12.6",
+    "issues": [
+     "unit_mismatch"
+    ]
+   }
+  ]
+ },
+ "review": {
+  "coverage": "full",
+  "gap": ""
+ },
+ "attempts": [
+  {
+   "attempt": 1,
+   "mode": "standard",
+   "resumed_from": [],
+   "status": "complete",
+   "seconds": 169.936,
+   "timings": {
+    "evidence": 26.416,
+    "synthesis": 85.68,
+    "review": 57.751,
+    "publication": 0.043
+   }
+  }
+ ],
+ "human_review": {
+  "status": "pending",
+  "reviewer": null
+ },
+ "approved": false,
+ "engine": "s3-standard",
+ "components": [
+  "What is CULTURE-CMT?",
+  "CULTURE-CMT how is translation quality judged?",
+  "CULTURE-CMT does adding the conversation context fix cultural errors?",
+  "CULTURE-CMT do larger or reasoning models help?",
+  "CULTURE-CMT what approach worked best?"
+ ]
+}

@@ -1,0 +1,1695 @@
+{
+ "mode": "standard",
+ "question": "A cardiology analytics client is comparing two ways to use language models on ECGs: report generation with retrieved criteria (RAG-TRACE) and direct diagnostic option scoring (ECGJev). How does ECGJev work and perform, what evidence shows it relies on the ECG signal, what does RAG-TRACE show about retrieved criteria as evidence, and is either validated for clinical use?",
+ "summary": {
+  "status": "ok",
+  "claims": [
+   {
+    "text": "RAG-TRACE evaluated report generation on 1,083 held-out PTB-XL patients using 47 criteria cards: 14 with numeric checks and 33 without measurable verification rules.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01409v1_c0002",
+      "quote": "We analyze 1,083 held-out PTB-XL patients using 47 criteria cards, including 14 with numeric checks and 33 without measurable verification rules."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01409v1_c0002"
+    ],
+    "draft_index": 0,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The attached quote states the evaluation population and all library counts."
+     },
+     "number_grounding": "uncertain",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "RAG-TRACE verifies retrieved criteria against Marquette 12SL measurements and uses Uni-G for independent assessment. It withdraws criteria without measurable support while leaving diagnostic statements unchanged.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01409v1_c0007",
+      "quote": "RAG-TRACE applied deterministic verification to retrieved criteria using Marquette 12SL measurements. Criteria without measurable support were withdrawn, while diagnostic statements remained unchanged. Uni-G provided independent assessment, with an additional configuration requiring agreement between both measurement algorithms."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01409v1_c0007"
+    ],
+    "draft_index": 1,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The quote establishes both measurement algorithms and withdrawal without changing diagnostic statements."
+     },
+     "number_grounding": "no_numbers",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "Keyword retrieval introduced untestable or measurement-disconfirmed criteria in 46.8% of GPT-4.1-mini reports. Verification withdrew 647 criterion applications, including 639 without numeric checks, while preserving 268 of 269 applications independently supported by Uni-G.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01409v1_c0000",
+      "quote": "Keyword retrieval introduced untestable or measurement-disconfirmed criteria in 46.8% of GPT-4.1-mini reports. A deterministic verification rule withdrew 647 criterion applications, including 639 without numeric checks, while preserving 268 of 269 applications independently supported by Uni-G."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01409v1_c0000"
+    ],
+    "draft_index": 2,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "All rates, counts, conditions and independent-support qualifications are explicitly stated."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "For GPT-4.1 mini, removing the 33 cards without numeric checks reduced the release score from 46.8% to 13.8%; requiring a retrieved-card identifier with the 14-card library reduced it further to 3.0%.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01409v1_c0015",
+      "quote": "Removing the 33 cards without numeric checks reduced the GPT-4.1 mini release score from 46.8% to 13.8% (Table 6 ). With the 14-card library, requiring a retrieved-card identifier further reduced the release score to 3.0%."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01409v1_c0015"
+    ],
+    "draft_index": 3,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The quote states both library restrictions and their corresponding release scores."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "In the controlled comparison with identical instructions and output schemas, retrieval increased unsupported-criterion reports from 17.4% to 31.1%, while hypertrophy recall remained unchanged at 62.6%.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01409v1_c0000",
+      "quote": "Under matched instructions and an identical output schema, retrieval increased unsupported-criterion reports from 17.4% to 31.1%, while hypertrophy recall remained unchanged at 62.6%."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01409v1_c0000"
+    ],
+    "draft_index": 4,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The quote explicitly supports the matched comparison, increased unsupported reports and unchanged recall."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "Measurement support did not establish diagnostic-label agreement: among retained applications linked to cardiologist statement codes, the linked code was present in 27.5% of 204 GPT-4.1 mini applications and 12.8% of 218 Qwen3-8B applications.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01409v1_c0014",
+      "quote": "For the eight criteria linked to cardiologist statement codes, keyword retrieval increased statement mismatch from 7.5% to 24.9% for GPT-4.1 mini and from 1.6% to 34.1% for Qwen3-8B."
+     },
+     {
+      "chunk_id": "2611.01409v1_c0014",
+      "quote": "Among retained applications, the linked code was present in 27.5% of 204 GPT-4.1 mini applications and 12.8% of 218 Qwen3-8B applications. Numeric support and diagnostic-label agreement therefore remained distinct."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01409v1_c0014"
+    ],
+    "draft_index": 5,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The quotes establish the linked-code scope, both application denominators and the distinction from numeric support."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "RAG-TRACE reports no prospective clinical evaluation and relied on published PTB-XL diagnostic labels without independent clinical review of generated reports; these conditions limit conclusions about diagnostic safety and real-world applicability.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01409v1_c0024",
+      "quote": "The evaluation relied on published PTB-XL diagnostic labels without independent clinical review of generated reports."
+     },
+     {
+      "chunk_id": "2611.01409v1_c0024",
+      "quote": "The absence of prospective clinical evaluation limits conclusions about diagnostic safety and real-world applicability."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01409v1_c0024"
+    ],
+    "draft_index": 6,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "Both clinical-evaluation limitations and their implications are explicitly stated."
+     },
+     "number_grounding": "no_numbers",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "For a cardiology analytics client, these results support checking retrieved criteria against patient measurements and assessing diagnostic validity separately before considering clinical use.",
+    "kind": "interpretation",
+    "support": [
+     {
+      "chunk_id": "2611.01409v1_c0023",
+      "quote": "A clinically relevant criterion requires measurable patient support before its application can be justified. Deterministic verification can address unsupported criterion claims without modifying diagnostic statements. Measurement agreement, diagnostic completeness, and clinical validity must therefore be assessed independently."
+     },
+     {
+      "chunk_id": "2611.01409v1_c0024",
+      "quote": "The absence of prospective clinical evaluation limits conclusions about diagnostic safety and real-world applicability."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01409v1_c0023",
+     "2611.01409v1_c0024"
+    ],
+    "draft_index": 7,
+    "label": "Interpretation: inferred from the cited findings for this decision; not a research result."
+   }
+  ],
+  "held_claims": [],
+  "limitation_support": [
+   {
+    "text": "The deliberately constructed criteria library increased exposure to the studied failures, limiting generalization to routine clinical practice.",
+    "support": [
+     {
+      "chunk_id": "2611.01409v1_c0022",
+      "quote": "The deliberately constructed criteria library increased exposure to these failures, limiting generalization to routine clinical practice."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01409v1_c0022"
+    ]
+   },
+   {
+    "text": "RAG-TRACE relied on published PTB-XL diagnostic labels without independent clinical review of generated reports; absent prospective clinical evaluation limits conclusions about diagnostic safety and real-world applicability.",
+    "support": [
+     {
+      "chunk_id": "2611.01409v1_c0024",
+      "quote": "The evaluation relied on published PTB-XL diagnostic labels without independent clinical review of generated reports."
+     },
+     {
+      "chunk_id": "2611.01409v1_c0024",
+      "quote": "The absence of prospective clinical evaluation limits conclusions about diagnostic safety and real-world applicability."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01409v1_c0024"
+    ]
+   }
+  ],
+  "limitations": [
+   "The deliberately constructed criteria library increased exposure to the studied failures, limiting generalization to routine clinical practice.",
+   "RAG-TRACE relied on published PTB-XL diagnostic labels without independent clinical review of generated reports; absent prospective clinical evaluation limits conclusions about diagnostic safety and real-world applicability."
+  ],
+  "dropped_limitations": [],
+  "evidence_notes": [
+   "Only 1 of 4 rows of Table 5: Statement mismatch against stored cardiologist codes for the original eight checks, and the mean n (RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports) are in the evidence, so a comparison across that table may be incomplete."
+  ],
+  "answer_scope": "partial",
+  "answer_lead": "The supplied passages do not establish ECGJev’s methods, performance, reliance on the ECG signal, or clinical validation.",
+  "answer_lead_check": null,
+  "support_check": "exact quotes; per-claim number recall against attached quotes; numeric_checks_v2 attribution flags (quote-anchored resolution); model review of quote entailment; not human verification"
+ },
+ "evidence": [
+  {
+   "chunk_id": "2611.01409v1_c0000",
+   "arxiv_id": "2611.01409v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01409v1#abstract1",
+   "section": "abstract",
+   "subsection": "",
+   "high_value": true,
+   "text": "Purpose: Retrieval-augmented generation (RAG) can introduce electrocardiogram (ECG) criteria that lack patient-specific measurement support. This study evaluates the reliability of retrieved diagnostic criteria in AI-generated ECG reports. Methods: We analyzed 1,083 human-validated PTB-XL patient records using a library of 47 criteria cards, including 33 without numeric verification rules. Language models generated structured reports with and without retrieval. Criterion applicability was evaluated using Marquette 12SL measurements, with independent assessment using Uni-G and comparison against expert-validated diagnostic labels. Results: Keyword retrieval introduced untestable or measurement-disconfirmed criteria in 46.8% of GPT-4.1-mini reports. A deterministic verification rule withdrew 647 criterion applications, including 639 without numeric checks, while preserving 268 of 269 applications independently supported by Uni-G. Restricting retrieval to 14 testable criteria reduced the initial unsupported-criterion rate to 13.8%. Under matched instructions and an identical output schema, retrieval increased unsupported-criterion reports from 17.4% to 31.1%, while hypertrophy recall remained unchanged at 62.6%. Conclusion: These findings identify a fundamental limitation of retrieval-based clinical report generation: retrieved criteria do not necessarily provide valid patient-specific evidence. Measurement-based verification can reduce unsupported criterion applications, but diagnostic validity requires independent assessment.",
+   "text_with_context": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports | Abstract\n\nPurpose: Retrieval-augmented generation (RAG) can introduce electrocardiogram (ECG) criteria that lack patient-specific measurement support. This study evaluates the reliability of retrieved diagnostic criteria in AI-generated ECG reports. Methods: We analyzed 1,083 human-validated PTB-XL patient records using a library of 47 criteria cards, including 33 without numeric verification rules. Language models generated structured reports with and without retrieval. Criterion applicability was evaluated using Marquette 12SL measurements, with independent assessment using Uni-G and comparison against expert-validated diagnostic labels. Results: Keyword retrieval introduced untestable or measurement-disconfirmed criteria in 46.8% of GPT-4.1-mini reports. A deterministic verification rule withdrew 647 criterion applications, including 639 without numeric checks, while preserving 268 of 269 applications independently supported by Uni-G. Restricting retrieval to 14 testable criteria reduced the initial unsupported-criterion rate to 13.8%. Under matched instructions and an identical output schema, retrieval increased unsupported-criterion reports from 17.4% to 31.1%, while hypertrophy recall remained unchanged at 62.6%. Conclusion: These findings identify a fundamental limitation of retrieval-based clinical report generation: retrieved criteria do not necessarily provide valid patient-specific evidence. Measurement-based verification can reduce unsupported criterion applications, but diagnostic validity requires independent assessment.",
+   "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01409v1#abstract1",
+   "pdf_url": "https://arxiv.org/pdf/2611.01409v1",
+   "source_sha256": "9f4550a0440db73f9c89ba5539dbf61611ca33651dcfae14a054fda6a917951d"
+  },
+  {
+   "chunk_id": "2611.01409v1_c0006",
+   "arxiv_id": "2611.01409v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01409v1#S2.SS2",
+   "section": "materials and methods",
+   "subsection": "criteria cards and retrieval",
+   "high_value": false,
+   "text": "Meeting one predicate is not a clinical diagnosis.\nTable 1 summarizes the library. Composition of the ECG criteria library. Each numeric threshold is an operational predicate used for verification. It is not sufficient, by itself, for a clinical diagnosis. Following construction of the criteria library, three retrieval strategies were evaluated: keyword overlap, term frequency–inverse document frequency (TF–IDF), and Okapi BM25. Retrieval queries were constructed from the names of diagnostic superclasses with calibrated probabilities \\geq 0.5 , without access to held-out diagnostic labels. For keyword retrieval, the relevance score between query q and criterion card c was defined as  where T(q) and T(c) denote their respective token sets. Ties were resolved using card identifiers. TF–IDF and BM25 operated on the same queries and criterion descriptions, with BM25 parameters k_{1}=1.5 and b=0.75 . Each strategy retrieved the three highest-ranked cards. BM25 was evaluated using saved queries without generating additional reports, and biomedical embedding-based retrieval was not included. Figure 1 illustrates the overall RAG-TRACE pipeline, from dataset preparation and criteria library construction to evidence retrieval and structured ECG report generation. Overview of the RAG-TRACE framework, showing dataset preparation, ECG criteria library construction, evidence retrieval strategies, and structured inputs for language model-based ECG report generation.",
+   "text_with_context": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports | Materials And Methods > Criteria Cards And Retrieval\n\nMeeting one predicate is not a clinical diagnosis.\nTable 1 summarizes the library. Composition of the ECG criteria library. Each numeric threshold is an operational predicate used for verification. It is not sufficient, by itself, for a clinical diagnosis. Following construction of the criteria library, three retrieval strategies were evaluated: keyword overlap, term frequency–inverse document frequency (TF–IDF), and Okapi BM25. Retrieval queries were constructed from the names of diagnostic superclasses with calibrated probabilities \\geq 0.5 , without access to held-out diagnostic labels. For keyword retrieval, the relevance score between query q and criterion card c was defined as  where T(q) and T(c) denote their respective token sets. Ties were resolved using card identifiers. TF–IDF and BM25 operated on the same queries and criterion descriptions, with BM25 parameters k_{1}=1.5 and b=0.75 . Each strategy retrieved the three highest-ranked cards. BM25 was evaluated using saved queries without generating additional reports, and biomedical embedding-based retrieval was not included. Figure 1 illustrates the overall RAG-TRACE pipeline, from dataset preparation and criteria library construction to evidence retrieval and structured ECG report generation. Overview of the RAG-TRACE framework, showing dataset preparation, ECG criteria library construction, evidence retrieval strategies, and structured inputs for language model-based ECG report generation.",
+   "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01409v1#S2.SS2",
+   "pdf_url": "https://arxiv.org/pdf/2611.01409v1",
+   "source_sha256": "9f4550a0440db73f9c89ba5539dbf61611ca33651dcfae14a054fda6a917951d"
+  },
+  {
+   "chunk_id": "2611.01409v1_c0007",
+   "arxiv_id": "2611.01409v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01409v1#S2.SS3",
+   "section": "materials and methods",
+   "subsection": "report generation and verification",
+   "high_value": false,
+   "text": "Structured ECG reports were generated under three conditions: no retrieval, keyword retrieval, and TF–IDF retrieval. GPT-4.1-mini was evaluated at temperature 0, with diagnostic claims restricted to calibrated probabilities \\geq 0.5 . Reports were assessed for diagnostic affirmation using predefined linguistic cues and an exploratory label-aware approach. RAG-TRACE applied deterministic verification to retrieved criteria using Marquette 12SL measurements. Criteria without measurable support were withdrawn, while diagnostic statements remained unchanged. Uni-G provided independent assessment, with an additional configuration requiring agreement between both measurement algorithms. The verification process is illustrated in Figure 2 . RAG-TRACE framework for ECG report generation and measurement-based verification using Marquette 12SL and Uni-G. The evaluation included 1,083 held-out patients, with one ECG per patient. Diagnostic superclass distributions are presented in Figure 3 . Statistical comparisons used 10,000 patient-level bootstrap resamples and exact McNemar tests for paired outcomes. Distribution of diagnostic superclass combinations among 1,083 PTB-XL patients. Bars represent combination frequencies, with normal-only recordings forming the largest group ( n=483 ).",
+   "text_with_context": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports | Materials And Methods > Report Generation And Verification\n\nStructured ECG reports were generated under three conditions: no retrieval, keyword retrieval, and TF–IDF retrieval. GPT-4.1-mini was evaluated at temperature 0, with diagnostic claims restricted to calibrated probabilities \\geq 0.5 . Reports were assessed for diagnostic affirmation using predefined linguistic cues and an exploratory label-aware approach. RAG-TRACE applied deterministic verification to retrieved criteria using Marquette 12SL measurements. Criteria without measurable support were withdrawn, while diagnostic statements remained unchanged. Uni-G provided independent assessment, with an additional configuration requiring agreement between both measurement algorithms. The verification process is illustrated in Figure 2 . RAG-TRACE framework for ECG report generation and measurement-based verification using Marquette 12SL and Uni-G. The evaluation included 1,083 held-out patients, with one ECG per patient. Diagnostic superclass distributions are presented in Figure 3 . Statistical comparisons used 10,000 patient-level bootstrap resamples and exact McNemar tests for paired outcomes. Distribution of diagnostic superclass combinations among 1,083 PTB-XL patients. Bars represent combination frequencies, with normal-only recordings forming the largest group ( n=483 ).",
+   "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01409v1#S2.SS3",
+   "pdf_url": "https://arxiv.org/pdf/2611.01409v1",
+   "source_sha256": "9f4550a0440db73f9c89ba5539dbf61611ca33651dcfae14a054fda6a917951d"
+  },
+  {
+   "chunk_id": "2611.01409v1_c0002",
+   "arxiv_id": "2611.01409v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01409v1#S1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": ". These advances highlight the importance of evidence quality, but the reliability of retrieved criteria in ECG report generation remains insufficiently examined. ECG interpretation depends on standardized criteria, including QRS duration, Sokolow–Lyon voltage, and corrected QT intervals Surawicz et al. (2009) ; Sokolow and Lyon (1949) ; Hancock et al. (2009) ; Casale et al. (1985) ; Peguero et al. (2017) ; Bazett (1920) ; Rautaharju et al. (2009) ; Prineas et al. (2010) . Clinical guidelines establish measurable thresholds and diagnostic definitions Mason et al. (2007) ; Wagner et al. (2009) ; Thygesen et al. (2018) . A retrieved criterion may be clinically relevant without being satisfied by the patient’s measurements. Other retrieved information, such as calibration settings or laboratory values, may lack a corresponding ECG measurement. These limitations create a critical gap between retrieval relevance and verifiable diagnostic evidence. This study presents RAG-TRACE, a measurement-based framework for evaluating retrieved criteria in AI-generated ECG reports. We analyze 1,083 held-out PTB-XL patients using 47 criteria cards, including 14 with numeric checks and 33 without measurable verification rules. Structured reports are generated with and without retrieval. A deterministic rule evaluates applied criteria against Marquette 12SL measurements, while Uni-G provides independent assessment. Diagnostic agreement and completeness are evaluated separately against expert-validated labels. Additional experiments assess retrieval constraints, controlled generation settings, and generalizability to other physiological recordings",
+   "text_with_context": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports | Introduction\n\n. These advances highlight the importance of evidence quality, but the reliability of retrieved criteria in ECG report generation remains insufficiently examined. ECG interpretation depends on standardized criteria, including QRS duration, Sokolow–Lyon voltage, and corrected QT intervals Surawicz et al. (2009) ; Sokolow and Lyon (1949) ; Hancock et al. (2009) ; Casale et al. (1985) ; Peguero et al. (2017) ; Bazett (1920) ; Rautaharju et al. (2009) ; Prineas et al. (2010) . Clinical guidelines establish measurable thresholds and diagnostic definitions Mason et al. (2007) ; Wagner et al. (2009) ; Thygesen et al. (2018) . A retrieved criterion may be clinically relevant without being satisfied by the patient’s measurements. Other retrieved information, such as calibration settings or laboratory values, may lack a corresponding ECG measurement. These limitations create a critical gap between retrieval relevance and verifiable diagnostic evidence. This study presents RAG-TRACE, a measurement-based framework for evaluating retrieved criteria in AI-generated ECG reports. We analyze 1,083 held-out PTB-XL patients using 47 criteria cards, including 14 with numeric checks and 33 without measurable verification rules. Structured reports are generated with and without retrieval. A deterministic rule evaluates applied criteria against Marquette 12SL measurements, while Uni-G provides independent assessment. Diagnostic agreement and completeness are evaluated separately against expert-validated labels. Additional experiments assess retrieval constraints, controlled generation settings, and generalizability to other physiological recordings",
+   "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01409v1#S1",
+   "pdf_url": "https://arxiv.org/pdf/2611.01409v1",
+   "source_sha256": "9f4550a0440db73f9c89ba5539dbf61611ca33651dcfae14a054fda6a917951d"
+  },
+  {
+   "chunk_id": "2611.01409v1_c0001",
+   "arxiv_id": "2611.01409v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01409v1#S1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": "The 12-lead electrocardiogram (ECG) is an essential diagnostic tool for assessing cardiac activity through measurable intervals, axes, and voltages Kligfield et al. (2007) ; Mason et al. (2007) . Large datasets such as PTB-XL, comprising 21,799 recordings from 18,869 patients Wagner et al. (2020) , have advanced automated ECG interpretation Strodthoff et al. (2021) . Deep learning models have achieved strong performance in detecting cardiac abnormalities Ribeiro et al. (2020) ; Hannun et al. (2019) ; Alday et al. (2020) ; Mehari and Strodthoff (2022) and supporting cardiovascular screening Attia et al. (2019) ; Siontis et al. (2021) . Nevertheless, generating reliable clinical reports requires more than diagnostic predictions. Each reported finding must be supported by patient-specific evidence. Large language models (LLMs) have demonstrated considerable potential for generating clinical narratives Tu et al. (2025) and diagnostic explanations Singhal et al. (2023) ; Nori et al. (2023) . Their outputs can contain unsupported statements and inaccurate evidence attribution Ji et al. (2023) ; Maynez et al. (2020) . Retrieval-augmented generation (RAG) incorporates external knowledge to improve factual grounding Lewis et al. (2020) ; Gao et al. (2024) ; Shuster et al. (2021) , with promising applications in medical question answering Xiong et al. (2024) ; Zakka et al. (2024) and clinical information extraction Agrawal et al. (2022) . Recent studies have investigated evidence alignment in clinical question answering Irankhah and Fodeh (2026) and query-level reliability in retriever upgrades Irankhah and Arif (2026) . These advances highlight the importance of evidence quality, but the reliability of retrieved criteria in ECG report generation remains insufficiently examined",
+   "text_with_context": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports | Introduction\n\nThe 12-lead electrocardiogram (ECG) is an essential diagnostic tool for assessing cardiac activity through measurable intervals, axes, and voltages Kligfield et al. (2007) ; Mason et al. (2007) . Large datasets such as PTB-XL, comprising 21,799 recordings from 18,869 patients Wagner et al. (2020) , have advanced automated ECG interpretation Strodthoff et al. (2021) . Deep learning models have achieved strong performance in detecting cardiac abnormalities Ribeiro et al. (2020) ; Hannun et al. (2019) ; Alday et al. (2020) ; Mehari and Strodthoff (2022) and supporting cardiovascular screening Attia et al. (2019) ; Siontis et al. (2021) . Nevertheless, generating reliable clinical reports requires more than diagnostic predictions. Each reported finding must be supported by patient-specific evidence. Large language models (LLMs) have demonstrated considerable potential for generating clinical narratives Tu et al. (2025) and diagnostic explanations Singhal et al. (2023) ; Nori et al. (2023) . Their outputs can contain unsupported statements and inaccurate evidence attribution Ji et al. (2023) ; Maynez et al. (2020) . Retrieval-augmented generation (RAG) incorporates external knowledge to improve factual grounding Lewis et al. (2020) ; Gao et al. (2024) ; Shuster et al. (2021) , with promising applications in medical question answering Xiong et al. (2024) ; Zakka et al. (2024) and clinical information extraction Agrawal et al. (2022) . Recent studies have investigated evidence alignment in clinical question answering Irankhah and Fodeh (2026) and query-level reliability in retriever upgrades Irankhah and Arif (2026) . These advances highlight the importance of evidence quality, but the reliability of retrieved criteria in ECG report generation remains insufficiently examined",
+   "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01409v1#S1",
+   "pdf_url": "https://arxiv.org/pdf/2611.01409v1",
+   "source_sha256": "9f4550a0440db73f9c89ba5539dbf61611ca33651dcfae14a054fda6a917951d"
+  },
+  {
+   "chunk_id": "2611.01409v1_c0010",
+   "arxiv_id": "2611.01409v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01409v1#S2.SS5",
+   "section": "materials and methods",
+   "subsection": "additional experiments and model evaluation",
+   "high_value": true,
+   "text": "Additional experiments assessed retrieval constraints, model variability, and robustness. Retrieval was restricted to 14 verifiable criteria, with a separate configuration requiring valid card identifiers. Two GPT-4.1 mini comparisons involving 1,083 patients used fixed instructions with identical or different output schemas to distinguish retrieval effects from schema-dependent diagnostic scores (Figure 1 ). Evaluation included Qwen3-8B and Qwen3-14B Qwen Team (2025) , Gemma 3 12B, MedGemma 4B, DeepSeek-R1-Distill-Llama-8B DeepSeek-AI (2025) , and Llama 3.1 8B Instruct Llama Team (2024) . Models used greedy decoding and a 1,200-token limit. Paired sample sizes were 1,082, 1,083, 1,083, 850, 112, and 4, respectively; Llama was excluded from rate comparisons. GLM-5.3-Flash was evaluated separately on 1,083 patients per arm.",
+   "text_with_context": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports | Materials And Methods > Additional Experiments And Model Evaluation\n\nAdditional experiments assessed retrieval constraints, model variability, and robustness. Retrieval was restricted to 14 verifiable criteria, with a separate configuration requiring valid card identifiers. Two GPT-4.1 mini comparisons involving 1,083 patients used fixed instructions with identical or different output schemas to distinguish retrieval effects from schema-dependent diagnostic scores (Figure 1 ). Evaluation included Qwen3-8B and Qwen3-14B Qwen Team (2025) , Gemma 3 12B, MedGemma 4B, DeepSeek-R1-Distill-Llama-8B DeepSeek-AI (2025) , and Llama 3.1 8B Instruct Llama Team (2024) . Models used greedy decoding and a 1,200-token limit. Paired sample sizes were 1,082, 1,083, 1,083, 850, 112, and 4, respectively; Llama was excluded from rate comparisons. GLM-5.3-Flash was evaluated separately on 1,083 patients per arm.",
+   "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01409v1#S2.SS5",
+   "pdf_url": "https://arxiv.org/pdf/2611.01409v1",
+   "source_sha256": "9f4550a0440db73f9c89ba5539dbf61611ca33651dcfae14a054fda6a917951d"
+  },
+  {
+   "chunk_id": "2611.01409v1_c0025",
+   "arxiv_id": "2611.01409v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01409v1#S6",
+   "section": "conclusion",
+   "subsection": "",
+   "high_value": true,
+   "text": "RAG-TRACE establishes a measurement-centered approach to assessing evidence reliability in AI-generated ECG reports. The evaluation highlights the importance of distinguishing retrieved clinical information from criteria supported by patient-specific measurements. Its verification mechanism provides a transparent means of identifying unsupported applications while preserving valid quantitative evidence. Importantly, criterion-level reliability and diagnostic completeness represent separate dimensions of report quality that require independent assessment. Integrating these principles into clinical RAG pipelines could support more interpretable and auditable AI-generated reports. Future work should extend RAG-TRACE to broader clinical datasets, incorporate measurement-aware retrieval, and evaluate its impact through clinician-adjudicated assessments.",
+   "text_with_context": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports | Conclusion\n\nRAG-TRACE establishes a measurement-centered approach to assessing evidence reliability in AI-generated ECG reports. The evaluation highlights the importance of distinguishing retrieved clinical information from criteria supported by patient-specific measurements. Its verification mechanism provides a transparent means of identifying unsupported applications while preserving valid quantitative evidence. Importantly, criterion-level reliability and diagnostic completeness represent separate dimensions of report quality that require independent assessment. Integrating these principles into clinical RAG pipelines could support more interpretable and auditable AI-generated reports. Future work should extend RAG-TRACE to broader clinical datasets, incorporate measurement-aware retrieval, and evaluate its impact through clinician-adjudicated assessments.",
+   "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01409v1#S6",
+   "pdf_url": "https://arxiv.org/pdf/2611.01409v1",
+   "source_sha256": "9f4550a0440db73f9c89ba5539dbf61611ca33651dcfae14a054fda6a917951d"
+  },
+  {
+   "chunk_id": "2611.01409v1_c0022",
+   "arxiv_id": "2611.01409v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01409v1#S4",
+   "section": "discussion",
+   "subsection": "",
+   "high_value": true,
+   "text": "Retrieval-augmented ECG reporting exposes a gap between clinical relevance and patient-specific evidence. Keyword retrieval introduced untestable or measurement-disconfirmed criteria in 46.8% of GPT-4.1 mini reports, with 639 of 647 withdrawn applications lacking numeric checks. Qwen3-8B exhibited a distinct failure pattern, with 203 of 211 measurement-disconfirmed applications independently rejected by Uni-G. The differences highlight two sources of unreliable reporting: unverifiable retrieved content and incorrect application of measurable criteria. The deliberately constructed criteria library increased exposure to these failures, limiting generalization to routine clinical practice. RAG-TRACE complements research on retrieval robustness, medical citation reliability, and multi-step clinical reasoning Park and Lee (2024) ; Wu et al. (2025) ; Wind et al. (2025) by assessing retrieved evidence against patient-specific measurements. Verification preserved 268 of 269 independently supported GPT-4.1 mini applications and 274 of 282 Qwen3-8B applications. This selective withdrawal offers that unsupported criteria can be removed with limited loss of measurement-supported claims. The zero release score reflects the deterministic rule itself, making independent measurement agreement essential for assessing verification performance. Controlled comparisons further distinguish retrieval effects from changes in diagnostic scoring. Under identical instructions and output schemas, unsupported-criterion reports increased from 17.4% to 31.1%, while hypertrophy recall remained at 62.6%. The different-schema comparison showed a modest decrease in micro-F1 (0.804 to 0.795) and scored hypertrophy recall (0.617 to 0.514)",
+   "text_with_context": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports | Discussion\n\nRetrieval-augmented ECG reporting exposes a gap between clinical relevance and patient-specific evidence. Keyword retrieval introduced untestable or measurement-disconfirmed criteria in 46.8% of GPT-4.1 mini reports, with 639 of 647 withdrawn applications lacking numeric checks. Qwen3-8B exhibited a distinct failure pattern, with 203 of 211 measurement-disconfirmed applications independently rejected by Uni-G. The differences highlight two sources of unreliable reporting: unverifiable retrieved content and incorrect application of measurable criteria. The deliberately constructed criteria library increased exposure to these failures, limiting generalization to routine clinical practice. RAG-TRACE complements research on retrieval robustness, medical citation reliability, and multi-step clinical reasoning Park and Lee (2024) ; Wu et al. (2025) ; Wind et al. (2025) by assessing retrieved evidence against patient-specific measurements. Verification preserved 268 of 269 independently supported GPT-4.1 mini applications and 274 of 282 Qwen3-8B applications. This selective withdrawal offers that unsupported criteria can be removed with limited loss of measurement-supported claims. The zero release score reflects the deterministic rule itself, making independent measurement agreement essential for assessing verification performance. Controlled comparisons further distinguish retrieval effects from changes in diagnostic scoring. Under identical instructions and output schemas, unsupported-criterion reports increased from 17.4% to 31.1%, while hypertrophy recall remained at 62.6%. The different-schema comparison showed a modest decrease in micro-F1 (0.804 to 0.795) and scored hypertrophy recall (0.617 to 0.514)",
+   "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01409v1#S4",
+   "pdf_url": "https://arxiv.org/pdf/2611.01409v1",
+   "source_sha256": "9f4550a0440db73f9c89ba5539dbf61611ca33651dcfae14a054fda6a917951d"
+  },
+  {
+   "chunk_id": "2611.01409v1_c0003",
+   "arxiv_id": "2611.01409v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01409v1#S1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": ". Diagnostic agreement and completeness are evaluated separately against expert-validated labels. Additional experiments assess retrieval constraints, controlled generation settings, and generalizability to other physiological recordings. The evaluation distinguishes criterion applicability, independent measurement agreement, and diagnostic accuracy, following established reporting principles Collins et al. (2024) ; Gallifant et al. (2025) . Our objective is to determine whether retrieved clinical criteria provide verifiable patient-specific evidence and whether deterministic verification reduces unsupported applications without altering diagnostic conclusions.",
+   "text_with_context": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports | Introduction\n\n. Diagnostic agreement and completeness are evaluated separately against expert-validated labels. Additional experiments assess retrieval constraints, controlled generation settings, and generalizability to other physiological recordings. The evaluation distinguishes criterion applicability, independent measurement agreement, and diagnostic accuracy, following established reporting principles Collins et al. (2024) ; Gallifant et al. (2025) . Our objective is to determine whether retrieved clinical criteria provide verifiable patient-specific evidence and whether deterministic verification reduces unsupported applications without altering diagnostic conclusions.",
+   "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01409v1#S1",
+   "pdf_url": "https://arxiv.org/pdf/2611.01409v1",
+   "source_sha256": "9f4550a0440db73f9c89ba5539dbf61611ca33651dcfae14a054fda6a917951d"
+  },
+  {
+   "chunk_id": "2611.01409v1_c0024",
+   "arxiv_id": "2611.01409v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01409v1#S5",
+   "section": "limitations",
+   "subsection": "",
+   "high_value": true,
+   "text": "The evaluation relied on published PTB-XL diagnostic labels without independent clinical review of generated reports. The prespecified affirmation rule undercounted diagnostic assertions, while the exploratory label-aware analysis excluded 138 sentences with disagreement between judges. Model comparisons were constrained by incomplete JSON generation for Llama, 112 paired DeepSeek cases, and the use of a single closed model for numeric-only retrieval. The identical-schema and different-schema comparisons addressed distinct experimental conditions. BM25 was evaluated without report generation, and TF–IDF did not incorporate biomedical embeddings. The reported cue-list contrast was significant ( p=0.008 ); the other comparisons were exploratory. The absence of prospective clinical evaluation limits conclusions about diagnostic safety and real-world applicability.",
+   "text_with_context": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports | Limitations\n\nThe evaluation relied on published PTB-XL diagnostic labels without independent clinical review of generated reports. The prespecified affirmation rule undercounted diagnostic assertions, while the exploratory label-aware analysis excluded 138 sentences with disagreement between judges. Model comparisons were constrained by incomplete JSON generation for Llama, 112 paired DeepSeek cases, and the use of a single closed model for numeric-only retrieval. The identical-schema and different-schema comparisons addressed distinct experimental conditions. BM25 was evaluated without report generation, and TF–IDF did not incorporate biomedical embeddings. The reported cue-list contrast was significant ( p=0.008 ); the other comparisons were exploratory. The absence of prospective clinical evaluation limits conclusions about diagnostic safety and real-world applicability.",
+   "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01409v1#S5",
+   "pdf_url": "https://arxiv.org/pdf/2611.01409v1",
+   "source_sha256": "9f4550a0440db73f9c89ba5539dbf61611ca33651dcfae14a054fda6a917951d"
+  },
+  {
+   "chunk_id": "2611.01409v1_table_10b6396bf26b82f3_1",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nRAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports\nTable 1: Composition of the ECG criteria library. Each numeric threshold is an operational predicate used for verification. It is not sufficient, by itself, for a clinical diagnosis.\nRow group: Original numeric criteria; Criterion: QRS duration; Threshold or description: \\geq 120 ms; Cards: 1",
+   "arxiv_id": "2611.01409v1",
+   "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01409v1",
+   "html_url": "https://arxiv.org/html/2611.01409v1#S2.T1",
+   "source_url": "https://arxiv.org/html/2611.01409v1#S2.T1",
+   "page_number": null,
+   "source_sha256": "9f4550a0440db73f9c89ba5539dbf61611ca33651dcfae14a054fda6a917951d",
+   "source_anchor": "S2.T1",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Materials and methods",
+   "subsection": "Criteria cards and retrieval",
+   "section_id": "S2",
+   "subsection_id": "S2.SS2",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S2.T1",
+   "table_row": 1,
+   "row_label": "QRS duration",
+   "caption": "Table 1: Composition of the ECG criteria library. Each numeric threshold is an operational predicate used for verification. It is not sufficient, by itself, for a clinical diagnosis.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Criterion",
+     "source_id": "S2.T1.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Threshold or description",
+     "source_id": "S2.T1.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Cards",
+     "source_id": "S2.T1.2.1.3"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 1,
+     "column": 0,
+     "text": "QRS duration",
+     "source_id": "S2.T1.2.3.1"
+    },
+    {
+     "row": 1,
+     "column": 1,
+     "text": "\\geq 120 ms",
+     "source_id": "S2.T1.2.3.2"
+    },
+    {
+     "row": 1,
+     "column": 2,
+     "text": "1",
+     "source_id": "S2.T1.2.3.3"
+    }
+   ],
+   "source_notes": [],
+   "row_group": "Original numeric criteria"
+  },
+  {
+   "chunk_id": "2611.01409v1_table_10b6396bf26b82f3_2",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nRAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports\nTable 1: Composition of the ECG criteria library. Each numeric threshold is an operational predicate used for verification. It is not sufficient, by itself, for a clinical diagnosis.\nRow group: Original numeric criteria; Criterion: PR interval; Threshold or description: \\geq 200 ms; Cards: 1",
+   "arxiv_id": "2611.01409v1",
+   "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01409v1",
+   "html_url": "https://arxiv.org/html/2611.01409v1#S2.T1",
+   "source_url": "https://arxiv.org/html/2611.01409v1#S2.T1",
+   "page_number": null,
+   "source_sha256": "9f4550a0440db73f9c89ba5539dbf61611ca33651dcfae14a054fda6a917951d",
+   "source_anchor": "S2.T1",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Materials and methods",
+   "subsection": "Criteria cards and retrieval",
+   "section_id": "S2",
+   "subsection_id": "S2.SS2",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S2.T1",
+   "table_row": 2,
+   "row_label": "PR interval",
+   "caption": "Table 1: Composition of the ECG criteria library. Each numeric threshold is an operational predicate used for verification. It is not sufficient, by itself, for a clinical diagnosis.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Criterion",
+     "source_id": "S2.T1.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Threshold or description",
+     "source_id": "S2.T1.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Cards",
+     "source_id": "S2.T1.2.1.3"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 2,
+     "column": 0,
+     "text": "PR interval",
+     "source_id": "S2.T1.2.4.1"
+    },
+    {
+     "row": 2,
+     "column": 1,
+     "text": "\\geq 200 ms",
+     "source_id": "S2.T1.2.4.2"
+    },
+    {
+     "row": 2,
+     "column": 2,
+     "text": "1",
+     "source_id": "S2.T1.2.4.3"
+    }
+   ],
+   "source_notes": [],
+   "row_group": "Original numeric criteria"
+  },
+  {
+   "chunk_id": "2611.01409v1_table_10b6396bf26b82f3_3",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nRAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports\nTable 1: Composition of the ECG criteria library. Each numeric threshold is an operational predicate used for verification. It is not sufficient, by itself, for a clinical diagnosis.\nRow group: Original numeric criteria; Criterion: QRS axis; Threshold or description: \\leq-30^{\\circ}; Cards: 1",
+   "arxiv_id": "2611.01409v1",
+   "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01409v1",
+   "html_url": "https://arxiv.org/html/2611.01409v1#S2.T1",
+   "source_url": "https://arxiv.org/html/2611.01409v1#S2.T1",
+   "page_number": null,
+   "source_sha256": "9f4550a0440db73f9c89ba5539dbf61611ca33651dcfae14a054fda6a917951d",
+   "source_anchor": "S2.T1",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Materials and methods",
+   "subsection": "Criteria cards and retrieval",
+   "section_id": "S2",
+   "subsection_id": "S2.SS2",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S2.T1",
+   "table_row": 3,
+   "row_label": "QRS axis",
+   "caption": "Table 1: Composition of the ECG criteria library. Each numeric threshold is an operational predicate used for verification. It is not sufficient, by itself, for a clinical diagnosis.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Criterion",
+     "source_id": "S2.T1.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Threshold or description",
+     "source_id": "S2.T1.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Cards",
+     "source_id": "S2.T1.2.1.3"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 3,
+     "column": 0,
+     "text": "QRS axis",
+     "source_id": "S2.T1.2.5.1"
+    },
+    {
+     "row": 3,
+     "column": 1,
+     "text": "\\leq-30^{\\circ}",
+     "source_id": "S2.T1.2.5.2"
+    },
+    {
+     "row": 3,
+     "column": 2,
+     "text": "1",
+     "source_id": "S2.T1.2.5.3"
+    }
+   ],
+   "source_notes": [],
+   "row_group": "Original numeric criteria"
+  },
+  {
+   "chunk_id": "2611.01409v1_table_10b6396bf26b82f3_4",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nRAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports\nTable 1: Composition of the ECG criteria library. Each numeric threshold is an operational predicate used for verification. It is not sufficient, by itself, for a clinical diagnosis.\nRow group: Original numeric criteria; Criterion: Sokolow–Lyon voltage; Threshold or description: \\geq 3.5 mV; Cards: 1",
+   "arxiv_id": "2611.01409v1",
+   "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01409v1",
+   "html_url": "https://arxiv.org/html/2611.01409v1#S2.T1",
+   "source_url": "https://arxiv.org/html/2611.01409v1#S2.T1",
+   "page_number": null,
+   "source_sha256": "9f4550a0440db73f9c89ba5539dbf61611ca33651dcfae14a054fda6a917951d",
+   "source_anchor": "S2.T1",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Materials and methods",
+   "subsection": "Criteria cards and retrieval",
+   "section_id": "S2",
+   "subsection_id": "S2.SS2",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S2.T1",
+   "table_row": 4,
+   "row_label": "Sokolow–Lyon voltage",
+   "caption": "Table 1: Composition of the ECG criteria library. Each numeric threshold is an operational predicate used for verification. It is not sufficient, by itself, for a clinical diagnosis.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Criterion",
+     "source_id": "S2.T1.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Threshold or description",
+     "source_id": "S2.T1.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Cards",
+     "source_id": "S2.T1.2.1.3"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 4,
+     "column": 0,
+     "text": "Sokolow–Lyon voltage",
+     "source_id": "S2.T1.2.6.1"
+    },
+    {
+     "row": 4,
+     "column": 1,
+     "text": "\\geq 3.5 mV",
+     "source_id": "S2.T1.2.6.2"
+    },
+    {
+     "row": 4,
+     "column": 2,
+     "text": "1",
+     "source_id": "S2.T1.2.6.3"
+    }
+   ],
+   "source_notes": [],
+   "row_group": "Original numeric criteria"
+  },
+  {
+   "chunk_id": "2611.01409v1_table_10b6396bf26b82f3_5",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nRAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports\nTable 1: Composition of the ECG criteria library. Each numeric threshold is an operational predicate used for verification. It is not sufficient, by itself, for a clinical diagnosis.\nRow group: Original numeric criteria; Criterion: Bazett QTc; Threshold or description: \\geq 450 ms (men); \\geq 460 ms (women); Cards: 1",
+   "arxiv_id": "2611.01409v1",
+   "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01409v1",
+   "html_url": "https://arxiv.org/html/2611.01409v1#S2.T1",
+   "source_url": "https://arxiv.org/html/2611.01409v1#S2.T1",
+   "page_number": null,
+   "source_sha256": "9f4550a0440db73f9c89ba5539dbf61611ca33651dcfae14a054fda6a917951d",
+   "source_anchor": "S2.T1",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Materials and methods",
+   "subsection": "Criteria cards and retrieval",
+   "section_id": "S2",
+   "subsection_id": "S2.SS2",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S2.T1",
+   "table_row": 5,
+   "row_label": "Bazett QTc",
+   "caption": "Table 1: Composition of the ECG criteria library. Each numeric threshold is an operational predicate used for verification. It is not sufficient, by itself, for a clinical diagnosis.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Criterion",
+     "source_id": "S2.T1.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Threshold or description",
+     "source_id": "S2.T1.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Cards",
+     "source_id": "S2.T1.2.1.3"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 5,
+     "column": 0,
+     "text": "Bazett QTc",
+     "source_id": "S2.T1.2.7.1"
+    },
+    {
+     "row": 5,
+     "column": 1,
+     "text": "\\geq 450 ms (men); \\geq 460 ms (women)",
+     "source_id": "S2.T1.2.7.2"
+    },
+    {
+     "row": 5,
+     "column": 2,
+     "text": "1",
+     "source_id": "S2.T1.2.7.3"
+    }
+   ],
+   "source_notes": [],
+   "row_group": "Original numeric criteria"
+  },
+  {
+   "chunk_id": "2611.01409v1_table_10b6396bf26b82f3_6",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nRAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports\nTable 1: Composition of the ECG criteria library. Each numeric threshold is an operational predicate used for verification. It is not sufficient, by itself, for a clinical diagnosis.\nRow group: Original numeric criteria; Criterion: ST deviation (lead II); Threshold or description: \\leq-0.1 mV; Cards: 1",
+   "arxiv_id": "2611.01409v1",
+   "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01409v1",
+   "html_url": "https://arxiv.org/html/2611.01409v1#S2.T1",
+   "source_url": "https://arxiv.org/html/2611.01409v1#S2.T1",
+   "page_number": null,
+   "source_sha256": "9f4550a0440db73f9c89ba5539dbf61611ca33651dcfae14a054fda6a917951d",
+   "source_anchor": "S2.T1",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Materials and methods",
+   "subsection": "Criteria cards and retrieval",
+   "section_id": "S2",
+   "subsection_id": "S2.SS2",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S2.T1",
+   "table_row": 6,
+   "row_label": "ST deviation (lead II)",
+   "caption": "Table 1: Composition of the ECG criteria library. Each numeric threshold is an operational predicate used for verification. It is not sufficient, by itself, for a clinical diagnosis.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Criterion",
+     "source_id": "S2.T1.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Threshold or description",
+     "source_id": "S2.T1.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Cards",
+     "source_id": "S2.T1.2.1.3"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 6,
+     "column": 0,
+     "text": "ST deviation (lead II)",
+     "source_id": "S2.T1.2.8.1"
+    },
+    {
+     "row": 6,
+     "column": 1,
+     "text": "\\leq-0.1 mV",
+     "source_id": "S2.T1.2.8.2"
+    },
+    {
+     "row": 6,
+     "column": 2,
+     "text": "1",
+     "source_id": "S2.T1.2.8.3"
+    }
+   ],
+   "source_notes": [],
+   "row_group": "Original numeric criteria"
+  },
+  {
+   "chunk_id": "2611.01409v1_table_10b6396bf26b82f3_7",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nRAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports\nTable 1: Composition of the ECG criteria library. Each numeric threshold is an operational predicate used for verification. It is not sufficient, by itself, for a clinical diagnosis.\nRow group: Original numeric criteria; Criterion: Q-wave duration; Threshold or description: \\geq 40 ms (II, III, aVF, or V1–V4); Cards: 1",
+   "arxiv_id": "2611.01409v1",
+   "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01409v1",
+   "html_url": "https://arxiv.org/html/2611.01409v1#S2.T1",
+   "source_url": "https://arxiv.org/html/2611.01409v1#S2.T1",
+   "page_number": null,
+   "source_sha256": "9f4550a0440db73f9c89ba5539dbf61611ca33651dcfae14a054fda6a917951d",
+   "source_anchor": "S2.T1",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Materials and methods",
+   "subsection": "Criteria cards and retrieval",
+   "section_id": "S2",
+   "subsection_id": "S2.SS2",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S2.T1",
+   "table_row": 7,
+   "row_label": "Q-wave duration",
+   "caption": "Table 1: Composition of the ECG criteria library. Each numeric threshold is an operational predicate used for verification. It is not sufficient, by itself, for a clinical diagnosis.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Criterion",
+     "source_id": "S2.T1.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Threshold or description",
+     "source_id": "S2.T1.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Cards",
+     "source_id": "S2.T1.2.1.3"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 7,
+     "column": 0,
+     "text": "Q-wave duration",
+     "source_id": "S2.T1.2.9.1"
+    },
+    {
+     "row": 7,
+     "column": 1,
+     "text": "\\geq 40 ms (II, III, aVF, or V1–V4)",
+     "source_id": "S2.T1.2.9.2"
+    },
+    {
+     "row": 7,
+     "column": 2,
+     "text": "1",
+     "source_id": "S2.T1.2.9.3"
+    }
+   ],
+   "source_notes": [],
+   "row_group": "Original numeric criteria"
+  },
+  {
+   "chunk_id": "2611.01409v1_table_10b6396bf26b82f3_8",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nRAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports\nTable 1: Composition of the ECG criteria library. Each numeric threshold is an operational predicate used for verification. It is not sufficient, by itself, for a clinical diagnosis.\nRow group: Original numeric criteria; Criterion: Heart rate; Threshold or description: \\geq 100 bpm; Cards: 1",
+   "arxiv_id": "2611.01409v1",
+   "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01409v1",
+   "html_url": "https://arxiv.org/html/2611.01409v1#S2.T1",
+   "source_url": "https://arxiv.org/html/2611.01409v1#S2.T1",
+   "page_number": null,
+   "source_sha256": "9f4550a0440db73f9c89ba5539dbf61611ca33651dcfae14a054fda6a917951d",
+   "source_anchor": "S2.T1",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Materials and methods",
+   "subsection": "Criteria cards and retrieval",
+   "section_id": "S2",
+   "subsection_id": "S2.SS2",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S2.T1",
+   "table_row": 8,
+   "row_label": "Heart rate",
+   "caption": "Table 1: Composition of the ECG criteria library. Each numeric threshold is an operational predicate used for verification. It is not sufficient, by itself, for a clinical diagnosis.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Criterion",
+     "source_id": "S2.T1.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Threshold or description",
+     "source_id": "S2.T1.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Cards",
+     "source_id": "S2.T1.2.1.3"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 8,
+     "column": 0,
+     "text": "Heart rate",
+     "source_id": "S2.T1.2.10.1"
+    },
+    {
+     "row": 8,
+     "column": 1,
+     "text": "\\geq 100 bpm",
+     "source_id": "S2.T1.2.10.2"
+    },
+    {
+     "row": 8,
+     "column": 2,
+     "text": "1",
+     "source_id": "S2.T1.2.10.3"
+    }
+   ],
+   "source_notes": [],
+   "row_group": "Original numeric criteria"
+  },
+  {
+   "chunk_id": "2611.01409v1_table_10b6396bf26b82f3_9",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nRAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports\nTable 1: Composition of the ECG criteria library. Each numeric threshold is an operational predicate used for verification. It is not sufficient, by itself, for a clinical diagnosis.\nRow group: Original numeric criteria; Criterion: Opposing numeric checks; Threshold or description: Six complementary measurement predicates; Cards: 6",
+   "arxiv_id": "2611.01409v1",
+   "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01409v1",
+   "html_url": "https://arxiv.org/html/2611.01409v1#S2.T1",
+   "source_url": "https://arxiv.org/html/2611.01409v1#S2.T1",
+   "page_number": null,
+   "source_sha256": "9f4550a0440db73f9c89ba5539dbf61611ca33651dcfae14a054fda6a917951d",
+   "source_anchor": "S2.T1",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Materials and methods",
+   "subsection": "Criteria cards and retrieval",
+   "section_id": "S2",
+   "subsection_id": "S2.SS2",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S2.T1",
+   "table_row": 9,
+   "row_label": "Opposing numeric checks",
+   "caption": "Table 1: Composition of the ECG criteria library. Each numeric threshold is an operational predicate used for verification. It is not sufficient, by itself, for a clinical diagnosis.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Criterion",
+     "source_id": "S2.T1.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Threshold or description",
+     "source_id": "S2.T1.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Cards",
+     "source_id": "S2.T1.2.1.3"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 9,
+     "column": 0,
+     "text": "Opposing numeric checks",
+     "source_id": "S2.T1.2.11.1"
+    },
+    {
+     "row": 9,
+     "column": 1,
+     "text": "Six complementary measurement predicates",
+     "source_id": "S2.T1.2.11.2"
+    },
+    {
+     "row": 9,
+     "column": 2,
+     "text": "6",
+     "source_id": "S2.T1.2.11.3"
+    }
+   ],
+   "source_notes": [],
+   "row_group": "Original numeric criteria"
+  },
+  {
+   "chunk_id": "2611.01409v1_table_10b6396bf26b82f3_10",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nRAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports\nTable 1: Composition of the ECG criteria library. Each numeric threshold is an operational predicate used for verification. It is not sufficient, by itself, for a clinical diagnosis.\nRow group: Original numeric criteria; Criterion: Cards without numeric checks; Threshold or description: Calibration pulse, paper speed, notch filter, pediatric QRS limit, lead reversal, age, troponin, wall thickness, potassium, and digoxin; Cards: 33",
+   "arxiv_id": "2611.01409v1",
+   "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01409v1",
+   "html_url": "https://arxiv.org/html/2611.01409v1#S2.T1",
+   "source_url": "https://arxiv.org/html/2611.01409v1#S2.T1",
+   "page_number": null,
+   "source_sha256": "9f4550a0440db73f9c89ba5539dbf61611ca33651dcfae14a054fda6a917951d",
+   "source_anchor": "S2.T1",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Materials and methods",
+   "subsection": "Criteria cards and retrieval",
+   "section_id": "S2",
+   "subsection_id": "S2.SS2",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S2.T1",
+   "table_row": 10,
+   "row_label": "Cards without numeric checks",
+   "caption": "Table 1: Composition of the ECG criteria library. Each numeric threshold is an operational predicate used for verification. It is not sufficient, by itself, for a clinical diagnosis.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Criterion",
+     "source_id": "S2.T1.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Threshold or description",
+     "source_id": "S2.T1.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Cards",
+     "source_id": "S2.T1.2.1.3"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 10,
+     "column": 0,
+     "text": "Cards without numeric checks",
+     "source_id": "S2.T1.2.12.1"
+    },
+    {
+     "row": 10,
+     "column": 1,
+     "text": "Calibration pulse, paper speed, notch filter, pediatric QRS limit, lead reversal, age, troponin, wall thickness, potassium, and digoxin",
+     "source_id": "S2.T1.2.12.2"
+    },
+    {
+     "row": 10,
+     "column": 2,
+     "text": "33",
+     "source_id": "S2.T1.2.12.3"
+    }
+   ],
+   "source_notes": [],
+   "row_group": "Original numeric criteria"
+  },
+  {
+   "chunk_id": "2611.01409v1_table_10b6396bf26b82f3_11",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nRAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports\nTable 1: Composition of the ECG criteria library. Each numeric threshold is an operational predicate used for verification. It is not sufficient, by itself, for a clinical diagnosis.\nRow group: Original numeric criteria; Criterion: Total; Threshold or description: [empty in source]; Cards: 47",
+   "arxiv_id": "2611.01409v1",
+   "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01409v1",
+   "html_url": "https://arxiv.org/html/2611.01409v1#S2.T1",
+   "source_url": "https://arxiv.org/html/2611.01409v1#S2.T1",
+   "page_number": null,
+   "source_sha256": "9f4550a0440db73f9c89ba5539dbf61611ca33651dcfae14a054fda6a917951d",
+   "source_anchor": "S2.T1",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Materials and methods",
+   "subsection": "Criteria cards and retrieval",
+   "section_id": "S2",
+   "subsection_id": "S2.SS2",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S2.T1",
+   "table_row": 11,
+   "row_label": "Total",
+   "caption": "Table 1: Composition of the ECG criteria library. Each numeric threshold is an operational predicate used for verification. It is not sufficient, by itself, for a clinical diagnosis.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Criterion",
+     "source_id": "S2.T1.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Threshold or description",
+     "source_id": "S2.T1.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Cards",
+     "source_id": "S2.T1.2.1.3"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 11,
+     "column": 0,
+     "text": "Total",
+     "source_id": "S2.T1.2.13.1"
+    },
+    {
+     "row": 11,
+     "column": 1,
+     "text": "",
+     "source_id": "S2.T1.2.13.2"
+    },
+    {
+     "row": 11,
+     "column": 2,
+     "text": "47",
+     "source_id": "S2.T1.2.13.3"
+    }
+   ],
+   "source_notes": [],
+   "row_group": "Original numeric criteria"
+  },
+  {
+   "chunk_id": "2611.01409v1_c0009",
+   "arxiv_id": "2611.01409v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01409v1#S2.SS4",
+   "section": "materials and methods",
+   "subsection": "evaluation metrics",
+   "high_value": true,
+   "text": ". Affirmed diagnoses were extracted using the prespecified cue-based rule and, separately, the exploratory label-aware approach. Since verification modifies only criterion applications, diagnostic consistency remains unchanged after withdrawal. An additional statement-level metric assessed discrepancies between the original eight criteria and their linked cardiologist statement codes, including unsupported applications and omitted findings. Diagnostic agreement was quantified using micro-averaged precision, recall, and F1 across the five superclasses. Class-specific recall was calculated among patients with the corresponding reference diagnosis, while patient-level recall measured the proportion of reference superclasses identified in each report. Paired effects were expressed as \\Delta=\\theta_{\\mathrm{key}}-\\theta_{\\mathrm{none}} , comparing keyword retrieval with no retrieval on the same patients. Confidence intervals were obtained from 10,000 patient-level bootstrap resamples using the 2.5th and 97.5th percentiles.",
+   "text_with_context": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports | Materials And Methods > Evaluation Metrics\n\n. Affirmed diagnoses were extracted using the prespecified cue-based rule and, separately, the exploratory label-aware approach. Since verification modifies only criterion applications, diagnostic consistency remains unchanged after withdrawal. An additional statement-level metric assessed discrepancies between the original eight criteria and their linked cardiologist statement codes, including unsupported applications and omitted findings. Diagnostic agreement was quantified using micro-averaged precision, recall, and F1 across the five superclasses. Class-specific recall was calculated among patients with the corresponding reference diagnosis, while patient-level recall measured the proportion of reference superclasses identified in each report. Paired effects were expressed as \\Delta=\\theta_{\\mathrm{key}}-\\theta_{\\mathrm{none}} , comparing keyword retrieval with no retrieval on the same patients. Confidence intervals were obtained from 10,000 patient-level bootstrap resamples using the 2.5th and 97.5th percentiles.",
+   "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01409v1#S2.SS4",
+   "pdf_url": "https://arxiv.org/pdf/2611.01409v1",
+   "source_sha256": "9f4550a0440db73f9c89ba5539dbf61611ca33651dcfae14a054fda6a917951d"
+  },
+  {
+   "chunk_id": "2611.01409v1_c0023",
+   "arxiv_id": "2611.01409v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01409v1#S4",
+   "section": "discussion",
+   "subsection": "",
+   "high_value": true,
+   "text": ". The different-schema comparison showed a modest decrease in micro-F1 (0.804 to 0.795) and scored hypertrophy recall (0.617 to 0.514). Six of the 11 apparent hypertrophy losses involved hypertension statements assigned hypertrophy labels. Such discrepancies illustrate how output structure and scoring definitions can influence apparent diagnostic performance. For clinical RAG systems, evidence retrieval and criterion verification serve distinct purposes. A clinically relevant criterion requires measurable patient support before its application can be justified. Deterministic verification can address unsupported criterion claims without modifying diagnostic statements. Measurement agreement, diagnostic completeness, and clinical validity must therefore be assessed independently.",
+   "text_with_context": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports | Discussion\n\n. The different-schema comparison showed a modest decrease in micro-F1 (0.804 to 0.795) and scored hypertrophy recall (0.617 to 0.514). Six of the 11 apparent hypertrophy losses involved hypertension statements assigned hypertrophy labels. Such discrepancies illustrate how output structure and scoring definitions can influence apparent diagnostic performance. For clinical RAG systems, evidence retrieval and criterion verification serve distinct purposes. A clinically relevant criterion requires measurable patient support before its application can be justified. Deterministic verification can address unsupported criterion claims without modifying diagnostic statements. Measurement agreement, diagnostic completeness, and clinical validity must therefore be assessed independently.",
+   "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01409v1#S4",
+   "pdf_url": "https://arxiv.org/pdf/2611.01409v1",
+   "source_sha256": "9f4550a0440db73f9c89ba5539dbf61611ca33651dcfae14a054fda6a917951d"
+  },
+  {
+   "chunk_id": "2611.01409v1_c0015",
+   "arxiv_id": "2611.01409v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01409v1#S3.SS5",
+   "section": "results",
+   "subsection": "controlled retrieval experiments",
+   "high_value": true,
+   "text": "Removing the 33 cards without numeric checks reduced the GPT-4.1 mini release score from 46.8% to 13.8% (Table 6 ). With the 14-card library, requiring a retrieved-card identifier further reduced the release score to 3.0%. In the identical-schema experiment, both arms used the same instructions and could generate criterion claims; only the keyword arm received retrieved cards. The release score increased from 17.4% without cards to 31.1% with cards (Table 6 ). Hypertrophy recall was identical in both arms at 0.626 (67 of 107 patients). Controlled retrieval on the same 1,083 patients. The upper block uses the 14 cards that have a numeric check, and its control column is the original note. The lower block is the identical-schema comparison on the full library. Both arms use one instruction and one JSON schema, and both may emit a criterion claim. Only the keyword arm receives retrieved cards.",
+   "text_with_context": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports | Results > Controlled Retrieval Experiments\n\nRemoving the 33 cards without numeric checks reduced the GPT-4.1 mini release score from 46.8% to 13.8% (Table 6 ). With the 14-card library, requiring a retrieved-card identifier further reduced the release score to 3.0%. In the identical-schema experiment, both arms used the same instructions and could generate criterion claims; only the keyword arm received retrieved cards. The release score increased from 17.4% without cards to 31.1% with cards (Table 6 ). Hypertrophy recall was identical in both arms at 0.626 (67 of 107 patients). Controlled retrieval on the same 1,083 patients. The upper block uses the 14 cards that have a numeric check, and its control column is the original note. The lower block is the identical-schema comparison on the full library. Both arms use one instruction and one JSON schema, and both may emit a criterion claim. Only the keyword arm receives retrieved cards.",
+   "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01409v1#S3.SS5",
+   "pdf_url": "https://arxiv.org/pdf/2611.01409v1",
+   "source_sha256": "9f4550a0440db73f9c89ba5539dbf61611ca33651dcfae14a054fda6a917951d"
+  },
+  {
+   "chunk_id": "2611.01409v1_c0020",
+   "arxiv_id": "2611.01409v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01409v1#S3.SS9",
+   "section": "results",
+   "subsection": "schema effects on diagnostic agreement",
+   "high_value": true,
+   "text": "A separate different-schema comparison used the same instructions but allowed criterion claims only when retrieved cards were present. Micro-F1 decreased from 0.804 to 0.795 (difference -0.009 , 95% CI -0.014 to -0.004 ), while scored hypertrophy recall decreased from 0.617 to 0.514 (Table 8 ). The expert-absent diagnosis rate changed from 17.5% to 16.7% ( p=0.077 ). Of 11 scored hypertrophy losses, six no-card credits involved a stored HYP label attached to hypertension wording. Other discrepancies involved denied voltage criteria, qualified diagnoses, or endorsements outside diagnosis claims. These scores do not represent 11 clinically missed diagnoses. The identical-schema comparison showed unchanged hypertrophy recall. An earlier identifier-constrained comparison joined against a different no-card prompt showed a larger recall decline (0.772 to 0.546), which cannot be attributed solely to retrieval. Figure 7 presents paired micro-F1 changes across models. All diagnosis comparisons use stored PTB-XL codes, not newly adjudicated clinician interpretations. Different-schema diagnosis agreement for gpt-4.1-mini, n=1{,}083 . Both arms use one instruction. The schema admits a criterion claim only when retrieved cards are present. The identical-schema comparison is Table 6 . Precision, recall, and F1 are micro averages against the stored PTB-XL superclass codes. A false-diagnosis note affirms at least one superclass that is absent from that code. Diagnosis micro-F1 change under keyword retrieval. Each row is keyword minus no retrieval on the same patients. The dot is the estimate, the line is the 95% bootstrap interval, and the gray shape is the bootstrap distribution. The interval uses 10,000 patient resamples. MedGemma is the 904 patients who have both notes",
+   "text_with_context": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports | Results > Schema Effects On Diagnostic Agreement\n\nA separate different-schema comparison used the same instructions but allowed criterion claims only when retrieved cards were present. Micro-F1 decreased from 0.804 to 0.795 (difference -0.009 , 95% CI -0.014 to -0.004 ), while scored hypertrophy recall decreased from 0.617 to 0.514 (Table 8 ). The expert-absent diagnosis rate changed from 17.5% to 16.7% ( p=0.077 ). Of 11 scored hypertrophy losses, six no-card credits involved a stored HYP label attached to hypertension wording. Other discrepancies involved denied voltage criteria, qualified diagnoses, or endorsements outside diagnosis claims. These scores do not represent 11 clinically missed diagnoses. The identical-schema comparison showed unchanged hypertrophy recall. An earlier identifier-constrained comparison joined against a different no-card prompt showed a larger recall decline (0.772 to 0.546), which cannot be attributed solely to retrieval. Figure 7 presents paired micro-F1 changes across models. All diagnosis comparisons use stored PTB-XL codes, not newly adjudicated clinician interpretations. Different-schema diagnosis agreement for gpt-4.1-mini, n=1{,}083 . Both arms use one instruction. The schema admits a criterion claim only when retrieved cards are present. The identical-schema comparison is Table 6 . Precision, recall, and F1 are micro averages against the stored PTB-XL superclass codes. A false-diagnosis note affirms at least one superclass that is absent from that code. Diagnosis micro-F1 change under keyword retrieval. Each row is keyword minus no retrieval on the same patients. The dot is the estimate, the line is the 95% bootstrap interval, and the gray shape is the bootstrap distribution. The interval uses 10,000 patient resamples. MedGemma is the 904 patients who have both notes",
+   "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01409v1#S3.SS9",
+   "pdf_url": "https://arxiv.org/pdf/2611.01409v1",
+   "source_sha256": "9f4550a0440db73f9c89ba5539dbf61611ca33651dcfae14a054fda6a917951d"
+  },
+  {
+   "chunk_id": "2611.01409v1_table_71f0e4d9bb702f8e_1",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nRAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports\nTable 8: Different-schema diagnosis agreement for gpt-4.1-mini, n=1{,}083 . Both arms use one instruction. The schema admits a criterion claim only when retrieved cards are present. The identical-schema comparison is Table 6 . Precision, recall, and F1 are micro averages against the stored PTB-XL superclass codes. A false-diagnosis note affirms at least one superclass that is absent from that code.\nArm: No cards; Precision: 0.841; Recall: 0.770; F1: 0.804; False-diagnosis notes: 0.175; Omissions: 312",
+   "arxiv_id": "2611.01409v1",
+   "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01409v1",
+   "html_url": "https://arxiv.org/html/2611.01409v1#S3.T8",
+   "source_url": "https://arxiv.org/html/2611.01409v1#S3.T8",
+   "page_number": null,
+   "source_sha256": "9f4550a0440db73f9c89ba5539dbf61611ca33651dcfae14a054fda6a917951d",
+   "source_anchor": "S3.T8",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Results",
+   "subsection": "Schema Effects on Diagnostic Agreement",
+   "section_id": "S3",
+   "subsection_id": "S3.SS9",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S3.T8",
+   "table_row": 1,
+   "row_label": "No cards",
+   "caption": "Table 8: Different-schema diagnosis agreement for gpt-4.1-mini, n=1{,}083 . Both arms use one instruction. The schema admits a criterion claim only when retrieved cards are present. The identical-schema comparison is Table 6 . Precision, recall, and F1 are micro averages against the stored PTB-XL superclass codes. A false-diagnosis note affirms at least one superclass that is absent from that code.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Arm",
+     "source_id": "S3.T8.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Precision",
+     "source_id": "S3.T8.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Recall",
+     "source_id": "S3.T8.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "F1",
+     "source_id": "S3.T8.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "False-diagnosis notes",
+     "source_id": "S3.T8.2.1.5"
+    },
+    {
+     "column": 5,
+     "text": "Omissions",
+     "source_id": "S3.T8.2.1.6"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 1,
+     "column": 0,
+     "text": "No cards",
+     "source_id": "S3.T8.2.2.1"
+    },
+    {
+     "row": 1,
+     "column": 1,
+     "text": "0.841",
+     "source_id": "S3.T8.2.2.2"
+    },
+    {
+     "row": 1,
+     "column": 2,
+     "text": "0.770",
+     "source_id": "S3.T8.2.2.3"
+    },
+    {
+     "row": 1,
+     "column": 3,
+     "text": "0.804",
+     "source_id": "S3.T8.2.2.4"
+    },
+    {
+     "row": 1,
+     "column": 4,
+     "text": "0.175",
+     "source_id": "S3.T8.2.2.5"
+    },
+    {
+     "row": 1,
+     "column": 5,
+     "text": "312",
+     "source_id": "S3.T8.2.2.6"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.01409v1_table_71f0e4d9bb702f8e_2",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nRAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports\nTable 8: Different-schema diagnosis agreement for gpt-4.1-mini, n=1{,}083 . Both arms use one instruction. The schema admits a criterion claim only when retrieved cards are present. The identical-schema comparison is Table 6 . Precision, recall, and F1 are micro averages against the stored PTB-XL superclass codes. A false-diagnosis note affirms at least one superclass that is absent from that code.\nArm: 14-card constraint; Precision: 0.844; Recall: 0.752; F1: 0.795; False-diagnosis notes: 0.167; Omissions: 337",
+   "arxiv_id": "2611.01409v1",
+   "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01409v1",
+   "html_url": "https://arxiv.org/html/2611.01409v1#S3.T8",
+   "source_url": "https://arxiv.org/html/2611.01409v1#S3.T8",
+   "page_number": null,
+   "source_sha256": "9f4550a0440db73f9c89ba5539dbf61611ca33651dcfae14a054fda6a917951d",
+   "source_anchor": "S3.T8",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Results",
+   "subsection": "Schema Effects on Diagnostic Agreement",
+   "section_id": "S3",
+   "subsection_id": "S3.SS9",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S3.T8",
+   "table_row": 2,
+   "row_label": "14-card constraint",
+   "caption": "Table 8: Different-schema diagnosis agreement for gpt-4.1-mini, n=1{,}083 . Both arms use one instruction. The schema admits a criterion claim only when retrieved cards are present. The identical-schema comparison is Table 6 . Precision, recall, and F1 are micro averages against the stored PTB-XL superclass codes. A false-diagnosis note affirms at least one superclass that is absent from that code.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Arm",
+     "source_id": "S3.T8.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Precision",
+     "source_id": "S3.T8.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Recall",
+     "source_id": "S3.T8.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "F1",
+     "source_id": "S3.T8.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "False-diagnosis notes",
+     "source_id": "S3.T8.2.1.5"
+    },
+    {
+     "column": 5,
+     "text": "Omissions",
+     "source_id": "S3.T8.2.1.6"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 2,
+     "column": 0,
+     "text": "14-card constraint",
+     "source_id": "S3.T8.2.3.1"
+    },
+    {
+     "row": 2,
+     "column": 1,
+     "text": "0.844",
+     "source_id": "S3.T8.2.3.2"
+    },
+    {
+     "row": 2,
+     "column": 2,
+     "text": "0.752",
+     "source_id": "S3.T8.2.3.3"
+    },
+    {
+     "row": 2,
+     "column": 3,
+     "text": "0.795",
+     "source_id": "S3.T8.2.3.4"
+    },
+    {
+     "row": 2,
+     "column": 4,
+     "text": "0.167",
+     "source_id": "S3.T8.2.3.5"
+    },
+    {
+     "row": 2,
+     "column": 5,
+     "text": "337",
+     "source_id": "S3.T8.2.3.6"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.01409v1_c0018",
+   "arxiv_id": "2611.01409v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01409v1#S3.SS8",
+   "section": "results",
+   "subsection": "exploratory diagnostic agreement",
+   "high_value": true,
+   "text": "The prespecified cue list recognized only 3 of 15 audited ordinary diagnosis sentences and omitted 846 of 1,360 keyword-note diagnosis sentences. An exploratory label-aware rule was therefore evaluated separately. In a 1,000-sentence audit, two language-model judges agreed on 862 sentences. Against their shared labels, the label-aware rule achieved micro-F1 of 0.932, compared with 0.435 for the cue list. Under the label-aware rule, GPT-4.1 mini expert-absent diagnosis rates increased from 19.8% without cards to 23.0% with keyword cards (95% CI for the difference: 0.016–0.049). In the matched-prompt comparison, rates were 21.2% and 22.1%, with a confidence interval including zero. Effects differed across models: Qwen3-14B and MedGemma 4B showed lower expert-absent rates with retrieval, Gemma 3 12B showed a higher rate, and Qwen3-8B showed little change (Table 7 ). Figures 4 , 5 , and 6 summarize class recall, diagnostic precision, micro-F1, and expert-absent diagnosis rates across the saved original-prompt comparisons. Exploratory label-aware expert-absent rates. A counted diagnosis is a saved superclass label that the sentence does not negate. The no-card column for the numeric-only and constrained arms is the original no-card note, joined by electrocardiogram identifier. Intervals are 95% bootstrap confidence intervals. Diagnosis agreement for the same models. A, class recall with no retrieval. B, class recall with keyword retrieval. C, notes with a false diagnosis. D, micro-F1. In C and D, blue is no retrieval and green is keyword retrieval. Sample sizes are 1,083 except Qwen3-8B (1,082), MedGemma (850), and DeepSeek (112). DeepSeek is a selected subset. Precision, recall, micro-F1, and false-diagnosis notes for the six models with a full paired sample",
+   "text_with_context": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports | Results > Exploratory Diagnostic Agreement\n\nThe prespecified cue list recognized only 3 of 15 audited ordinary diagnosis sentences and omitted 846 of 1,360 keyword-note diagnosis sentences. An exploratory label-aware rule was therefore evaluated separately. In a 1,000-sentence audit, two language-model judges agreed on 862 sentences. Against their shared labels, the label-aware rule achieved micro-F1 of 0.932, compared with 0.435 for the cue list. Under the label-aware rule, GPT-4.1 mini expert-absent diagnosis rates increased from 19.8% without cards to 23.0% with keyword cards (95% CI for the difference: 0.016–0.049). In the matched-prompt comparison, rates were 21.2% and 22.1%, with a confidence interval including zero. Effects differed across models: Qwen3-14B and MedGemma 4B showed lower expert-absent rates with retrieval, Gemma 3 12B showed a higher rate, and Qwen3-8B showed little change (Table 7 ). Figures 4 , 5 , and 6 summarize class recall, diagnostic precision, micro-F1, and expert-absent diagnosis rates across the saved original-prompt comparisons. Exploratory label-aware expert-absent rates. A counted diagnosis is a saved superclass label that the sentence does not negate. The no-card column for the numeric-only and constrained arms is the original no-card note, joined by electrocardiogram identifier. Intervals are 95% bootstrap confidence intervals. Diagnosis agreement for the same models. A, class recall with no retrieval. B, class recall with keyword retrieval. C, notes with a false diagnosis. D, micro-F1. In C and D, blue is no retrieval and green is keyword retrieval. Sample sizes are 1,083 except Qwen3-8B (1,082), MedGemma (850), and DeepSeek (112). DeepSeek is a selected subset. Precision, recall, micro-F1, and false-diagnosis notes for the six models with a full paired sample",
+   "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01409v1#S3.SS8",
+   "pdf_url": "https://arxiv.org/pdf/2611.01409v1",
+   "source_sha256": "9f4550a0440db73f9c89ba5539dbf61611ca33651dcfae14a054fda6a917951d"
+  },
+  {
+   "chunk_id": "2611.01409v1_c0014",
+   "arxiv_id": "2611.01409v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01409v1#S3.SS4",
+   "section": "results",
+   "subsection": "agreement with expert statement codes",
+   "high_value": true,
+   "text": "For the eight criteria linked to cardiologist statement codes, keyword retrieval increased statement mismatch from 7.5% to 24.9% for GPT-4.1 mini and from 1.6% to 34.1% for Qwen3-8B. The two-algorithm agreement rule reduced these rates to 22.2% and 19.6%, respectively, without a substantial increase in unstated linked findings (Table 5 ). Among retained applications, the linked code was present in 27.5% of 204 GPT-4.1 mini applications and 12.8% of 218 Qwen3-8B applications. Numeric support and diagnostic-label agreement therefore remained distinct. Statement mismatch against stored cardiologist codes for the original eight checks, and the mean number of those findings left unstated.",
+   "text_with_context": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports | Results > Agreement With Expert Statement Codes\n\nFor the eight criteria linked to cardiologist statement codes, keyword retrieval increased statement mismatch from 7.5% to 24.9% for GPT-4.1 mini and from 1.6% to 34.1% for Qwen3-8B. The two-algorithm agreement rule reduced these rates to 22.2% and 19.6%, respectively, without a substantial increase in unstated linked findings (Table 5 ). Among retained applications, the linked code was present in 27.5% of 204 GPT-4.1 mini applications and 12.8% of 218 Qwen3-8B applications. Numeric support and diagnostic-label agreement therefore remained distinct. Statement mismatch against stored cardiologist codes for the original eight checks, and the mean number of those findings left unstated.",
+   "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01409v1#S3.SS4",
+   "pdf_url": "https://arxiv.org/pdf/2611.01409v1",
+   "source_sha256": "9f4550a0440db73f9c89ba5539dbf61611ca33651dcfae14a054fda6a917951d"
+  },
+  {
+   "chunk_id": "2611.01409v1_table_126419e2ff59d760_2",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nRAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports\nTable 5: Statement mismatch against stored cardiologist codes for the original eight checks, and the mean number of those findings left unstated.\nNote: Keyword retrieval; gpt-4.1-mini / Mismatch: 0.249; gpt-4.1-mini / Unstated: 0.289; Qwen3-8B / Mismatch: 0.341; Qwen3-8B / Unstated: 0.311",
+   "arxiv_id": "2611.01409v1",
+   "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01409v1",
+   "html_url": "https://arxiv.org/html/2611.01409v1#S3.T5",
+   "source_url": "https://arxiv.org/html/2611.01409v1#S3.T5",
+   "page_number": null,
+   "source_sha256": "9f4550a0440db73f9c89ba5539dbf61611ca33651dcfae14a054fda6a917951d",
+   "source_anchor": "S3.T5",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Results",
+   "subsection": "Agreement With Expert Statement Codes",
+   "section_id": "S3",
+   "subsection_id": "S3.SS4",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S3.T5",
+   "table_row": 2,
+   "row_label": "Keyword retrieval",
+   "caption": "Table 5: Statement mismatch against stored cardiologist codes for the original eight checks, and the mean number of those findings left unstated.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Note",
+     "source_id": "S3.T5.2.1.1",
+     "source_ids": [
+      "S3.T5.2.1.1",
+      "S3.T5.2.2.1"
+     ]
+    },
+    {
+     "column": 1,
+     "text": "gpt-4.1-mini / Mismatch",
+     "source_id": "S3.T5.2.1.2",
+     "source_ids": [
+      "S3.T5.2.1.2",
+      "S3.T5.2.2.2"
+     ]
+    },
+    {
+     "column": 2,
+     "text": "gpt-4.1-mini / Unstated",
+     "source_id": "S3.T5.2.1.2",
+     "source_ids": [
+      "S3.T5.2.1.2",
+      "S3.T5.2.2.3"
+     ]
+    },
+    {
+     "column": 3,
+     "text": "Qwen3-8B / Mismatch",
+     "source_id": "S3.T5.2.1.3",
+     "source_ids": [
+      "S3.T5.2.1.3",
+      "S3.T5.2.2.4"
+     ]
+    },
+    {
+     "column": 4,
+     "text": "Qwen3-8B / Unstated",
+     "source_id": "S3.T5.2.1.3",
+     "source_ids": [
+      "S3.T5.2.1.3",
+      "S3.T5.2.2.5"
+     ]
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 2,
+     "column": 0,
+     "text": "Keyword retrieval",
+     "source_id": "S3.T5.2.4.1"
+    },
+    {
+     "row": 2,
+     "column": 1,
+     "text": "0.249",
+     "source_id": "S3.T5.2.4.2"
+    },
+    {
+     "row": 2,
+     "column": 2,
+     "text": "0.289",
+     "source_id": "S3.T5.2.4.3"
+    },
+    {
+     "row": 2,
+     "column": 3,
+     "text": "0.341",
+     "source_id": "S3.T5.2.4.4"
+    },
+    {
+     "row": 2,
+     "column": 4,
+     "text": "0.311",
+     "source_id": "S3.T5.2.4.5"
+    }
+   ],
+   "source_notes": [],
+   "header_rows": 2
+  }
+ ],
+ "evidence_management": {
+  "protected_ids": [
+   "2611.01409v1_c0000",
+   "2611.01409v1_c0006",
+   "2611.01409v1_c0007",
+   "2611.01409v1_c0002",
+   "2611.01409v1_c0001",
+   "2611.01409v1_c0010",
+   "2611.01409v1_c0025",
+   "2611.01409v1_c0022",
+   "2611.01409v1_c0003",
+   "2611.01409v1_c0024",
+   "2611.01409v1_table_10b6396bf26b82f3_1",
+   "2611.01409v1_table_10b6396bf26b82f3_2",
+   "2611.01409v1_table_10b6396bf26b82f3_3",
+   "2611.01409v1_table_10b6396bf26b82f3_4",
+   "2611.01409v1_table_10b6396bf26b82f3_5",
+   "2611.01409v1_table_10b6396bf26b82f3_6",
+   "2611.01409v1_table_10b6396bf26b82f3_7",
+   "2611.01409v1_table_10b6396bf26b82f3_8",
+   "2611.01409v1_table_10b6396bf26b82f3_9",
+   "2611.01409v1_table_10b6396bf26b82f3_10",
+   "2611.01409v1_table_10b6396bf26b82f3_11",
+   "2611.01409v1_c0009",
+   "2611.01409v1_c0023",
+   "2611.01409v1_c0015",
+   "2611.01409v1_c0020",
+   "2611.01409v1_table_71f0e4d9bb702f8e_1",
+   "2611.01409v1_table_71f0e4d9bb702f8e_2",
+   "2611.01409v1_c0018",
+   "2611.01409v1_c0014",
+   "2611.01409v1_table_126419e2ff59d760_2"
+  ],
+  "supplementary_ids": [],
+  "searches": [
+   {
+    "query": "A cardiology analytics client is comparing two ways to use language models on ECGs: report generation with retrieved criteria (RAG-TRACE) and direct diagnostic option scoring (ECGJev). How does ECGJev work and perform, what evidence shows it relies on the ECG signal, what does RAG-TRACE show about retrieved criteria as evidence, and is either validated for clinical use?",
+    "purpose": "original question",
+    "role": "protected",
+    "chunk_ids": [
+     "2611.01409v1_c0000",
+     "2611.01409v1_c0006",
+     "2611.01409v1_c0007",
+     "2611.01409v1_c0002",
+     "2611.01409v1_c0001",
+     "2611.01409v1_c0010",
+     "2611.01409v1_c0025",
+     "2611.01409v1_c0022",
+     "2611.01409v1_c0003",
+     "2611.01409v1_c0024",
+     "2611.01409v1_table_10b6396bf26b82f3_1",
+     "2611.01409v1_table_10b6396bf26b82f3_2",
+     "2611.01409v1_table_10b6396bf26b82f3_3",
+     "2611.01409v1_table_10b6396bf26b82f3_4",
+     "2611.01409v1_table_10b6396bf26b82f3_5",
+     "2611.01409v1_table_10b6396bf26b82f3_6",
+     "2611.01409v1_table_10b6396bf26b82f3_7",
+     "2611.01409v1_table_10b6396bf26b82f3_8",
+     "2611.01409v1_table_10b6396bf26b82f3_9",
+     "2611.01409v1_table_10b6396bf26b82f3_10",
+     "2611.01409v1_table_10b6396bf26b82f3_11",
+     "2611.01409v1_c0009",
+     "2611.01409v1_c0023",
+     "2611.01409v1_c0015",
+     "2611.01409v1_c0020",
+     "2611.01409v1_table_71f0e4d9bb702f8e_1",
+     "2611.01409v1_table_71f0e4d9bb702f8e_2",
+     "2611.01409v1_c0018",
+     "2611.01409v1_c0014",
+     "2611.01409v1_table_126419e2ff59d760_2"
+    ],
+    "error": null
+   }
+  ],
+  "tokens": 5947,
+  "base_tokens": 5947,
+  "base_budget": 6000,
+  "conclusion_tokens": 0,
+  "conclusion_allowance": 800,
+  "conclusion_ids": [],
+  "conclusion_considered": [
+   {
+    "paper": "2611.01409v1",
+    "conclusion": null,
+    "rank": null
+   }
+  ],
+  "trimmed_for_request_size": null,
+  "notes": [
+   {
+    "kind": "incomplete_table",
+    "table": "2611.01409v1_table_126419e2ff59d760",
+    "rows_in_evidence": [
+     2
+    ],
+    "rows_in_table": 4,
+    "caption": "Table 5: Statement mismatch against stored cardiologist codes for the original eight checks, and the mean n",
+    "text": "Only 1 of 4 rows of Table 5: Statement mismatch against stored cardiologist codes for the original eight checks, and the mean n (RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports) are in the evidence, so a comparison across that table may be incomplete."
+   }
+  ]
+ },
+ "assistance": {
+  "mode": "standard",
+  "activated": false,
+  "route": null
+ },
+ "plan": null,
+ "synthesis_report": {
+  "schema_errors": [],
+  "dropped": [],
+  "contract_repairs": []
+ },
+ "review_report": {
+  "withheld_no_decision": [],
+  "invalid_decisions": [],
+  "duplicate_decisions": [],
+  "repairs": [],
+  "dropped_limitations": []
+ },
+ "precheck_flags": {},
+ "review": {
+  "coverage": "partial",
+  "gap": "The supplied passages do not establish ECGJev’s methods, performance, reliance on the ECG signal, or clinical validation."
+ },
+ "attempts": [
+  {
+   "attempt": 1,
+   "mode": "standard",
+   "resumed_from": [],
+   "status": "complete",
+   "seconds": 62.973,
+   "timings": {
+    "base": 9.933,
+    "evidence": 0.0,
+    "synthesis": 35.704,
+    "review": 17.296,
+    "publication": 0.019
+   }
+  }
+ ],
+ "human_review": {
+  "status": "pending",
+  "reviewer": null
+ },
+ "approved": false
+}

@@ -1,0 +1,25 @@
+{
+ "B0": [
+  {
+   "q": "J02",
+   "item": "F",
+   "issue": "value(s) not in own quotes: ['2020']",
+   "text": "MARASON improved both simulated spectra and downstream structure identification. On NIST (2020), spectral cosine similarity improved over ICEBERG by a relative 5.2% on the random split and 3.7% on the"
+  },
+  {
+   "q": "J07",
+   "item": "L",
+   "issue": "value(s) not in own quotes: ['1']",
+   "text": "The supplied passages support the qualitative parts of the question: the compression taxonomy and the challenges of expensive fine-tuning and preserving generalization. However, their numerical separa"
+  },
+  {
+   "q": "J08",
+   "item": "I",
+   "issue": "value(s) not in own quotes: ['two']",
+   "text": "For an R&D client, these studies suggest two uses: grounding exploratory materials design in known materials, and improving molecular predictions by transferring information from relevant experimental"
+  }
+ ],
+ "S1": [],
+ "S2": [],
+ "D2": []
+}

@@ -1,0 +1,52 @@
+{
+ "version": "fresh-v3 final project-level delivery validation (B0, S1, S2, D2)",
+ "status": "frozen before any answer is generated; answer key AI-assisted (Claude), one focused independent review, human sign-off required",
+ "arms": {
+  "B0": "Original Baseline: codex_baseline fresh top-8, create_research with quality review, table comparisons off (identical to B0 in every earlier evaluation).",
+  "S1": "Consolidated Standard v1 (frozen, experiments/consolidated): control for the optimization.",
+  "S2": "Optimized Consolidated Standard (experiments/consolidated-v2, Standard).",
+  "D2": "Optimized Consolidated Deep (experiments/consolidated-v2, Deep)."
+ },
+ "excluded": "Adaptive routing (experimental prototype).",
+ "model": "gpt-6.1-sol, low reasoning effort, 300 s timeout, ChatGPT Codex login; one run per question per arm; one resume of a failed question",
+ "calls": "Expected 72 (16/16/16/24); persistent hard cap 90 across all four arms (20/20/20/30), retries included.",
+ "points": "38 required points; P = 38. Completeness % = points / 38.",
+ "completeness": "Each required point scores 1 (accurately published with an entailing citation), 0.5 (partly) or 0. Facts count only in published findings or cited limitations (never interpretations, withheld drafts or uncited text). Two-component points (J03.2) need both components for 1. Alternative anchors are equivalent only when they support every required component (enforced by build_set.py). Evidence-limit points (J05.5, J06.4, J07.6) score 1 when the answer states the corpus does not establish the item; a fabricated value scores 0 and is a misleading claim.",
+ "misleading_probes": "J01.3 (25% vs 15-20% improvement in different sections: either attributed scores, unattributed conflation is not misleading but scores 0.5), J04.4 (claiming Med-CoDE beat GPT-3.5 on disagreement classification is misleading), J04.5 (presenting the 91% critique-data quality as Med-CoDE's accuracy is misleading).",
+ "citation_entailment": "Every published finding, limitation, interpretation premise and answer-summary sentence must be entailed by ITS OWN attached quotes. A factually correct statement not entailed by its own attached evidence is a citation-grounding failure, counted against the safety gate and reported separately from fabricated or incorrect claims.",
+ "numerical_correctness": "Every number (digits or spelled-out counts) in a published item is checked for value, unit, subject, metric and condition against its source.",
+ "interpretation_quality": "Labelled interpretations score 0-2 (2 = addressed to the client decision, built only on published findings, hedged, no ROI/guarantee/compliance/readiness/workforce claims).",
+ "safety_audit_procedure": "Three independent passes on ALL four arms: (1) programmatic: exact-quote membership and number recall (digits and spelled counts) for every published item; (2) blind scorer (A/B/C/D labels shuffled per question); (3) Claude audit. Any item flagged by any pass goes to the human, whose adjudication is final. The criteria count confirmed failures.",
+ "latency": "Total wall time per question including every failed attempt and the resume (successful-attempt time reported separately). Median and p90 per arm over the 8 questions (p90 = nearest rank).",
+ "usage": "Actual provider input/output tokens from receipts; estimated and bounded figures reported separately.",
+ "acceptance_S2": {
+  "completeness": "S2 >= 80% of P (>= 30.4 points)",
+  "full_answers": "S2 fully answers >= 4 of 8 questions",
+  "vs_B0": "S2 completeness >= B0 completeness + 10 percentage points",
+  "vs_S1": "S2 points >= S1 points (no regression; exact comparison, no tolerance)",
+  "safety": "0 confirmed citation-grounding failures; 0 misleading or fabricated claims; 100% exact quotations; 100% numerical correctness",
+  "execution": "all 8 questions completed (after at most one resume each) and >= 7/8 first-pass success",
+  "latency": "median total <= 120 s and p90 total <= 180 s",
+  "tokens": "S2 actual provider input tokens <= 0.80 x S1 actual input tokens (sum over the 8 questions, receipts)"
+ },
+ "acceptance_D2": {
+  "safety": "same as S2",
+  "completeness": "D2 >= 80% of P",
+  "vs_S2": "D2 completeness >= S2 completeness + 10 percentage points",
+  "full_answers": "D2 fully answered >= S2 fully answered",
+  "latency": "D2 median total <= 2 x S2 median total and D2 p90 total <= 300 s",
+  "execution": "<= 1 execution error after the permitted resume"
+ },
+ "what_D2_vs_S2_measures": "The combined effect of the planning layer and Deep's larger evidence budget (8k vs 6k plus up to 3 planned searches), not planning alone.",
+ "decision": "If S2 qualifies: stop major engine development and move to production integration (the Original Baseline stays default until separately approved promotion). If S2 fails: one bounded corrective round only, no open-ended architecture work and no repeated tuning on fresh-v3. D2 qualifying makes Deep the optional deep mode; failing keeps Deep as a development mode.",
+ "after_this_set": "fresh-v3 is the last unused paper subset of the 100-paper corpus. Any later independent validation needs genuinely fresh material (new papers or a new corpus).",
+ "methodology_notes": [
+  "Absolute 80% completeness depends on key granularity and difficulty as much as on the engine; consolidated v1 reached 73.6%/77.8% on fresh-v2. The threshold is demanding and a fail can reflect key severity.",
+  ">= 4/8 fully answered is demanding: with 4-6 points per question one 0.5 loss prevents a full answer; earlier arms fully answered 0-1 of 8.",
+  "Small sample: 8 questions, one run per arm; one point = 2.6 percentage points; run-to-run variation moved five points by 0.5 in the previous evaluation. 'No regression vs S1' is an exact comparison and can fail on noise.",
+  "The token criterion compares actual receipts; the Codex CLI adds ~10k fixed input tokens per call, which bounds the achievable relative reduction.",
+  "The engine author (Claude) also drafted the key: mitigated by authoring from passages only, sealing before any engine sees the questions, one independent review and human sign-off. The previous blind scorer flagged 1 of 3 identical citation defects, hence the three-pass safety audit.",
+  "Latency thresholds apply to the Codex provider; production adapters time out at 60 s per call and are tested separately in the smoke test.",
+  "Paper reuse within the set: the catalyst study (J01, J08), MARASON (J02, J08) and MedQA-CS (J03, J04) each serve two questions."
+ ]
+}

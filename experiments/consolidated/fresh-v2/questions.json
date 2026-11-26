@@ -1,0 +1,42 @@
+[
+ {
+  "id": "H01",
+  "type": "single-paper",
+  "question": "A Japanese hospital group is evaluating LLM chat assistants for patient conversations. What did JMedEthicBench test, how did commercial and medical-specialised models hold up, how did safety change over the course of a conversation, and did the weaknesses persist in English?"
+ },
+ {
+  "id": "H02",
+  "type": "numerical/table",
+  "question": "A healthcare client wants a small model aligned to medical ethics. In the MedES study, how did the aligned 7B model compare with the 671B DeepSeek-R1 on the subjective ethics test (risk rate, quality and comprehensive score) and on objective knowledge, drug-safety and emergency-care accuracy, and where does the evidence apply?"
+ },
+ {
+  "id": "H03",
+  "type": "cross-paper",
+  "question": "A bank's AI security team wants to understand automated jailbreak tooling. What do HarmNet and AutoJailbreak show about how automated attacks are built, how successful they were, and which defence held up?"
+ },
+ {
+  "id": "H04",
+  "type": "cross-paper",
+  "question": "A model-risk team must decide how to assure an LLM against jailbreaks: systematic testing or adversarial training. What do the jailbreak-oracle (BOA) study and the continuous adversarial training study each offer, what evidence supports them, and what are their limits or costs?"
+ },
+ {
+  "id": "H05",
+  "type": "numerical/table",
+  "question": "For a client hardening open models, what attack success rates under GCG did the continuous adversarial training study report for Vicuna-7B, Mistral-7B and Llama-2-7B in their original form, after CAT and after ER-CAT, and what happened to utility?"
+ },
+ {
+  "id": "H06",
+  "type": "partially unanswerable",
+  "question": "A chemicals client wants an LLM to speed up catalyst R&D. How was CataLM built and evaluated, how well does it extract entities from the literature, and how much did it shorten catalyst development time or cost in practice?"
+ },
+ {
+  "id": "H07",
+  "type": "cross-paper",
+  "question": "A global health-tech client will deploy an LLM assistant in several languages, including Japanese and low-resource languages. What do CLINIC and JMedEthicBench show about language-related and model-type-related trustworthiness and safety risks?"
+ },
+ {
+  "id": "H08",
+  "type": "partially unanswerable",
+  "question": "An NGO wants a health chatbot for Swahili-, Hausa- and Yoruba-speaking communities. Which languages did CLINIC cover as low-resource, what did it find about privacy and reliability in low-resource languages, and how do the models perform in Yoruba?"
+ }
+]

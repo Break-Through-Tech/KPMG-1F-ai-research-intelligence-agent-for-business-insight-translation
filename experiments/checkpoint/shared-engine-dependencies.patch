@@ -1,0 +1,300 @@
+diff --git a/src/codex_generation.py b/src/codex_generation.py
+index eec6324..3c1b623 100644
+--- a/src/codex_generation.py
++++ b/src/codex_generation.py
+@@ -9,6 +9,7 @@ from hashlib import sha256
+ import json
+ import os
+ from pathlib import Path
++import re
+ import shutil
+ import subprocess
+ import tempfile
+@@ -25,6 +26,50 @@ DISABLED_FEATURES = ('shell_tool', 'unified_exec', 'code_mode', 'code_mode_host'
+ REQUIRED_EXEC_FLAGS = ('--ignore-user-config', '--strict-config', '--ephemeral',
+                        '--skip-git-repo-check', '--sandbox', '--json', '--output-schema')
+ 
++
++def _exit_diagnostic(response):
++    # Keep only allowlisted metadata. CLI error strings can include the prompt,
++    # source passages, endpoint details or credentials.
++    messages = [response.stderr or '']
++    for line in response.stdout.splitlines():
++        try:
++            event = json.loads(line)
++        except ValueError:
++            continue
++        if isinstance(event, dict) and (event.get('type') in {'error', 'turn.failed'}
++                or (isinstance(event.get('item'), dict) and event['item'].get('type') == 'error')):
++            messages.append(json.dumps(event))
++    text = '\n'.join(messages).lower()
++    status = re.search(r'\b(?:http(?: status)?|status(?:_code| code)?)\b["\s:=]+([45]\d\d)\b', text)
++    result = {'category': 'cli_exit', 'exit_code': response.returncode}
++    if status:
++        result['http_status'] = int(status[1])
++    for code in ('invalid_json_schema', 'rate_limit_exceeded', 'insufficient_quota', 'model_not_found'):
++        if re.search(rf'\b{code}\b', text):
++            result['provider_code'] = code
++            break
++    if result.get('provider_code') == 'invalid_json_schema' or 'invalid schema' in text:
++        result['category'] = 'invalid_json_schema'
++        if re.search(r'\buniqueitems\b', text):
++            result['schema_keyword'] = 'uniqueItems'
++    elif result.get('http_status') == 429 or result.get('provider_code') == 'rate_limit_exceeded':
++        result['category'] = 'rate_limited'
++    elif result.get('http_status') in {401, 403}:
++        result['category'] = 'authentication'
++    elif result.get('http_status', 0) >= 500:
++        result['category'] = 'upstream_unavailable'
++    return result
++
++
++def _failure(record, diagnostic, *, invalid=False):
++    record['status'] = 'invalid_response' if invalid else 'failed'
++    record['diagnostic'] = diagnostic
++    error = (SchemaResponseError('Codex returned invalid JSON or schema output; no result was approved.')
++             if invalid else PipelineError('Codex generation failed; check login, model access or subscription limits.'))
++    error.codex_diagnostic = diagnostic.copy()
++    return error
++
++
+ def create_codex_generate(*, model, binary=None, effort='medium', timeout=300,
+                           receipts=None):
+     binary = binary or os.environ.get('RESEARCH_CODEX_BIN') or shutil.which('codex')
+@@ -59,6 +104,7 @@ def create_codex_generate(*, model, binary=None, effort='medium', timeout=300,
+     receipts = receipts if receipts is not None else []
+ 
+     def generate(prompt, *, response_schema=None):
++        from jsonschema import Draft202012Validator, ValidationError
+         if not isinstance(prompt, str) or not prompt.strip():
+             raise ValueError('Generation requires a nonempty prompt')
+         record = {'provider': 'codex_subscription', 'model': model, 'reasoning_effort': effort,
+@@ -80,7 +126,6 @@ def create_codex_generate(*, model, binary=None, effort='medium', timeout=300,
+             for feature in DISABLED_FEATURES:
+                 command += ['--disable', feature]
+             if response_schema is not None:
+-                from jsonschema import Draft202012Validator
+                 Draft202012Validator.check_schema(response_schema)
+                 schema_path = folder / 'schema.json'
+                 schema_path.write_text(json.dumps(response_schema, allow_nan=False), encoding='utf-8')
+@@ -90,17 +135,29 @@ def create_codex_generate(*, model, binary=None, effort='medium', timeout=300,
+             instruction = ('You are a text-only research generation function. Do not use tools, '
+                            'read files, browse, or execute commands. All evidence is provided below. '
+                            'Return only the requested JSON object.\n\n' + prompt)
++            phase = 'subprocess'
+             try:
+                 response = subprocess.run(command, input=instruction, text=True, encoding='utf-8',
+                     capture_output=True, timeout=timeout, env=env)
++                if response.returncode:
++                    record['usage'] = []
++                    raise _failure(record, _exit_diagnostic(response))
++                phase = 'cli_events'
+                 events = [json.loads(line) for line in response.stdout.splitlines() if line.strip()]
+                 record['usage'] = [e['usage'] for e in events if e.get('type') == 'turn.completed']
+                 config_errors = [e for e in events if e.get('item', {}).get('type') == 'error'
+                     and 'unrecognized configuration' in e.get('item', {}).get('message', '').lower()]
+                 forbidden = [e for e in events if e.get('item', {}).get('type') in {
+                     'command_execution', 'file_change', 'mcp_tool_call', 'web_search'}]
+-                if response.returncode or config_errors or forbidden or not output.is_file():
+-                    raise PipelineError('Codex text-only generation failed; no provider fallback occurred.')
++                if config_errors or forbidden:
++                    category = 'configuration' if config_errors else 'forbidden_tool_output'
++                    raise _failure(record, {'category': category, 'exit_code': response.returncode})
++                if not output.is_file():
++                    diagnostic = _exit_diagnostic(response)
++                    if diagnostic['category'] == 'cli_exit':
++                        diagnostic['category'] = 'missing_output'
++                    raise _failure(record, diagnostic)
++                phase = 'answer'
+                 raw = output.read_text(encoding='utf-8')
+                 if response_schema is not None:
+                     def pairs(items):
+@@ -116,14 +173,21 @@ def create_codex_generate(*, model, binary=None, effort='medium', timeout=300,
+                     Draft202012Validator(response_schema).validate(parsed)
+                 record.update(status='ok', response_sha256=sha256(raw.encode()).hexdigest())
+                 return raw
+-            except (ValueError, KeyError) as exc:
+-                record['status'] = 'invalid_response'
+-                raise SchemaResponseError('Codex returned invalid JSON; no result was approved.') from None
+-            except Exception:
+-                record['status'] = 'failed'
+-                raise PipelineError('Codex generation failed; check login, model access or subscription limits.') from None
++            except PipelineError:
++                raise
++            except subprocess.TimeoutExpired as error:
++                failure = _failure(record, {'category': 'timeout', 'exception_type': type(error).__name__})
++            except (ValueError, KeyError, ValidationError) as error:
++                category = 'invalid_answer' if phase == 'answer' else 'cli_protocol'
++                failure = _failure(record, {'category': category, 'exception_type': type(error).__name__},
++                                   invalid=phase == 'answer')
++            except Exception as error:
++                failure = _failure(record, {'category': phase, 'exception_type': type(error).__name__})
+             finally:
+                 record['elapsed_seconds'] = round(time.monotonic() - start, 3)
++            # Raise after the handler exits so consumers cannot log a raw
++            # exception from __context__.
++            raise failure from None
+     generate.supports_response_schema = True
+     return generate, {'provider': 'codex_subscription', 'model': model,
+                       'reasoning_effort': effort, 'auth': 'existing_chatgpt_login',
+diff --git a/src/experimental/b2.py b/src/experimental/b2.py
+index 1a8271a..451810b 100644
+--- a/src/experimental/b2.py
++++ b/src/experimental/b2.py
+@@ -8,7 +8,7 @@ from .search_index import SearchViewIndex
+ 
+ METHOD = 'document-table-balanced-facets-v1'
+ 
+-def open_b2(index_path, *, encoder_path, reranker_path, encoder=None, reranker=None):
++def open_b2(index_path, *, encoder_path, reranker_path, encoder=None, reranker=None, table_comparisons=False):
+     """Require explicitly selected local artifacts; never fall back or download."""
+     model_paths = [Path(encoder_path).resolve(), Path(reranker_path).resolve()]
+     if any(not p.is_dir() for p in model_paths):
+@@ -22,7 +22,7 @@ def open_b2(index_path, *, encoder_path, reranker_path, encoder=None, reranker=N
+     index = SearchViewIndex(index_path, model=encoder)
+     if index.manifest['strategy'] not in {'token224_parent', 'semantic95_token224_parent'}:
+         raise ValueError('B2 requires the bounded token224_parent bundle; no alternate strategy selected.')
+-    engine = FacetRetriever(index, reranker, encoder)
++    engine = FacetRetriever(index, reranker, encoder, table_comparisons=table_comparisons)
+     here = Path(__file__).resolve().parent
+     names = ('b2.py','retriever.py','balanced_retriever.py','evidence_coverage.py','search_index.py','search_chunks.py','semantic_views.py')
+     hashes = {name: sha256((here/name).read_bytes()).hexdigest() for name in names}
+@@ -40,7 +40,8 @@ def open_b2(index_path, *, encoder_path, reranker_path, encoder=None, reranker=N
+         for name, digest in hashes.items():
+             if sha256((here/name if name in names else here.parent/name).read_bytes()).hexdigest() != digest:
+                 raise ValueError('Retrieval implementation changed; restart before querying.')
+-        return {**index.identity(), 'candidate_algorithm': METHOD, 'algorithm_sha256': deepcopy(hashes)}
++        return {**index.identity(), 'candidate_algorithm': METHOD, 'algorithm_sha256': deepcopy(hashes),
++                **({'table_comparisons': True} if table_comparisons else {})}
+     def retrieve(query, top_k=5):
+         identity()
+         if not isinstance(query,str) or not query.strip():
+@@ -58,4 +59,4 @@ def open_b2(index_path, *, encoder_path, reranker_path, encoder=None, reranker=N
+         'method':METHOD,'strategy':index.manifest['strategy'],'experimental':True,'human_acceptance':'pending',
+         'generation_calls':0,'document_index_rebuilt':False,
+         'embedding_model':'all-MiniLM-L6-v2','reranker':str(model_paths[1]),
+-        'algorithm_sha256':hashes}
++        'algorithm_sha256':hashes, **({'table_comparisons': True} if table_comparisons else {})}
+diff --git a/src/experimental/balanced_retriever.py b/src/experimental/balanced_retriever.py
+index aa7dbbd..a34c2c7 100644
+--- a/src/experimental/balanced_retriever.py
++++ b/src/experimental/balanced_retriever.py
+@@ -2,7 +2,7 @@
+ import re,math
+ import numpy as np
+ from .retriever import Retriever,tokens
+-from .evidence_coverage import coverage_candidates
++from .evidence_coverage import comparison_pair, coverage_candidates
+ 
+ def facets(query):
+     parts=re.split(r',\s*and\s+(?=(?:what|how|why|whether)\b)|;\s*',query,flags=re.I)
+@@ -12,7 +12,10 @@ def facets(query):
+     return list(dict.fromkeys(result))[:2]
+ 
+ class FacetRetriever(Retriever):
+-    def __init__(self,index,reranker,model):super().__init__(index,reranker);self.model=model
++    def __init__(self,index,reranker,model,*,table_comparisons=False):
++        super().__init__(index,reranker)
++        self.model=model
++        self.table_comparisons=table_comparisons
+     def rank_facets(self,query,qv):
+         routes,debug=super().rank(query,qv,with_reranker=False)
+         hybrid=routes['document_hybrid'];fqs=facets(query);docs=set(debug['paper_candidates'])
+@@ -71,5 +74,8 @@ class FacetRetriever(Retriever):
+             best=min(candidates,key=lambda i:(ranks[i],i))
+             if best not in selected:selected.append(best)
+         if hybrid[0] not in selected:selected.append(hybrid[0])
++        pair = comparison_pair(query, order, self.byid, docs) if self.table_comparisons else []
++        if pair:
++            selected = pair + [ident for ident in selected if ident not in pair]
+         order=selected+[i for i in order if i not in selected]
+-        return order,{'facets':fqs,'candidate_count':len(candidates),'pairs_scored':pairs_total,'paper_candidates':debug['paper_candidates'],'balanced_prefix':selected}
++        return order,{'facets':fqs,'candidate_count':len(candidates),'pairs_scored':pairs_total,'paper_candidates':debug['paper_candidates'],'balanced_prefix':selected,'comparison_pair':pair}
+diff --git a/src/experimental/evidence_coverage.py b/src/experimental/evidence_coverage.py
+index 105e541..aed4844 100644
+--- a/src/experimental/evidence_coverage.py
++++ b/src/experimental/evidence_coverage.py
+@@ -1,8 +1,52 @@
+ """Candidate expansion only: final selection belongs to relevance ranking."""
+ import re
++from collections import defaultdict
++
++from .retriever import tokens
+ 
+ 
+ def coverage_candidates(question, parents, papers):
+     """Offer results/methods passages without reserving evidence slots."""
+     return [p['chunk_id'] for p in parents if p.get('arxiv_id') in papers
+             and re.search(r"results?|evaluation|experiments?|performance|methods?|methodology", p.get('section', ''), re.I)]
++
++
++def _configuration_terms(text):
++    text = re.sub(r'\bw/o\b', 'without', text, flags=re.I)
++    text = re.sub(r'\bw/(?=\s|$)', 'with', text, flags=re.I)
++    text = re.sub(r'\bfine[- ]tun(?:ed|ing)\b', 'ft', text, flags=re.I)
++    return set(tokens(text))
++
++
++def comparison_pair(question, ranked, byid, papers):
++    """Keep an unambiguous pair of explicitly requested numeric rows together."""
++    if not re.search(r'\b(?:and|vs|versus|compar\w*|between)\b', question, re.I):
++        return []
++    if not re.search(r'\b(?:scores?|ranges?|accuracy|auc|rates?|counts?|latency|values?|pass@\d+)\b',
++                     question, re.I):
++        return []
++    requested = _configuration_terms(question)
++    eligible = defaultdict(list)
++    for ident in ranked:
++        row = byid[ident]
++        if row['arxiv_id'] not in papers or not row.get('table_id'):
++            continue
++        label = _configuration_terms(row['row_label'])
++        if label and label <= requested:
++            eligible[(row['arxiv_id'], row['table_id'])].append((ident, label))
++
++    pairs = []
++    for matches in eligible.values():
++        specific = [(ident, label) for ident, label in matches
++                    if not any(label < other for _, other in matches)]
++        if len(specific) != 2 or specific[0][1] == specific[1][1]:
++            continue
++        first, second = specific
++        row = byid[first[0]]
++        table_terms = _configuration_terms(' '.join(
++            [row.get('caption', '')] + [header['text'] for header in row['table_headers'][1:]]
++        ))
++        # Require a table-level match beyond the two row labels.
++        if requested.intersection(table_terms) - first[1] - second[1]:
++            pairs.append([first[0], second[0]])
++    return pairs[0] if len(pairs) == 1 else []
+diff --git a/src/generation.py b/src/generation.py
+index a17584c..387a4fb 100644
+--- a/src/generation.py
++++ b/src/generation.py
+@@ -22,7 +22,7 @@ def summarize_with_generation(query, passages, *, generate):
+     return json.loads(generate(prompt))
+ 
+ 
+-def create_generate(config=None):
++def create_generate(config=None, *, http_client=None):
+     """Build only the explicitly selected BYOK client; never fall back providers.
+ 
+     Config/keys are loaded only when generation is requested. Keys are not part
+@@ -35,6 +35,8 @@ def create_generate(config=None):
+         config = GenerationConfig.from_environment()
+     if not isinstance(config, GenerationConfig):
+         raise PipelineError('Generation requires a validated GenerationConfig.')
++    if http_client is not None and config.provider not in {'openai', 'openai_compatible'}:
++        raise PipelineError('A custom HTTP client requires an OpenAI adapter.')
+     try:
+         if config.provider == 'gemini':
+             from google import genai
+@@ -93,7 +95,7 @@ def create_generate(config=None):
+             # the named OpenAI provider or receiving another provider's key.
+             client = OpenAI(api_key=config.api_key,
+                 base_url=config.base_url or 'https://api.openai.com/v1',
+-                timeout=60, max_retries=0)
++                timeout=60, max_retries=0, **({'http_client': http_client} if http_client is not None else {}))
+             def invoke(prompt, response_schema=None):
+                 output_format = {'type':'json_object'} if response_schema is None else {
+                     'type':'json_schema', 'json_schema': {'name':'research_output',

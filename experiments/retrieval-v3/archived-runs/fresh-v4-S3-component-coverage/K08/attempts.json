@@ -1,0 +1,29 @@
+[
+ {
+  "attempt": 1,
+  "mode": "standard",
+  "resumed_from": [],
+  "status": "failed",
+  "error": "PipelineError: Codex generation failed; check login, model access or subscription limits.",
+  "failed_stage": "synthesis",
+  "seconds": 5128.28,
+  "timings": {
+   "evidence": 25.513
+  }
+ },
+ {
+  "attempt": 2,
+  "mode": "standard",
+  "resumed_from": [
+   "evidence"
+  ],
+  "status": "complete",
+  "seconds": 109.316,
+  "timings": {
+   "evidence": "checkpoint",
+   "synthesis": 63.742,
+   "review": 45.484,
+   "publication": 0.024
+  }
+ }
+]

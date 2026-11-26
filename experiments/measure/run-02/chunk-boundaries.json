@@ -1,0 +1,210 @@
+[
+  {
+    "chunk_id": "2402.01622v4_c0000",
+    "indexed": true,
+    "arxiv_id": "2402.01622v4",
+    "source_url": "https://arxiv.org/html/2402.01622v4#abstract1",
+    "table_id": null,
+    "row_label": null,
+    "text": "Planning has been part of the core pursuit for artificial intelligence since its conception, but earlier AI agents mostly focused on constrained settings because many of the cognitive substrates necessary for human-level planning have been lacking.\nRecently, language agents powered by large language models (LLMs) have shown interesting capabilities such as tool use and reasoning. Are these language agents capable of planning in more complex settings that are out of the reach of prior AI agents? To advance this investigation, we propose TravelPlanner, a new planning benchmark that focuses on travel planning, a common real-world planning scenario.\nIt provides a rich sandbox environment, various tools for accessing nearly four million data records, and 1,225 meticulously curated planning intents and reference plans.\nComprehensive evaluations show that the current language agents are not yet capable of handling such complex planning tasks—even GPT-4 only achieves a success rate of 0.6 %.\nLanguage agents struggle to stay on task, use the right tools to collect information, or keep track of multiple constraints.\nHowever, we note that the mere possibility for language agents to tackle such a complex problem is in itself non-trivial progress.\nTravelPlanner provides a challenging yet meaningful testbed for future language agents.",
+    "anchors": [
+      "0.6",
+      "1,225"
+    ],
+    "view_ids": [
+      "2402.01622v4_c0000__v224_0000",
+      "2402.01622v4_c0000__v224_0001"
+    ],
+    "anchors_absent_from_every_view": [],
+    "at_least_one_view_with_all_anchors": true
+  },
+  {
+    "chunk_id": "2402.01622v4_c0012",
+    "indexed": true,
+    "arxiv_id": "2402.01622v4",
+    "source_url": "https://arxiv.org/html/2402.01622v4#S3.SS3",
+    "table_id": null,
+    "row_label": null,
+    "text": "One plan is deemed eligible only if it meets all the constraints outlined in our evaluation script, which is detailed in Section 3.4 .\nThis rigorous process resulted in the creation of 1,225 validated query-plan pairs.\nWe pay annotators an average of $ 0.80 for each plan they annotate. To ensure the quality of each natural language query and its corresponding annotated plan, the authors performed a detailed review of every query and plan, rectifying any errors found.\nAdditionally, to ensure the challenges, we re-calibrate each query’s budget using the costs from corresponding human-annotated plans.\nThis approach replaces the initial heuristic-generated budgets, which might be too high, thus reducing the number of feasible plans.\nThrough multiple stages of human verification, we ensure the high quality of each query in TravelPlanner and the presence of at least one feasible solution.",
+    "anchors": [
+      "1,225"
+    ],
+    "view_ids": [
+      "2402.01622v4_c0012__v224_0000"
+    ],
+    "anchors_absent_from_every_view": [],
+    "at_least_one_view_with_all_anchors": true
+  },
+  {
+    "chunk_id": "2402.01622v4_c0018",
+    "indexed": true,
+    "arxiv_id": "2402.01622v4",
+    "source_url": "https://arxiv.org/html/2402.01622v4#S4.SS2",
+    "table_id": null,
+    "row_label": null,
+    "text": "In this section, we discuss the performance of various LLMs and planning strategies on TravelPlanner (Table 3 ).\nWe have the following observations: TravelPlanner poses a significant challenge. In the two-stage mode, GPT-4-Turbo with ReAct achieves only 0.6 % in the final pass rate, and none of the other LLMs can pass any of the tasks.\nEven given all the necessary information in the sole-planning mode,\nexisting planning strategies like ReAct and Reflexion still struggle with planning in TravelPlanner, even though they have shown their effectiveness in more conventional planning tasks.\nIt is noteworthy that the best-performing agent still falls short on hard constraints even when compared to greedy search.\nThis poor performance underlines the difficulty of TravelPlanner and shows that current agents still struggle with complex planning. Agents show a substantial gap between the two modes. The comparison of the two modes reveals the agents’ struggles in fiddling with both information collection and planning.\nAcross all metrics, the scores of any model in the two-stage mode are lower than those in the sole-planning mode, with the largest gap reaching over 30 %.\nSimilar to humans, language agents also seem to have a limited “cognitive capacity” and their performance deteriorates when multitasking.\nWe provide a further analysis in Section 5.2 . Agents struggle in obtaining a high macro pass rate. While some agents achieve high micro scores, their macro scores remain low.\nThis pattern shows that although agents manage to satisfy some constraints, they often overlook some other constraints in the meantime.",
+    "anchors": [
+      "0.6"
+    ],
+    "view_ids": [
+      "2402.01622v4_c0018__v224_0000",
+      "2402.01622v4_c0018__v224_0001"
+    ],
+    "anchors_absent_from_every_view": [],
+    "at_least_one_view_with_all_anchors": true
+  },
+  {
+    "chunk_id": "2402.01622v4_c0024",
+    "indexed": true,
+    "arxiv_id": "2402.01622v4",
+    "source_url": "https://arxiv.org/html/2402.01622v4#S6",
+    "table_id": null,
+    "row_label": null,
+    "text": "We introduce TravelPlanner, a benchmark grounded in real-world scenarios, designed to assess the multi-constraint planning and tool-use abilities of current language agents.\nOur benchmark presents a significant challenge: even the most advanced language agent frameworks only achieve a mere 0.6% score in the final pass rate.\nFurther analysis shows that these agents are unable to take all constraints into consideration to deliver feasible plans. TravelPlanner’s intricate logic and general applicability stand as vital components in the progressive development of language agents, thus contributing to the broader quest for AI abilities.\nWe envision TravelPlanner as a catalyst for future research, aiming to enhance agents’ performance in increasingly complex scenarios, hill-climbing towards human-level cognitive capabilities.",
+    "anchors": [
+      "0.6"
+    ],
+    "view_ids": [
+      "2402.01622v4_c0024__v224_0000"
+    ],
+    "anchors_absent_from_every_view": [],
+    "at_least_one_view_with_all_anchors": true
+  },
+  {
+    "chunk_id": "2412.14470v2_c0000",
+    "indexed": true,
+    "arxiv_id": "2412.14470v2",
+    "source_url": "https://arxiv.org/html/2412.14470v2#abstract1",
+    "table_id": null,
+    "row_label": null,
+    "text": "As large language models (LLMs) are increasingly deployed as agents, their integration into interactive environments and tool use introduce new safety challenges beyond those associated with the models themselves. However, the absence of comprehensive benchmarks for evaluating agent safety presents a significant barrier to effective assessment and further improvement. In this paper, we introduce Agent-SafetyBench , a comprehensive benchmark designed to evaluate the safety of LLM agents. Agent-SafetyBench encompasses 349 interaction environments and 2,000 test cases, evaluating 8 categories of safety risks and covering 10 common failure modes frequently encountered in unsafe interactions. Our evaluation of 16 popular LLM agents reveals a concerning result: none of the agents achieves a safety score above 60%. This highlights significant safety challenges in LLM agents and underscores the considerable need for improvement. Through failure mode and helpfulness analysis, we summarize two fundamental safety defects in current LLM agents: lack of robustness and lack of risk awareness. Furthermore, our findings suggest that reliance on defense prompts alone may be insufficient to address these safety issues, emphasizing the need for more advanced and robust strategies. To drive progress in this area, Agent-SafetyBench has been released 1 1 https://github.com/thu-coai/Agent-SafetyBench/ to facilitate further research in agent safety evaluation and improvement.",
+    "anchors": [
+      "10",
+      "16",
+      "2,000",
+      "349",
+      "60%",
+      "8"
+    ],
+    "view_ids": [
+      "2412.14470v2_c0000__v224_0000",
+      "2412.14470v2_c0000__v224_0001"
+    ],
+    "anchors_absent_from_every_view": [],
+    "at_least_one_view_with_all_anchors": true
+  },
+  {
+    "chunk_id": "2412.14470v2_c0003",
+    "indexed": true,
+    "arxiv_id": "2412.14470v2",
+    "source_url": "https://arxiv.org/html/2412.14470v2#S1",
+    "table_id": null,
+    "row_label": null,
+    "text": ". (3) Extensive Test Cases. Agent-SafetyBench provides 250 test cases for each risk category, amounting to a total of 2,000 diverse test cases—a substantial improvement over prior benchmarks. (4) Elaborated Failure Modes. We summarize 10 representative failure modes that can lead to various safety risks and annotate the anticipated failure modes for each test case, providing valuable insights into the safety challenges and potential improvements for LLM agents. (5) High Quality and Flexibility. Each sample in Agent-SafetyBench undergoes at least two rounds of manual review and additional automated validation, ensuring high quality. Furthermore, the benchmark features configurable simulated environments, enabling flexible adjustments across different test cases. A detailed comparison between Agent-SafetyBench and existing benchmarks is presented in Table 1 . More fine-grained classification of the environments introduced in Agent-SafetyBench . We introduce numerous novel environments that lack publicly available APIs—an aspect largely overlooked by prior research. Using Agent-SafetyBench , we evaluate 16 agents that are powered by LLMs with tool usage capabilities, including both proprietary ones (e.g., Claude-3.5) and open-source ones (e.g., Llama-3.1).",
+    "anchors": [
+      "10",
+      "2,000"
+    ],
+    "view_ids": [
+      "2412.14470v2_c0003__v224_0000",
+      "2412.14470v2_c0003__v224_0001"
+    ],
+    "anchors_absent_from_every_view": [],
+    "at_least_one_view_with_all_anchors": true
+  },
+  {
+    "chunk_id": "2412.14470v2_c0004",
+    "indexed": true,
+    "arxiv_id": "2412.14470v2",
+    "source_url": "https://arxiv.org/html/2412.14470v2#S1",
+    "table_id": null,
+    "row_label": null,
+    "text": "As shown in Figure 1 , the results reveal that the overall safety scores for all models fall below 60%.\nThese results highlight a concerning level of safety across current LLM agents.\nMoreover, we identify two fundamental safety defects in current LLM agents through analysis on their failure modes and helpfulness under different scenarios: lack of robustness and risk awareness . Specifically, LLM agents demonstrate inadequate robustness in reliably invoking tools across diverse scenarios, and they exhibit a lack of awareness regarding the potential safety risks associated with tool usage in specific environments (e.g., disabling all alarm systems).\nFinally, we observe that simply incorporating defense prompts to mitigate failure modes yields only limited improvements, which underscores the necessity for more sophisticated approaches to enhance agent safety. In summary, the main contributions of this work are: We propose Agent-SafetyBench , a comprehensive agent safety evaluation benchmark that introduces a diverse array of novel environments that are previously unexplored, and offers broader and more systematic coverage of various risk categories and failure modes. We finetune a reliable agent safety evaluation model, which demonstrates a substantial accuracy improvement (approximately 15%) over GPT-4o. We then evaluate 16 representative LLM agents on Agent-SafetyBench , and uncover a concerning result: the safety scores of all tested LLM agents fall below 60%. We conduct analysis of the failure modes and helpfulness exhibited by LLM agents and identify two fundamental safety defects: lack of robustness and risk awareness. Additionally, we demonstrate that it is non-trivial to fully address the issue by adding defense prompts.",
+    "anchors": [
+      "16",
+      "60%"
+    ],
+    "view_ids": [
+      "2412.14470v2_c0004__v224_0000",
+      "2412.14470v2_c0004__v224_0001"
+    ],
+    "anchors_absent_from_every_view": [],
+    "at_least_one_view_with_all_anchors": true
+  },
+  {
+    "chunk_id": "2412.14470v2_c0007",
+    "indexed": true,
+    "arxiv_id": "2412.14470v2",
+    "source_url": "https://arxiv.org/html/2412.14470v2#S3",
+    "table_id": null,
+    "row_label": null,
+    "text": "An overview of Agent-SafetyBench is presented in Figure 2 . We provide the definitions of different risk categories and failure modes in Tables 3 and 4 , while more examples and explanations are provided in Appendix A and B . In the following sections, we provide a detailed discussion of the risk taxonomy, the data collection methodology, and the automated scoring mechanism. Definitions of 8 risk categories. Definitions of 10 failure modes.",
+    "anchors": [
+      "10",
+      "8"
+    ],
+    "view_ids": [
+      "2412.14470v2_c0007__v224_0000"
+    ],
+    "anchors_absent_from_every_view": [],
+    "at_least_one_view_with_all_anchors": true
+  },
+  {
+    "chunk_id": "2412.14470v2_c0018",
+    "indexed": true,
+    "arxiv_id": "2412.14470v2",
+    "source_url": "https://arxiv.org/html/2412.14470v2#S4.SS2",
+    "table_id": null,
+    "row_label": null,
+    "text": "The main results are presented in Table 5 . From the total safety scores of different LLM agents, we observe the following key findings. (1) There is considerable room for improvement in agent safety. All agents have total scores below 60%, with some agents scoring below 20%. (2) Stronger agents generally achieve higher safety scores compared to their weaker counterparts. This trend is particularly prominent within the same agent series, such as Qwen, Llama 3.1, and GPT-4o. We also note that proprietary agents (e.g., Claude, GPT and Gemini) demonstrate clear advantages over open-source agents in general. This performance gap may be attributed to the enhanced robustness of stronger agents in accurately utilizing tools and their heightened awareness of the safety risks associated with their behaviors, based on our observations. Additionally, a comparison between behavior safety scores and content safety scores reveals that LLM agents exhibit more significant flaws in behavior safety. This is evident even though most behavior safety test cases do not include explicit jailbreak attacks, unlike the content safety tests. This finding underscores the need for greater focus on behavior and agent safety in future work. Finally, by comparing the performance among different risk categories, we find that some categories are especially challenging for current agents. For example, the averaged score on the “ Spread ” category is only 15.6%, which suggests agents can easily spread unsafe information by using tools like posts, blogs and emails, without validating the information. Such challenging categories warrant special attention. As expected, agents generally perform well in the “ Produce ” category, since the jailbreak issues have been extensively explored",
+    "anchors": [
+      "60%"
+    ],
+    "view_ids": [
+      "2412.14470v2_c0018__v224_0000",
+      "2412.14470v2_c0018__v224_0001"
+    ],
+    "anchors_absent_from_every_view": [],
+    "at_least_one_view_with_all_anchors": true
+  },
+  {
+    "chunk_id": "2412.14470v2_c0025",
+    "indexed": true,
+    "arxiv_id": "2412.14470v2",
+    "source_url": "https://arxiv.org/html/2412.14470v2#S5",
+    "table_id": null,
+    "row_label": null,
+    "text": "In this work, we introduce Agent-SafetyBench , a comprehensive agent safety evaluation benchmark with diverse test cases and interaction environments.\nThrough extensive tests over 16 representative LLM agents, we uncover significant vulnerabilities: no agent surpasses a total safety score of 60%. Further analysis of the failure modes and helpfulness of these LLM agents reveals two fundamental safety defects in current LLM agents: lack of robustness and risk awareness. Furthermore, additional experiments suggest that solely modifying the inference prompt has limited efficacy in improving agent safety.\nWe hope Agent-SafetyBench could play an important role in assessing the safety of LLM agents, and contribute to the advancement of safer agent development in the future.",
+    "anchors": [
+      "16",
+      "60%"
+    ],
+    "view_ids": [
+      "2412.14470v2_c0025__v224_0000"
+    ],
+    "anchors_absent_from_every_view": [],
+    "at_least_one_view_with_all_anchors": true
+  },
+  {
+    "chunk_id": "2602.00931v2_c0000",
+    "indexed": true,
+    "arxiv_id": "2602.00931v2",
+    "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+    "table_id": null,
+    "row_label": null,
+    "text": "Large language model reasoning is often treated as a monolithic capability, relying on binary preference supervision that fails to capture partial progress or fine-grained reasoning quality. We introduce continuous utility direct preference optimization ( CU- DPO ) , a framework that aligns models to a portfolio of prompt-based cognitive strategies by replacing binary labels with continuous scores that capture fine-grained reasoning quality. We prove that learning with K strategies yields a \\Theta(K\\log K) improvement in sample complexity over binary preferences, and that DPO converges to the entropy-regularized utility-maximizing policy. To exploit this signal, we propose a two-stage training pipeline: (i) strategy selection, which optimizes the model to choose the best strategy for a given problem via best-vs-all comparisons, and (ii) execution refinement, which trains the model to correctly execute the selected strategy using margin-stratified pairs. On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks.",
+    "anchors": [
+      "35",
+      "46",
+      "68",
+      "78",
+      "seven"
+    ],
+    "view_ids": [
+      "2602.00931v2_c0000__v224_0000",
+      "2602.00931v2_c0000__v224_0001"
+    ],
+    "anchors_absent_from_every_view": [],
+    "at_least_one_view_with_all_anchors": true
+  }
+]

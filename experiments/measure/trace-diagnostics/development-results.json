@@ -1,0 +1,282 @@
+{
+  "runs": {
+    "accuraterag-A": {
+      "point_decisions": {
+        "accuraterag_row": {
+          "evidence": false,
+          "stage": "missing_delivered_evidence"
+        },
+        "raft_row": {
+          "evidence": false,
+          "stage": "missing_delivered_evidence"
+        }
+      },
+      "evidence_coverage": [
+        0,
+        2
+      ],
+      "published_point_coverage": [
+        0,
+        2
+      ],
+      "complete": false,
+      "abstained": true,
+      "false_abstention": false,
+      "partial_evidence_abstention": false,
+      "unsupported_published": 0,
+      "unreviewed_published": 0,
+      "reviewed_published": 0,
+      "question": "With fine-tuned Llama-2-7B, what score ranges did AccurateRAG and RAFT with GPT-4 CoT achieve across the three APIBench subsets?",
+      "summary_status": "insufficient_evidence",
+      "historical_seconds": 11.089,
+      "historical_invocations": 1,
+      "historical_hold_reasons": [],
+      "sha256": [
+        "8127ee66c32c176ff4a0679bf3063c8309436eac841e487c97833bad73043463",
+        "52f2ba8a450acba6bba059d5e9d66e768419b90020ca02a8641fedee571cbc86",
+        "c41ca4c1c6f307930052d2683d1c3350e64066b070e2e3e3942c9d883064b178"
+      ]
+    },
+    "accuraterag-B": {
+      "point_decisions": {
+        "accuraterag_row": {
+          "evidence": false,
+          "stage": "missing_delivered_evidence"
+        },
+        "raft_row": {
+          "evidence": false,
+          "stage": "missing_delivered_evidence"
+        }
+      },
+      "evidence_coverage": [
+        0,
+        2
+      ],
+      "published_point_coverage": [
+        0,
+        2
+      ],
+      "complete": false,
+      "abstained": true,
+      "false_abstention": false,
+      "partial_evidence_abstention": false,
+      "unsupported_published": 0,
+      "unreviewed_published": 0,
+      "reviewed_published": 0,
+      "question": "With fine-tuned Llama-2-7B, what score ranges did AccurateRAG and RAFT with GPT-4 CoT achieve across the three APIBench subsets?",
+      "summary_status": "insufficient_evidence",
+      "historical_seconds": 25.201,
+      "historical_invocations": 2,
+      "historical_hold_reasons": [],
+      "sha256": [
+        "45de4fd81981abb3c595917fc98ed4272fadc45f86fe35ef5ebdb9af44cd4025",
+        "76b4333e619383ac7778014e6f8a1fc1e60dd16ca5da9cb90586b53fb4bd2d99",
+        "77789a9404e1ba514c9971e876131224b85c75504b7422cce557ad0c8fe91982"
+      ]
+    },
+    "accuraterag-C": {
+      "point_decisions": {
+        "accuraterag_row": {
+          "evidence": true,
+          "stage": "published"
+        },
+        "raft_row": {
+          "evidence": true,
+          "stage": "held_by_gate"
+        }
+      },
+      "evidence_coverage": [
+        2,
+        2
+      ],
+      "published_point_coverage": [
+        1,
+        2
+      ],
+      "complete": false,
+      "abstained": false,
+      "false_abstention": false,
+      "partial_evidence_abstention": false,
+      "unsupported_published": 0,
+      "unreviewed_published": 0,
+      "reviewed_published": 1,
+      "question": "With fine-tuned Llama-2-7B, what score ranges did AccurateRAG and RAFT with GPT-4 CoT achieve across the three APIBench subsets?",
+      "summary_status": "ok",
+      "historical_seconds": 35.384,
+      "historical_invocations": 3,
+      "historical_hold_reasons": [
+        "deterministic check failed: numbers_and_qualifiers (subject_mismatch)"
+      ],
+      "sha256": [
+        "f5f95fb964aee568496e61f4f073f3dfd184a503d684d90857de76c24d99225b",
+        "d238776cbf66ec2da7ff652c03df56cb1deb0af3b511c90c2fcf3904fe873489",
+        "8cdaf8d4ec986e4cb1e20be9c91eeec1112c2bb363c3b20a354aa8ac102d8dfe"
+      ]
+    },
+    "travelplanner-A": {
+      "point_decisions": {
+        "safety_design": {
+          "evidence": true,
+          "stage": "draft_omission"
+        },
+        "safety_result": {
+          "evidence": true,
+          "stage": "draft_omission"
+        },
+        "travel_design": {
+          "evidence": false,
+          "stage": "missing_delivered_evidence"
+        },
+        "travel_result": {
+          "evidence": false,
+          "stage": "missing_delivered_evidence"
+        },
+        "travel_setting": {
+          "evidence": false,
+          "stage": "missing_delivered_evidence"
+        },
+        "comparison_caveat": {
+          "evidence": false,
+          "stage": "missing_delivered_evidence"
+        }
+      },
+      "evidence_coverage": [
+        2,
+        6
+      ],
+      "published_point_coverage": [
+        0,
+        6
+      ],
+      "complete": false,
+      "abstained": true,
+      "false_abstention": false,
+      "partial_evidence_abstention": true,
+      "unsupported_published": 0,
+      "unreviewed_published": 0,
+      "reviewed_published": 0,
+      "question": "Compare how Agent-SafetyBench and TravelPlanner evaluate LLM agents, and what safety or success rates does each report?",
+      "summary_status": "insufficient_evidence",
+      "historical_seconds": 15.24,
+      "historical_invocations": 1,
+      "historical_hold_reasons": [],
+      "sha256": [
+        "2bb9bcaf403952cee7358b9d987717c86e839273fdbfe4fe2cbee174805c5028",
+        "19b8a8f82d470b67e082306a8b7b96d12c779d3c36bb2b8397d9390a32f65018",
+        "f6521f158ae2fc91e259b7920ff035f86edce359f5716ebc250c5028a6883d9b"
+      ]
+    },
+    "travelplanner-B": {
+      "point_decisions": {
+        "safety_design": {
+          "evidence": true,
+          "stage": "published"
+        },
+        "safety_result": {
+          "evidence": true,
+          "stage": "published"
+        },
+        "travel_design": {
+          "evidence": true,
+          "stage": "published"
+        },
+        "travel_result": {
+          "evidence": true,
+          "stage": "published"
+        },
+        "travel_setting": {
+          "evidence": false,
+          "stage": "missing_delivered_evidence"
+        },
+        "comparison_caveat": {
+          "evidence": true,
+          "stage": "held_by_gate"
+        }
+      },
+      "evidence_coverage": [
+        5,
+        6
+      ],
+      "published_point_coverage": [
+        4,
+        6
+      ],
+      "complete": false,
+      "abstained": false,
+      "false_abstention": false,
+      "partial_evidence_abstention": false,
+      "unsupported_published": 0,
+      "unreviewed_published": 0,
+      "reviewed_published": 3,
+      "question": "Compare how Agent-SafetyBench and TravelPlanner evaluate LLM agents, and what safety or success rates does each report?",
+      "summary_status": "ok",
+      "historical_seconds": 57.22,
+      "historical_invocations": 3,
+      "historical_hold_reasons": [
+        "deterministic check failed: numbers_and_qualifiers (missing_condition)"
+      ],
+      "sha256": [
+        "c89698e1acb76e559c84fb8086d3d686cd78c580d5a2f8e315976b6a66575f36",
+        "084c2525a012b44e5487d71dcbcff20d5b725c262719fb611dcbceb4dba82b7b",
+        "95a1b2806518a6ba9a51b58451699220d53e837050cd2939a2e6c9beb29342b3"
+      ]
+    },
+    "travelplanner-C": {
+      "point_decisions": {
+        "safety_design": {
+          "evidence": true,
+          "stage": "published"
+        },
+        "safety_result": {
+          "evidence": true,
+          "stage": "published"
+        },
+        "travel_design": {
+          "evidence": true,
+          "stage": "published"
+        },
+        "travel_result": {
+          "evidence": true,
+          "stage": "published"
+        },
+        "travel_setting": {
+          "evidence": false,
+          "stage": "missing_delivered_evidence"
+        },
+        "comparison_caveat": {
+          "evidence": true,
+          "stage": "held_by_gate"
+        }
+      },
+      "evidence_coverage": [
+        5,
+        6
+      ],
+      "published_point_coverage": [
+        4,
+        6
+      ],
+      "complete": false,
+      "abstained": false,
+      "false_abstention": false,
+      "partial_evidence_abstention": false,
+      "unsupported_published": 0,
+      "unreviewed_published": 0,
+      "reviewed_published": 3,
+      "question": "Compare how Agent-SafetyBench and TravelPlanner evaluate LLM agents, and what safety or success rates does each report?",
+      "summary_status": "ok",
+      "historical_seconds": 49.479,
+      "historical_invocations": 3,
+      "historical_hold_reasons": [
+        "deterministic check failed: numbers_and_qualifiers (missing_condition)"
+      ],
+      "sha256": [
+        "9890a15ee0b92c617b546ddf135c2ca2a243b15f986b0c52da64758d6790146e",
+        "9530bae3ba79b1b27f525d4ca5edf05df8cf13486f6195acdd9c538a464a7bfb",
+        "95a1b2806518a6ba9a51b58451699220d53e837050cd2939a2e6c9beb29342b3"
+      ]
+    }
+  },
+  "diagnostic_seconds": 0.008983,
+  "added_provider_invocations": 0
+}

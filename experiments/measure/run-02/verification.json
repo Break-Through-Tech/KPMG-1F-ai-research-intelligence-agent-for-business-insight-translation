@@ -1,0 +1,2604 @@
+{
+  "cases": [
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "unsigned 3.2% against -3.2% (Codex)",
+      "category": "sign",
+      "expected_supported": false,
+      "source_chunk_id": "frozen-audit-1",
+      "source_url": null,
+      "frozen_fixture_expected_status": "contradicted",
+      "claim": {
+        "text": "Accuracy changed by 3.2% after pruning.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-1",
+            "quote": "Accuracy changed by -3.2% after pruning."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": false,
+          "status": "contradicted",
+          "contradictions": [
+            "sign_flip"
+          ],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "3.2",
+              "status": "contradicted",
+              "issues": [
+                "sign_flip"
+              ],
+              "subject": null,
+              "metric": "accuracy",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": false
+        }
+      }
+    },
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "decrease stated for -3.2% (valid)",
+      "category": "sign",
+      "expected_supported": true,
+      "source_chunk_id": "frozen-audit-2",
+      "source_url": null,
+      "frozen_fixture_expected_status": "grounded",
+      "claim": {
+        "text": "Accuracy decreased by 3.2% after pruning.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-2",
+            "quote": "Accuracy changed by -3.2% after pruning."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": true,
+          "status": "grounded",
+          "contradictions": [],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "3.2",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": "accuracy",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": true
+        }
+      }
+    },
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "-3.2% against -3.2% (valid)",
+      "category": "sign",
+      "expected_supported": true,
+      "source_chunk_id": "frozen-audit-3",
+      "source_url": null,
+      "frozen_fixture_expected_status": "grounded",
+      "claim": {
+        "text": "Accuracy changed by -3.2% after pruning.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-3",
+            "quote": "Accuracy changed by -3.2% after pruning."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": true,
+          "status": "grounded",
+          "contradictions": [],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "3.2",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": "accuracy",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": true
+        }
+      }
+    },
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "negated claim (Codex)",
+      "category": "negation",
+      "expected_supported": false,
+      "source_chunk_id": "frozen-audit-4",
+      "source_url": null,
+      "frozen_fixture_expected_status": "contradicted",
+      "claim": {
+        "text": "Model X did not reach 78.0% accuracy on the benchmark.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-4",
+            "quote": "Model X reached 78.0% accuracy on the benchmark."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": false,
+          "status": "contradicted",
+          "contradictions": [
+            "negation_mismatch"
+          ],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "78.0",
+              "status": "contradicted",
+              "issues": [
+                "negation_mismatch"
+              ],
+              "subject": "Model X",
+              "metric": "accuracy",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": false
+        }
+      }
+    },
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "negation kept (valid)",
+      "category": "negation",
+      "expected_supported": true,
+      "source_chunk_id": "frozen-audit-5",
+      "source_url": null,
+      "frozen_fixture_expected_status": "grounded",
+      "claim": {
+        "text": "Model X did not reach 80.0% accuracy on the benchmark.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-5",
+            "quote": "Model X did not reach 80.0% accuracy on the benchmark."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": true,
+          "status": "grounded",
+          "contradictions": [],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "80.0",
+              "status": "grounded",
+              "issues": [],
+              "subject": "Model X",
+              "metric": "accuracy",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": true
+        }
+      }
+    },
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "\"not only\" is not a negation (valid)",
+      "category": "negation",
+      "expected_supported": true,
+      "source_chunk_id": "frozen-audit-6",
+      "source_url": null,
+      "frozen_fixture_expected_status": "grounded",
+      "claim": {
+        "text": "Model X not only reached 78.0% accuracy on the benchmark.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-6",
+            "quote": "Model X reached 78.0% accuracy on the benchmark."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": true,
+          "status": "grounded",
+          "contradictions": [],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "78.0",
+              "status": "grounded",
+              "issues": [],
+              "subject": "Model X",
+              "metric": "accuracy",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": true
+        }
+      }
+    },
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "benchmark result moved to clinical notes (Codex)",
+      "category": "setting or subject",
+      "expected_supported": false,
+      "source_chunk_id": "frozen-audit-7",
+      "source_url": null,
+      "frozen_fixture_expected_status": "contradicted",
+      "claim": {
+        "text": "Model X reached 78.0% accuracy on clinical notes in hospitals.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-7",
+            "quote": "Model X reached 78.0% accuracy on the benchmark."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": false,
+          "status": "contradicted",
+          "contradictions": [
+            "setting_transfer"
+          ],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "78.0",
+              "status": "contradicted",
+              "issues": [
+                "setting_transfer"
+              ],
+              "subject": "Model X",
+              "metric": "accuracy",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": false
+        }
+      }
+    },
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "benchmark result kept on the benchmark (valid)",
+      "category": "setting or subject",
+      "expected_supported": true,
+      "source_chunk_id": "frozen-audit-8",
+      "source_url": null,
+      "frozen_fixture_expected_status": "grounded",
+      "claim": {
+        "text": "Model X reached 78.0% accuracy on the benchmark.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-8",
+            "quote": "Model X reached 78.0% accuracy on the benchmark."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": true,
+          "status": "grounded",
+          "contradictions": [],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "78.0",
+              "status": "grounded",
+              "issues": [],
+              "subject": "Model X",
+              "metric": "accuracy",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": true
+        }
+      }
+    },
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "clinical result kept clinical (valid)",
+      "category": "setting or subject",
+      "expected_supported": true,
+      "source_chunk_id": "frozen-audit-9",
+      "source_url": null,
+      "frozen_fixture_expected_status": "grounded",
+      "claim": {
+        "text": "Model X reached 78.0% accuracy on clinical notes.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-9",
+            "quote": "Model X reached 78.0% accuracy on clinical notes from two hospitals."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": true,
+          "status": "grounded",
+          "contradictions": [],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "78.0",
+              "status": "grounded",
+              "issues": [],
+              "subject": "Model X",
+              "metric": "accuracy",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": true
+        }
+      }
+    },
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "0.5 seconds as 500 milliseconds (Codex, valid)",
+      "category": "unit conversion",
+      "expected_supported": true,
+      "source_chunk_id": "frozen-audit-10",
+      "source_url": null,
+      "frozen_fixture_expected_status": "grounded",
+      "claim": {
+        "text": "Latency was 0.5 seconds per query.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-10",
+            "quote": "Latency was 500 milliseconds per query."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": false,
+          "reason": "A finding contains a number absent from its cited excerpts."
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": true,
+          "status": "grounded",
+          "contradictions": [],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "0.5",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": "latency",
+              "unit": "seconds"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": true
+        }
+      }
+    },
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "3 ms against 3 s",
+      "category": "unit conversion",
+      "expected_supported": false,
+      "source_chunk_id": "frozen-audit-11",
+      "source_url": null,
+      "frozen_fixture_expected_status": "contradicted",
+      "claim": {
+        "text": "Latency was 3 ms per query.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-11",
+            "quote": "Latency was 3 s per query."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": false,
+          "status": "contradicted",
+          "contradictions": [
+            "unit_mismatch"
+          ],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "3",
+              "status": "contradicted",
+              "issues": [
+                "unit_mismatch"
+              ],
+              "subject": null,
+              "metric": "latency",
+              "unit": "ms"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": false
+        }
+      }
+    },
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "$2 million as $2,000,000 (valid)",
+      "category": "unit conversion",
+      "expected_supported": true,
+      "source_chunk_id": "frozen-audit-12",
+      "source_url": null,
+      "frozen_fixture_expected_status": "grounded",
+      "claim": {
+        "text": "The pilot cost $2 million.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-12",
+            "quote": "The pilot cost $2,000,000."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": false,
+          "reason": "A finding contains a number absent from its cited excerpts."
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": true,
+          "status": "grounded",
+          "contradictions": [],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "2",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": "cost",
+              "unit": "currency+million"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": true
+        }
+      }
+    },
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "population paraphrase is not rejected (Codex)",
+      "category": "scope or condition",
+      "expected_supported": true,
+      "source_chunk_id": "frozen-audit-13",
+      "source_url": null,
+      "frozen_fixture_expected_status": "grounded",
+      "claim": {
+        "text": "12% of surveyed hospitals reported errors.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-13",
+            "quote": "12% of hospital sites in the survey reported errors."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": true,
+          "status": "grounded",
+          "contradictions": [],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "12",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": "errors",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": true
+        }
+      }
+    },
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "same population, reordered (valid)",
+      "category": "scope or condition",
+      "expected_supported": true,
+      "source_chunk_id": "frozen-audit-14",
+      "source_url": null,
+      "frozen_fixture_expected_status": "grounded",
+      "claim": {
+        "text": "12% of hospitals reported errors in the survey.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-14",
+            "quote": "In the survey, 12% of hospitals reported errors."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": true,
+          "status": "grounded",
+          "contradictions": [],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "12",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": "errors",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": true
+        }
+      }
+    },
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "case 1: 78% (benchmark) claimed for hospitals",
+      "category": "setting or subject",
+      "expected_supported": false,
+      "source_chunk_id": "frozen-audit-15",
+      "source_url": null,
+      "frozen_fixture_expected_status": "contradicted",
+      "claim": {
+        "text": "Model X reached 78% accuracy in hospitals.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-15",
+            "quote": "Model X reached 78% accuracy on the benchmark and 64% accuracy in hospitals."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": false,
+          "status": "contradicted",
+          "contradictions": [
+            "setting_transfer"
+          ],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "78",
+              "status": "contradicted",
+              "issues": [
+                "setting_transfer"
+              ],
+              "subject": "Model X",
+              "metric": "accuracy",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": false
+        }
+      }
+    },
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "case 1 twin: 64% in hospitals",
+      "category": "setting or subject",
+      "expected_supported": true,
+      "source_chunk_id": "frozen-audit-16",
+      "source_url": null,
+      "frozen_fixture_expected_status": "grounded",
+      "claim": {
+        "text": "Model X reached 64% accuracy in hospitals.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-16",
+            "quote": "Model X reached 78% accuracy on the benchmark and 64% accuracy in hospitals."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": true,
+          "status": "grounded",
+          "contradictions": [],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "64",
+              "status": "grounded",
+              "issues": [],
+              "subject": "Model X",
+              "metric": "accuracy",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": true
+        }
+      }
+    },
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "case 1 twin: 78% on the benchmark",
+      "category": "setting or subject",
+      "expected_supported": true,
+      "source_chunk_id": "frozen-audit-17",
+      "source_url": null,
+      "frozen_fixture_expected_status": "grounded",
+      "claim": {
+        "text": "Model X reached 78% accuracy on the benchmark.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-17",
+            "quote": "Model X reached 78% accuracy on the benchmark and 64% accuracy in hospitals."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": true,
+          "status": "grounded",
+          "contradictions": [],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "78",
+              "status": "grounded",
+              "issues": [],
+              "subject": "Model X",
+              "metric": "accuracy",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": true
+        }
+      }
+    },
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "case 1 reverse: 64% (hospitals) claimed for the benchmark",
+      "category": "setting or subject",
+      "expected_supported": false,
+      "source_chunk_id": "frozen-audit-18",
+      "source_url": null,
+      "frozen_fixture_expected_status": "contradicted",
+      "claim": {
+        "text": "Model X reached 64% accuracy on the benchmark.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-18",
+            "quote": "Model X reached 78% accuracy on the benchmark and 64% accuracy in hospitals."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": false,
+          "status": "contradicted",
+          "contradictions": [
+            "setting_mismatch"
+          ],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "64",
+              "status": "contradicted",
+              "issues": [
+                "setting_mismatch"
+              ],
+              "subject": "Model X",
+              "metric": "accuracy",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": false
+        }
+      }
+    },
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "case 2: 78% overall (condition belongs to 90%)",
+      "category": "scope or condition",
+      "expected_supported": true,
+      "source_chunk_id": "frozen-audit-19",
+      "source_url": null,
+      "frozen_fixture_expected_status": "grounded",
+      "claim": {
+        "text": "Model X reached 78% accuracy overall.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-19",
+            "quote": "Model X reached 78% accuracy overall and 90% only on English tasks."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": true,
+          "status": "grounded",
+          "contradictions": [],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "78",
+              "status": "grounded",
+              "issues": [],
+              "subject": "Model X",
+              "metric": "accuracy",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": true
+        }
+      }
+    },
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "case 2 twin: 90% claimed overall",
+      "category": "other",
+      "expected_supported": false,
+      "source_chunk_id": "frozen-audit-20",
+      "source_url": null,
+      "frozen_fixture_expected_status": "contradicted",
+      "claim": {
+        "text": "Model X reached 90% accuracy overall.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-20",
+            "quote": "Model X reached 78% accuracy overall and 90% only on English tasks."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": false,
+          "status": "contradicted",
+          "contradictions": [
+            "missing_condition"
+          ],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "90",
+              "status": "contradicted",
+              "issues": [
+                "missing_condition"
+              ],
+              "subject": "Model X",
+              "metric": "accuracy",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": false
+        }
+      }
+    },
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "case 2 twin: 90% with its condition",
+      "category": "scope or condition",
+      "expected_supported": true,
+      "source_chunk_id": "frozen-audit-21",
+      "source_url": null,
+      "frozen_fixture_expected_status": "grounded",
+      "claim": {
+        "text": "Model X reached 90% accuracy only on English tasks.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-21",
+            "quote": "Model X reached 78% accuracy overall and 90% only on English tasks."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": true,
+          "status": "grounded",
+          "contradictions": [],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "90",
+              "status": "grounded",
+              "issues": [],
+              "subject": "Model X",
+              "metric": "accuracy",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": true
+        }
+      }
+    },
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "case 2 twin: 90% with a changed condition",
+      "category": "scope or condition",
+      "expected_supported": false,
+      "source_chunk_id": "frozen-audit-22",
+      "source_url": null,
+      "frozen_fixture_expected_status": "contradicted",
+      "claim": {
+        "text": "Model X reached 90% accuracy only on Spanish tasks.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-22",
+            "quote": "Model X reached 78% accuracy overall and 90% only on English tasks."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": false,
+          "status": "contradicted",
+          "contradictions": [
+            "changed_condition"
+          ],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "90",
+              "status": "contradicted",
+              "issues": [
+                "changed_condition"
+              ],
+              "subject": "Model X",
+              "metric": "accuracy",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": false
+        }
+      }
+    },
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "shared lead-in condition applies to all values",
+      "category": "scope or condition",
+      "expected_supported": false,
+      "source_chunk_id": "frozen-audit-23",
+      "source_url": null,
+      "frozen_fixture_expected_status": "contradicted",
+      "claim": {
+        "text": "Model X reached 78% accuracy.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-23",
+            "quote": "Only on English tasks, Model X reached 78% accuracy and Model Y reached 64% accuracy."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": false,
+          "status": "contradicted",
+          "contradictions": [
+            "missing_condition"
+          ],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "78",
+              "status": "contradicted",
+              "issues": [
+                "missing_condition"
+              ],
+              "subject": "Model X",
+              "metric": "accuracy",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": false
+        }
+      }
+    },
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "shared lead-in condition kept",
+      "category": "scope or condition",
+      "expected_supported": true,
+      "source_chunk_id": "frozen-audit-24",
+      "source_url": null,
+      "frozen_fixture_expected_status": "grounded",
+      "claim": {
+        "text": "Model X reached 78% accuracy only on English tasks.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-24",
+            "quote": "Only on English tasks, Model X reached 78% accuracy and Model Y reached 64% accuracy."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": true,
+          "status": "grounded",
+          "contradictions": [],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "78",
+              "status": "grounded",
+              "issues": [],
+              "subject": "Model X",
+              "metric": "accuracy",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": true
+        }
+      }
+    },
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "shared lead-in setting applies to all values",
+      "category": "scope or condition",
+      "expected_supported": false,
+      "source_chunk_id": "frozen-audit-25",
+      "source_url": null,
+      "frozen_fixture_expected_status": "contradicted",
+      "claim": {
+        "text": "Model X reached 78% accuracy in hospitals.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-25",
+            "quote": "On the benchmark, Model X reached 78% accuracy and Model Y reached 64% accuracy."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": false,
+          "status": "contradicted",
+          "contradictions": [
+            "setting_transfer"
+          ],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "78",
+              "status": "contradicted",
+              "issues": [
+                "setting_transfer"
+              ],
+              "subject": "Model X",
+              "metric": "accuracy",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": false
+        }
+      }
+    },
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "single-number trailing condition applies",
+      "category": "scope or condition",
+      "expected_supported": false,
+      "source_chunk_id": "frozen-audit-26",
+      "source_url": null,
+      "frozen_fixture_expected_status": "contradicted",
+      "claim": {
+        "text": "Model X reached 78% accuracy.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-26",
+            "quote": "Model X reached 78% accuracy, only on English tasks."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": false,
+          "status": "contradicted",
+          "contradictions": [
+            "missing_condition"
+          ],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "78",
+              "status": "contradicted",
+              "issues": [
+                "missing_condition"
+              ],
+              "subject": "Model X",
+              "metric": "accuracy",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": false
+        }
+      }
+    },
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "elliptical clause inherits its subject",
+      "category": "setting or subject",
+      "expected_supported": true,
+      "source_chunk_id": "frozen-audit-27",
+      "source_url": null,
+      "frozen_fixture_expected_status": "grounded",
+      "claim": {
+        "text": "Model X reached 64% accuracy in hospitals.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-27",
+            "quote": "Model X reached 78% accuracy on the benchmark and 64% accuracy in hospitals."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": true,
+          "status": "grounded",
+          "contradictions": [],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "64",
+              "status": "grounded",
+              "issues": [],
+              "subject": "Model X",
+              "metric": "accuracy",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": true
+        }
+      }
+    },
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "thousands separator",
+      "category": "other",
+      "expected_supported": true,
+      "source_chunk_id": "frozen-audit-28",
+      "source_url": null,
+      "frozen_fixture_expected_status": "grounded",
+      "claim": {
+        "text": "Agreement reached 91.4% in 1,240 cases.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-28",
+            "quote": "Agreement reached 91.4% in 1,240 cases."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": true,
+          "status": "grounded",
+          "contradictions": [],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "91.4",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": "agreement",
+              "unit": "percent"
+            },
+            {
+              "number": "1,240",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": "agreement",
+              "unit": null
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": true
+        }
+      }
+    },
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "correct paired ranges",
+      "category": "CU-DPO range",
+      "expected_supported": true,
+      "source_chunk_id": "2602.00931v2_c0000",
+      "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+      "frozen_fixture_expected_status": null,
+      "claim": {
+        "text": "Strategy selection accuracy improved from 35–46% to 68–78% across seven base models.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.00931v2_c0000",
+            "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": true,
+          "status": "grounded",
+          "contradictions": [],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "35",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": "accuracy",
+              "unit": null
+            },
+            {
+              "number": "46",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": "accuracy",
+              "unit": "percent"
+            },
+            {
+              "number": "68",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": "accuracy",
+              "unit": null
+            },
+            {
+              "number": "78",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": "accuracy",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": true
+        }
+      }
+    },
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "reversed ranges",
+      "category": "CU-DPO range",
+      "expected_supported": false,
+      "source_chunk_id": "2602.00931v2_c0000",
+      "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+      "frozen_fixture_expected_status": null,
+      "claim": {
+        "text": "Strategy selection accuracy improved from 68–78% to 35–46% across seven base models.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.00931v2_c0000",
+            "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": true,
+          "status": "grounded",
+          "contradictions": [],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "68",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": "accuracy",
+              "unit": null
+            },
+            {
+              "number": "78",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": "accuracy",
+              "unit": "percent"
+            },
+            {
+              "number": "35",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": "accuracy",
+              "unit": null
+            },
+            {
+              "number": "46",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": "accuracy",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": true
+        }
+      }
+    },
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "regrouped endpoints",
+      "category": "CU-DPO range",
+      "expected_supported": false,
+      "source_chunk_id": "2602.00931v2_c0000",
+      "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+      "frozen_fixture_expected_status": null,
+      "claim": {
+        "text": "Strategy selection accuracy improved from 35–78% to 46–68% across seven base models.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.00931v2_c0000",
+            "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": true,
+          "status": "grounded",
+          "contradictions": [],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "35",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": "accuracy",
+              "unit": null
+            },
+            {
+              "number": "78",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": "accuracy",
+              "unit": "percent"
+            },
+            {
+              "number": "46",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": "accuracy",
+              "unit": null
+            },
+            {
+              "number": "68",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": "accuracy",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": true
+        }
+      }
+    },
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "collapsed endpoints",
+      "category": "CU-DPO range",
+      "expected_supported": false,
+      "source_chunk_id": "2602.00931v2_c0000",
+      "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+      "frozen_fixture_expected_status": null,
+      "claim": {
+        "text": "Strategy selection accuracy improved from 35% to 78% across seven base models.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.00931v2_c0000",
+            "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": true,
+          "status": "grounded",
+          "contradictions": [],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "35",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": "accuracy",
+              "unit": "percent"
+            },
+            {
+              "number": "78",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": "accuracy",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": true
+        }
+      }
+    },
+    {
+      "origin": "established audit",
+      "reviewed": true,
+      "human_adjudicated": false,
+      "name": "equivalent under-18 qualifier",
+      "category": "population paraphrase",
+      "expected_supported": true,
+      "source_chunk_id": "frozen-audit-33",
+      "source_url": null,
+      "frozen_fixture_expected_status": null,
+      "claim": {
+        "text": "Accuracy reached 78% only for participants under age 18.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-33",
+            "quote": "Accuracy reached 78% only for minors under age 18."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": false,
+          "status": "contradicted",
+          "contradictions": [
+            "changed_condition"
+          ],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "78",
+              "status": "contradicted",
+              "issues": [
+                "changed_condition"
+              ],
+              "subject": null,
+              "metric": "accuracy",
+              "unit": "percent"
+            },
+            {
+              "number": "18",
+              "status": "contradicted",
+              "issues": [
+                "changed_condition"
+              ],
+              "subject": null,
+              "metric": "accuracy",
+              "unit": null
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": false
+        }
+      }
+    },
+    {
+      "origin": "draft",
+      "reviewed": false,
+      "human_adjudicated": false,
+      "name": "percent vs percentage points",
+      "category": "units",
+      "expected_supported": false,
+      "source_chunk_id": "frozen-audit-34",
+      "source_url": null,
+      "frozen_fixture_expected_status": null,
+      "claim": {
+        "text": "Accuracy increased by 10% on the benchmark.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-34",
+            "quote": "Accuracy increased by 10 percentage points on the benchmark."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": false,
+          "status": "contradicted",
+          "contradictions": [
+            "unit_mismatch"
+          ],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "10",
+              "status": "contradicted",
+              "issues": [
+                "unit_mismatch"
+              ],
+              "subject": null,
+              "metric": "accuracy",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": false
+        }
+      }
+    },
+    {
+      "origin": "draft",
+      "reviewed": false,
+      "human_adjudicated": false,
+      "name": "different denominator",
+      "category": "denominator/condition",
+      "expected_supported": false,
+      "source_chunk_id": "frozen-audit-35",
+      "source_url": null,
+      "frozen_fixture_expected_status": null,
+      "claim": {
+        "text": "78% of all cases passed.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-35",
+            "quote": "78% of the 30 English cases passed."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": true,
+          "status": "grounded",
+          "contradictions": [],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "78",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": null,
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": true
+        }
+      }
+    },
+    {
+      "origin": "draft",
+      "reviewed": false,
+      "human_adjudicated": false,
+      "name": "valid phrasing with unit",
+      "category": "unit conversion",
+      "expected_supported": true,
+      "source_chunk_id": "frozen-audit-36",
+      "source_url": null,
+      "frozen_fixture_expected_status": null,
+      "claim": {
+        "text": "Latency was 60 seconds per run.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-36",
+            "quote": "Latency was one minute (1 minute) per run."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": false,
+          "reason": "A finding contains a number absent from its cited excerpts."
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": true,
+          "status": "grounded",
+          "contradictions": [],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "60",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": "latency",
+              "unit": "seconds"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": true
+        }
+      }
+    },
+    {
+      "origin": "draft",
+      "reviewed": false,
+      "human_adjudicated": false,
+      "name": "unsupported setting with missing benchmark word",
+      "category": "setting",
+      "expected_supported": false,
+      "source_chunk_id": "frozen-audit-37",
+      "source_url": null,
+      "frozen_fixture_expected_status": null,
+      "claim": {
+        "text": "Model X reached 78% accuracy in clinical deployment.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-37",
+            "quote": "Model X reached 78% accuracy on simulated cases."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": false,
+          "status": "contradicted",
+          "contradictions": [
+            "setting_transfer"
+          ],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "78",
+              "status": "contradicted",
+              "issues": [
+                "setting_transfer"
+              ],
+              "subject": "Model X",
+              "metric": "accuracy",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": false
+        }
+      }
+    },
+    {
+      "origin": "draft",
+      "reviewed": false,
+      "human_adjudicated": false,
+      "name": "negative sign",
+      "category": "sign",
+      "expected_supported": false,
+      "source_chunk_id": "frozen-audit-38",
+      "source_url": null,
+      "frozen_fixture_expected_status": null,
+      "claim": {
+        "text": "Model X's performance changed by -5%.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-38",
+            "quote": "Model X's performance changed by +5%."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": false,
+          "status": "contradicted",
+          "contradictions": [
+            "sign_flip"
+          ],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "5",
+              "status": "contradicted",
+              "issues": [
+                "sign_flip"
+              ],
+              "subject": "Model X",
+              "metric": null,
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": false
+        }
+      }
+    },
+    {
+      "origin": "draft",
+      "reviewed": false,
+      "human_adjudicated": false,
+      "name": "reference range paraphrase",
+      "category": "CU-DPO range",
+      "expected_supported": true,
+      "source_chunk_id": "2602.00931v2_c0000",
+      "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+      "frozen_fixture_expected_status": null,
+      "claim": {
+        "text": "Across seven models, strategy selection accuracy went from 35–46% to 68–78%.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.00931v2_c0000",
+            "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": true,
+          "status": "grounded",
+          "contradictions": [],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "35",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": "accuracy",
+              "unit": null
+            },
+            {
+              "number": "46",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": "accuracy",
+              "unit": "percent"
+            },
+            {
+              "number": "68",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": "accuracy",
+              "unit": null
+            },
+            {
+              "number": "78",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": "accuracy",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": true
+        }
+      }
+    },
+    {
+      "origin": "draft",
+      "reviewed": false,
+      "human_adjudicated": false,
+      "name": "different setting, right range",
+      "category": "CU-DPO setting",
+      "expected_supported": false,
+      "source_chunk_id": "2602.00931v2_c0000",
+      "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+      "frozen_fixture_expected_status": null,
+      "claim": {
+        "text": "Strategy selection accuracy in hospitals went from 35–46% to 68–78%.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.00931v2_c0000",
+            "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": false,
+          "status": "contradicted",
+          "contradictions": [
+            "setting_transfer"
+          ],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "35",
+              "status": "contradicted",
+              "issues": [
+                "setting_transfer"
+              ],
+              "subject": null,
+              "metric": "accuracy",
+              "unit": null
+            },
+            {
+              "number": "46",
+              "status": "contradicted",
+              "issues": [
+                "setting_transfer"
+              ],
+              "subject": null,
+              "metric": "accuracy",
+              "unit": "percent"
+            },
+            {
+              "number": "68",
+              "status": "contradicted",
+              "issues": [
+                "setting_transfer"
+              ],
+              "subject": null,
+              "metric": "accuracy",
+              "unit": null
+            },
+            {
+              "number": "78",
+              "status": "contradicted",
+              "issues": [
+                "setting_transfer"
+              ],
+              "subject": null,
+              "metric": "accuracy",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": false
+        }
+      }
+    },
+    {
+      "origin": "draft",
+      "reviewed": false,
+      "human_adjudicated": false,
+      "name": "wrong metric, same figure",
+      "category": "CU-DPO metric",
+      "expected_supported": false,
+      "source_chunk_id": "2602.00931v2_c0000",
+      "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+      "frozen_fixture_expected_status": null,
+      "claim": {
+        "text": "Downstream reasoning gains were 68–78% across seven base models.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.00931v2_c0000",
+            "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": true,
+          "status": "grounded",
+          "contradictions": [],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "68",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": null,
+              "unit": null
+            },
+            {
+              "number": "78",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": null,
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": true
+        }
+      }
+    },
+    {
+      "origin": "draft",
+      "reviewed": false,
+      "human_adjudicated": false,
+      "name": "wrong comparison interpretation",
+      "category": "CU-DPO units",
+      "expected_supported": false,
+      "source_chunk_id": "2602.00931v2_c0000",
+      "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+      "frozen_fixture_expected_status": null,
+      "claim": {
+        "text": "Strategy selection accuracy was 68–78 percentage points higher.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.00931v2_c0000",
+            "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": false,
+          "status": "contradicted",
+          "contradictions": [
+            "unit_mismatch"
+          ],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "68",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": "accuracy",
+              "unit": null
+            },
+            {
+              "number": "78",
+              "status": "contradicted",
+              "issues": [
+                "unit_mismatch"
+              ],
+              "subject": null,
+              "metric": "accuracy",
+              "unit": "pp"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": false
+        }
+      }
+    },
+    {
+      "origin": "draft",
+      "reviewed": false,
+      "human_adjudicated": false,
+      "name": "count outside numerical token parser",
+      "category": "CU-DPO model count",
+      "expected_supported": false,
+      "source_chunk_id": "2602.00931v2_c0000",
+      "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+      "frozen_fixture_expected_status": null,
+      "claim": {
+        "text": "Across nine base models, strategy selection accuracy reached 68–78%.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.00931v2_c0000",
+            "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+          }
+        ]
+      },
+      "results": {
+        "quote_membership": {
+          "accepted": true
+        },
+        "literal_numbers": {
+          "accepted": true
+        },
+        "schema": {
+          "accepted": true
+        },
+        "numeric_strict_reject_only": {
+          "accepted": true,
+          "status": "grounded",
+          "contradictions": [],
+          "uncertain": [],
+          "mentions": [
+            {
+              "number": "68",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": "accuracy",
+              "unit": null
+            },
+            {
+              "number": "78",
+              "status": "grounded",
+              "issues": [],
+              "subject": null,
+              "metric": "accuracy",
+              "unit": "percent"
+            }
+          ]
+        },
+        "numeric_grounded_only": {
+          "accepted": true
+        }
+      }
+    }
+  ],
+  "totals": {
+    "established audit": {
+      "quote_membership": {
+        "false_acceptances": 14,
+        "unsupported": 14,
+        "false_rejections": 0,
+        "supported": 19,
+        "false_accept_categories": {
+          "sign": 1,
+          "negation": 1,
+          "setting or subject": 3,
+          "unit conversion": 1,
+          "other": 1,
+          "scope or condition": 4,
+          "CU-DPO range": 3
+        },
+        "false_reject_categories": {}
+      },
+      "literal_numbers": {
+        "false_acceptances": 14,
+        "unsupported": 14,
+        "false_rejections": 2,
+        "supported": 19,
+        "false_accept_categories": {
+          "sign": 1,
+          "negation": 1,
+          "setting or subject": 3,
+          "unit conversion": 1,
+          "other": 1,
+          "scope or condition": 4,
+          "CU-DPO range": 3
+        },
+        "false_reject_categories": {
+          "unit conversion": 2
+        }
+      },
+      "schema": {
+        "false_acceptances": 14,
+        "unsupported": 14,
+        "false_rejections": 0,
+        "supported": 19,
+        "false_accept_categories": {
+          "sign": 1,
+          "negation": 1,
+          "setting or subject": 3,
+          "unit conversion": 1,
+          "other": 1,
+          "scope or condition": 4,
+          "CU-DPO range": 3
+        },
+        "false_reject_categories": {}
+      },
+      "numeric_strict_reject_only": {
+        "false_acceptances": 3,
+        "unsupported": 14,
+        "false_rejections": 1,
+        "supported": 19,
+        "false_accept_categories": {
+          "CU-DPO range": 3
+        },
+        "false_reject_categories": {
+          "population paraphrase": 1
+        }
+      },
+      "numeric_grounded_only": {
+        "false_acceptances": 3,
+        "unsupported": 14,
+        "false_rejections": 1,
+        "supported": 19,
+        "false_accept_categories": {
+          "CU-DPO range": 3
+        },
+        "false_reject_categories": {
+          "population paraphrase": 1
+        }
+      }
+    },
+    "draft": {
+      "quote_membership": {
+        "false_acceptances": 8,
+        "unsupported": 8,
+        "false_rejections": 0,
+        "supported": 2,
+        "false_accept_categories": {
+          "units": 1,
+          "denominator/condition": 1,
+          "setting": 1,
+          "sign": 1,
+          "CU-DPO setting": 1,
+          "CU-DPO metric": 1,
+          "CU-DPO units": 1,
+          "CU-DPO model count": 1
+        },
+        "false_reject_categories": {}
+      },
+      "literal_numbers": {
+        "false_acceptances": 8,
+        "unsupported": 8,
+        "false_rejections": 1,
+        "supported": 2,
+        "false_accept_categories": {
+          "units": 1,
+          "denominator/condition": 1,
+          "setting": 1,
+          "sign": 1,
+          "CU-DPO setting": 1,
+          "CU-DPO metric": 1,
+          "CU-DPO units": 1,
+          "CU-DPO model count": 1
+        },
+        "false_reject_categories": {
+          "unit conversion": 1
+        }
+      },
+      "schema": {
+        "false_acceptances": 8,
+        "unsupported": 8,
+        "false_rejections": 0,
+        "supported": 2,
+        "false_accept_categories": {
+          "units": 1,
+          "denominator/condition": 1,
+          "setting": 1,
+          "sign": 1,
+          "CU-DPO setting": 1,
+          "CU-DPO metric": 1,
+          "CU-DPO units": 1,
+          "CU-DPO model count": 1
+        },
+        "false_reject_categories": {}
+      },
+      "numeric_strict_reject_only": {
+        "false_acceptances": 3,
+        "unsupported": 8,
+        "false_rejections": 0,
+        "supported": 2,
+        "false_accept_categories": {
+          "denominator/condition": 1,
+          "CU-DPO metric": 1,
+          "CU-DPO model count": 1
+        },
+        "false_reject_categories": {}
+      },
+      "numeric_grounded_only": {
+        "false_acceptances": 3,
+        "unsupported": 8,
+        "false_rejections": 0,
+        "supported": 2,
+        "false_accept_categories": {
+          "denominator/condition": 1,
+          "CU-DPO metric": 1,
+          "CU-DPO model count": 1
+        },
+        "false_reject_categories": {}
+      }
+    }
+  },
+  "checker_sha256": "9a8f8df61d7780ae7e27958caaa5e5dda669f94055ccd78bcfea7d81afe99051",
+  "literal_sha256": "274acdf7876cd6846e0058039fcc618cbe860975931a83dfedd4b6a26c488591",
+  "design": "All quotes are real within their pinned source or frozen synthetic fixture. This intentionally tests membership versus semantic support. Previously reviewed means established engineering audit decisions, not human adjudication."
+}

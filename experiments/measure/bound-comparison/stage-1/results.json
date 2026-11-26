@@ -1,0 +1,1295 @@
+{
+  "python": "3.11.9",
+  "provider_calls": 0,
+  "input_sha256": {
+    "saved-traces.json": "cb7c0625b23b09f9c0656efe81f6c17eba8c82c27d7dd5024b9a773bb33871a5",
+    "results.json": "4e28c19eb6f1218af291b62d0a2e692e9958767af817450ce0e9cb646ca52800",
+    "parents.jsonl": "78d8efd7c9df075be09ffa5f3a9c7ca79c54efa2d7caf75c8f0329ea72ff41aa"
+  },
+  "snapshots": [
+    {
+      "version": "e5a8c4c460134444ad0b3e7da476fa44",
+      "claims": 1,
+      "evidence_rows": 8,
+      "matched_parents": 8
+    },
+    {
+      "version": "a964786bd4fe48bbab643c0272f44421",
+      "claims": 0,
+      "evidence_rows": 8,
+      "matched_parents": 8
+    },
+    {
+      "version": "08ca414c98754b068a44222c9d498c9f",
+      "claims": 0,
+      "evidence_rows": 8,
+      "matched_parents": 8
+    },
+    {
+      "version": "af4e65d7d7074dd98a1bdfd8f1617073",
+      "claims": 0,
+      "evidence_rows": 8,
+      "matched_parents": 8
+    },
+    {
+      "version": "39b20c7e451a4d2b9c5579a6b3767d34",
+      "claims": 1,
+      "evidence_rows": 8,
+      "matched_parents": 8
+    },
+    {
+      "version": "860c91485cbe47f0b4f8ca4395bd657a",
+      "claims": 4,
+      "evidence_rows": 8,
+      "matched_parents": 8
+    },
+    {
+      "version": "b2a9bd0559d04dad93327fb584f06352",
+      "claims": 0,
+      "evidence_rows": 8,
+      "matched_parents": 8
+    },
+    {
+      "version": "761015b9940c4c508a3a11405da57aed",
+      "claims": 3,
+      "evidence_rows": 8,
+      "matched_parents": 8
+    },
+    {
+      "version": "8b16ec01432d45ce98dbfe47897ea8f6",
+      "claims": 4,
+      "evidence_rows": 8,
+      "matched_parents": 8
+    },
+    {
+      "version": "808fd57a838143cba3d692019d169c02",
+      "claims": 4,
+      "evidence_rows": 8,
+      "matched_parents": 8
+    },
+    {
+      "version": "98a2b82213874820972ebb3adfb0f60a",
+      "claims": 0,
+      "evidence_rows": 8,
+      "matched_parents": 8
+    }
+  ],
+  "archive": [
+    {
+      "version": "e5a8c4c460134444ad0b3e7da476fa44",
+      "claim_index": 0,
+      "question": "By how much did the CU-DPO training method improve strategy-selection accuracy, and on how many base models?",
+      "claim": {
+        "chunk_ids": [
+          "2602.00931v2_c0000"
+        ],
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.00931v2_c0000",
+            "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+          }
+        ],
+        "text": "On mathematical reasoning benchmarks, CU-DPO improved strategy-selection accuracy from 35–46% to 68–78% across seven base models."
+      },
+      "status": "linked",
+      "reason": "scope, role, value, and exact delivered evidence agree",
+      "finding": "cu",
+      "scope": {
+        "subject": "CU-DPO",
+        "metric": "strategy selection accuracy",
+        "setting": "mathematical reasoning benchmarks",
+        "population": "seven base models"
+      },
+      "operands": {
+        "before": {
+          "label": "the before-training range",
+          "claim_value": {
+            "lower": "35",
+            "upper": "46",
+            "unit": "percent",
+            "form": "range"
+          },
+          "source_links": [
+            {
+              "locator": {
+                "chunk_id": "2602.00931v2_c0000",
+                "selector": [
+                  1056,
+                  1062
+                ]
+              },
+              "paper": "2602.00931v2",
+              "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+              "source_sha256": null,
+              "passage_sha256": "6a4943b4e6384785a7c3d96deccab341d7040027805a3f87e362e5a55139cb79",
+              "source_text": "35–46%",
+              "header_path": [],
+              "header_cell_id": null,
+              "table_id": null
+            }
+          ]
+        },
+        "after": {
+          "label": "the after-training range",
+          "claim_value": {
+            "lower": "68",
+            "upper": "78",
+            "unit": "percent",
+            "form": "range"
+          },
+          "source_links": [
+            {
+              "locator": {
+                "chunk_id": "2602.00931v2_c0000",
+                "selector": [
+                  1066,
+                  1072
+                ]
+              },
+              "paper": "2602.00931v2",
+              "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+              "source_sha256": null,
+              "passage_sha256": "6a4943b4e6384785a7c3d96deccab341d7040027805a3f87e362e5a55139cb79",
+              "source_text": "68–78%",
+              "header_path": [],
+              "header_cell_id": null,
+              "table_id": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "version": "39b20c7e451a4d2b9c5579a6b3767d34",
+      "claim_index": 0,
+      "question": "By how much did the CU-DPO training method improve strategy-selection accuracy, and on how many base models?",
+      "claim": {
+        "chunk_ids": [
+          "2602.00931v2_c0000"
+        ],
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.00931v2_c0000",
+            "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+          }
+        ],
+        "text": "CU-DPO improved strategy-selection accuracy from 35–46% to 68–78% across seven base models on mathematical reasoning benchmarks."
+      },
+      "status": "linked",
+      "reason": "scope, role, value, and exact delivered evidence agree",
+      "finding": "cu",
+      "scope": {
+        "subject": "CU-DPO",
+        "metric": "strategy selection accuracy",
+        "setting": "mathematical reasoning benchmarks",
+        "population": "seven base models"
+      },
+      "operands": {
+        "before": {
+          "label": "the before-training range",
+          "claim_value": {
+            "lower": "35",
+            "upper": "46",
+            "unit": "percent",
+            "form": "range"
+          },
+          "source_links": [
+            {
+              "locator": {
+                "chunk_id": "2602.00931v2_c0000",
+                "selector": [
+                  1056,
+                  1062
+                ]
+              },
+              "paper": "2602.00931v2",
+              "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+              "source_sha256": null,
+              "passage_sha256": "6a4943b4e6384785a7c3d96deccab341d7040027805a3f87e362e5a55139cb79",
+              "source_text": "35–46%",
+              "header_path": [],
+              "header_cell_id": null,
+              "table_id": null
+            }
+          ]
+        },
+        "after": {
+          "label": "the after-training range",
+          "claim_value": {
+            "lower": "68",
+            "upper": "78",
+            "unit": "percent",
+            "form": "range"
+          },
+          "source_links": [
+            {
+              "locator": {
+                "chunk_id": "2602.00931v2_c0000",
+                "selector": [
+                  1066,
+                  1072
+                ]
+              },
+              "paper": "2602.00931v2",
+              "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+              "source_sha256": null,
+              "passage_sha256": "6a4943b4e6384785a7c3d96deccab341d7040027805a3f87e362e5a55139cb79",
+              "source_text": "68–78%",
+              "header_path": [],
+              "header_cell_id": null,
+              "table_id": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "version": "860c91485cbe47f0b4f8ca4395bd657a",
+      "claim_index": 0,
+      "question": "How accurately do LLMs answer financial analysis questions on SEC filings, and where do they fail most?",
+      "claim": {
+        "chunk_ids": [
+          "2602.07294v4_c0000",
+          "2602.07294v4_c0023"
+        ],
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.07294v4_c0000",
+            "quote": "We benchmark 17 leading LLMs, spanning open-source, closed-source, and finance-specialized models, under both ground-truth context and retrieval-augmented settings."
+          },
+          {
+            "chunk_id": "2602.07294v4_c0023",
+            "quote": "As illustrated in Table 4 , end-to-end accuracy under retrieved context remains below 27% across all tasks. In contrast, Table 2 shows that with gold context, the same models reach 57.48% on DR-QA and 43–44% on EC-QA and LT-QA, demonstrating that adequate reasoning is achievable once relevant evidence is available."
+          }
+        ],
+        "text": "In Fin-RATE’s SEC-filing evaluation of 17 LLMs, accuracy depended strongly on the evidence supplied. With gold context, the reported accuracy was 57.48% for detail-and-reasoning questions and 43–44% for cross-company comparison and longitudinal tracking; with retrieved context, accuracy remained below 27% across all three tasks."
+      },
+      "status": "review",
+      "reason": "cited passages have no registered comparison"
+    },
+    {
+      "version": "860c91485cbe47f0b4f8ca4395bd657a",
+      "claim_index": 1,
+      "question": "How accurately do LLMs answer financial analysis questions on SEC filings, and where do they fail most?",
+      "claim": {
+        "chunk_ids": [
+          "2602.07294v4_c0024",
+          "2602.07294v4_c0023"
+        ],
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.07294v4_c0024",
+            "quote": "EC-QA exhibits the most severe breakdowns. Figure 5 shows that Missing Evidence reaches 75.44%. Moreover, 57.6% of multi-company questions fail to retrieve all relevant entities, leaving key company evidence absent. This forces the model to conduct comparative reasoning over severely asymmetric or biased contexts."
+          },
+          {
+            "chunk_id": "2602.07294v4_c0023",
+            "quote": "Across all QA tasks, end-to-end degradation under RAG is driven primarily by retrieval rather than generation."
+          }
+        ],
+        "text": "Cross-company comparison showed the most severe retrieval failures: Missing Evidence reached 75.44%, and 57.6% of multi-company questions failed to retrieve evidence for every relevant company. The study identifies retrieval as the main bottleneck in its retrieval-augmented setting, leaving models to compare companies using incomplete or asymmetric evidence."
+      },
+      "status": "review",
+      "reason": "cited passages have no registered comparison"
+    },
+    {
+      "version": "860c91485cbe47f0b4f8ca4395bd657a",
+      "claim_index": 2,
+      "question": "How accurately do LLMs answer financial analysis questions on SEC filings, and where do they fail most?",
+      "claim": {
+        "chunk_ids": [
+          "2602.07294v4_c0024"
+        ],
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.07294v4_c0024",
+            "quote": "LT-QA shows a distinct error profile. The 7.64% Sorting Failure and 4.96% Distractor Evidence reflect frequent temporal misalignment, with correct-year gold chunks pushed down by similar paragraphs from other years or entangled with multi-year narratives in the top-5 results."
+          }
+        ],
+        "text": "Tracking a company over time also failed through temporal misalignment: the reported retrieval error rates were 7.64% for Sorting Failure and 4.96% for Distractor Evidence. Similar disclosures from other years displaced or obscured the correct-year evidence, making year-to-year comparisons unreliable."
+      },
+      "status": "review",
+      "reason": "cited passages have no registered comparison"
+    },
+    {
+      "version": "761015b9940c4c508a3a11405da57aed",
+      "claim_index": 0,
+      "question": "How safe are LLM agents when they take real actions, and what are the most common failure types?",
+      "claim": {
+        "chunk_ids": [
+          "2412.14470v2_c0000",
+          "2412.14470v2_c0004"
+        ],
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2412.14470v2_c0000",
+            "quote": "Agent-SafetyBench encompasses 349 interaction environments and 2,000 test cases, evaluating 8 categories of safety risks and covering 10 common failure modes frequently encountered in unsafe interactions."
+          },
+          {
+            "chunk_id": "2412.14470v2_c0004",
+            "quote": "We then evaluate 16 representative LLM agents on Agent-SafetyBench , and uncover a concerning result: the safety scores of all tested LLM agents fall below 60%."
+          }
+        ],
+        "text": "The supplied benchmark evidence shows substantial safety weaknesses when LLM agents use tools. Agent-SafetyBench evaluated 16 agents across 349 interaction environments and 2,000 test cases; all tested agents scored below 60% on safety. These are benchmark safety scores, rather than measured rates of harm in real deployments."
+      },
+      "status": "review",
+      "reason": "cited passages have no registered comparison"
+    },
+    {
+      "version": "8b16ec01432d45ce98dbfe47897ea8f6",
+      "claim_index": 0,
+      "question": "Why do LLMs still struggle with financial questions even when they have access to SEC filings? Is the bigger problem finding the right information or reasoning about it?",
+      "claim": {
+        "chunk_ids": [
+          "2602.07294v4_c0018"
+        ],
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.07294v4_c0018",
+            "quote": "human experts achieve 92.40%, 82.68%, and 85.88% accuracy on DR-QA, EC-QA, and LT-QA, respectively."
+          },
+          {
+            "chunk_id": "2602.07294v4_c0018",
+            "quote": "However, even the best-performing LLMs still lag behind human experts by 34.92, 39.04, and 42.36 percentage points on DR-QA, EC-QA, and LT-QA, respectively."
+          },
+          {
+            "chunk_id": "2602.07294v4_c0018",
+            "quote": "current LLMs still struggle with evidence-grounded cross-entity comparison and longitudinal\ntracking, even when all relevant context is provided."
+          }
+        ],
+        "text": "The strongest evidence points to reasoning and evidence integration as a substantial bottleneck even after retrieval succeeds. In Fin-RATE, human experts achieved 92.40% accuracy on detailed reasoning, 82.68% on company comparisons, and 85.88% on tracking companies over time; the best LLMs trailed by 34.92, 39.04, and 42.36 percentage points, respectively, even with all relevant context provided."
+      },
+      "status": "review",
+      "reason": "cited passages have no registered comparison"
+    },
+    {
+      "version": "8b16ec01432d45ce98dbfe47897ea8f6",
+      "claim_index": 1,
+      "question": "Why do LLMs still struggle with financial questions even when they have access to SEC filings? Is the bigger problem finding the right information or reasoning about it?",
+      "claim": {
+        "chunk_ids": [
+          "2602.07294v4_c0003",
+          "2602.07294v4_c0000"
+        ],
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.07294v4_c0003",
+            "quote": "Enterprise Comparison QA (EC-QA) evaluates the model’s ability to align disclosures from different companies and identify salient differences across structured metrics and narrative content, despite variations in reporting style. Longitudinal Tracking QA (LT-QA) examines whether the model can detect trends and shifts across filings from the same company over time, including structural or semantic changes under evolving disclosure frames."
+          },
+          {
+            "chunk_id": "2602.07294v4_c0000",
+            "quote": "We benchmark 17 leading LLMs, spanning open-source, closed-source, and finance-specialized models, under both ground-truth context and retrieval-augmented settings. Results show substantial performance degradation, with accuracy dropping by 18.60% and 14.35% as tasks shift from single-document reasoning to longitudinal and cross-entity analysis. This degradation is associated with increased comparison hallucinations, temporal and entity mismatches, and is further reflected in declines in reasoning quality and factual consistency—limitations that existing benchmarks have yet to formally categorize or quantify."
+          }
+        ],
+        "text": "Access to filings does not ensure that a model connects evidence correctly: it must align companies, reporting periods, and disclosures whose wording or structure changes. Across 17 evaluated LLMs, the paper reports accuracy drops of 18.60% for longitudinal analysis and 14.35% for cross-company analysis relative to single-document reasoning, associated with hallucinated comparisons and confusion about times and entities."
+      },
+      "status": "review",
+      "reason": "cited passages have no registered comparison"
+    },
+    {
+      "version": "808fd57a838143cba3d692019d169c02",
+      "claim_index": 1,
+      "question": "Why do LLMs still struggle with financial questions even when they have access to SEC filings? Is the bigger problem finding the right information or reasoning about it?",
+      "claim": {
+        "chunk_ids": [
+          "2602.07294v4_c0018"
+        ],
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.07294v4_c0018",
+            "quote": "human experts achieve 92.40%, 82.68%, and 85.88% accuracy on DR-QA, EC-QA, and LT-QA, respectively."
+          },
+          {
+            "chunk_id": "2602.07294v4_c0018",
+            "quote": "However, even the best-performing LLMs still lag behind human experts by 34.92, 39.04, and 42.36 percentage points on DR-QA, EC-QA, and LT-QA, respectively."
+          },
+          {
+            "chunk_id": "2602.07294v4_c0018",
+            "quote": "current LLMs still struggle with evidence-grounded cross-entity comparison and longitudinal\ntracking, even when all relevant context is provided."
+          }
+        ],
+        "text": "The strongest evidence of a reasoning bottleneck is that models still struggle when all relevant context is supplied. Human experts achieved 92.40% accuracy on detail-and-reasoning questions, 82.68% on company comparisons, and 85.88% on longitudinal tracking; even the best-performing LLMs trailed by 34.92, 39.04, and 42.36 percentage points, respectively."
+      },
+      "status": "review",
+      "reason": "cited passages have no registered comparison"
+    },
+    {
+      "version": "808fd57a838143cba3d692019d169c02",
+      "claim_index": 2,
+      "question": "Why do LLMs still struggle with financial questions even when they have access to SEC filings? Is the bigger problem finding the right information or reasoning about it?",
+      "claim": {
+        "chunk_ids": [
+          "2602.07294v4_c0000",
+          "2602.07294v4_c0018"
+        ],
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.07294v4_c0000",
+            "quote": "We benchmark 17 leading LLMs, spanning open-source, closed-source, and finance-specialized models, under both ground-truth context and retrieval-augmented settings."
+          },
+          {
+            "chunk_id": "2602.07294v4_c0000",
+            "quote": "Results show substantial performance degradation, with accuracy dropping by 18.60% and 14.35% as tasks shift from single-document reasoning to longitudinal and cross-entity analysis. This degradation is associated with increased comparison hallucinations, temporal and entity mismatches"
+          },
+          {
+            "chunk_id": "2602.07294v4_c0018",
+            "quote": "These trends indicate that models struggle to maintain consistent comparative logic, often extending partial evidence into unsupported conclusions or confusing the entities being contrasted."
+          }
+        ],
+        "text": "Across the benchmark's 17 LLMs, the paper reports accuracy drops of 18.60% for longitudinal analysis and 14.35% for company comparisons relative to single-document reasoning. These declines were associated with invented comparisons and confusion about companies or time periods: models sometimes turned partial evidence into unsupported conclusions."
+      },
+      "status": "review",
+      "reason": "cited passages have no registered comparison"
+    }
+  ],
+  "earlier_cases": [
+    {
+      "name": "correct paired ranges",
+      "cohort": "frozen range",
+      "reviewed": true,
+      "expected": "accept",
+      "claim": {
+        "text": "Strategy selection accuracy improved from 35–46% to 68–78% across seven base models.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.00931v2_c0000",
+            "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+          }
+        ]
+      },
+      "status": "review",
+      "reason": "comparison wording or scope is unbound or ambiguous"
+    },
+    {
+      "name": "reversed ranges",
+      "cohort": "frozen range",
+      "reviewed": true,
+      "expected": "reject",
+      "claim": {
+        "text": "Strategy selection accuracy improved from 68–78% to 35–46% across seven base models.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.00931v2_c0000",
+            "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+          }
+        ]
+      },
+      "status": "review",
+      "reason": "comparison wording or scope is unbound or ambiguous"
+    },
+    {
+      "name": "regrouped endpoints",
+      "cohort": "frozen range",
+      "reviewed": true,
+      "expected": "reject",
+      "claim": {
+        "text": "Strategy selection accuracy improved from 35–78% to 46–68% across seven base models.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.00931v2_c0000",
+            "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+          }
+        ]
+      },
+      "status": "review",
+      "reason": "comparison wording or scope is unbound or ambiguous"
+    },
+    {
+      "name": "collapsed endpoints",
+      "cohort": "frozen range",
+      "reviewed": true,
+      "expected": "reject",
+      "claim": {
+        "text": "Strategy selection accuracy improved from 35% to 78% across seven base models.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.00931v2_c0000",
+            "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+          }
+        ]
+      },
+      "status": "review",
+      "reason": "comparison wording or scope is unbound or ambiguous"
+    },
+    {
+      "name": "different setting",
+      "cohort": "existing boundary draft",
+      "reviewed": false,
+      "expected": "reject",
+      "claim": {
+        "text": "On French elementary tasks, strategy selection accuracy improved from 35–46% to 68–78% across seven base models.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.00931v2_c0000",
+            "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+          }
+        ]
+      },
+      "status": "review",
+      "reason": "comparison wording or scope is unbound or ambiguous"
+    },
+    {
+      "name": "metric assigned in a separate sentence",
+      "cohort": "existing boundary draft",
+      "reviewed": false,
+      "expected": "reject",
+      "claim": {
+        "text": "Preference accuracy improved from 35–46% to 68–78%. Strategy selection accuracy was discussed across seven base models.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.00931v2_c0000",
+            "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+          }
+        ]
+      },
+      "status": "review",
+      "reason": "comparison wording or scope is unbound or ambiguous"
+    },
+    {
+      "name": "clinical context transfer",
+      "cohort": "existing boundary draft",
+      "reviewed": false,
+      "expected": "reject",
+      "claim": {
+        "text": "Strategy selection accuracy improved from 35–46% to 68–78% across seven base models during clinical deployment.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.00931v2_c0000",
+            "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+          }
+        ]
+      },
+      "status": "review",
+      "reason": "comparison wording or scope is unbound or ambiguous"
+    },
+    {
+      "name": "equivalent range wording",
+      "cohort": "existing boundary draft",
+      "reviewed": false,
+      "expected": "accept",
+      "claim": {
+        "text": "Strategy selection accuracy ranged from 35% to 46% before training and from 68% to 78% afterward across seven base models.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.00931v2_c0000",
+            "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+          }
+        ]
+      },
+      "status": "review",
+      "reason": "comparison wording or scope is unbound or ambiguous"
+    },
+    {
+      "name": "hammer-01",
+      "cohort": "transfer draft",
+      "reviewed": false,
+      "expected": "accept",
+      "claim": {
+        "text": "Qwen3-1.7B-DAPO pass@1 on AIME 2024 and 2025 at k=100 ranged from 25.3–36.3 for the baseline and 31.0–39.3 for HAMMER.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_1",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nHAMMER: Hamiltonian Curiosity Augmented Large Language Model Reinforcement\nTable 1: Main results comparing baseline (B) and HAMMER (H), with k=100 for AIME 2024/2025 and AMC 2023, k=32 for Olympiad, and \\mathbf{Diff}=\\mathbf{Avg}_{\\text{H}}-\\mathbf{Avg}_{\\text{B}} .\nMethod: Qwen3-1.7B-DAPO; Dataset: AIME 2024; pass@1 / B: 36.3; pass@1 / H: 39.3; pass@10 / B: 61.0; pass@10 / H: 64.7; pass@k / B: 69.0; pass@k / H: 74.3; cons@k / B: 43.3; cons@k / H: 43.3; Avg. / B: 52.4; Avg. / H: 55.4; Diff.: +3.0"
+          },
+          {
+            "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_2",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nHAMMER: Hamiltonian Curiosity Augmented Large Language Model Reinforcement\nTable 1: Main results comparing baseline (B) and HAMMER (H), with k=100 for AIME 2024/2025 and AMC 2023, k=32 for Olympiad, and \\mathbf{Diff}=\\mathbf{Avg}_{\\text{H}}-\\mathbf{Avg}_{\\text{B}} .\nMethod: Qwen3-1.7B-DAPO; Dataset: AIME 2025; pass@1 / B: 25.3; pass@1 / H: 31.0; pass@10 / B: 39.7; pass@10 / H: 48.7; pass@k / B: 56.3; pass@k / H: 59.7; cons@k / B: 30.0; cons@k / H: 30.0; Avg. / B: 37.8; Avg. / H: 42.3; Diff.: +4.5"
+          }
+        ]
+      },
+      "status": "review",
+      "reason": "comparison wording or scope is unbound or ambiguous"
+    },
+    {
+      "name": "hammer-02",
+      "cohort": "transfer draft",
+      "reviewed": false,
+      "expected": "reject",
+      "claim": {
+        "text": "At k=32, Qwen3-1.7B-DAPO pass@1 on AIME 2024 and 2025 ranged from 25.3–36.3 for the baseline and 31.0–39.3 for HAMMER.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_1",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nHAMMER: Hamiltonian Curiosity Augmented Large Language Model Reinforcement\nTable 1: Main results comparing baseline (B) and HAMMER (H), with k=100 for AIME 2024/2025 and AMC 2023, k=32 for Olympiad, and \\mathbf{Diff}=\\mathbf{Avg}_{\\text{H}}-\\mathbf{Avg}_{\\text{B}} .\nMethod: Qwen3-1.7B-DAPO; Dataset: AIME 2024; pass@1 / B: 36.3; pass@1 / H: 39.3; pass@10 / B: 61.0; pass@10 / H: 64.7; pass@k / B: 69.0; pass@k / H: 74.3; cons@k / B: 43.3; cons@k / H: 43.3; Avg. / B: 52.4; Avg. / H: 55.4; Diff.: +3.0"
+          },
+          {
+            "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_2",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nHAMMER: Hamiltonian Curiosity Augmented Large Language Model Reinforcement\nTable 1: Main results comparing baseline (B) and HAMMER (H), with k=100 for AIME 2024/2025 and AMC 2023, k=32 for Olympiad, and \\mathbf{Diff}=\\mathbf{Avg}_{\\text{H}}-\\mathbf{Avg}_{\\text{B}} .\nMethod: Qwen3-1.7B-DAPO; Dataset: AIME 2025; pass@1 / B: 25.3; pass@1 / H: 31.0; pass@10 / B: 39.7; pass@10 / H: 48.7; pass@k / B: 56.3; pass@k / H: 59.7; cons@k / B: 30.0; cons@k / H: 30.0; Avg. / B: 37.8; Avg. / H: 42.3; Diff.: +4.5"
+          }
+        ]
+      },
+      "status": "review",
+      "reason": "comparison wording or scope is unbound or ambiguous"
+    },
+    {
+      "name": "hammer-03",
+      "cohort": "transfer draft",
+      "reviewed": false,
+      "expected": "reject",
+      "claim": {
+        "text": "At k=100, Qwen3-1.7B-DAPO pass@10 on AIME 2024 and 2025 ranged from 25.3–36.3 for the baseline and 31.0–39.3 for HAMMER.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_1",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nHAMMER: Hamiltonian Curiosity Augmented Large Language Model Reinforcement\nTable 1: Main results comparing baseline (B) and HAMMER (H), with k=100 for AIME 2024/2025 and AMC 2023, k=32 for Olympiad, and \\mathbf{Diff}=\\mathbf{Avg}_{\\text{H}}-\\mathbf{Avg}_{\\text{B}} .\nMethod: Qwen3-1.7B-DAPO; Dataset: AIME 2024; pass@1 / B: 36.3; pass@1 / H: 39.3; pass@10 / B: 61.0; pass@10 / H: 64.7; pass@k / B: 69.0; pass@k / H: 74.3; cons@k / B: 43.3; cons@k / H: 43.3; Avg. / B: 52.4; Avg. / H: 55.4; Diff.: +3.0"
+          },
+          {
+            "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_2",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nHAMMER: Hamiltonian Curiosity Augmented Large Language Model Reinforcement\nTable 1: Main results comparing baseline (B) and HAMMER (H), with k=100 for AIME 2024/2025 and AMC 2023, k=32 for Olympiad, and \\mathbf{Diff}=\\mathbf{Avg}_{\\text{H}}-\\mathbf{Avg}_{\\text{B}} .\nMethod: Qwen3-1.7B-DAPO; Dataset: AIME 2025; pass@1 / B: 25.3; pass@1 / H: 31.0; pass@10 / B: 39.7; pass@10 / H: 48.7; pass@k / B: 56.3; pass@k / H: 59.7; cons@k / B: 30.0; cons@k / H: 30.0; Avg. / B: 37.8; Avg. / H: 42.3; Diff.: +4.5"
+          }
+        ]
+      },
+      "status": "review",
+      "reason": "comparison wording or scope is unbound or ambiguous"
+    },
+    {
+      "name": "acdc-04",
+      "cohort": "transfer draft",
+      "reviewed": false,
+      "expected": "accept",
+      "claim": {
+        "text": "Across IOI and Docstring, random-baseline AUC ranged from 50–50% and ACDC AUC ranged from 92–95%.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2604.00324v1_table_99d7ef000b02b530_1",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Persistent Vulnerability of Aligned AI Systems\nTable A.1 : AUC results for random baseline experiments\nTask: IOI; ACDC AUC: 0.95; Random AUC: 0.50"
+          },
+          {
+            "chunk_id": "2604.00324v1_table_99d7ef000b02b530_2",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Persistent Vulnerability of Aligned AI Systems\nTable A.1 : AUC results for random baseline experiments\nTask: Docstring; ACDC AUC: 0.92; Random AUC: 0.50"
+          }
+        ]
+      },
+      "status": "review",
+      "reason": "comparison wording or scope is unbound or ambiguous"
+    },
+    {
+      "name": "acdc-05",
+      "cohort": "transfer draft",
+      "reviewed": false,
+      "expected": "reject",
+      "claim": {
+        "text": "Across IOI and Greater-Than, random-baseline AUC ranged from 50–50% and ACDC AUC ranged from 92–95%.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2604.00324v1_table_99d7ef000b02b530_1",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Persistent Vulnerability of Aligned AI Systems\nTable A.1 : AUC results for random baseline experiments\nTask: IOI; ACDC AUC: 0.95; Random AUC: 0.50"
+          },
+          {
+            "chunk_id": "2604.00324v1_table_99d7ef000b02b530_2",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Persistent Vulnerability of Aligned AI Systems\nTable A.1 : AUC results for random baseline experiments\nTask: Docstring; ACDC AUC: 0.92; Random AUC: 0.50"
+          }
+        ]
+      },
+      "status": "review",
+      "reason": "comparison wording or scope is unbound or ambiguous"
+    },
+    {
+      "name": "acdc-06",
+      "cohort": "transfer draft",
+      "reviewed": false,
+      "expected": "reject",
+      "claim": {
+        "text": "Across IOI and Docstring, random-baseline AUC ranged from 50–50 percentage points and ACDC AUC ranged from 92–95 percentage points.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2604.00324v1_table_99d7ef000b02b530_1",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Persistent Vulnerability of Aligned AI Systems\nTable A.1 : AUC results for random baseline experiments\nTask: IOI; ACDC AUC: 0.95; Random AUC: 0.50"
+          },
+          {
+            "chunk_id": "2604.00324v1_table_99d7ef000b02b530_2",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Persistent Vulnerability of Aligned AI Systems\nTable A.1 : AUC results for random baseline experiments\nTask: Docstring; ACDC AUC: 0.92; Random AUC: 0.50"
+          }
+        ]
+      },
+      "status": "review",
+      "reason": "comparison wording or scope is unbound or ambiguous"
+    },
+    {
+      "name": "accuraterag-07",
+      "cohort": "transfer draft",
+      "reviewed": false,
+      "expected": "accept",
+      "claim": {
+        "text": "With fine-tuned Llama-2-7B on the three APIBench subsets, AST-match scores ranged from 74.00–86.86 for RAFT with GPT-4 CoT and 68.36–88.71 for AccurateRAG.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2510.02243v2_table_a61b33c87b34e803_3",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAccurateRAG: A Framework for Building Accurate Retrieval-Augmented Question-Answering Applications\nTable 2: Question answering results on 5 other test sets. \"HF\", \"TF Hub\" and \"CoT\" abbreviate HuggingFace, Tensorflow Hub and Chain-of-Thought respectively. NOTE that PubMedQA is formulated as a multiple-choice question-answering task, so calculating the accuracy on PubMedQA is straightforward and does not require manual verification. We compute the accuracy on HotpotQA based on the exact matching of answer outputs. For the APIBench datasets, following previous work, we employ the standard Abstract Syntax Tree matching evaluation script Patil et al. (2023) .\nModel: RAFT [w/ FT Llama-2-7B ] w/ GPT-4 CoT; HotpotQA: 35.28; PubMedQA: 73.3; HF: 74.00; Torch Hub: 84.95; TF Hub: 86.86"
+          },
+          {
+            "chunk_id": "2510.02243v2_table_a61b33c87b34e803_4",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAccurateRAG: A Framework for Building Accurate Retrieval-Augmented Question-Answering Applications\nTable 2: Question answering results on 5 other test sets. \"HF\", \"TF Hub\" and \"CoT\" abbreviate HuggingFace, Tensorflow Hub and Chain-of-Thought respectively. NOTE that PubMedQA is formulated as a multiple-choice question-answering task, so calculating the accuracy on PubMedQA is straightforward and does not require manual verification. We compute the accuracy on HotpotQA based on the exact matching of answer outputs. For the APIBench datasets, following previous work, we employ the standard Abstract Syntax Tree matching evaluation script Patil et al. (2023) .\nModel: Our AccurateRAG [w/ FT Llama-2-7B ]; HotpotQA: 45.71; PubMedQA: 74.6; HF: 68.36; Torch Hub: 88.71; TF Hub: 88.03"
+          }
+        ]
+      },
+      "status": "review",
+      "reason": "comparison wording or scope is unbound or ambiguous"
+    },
+    {
+      "name": "accuraterag-08",
+      "cohort": "transfer draft",
+      "reviewed": false,
+      "expected": "reject",
+      "claim": {
+        "text": "With fine-tuned Llama-3-8B on the three APIBench subsets, AST-match scores ranged from 74.00–86.86 for RAFT with GPT-4 CoT and 68.36–88.71 for AccurateRAG.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2510.02243v2_table_a61b33c87b34e803_3",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAccurateRAG: A Framework for Building Accurate Retrieval-Augmented Question-Answering Applications\nTable 2: Question answering results on 5 other test sets. \"HF\", \"TF Hub\" and \"CoT\" abbreviate HuggingFace, Tensorflow Hub and Chain-of-Thought respectively. NOTE that PubMedQA is formulated as a multiple-choice question-answering task, so calculating the accuracy on PubMedQA is straightforward and does not require manual verification. We compute the accuracy on HotpotQA based on the exact matching of answer outputs. For the APIBench datasets, following previous work, we employ the standard Abstract Syntax Tree matching evaluation script Patil et al. (2023) .\nModel: RAFT [w/ FT Llama-2-7B ] w/ GPT-4 CoT; HotpotQA: 35.28; PubMedQA: 73.3; HF: 74.00; Torch Hub: 84.95; TF Hub: 86.86"
+          },
+          {
+            "chunk_id": "2510.02243v2_table_a61b33c87b34e803_4",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAccurateRAG: A Framework for Building Accurate Retrieval-Augmented Question-Answering Applications\nTable 2: Question answering results on 5 other test sets. \"HF\", \"TF Hub\" and \"CoT\" abbreviate HuggingFace, Tensorflow Hub and Chain-of-Thought respectively. NOTE that PubMedQA is formulated as a multiple-choice question-answering task, so calculating the accuracy on PubMedQA is straightforward and does not require manual verification. We compute the accuracy on HotpotQA based on the exact matching of answer outputs. For the APIBench datasets, following previous work, we employ the standard Abstract Syntax Tree matching evaluation script Patil et al. (2023) .\nModel: Our AccurateRAG [w/ FT Llama-2-7B ]; HotpotQA: 45.71; PubMedQA: 74.6; HF: 68.36; Torch Hub: 88.71; TF Hub: 88.03"
+          }
+        ]
+      },
+      "status": "review",
+      "reason": "comparison wording or scope is unbound or ambiguous"
+    },
+    {
+      "name": "accuraterag-09",
+      "cohort": "transfer draft",
+      "reviewed": false,
+      "expected": "reject",
+      "claim": {
+        "text": "With fine-tuned Llama-2-7B on PubMedQA, AST-match scores ranged from 74.00–86.86 for RAFT with GPT-4 CoT and 68.36–88.71 for AccurateRAG.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2510.02243v2_table_a61b33c87b34e803_3",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAccurateRAG: A Framework for Building Accurate Retrieval-Augmented Question-Answering Applications\nTable 2: Question answering results on 5 other test sets. \"HF\", \"TF Hub\" and \"CoT\" abbreviate HuggingFace, Tensorflow Hub and Chain-of-Thought respectively. NOTE that PubMedQA is formulated as a multiple-choice question-answering task, so calculating the accuracy on PubMedQA is straightforward and does not require manual verification. We compute the accuracy on HotpotQA based on the exact matching of answer outputs. For the APIBench datasets, following previous work, we employ the standard Abstract Syntax Tree matching evaluation script Patil et al. (2023) .\nModel: RAFT [w/ FT Llama-2-7B ] w/ GPT-4 CoT; HotpotQA: 35.28; PubMedQA: 73.3; HF: 74.00; Torch Hub: 84.95; TF Hub: 86.86"
+          },
+          {
+            "chunk_id": "2510.02243v2_table_a61b33c87b34e803_4",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAccurateRAG: A Framework for Building Accurate Retrieval-Augmented Question-Answering Applications\nTable 2: Question answering results on 5 other test sets. \"HF\", \"TF Hub\" and \"CoT\" abbreviate HuggingFace, Tensorflow Hub and Chain-of-Thought respectively. NOTE that PubMedQA is formulated as a multiple-choice question-answering task, so calculating the accuracy on PubMedQA is straightforward and does not require manual verification. We compute the accuracy on HotpotQA based on the exact matching of answer outputs. For the APIBench datasets, following previous work, we employ the standard Abstract Syntax Tree matching evaluation script Patil et al. (2023) .\nModel: Our AccurateRAG [w/ FT Llama-2-7B ]; HotpotQA: 45.71; PubMedQA: 74.6; HF: 68.36; Torch Hub: 88.71; TF Hub: 88.03"
+          }
+        ]
+      },
+      "status": "review",
+      "reason": "comparison wording or scope is unbound or ambiguous"
+    },
+    {
+      "name": "accuraterag-10",
+      "cohort": "transfer draft",
+      "reviewed": false,
+      "expected": "reject",
+      "claim": {
+        "text": "With fine-tuned Llama-2-7B on the three APIBench subsets, AST-match scores ranged from 68.36–88.71 for RAFT with GPT-4 CoT and 74.00–86.86 for AccurateRAG.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2510.02243v2_table_a61b33c87b34e803_3",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAccurateRAG: A Framework for Building Accurate Retrieval-Augmented Question-Answering Applications\nTable 2: Question answering results on 5 other test sets. \"HF\", \"TF Hub\" and \"CoT\" abbreviate HuggingFace, Tensorflow Hub and Chain-of-Thought respectively. NOTE that PubMedQA is formulated as a multiple-choice question-answering task, so calculating the accuracy on PubMedQA is straightforward and does not require manual verification. We compute the accuracy on HotpotQA based on the exact matching of answer outputs. For the APIBench datasets, following previous work, we employ the standard Abstract Syntax Tree matching evaluation script Patil et al. (2023) .\nModel: RAFT [w/ FT Llama-2-7B ] w/ GPT-4 CoT; HotpotQA: 35.28; PubMedQA: 73.3; HF: 74.00; Torch Hub: 84.95; TF Hub: 86.86"
+          },
+          {
+            "chunk_id": "2510.02243v2_table_a61b33c87b34e803_4",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAccurateRAG: A Framework for Building Accurate Retrieval-Augmented Question-Answering Applications\nTable 2: Question answering results on 5 other test sets. \"HF\", \"TF Hub\" and \"CoT\" abbreviate HuggingFace, Tensorflow Hub and Chain-of-Thought respectively. NOTE that PubMedQA is formulated as a multiple-choice question-answering task, so calculating the accuracy on PubMedQA is straightforward and does not require manual verification. We compute the accuracy on HotpotQA based on the exact matching of answer outputs. For the APIBench datasets, following previous work, we employ the standard Abstract Syntax Tree matching evaluation script Patil et al. (2023) .\nModel: Our AccurateRAG [w/ FT Llama-2-7B ]; HotpotQA: 45.71; PubMedQA: 74.6; HF: 68.36; Torch Hub: 88.71; TF Hub: 88.03"
+          }
+        ]
+      },
+      "status": "review",
+      "reason": "comparison wording or scope is unbound or ambiguous"
+    },
+    {
+      "name": "agreemate-11",
+      "cohort": "transfer draft",
+      "reviewed": false,
+      "expected": "accept",
+      "claim": {
+        "text": "AgreeMate's fairness score was 0.3021 without CoT and -0.4385 with CoT.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2412.18690v1_table_5bd4fffb5c9a7277_4",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgreeMate: Teaching LLMs to Haggle\nTable 3: Comparison of Metrics for Combinations with and without COT\nMetric: Fairness; With COT: -0.4385; Without COT: 0.3021"
+          }
+        ]
+      },
+      "status": "review",
+      "reason": "comparison wording or scope is unbound or ambiguous"
+    },
+    {
+      "name": "agreemate-12",
+      "cohort": "transfer draft",
+      "reviewed": false,
+      "expected": "reject",
+      "claim": {
+        "text": "AgreeMate's fairness score was 0.3021 without CoT and 0.4385 with CoT.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2412.18690v1_table_5bd4fffb5c9a7277_4",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgreeMate: Teaching LLMs to Haggle\nTable 3: Comparison of Metrics for Combinations with and without COT\nMetric: Fairness; With COT: -0.4385; Without COT: 0.3021"
+          }
+        ]
+      },
+      "status": "review",
+      "reason": "comparison wording or scope is unbound or ambiguous"
+    }
+  ],
+  "table_controls": [
+    {
+      "name": "APIBench labeled ranges",
+      "cohort": "labeled table control",
+      "reviewed": false,
+      "expected": "accept",
+      "claim": {
+        "text": "For AST-match score (fine-tuned Llama-2-7B, APIBench, HF, Torch Hub, and TF Hub), the RAFT with GPT-4 CoT range was 74.00–86.86 and the AccurateRAG range was 68.36–88.71.",
+        "support": [
+          {
+            "chunk_id": "2510.02243v2_table_a61b33c87b34e803_3",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAccurateRAG: A Framework for Building Accurate Retrieval-Augmented Question-Answering Applications\nTable 2: Question answering results on 5 other test sets. \"HF\", \"TF Hub\" and \"CoT\" abbreviate HuggingFace, Tensorflow Hub and Chain-of-Thought respectively. NOTE that PubMedQA is formulated as a multiple-choice question-answering task, so calculating the accuracy on PubMedQA is straightforward and does not require manual verification. We compute the accuracy on HotpotQA based on the exact matching of answer outputs. For the APIBench datasets, following previous work, we employ the standard Abstract Syntax Tree matching evaluation script Patil et al. (2023) .\nModel: RAFT [w/ FT Llama-2-7B ] w/ GPT-4 CoT; HotpotQA: 35.28; PubMedQA: 73.3; HF: 74.00; Torch Hub: 84.95; TF Hub: 86.86"
+          },
+          {
+            "chunk_id": "2510.02243v2_table_a61b33c87b34e803_4",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAccurateRAG: A Framework for Building Accurate Retrieval-Augmented Question-Answering Applications\nTable 2: Question answering results on 5 other test sets. \"HF\", \"TF Hub\" and \"CoT\" abbreviate HuggingFace, Tensorflow Hub and Chain-of-Thought respectively. NOTE that PubMedQA is formulated as a multiple-choice question-answering task, so calculating the accuracy on PubMedQA is straightforward and does not require manual verification. We compute the accuracy on HotpotQA based on the exact matching of answer outputs. For the APIBench datasets, following previous work, we employ the standard Abstract Syntax Tree matching evaluation script Patil et al. (2023) .\nModel: Our AccurateRAG [w/ FT Llama-2-7B ]; HotpotQA: 45.71; PubMedQA: 74.6; HF: 68.36; Torch Hub: 88.71; TF Hub: 88.03"
+          }
+        ]
+      },
+      "status": "linked",
+      "reason": "scope, role, value, and exact delivered evidence agree",
+      "finding": "accuraterag",
+      "scope": {
+        "subject": "fine-tuned Llama-2-7B",
+        "metric": "AST-match score",
+        "setting": "APIBench",
+        "population": "HF, Torch Hub, and TF Hub"
+      },
+      "operands": {
+        "before": {
+          "label": "the RAFT with GPT-4 CoT range",
+          "claim_value": {
+            "lower": "74.00",
+            "upper": "86.86",
+            "unit": "score",
+            "form": "range"
+          },
+          "source_links": [
+            {
+              "locator": {
+                "chunk_id": "2510.02243v2_table_a61b33c87b34e803_3",
+                "selector": "S2.T2.2.1.4.4"
+              },
+              "paper": "2510.02243v2",
+              "source_url": "https://arxiv.org/html/2510.02243v2#S2.T2",
+              "source_sha256": "4c5159d799683b1b523a48765e2d70eca477c138d54a0a90f37d18a21e0c40e6",
+              "passage_sha256": "7961874b7748225149ee8d98925a0587674d065ee5e6e4a603c85edced4b93fa",
+              "source_text": "74.00",
+              "header_path": [
+                "HF"
+              ],
+              "header_cell_id": "S2.T2.2.1.1.4",
+              "table_id": "S2.T2"
+            },
+            {
+              "locator": {
+                "chunk_id": "2510.02243v2_table_a61b33c87b34e803_3",
+                "selector": "S2.T2.2.1.4.5"
+              },
+              "paper": "2510.02243v2",
+              "source_url": "https://arxiv.org/html/2510.02243v2#S2.T2",
+              "source_sha256": "4c5159d799683b1b523a48765e2d70eca477c138d54a0a90f37d18a21e0c40e6",
+              "passage_sha256": "7961874b7748225149ee8d98925a0587674d065ee5e6e4a603c85edced4b93fa",
+              "source_text": "84.95",
+              "header_path": [
+                "Torch Hub"
+              ],
+              "header_cell_id": "S2.T2.2.1.1.5",
+              "table_id": "S2.T2"
+            },
+            {
+              "locator": {
+                "chunk_id": "2510.02243v2_table_a61b33c87b34e803_3",
+                "selector": "S2.T2.2.1.4.6"
+              },
+              "paper": "2510.02243v2",
+              "source_url": "https://arxiv.org/html/2510.02243v2#S2.T2",
+              "source_sha256": "4c5159d799683b1b523a48765e2d70eca477c138d54a0a90f37d18a21e0c40e6",
+              "passage_sha256": "7961874b7748225149ee8d98925a0587674d065ee5e6e4a603c85edced4b93fa",
+              "source_text": "86.86",
+              "header_path": [
+                "TF Hub"
+              ],
+              "header_cell_id": "S2.T2.2.1.1.6",
+              "table_id": "S2.T2"
+            }
+          ]
+        },
+        "after": {
+          "label": "the AccurateRAG range",
+          "claim_value": {
+            "lower": "68.36",
+            "upper": "88.71",
+            "unit": "score",
+            "form": "range"
+          },
+          "source_links": [
+            {
+              "locator": {
+                "chunk_id": "2510.02243v2_table_a61b33c87b34e803_4",
+                "selector": "S2.T2.2.1.5.4"
+              },
+              "paper": "2510.02243v2",
+              "source_url": "https://arxiv.org/html/2510.02243v2#S2.T2",
+              "source_sha256": "4c5159d799683b1b523a48765e2d70eca477c138d54a0a90f37d18a21e0c40e6",
+              "passage_sha256": "f30e2927ab10c5e329d694bd5f07fa7138b1f77e00fae2e3ab1094de65553003",
+              "source_text": "68.36",
+              "header_path": [
+                "HF"
+              ],
+              "header_cell_id": "S2.T2.2.1.1.4",
+              "table_id": "S2.T2"
+            },
+            {
+              "locator": {
+                "chunk_id": "2510.02243v2_table_a61b33c87b34e803_4",
+                "selector": "S2.T2.2.1.5.5"
+              },
+              "paper": "2510.02243v2",
+              "source_url": "https://arxiv.org/html/2510.02243v2#S2.T2",
+              "source_sha256": "4c5159d799683b1b523a48765e2d70eca477c138d54a0a90f37d18a21e0c40e6",
+              "passage_sha256": "f30e2927ab10c5e329d694bd5f07fa7138b1f77e00fae2e3ab1094de65553003",
+              "source_text": "88.71",
+              "header_path": [
+                "Torch Hub"
+              ],
+              "header_cell_id": "S2.T2.2.1.1.5",
+              "table_id": "S2.T2"
+            },
+            {
+              "locator": {
+                "chunk_id": "2510.02243v2_table_a61b33c87b34e803_4",
+                "selector": "S2.T2.2.1.5.6"
+              },
+              "paper": "2510.02243v2",
+              "source_url": "https://arxiv.org/html/2510.02243v2#S2.T2",
+              "source_sha256": "4c5159d799683b1b523a48765e2d70eca477c138d54a0a90f37d18a21e0c40e6",
+              "passage_sha256": "f30e2927ab10c5e329d694bd5f07fa7138b1f77e00fae2e3ab1094de65553003",
+              "source_text": "88.03",
+              "header_path": [
+                "TF Hub"
+              ],
+              "header_cell_id": "S2.T2.2.1.1.6",
+              "table_id": "S2.T2"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "same digits, different benchmark",
+      "cohort": "labeled table control",
+      "reviewed": false,
+      "expected": "reject",
+      "claim": {
+        "text": "For AST-match score (fine-tuned Llama-2-7B, PubMedQA, HF, Torch Hub, and TF Hub), the RAFT with GPT-4 CoT range was 74.00–86.86 and the AccurateRAG range was 68.36–88.71.",
+        "support": [
+          {
+            "chunk_id": "2510.02243v2_table_a61b33c87b34e803_3",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAccurateRAG: A Framework for Building Accurate Retrieval-Augmented Question-Answering Applications\nTable 2: Question answering results on 5 other test sets. \"HF\", \"TF Hub\" and \"CoT\" abbreviate HuggingFace, Tensorflow Hub and Chain-of-Thought respectively. NOTE that PubMedQA is formulated as a multiple-choice question-answering task, so calculating the accuracy on PubMedQA is straightforward and does not require manual verification. We compute the accuracy on HotpotQA based on the exact matching of answer outputs. For the APIBench datasets, following previous work, we employ the standard Abstract Syntax Tree matching evaluation script Patil et al. (2023) .\nModel: RAFT [w/ FT Llama-2-7B ] w/ GPT-4 CoT; HotpotQA: 35.28; PubMedQA: 73.3; HF: 74.00; Torch Hub: 84.95; TF Hub: 86.86"
+          },
+          {
+            "chunk_id": "2510.02243v2_table_a61b33c87b34e803_4",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAccurateRAG: A Framework for Building Accurate Retrieval-Augmented Question-Answering Applications\nTable 2: Question answering results on 5 other test sets. \"HF\", \"TF Hub\" and \"CoT\" abbreviate HuggingFace, Tensorflow Hub and Chain-of-Thought respectively. NOTE that PubMedQA is formulated as a multiple-choice question-answering task, so calculating the accuracy on PubMedQA is straightforward and does not require manual verification. We compute the accuracy on HotpotQA based on the exact matching of answer outputs. For the APIBench datasets, following previous work, we employ the standard Abstract Syntax Tree matching evaluation script Patil et al. (2023) .\nModel: Our AccurateRAG [w/ FT Llama-2-7B ]; HotpotQA: 45.71; PubMedQA: 74.6; HF: 68.36; Torch Hub: 88.71; TF Hub: 88.03"
+          }
+        ]
+      },
+      "status": "review",
+      "reason": "comparison wording or scope is unbound or ambiguous"
+    },
+    {
+      "name": "swapped range endpoints",
+      "cohort": "labeled table control",
+      "reviewed": false,
+      "expected": "reject",
+      "claim": {
+        "text": "For AST-match score (fine-tuned Llama-2-7B, APIBench, HF, Torch Hub, and TF Hub), the RAFT with GPT-4 CoT range was 74.00–86.86 and the AccurateRAG range was 68.36–86.86.",
+        "support": [
+          {
+            "chunk_id": "2510.02243v2_table_a61b33c87b34e803_3",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAccurateRAG: A Framework for Building Accurate Retrieval-Augmented Question-Answering Applications\nTable 2: Question answering results on 5 other test sets. \"HF\", \"TF Hub\" and \"CoT\" abbreviate HuggingFace, Tensorflow Hub and Chain-of-Thought respectively. NOTE that PubMedQA is formulated as a multiple-choice question-answering task, so calculating the accuracy on PubMedQA is straightforward and does not require manual verification. We compute the accuracy on HotpotQA based on the exact matching of answer outputs. For the APIBench datasets, following previous work, we employ the standard Abstract Syntax Tree matching evaluation script Patil et al. (2023) .\nModel: RAFT [w/ FT Llama-2-7B ] w/ GPT-4 CoT; HotpotQA: 35.28; PubMedQA: 73.3; HF: 74.00; Torch Hub: 84.95; TF Hub: 86.86"
+          },
+          {
+            "chunk_id": "2510.02243v2_table_a61b33c87b34e803_4",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAccurateRAG: A Framework for Building Accurate Retrieval-Augmented Question-Answering Applications\nTable 2: Question answering results on 5 other test sets. \"HF\", \"TF Hub\" and \"CoT\" abbreviate HuggingFace, Tensorflow Hub and Chain-of-Thought respectively. NOTE that PubMedQA is formulated as a multiple-choice question-answering task, so calculating the accuracy on PubMedQA is straightforward and does not require manual verification. We compute the accuracy on HotpotQA based on the exact matching of answer outputs. For the APIBench datasets, following previous work, we employ the standard Abstract Syntax Tree matching evaluation script Patil et al. (2023) .\nModel: Our AccurateRAG [w/ FT Llama-2-7B ]; HotpotQA: 45.71; PubMedQA: 74.6; HF: 68.36; Torch Hub: 88.71; TF Hub: 88.03"
+          }
+        ]
+      },
+      "status": "reject",
+      "reason": "after value, form, or unit differs"
+    },
+    {
+      "name": "equivalent percent representation",
+      "cohort": "labeled table control",
+      "reviewed": false,
+      "expected": "accept",
+      "claim": {
+        "text": "For AUC (ACDC, random baseline experiment, IOI and Docstring), the random baseline range was 50–50% and the ACDC range was 92–95%.",
+        "support": [
+          {
+            "chunk_id": "2604.00324v1_table_99d7ef000b02b530_1",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Persistent Vulnerability of Aligned AI Systems\nTable A.1 : AUC results for random baseline experiments\nTask: IOI; ACDC AUC: 0.95; Random AUC: 0.50"
+          },
+          {
+            "chunk_id": "2604.00324v1_table_99d7ef000b02b530_2",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Persistent Vulnerability of Aligned AI Systems\nTable A.1 : AUC results for random baseline experiments\nTask: Docstring; ACDC AUC: 0.92; Random AUC: 0.50"
+          }
+        ]
+      },
+      "status": "linked",
+      "reason": "scope, role, value, and exact delivered evidence agree",
+      "finding": "acdc",
+      "scope": {
+        "subject": "ACDC",
+        "metric": "AUC",
+        "setting": "random baseline experiment",
+        "population": "IOI and Docstring"
+      },
+      "operands": {
+        "before": {
+          "label": "the random baseline range",
+          "claim_value": {
+            "lower": "50",
+            "upper": "50",
+            "unit": "percent",
+            "form": "range"
+          },
+          "source_links": [
+            {
+              "locator": {
+                "chunk_id": "2604.00324v1_table_99d7ef000b02b530_1",
+                "selector": "A1.T1.5.2.3"
+              },
+              "paper": "2604.00324v1",
+              "source_url": "https://arxiv.org/html/2604.00324v1#A1.T1",
+              "source_sha256": "3eabd23101417afdcc74b7bdbe70b3997c5d7b3d75777ffb2f42566b6515bdb2",
+              "passage_sha256": "0931c4a9313e17e34766bc44ea6c76cbe6a47633ab244b8526e5ee9a4ec133f1",
+              "source_text": "0.50",
+              "header_path": [
+                "Random AUC"
+              ],
+              "header_cell_id": "A1.T1.5.1.3",
+              "table_id": "A1.T1"
+            },
+            {
+              "locator": {
+                "chunk_id": "2604.00324v1_table_99d7ef000b02b530_2",
+                "selector": "A1.T1.5.3.3"
+              },
+              "paper": "2604.00324v1",
+              "source_url": "https://arxiv.org/html/2604.00324v1#A1.T1",
+              "source_sha256": "3eabd23101417afdcc74b7bdbe70b3997c5d7b3d75777ffb2f42566b6515bdb2",
+              "passage_sha256": "230b4573378d09548d2a28c5f4ea98d144a7ffe9f4dc4a0898ef2033ac1ed438",
+              "source_text": "0.50",
+              "header_path": [
+                "Random AUC"
+              ],
+              "header_cell_id": "A1.T1.5.1.3",
+              "table_id": "A1.T1"
+            }
+          ]
+        },
+        "after": {
+          "label": "the ACDC range",
+          "claim_value": {
+            "lower": "92",
+            "upper": "95",
+            "unit": "percent",
+            "form": "range"
+          },
+          "source_links": [
+            {
+              "locator": {
+                "chunk_id": "2604.00324v1_table_99d7ef000b02b530_1",
+                "selector": "A1.T1.5.2.2"
+              },
+              "paper": "2604.00324v1",
+              "source_url": "https://arxiv.org/html/2604.00324v1#A1.T1",
+              "source_sha256": "3eabd23101417afdcc74b7bdbe70b3997c5d7b3d75777ffb2f42566b6515bdb2",
+              "passage_sha256": "0931c4a9313e17e34766bc44ea6c76cbe6a47633ab244b8526e5ee9a4ec133f1",
+              "source_text": "0.95",
+              "header_path": [
+                "ACDC AUC"
+              ],
+              "header_cell_id": "A1.T1.5.1.2",
+              "table_id": "A1.T1"
+            },
+            {
+              "locator": {
+                "chunk_id": "2604.00324v1_table_99d7ef000b02b530_2",
+                "selector": "A1.T1.5.3.2"
+              },
+              "paper": "2604.00324v1",
+              "source_url": "https://arxiv.org/html/2604.00324v1#A1.T1",
+              "source_sha256": "3eabd23101417afdcc74b7bdbe70b3997c5d7b3d75777ffb2f42566b6515bdb2",
+              "passage_sha256": "230b4573378d09548d2a28c5f4ea98d144a7ffe9f4dc4a0898ef2033ac1ed438",
+              "source_text": "0.92",
+              "header_path": [
+                "ACDC AUC"
+              ],
+              "header_cell_id": "A1.T1.5.1.2",
+              "table_id": "A1.T1"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "percentage points in place of levels",
+      "cohort": "labeled table control",
+      "reviewed": false,
+      "expected": "reject",
+      "claim": {
+        "text": "For AUC (ACDC, random baseline experiment, IOI and Docstring), the random baseline range was 50–50 percentage points and the ACDC range was 92–95 percentage points.",
+        "support": [
+          {
+            "chunk_id": "2604.00324v1_table_99d7ef000b02b530_1",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Persistent Vulnerability of Aligned AI Systems\nTable A.1 : AUC results for random baseline experiments\nTask: IOI; ACDC AUC: 0.95; Random AUC: 0.50"
+          },
+          {
+            "chunk_id": "2604.00324v1_table_99d7ef000b02b530_2",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Persistent Vulnerability of Aligned AI Systems\nTable A.1 : AUC results for random baseline experiments\nTask: Docstring; ACDC AUC: 0.92; Random AUC: 0.50"
+          }
+        ]
+      },
+      "status": "reject",
+      "reason": "before value, form, or unit differs"
+    },
+    {
+      "name": "signed fairness scores",
+      "cohort": "labeled table control",
+      "reviewed": false,
+      "expected": "accept",
+      "claim": {
+        "text": "For fairness score (AgreeMate, negotiation experiment), the score without CoT was 0.3021 and the score with CoT was −0.4385.",
+        "support": [
+          {
+            "chunk_id": "2412.18690v1_table_5bd4fffb5c9a7277_4",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgreeMate: Teaching LLMs to Haggle\nTable 3: Comparison of Metrics for Combinations with and without COT\nMetric: Fairness; With COT: -0.4385; Without COT: 0.3021"
+          }
+        ]
+      },
+      "status": "linked",
+      "reason": "scope, role, value, and exact delivered evidence agree",
+      "finding": "agreemate",
+      "scope": {
+        "subject": "AgreeMate",
+        "metric": "fairness score",
+        "setting": "negotiation experiment"
+      },
+      "operands": {
+        "before": {
+          "label": "the score without CoT",
+          "claim_value": {
+            "lower": "0.3021",
+            "upper": "0.3021",
+            "unit": "score",
+            "form": "point"
+          },
+          "source_links": [
+            {
+              "locator": {
+                "chunk_id": "2412.18690v1_table_5bd4fffb5c9a7277_4",
+                "selector": "S6.T3.2.5.3"
+              },
+              "paper": "2412.18690v1",
+              "source_url": "https://arxiv.org/html/2412.18690v1#S6.T3",
+              "source_sha256": "14c2c2989b9a7a5cc60de5366b0b1c7cb37351598c29d7dd330a09ff8142527a",
+              "passage_sha256": "a326e785a847230e6a93fb8dabc042de5657122690fec07f2a3b23eaf3307d03",
+              "source_text": "0.3021",
+              "header_path": [
+                "Without COT"
+              ],
+              "header_cell_id": "S6.T3.2.1.3",
+              "table_id": "S6.T3"
+            }
+          ]
+        },
+        "after": {
+          "label": "the score with CoT",
+          "claim_value": {
+            "lower": "-0.4385",
+            "upper": "-0.4385",
+            "unit": "score",
+            "form": "point"
+          },
+          "source_links": [
+            {
+              "locator": {
+                "chunk_id": "2412.18690v1_table_5bd4fffb5c9a7277_4",
+                "selector": "S6.T3.2.5.2"
+              },
+              "paper": "2412.18690v1",
+              "source_url": "https://arxiv.org/html/2412.18690v1#S6.T3",
+              "source_sha256": "14c2c2989b9a7a5cc60de5366b0b1c7cb37351598c29d7dd330a09ff8142527a",
+              "passage_sha256": "a326e785a847230e6a93fb8dabc042de5657122690fec07f2a3b23eaf3307d03",
+              "source_text": "-0.4385",
+              "header_path": [
+                "With COT"
+              ],
+              "header_cell_id": "S6.T3.2.1.2",
+              "table_id": "S6.T3"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "flipped sign",
+      "cohort": "labeled table control",
+      "reviewed": false,
+      "expected": "reject",
+      "claim": {
+        "text": "For fairness score (AgreeMate, negotiation experiment), the score without CoT was 0.3021 and the score with CoT was 0.4385.",
+        "support": [
+          {
+            "chunk_id": "2412.18690v1_table_5bd4fffb5c9a7277_4",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgreeMate: Teaching LLMs to Haggle\nTable 3: Comparison of Metrics for Combinations with and without COT\nMetric: Fairness; With COT: -0.4385; Without COT: 0.3021"
+          }
+        ]
+      },
+      "status": "reject",
+      "reason": "after value, form, or unit differs"
+    }
+  ],
+  "counts": {
+    "archive": {
+      "linked": 2,
+      "review": 8
+    },
+    "earlier": {
+      "review": 20
+    },
+    "table": {
+      "linked": 3,
+      "review": 1,
+      "reject": 3
+    }
+  }
+}

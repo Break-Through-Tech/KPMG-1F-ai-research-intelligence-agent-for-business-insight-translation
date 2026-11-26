@@ -1,0 +1,17 @@
+# Direct dependencies of the Gemini paired runner (gemini_paired.py) and its frozen B2 route.
+# Pinned to the versions in the environment that produced the simplified-v2 live run, so retrieval matches.
+# Exact resolved set: requirements-stage-a.lock.txt (pip freeze after install).
+torch==2.15.0
+sentence-transformers==6.2.0
+transformers==5.21.0
+numpy==2.4.6
+scipy==1.17.1
+scikit-learn==1.9.1
+httpx==0.28.1
+jsonschema==4.26.0
+beautifulsoup4==4.15.0
+requests==2.34.2
+typing_extensions==4.16.0
+# Offline tests of the shared SDK adapter only (test_gemini_replay); the paired runner calls Gemini over httpx.
+google-genai==2.33.0
+google-auth==2.62.0

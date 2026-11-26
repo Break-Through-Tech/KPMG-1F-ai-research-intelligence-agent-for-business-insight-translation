@@ -1,0 +1,16 @@
+[
+ {
+  "attempt": 1,
+  "mode": "standard",
+  "resumed_from": [],
+  "status": "complete",
+  "seconds": 86.997,
+  "timings": {
+   "base": 6.99,
+   "evidence": 0.0,
+   "synthesis": 48.821,
+   "review": 31.122,
+   "publication": 0.035
+  }
+ }
+]

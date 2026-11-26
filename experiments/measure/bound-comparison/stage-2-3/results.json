@@ -1,0 +1,2621 @@
+{
+  "python": "3.11.9",
+  "provider_calls": 0,
+  "index": "78d8efd7c9df075be09ffa5f3a9c7ca79c54efa2d7caf75c8f0329ea72ff41aa",
+  "archive_sha256": "cb7c0625b23b09f9c0656efe81f6c17eba8c82c27d7dd5024b9a773bb33871a5",
+  "current_checker_sha256": "9a8f8df61d7780ae7e27958caaa5e5dda669f94055ccd78bcfea7d81afe99051",
+  "stage_2": {
+    "passed": true,
+    "archive_counts": {
+      "linked": 2,
+      "review": 8
+    },
+    "archives": [
+      {
+        "version": "e5a8c4c460134444ad0b3e7da476fa44",
+        "answer_preserved": true,
+        "previews": 0,
+        "checks": [
+          {
+            "current_numeric_checker": "uncertain",
+            "claim_index": 0,
+            "path": "legacy",
+            "status": "linked",
+            "reason": "scope, role, value, and exact delivered evidence agree"
+          }
+        ]
+      },
+      {
+        "version": "a964786bd4fe48bbab643c0272f44421",
+        "answer_preserved": true,
+        "previews": 0,
+        "checks": []
+      },
+      {
+        "version": "08ca414c98754b068a44222c9d498c9f",
+        "answer_preserved": true,
+        "previews": 0,
+        "checks": []
+      },
+      {
+        "version": "af4e65d7d7074dd98a1bdfd8f1617073",
+        "answer_preserved": true,
+        "previews": 0,
+        "checks": []
+      },
+      {
+        "version": "39b20c7e451a4d2b9c5579a6b3767d34",
+        "answer_preserved": true,
+        "previews": 0,
+        "checks": [
+          {
+            "current_numeric_checker": "uncertain",
+            "claim_index": 0,
+            "path": "legacy",
+            "status": "linked",
+            "reason": "scope, role, value, and exact delivered evidence agree"
+          }
+        ]
+      },
+      {
+        "version": "860c91485cbe47f0b4f8ca4395bd657a",
+        "answer_preserved": true,
+        "previews": 0,
+        "checks": [
+          {
+            "current_numeric_checker": "contradicted",
+            "claim_index": 0,
+            "path": "legacy",
+            "status": "review",
+            "reason": "cited passages have no registered comparison"
+          },
+          {
+            "current_numeric_checker": "uncertain",
+            "claim_index": 1,
+            "path": "legacy",
+            "status": "review",
+            "reason": "cited passages have no registered comparison"
+          },
+          {
+            "current_numeric_checker": "uncertain",
+            "claim_index": 2,
+            "path": "legacy",
+            "status": "review",
+            "reason": "cited passages have no registered comparison"
+          }
+        ]
+      },
+      {
+        "version": "b2a9bd0559d04dad93327fb584f06352",
+        "answer_preserved": true,
+        "previews": 0,
+        "checks": []
+      },
+      {
+        "version": "761015b9940c4c508a3a11405da57aed",
+        "answer_preserved": true,
+        "previews": 0,
+        "checks": [
+          {
+            "current_numeric_checker": "contradicted",
+            "claim_index": 0,
+            "path": "legacy",
+            "status": "review",
+            "reason": "cited passages have no registered comparison"
+          }
+        ]
+      },
+      {
+        "version": "8b16ec01432d45ce98dbfe47897ea8f6",
+        "answer_preserved": true,
+        "previews": 0,
+        "checks": [
+          {
+            "current_numeric_checker": "uncertain",
+            "claim_index": 0,
+            "path": "legacy",
+            "status": "review",
+            "reason": "cited passages have no registered comparison"
+          },
+          {
+            "current_numeric_checker": "uncertain",
+            "claim_index": 1,
+            "path": "legacy",
+            "status": "review",
+            "reason": "cited passages have no registered comparison"
+          }
+        ]
+      },
+      {
+        "version": "808fd57a838143cba3d692019d169c02",
+        "answer_preserved": true,
+        "previews": 0,
+        "checks": [
+          {
+            "current_numeric_checker": "uncertain",
+            "claim_index": 1,
+            "path": "legacy",
+            "status": "review",
+            "reason": "cited passages have no registered comparison"
+          },
+          {
+            "current_numeric_checker": "uncertain",
+            "claim_index": 2,
+            "path": "legacy",
+            "status": "review",
+            "reason": "cited passages have no registered comparison"
+          }
+        ]
+      },
+      {
+        "version": "98a2b82213874820972ebb3adfb0f60a",
+        "answer_preserved": true,
+        "previews": 0,
+        "checks": []
+      }
+    ],
+    "controls": [
+      {
+        "case": "cu",
+        "expected": "linked",
+        "reviewed": false,
+        "source_papers": [
+          "2602.00931v2"
+        ],
+        "claim": {
+          "kind": "finding",
+          "text": "Across seven models, the accuracy went from 35 to 46 percent before training to 68 to 78 percent afterward.",
+          "support": [
+            {
+              "chunk_id": "2602.00931v2_c0000",
+              "quote": "Large language model reasoning is often treated as a monolithic capability, relying on binary preference supervision that fails to capture partial progress or fine-grained reasoning quality. We introduce continuous utility direct preference optimization ( CU- DPO ) , a framework that aligns models to a portfolio of prompt-based cognitive strategies by replacing binary labels with continuous scores that capture fine-grained reasoning quality. We prove that learning with K strategies yields a \\Theta(K\\log K) improvement in sample complexity over binary preferences, and that DPO converges to the entropy-regularized utility-maximizing policy. To exploit this signal, we propose a two-stage training pipeline: (i) strategy selection, which optimizes the model to choose the best strategy for a given problem via best-vs-all comparisons, and (ii) execution refinement, which trains the model to correctly execute the selected strategy using margin-stratified pairs. On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+            }
+          ]
+        },
+        "record": {
+          "schema_version": 1,
+          "claim_sha256": "aadb3130d83fcf88f7fe07b3dc15d92e700405d8b3eeb081584f86049138882d",
+          "scope": {
+            "subject": "CU-DPO",
+            "metric": "strategy selection accuracy",
+            "setting": "mathematical reasoning benchmarks",
+            "population": "seven base models"
+          },
+          "before": {
+            "lower": "35",
+            "upper": "46",
+            "unit": "percent",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2602.00931v2_c0000",
+                "selector": [
+                  1056,
+                  1062
+                ]
+              }
+            ]
+          },
+          "after": {
+            "lower": "68",
+            "upper": "78",
+            "unit": "percent",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2602.00931v2_c0000",
+                "selector": [
+                  1066,
+                  1072
+                ]
+              }
+            ]
+          }
+        },
+        "answer_preserved": true,
+        "current_numeric_checker": "grounded",
+        "observation": {
+          "claim_index": 0,
+          "path": "structured",
+          "status": "linked",
+          "reason": "scope, role, value, and exact delivered evidence agree",
+          "links": {
+            "before": [
+              {
+                "locator": {
+                  "chunk_id": "2602.00931v2_c0000",
+                  "selector": [
+                    1056,
+                    1062
+                  ]
+                },
+                "paper": "2602.00931v2",
+                "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+                "source_sha256": null,
+                "passage_sha256": "6a4943b4e6384785a7c3d96deccab341d7040027805a3f87e362e5a55139cb79",
+                "source_text": "35–46%",
+                "header_path": [],
+                "header_cell_id": null,
+                "table_id": null
+              }
+            ],
+            "after": [
+              {
+                "locator": {
+                  "chunk_id": "2602.00931v2_c0000",
+                  "selector": [
+                    1066,
+                    1072
+                  ]
+                },
+                "paper": "2602.00931v2",
+                "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+                "source_sha256": null,
+                "passage_sha256": "6a4943b4e6384785a7c3d96deccab341d7040027805a3f87e362e5a55139cb79",
+                "source_text": "68–78%",
+                "header_path": [],
+                "header_cell_id": null,
+                "table_id": null
+              }
+            ]
+          }
+        },
+        "preview": null,
+        "passed": true
+      },
+      {
+        "case": "cu-wrong-metric",
+        "expected": "reject",
+        "reviewed": false,
+        "source_papers": [
+          "2602.00931v2"
+        ],
+        "claim": {
+          "kind": "finding",
+          "text": "Across seven models, the accuracy went from 35 to 46 percent before training to 68 to 78 percent afterward.",
+          "support": [
+            {
+              "chunk_id": "2602.00931v2_c0000",
+              "quote": "Large language model reasoning is often treated as a monolithic capability, relying on binary preference supervision that fails to capture partial progress or fine-grained reasoning quality. We introduce continuous utility direct preference optimization ( CU- DPO ) , a framework that aligns models to a portfolio of prompt-based cognitive strategies by replacing binary labels with continuous scores that capture fine-grained reasoning quality. We prove that learning with K strategies yields a \\Theta(K\\log K) improvement in sample complexity over binary preferences, and that DPO converges to the entropy-regularized utility-maximizing policy. To exploit this signal, we propose a two-stage training pipeline: (i) strategy selection, which optimizes the model to choose the best strategy for a given problem via best-vs-all comparisons, and (ii) execution refinement, which trains the model to correctly execute the selected strategy using margin-stratified pairs. On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+            }
+          ]
+        },
+        "record": {
+          "schema_version": 1,
+          "claim_sha256": "aadb3130d83fcf88f7fe07b3dc15d92e700405d8b3eeb081584f86049138882d",
+          "scope": {
+            "subject": "CU-DPO",
+            "metric": "a different metric",
+            "setting": "mathematical reasoning benchmarks",
+            "population": "seven base models"
+          },
+          "before": {
+            "lower": "35",
+            "upper": "46",
+            "unit": "percent",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2602.00931v2_c0000",
+                "selector": [
+                  1056,
+                  1062
+                ]
+              }
+            ]
+          },
+          "after": {
+            "lower": "68",
+            "upper": "78",
+            "unit": "percent",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2602.00931v2_c0000",
+                "selector": [
+                  1066,
+                  1072
+                ]
+              }
+            ]
+          }
+        },
+        "answer_preserved": true,
+        "current_numeric_checker": "grounded",
+        "observation": {
+          "claim_index": 0,
+          "path": "structured",
+          "status": "reject",
+          "reason": "different metric"
+        },
+        "preview": null,
+        "passed": true
+      },
+      {
+        "case": "hammer",
+        "expected": "linked",
+        "reviewed": false,
+        "source_papers": [
+          "2509.25240v1"
+        ],
+        "claim": {
+          "kind": "finding",
+          "text": "For the two AIME years, the paired HAMMER comparison was 25.3 to 36.3 against 31.0 to 39.3.",
+          "support": [
+            {
+              "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_1",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nHAMMER: Hamiltonian Curiosity Augmented Large Language Model Reinforcement\nTable 1: Main results comparing baseline (B) and HAMMER (H), with k=100 for AIME 2024/2025 and AMC 2023, k=32 for Olympiad, and \\mathbf{Diff}=\\mathbf{Avg}_{\\text{H}}-\\mathbf{Avg}_{\\text{B}} .\nMethod: Qwen3-1.7B-DAPO; Dataset: AIME 2024; pass@1 / B: 36.3; pass@1 / H: 39.3; pass@10 / B: 61.0; pass@10 / H: 64.7; pass@k / B: 69.0; pass@k / H: 74.3; cons@k / B: 43.3; cons@k / H: 43.3; Avg. / B: 52.4; Avg. / H: 55.4; Diff.: +3.0"
+            },
+            {
+              "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_2",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nHAMMER: Hamiltonian Curiosity Augmented Large Language Model Reinforcement\nTable 1: Main results comparing baseline (B) and HAMMER (H), with k=100 for AIME 2024/2025 and AMC 2023, k=32 for Olympiad, and \\mathbf{Diff}=\\mathbf{Avg}_{\\text{H}}-\\mathbf{Avg}_{\\text{B}} .\nMethod: Qwen3-1.7B-DAPO; Dataset: AIME 2025; pass@1 / B: 25.3; pass@1 / H: 31.0; pass@10 / B: 39.7; pass@10 / H: 48.7; pass@k / B: 56.3; pass@k / H: 59.7; cons@k / B: 30.0; cons@k / H: 30.0; Avg. / B: 37.8; Avg. / H: 42.3; Diff.: +4.5"
+            }
+          ]
+        },
+        "record": {
+          "schema_version": 1,
+          "claim_sha256": "a19a455ff4255cb30bfe0a8a666d4441cc865f85f0072ce37ea980e7075fefa4",
+          "scope": {
+            "subject": "Qwen3-1.7B-DAPO",
+            "metric": "pass@1",
+            "setting": "benchmark evaluation",
+            "population": "AIME 2024 and AIME 2025",
+            "qualifier": "k=100"
+          },
+          "before": {
+            "lower": "25.3",
+            "upper": "36.3",
+            "unit": "score",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_1",
+                "selector": "S5.T1.4.1.3.3"
+              },
+              {
+                "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_2",
+                "selector": "S5.T1.4.1.4.2"
+              }
+            ]
+          },
+          "after": {
+            "lower": "31.0",
+            "upper": "39.3",
+            "unit": "score",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_1",
+                "selector": "S5.T1.4.1.3.4"
+              },
+              {
+                "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_2",
+                "selector": "S5.T1.4.1.4.3"
+              }
+            ]
+          }
+        },
+        "answer_preserved": true,
+        "current_numeric_checker": "uncertain",
+        "observation": {
+          "claim_index": 0,
+          "path": "structured",
+          "status": "linked",
+          "reason": "scope, role, value, and exact delivered evidence agree",
+          "links": {
+            "before": [
+              {
+                "locator": {
+                  "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_1",
+                  "selector": "S5.T1.4.1.3.3"
+                },
+                "paper": "2509.25240v1",
+                "source_url": "https://arxiv.org/html/2509.25240v1#S5.T1",
+                "source_sha256": "4e615ff86053e113babb214ff67e1b9630d52415db1684cfa6216d5844123bd5",
+                "passage_sha256": "ac35266d2a4cb65a7ef5c1ffaab34430cb77bb52e31976eec7119c5efe04f04a",
+                "source_text": "36.3",
+                "header_path": [
+                  "pass@1",
+                  "B"
+                ],
+                "header_cell_id": "S5.T1.4.1.1.3",
+                "table_id": "S5.T1"
+              },
+              {
+                "locator": {
+                  "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_2",
+                  "selector": "S5.T1.4.1.4.2"
+                },
+                "paper": "2509.25240v1",
+                "source_url": "https://arxiv.org/html/2509.25240v1#S5.T1",
+                "source_sha256": "4e615ff86053e113babb214ff67e1b9630d52415db1684cfa6216d5844123bd5",
+                "passage_sha256": "4532160a27906d88f2cee7df2ad6c655c1ffb9877cf8cbdf32f723d526e0bdbf",
+                "source_text": "25.3",
+                "header_path": [
+                  "pass@1",
+                  "B"
+                ],
+                "header_cell_id": "S5.T1.4.1.1.3",
+                "table_id": "S5.T1"
+              }
+            ],
+            "after": [
+              {
+                "locator": {
+                  "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_1",
+                  "selector": "S5.T1.4.1.3.4"
+                },
+                "paper": "2509.25240v1",
+                "source_url": "https://arxiv.org/html/2509.25240v1#S5.T1",
+                "source_sha256": "4e615ff86053e113babb214ff67e1b9630d52415db1684cfa6216d5844123bd5",
+                "passage_sha256": "ac35266d2a4cb65a7ef5c1ffaab34430cb77bb52e31976eec7119c5efe04f04a",
+                "source_text": "39.3",
+                "header_path": [
+                  "pass@1",
+                  "H"
+                ],
+                "header_cell_id": "S5.T1.4.1.1.3",
+                "table_id": "S5.T1"
+              },
+              {
+                "locator": {
+                  "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_2",
+                  "selector": "S5.T1.4.1.4.3"
+                },
+                "paper": "2509.25240v1",
+                "source_url": "https://arxiv.org/html/2509.25240v1#S5.T1",
+                "source_sha256": "4e615ff86053e113babb214ff67e1b9630d52415db1684cfa6216d5844123bd5",
+                "passage_sha256": "4532160a27906d88f2cee7df2ad6c655c1ffb9877cf8cbdf32f723d526e0bdbf",
+                "source_text": "31.0",
+                "header_path": [
+                  "pass@1",
+                  "H"
+                ],
+                "header_cell_id": "S5.T1.4.1.1.3",
+                "table_id": "S5.T1"
+              }
+            ]
+          }
+        },
+        "preview": null,
+        "passed": true
+      },
+      {
+        "case": "hammer-wrong-metric",
+        "expected": "reject",
+        "reviewed": false,
+        "source_papers": [
+          "2509.25240v1"
+        ],
+        "claim": {
+          "kind": "finding",
+          "text": "For the two AIME years, the paired HAMMER comparison was 25.3 to 36.3 against 31.0 to 39.3.",
+          "support": [
+            {
+              "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_1",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nHAMMER: Hamiltonian Curiosity Augmented Large Language Model Reinforcement\nTable 1: Main results comparing baseline (B) and HAMMER (H), with k=100 for AIME 2024/2025 and AMC 2023, k=32 for Olympiad, and \\mathbf{Diff}=\\mathbf{Avg}_{\\text{H}}-\\mathbf{Avg}_{\\text{B}} .\nMethod: Qwen3-1.7B-DAPO; Dataset: AIME 2024; pass@1 / B: 36.3; pass@1 / H: 39.3; pass@10 / B: 61.0; pass@10 / H: 64.7; pass@k / B: 69.0; pass@k / H: 74.3; cons@k / B: 43.3; cons@k / H: 43.3; Avg. / B: 52.4; Avg. / H: 55.4; Diff.: +3.0"
+            },
+            {
+              "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_2",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nHAMMER: Hamiltonian Curiosity Augmented Large Language Model Reinforcement\nTable 1: Main results comparing baseline (B) and HAMMER (H), with k=100 for AIME 2024/2025 and AMC 2023, k=32 for Olympiad, and \\mathbf{Diff}=\\mathbf{Avg}_{\\text{H}}-\\mathbf{Avg}_{\\text{B}} .\nMethod: Qwen3-1.7B-DAPO; Dataset: AIME 2025; pass@1 / B: 25.3; pass@1 / H: 31.0; pass@10 / B: 39.7; pass@10 / H: 48.7; pass@k / B: 56.3; pass@k / H: 59.7; cons@k / B: 30.0; cons@k / H: 30.0; Avg. / B: 37.8; Avg. / H: 42.3; Diff.: +4.5"
+            }
+          ]
+        },
+        "record": {
+          "schema_version": 1,
+          "claim_sha256": "a19a455ff4255cb30bfe0a8a666d4441cc865f85f0072ce37ea980e7075fefa4",
+          "scope": {
+            "subject": "Qwen3-1.7B-DAPO",
+            "metric": "a different metric",
+            "setting": "benchmark evaluation",
+            "population": "AIME 2024 and AIME 2025",
+            "qualifier": "k=100"
+          },
+          "before": {
+            "lower": "25.3",
+            "upper": "36.3",
+            "unit": "score",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_1",
+                "selector": "S5.T1.4.1.3.3"
+              },
+              {
+                "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_2",
+                "selector": "S5.T1.4.1.4.2"
+              }
+            ]
+          },
+          "after": {
+            "lower": "31.0",
+            "upper": "39.3",
+            "unit": "score",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_1",
+                "selector": "S5.T1.4.1.3.4"
+              },
+              {
+                "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_2",
+                "selector": "S5.T1.4.1.4.3"
+              }
+            ]
+          }
+        },
+        "answer_preserved": true,
+        "current_numeric_checker": "uncertain",
+        "observation": {
+          "claim_index": 0,
+          "path": "structured",
+          "status": "reject",
+          "reason": "different metric"
+        },
+        "preview": null,
+        "passed": true
+      },
+      {
+        "case": "acdc",
+        "expected": "linked",
+        "reviewed": false,
+        "source_papers": [
+          "2604.00324v1"
+        ],
+        "claim": {
+          "kind": "finding",
+          "text": "The two tasks show a 50 percent random baseline and 92 to 95 percent for ACDC.",
+          "support": [
+            {
+              "chunk_id": "2604.00324v1_table_99d7ef000b02b530_1",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Persistent Vulnerability of Aligned AI Systems\nTable A.1 : AUC results for random baseline experiments\nTask: IOI; ACDC AUC: 0.95; Random AUC: 0.50"
+            },
+            {
+              "chunk_id": "2604.00324v1_table_99d7ef000b02b530_2",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Persistent Vulnerability of Aligned AI Systems\nTable A.1 : AUC results for random baseline experiments\nTask: Docstring; ACDC AUC: 0.92; Random AUC: 0.50"
+            }
+          ]
+        },
+        "record": {
+          "schema_version": 1,
+          "claim_sha256": "73ba0ebb9d8573bf4afe0820cb37284cb7e4c7202e279861f5130c624da2be59",
+          "scope": {
+            "subject": "ACDC",
+            "metric": "AUC",
+            "setting": "random baseline experiment",
+            "population": "IOI and Docstring"
+          },
+          "before": {
+            "lower": "50",
+            "upper": "50",
+            "unit": "percent",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2604.00324v1_table_99d7ef000b02b530_1",
+                "selector": "A1.T1.5.2.3"
+              },
+              {
+                "chunk_id": "2604.00324v1_table_99d7ef000b02b530_2",
+                "selector": "A1.T1.5.3.3"
+              }
+            ]
+          },
+          "after": {
+            "lower": "92",
+            "upper": "95",
+            "unit": "percent",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2604.00324v1_table_99d7ef000b02b530_1",
+                "selector": "A1.T1.5.2.2"
+              },
+              {
+                "chunk_id": "2604.00324v1_table_99d7ef000b02b530_2",
+                "selector": "A1.T1.5.3.2"
+              }
+            ]
+          }
+        },
+        "answer_preserved": true,
+        "current_numeric_checker": "contradicted",
+        "observation": {
+          "claim_index": 0,
+          "path": "structured",
+          "status": "linked",
+          "reason": "scope, role, value, and exact delivered evidence agree",
+          "links": {
+            "before": [
+              {
+                "locator": {
+                  "chunk_id": "2604.00324v1_table_99d7ef000b02b530_1",
+                  "selector": "A1.T1.5.2.3"
+                },
+                "paper": "2604.00324v1",
+                "source_url": "https://arxiv.org/html/2604.00324v1#A1.T1",
+                "source_sha256": "3eabd23101417afdcc74b7bdbe70b3997c5d7b3d75777ffb2f42566b6515bdb2",
+                "passage_sha256": "0931c4a9313e17e34766bc44ea6c76cbe6a47633ab244b8526e5ee9a4ec133f1",
+                "source_text": "0.50",
+                "header_path": [
+                  "Random AUC"
+                ],
+                "header_cell_id": "A1.T1.5.1.3",
+                "table_id": "A1.T1"
+              },
+              {
+                "locator": {
+                  "chunk_id": "2604.00324v1_table_99d7ef000b02b530_2",
+                  "selector": "A1.T1.5.3.3"
+                },
+                "paper": "2604.00324v1",
+                "source_url": "https://arxiv.org/html/2604.00324v1#A1.T1",
+                "source_sha256": "3eabd23101417afdcc74b7bdbe70b3997c5d7b3d75777ffb2f42566b6515bdb2",
+                "passage_sha256": "230b4573378d09548d2a28c5f4ea98d144a7ffe9f4dc4a0898ef2033ac1ed438",
+                "source_text": "0.50",
+                "header_path": [
+                  "Random AUC"
+                ],
+                "header_cell_id": "A1.T1.5.1.3",
+                "table_id": "A1.T1"
+              }
+            ],
+            "after": [
+              {
+                "locator": {
+                  "chunk_id": "2604.00324v1_table_99d7ef000b02b530_1",
+                  "selector": "A1.T1.5.2.2"
+                },
+                "paper": "2604.00324v1",
+                "source_url": "https://arxiv.org/html/2604.00324v1#A1.T1",
+                "source_sha256": "3eabd23101417afdcc74b7bdbe70b3997c5d7b3d75777ffb2f42566b6515bdb2",
+                "passage_sha256": "0931c4a9313e17e34766bc44ea6c76cbe6a47633ab244b8526e5ee9a4ec133f1",
+                "source_text": "0.95",
+                "header_path": [
+                  "ACDC AUC"
+                ],
+                "header_cell_id": "A1.T1.5.1.2",
+                "table_id": "A1.T1"
+              },
+              {
+                "locator": {
+                  "chunk_id": "2604.00324v1_table_99d7ef000b02b530_2",
+                  "selector": "A1.T1.5.3.2"
+                },
+                "paper": "2604.00324v1",
+                "source_url": "https://arxiv.org/html/2604.00324v1#A1.T1",
+                "source_sha256": "3eabd23101417afdcc74b7bdbe70b3997c5d7b3d75777ffb2f42566b6515bdb2",
+                "passage_sha256": "230b4573378d09548d2a28c5f4ea98d144a7ffe9f4dc4a0898ef2033ac1ed438",
+                "source_text": "0.92",
+                "header_path": [
+                  "ACDC AUC"
+                ],
+                "header_cell_id": "A1.T1.5.1.2",
+                "table_id": "A1.T1"
+              }
+            ]
+          }
+        },
+        "preview": null,
+        "passed": true
+      },
+      {
+        "case": "acdc-wrong-metric",
+        "expected": "reject",
+        "reviewed": false,
+        "source_papers": [
+          "2604.00324v1"
+        ],
+        "claim": {
+          "kind": "finding",
+          "text": "The two tasks show a 50 percent random baseline and 92 to 95 percent for ACDC.",
+          "support": [
+            {
+              "chunk_id": "2604.00324v1_table_99d7ef000b02b530_1",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Persistent Vulnerability of Aligned AI Systems\nTable A.1 : AUC results for random baseline experiments\nTask: IOI; ACDC AUC: 0.95; Random AUC: 0.50"
+            },
+            {
+              "chunk_id": "2604.00324v1_table_99d7ef000b02b530_2",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Persistent Vulnerability of Aligned AI Systems\nTable A.1 : AUC results for random baseline experiments\nTask: Docstring; ACDC AUC: 0.92; Random AUC: 0.50"
+            }
+          ]
+        },
+        "record": {
+          "schema_version": 1,
+          "claim_sha256": "73ba0ebb9d8573bf4afe0820cb37284cb7e4c7202e279861f5130c624da2be59",
+          "scope": {
+            "subject": "ACDC",
+            "metric": "a different metric",
+            "setting": "random baseline experiment",
+            "population": "IOI and Docstring"
+          },
+          "before": {
+            "lower": "50",
+            "upper": "50",
+            "unit": "percent",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2604.00324v1_table_99d7ef000b02b530_1",
+                "selector": "A1.T1.5.2.3"
+              },
+              {
+                "chunk_id": "2604.00324v1_table_99d7ef000b02b530_2",
+                "selector": "A1.T1.5.3.3"
+              }
+            ]
+          },
+          "after": {
+            "lower": "92",
+            "upper": "95",
+            "unit": "percent",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2604.00324v1_table_99d7ef000b02b530_1",
+                "selector": "A1.T1.5.2.2"
+              },
+              {
+                "chunk_id": "2604.00324v1_table_99d7ef000b02b530_2",
+                "selector": "A1.T1.5.3.2"
+              }
+            ]
+          }
+        },
+        "answer_preserved": true,
+        "current_numeric_checker": "contradicted",
+        "observation": {
+          "claim_index": 0,
+          "path": "structured",
+          "status": "reject",
+          "reason": "different metric"
+        },
+        "preview": null,
+        "passed": true
+      },
+      {
+        "case": "agreemate",
+        "expected": "linked",
+        "reviewed": false,
+        "source_papers": [
+          "2412.18690v1"
+        ],
+        "claim": {
+          "kind": "finding",
+          "text": "The fairness score was 0.3021 without CoT and negative 0.4385 with it.",
+          "support": [
+            {
+              "chunk_id": "2412.18690v1_table_5bd4fffb5c9a7277_4",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgreeMate: Teaching LLMs to Haggle\nTable 3: Comparison of Metrics for Combinations with and without COT\nMetric: Fairness; With COT: -0.4385; Without COT: 0.3021"
+            }
+          ]
+        },
+        "record": {
+          "schema_version": 1,
+          "claim_sha256": "872cab083d91a70aab42e643f907b35fc7aa11c9125c7a8b31e10eb2f8f8e295",
+          "scope": {
+            "subject": "AgreeMate",
+            "metric": "fairness score",
+            "setting": "negotiation experiment"
+          },
+          "before": {
+            "lower": "0.3021",
+            "upper": "0.3021",
+            "unit": "score",
+            "form": "point",
+            "locators": [
+              {
+                "chunk_id": "2412.18690v1_table_5bd4fffb5c9a7277_4",
+                "selector": "S6.T3.2.5.3"
+              }
+            ]
+          },
+          "after": {
+            "lower": "-0.4385",
+            "upper": "-0.4385",
+            "unit": "score",
+            "form": "point",
+            "locators": [
+              {
+                "chunk_id": "2412.18690v1_table_5bd4fffb5c9a7277_4",
+                "selector": "S6.T3.2.5.2"
+              }
+            ]
+          }
+        },
+        "answer_preserved": true,
+        "current_numeric_checker": "contradicted",
+        "observation": {
+          "claim_index": 0,
+          "path": "structured",
+          "status": "linked",
+          "reason": "scope, role, value, and exact delivered evidence agree",
+          "links": {
+            "before": [
+              {
+                "locator": {
+                  "chunk_id": "2412.18690v1_table_5bd4fffb5c9a7277_4",
+                  "selector": "S6.T3.2.5.3"
+                },
+                "paper": "2412.18690v1",
+                "source_url": "https://arxiv.org/html/2412.18690v1#S6.T3",
+                "source_sha256": "14c2c2989b9a7a5cc60de5366b0b1c7cb37351598c29d7dd330a09ff8142527a",
+                "passage_sha256": "a326e785a847230e6a93fb8dabc042de5657122690fec07f2a3b23eaf3307d03",
+                "source_text": "0.3021",
+                "header_path": [
+                  "Without COT"
+                ],
+                "header_cell_id": "S6.T3.2.1.3",
+                "table_id": "S6.T3"
+              }
+            ],
+            "after": [
+              {
+                "locator": {
+                  "chunk_id": "2412.18690v1_table_5bd4fffb5c9a7277_4",
+                  "selector": "S6.T3.2.5.2"
+                },
+                "paper": "2412.18690v1",
+                "source_url": "https://arxiv.org/html/2412.18690v1#S6.T3",
+                "source_sha256": "14c2c2989b9a7a5cc60de5366b0b1c7cb37351598c29d7dd330a09ff8142527a",
+                "passage_sha256": "a326e785a847230e6a93fb8dabc042de5657122690fec07f2a3b23eaf3307d03",
+                "source_text": "-0.4385",
+                "header_path": [
+                  "With COT"
+                ],
+                "header_cell_id": "S6.T3.2.1.2",
+                "table_id": "S6.T3"
+              }
+            ]
+          }
+        },
+        "preview": null,
+        "passed": true
+      },
+      {
+        "case": "agreemate-wrong-metric",
+        "expected": "reject",
+        "reviewed": false,
+        "source_papers": [
+          "2412.18690v1"
+        ],
+        "claim": {
+          "kind": "finding",
+          "text": "The fairness score was 0.3021 without CoT and negative 0.4385 with it.",
+          "support": [
+            {
+              "chunk_id": "2412.18690v1_table_5bd4fffb5c9a7277_4",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgreeMate: Teaching LLMs to Haggle\nTable 3: Comparison of Metrics for Combinations with and without COT\nMetric: Fairness; With COT: -0.4385; Without COT: 0.3021"
+            }
+          ]
+        },
+        "record": {
+          "schema_version": 1,
+          "claim_sha256": "872cab083d91a70aab42e643f907b35fc7aa11c9125c7a8b31e10eb2f8f8e295",
+          "scope": {
+            "subject": "AgreeMate",
+            "metric": "a different metric",
+            "setting": "negotiation experiment"
+          },
+          "before": {
+            "lower": "0.3021",
+            "upper": "0.3021",
+            "unit": "score",
+            "form": "point",
+            "locators": [
+              {
+                "chunk_id": "2412.18690v1_table_5bd4fffb5c9a7277_4",
+                "selector": "S6.T3.2.5.3"
+              }
+            ]
+          },
+          "after": {
+            "lower": "-0.4385",
+            "upper": "-0.4385",
+            "unit": "score",
+            "form": "point",
+            "locators": [
+              {
+                "chunk_id": "2412.18690v1_table_5bd4fffb5c9a7277_4",
+                "selector": "S6.T3.2.5.2"
+              }
+            ]
+          }
+        },
+        "answer_preserved": true,
+        "current_numeric_checker": "contradicted",
+        "observation": {
+          "claim_index": 0,
+          "path": "structured",
+          "status": "reject",
+          "reason": "different metric"
+        },
+        "preview": null,
+        "passed": true
+      }
+    ]
+  },
+  "stage_3": {
+    "status": "passed_offline",
+    "outcomes": {
+      "linked": 3,
+      "reject": 6,
+      "review": 6
+    },
+    "cases": [
+      {
+        "case": "benchmark",
+        "expected": "linked",
+        "reviewed": false,
+        "source_papers": [
+          "2412.14470v2"
+        ],
+        "claim": {
+          "kind": "finding",
+          "text": "For the three Claude models, M1 ranges from 86.2 to 89.8 and M2 from 15.2 to 36.6.",
+          "support": [
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3-Opus; Total: 59.8; M1: 86.2; M2: 36.6; M3: 63.6; M4: 59.0; M5: 48.0; M6: 81.1; M7: 35.1; M8: 72.2; M9: 59.5; M10: 81.5"
+            },
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3.5-Sonnet; Total: 59.4; M1: 89.8; M2: 27.6; M3: 55.8; M4: 58.3; M5: 48.5; M6: 79.5; M7: 18.3; M8: 63.3; M9: 63.4; M10: 81.5"
+            },
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3.5-Haiku; Total: 55.1; M1: 87.5; M2: 15.2; M3: 35.1; M4: 31.9; M5: 39.9; M6: 68.0; M7: 9.9; M8: 49.4; M9: 64.8; M10: 71.8"
+            }
+          ]
+        },
+        "record": {
+          "schema_version": 1,
+          "claim_sha256": "339d18cf4160bbde2c47bf1b4b40c0697ba722a85c921d4baa58f8ce65a4bc17",
+          "scope": {
+            "subject": "Claude models",
+            "metric": "reported safety score",
+            "setting": "Agent-SafetyBench Table 6",
+            "population": "Claude-3-Opus, Claude-3.5-Sonnet, and Claude-3.5-Haiku"
+          },
+          "before": {
+            "lower": "86.2",
+            "upper": "89.8",
+            "unit": "score",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+                "selector": "S4.T6.2.1.2.3"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+                "selector": "S4.T6.2.1.3.3"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+                "selector": "S4.T6.2.1.4.3"
+              }
+            ]
+          },
+          "after": {
+            "lower": "15.2",
+            "upper": "36.6",
+            "unit": "score",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+                "selector": "S4.T6.2.1.2.4"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+                "selector": "S4.T6.2.1.3.4"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+                "selector": "S4.T6.2.1.4.4"
+              }
+            ]
+          }
+        },
+        "answer_preserved": true,
+        "current_numeric_checker": "grounded",
+        "observation": {
+          "claim_index": 0,
+          "path": "structured",
+          "status": "linked",
+          "reason": "scope, role, value, and exact delivered evidence agree",
+          "links": {
+            "before": [
+              {
+                "locator": {
+                  "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+                  "selector": "S4.T6.2.1.2.3"
+                },
+                "paper": "2412.14470v2",
+                "source_url": "https://arxiv.org/html/2412.14470v2#S4.T6",
+                "source_sha256": "d75e5fb230a89a9ffa0484fbfe694ac609b7b5de3aa59204cadf73b473737338",
+                "passage_sha256": "e62e533f51aa668ef0d8ac9e59977179587b65fc4bf60bd47564ba13422e0b2e",
+                "source_text": "86.2",
+                "header_path": [
+                  "M1"
+                ],
+                "header_cell_id": "S4.T6.2.1.1.3",
+                "table_id": "S4.T6"
+              },
+              {
+                "locator": {
+                  "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+                  "selector": "S4.T6.2.1.3.3"
+                },
+                "paper": "2412.14470v2",
+                "source_url": "https://arxiv.org/html/2412.14470v2#S4.T6",
+                "source_sha256": "d75e5fb230a89a9ffa0484fbfe694ac609b7b5de3aa59204cadf73b473737338",
+                "passage_sha256": "a3d8d89cb5d03cb465a1ba4ffc0e503a91a0e2e099de533c0f6083c1b4cfa409",
+                "source_text": "89.8",
+                "header_path": [
+                  "M1"
+                ],
+                "header_cell_id": "S4.T6.2.1.1.3",
+                "table_id": "S4.T6"
+              },
+              {
+                "locator": {
+                  "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+                  "selector": "S4.T6.2.1.4.3"
+                },
+                "paper": "2412.14470v2",
+                "source_url": "https://arxiv.org/html/2412.14470v2#S4.T6",
+                "source_sha256": "d75e5fb230a89a9ffa0484fbfe694ac609b7b5de3aa59204cadf73b473737338",
+                "passage_sha256": "2d9c65c12d573e41e209c11a0d4f9b1b27a286c3122ccfab89383f5184138e0e",
+                "source_text": "87.5",
+                "header_path": [
+                  "M1"
+                ],
+                "header_cell_id": "S4.T6.2.1.1.3",
+                "table_id": "S4.T6"
+              }
+            ],
+            "after": [
+              {
+                "locator": {
+                  "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+                  "selector": "S4.T6.2.1.2.4"
+                },
+                "paper": "2412.14470v2",
+                "source_url": "https://arxiv.org/html/2412.14470v2#S4.T6",
+                "source_sha256": "d75e5fb230a89a9ffa0484fbfe694ac609b7b5de3aa59204cadf73b473737338",
+                "passage_sha256": "e62e533f51aa668ef0d8ac9e59977179587b65fc4bf60bd47564ba13422e0b2e",
+                "source_text": "36.6",
+                "header_path": [
+                  "M2"
+                ],
+                "header_cell_id": "S4.T6.2.1.1.4",
+                "table_id": "S4.T6"
+              },
+              {
+                "locator": {
+                  "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+                  "selector": "S4.T6.2.1.3.4"
+                },
+                "paper": "2412.14470v2",
+                "source_url": "https://arxiv.org/html/2412.14470v2#S4.T6",
+                "source_sha256": "d75e5fb230a89a9ffa0484fbfe694ac609b7b5de3aa59204cadf73b473737338",
+                "passage_sha256": "a3d8d89cb5d03cb465a1ba4ffc0e503a91a0e2e099de533c0f6083c1b4cfa409",
+                "source_text": "27.6",
+                "header_path": [
+                  "M2"
+                ],
+                "header_cell_id": "S4.T6.2.1.1.4",
+                "table_id": "S4.T6"
+              },
+              {
+                "locator": {
+                  "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+                  "selector": "S4.T6.2.1.4.4"
+                },
+                "paper": "2412.14470v2",
+                "source_url": "https://arxiv.org/html/2412.14470v2#S4.T6",
+                "source_sha256": "d75e5fb230a89a9ffa0484fbfe694ac609b7b5de3aa59204cadf73b473737338",
+                "passage_sha256": "2d9c65c12d573e41e209c11a0d4f9b1b27a286c3122ccfab89383f5184138e0e",
+                "source_text": "15.2",
+                "header_path": [
+                  "M2"
+                ],
+                "header_cell_id": "S4.T6.2.1.1.4",
+                "table_id": "S4.T6"
+              }
+            ]
+          },
+          "preview": "For reported safety score (Claude models, Agent-SafetyBench Table 6, Claude-3-Opus, Claude-3.5-Sonnet, and Claude-3.5-Haiku), the M1 range was 86.2–89.8 and the M2 range was 15.2–36.6."
+        },
+        "preview": {
+          "claim_index": 0,
+          "text": "For reported safety score (Claude models, Agent-SafetyBench Table 6, Claude-3-Opus, Claude-3.5-Sonnet, and Claude-3.5-Haiku), the M1 range was 86.2–89.8 and the M2 range was 15.2–36.6.",
+          "links": {
+            "before": [
+              {
+                "locator": {
+                  "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+                  "selector": "S4.T6.2.1.2.3"
+                },
+                "paper": "2412.14470v2",
+                "source_url": "https://arxiv.org/html/2412.14470v2#S4.T6",
+                "source_sha256": "d75e5fb230a89a9ffa0484fbfe694ac609b7b5de3aa59204cadf73b473737338",
+                "passage_sha256": "e62e533f51aa668ef0d8ac9e59977179587b65fc4bf60bd47564ba13422e0b2e",
+                "source_text": "86.2",
+                "header_path": [
+                  "M1"
+                ],
+                "header_cell_id": "S4.T6.2.1.1.3",
+                "table_id": "S4.T6"
+              },
+              {
+                "locator": {
+                  "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+                  "selector": "S4.T6.2.1.3.3"
+                },
+                "paper": "2412.14470v2",
+                "source_url": "https://arxiv.org/html/2412.14470v2#S4.T6",
+                "source_sha256": "d75e5fb230a89a9ffa0484fbfe694ac609b7b5de3aa59204cadf73b473737338",
+                "passage_sha256": "a3d8d89cb5d03cb465a1ba4ffc0e503a91a0e2e099de533c0f6083c1b4cfa409",
+                "source_text": "89.8",
+                "header_path": [
+                  "M1"
+                ],
+                "header_cell_id": "S4.T6.2.1.1.3",
+                "table_id": "S4.T6"
+              },
+              {
+                "locator": {
+                  "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+                  "selector": "S4.T6.2.1.4.3"
+                },
+                "paper": "2412.14470v2",
+                "source_url": "https://arxiv.org/html/2412.14470v2#S4.T6",
+                "source_sha256": "d75e5fb230a89a9ffa0484fbfe694ac609b7b5de3aa59204cadf73b473737338",
+                "passage_sha256": "2d9c65c12d573e41e209c11a0d4f9b1b27a286c3122ccfab89383f5184138e0e",
+                "source_text": "87.5",
+                "header_path": [
+                  "M1"
+                ],
+                "header_cell_id": "S4.T6.2.1.1.3",
+                "table_id": "S4.T6"
+              }
+            ],
+            "after": [
+              {
+                "locator": {
+                  "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+                  "selector": "S4.T6.2.1.2.4"
+                },
+                "paper": "2412.14470v2",
+                "source_url": "https://arxiv.org/html/2412.14470v2#S4.T6",
+                "source_sha256": "d75e5fb230a89a9ffa0484fbfe694ac609b7b5de3aa59204cadf73b473737338",
+                "passage_sha256": "e62e533f51aa668ef0d8ac9e59977179587b65fc4bf60bd47564ba13422e0b2e",
+                "source_text": "36.6",
+                "header_path": [
+                  "M2"
+                ],
+                "header_cell_id": "S4.T6.2.1.1.4",
+                "table_id": "S4.T6"
+              },
+              {
+                "locator": {
+                  "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+                  "selector": "S4.T6.2.1.3.4"
+                },
+                "paper": "2412.14470v2",
+                "source_url": "https://arxiv.org/html/2412.14470v2#S4.T6",
+                "source_sha256": "d75e5fb230a89a9ffa0484fbfe694ac609b7b5de3aa59204cadf73b473737338",
+                "passage_sha256": "a3d8d89cb5d03cb465a1ba4ffc0e503a91a0e2e099de533c0f6083c1b4cfa409",
+                "source_text": "27.6",
+                "header_path": [
+                  "M2"
+                ],
+                "header_cell_id": "S4.T6.2.1.1.4",
+                "table_id": "S4.T6"
+              },
+              {
+                "locator": {
+                  "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+                  "selector": "S4.T6.2.1.4.4"
+                },
+                "paper": "2412.14470v2",
+                "source_url": "https://arxiv.org/html/2412.14470v2#S4.T6",
+                "source_sha256": "d75e5fb230a89a9ffa0484fbfe694ac609b7b5de3aa59204cadf73b473737338",
+                "passage_sha256": "2d9c65c12d573e41e209c11a0d4f9b1b27a286c3122ccfab89383f5184138e0e",
+                "source_text": "15.2",
+                "header_path": [
+                  "M2"
+                ],
+                "header_cell_id": "S4.T6.2.1.1.4",
+                "table_id": "S4.T6"
+              }
+            ]
+          },
+          "human_review": "pending"
+        },
+        "passed": true
+      },
+      {
+        "case": "signed",
+        "expected": "linked",
+        "reviewed": false,
+        "source_papers": [
+          "2410.16285v1"
+        ],
+        "claim": {
+          "kind": "finding",
+          "text": "Table A1 lists negative mean differences for the two comparisons.",
+          "support": [
+            {
+              "chunk_id": "2410.16285v1_table_8151e213db9d89d4_1",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAssessing the Performance of Human-Capable LLMs -- Are LLMs Coming for Your Job?\nComparison of Groups\nGroup 1: gpt-4-1106-preview+RAG; Group 2: gpt-4-1106-preview; Mean Diff: -5.9471; p-adj: 0; Lower: -7.2174; Upper: -4.6767; Reject: TRUE"
+            },
+            {
+              "chunk_id": "2410.16285v1_table_8151e213db9d89d4_2",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAssessing the Performance of Human-Capable LLMs -- Are LLMs Coming for Your Job?\nComparison of Groups\nGroup 1: gpt-4-1106-preview+RAG; Group 2: human; Mean Diff: -6.2272; p-adj: 0; Lower: -7.5017; Upper: -4.9528; Reject: TRUE"
+            }
+          ]
+        },
+        "record": {
+          "schema_version": 1,
+          "claim_sha256": "4bb636b084b21bb0a0fc8b83f1df0ef0f0d012f40cccce95ed8f583af3420022",
+          "scope": {
+            "subject": "GPT-4-1106-preview with RAG",
+            "setting": "Comparison of Groups",
+            "population": "GPT-4 without RAG and human comparison groups",
+            "metric": "reported mean difference"
+          },
+          "before": {
+            "lower": "-5.9471",
+            "upper": "-5.9471",
+            "unit": "score",
+            "form": "point",
+            "locators": [
+              {
+                "chunk_id": "2410.16285v1_table_8151e213db9d89d4_1",
+                "selector": "A1.tab1.1.2.3"
+              }
+            ]
+          },
+          "after": {
+            "lower": "-6.2272",
+            "upper": "-6.2272",
+            "unit": "score",
+            "form": "point",
+            "locators": [
+              {
+                "chunk_id": "2410.16285v1_table_8151e213db9d89d4_2",
+                "selector": "A1.tab1.1.3.3"
+              }
+            ]
+          }
+        },
+        "answer_preserved": true,
+        "current_numeric_checker": "no_numbers",
+        "observation": {
+          "claim_index": 0,
+          "path": "structured",
+          "status": "linked",
+          "reason": "scope, role, value, and exact delivered evidence agree",
+          "links": {
+            "before": [
+              {
+                "locator": {
+                  "chunk_id": "2410.16285v1_table_8151e213db9d89d4_1",
+                  "selector": "A1.tab1.1.2.3"
+                },
+                "paper": "2410.16285v1",
+                "source_url": "https://arxiv.org/html/2410.16285v1#A1.tab1",
+                "source_sha256": "4f3e8bee6734ae3038a0a10df4b84ff3471026f1b79570ec54f28f8652bf09c8",
+                "passage_sha256": "45086842fda450f8869af19ee65729525e7b890da04514866a1e0b23a0dd8d67",
+                "source_text": "-5.9471",
+                "header_path": [
+                  "Mean Diff"
+                ],
+                "header_cell_id": "A1.tab1.1.1.3",
+                "table_id": "A1.tab1"
+              }
+            ],
+            "after": [
+              {
+                "locator": {
+                  "chunk_id": "2410.16285v1_table_8151e213db9d89d4_2",
+                  "selector": "A1.tab1.1.3.3"
+                },
+                "paper": "2410.16285v1",
+                "source_url": "https://arxiv.org/html/2410.16285v1#A1.tab1",
+                "source_sha256": "4f3e8bee6734ae3038a0a10df4b84ff3471026f1b79570ec54f28f8652bf09c8",
+                "passage_sha256": "06a6bbbe9caac54906332b838aed0f91e575d6f2d243ef86d360b2e781593033",
+                "source_text": "-6.2272",
+                "header_path": [
+                  "Mean Diff"
+                ],
+                "header_cell_id": "A1.tab1.1.1.3",
+                "table_id": "A1.tab1"
+              }
+            ]
+          },
+          "preview": "For reported mean difference (GPT-4-1106-preview with RAG, Comparison of Groups, GPT-4 without RAG and human comparison groups), the GPT-4 comparison was -5.9471 and the human comparison was -6.2272."
+        },
+        "preview": {
+          "claim_index": 0,
+          "text": "For reported mean difference (GPT-4-1106-preview with RAG, Comparison of Groups, GPT-4 without RAG and human comparison groups), the GPT-4 comparison was -5.9471 and the human comparison was -6.2272.",
+          "links": {
+            "before": [
+              {
+                "locator": {
+                  "chunk_id": "2410.16285v1_table_8151e213db9d89d4_1",
+                  "selector": "A1.tab1.1.2.3"
+                },
+                "paper": "2410.16285v1",
+                "source_url": "https://arxiv.org/html/2410.16285v1#A1.tab1",
+                "source_sha256": "4f3e8bee6734ae3038a0a10df4b84ff3471026f1b79570ec54f28f8652bf09c8",
+                "passage_sha256": "45086842fda450f8869af19ee65729525e7b890da04514866a1e0b23a0dd8d67",
+                "source_text": "-5.9471",
+                "header_path": [
+                  "Mean Diff"
+                ],
+                "header_cell_id": "A1.tab1.1.1.3",
+                "table_id": "A1.tab1"
+              }
+            ],
+            "after": [
+              {
+                "locator": {
+                  "chunk_id": "2410.16285v1_table_8151e213db9d89d4_2",
+                  "selector": "A1.tab1.1.3.3"
+                },
+                "paper": "2410.16285v1",
+                "source_url": "https://arxiv.org/html/2410.16285v1#A1.tab1",
+                "source_sha256": "4f3e8bee6734ae3038a0a10df4b84ff3471026f1b79570ec54f28f8652bf09c8",
+                "passage_sha256": "06a6bbbe9caac54906332b838aed0f91e575d6f2d243ef86d360b2e781593033",
+                "source_text": "-6.2272",
+                "header_path": [
+                  "Mean Diff"
+                ],
+                "header_cell_id": "A1.tab1.1.1.3",
+                "table_id": "A1.tab1"
+              }
+            ]
+          },
+          "human_review": "pending"
+        },
+        "passed": true
+      },
+      {
+        "case": "interval",
+        "expected": "linked",
+        "reviewed": false,
+        "source_papers": [
+          "2410.16285v1"
+        ],
+        "claim": {
+          "kind": "finding",
+          "text": "The reported bounds are negative for both group contrasts.",
+          "support": [
+            {
+              "chunk_id": "2410.16285v1_table_8151e213db9d89d4_1",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAssessing the Performance of Human-Capable LLMs -- Are LLMs Coming for Your Job?\nComparison of Groups\nGroup 1: gpt-4-1106-preview+RAG; Group 2: gpt-4-1106-preview; Mean Diff: -5.9471; p-adj: 0; Lower: -7.2174; Upper: -4.6767; Reject: TRUE"
+            },
+            {
+              "chunk_id": "2410.16285v1_table_8151e213db9d89d4_2",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAssessing the Performance of Human-Capable LLMs -- Are LLMs Coming for Your Job?\nComparison of Groups\nGroup 1: gpt-4-1106-preview+RAG; Group 2: human; Mean Diff: -6.2272; p-adj: 0; Lower: -7.5017; Upper: -4.9528; Reject: TRUE"
+            }
+          ]
+        },
+        "record": {
+          "schema_version": 1,
+          "claim_sha256": "1797adb910a98f248fbfc94f6734471edd0768750cc369aff911d65db4c65aa3",
+          "scope": {
+            "subject": "GPT-4-1106-preview with RAG",
+            "setting": "Comparison of Groups",
+            "population": "GPT-4 without RAG and human comparison groups",
+            "metric": "reported lower and upper bounds"
+          },
+          "before": {
+            "lower": "-7.2174",
+            "upper": "-4.6767",
+            "unit": "score",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2410.16285v1_table_8151e213db9d89d4_1",
+                "selector": "A1.tab1.1.2.5"
+              },
+              {
+                "chunk_id": "2410.16285v1_table_8151e213db9d89d4_1",
+                "selector": "A1.tab1.1.2.6"
+              }
+            ]
+          },
+          "after": {
+            "lower": "-7.5017",
+            "upper": "-4.9528",
+            "unit": "score",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2410.16285v1_table_8151e213db9d89d4_2",
+                "selector": "A1.tab1.1.3.5"
+              },
+              {
+                "chunk_id": "2410.16285v1_table_8151e213db9d89d4_2",
+                "selector": "A1.tab1.1.3.6"
+              }
+            ]
+          }
+        },
+        "answer_preserved": true,
+        "current_numeric_checker": "no_numbers",
+        "observation": {
+          "claim_index": 0,
+          "path": "structured",
+          "status": "linked",
+          "reason": "scope, role, value, and exact delivered evidence agree",
+          "links": {
+            "before": [
+              {
+                "locator": {
+                  "chunk_id": "2410.16285v1_table_8151e213db9d89d4_1",
+                  "selector": "A1.tab1.1.2.5"
+                },
+                "paper": "2410.16285v1",
+                "source_url": "https://arxiv.org/html/2410.16285v1#A1.tab1",
+                "source_sha256": "4f3e8bee6734ae3038a0a10df4b84ff3471026f1b79570ec54f28f8652bf09c8",
+                "passage_sha256": "45086842fda450f8869af19ee65729525e7b890da04514866a1e0b23a0dd8d67",
+                "source_text": "-7.2174",
+                "header_path": [
+                  "Lower"
+                ],
+                "header_cell_id": "A1.tab1.1.1.5",
+                "table_id": "A1.tab1"
+              },
+              {
+                "locator": {
+                  "chunk_id": "2410.16285v1_table_8151e213db9d89d4_1",
+                  "selector": "A1.tab1.1.2.6"
+                },
+                "paper": "2410.16285v1",
+                "source_url": "https://arxiv.org/html/2410.16285v1#A1.tab1",
+                "source_sha256": "4f3e8bee6734ae3038a0a10df4b84ff3471026f1b79570ec54f28f8652bf09c8",
+                "passage_sha256": "45086842fda450f8869af19ee65729525e7b890da04514866a1e0b23a0dd8d67",
+                "source_text": "-4.6767",
+                "header_path": [
+                  "Upper"
+                ],
+                "header_cell_id": "A1.tab1.1.1.6",
+                "table_id": "A1.tab1"
+              }
+            ],
+            "after": [
+              {
+                "locator": {
+                  "chunk_id": "2410.16285v1_table_8151e213db9d89d4_2",
+                  "selector": "A1.tab1.1.3.5"
+                },
+                "paper": "2410.16285v1",
+                "source_url": "https://arxiv.org/html/2410.16285v1#A1.tab1",
+                "source_sha256": "4f3e8bee6734ae3038a0a10df4b84ff3471026f1b79570ec54f28f8652bf09c8",
+                "passage_sha256": "06a6bbbe9caac54906332b838aed0f91e575d6f2d243ef86d360b2e781593033",
+                "source_text": "-7.5017",
+                "header_path": [
+                  "Lower"
+                ],
+                "header_cell_id": "A1.tab1.1.1.5",
+                "table_id": "A1.tab1"
+              },
+              {
+                "locator": {
+                  "chunk_id": "2410.16285v1_table_8151e213db9d89d4_2",
+                  "selector": "A1.tab1.1.3.6"
+                },
+                "paper": "2410.16285v1",
+                "source_url": "https://arxiv.org/html/2410.16285v1#A1.tab1",
+                "source_sha256": "4f3e8bee6734ae3038a0a10df4b84ff3471026f1b79570ec54f28f8652bf09c8",
+                "passage_sha256": "06a6bbbe9caac54906332b838aed0f91e575d6f2d243ef86d360b2e781593033",
+                "source_text": "-4.9528",
+                "header_path": [
+                  "Upper"
+                ],
+                "header_cell_id": "A1.tab1.1.1.6",
+                "table_id": "A1.tab1"
+              }
+            ]
+          },
+          "preview": "For reported lower and upper bounds (GPT-4-1106-preview with RAG, Comparison of Groups, GPT-4 without RAG and human comparison groups), the GPT-4 comparison was -7.2174–-4.6767 and the human comparison was -7.5017–-4.9528."
+        },
+        "preview": {
+          "claim_index": 0,
+          "text": "For reported lower and upper bounds (GPT-4-1106-preview with RAG, Comparison of Groups, GPT-4 without RAG and human comparison groups), the GPT-4 comparison was -7.2174–-4.6767 and the human comparison was -7.5017–-4.9528.",
+          "links": {
+            "before": [
+              {
+                "locator": {
+                  "chunk_id": "2410.16285v1_table_8151e213db9d89d4_1",
+                  "selector": "A1.tab1.1.2.5"
+                },
+                "paper": "2410.16285v1",
+                "source_url": "https://arxiv.org/html/2410.16285v1#A1.tab1",
+                "source_sha256": "4f3e8bee6734ae3038a0a10df4b84ff3471026f1b79570ec54f28f8652bf09c8",
+                "passage_sha256": "45086842fda450f8869af19ee65729525e7b890da04514866a1e0b23a0dd8d67",
+                "source_text": "-7.2174",
+                "header_path": [
+                  "Lower"
+                ],
+                "header_cell_id": "A1.tab1.1.1.5",
+                "table_id": "A1.tab1"
+              },
+              {
+                "locator": {
+                  "chunk_id": "2410.16285v1_table_8151e213db9d89d4_1",
+                  "selector": "A1.tab1.1.2.6"
+                },
+                "paper": "2410.16285v1",
+                "source_url": "https://arxiv.org/html/2410.16285v1#A1.tab1",
+                "source_sha256": "4f3e8bee6734ae3038a0a10df4b84ff3471026f1b79570ec54f28f8652bf09c8",
+                "passage_sha256": "45086842fda450f8869af19ee65729525e7b890da04514866a1e0b23a0dd8d67",
+                "source_text": "-4.6767",
+                "header_path": [
+                  "Upper"
+                ],
+                "header_cell_id": "A1.tab1.1.1.6",
+                "table_id": "A1.tab1"
+              }
+            ],
+            "after": [
+              {
+                "locator": {
+                  "chunk_id": "2410.16285v1_table_8151e213db9d89d4_2",
+                  "selector": "A1.tab1.1.3.5"
+                },
+                "paper": "2410.16285v1",
+                "source_url": "https://arxiv.org/html/2410.16285v1#A1.tab1",
+                "source_sha256": "4f3e8bee6734ae3038a0a10df4b84ff3471026f1b79570ec54f28f8652bf09c8",
+                "passage_sha256": "06a6bbbe9caac54906332b838aed0f91e575d6f2d243ef86d360b2e781593033",
+                "source_text": "-7.5017",
+                "header_path": [
+                  "Lower"
+                ],
+                "header_cell_id": "A1.tab1.1.1.5",
+                "table_id": "A1.tab1"
+              },
+              {
+                "locator": {
+                  "chunk_id": "2410.16285v1_table_8151e213db9d89d4_2",
+                  "selector": "A1.tab1.1.3.6"
+                },
+                "paper": "2410.16285v1",
+                "source_url": "https://arxiv.org/html/2410.16285v1#A1.tab1",
+                "source_sha256": "4f3e8bee6734ae3038a0a10df4b84ff3471026f1b79570ec54f28f8652bf09c8",
+                "passage_sha256": "06a6bbbe9caac54906332b838aed0f91e575d6f2d243ef86d360b2e781593033",
+                "source_text": "-4.9528",
+                "header_path": [
+                  "Upper"
+                ],
+                "header_cell_id": "A1.tab1.1.1.6",
+                "table_id": "A1.tab1"
+              }
+            ]
+          },
+          "human_review": "pending"
+        },
+        "passed": true
+      },
+      {
+        "case": "wrong-metric",
+        "expected": "reject",
+        "reviewed": false,
+        "source_papers": [
+          "2412.14470v2"
+        ],
+        "claim": {
+          "kind": "finding",
+          "text": "For the three Claude models, M1 ranges from 86.2 to 89.8 and M2 from 15.2 to 36.6.",
+          "support": [
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3-Opus; Total: 59.8; M1: 86.2; M2: 36.6; M3: 63.6; M4: 59.0; M5: 48.0; M6: 81.1; M7: 35.1; M8: 72.2; M9: 59.5; M10: 81.5"
+            },
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3.5-Sonnet; Total: 59.4; M1: 89.8; M2: 27.6; M3: 55.8; M4: 58.3; M5: 48.5; M6: 79.5; M7: 18.3; M8: 63.3; M9: 63.4; M10: 81.5"
+            },
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3.5-Haiku; Total: 55.1; M1: 87.5; M2: 15.2; M3: 35.1; M4: 31.9; M5: 39.9; M6: 68.0; M7: 9.9; M8: 49.4; M9: 64.8; M10: 71.8"
+            }
+          ]
+        },
+        "record": {
+          "schema_version": 1,
+          "claim_sha256": "339d18cf4160bbde2c47bf1b4b40c0697ba722a85c921d4baa58f8ce65a4bc17",
+          "scope": {
+            "subject": "Claude models",
+            "metric": "real-world incident rate",
+            "setting": "Agent-SafetyBench Table 6",
+            "population": "Claude-3-Opus, Claude-3.5-Sonnet, and Claude-3.5-Haiku"
+          },
+          "before": {
+            "lower": "86.2",
+            "upper": "89.8",
+            "unit": "score",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+                "selector": "S4.T6.2.1.2.3"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+                "selector": "S4.T6.2.1.3.3"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+                "selector": "S4.T6.2.1.4.3"
+              }
+            ]
+          },
+          "after": {
+            "lower": "15.2",
+            "upper": "36.6",
+            "unit": "score",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+                "selector": "S4.T6.2.1.2.4"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+                "selector": "S4.T6.2.1.3.4"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+                "selector": "S4.T6.2.1.4.4"
+              }
+            ]
+          }
+        },
+        "answer_preserved": true,
+        "current_numeric_checker": "grounded",
+        "observation": {
+          "claim_index": 0,
+          "path": "structured",
+          "status": "reject",
+          "reason": "different metric"
+        },
+        "preview": null,
+        "passed": true
+      },
+      {
+        "case": "wrong-population",
+        "expected": "reject",
+        "reviewed": false,
+        "source_papers": [
+          "2412.14470v2"
+        ],
+        "claim": {
+          "kind": "finding",
+          "text": "For the three Claude models, M1 ranges from 86.2 to 89.8 and M2 from 15.2 to 36.6.",
+          "support": [
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3-Opus; Total: 59.8; M1: 86.2; M2: 36.6; M3: 63.6; M4: 59.0; M5: 48.0; M6: 81.1; M7: 35.1; M8: 72.2; M9: 59.5; M10: 81.5"
+            },
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3.5-Sonnet; Total: 59.4; M1: 89.8; M2: 27.6; M3: 55.8; M4: 58.3; M5: 48.5; M6: 79.5; M7: 18.3; M8: 63.3; M9: 63.4; M10: 81.5"
+            },
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3.5-Haiku; Total: 55.1; M1: 87.5; M2: 15.2; M3: 35.1; M4: 31.9; M5: 39.9; M6: 68.0; M7: 9.9; M8: 49.4; M9: 64.8; M10: 71.8"
+            }
+          ]
+        },
+        "record": {
+          "schema_version": 1,
+          "claim_sha256": "339d18cf4160bbde2c47bf1b4b40c0697ba722a85c921d4baa58f8ce65a4bc17",
+          "scope": {
+            "subject": "Claude models",
+            "metric": "reported safety score",
+            "setting": "Agent-SafetyBench Table 6",
+            "population": "all evaluated models"
+          },
+          "before": {
+            "lower": "86.2",
+            "upper": "89.8",
+            "unit": "score",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+                "selector": "S4.T6.2.1.2.3"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+                "selector": "S4.T6.2.1.3.3"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+                "selector": "S4.T6.2.1.4.3"
+              }
+            ]
+          },
+          "after": {
+            "lower": "15.2",
+            "upper": "36.6",
+            "unit": "score",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+                "selector": "S4.T6.2.1.2.4"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+                "selector": "S4.T6.2.1.3.4"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+                "selector": "S4.T6.2.1.4.4"
+              }
+            ]
+          }
+        },
+        "answer_preserved": true,
+        "current_numeric_checker": "grounded",
+        "observation": {
+          "claim_index": 0,
+          "path": "structured",
+          "status": "reject",
+          "reason": "different population"
+        },
+        "preview": null,
+        "passed": true
+      },
+      {
+        "case": "roles-swapped",
+        "expected": "reject",
+        "reviewed": false,
+        "source_papers": [
+          "2412.14470v2"
+        ],
+        "claim": {
+          "kind": "finding",
+          "text": "For the three Claude models, M1 ranges from 86.2 to 89.8 and M2 from 15.2 to 36.6.",
+          "support": [
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3-Opus; Total: 59.8; M1: 86.2; M2: 36.6; M3: 63.6; M4: 59.0; M5: 48.0; M6: 81.1; M7: 35.1; M8: 72.2; M9: 59.5; M10: 81.5"
+            },
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3.5-Sonnet; Total: 59.4; M1: 89.8; M2: 27.6; M3: 55.8; M4: 58.3; M5: 48.5; M6: 79.5; M7: 18.3; M8: 63.3; M9: 63.4; M10: 81.5"
+            },
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3.5-Haiku; Total: 55.1; M1: 87.5; M2: 15.2; M3: 35.1; M4: 31.9; M5: 39.9; M6: 68.0; M7: 9.9; M8: 49.4; M9: 64.8; M10: 71.8"
+            }
+          ]
+        },
+        "record": {
+          "schema_version": 1,
+          "claim_sha256": "339d18cf4160bbde2c47bf1b4b40c0697ba722a85c921d4baa58f8ce65a4bc17",
+          "scope": {
+            "subject": "Claude models",
+            "metric": "reported safety score",
+            "setting": "Agent-SafetyBench Table 6",
+            "population": "Claude-3-Opus, Claude-3.5-Sonnet, and Claude-3.5-Haiku"
+          },
+          "before": {
+            "lower": "15.2",
+            "upper": "36.6",
+            "unit": "score",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+                "selector": "S4.T6.2.1.2.4"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+                "selector": "S4.T6.2.1.3.4"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+                "selector": "S4.T6.2.1.4.4"
+              }
+            ]
+          },
+          "after": {
+            "lower": "86.2",
+            "upper": "89.8",
+            "unit": "score",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+                "selector": "S4.T6.2.1.2.3"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+                "selector": "S4.T6.2.1.3.3"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+                "selector": "S4.T6.2.1.4.3"
+              }
+            ]
+          }
+        },
+        "answer_preserved": true,
+        "current_numeric_checker": "grounded",
+        "observation": {
+          "claim_index": 0,
+          "path": "structured",
+          "status": "reject",
+          "reason": "before source locators differ"
+        },
+        "preview": null,
+        "passed": true
+      },
+      {
+        "case": "hidden-decimal-drift",
+        "expected": "reject",
+        "reviewed": false,
+        "source_papers": [
+          "2412.14470v2"
+        ],
+        "claim": {
+          "kind": "finding",
+          "text": "For the three Claude models, M1 ranges from 86.2 to 89.8 and M2 from 15.2 to 36.6.",
+          "support": [
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3-Opus; Total: 59.8; M1: 86.2; M2: 36.6; M3: 63.6; M4: 59.0; M5: 48.0; M6: 81.1; M7: 35.1; M8: 72.2; M9: 59.5; M10: 81.5"
+            },
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3.5-Sonnet; Total: 59.4; M1: 89.8; M2: 27.6; M3: 55.8; M4: 58.3; M5: 48.5; M6: 79.5; M7: 18.3; M8: 63.3; M9: 63.4; M10: 81.5"
+            },
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3.5-Haiku; Total: 55.1; M1: 87.5; M2: 15.2; M3: 35.1; M4: 31.9; M5: 39.9; M6: 68.0; M7: 9.9; M8: 49.4; M9: 64.8; M10: 71.8"
+            }
+          ]
+        },
+        "record": {
+          "schema_version": 1,
+          "claim_sha256": "339d18cf4160bbde2c47bf1b4b40c0697ba722a85c921d4baa58f8ce65a4bc17",
+          "scope": {
+            "subject": "Claude models",
+            "metric": "reported safety score",
+            "setting": "Agent-SafetyBench Table 6",
+            "population": "Claude-3-Opus, Claude-3.5-Sonnet, and Claude-3.5-Haiku"
+          },
+          "before": {
+            "lower": "86.2",
+            "upper": "89.80000000000000000001",
+            "unit": "score",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+                "selector": "S4.T6.2.1.2.3"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+                "selector": "S4.T6.2.1.3.3"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+                "selector": "S4.T6.2.1.4.3"
+              }
+            ]
+          },
+          "after": {
+            "lower": "15.2",
+            "upper": "36.6",
+            "unit": "score",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+                "selector": "S4.T6.2.1.2.4"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+                "selector": "S4.T6.2.1.3.4"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+                "selector": "S4.T6.2.1.4.4"
+              }
+            ]
+          }
+        },
+        "answer_preserved": true,
+        "current_numeric_checker": "grounded",
+        "observation": {
+          "claim_index": 0,
+          "path": "structured",
+          "status": "reject",
+          "reason": "before value, form, or unit differs"
+        },
+        "preview": null,
+        "passed": true
+      },
+      {
+        "case": "wrong-unit",
+        "expected": "reject",
+        "reviewed": false,
+        "source_papers": [
+          "2412.14470v2"
+        ],
+        "claim": {
+          "kind": "finding",
+          "text": "For the three Claude models, M1 ranges from 86.2 to 89.8 and M2 from 15.2 to 36.6.",
+          "support": [
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3-Opus; Total: 59.8; M1: 86.2; M2: 36.6; M3: 63.6; M4: 59.0; M5: 48.0; M6: 81.1; M7: 35.1; M8: 72.2; M9: 59.5; M10: 81.5"
+            },
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3.5-Sonnet; Total: 59.4; M1: 89.8; M2: 27.6; M3: 55.8; M4: 58.3; M5: 48.5; M6: 79.5; M7: 18.3; M8: 63.3; M9: 63.4; M10: 81.5"
+            },
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3.5-Haiku; Total: 55.1; M1: 87.5; M2: 15.2; M3: 35.1; M4: 31.9; M5: 39.9; M6: 68.0; M7: 9.9; M8: 49.4; M9: 64.8; M10: 71.8"
+            }
+          ]
+        },
+        "record": {
+          "schema_version": 1,
+          "claim_sha256": "339d18cf4160bbde2c47bf1b4b40c0697ba722a85c921d4baa58f8ce65a4bc17",
+          "scope": {
+            "subject": "Claude models",
+            "metric": "reported safety score",
+            "setting": "Agent-SafetyBench Table 6",
+            "population": "Claude-3-Opus, Claude-3.5-Sonnet, and Claude-3.5-Haiku"
+          },
+          "before": {
+            "lower": "86.2",
+            "upper": "89.8",
+            "unit": "score",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+                "selector": "S4.T6.2.1.2.3"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+                "selector": "S4.T6.2.1.3.3"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+                "selector": "S4.T6.2.1.4.3"
+              }
+            ]
+          },
+          "after": {
+            "lower": "15.2",
+            "upper": "36.6",
+            "unit": "percentage_points",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+                "selector": "S4.T6.2.1.2.4"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+                "selector": "S4.T6.2.1.3.4"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+                "selector": "S4.T6.2.1.4.4"
+              }
+            ]
+          }
+        },
+        "answer_preserved": true,
+        "current_numeric_checker": "grounded",
+        "observation": {
+          "claim_index": 0,
+          "path": "structured",
+          "status": "reject",
+          "reason": "after value, form, or unit differs"
+        },
+        "preview": null,
+        "passed": true
+      },
+      {
+        "case": "unknown-cell",
+        "expected": "review",
+        "reviewed": false,
+        "source_papers": [
+          "2412.14470v2"
+        ],
+        "claim": {
+          "kind": "finding",
+          "text": "For the three Claude models, M1 ranges from 86.2 to 89.8 and M2 from 15.2 to 36.6.",
+          "support": [
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3-Opus; Total: 59.8; M1: 86.2; M2: 36.6; M3: 63.6; M4: 59.0; M5: 48.0; M6: 81.1; M7: 35.1; M8: 72.2; M9: 59.5; M10: 81.5"
+            },
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3.5-Sonnet; Total: 59.4; M1: 89.8; M2: 27.6; M3: 55.8; M4: 58.3; M5: 48.5; M6: 79.5; M7: 18.3; M8: 63.3; M9: 63.4; M10: 81.5"
+            },
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3.5-Haiku; Total: 55.1; M1: 87.5; M2: 15.2; M3: 35.1; M4: 31.9; M5: 39.9; M6: 68.0; M7: 9.9; M8: 49.4; M9: 64.8; M10: 71.8"
+            }
+          ]
+        },
+        "record": {
+          "schema_version": 1,
+          "claim_sha256": "339d18cf4160bbde2c47bf1b4b40c0697ba722a85c921d4baa58f8ce65a4bc17",
+          "scope": {
+            "subject": "Claude models",
+            "metric": "reported safety score",
+            "setting": "Agent-SafetyBench Table 6",
+            "population": "Claude-3-Opus, Claude-3.5-Sonnet, and Claude-3.5-Haiku"
+          },
+          "before": {
+            "lower": "86.2",
+            "upper": "89.8",
+            "unit": "score",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+                "selector": "S4.T6.2.1.2.3"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+                "selector": "S4.T6.2.1.3.3"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+                "selector": "S4.T6.2.1.4.3"
+              }
+            ]
+          },
+          "after": {
+            "lower": "15.2",
+            "upper": "36.6",
+            "unit": "score",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+                "selector": "unknown-cell"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+                "selector": "S4.T6.2.1.3.4"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+                "selector": "S4.T6.2.1.4.4"
+              }
+            ]
+          }
+        },
+        "answer_preserved": true,
+        "current_numeric_checker": "grounded",
+        "observation": {
+          "claim_index": 0,
+          "path": "structured",
+          "status": "review",
+          "reason": "no unique trusted comparison for these locations"
+        },
+        "preview": null,
+        "passed": true
+      },
+      {
+        "case": "record-for-different-claim",
+        "expected": "review",
+        "reviewed": false,
+        "source_papers": [
+          "2412.14470v2"
+        ],
+        "claim": {
+          "kind": "finding",
+          "text": "For the three Claude models, M1 ranges from 86.2 to 89.8 and M2 from 15.2 to 36.6.",
+          "support": [
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3-Opus; Total: 59.8; M1: 86.2; M2: 36.6; M3: 63.6; M4: 59.0; M5: 48.0; M6: 81.1; M7: 35.1; M8: 72.2; M9: 59.5; M10: 81.5"
+            },
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3.5-Sonnet; Total: 59.4; M1: 89.8; M2: 27.6; M3: 55.8; M4: 58.3; M5: 48.5; M6: 79.5; M7: 18.3; M8: 63.3; M9: 63.4; M10: 81.5"
+            },
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3.5-Haiku; Total: 55.1; M1: 87.5; M2: 15.2; M3: 35.1; M4: 31.9; M5: 39.9; M6: 68.0; M7: 9.9; M8: 49.4; M9: 64.8; M10: 71.8"
+            }
+          ]
+        },
+        "record": {
+          "schema_version": 1,
+          "claim_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "scope": {
+            "subject": "Claude models",
+            "metric": "reported safety score",
+            "setting": "Agent-SafetyBench Table 6",
+            "population": "Claude-3-Opus, Claude-3.5-Sonnet, and Claude-3.5-Haiku"
+          },
+          "before": {
+            "lower": "86.2",
+            "upper": "89.8",
+            "unit": "score",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+                "selector": "S4.T6.2.1.2.3"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+                "selector": "S4.T6.2.1.3.3"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+                "selector": "S4.T6.2.1.4.3"
+              }
+            ]
+          },
+          "after": {
+            "lower": "15.2",
+            "upper": "36.6",
+            "unit": "score",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+                "selector": "S4.T6.2.1.2.4"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+                "selector": "S4.T6.2.1.3.4"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+                "selector": "S4.T6.2.1.4.4"
+              }
+            ]
+          }
+        },
+        "answer_preserved": true,
+        "current_numeric_checker": "grounded",
+        "observation": {
+          "claim_index": 0,
+          "path": "structured",
+          "status": "review",
+          "reason": "record belongs to a different claim"
+        },
+        "preview": null,
+        "passed": true
+      },
+      {
+        "case": "row-missing",
+        "expected": "review",
+        "reviewed": false,
+        "source_papers": [
+          "2412.14470v2"
+        ],
+        "claim": {
+          "kind": "finding",
+          "text": "For the three Claude models, M1 ranges from 86.2 to 89.8 and M2 from 15.2 to 36.6.",
+          "support": [
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3-Opus; Total: 59.8; M1: 86.2; M2: 36.6; M3: 63.6; M4: 59.0; M5: 48.0; M6: 81.1; M7: 35.1; M8: 72.2; M9: 59.5; M10: 81.5"
+            },
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3.5-Sonnet; Total: 59.4; M1: 89.8; M2: 27.6; M3: 55.8; M4: 58.3; M5: 48.5; M6: 79.5; M7: 18.3; M8: 63.3; M9: 63.4; M10: 81.5"
+            },
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3.5-Haiku; Total: 55.1; M1: 87.5; M2: 15.2; M3: 35.1; M4: 31.9; M5: 39.9; M6: 68.0; M7: 9.9; M8: 49.4; M9: 64.8; M10: 71.8"
+            }
+          ]
+        },
+        "record": {
+          "schema_version": 1,
+          "claim_sha256": "339d18cf4160bbde2c47bf1b4b40c0697ba722a85c921d4baa58f8ce65a4bc17",
+          "scope": {
+            "subject": "Claude models",
+            "metric": "reported safety score",
+            "setting": "Agent-SafetyBench Table 6",
+            "population": "Claude-3-Opus, Claude-3.5-Sonnet, and Claude-3.5-Haiku"
+          },
+          "before": {
+            "lower": "86.2",
+            "upper": "89.8",
+            "unit": "score",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+                "selector": "S4.T6.2.1.2.3"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+                "selector": "S4.T6.2.1.3.3"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+                "selector": "S4.T6.2.1.4.3"
+              }
+            ]
+          },
+          "after": {
+            "lower": "15.2",
+            "upper": "36.6",
+            "unit": "score",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+                "selector": "S4.T6.2.1.2.4"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+                "selector": "S4.T6.2.1.3.4"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+                "selector": "S4.T6.2.1.4.4"
+              }
+            ]
+          }
+        },
+        "answer_preserved": true,
+        "current_numeric_checker": "grounded",
+        "observation": {
+          "claim_index": 0,
+          "path": "structured",
+          "status": "review",
+          "reason": "required source row or span is absent from cited evidence"
+        },
+        "preview": null,
+        "passed": true
+      },
+      {
+        "case": "wrong-index",
+        "expected": "review",
+        "reviewed": false,
+        "source_papers": [
+          "2412.14470v2"
+        ],
+        "claim": {
+          "kind": "finding",
+          "text": "For the three Claude models, M1 ranges from 86.2 to 89.8 and M2 from 15.2 to 36.6.",
+          "support": [
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3-Opus; Total: 59.8; M1: 86.2; M2: 36.6; M3: 63.6; M4: 59.0; M5: 48.0; M6: 81.1; M7: 35.1; M8: 72.2; M9: 59.5; M10: 81.5"
+            },
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3.5-Sonnet; Total: 59.4; M1: 89.8; M2: 27.6; M3: 55.8; M4: 58.3; M5: 48.5; M6: 79.5; M7: 18.3; M8: 63.3; M9: 63.4; M10: 81.5"
+            },
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3.5-Haiku; Total: 55.1; M1: 87.5; M2: 15.2; M3: 35.1; M4: 31.9; M5: 39.9; M6: 68.0; M7: 9.9; M8: 49.4; M9: 64.8; M10: 71.8"
+            }
+          ]
+        },
+        "record": {
+          "schema_version": 1,
+          "claim_sha256": "339d18cf4160bbde2c47bf1b4b40c0697ba722a85c921d4baa58f8ce65a4bc17",
+          "scope": {
+            "subject": "Claude models",
+            "metric": "reported safety score",
+            "setting": "Agent-SafetyBench Table 6",
+            "population": "Claude-3-Opus, Claude-3.5-Sonnet, and Claude-3.5-Haiku"
+          },
+          "before": {
+            "lower": "86.2",
+            "upper": "89.8",
+            "unit": "score",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+                "selector": "S4.T6.2.1.2.3"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+                "selector": "S4.T6.2.1.3.3"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+                "selector": "S4.T6.2.1.4.3"
+              }
+            ]
+          },
+          "after": {
+            "lower": "15.2",
+            "upper": "36.6",
+            "unit": "score",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+                "selector": "S4.T6.2.1.2.4"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+                "selector": "S4.T6.2.1.3.4"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+                "selector": "S4.T6.2.1.4.4"
+              }
+            ]
+          }
+        },
+        "answer_preserved": true,
+        "current_numeric_checker": "grounded",
+        "observation": {
+          "claim_index": 0,
+          "path": "structured",
+          "status": "review",
+          "reason": "required source row or span is absent from cited evidence"
+        },
+        "preview": null,
+        "passed": true
+      },
+      {
+        "case": "changed-evidence",
+        "expected": "review",
+        "reviewed": false,
+        "source_papers": [
+          "2412.14470v2"
+        ],
+        "claim": {
+          "kind": "finding",
+          "text": "For the three Claude models, M1 ranges from 86.2 to 89.8 and M2 from 15.2 to 36.6.",
+          "support": [
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3-Opus; Total: 59.8; M1: 86.2; M2: 36.6; M3: 63.6; M4: 59.0; M5: 48.0; M6: 81.1; M7: 35.1; M8: 72.2; M9: 59.5; M10: 81.5"
+            },
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3.5-Sonnet; Total: 59.4; M1: 89.8; M2: 27.6; M3: 55.8; M4: 58.3; M5: 48.5; M6: 79.5; M7: 18.3; M8: 63.3; M9: 63.4; M10: 81.5"
+            },
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3.5-Haiku; Total: 55.1; M1: 87.5; M2: 15.2; M3: 35.1; M4: 31.9; M5: 39.9; M6: 68.0; M7: 9.9; M8: 49.4; M9: 64.8; M10: 71.8"
+            }
+          ]
+        },
+        "record": {
+          "schema_version": 1,
+          "claim_sha256": "339d18cf4160bbde2c47bf1b4b40c0697ba722a85c921d4baa58f8ce65a4bc17",
+          "scope": {
+            "subject": "Claude models",
+            "metric": "reported safety score",
+            "setting": "Agent-SafetyBench Table 6",
+            "population": "Claude-3-Opus, Claude-3.5-Sonnet, and Claude-3.5-Haiku"
+          },
+          "before": {
+            "lower": "86.2",
+            "upper": "89.8",
+            "unit": "score",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+                "selector": "S4.T6.2.1.2.3"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+                "selector": "S4.T6.2.1.3.3"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+                "selector": "S4.T6.2.1.4.3"
+              }
+            ]
+          },
+          "after": {
+            "lower": "15.2",
+            "upper": "36.6",
+            "unit": "score",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+                "selector": "S4.T6.2.1.2.4"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+                "selector": "S4.T6.2.1.3.4"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+                "selector": "S4.T6.2.1.4.4"
+              }
+            ]
+          }
+        },
+        "answer_preserved": true,
+        "current_numeric_checker": "grounded",
+        "observation": {
+          "claim_index": 0,
+          "path": "structured",
+          "status": "review",
+          "reason": "required source row or span is absent from cited evidence"
+        },
+        "preview": null,
+        "passed": true
+      },
+      {
+        "case": "changed-table-cell-metadata",
+        "expected": "review",
+        "reviewed": false,
+        "source_papers": [
+          "2412.14470v2"
+        ],
+        "claim": {
+          "kind": "finding",
+          "text": "For the three Claude models, M1 ranges from 86.2 to 89.8 and M2 from 15.2 to 36.6.",
+          "support": [
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3-Opus; Total: 59.8; M1: 86.2; M2: 36.6; M3: 63.6; M4: 59.0; M5: 48.0; M6: 81.1; M7: 35.1; M8: 72.2; M9: 59.5; M10: 81.5"
+            },
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3.5-Sonnet; Total: 59.4; M1: 89.8; M2: 27.6; M3: 55.8; M4: 58.3; M5: 48.5; M6: 79.5; M7: 18.3; M8: 63.3; M9: 63.4; M10: 81.5"
+            },
+            {
+              "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgent-SafetyBench: Evaluating the Safety of LLM Agents\nTable 6: The safety scores on failure modes. “M i ” represents the i -th failure mode defined in Table 4 .\nModel: Claude-3.5-Haiku; Total: 55.1; M1: 87.5; M2: 15.2; M3: 35.1; M4: 31.9; M5: 39.9; M6: 68.0; M7: 9.9; M8: 49.4; M9: 64.8; M10: 71.8"
+            }
+          ]
+        },
+        "record": {
+          "schema_version": 1,
+          "claim_sha256": "339d18cf4160bbde2c47bf1b4b40c0697ba722a85c921d4baa58f8ce65a4bc17",
+          "scope": {
+            "subject": "Claude models",
+            "metric": "reported safety score",
+            "setting": "Agent-SafetyBench Table 6",
+            "population": "Claude-3-Opus, Claude-3.5-Sonnet, and Claude-3.5-Haiku"
+          },
+          "before": {
+            "lower": "86.2",
+            "upper": "89.8",
+            "unit": "score",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+                "selector": "S4.T6.2.1.2.3"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+                "selector": "S4.T6.2.1.3.3"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+                "selector": "S4.T6.2.1.4.3"
+              }
+            ]
+          },
+          "after": {
+            "lower": "15.2",
+            "upper": "36.6",
+            "unit": "score",
+            "form": "range",
+            "locators": [
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_1",
+                "selector": "S4.T6.2.1.2.4"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_2",
+                "selector": "S4.T6.2.1.3.4"
+              },
+              {
+                "chunk_id": "2412.14470v2_table_c68d8ead56911a6b_3",
+                "selector": "S4.T6.2.1.4.4"
+              }
+            ]
+          }
+        },
+        "answer_preserved": true,
+        "current_numeric_checker": "grounded",
+        "observation": {
+          "claim_index": 0,
+          "path": "structured",
+          "status": "review",
+          "reason": "required source row or span is absent from cited evidence"
+        },
+        "preview": null,
+        "passed": true
+      },
+      {
+        "case": "sign-flipped",
+        "expected": "reject",
+        "reviewed": false,
+        "source_papers": [
+          "2410.16285v1"
+        ],
+        "claim": {
+          "kind": "finding",
+          "text": "Table A1 lists negative mean differences for the two comparisons.",
+          "support": [
+            {
+              "chunk_id": "2410.16285v1_table_8151e213db9d89d4_1",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAssessing the Performance of Human-Capable LLMs -- Are LLMs Coming for Your Job?\nComparison of Groups\nGroup 1: gpt-4-1106-preview+RAG; Group 2: gpt-4-1106-preview; Mean Diff: -5.9471; p-adj: 0; Lower: -7.2174; Upper: -4.6767; Reject: TRUE"
+            },
+            {
+              "chunk_id": "2410.16285v1_table_8151e213db9d89d4_2",
+              "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nAssessing the Performance of Human-Capable LLMs -- Are LLMs Coming for Your Job?\nComparison of Groups\nGroup 1: gpt-4-1106-preview+RAG; Group 2: human; Mean Diff: -6.2272; p-adj: 0; Lower: -7.5017; Upper: -4.9528; Reject: TRUE"
+            }
+          ]
+        },
+        "record": {
+          "schema_version": 1,
+          "claim_sha256": "4bb636b084b21bb0a0fc8b83f1df0ef0f0d012f40cccce95ed8f583af3420022",
+          "scope": {
+            "subject": "GPT-4-1106-preview with RAG",
+            "setting": "Comparison of Groups",
+            "population": "GPT-4 without RAG and human comparison groups",
+            "metric": "reported mean difference"
+          },
+          "before": {
+            "lower": "-5.9471",
+            "upper": "-5.9471",
+            "unit": "score",
+            "form": "point",
+            "locators": [
+              {
+                "chunk_id": "2410.16285v1_table_8151e213db9d89d4_1",
+                "selector": "A1.tab1.1.2.3"
+              }
+            ]
+          },
+          "after": {
+            "lower": "6.2272",
+            "upper": "6.2272",
+            "unit": "score",
+            "form": "point",
+            "locators": [
+              {
+                "chunk_id": "2410.16285v1_table_8151e213db9d89d4_2",
+                "selector": "A1.tab1.1.3.3"
+              }
+            ]
+          }
+        },
+        "answer_preserved": true,
+        "current_numeric_checker": "no_numbers",
+        "observation": {
+          "claim_index": 0,
+          "path": "structured",
+          "status": "reject",
+          "reason": "after value, form, or unit differs"
+        },
+        "preview": null,
+        "passed": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,52 @@
+[
+ {
+  "id": "G01",
+  "type": "single-paper",
+  "question": "A client's risk committee asks whether market mechanisms, not only regulation, can govern AI risk. What market mechanisms does the 'AI Governance through Markets' paper propose, how do they connect AI risk to financial risk, and what limits do the authors acknowledge?"
+ },
+ {
+  "id": "G02",
+  "type": "single-paper",
+  "question": "A multinational client must align its AI risk management across the EU, the U.S., the UK and China. According to the cross-regional study of AI risk-management frameworks, how do the four regimes differ and what trade-off does each carry?"
+ },
+ {
+  "id": "G03",
+  "type": "cross-paper",
+  "question": "A client must defend a customer-facing LLM against new jailbreaks. How do Safety Context Retrieval (SCR) and two-stage adversarial tuning differ in approach, how effective were they, and what did each cost in normal-task performance or effort?"
+ },
+ {
+  "id": "G04",
+  "type": "cross-paper",
+  "question": "A client plans custom GPT-style assistants with uploaded knowledge files and fine-tuning services for business units. What do the Pandora and 'Attack via Overfitting' studies show about these customisation routes as jailbreak attack surfaces, how successful were the attacks, and how detectable are they?"
+ },
+ {
+  "id": "G05",
+  "type": "cross-paper",
+  "question": "A hospital-network client is assessing LLMs for patient-facing conversations. How did the Polaris and AI Hospital studies evaluate conversational medical LLMs, and what do their results imply about readiness?"
+ },
+ {
+  "id": "G06",
+  "type": "numerical/table",
+  "question": "A client relies on AI vendors' public safety commitments. How well did AI companies implement their 2023 White House voluntary commitments: overall scores, the best and worst performers, which commitment was weakest, and which looked strongest?"
+ },
+ {
+  "id": "G07",
+  "type": "numerical/table",
+  "question": "A finance client wants natural-language querying of financial statements. What accuracy and speed did FinStat2SQL achieve, how did it compare with proprietary models and with its untuned base model, and what limits apply?"
+ },
+ {
+  "id": "G08",
+  "type": "numerical/table",
+  "question": "A client wants to harden an open-weight model against jailbreaks. What does the fail-closed alignment study report about why standard alignment fails, attack success, benign compliance, output quality and compute cost, and on which models was it tested?"
+ },
+ {
+  "id": "G09",
+  "type": "partially unanswerable",
+  "question": "A legal-services client wants AI statute retrieval for colloquial client questions under English and EU law. How does LegalMALR work, what retrieval results did it achieve, how well does it perform on English or EU statutes, and what does it cost per query?"
+ },
+ {
+  "id": "G10",
+  "type": "partially unanswerable",
+  "question": "A client is piloting autonomous multi-agent LLM systems that share a common resource. What did the study 'Is Lying an Emergent Behaviour in LLMs?' find about agents lying and its effects, and how often do deployed commercial AI agents lie to customers?"
+ }
+]

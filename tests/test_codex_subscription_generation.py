@@ -95,6 +95,28 @@ class CodexSubscriptionTests(unittest.TestCase):
             fn,_=create_codex_generate(model='gpt-test',binary=self.binary)
             with self.assertRaises(PipelineError) as caught:fn('Return JSON')
             self.assertNotIn('SECRET',str(caught.exception))
+            self.assertEqual(caught.exception.codex_diagnostic['exception_type'], 'TimeoutExpired')
+            self.assertEqual(caught.exception.codex_diagnostic['category'], 'timeout')
+            self.assertIsNone(caught.exception.__context__)
+
+    def test_schema_rejection_preserves_safe_details_even_with_non_json_stdout(self):
+        failure = SimpleNamespace(returncode=1, stdout='unexpected text\n' + json.dumps({
+            'type': 'turn.failed', 'error': {'message': 'HTTP 400 invalid_json_schema: uniqueItems is not permitted. SECRET'}
+        }), stderr='PRIVATE STDERR')
+        receipts = []
+        with patch('src.codex_generation.subprocess.run', side_effect=[
+                self.help, SimpleNamespace(returncode=0, stdout='Logged in using ChatGPT', stderr=''), failure]) as run:
+            fn, _ = create_codex_generate(model='gpt-test', binary=self.binary, receipts=receipts)
+            with self.assertRaises(PipelineError) as caught:
+                fn('PRIVATE PROMPT')
+        diagnostic = receipts[0]['diagnostic']
+        self.assertEqual(diagnostic, caught.exception.codex_diagnostic)
+        self.assertEqual(diagnostic['category'], 'invalid_json_schema')
+        self.assertEqual(diagnostic['exit_code'], 1)
+        self.assertEqual(diagnostic['http_status'], 400)
+        self.assertEqual(diagnostic['schema_keyword'], 'uniqueItems')
+        self.assertNotRegex(json.dumps(receipts) + str(caught.exception), 'SECRET|PRIVATE')
+        self.assertEqual(run.call_count, 3)
 
 
 if __name__=='__main__':unittest.main()

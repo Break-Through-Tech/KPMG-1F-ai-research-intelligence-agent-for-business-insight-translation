@@ -1,0 +1,315 @@
+{
+  "accuraterag-A": {
+    "sha256": [
+      "8127ee66c32c176ff4a0679bf3063c8309436eac841e487c97833bad73043463",
+      "52f2ba8a450acba6bba059d5e9d66e768419b90020ca02a8641fedee571cbc86",
+      "c41ca4c1c6f307930052d2683d1c3350e64066b070e2e3e3942c9d883064b178"
+    ],
+    "published": [],
+    "points": {
+      "accuraterag_row": {
+        "reference": "Fine-tuned Llama-2-7B: HF 68.36, Torch Hub 88.71, TF Hub 88.03; range 68.36\u201388.71.",
+        "anchors": [
+          [
+            "2510.02243v2_table_a61b33c87b34e803_4"
+          ]
+        ],
+        "draft": null,
+        "final": null
+      },
+      "raft_row": {
+        "reference": "Fine-tuned Llama-2-7B with GPT-4 CoT: HF 74.00, Torch Hub 84.95, TF Hub 86.86; range 74.00\u201386.86.",
+        "anchors": [
+          [
+            "2510.02243v2_table_a61b33c87b34e803_3"
+          ]
+        ],
+        "draft": null,
+        "final": null
+      }
+    }
+  },
+  "accuraterag-B": {
+    "sha256": [
+      "45de4fd81981abb3c595917fc98ed4272fadc45f86fe35ef5ebdb9af44cd4025",
+      "76b4333e619383ac7778014e6f8a1fc1e60dd16ca5da9cb90586b53fb4bd2d99",
+      "77789a9404e1ba514c9971e876131224b85c75504b7422cce557ad0c8fe91982"
+    ],
+    "published": [],
+    "points": {
+      "accuraterag_row": {
+        "reference": "Fine-tuned Llama-2-7B: HF 68.36, Torch Hub 88.71, TF Hub 88.03; range 68.36\u201388.71.",
+        "anchors": [
+          [
+            "2510.02243v2_table_a61b33c87b34e803_4"
+          ]
+        ],
+        "draft": null,
+        "final": null
+      },
+      "raft_row": {
+        "reference": "Fine-tuned Llama-2-7B with GPT-4 CoT: HF 74.00, Torch Hub 84.95, TF Hub 86.86; range 74.00\u201386.86.",
+        "anchors": [
+          [
+            "2510.02243v2_table_a61b33c87b34e803_3"
+          ]
+        ],
+        "draft": null,
+        "final": null
+      }
+    }
+  },
+  "accuraterag-C": {
+    "sha256": [
+      "f5f95fb964aee568496e61f4f073f3dfd184a503d684d90857de76c24d99225b",
+      "d238776cbf66ec2da7ff652c03df56cb1deb0af3b511c90c2fcf3904fe873489",
+      "8cdaf8d4ec986e4cb1e20be9c91eeec1112c2bb363c3b20a354aa8ac102d8dfe"
+    ],
+    "published": [
+      "supported"
+    ],
+    "points": {
+      "accuraterag_row": {
+        "reference": "Fine-tuned Llama-2-7B: HF 68.36, Torch Hub 88.71, TF Hub 88.03; range 68.36\u201388.71.",
+        "anchors": [
+          [
+            "2510.02243v2_table_a61b33c87b34e803_4"
+          ]
+        ],
+        "draft": 0,
+        "final": 0
+      },
+      "raft_row": {
+        "reference": "Fine-tuned Llama-2-7B with GPT-4 CoT: HF 74.00, Torch Hub 84.95, TF Hub 86.86; range 74.00\u201386.86.",
+        "anchors": [
+          [
+            "2510.02243v2_table_a61b33c87b34e803_3"
+          ]
+        ],
+        "draft": 1,
+        "final": null
+      }
+    }
+  },
+  "travelplanner-A": {
+    "sha256": [
+      "2bb9bcaf403952cee7358b9d987717c86e839273fdbfe4fe2cbee174805c5028",
+      "19b8a8f82d470b67e082306a8b7b96d12c779d3c36bb2b8397d9390a32f65018",
+      "f6521f158ae2fc91e259b7920ff035f86edce359f5716ebc250c5028a6883d9b"
+    ],
+    "published": [],
+    "points": {
+      "safety_design": {
+        "reference": "Agent-SafetyBench evaluates safety in 349 environments and 2,000 cases.",
+        "anchors": [
+          [
+            "2412.14470v2_c0000"
+          ]
+        ],
+        "draft": null,
+        "final": null
+      },
+      "safety_result": {
+        "reference": "Total safety scores below 60% across 16 evaluated agents.",
+        "anchors": [
+          [
+            "2412.14470v2_c0018"
+          ]
+        ],
+        "draft": null,
+        "final": null
+      },
+      "travel_design": {
+        "reference": "TravelPlanner tests tool use and multi-constraint planning with 1,225 intents and reference plans.",
+        "anchors": [
+          [
+            "2402.01622v4_c0000"
+          ]
+        ],
+        "draft": null,
+        "final": null
+      },
+      "travel_result": {
+        "reference": "TravelPlanner reports a GPT-4 result of 0.6%.",
+        "anchors": [
+          [
+            "2402.01622v4_c0000"
+          ]
+        ],
+        "draft": null,
+        "final": null
+      },
+      "travel_setting": {
+        "reference": "The 0.6% was the final pass rate of GPT-4-Turbo with ReAct in the two-stage setting.",
+        "anchors": [
+          [
+            "2402.01622v4_c0018"
+          ]
+        ],
+        "draft": null,
+        "final": null
+      },
+      "comparison_caveat": {
+        "reference": "Safety and planning success are different outcomes and cannot directly rank performance.",
+        "anchors": [
+          [
+            "2412.14470v2_c0000",
+            "2402.01622v4_c0000"
+          ]
+        ],
+        "draft": null,
+        "final": null
+      }
+    }
+  },
+  "travelplanner-B": {
+    "sha256": [
+      "c89698e1acb76e559c84fb8086d3d686cd78c580d5a2f8e315976b6a66575f36",
+      "084c2525a012b44e5487d71dcbcff20d5b725c262719fb611dcbceb4dba82b7b",
+      "95a1b2806518a6ba9a51b58451699220d53e837050cd2939a2e6c9beb29342b3"
+    ],
+    "published": [
+      "supported",
+      "supported",
+      "supported"
+    ],
+    "points": {
+      "safety_design": {
+        "reference": "Agent-SafetyBench evaluates safety in 349 environments and 2,000 cases.",
+        "anchors": [
+          [
+            "2412.14470v2_c0000"
+          ]
+        ],
+        "draft": 0,
+        "final": 0
+      },
+      "safety_result": {
+        "reference": "Total safety scores below 60% across 16 evaluated agents.",
+        "anchors": [
+          [
+            "2412.14470v2_c0018"
+          ]
+        ],
+        "draft": 1,
+        "final": 1
+      },
+      "travel_design": {
+        "reference": "TravelPlanner tests tool use and multi-constraint planning with 1,225 intents and reference plans.",
+        "anchors": [
+          [
+            "2402.01622v4_c0000"
+          ]
+        ],
+        "draft": 2,
+        "final": 2
+      },
+      "travel_result": {
+        "reference": "TravelPlanner reports a GPT-4 result of 0.6%.",
+        "anchors": [
+          [
+            "2402.01622v4_c0000"
+          ]
+        ],
+        "draft": 2,
+        "final": 2
+      },
+      "travel_setting": {
+        "reference": "The 0.6% was the final pass rate of GPT-4-Turbo with ReAct in the two-stage setting.",
+        "anchors": [
+          [
+            "2402.01622v4_c0018"
+          ]
+        ],
+        "draft": null,
+        "final": null
+      },
+      "comparison_caveat": {
+        "reference": "Safety and planning success are different outcomes and cannot directly rank performance.",
+        "anchors": [
+          [
+            "2412.14470v2_c0000",
+            "2402.01622v4_c0000"
+          ]
+        ],
+        "draft": 3,
+        "final": null
+      }
+    }
+  },
+  "travelplanner-C": {
+    "sha256": [
+      "9890a15ee0b92c617b546ddf135c2ca2a243b15f986b0c52da64758d6790146e",
+      "9530bae3ba79b1b27f525d4ca5edf05df8cf13486f6195acdd9c538a464a7bfb",
+      "95a1b2806518a6ba9a51b58451699220d53e837050cd2939a2e6c9beb29342b3"
+    ],
+    "published": [
+      "supported",
+      "supported",
+      "supported"
+    ],
+    "points": {
+      "safety_design": {
+        "reference": "Agent-SafetyBench evaluates safety in 349 environments and 2,000 cases.",
+        "anchors": [
+          [
+            "2412.14470v2_c0000"
+          ]
+        ],
+        "draft": 0,
+        "final": 0
+      },
+      "safety_result": {
+        "reference": "Total safety scores below 60% across 16 evaluated agents.",
+        "anchors": [
+          [
+            "2412.14470v2_c0018"
+          ]
+        ],
+        "draft": 1,
+        "final": 1
+      },
+      "travel_design": {
+        "reference": "TravelPlanner tests tool use and multi-constraint planning with 1,225 intents and reference plans.",
+        "anchors": [
+          [
+            "2402.01622v4_c0000"
+          ]
+        ],
+        "draft": 2,
+        "final": 2
+      },
+      "travel_result": {
+        "reference": "TravelPlanner reports a GPT-4 result of 0.6%.",
+        "anchors": [
+          [
+            "2402.01622v4_c0000"
+          ]
+        ],
+        "draft": 2,
+        "final": 2
+      },
+      "travel_setting": {
+        "reference": "The 0.6% was the final pass rate of GPT-4-Turbo with ReAct in the two-stage setting.",
+        "anchors": [
+          [
+            "2402.01622v4_c0018"
+          ]
+        ],
+        "draft": null,
+        "final": null
+      },
+      "comparison_caveat": {
+        "reference": "Safety and planning success are different outcomes and cannot directly rank performance.",
+        "anchors": [
+          [
+            "2412.14470v2_c0000",
+            "2402.01622v4_c0000"
+          ]
+        ],
+        "draft": 3,
+        "final": null
+      }
+    }
+  }
+}

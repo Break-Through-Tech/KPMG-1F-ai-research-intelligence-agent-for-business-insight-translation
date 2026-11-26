@@ -1,0 +1,305 @@
+{
+ "scorer": "",
+ "questions": {
+  "J01": {
+   "points": {
+    "J01.1": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    },
+    "J01.2": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    },
+    "J01.3": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    },
+    "J01.4": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    },
+    "J01.5": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    }
+   },
+   "citation_grounding_failures": [],
+   "misleading_claims": [],
+   "numerical_errors": [],
+   "interpretation_scores": {},
+   "notes": ""
+  },
+  "J02": {
+   "points": {
+    "J02.1": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    },
+    "J02.2": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    },
+    "J02.3": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    },
+    "J02.4": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    }
+   },
+   "citation_grounding_failures": [],
+   "misleading_claims": [],
+   "numerical_errors": [],
+   "interpretation_scores": {},
+   "notes": ""
+  },
+  "J03": {
+   "points": {
+    "J03.1": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    },
+    "J03.2": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    },
+    "J03.3": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    },
+    "J03.4": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    },
+    "J03.5": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    }
+   },
+   "citation_grounding_failures": [],
+   "misleading_claims": [],
+   "numerical_errors": [],
+   "interpretation_scores": {},
+   "notes": ""
+  },
+  "J04": {
+   "points": {
+    "J04.1": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    },
+    "J04.2": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    },
+    "J04.3": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    },
+    "J04.4": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    },
+    "J04.5": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    }
+   },
+   "citation_grounding_failures": [],
+   "misleading_claims": [],
+   "numerical_errors": [],
+   "interpretation_scores": {},
+   "notes": ""
+  },
+  "J05": {
+   "points": {
+    "J05.1": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    },
+    "J05.2": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    },
+    "J05.3": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    },
+    "J05.4": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    },
+    "J05.5": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    }
+   },
+   "citation_grounding_failures": [],
+   "misleading_claims": [],
+   "numerical_errors": [],
+   "interpretation_scores": {},
+   "notes": ""
+  },
+  "J06": {
+   "points": {
+    "J06.1": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    },
+    "J06.2": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    },
+    "J06.3": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    },
+    "J06.4": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    }
+   },
+   "citation_grounding_failures": [],
+   "misleading_claims": [],
+   "numerical_errors": [],
+   "interpretation_scores": {},
+   "notes": ""
+  },
+  "J07": {
+   "points": {
+    "J07.1": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    },
+    "J07.2": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    },
+    "J07.3": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    },
+    "J07.4": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    },
+    "J07.5": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    },
+    "J07.6": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    }
+   },
+   "citation_grounding_failures": [],
+   "misleading_claims": [],
+   "numerical_errors": [],
+   "interpretation_scores": {},
+   "notes": ""
+  },
+  "J08": {
+   "points": {
+    "J08.1": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    },
+    "J08.2": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    },
+    "J08.3": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    },
+    "J08.4": {
+     "A": null,
+     "B": null,
+     "C": null,
+     "D": null
+    }
+   },
+   "citation_grounding_failures": [],
+   "misleading_claims": [],
+   "numerical_errors": [],
+   "interpretation_scores": {},
+   "notes": ""
+  }
+ }
+}

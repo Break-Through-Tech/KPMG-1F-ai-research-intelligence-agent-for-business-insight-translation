@@ -1,0 +1,10 @@
+{
+ "questions.json": "92c70c3e7e775ce5357152e3c04d1a26ed54a2a26b4533085a0f848f0b1d0f3b",
+ "references.json": "052d8a8d854e155d2d4909e69faa283c5774c3cb84424a022989335da597c6b9",
+ "rules.json": "1b20075cbfed3bc202b68d2e5bff6a326e02776edf932673f34e56b6ba100785",
+ "answer-key.md": "c5297dafbcdf728af0532daf0fb3408548b7efb071a79b07ef6c821dc3f8f1ad",
+ "SELECTION-RULE.md": "abc45abf9cf54e284944b93e4cf9bc66895bc72a1cd9311bb3e15983dab8eb6b",
+ "OVERLAP.md": "12de52d9a236e618473857180c5f010b2f838254b1308f1389a3caa5781bcc46",
+ "build_set.py": "6ab3ed412cbe093ca7ebbca4504908163712a0e1c02133c8f45726f049641e78",
+ "index_parents_sha256": "78d8efd7c9df075be09ffa5f3a9c7ca79c54efa2d7caf75c8f0329ea72ff41aa"
+}

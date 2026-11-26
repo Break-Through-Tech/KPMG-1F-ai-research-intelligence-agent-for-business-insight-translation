@@ -1,0 +1,2016 @@
+{
+ "mode": "standard",
+ "question": "A neurology network wants to automate EEG report drafting without sending patient data to external providers. How does ERIA work, how much did policy optimization improve report quality, how did it do on external benchmarks, and what limits apply before clinical use?",
+ "summary": {
+  "status": "ok",
+  "claims": [
+   {
+    "text": "ERIA uses a locally served Qwen3.8-27B controller in a ReAct reasoning-and-action loop: it calls tools, incorporates their outputs, gathers further evidence, and synthesizes a structured EEG report.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01394v1_paragraph_4e3be099752bdeb6_0",
+      "quote": "ERIA uses a locally served Qwen3.8-27B controller ( Qwen Team, 2026b ) in a ReAct-style reasoning-and-action loop ( Yao et al., 2023 ) . At each iteration, the controller can issue one or more tool calls with temporal, spatial, or analysis-specific arguments. Tool outputs are returned to the controller and incorporated into subsequent reasoning. This cycle continues until the controller determines that sufficient evidence has been gathered to answer the request. For clinical reporting, the collected evidence is synthesized into a structured EEG report."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01394v1_paragraph_4e3be099752bdeb6_0"
+    ],
+    "draft_index": 0,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The attached quote states the local controller, iterative tool use and structured report synthesis."
+     },
+     "number_grounding": "no_numbers",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "ERIA combines tools for background abnormality, sleep–wake states, seizure-like activity and interictal epileptiform discharges with deterministic spectral, amplitude, symmetry, montage and signal-quality analyses. Its controller reasons over structured tool outputs rather than consuming waveform samples directly.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01394v1_c0000",
+      "quote": "ERIA combines specialized tools for detecting background abnormality, sleep–wake states, seizure-like activity, and interictal epileptiform discharges with deterministic spectral, amplitude, symmetry, montage, and signal-quality analyses"
+     },
+     {
+      "chunk_id": "2611.01394v1_c0006",
+      "quote": "A single local language-model controller selects specialist EEG analyses and reasons over their structured outputs rather than consuming waveform samples directly."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01394v1_c0000",
+     "2611.01394v1_c0006"
+    ],
+    "draft_index": 1,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "Both the tool categories and the controller's use of structured outputs are explicitly supported."
+     },
+     "number_grounding": "no_numbers",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "GEPA revises only the natural-language analysis policy using execution trajectories and clinical-evaluator feedback; the controller, specialist tools and safety constraints remain fixed. Candidate selection uses optimization and validation cases, keeps the protected test partition inaccessible, and freezes the selected policy before clinical and external evaluation.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01394v1_paragraph_6acb35058f19c0ac_0",
+      "quote": "The reflector uses execution trajectories and clinical-evaluator feedback to propose policy revisions. Candidate policies are first tested on the sampled optimization cases and, when improved, evaluated on the validation partition for selection. The controller, specialist tools, and safety constraints remain fixed, and the protected test set is inaccessible throughout optimization."
+     },
+     {
+      "chunk_id": "2611.01394v1_paragraph_6acb35058f19c0ac_0",
+      "quote": "Fixed safety instructions and tool descriptions are provided as read-only context, while GEPA modifies only the mutable analysis policy."
+     },
+     {
+      "chunk_id": "2611.01394v1_paragraph_6acb35058f19c0ac_0",
+      "quote": "The protected test partition remains inaccessible throughout optimization, after which the selected policy is frozen for subsequent clinical and external evaluations."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01394v1_paragraph_6acb35058f19c0ac_0"
+    ],
+    "draft_index": 2,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The quotes establish policy-only optimization, fixed components, partition protection and subsequent policy freezing."
+     },
+     "number_grounding": "uncertain",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "Internal evaluation used 200 private routine clinical EEG studies with matched reports authored by board-certified epileptologists: 50 optimization cases, 50 validation cases and 100 protected test cases.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01394v1_paragraph_849fe3c6168d998d_0",
+      "quote": "We first evaluate ERIA using a private dataset of 200 routine clinical EEG studies and matched clinically-generated reports. These EEG reports were authored by board-certified epileptologists according to the ACNS guidelines. Following the optimization protocol described above, the dataset is split at the recording level into 50 optimization cases, 50 validation cases, and 100 protected test cases."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01394v1_paragraph_849fe3c6168d998d_0"
+    ],
+    "draft_index": 3,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The dataset, report authorship and all partition counts match the quote."
+     },
+     "number_grounding": "uncertain",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "Policy optimization raised the validation aggregate clinical score from 0.5099 to 0.6277, an absolute gain of 0.1178 and a 23.1% relative increase.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01394v1_paragraph_958ebec7b639e581_0",
+      "quote": "On the validation partition, the aggregate clinical score increases from 0.5099 to 0.6277, corresponding to an absolute gain of 0.1178 and a 23.1% relative increase."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01394v1_paragraph_958ebec7b639e581_0"
+    ],
+    "draft_index": 4,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "All validation scores and improvement figures are explicitly stated."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "On the protected test partition, the aggregate clinical score rose from 0.5052 to 0.6024, an absolute improvement of 0.0972 and a 19.2% relative increase over the raw policy.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01394v1_paragraph_958ebec7b639e581_0",
+      "quote": "More importantly, the improvement persists on the protected test partition; its test score rises from 0.5052 to 0.6024, an absolute improvement of 0.0972 and a 19.2% relative increase over the raw policy."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01394v1_paragraph_958ebec7b639e581_0"
+    ],
+    "draft_index": 5,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "All protected-test scores and improvement figures match the attached quote."
+     },
+     "number_grounding": "uncertain",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "The report-quality objective is a separate LLM evaluator's comparison with the clinical reference across background, ictal activity, interictal epileptiform activity, overall classification, state/sleep, focal or regional abnormality, and impression. Activation procedures are excluded because their performance and timing are unavailable from the waveform alone.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01394v1_paragraph_6065e83e35f1f727_0",
+      "quote": "We therefore use a separate LLM-based clinical evaluator that compares an ERIA-generated report with its clinical reference."
+     },
+     {
+      "chunk_id": "2611.01394v1_paragraph_6065e83e35f1f727_0",
+      "quote": "The evaluated domains are background, ictal activity, interictal epileptiform activity, overall classification, state/sleep, focal or regional abnormality, and impression. Activation procedures are excluded from evaluation because their performance and timing depend on the acquisition protocol and are not available to ERIA from the EEG waveform alone."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01394v1_paragraph_6065e83e35f1f727_0"
+    ],
+    "draft_index": 6,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The evaluator, assessed domains and activation-procedure exclusion are explicitly supported."
+     },
+     "number_grounding": "no_numbers",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "CerebraGloss-Bench contains 90 10-second, 19-channel EEG segments; ERIA was evaluated on multiple-choice interpretation, free-text description and conversational question answering using raw signals. Neither external benchmark contributed examples to optimization or policy selection.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01394v1_paragraph_78ebfa5f5097f0e3_0",
+      "quote": "We further assess ERIA on two independent EEG benchmarks, neither of which contributes examples to GEPA optimization or policy selection. CerebraGloss-Bench : This benchmark contains 90 10-second, 19-channel EEG segments designed for fine-grained clinical interpretation ( Gu et al., 2026 ) . Although the benchmark was introduced for vision-language models operating on rendered EEG waveforms, ERIA instead analyzes the raw EEG signals to test whether its tool-based analysis policy transfers to the clinical interpretation setting. We report results on the benchmark’s three language-based tasks: multiple-choice clinical interpretation, free-text EEG description, and conversational question answering, using accuracy, ROUGE-1, and the benchmark’s LLM-based conversational score, respectively."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01394v1_paragraph_78ebfa5f5097f0e3_0"
+    ],
+    "draft_index": 7,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The quote establishes segment counts and dimensions, raw-signal tasks and exclusion from policy optimization and selection."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "On CerebraGloss-Bench, optimization preserved MCQ accuracy at 71.11%, improved conversational QA from 3.60 to 3.87, and reduced description ROUGE-1 from 30.70 to 30.17. One raw-policy case produced no valid output and was excluded from aggregation under the benchmark convention.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01394v1_paragraph_7959507ba9f55360_0",
+      "quote": "CerebraGloss-Bench : The optimized policy preserves MCQ accuracy at 71.11% while improving conversational QA from 3.60 to 3.87. Description ROUGE-1 decreases modestly from 30.70 to 30.17. One raw-policy case failed to produce a valid output; following the CerebraGloss-Bench evaluation convention, this case was excluded from score aggregation rather than assigned a score of zero."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01394v1_paragraph_7959507ba9f55360_0"
+    ],
+    "draft_index": 8,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "All benchmark changes and the failed-output exclusion match the quote; the numerical flags are false alarms."
+     },
+     "number_grounding": "contradicted",
+     "flags_resolved": [
+      {
+       "number": "30.70",
+       "quote": "Description ROUGE-1 decreases modestly from 30.70 to 30.17.",
+       "reason": "The quote explicitly assigns this starting value to description ROUGE-1."
+      },
+      {
+       "number": "30.17",
+       "quote": "Description ROUGE-1 decreases modestly from 30.70 to 30.17.",
+       "reason": "The quote explicitly assigns this ending value to description ROUGE-1."
+      }
+     ]
+    }
+   },
+   {
+    "text": "BrainBench evaluation covered Foundational Analysis: 40 tasks and 950 instances, scored using the official difficulty-weighted subset score on a 0–100 scale.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01394v1_paragraph_78ebfa5f5097f0e3_0",
+      "quote": "Here we evaluate ERIA on Foundational Analysis , comprising 40 tasks and 950 instances spanning recording inspection, preprocessing, feature extraction, spectral and spatiotemporal analysis, connectivity, and evidence-grounded interpretation."
+     },
+     {
+      "chunk_id": "2611.01394v1_paragraph_78ebfa5f5097f0e3_0",
+      "quote": "We follow the official BrainBench evaluation protocol and report its difficulty-weighted subset score on a 0–100 scale."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01394v1_paragraph_78ebfa5f5097f0e3_0"
+    ],
+    "draft_index": 10,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The subset, task and instance counts, metric and scale are explicitly supported."
+     },
+     "number_grounding": "uncertain",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "On BrainBench Foundational Analysis, ERIA improved from 85.86 with the raw policy to 86.89 with the GEPA-selected policy, an absolute improvement of 1.03 points. Both configurations exceeded the original evaluation's strongest reported score, 84.97 under CodeAct, and strongest BrainAgent result, 81.47.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01394v1_paragraph_7959507ba9f55360_0",
+      "quote": "BrainBench Foundational Analysis : Here, the raw ERIA policy obtains a difficulty-weighted score of 85.86, while the GEPA-selected policy reaches 86.89, an absolute improvement of 1.03 points. The strongest Foundational Analysis score reported in the original BrainBench evaluation is 84.97 under CodeAct, while the strongest BrainAgent result is 81.47 ( Zhou et al., 2026a ) . Both ERIA configurations exceed the highest score reported in that evaluation."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01394v1_paragraph_7959507ba9f55360_0"
+    ],
+    "draft_index": 11,
+    "scope": "related_variant",
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The ERIA scores, improvement and historical system comparisons all match the quote."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "The selected policy encouraged inspection of sleep spindles, K-complexes and vertex waves despite having no dedicated detector for them; that instruction remained unchanged in the reported evaluations. The paper identifies checking proposed instructions against machine-readable tool contracts as a possible deployment safeguard.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01394v1_paragraph_408cea153ae26a76_0",
+      "quote": "First, the GEPA-selected policy introduced one instruction that was not supported by ERIA’s available specialist capabilities: it encouraged inspection of sleep spindles, K-complexes, and vertex waves despite the absence of a dedicated detector for these graphoelements. We retain the selected policy unchanged for the reported evaluations rather than manually correcting this instruction after observing it."
+     },
+     {
+      "chunk_id": "2611.01394v1_paragraph_408cea153ae26a76_0",
+      "quote": "Future implementations could validate proposed policy instructions against machine-readable tool contracts before deployment."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01394v1_paragraph_408cea153ae26a76_0"
+    ],
+    "draft_index": 12,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The unsupported detector instruction, unchanged evaluation policy and proposed safeguard are accurately qualified."
+     },
+     "number_grounding": "no_numbers",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "The clinical evaluation was retrospective and used a single private collection of 200 matched EEG–report studies, including 100 protected test cases. The paper calls for direct EEG-specialist review and prospective multi-site assessment before establishing real-world clinical utility and robustness.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01394v1_paragraph_408cea153ae26a76_0",
+      "quote": "The evaluator accommodates unavailable domains and scores reports at the level of clinical concepts, but direct review by EEG specialists remains necessary to establish real-world clinical utility. Finally, the clinical evaluation is retrospective and based on a single private collection of 200 matched EEG–report studies, including 100 protected test cases. Evaluation across additional institutions, acquisition environments, patient populations, and reporting styles will be necessary to establish the robustness of the learned policy. The external benchmarks broaden the evaluation across datasets and tasks, but they do not replace prospective multi-site clinical assessment."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01394v1_paragraph_408cea153ae26a76_0"
+    ],
+    "draft_index": 13,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The retrospective single-collection scope, counts and need for specialist and prospective assessment are explicit."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "Offline GEPA optimization used a budget of 750 metric calls, sampling three optimization cases per iteration, and required approximately 4–5 days on a single NVIDIA DGX Spark with controller, evaluator and reflector executed sequentially.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01394v1_paragraph_849fe3c6168d998d_0",
+      "quote": "GEPA is initialized from ERIA’s raw mutable analysis policy and uses a budget of 750 metric calls ( Agrawal et al., 2026 ) , with three optimization cases sampled per iteration. GEPA optimization was performed on a single NVIDIA DGX Spark and required approximately 4–5 days. The controller, evaluator, and reflector were executed sequentially during optimization to remain within a single-machine setup."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01394v1_paragraph_849fe3c6168d998d_0"
+    ],
+    "draft_index": 14,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The optimization budget, sampling, duration, hardware and sequential execution match the quote and inform local feasibility."
+     },
+     "number_grounding": "uncertain",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "External evaluation of the frozen agent ran on a single NVIDIA RTX 4090; the larger evaluator and reflector are only needed during offline policy optimization, not deployment-time execution.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01394v1_paragraph_78ebfa5f5097f0e3_0",
+      "quote": "External evaluation of the frozen ERIA agent was performed on a single NVIDIA RTX 4090. The larger evaluator and reflector are used only during offline policy optimization and are not required for deployment-time execution of ERIA."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01394v1_paragraph_78ebfa5f5097f0e3_0"
+    ],
+    "draft_index": 15,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The hardware and distinction between offline optimization and deployment requirements are explicitly supported."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "For a neurology network seeking to keep patient data in its own infrastructure, these findings support evaluating ERIA as a local drafting aid with specialist review. They support a bounded offline policy-optimization experiment, rather than evidence of sustained recursive self-improvement or established clinical utility.",
+    "kind": "interpretation",
+    "support": [
+     {
+      "chunk_id": "2611.01394v1_c0003",
+      "quote": "Local inference can be especially attractive for sensitive clinical data because it allows institutions to keep patient information within their own infrastructure and reduces reliance on external model providers"
+     },
+     {
+      "chunk_id": "2611.01394v1_paragraph_4e3be099752bdeb6_0",
+      "quote": "ERIA uses a locally served Qwen3.8-27B controller"
+     },
+     {
+      "chunk_id": "2611.01394v1_paragraph_6acb35058f19c0ac_0",
+      "quote": "The protected test partition remains inaccessible throughout optimization, after which the selected policy is frozen for subsequent clinical and external evaluations."
+     },
+     {
+      "chunk_id": "2611.01394v1_paragraph_408cea153ae26a76_0",
+      "quote": "direct review by EEG specialists remains necessary to establish real-world clinical utility."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01394v1_c0003",
+     "2611.01394v1_paragraph_4e3be099752bdeb6_0",
+     "2611.01394v1_paragraph_6acb35058f19c0ac_0",
+     "2611.01394v1_paragraph_408cea153ae26a76_0"
+    ],
+    "draft_index": 16,
+    "label": "Interpretation: inferred from the cited findings for this decision; not a research result."
+   }
+  ],
+  "held_claims": [
+   {
+    "draft_index": 9,
+    "kind": "finding",
+    "text": "CerebraGloss-3B's originally published MCQ, ROUGE-1 and QA scores were 80.00, 44.19 and 4.76; its QA score reproduced with the current evaluation protocol was 4.13. GPT-5's corresponding original benchmark scores were 70.00, 37.07 and 4.58.",
+    "reasons": [
+     "P5: unresolved number-attribution flag(s): 4.13 subject_mismatch"
+    ]
+   }
+  ],
+  "limitation_support": [
+   {
+    "text": "The clinical score measures agreement with reference reports rather than independent waveform-level ground truth; direct EEG-specialist review remains necessary to establish clinical utility.",
+    "support": [
+     {
+      "chunk_id": "2611.01394v1_paragraph_408cea153ae26a76_0",
+      "quote": "Second, the physician-aligned score measures agreement with a clinical reference report rather than independently establishing waveform-level ground truth."
+     },
+     {
+      "chunk_id": "2611.01394v1_paragraph_408cea153ae26a76_0",
+      "quote": "The evaluator accommodates unavailable domains and scores reports at the level of clinical concepts, but direct review by EEG specialists remains necessary to establish real-world clinical utility."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01394v1_paragraph_408cea153ae26a76_0"
+    ]
+   },
+   {
+    "text": "Clinical evaluation was retrospective and used one private collection of 200 matched studies, including 100 protected test cases. External benchmarks do not replace prospective multi-site clinical assessment.",
+    "support": [
+     {
+      "chunk_id": "2611.01394v1_paragraph_408cea153ae26a76_0",
+      "quote": "Finally, the clinical evaluation is retrospective and based on a single private collection of 200 matched EEG–report studies, including 100 protected test cases."
+     },
+     {
+      "chunk_id": "2611.01394v1_paragraph_408cea153ae26a76_0",
+      "quote": "The external benchmarks broaden the evaluation across datasets and tasks, but they do not replace prospective multi-site clinical assessment."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01394v1_paragraph_408cea153ae26a76_0"
+    ]
+   },
+   {
+    "text": "CerebraGloss-Bench is a transfer test rather than an equivalent-architecture comparison. Historical and current QA scores may not be directly comparable because the evaluator uses an unpinned model endpoint.",
+    "support": [
+     {
+      "chunk_id": "2611.01394v1_paragraph_7959507ba9f55360_0",
+      "quote": "We therefore use CerebraGloss-Bench as a transfer test rather than as a comparison between equivalent model architectures."
+     },
+     {
+      "chunk_id": "2611.01394v1_paragraph_7959507ba9f55360_0",
+      "quote": "Because the released evaluator calls an unpinned model endpoint, historical and current QA scores are not guaranteed to be directly comparable."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01394v1_paragraph_7959507ba9f55360_0"
+    ]
+   },
+   {
+    "text": "External evaluation excluded image-space waveform localization and evaluated BrainBench's Foundational Analysis subset. BrainBench absolute performance reflects the complete controller–tool system.",
+    "support": [
+     {
+      "chunk_id": "2611.01394v1_paragraph_78ebfa5f5097f0e3_0",
+      "quote": "The image-space waveform-localization task is excluded because ERIA does not produce image-space bounding boxes."
+     },
+     {
+      "chunk_id": "2611.01394v1_paragraph_78ebfa5f5097f0e3_0",
+      "quote": "Here we evaluate ERIA on Foundational Analysis , comprising 40 tasks and 950 instances spanning recording inspection, preprocessing, feature extraction, spectral and spatiotemporal analysis, connectivity, and evidence-grounded interpretation."
+     },
+     {
+      "chunk_id": "2611.01394v1_paragraph_7959507ba9f55360_0",
+      "quote": "The absolute score therefore reflects the complete controller–tool system, whereas the difference between the raw and GEPA policies more specifically measures the effect of the learned analysis strategy."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01394v1_paragraph_78ebfa5f5097f0e3_0",
+     "2611.01394v1_paragraph_7959507ba9f55360_0"
+    ]
+   },
+   {
+    "text": "The selected policy encouraged inspection of sleep spindles, K-complexes and vertex waves without a dedicated detector; it remained unchanged during reported evaluations.",
+    "support": [
+     {
+      "chunk_id": "2611.01394v1_paragraph_408cea153ae26a76_0",
+      "quote": "First, the GEPA-selected policy introduced one instruction that was not supported by ERIA’s available specialist capabilities: it encouraged inspection of sleep spindles, K-complexes, and vertex waves despite the absence of a dedicated detector for these graphoelements. We retain the selected policy unchanged for the reported evaluations rather than manually correcting this instruction after observing it."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01394v1_paragraph_408cea153ae26a76_0"
+    ]
+   },
+   {
+    "text": "The private clinical collection is not distributed with the submission, and public source-code release is described as occurring upon acceptance.",
+    "support": [
+     {
+      "chunk_id": "2611.01394v1_c0010",
+      "quote": "Source code, including prompt configurations and evaluation scripts, will be made publicly available upon acceptance."
+     },
+     {
+      "chunk_id": "2611.01394v1_c0010",
+      "quote": "the private clinical EEG–report collection used for the internal evaluation is not distributed with the submission."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01394v1_c0010"
+    ]
+   }
+  ],
+  "limitations": [
+   "The clinical score measures agreement with reference reports rather than independent waveform-level ground truth; direct EEG-specialist review remains necessary to establish clinical utility.",
+   "Clinical evaluation was retrospective and used one private collection of 200 matched studies, including 100 protected test cases. External benchmarks do not replace prospective multi-site clinical assessment.",
+   "CerebraGloss-Bench is a transfer test rather than an equivalent-architecture comparison. Historical and current QA scores may not be directly comparable because the evaluator uses an unpinned model endpoint.",
+   "External evaluation excluded image-space waveform localization and evaluated BrainBench's Foundational Analysis subset. BrainBench absolute performance reflects the complete controller–tool system.",
+   "The selected policy encouraged inspection of sleep spindles, K-complexes and vertex waves without a dedicated detector; it remained unchanged during reported evaluations.",
+   "The private clinical collection is not distributed with the submission, and public source-code release is described as occurring upon acceptance."
+  ],
+  "dropped_limitations": [],
+  "evidence_notes": [
+   "3 tables from ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting are only partly in the evidence (Table 1: Core ERIA EEG-analysis tools: 1 of 13 rows; Table 2: Clinical performance and behavioral changes after G: 4 of 13 rows; Table 3: External EEG evaluation: 1 of 4 rows), so comparisons across those tables may be incomplete."
+  ],
+  "answer_scope": "partial",
+  "answer_lead": "Some drafted findings could not be verified against their attached quotes and are withheld.",
+  "answer_lead_check": null,
+  "support_check": "exact quotes; per-claim number recall against attached quotes; numeric_checks_v2 attribution flags (quote-anchored resolution); model review of quote entailment; not human verification",
+  "component_coverage": [
+   {
+    "component": "How does ERIA work?",
+    "status": "answered",
+    "basis": "reviewer-confirmed, published finding(s)",
+    "finding_draft_indices": [
+     0,
+     1,
+     2,
+     14,
+     15
+    ]
+   },
+   {
+    "component": "ERIA how much did policy optimization improve report quality?",
+    "status": "answered",
+    "basis": "reviewer-confirmed, published finding(s)",
+    "finding_draft_indices": [
+     3,
+     4,
+     5,
+     6
+    ]
+   },
+   {
+    "component": "ERIA how did it do on external benchmarks?",
+    "status": "answered",
+    "basis": "reviewer-confirmed, published finding(s)",
+    "finding_draft_indices": [
+     7,
+     8,
+     10,
+     11
+    ]
+   },
+   {
+    "component": "ERIA what limits apply before clinical use?",
+    "status": "answered",
+    "basis": "reviewer-confirmed, published finding(s)",
+    "finding_draft_indices": [
+     12,
+     13
+    ]
+   }
+  ]
+ },
+ "evidence": [
+  {
+   "chunk_id": "2611.01394v1_c0005",
+   "arxiv_id": "2611.01394v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01394v1#S1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": ". The controller weights, specialist tools, and safety constraints remain fixed; only the natural-language policy governing analysis and report synthesis is optimized. We use GEPA (Genetic-Pareto) to improve this policy from execution trajectories and textual feedback ( Agrawal et al., 2026 ) . Physician-authored reports provide the feedback signal, making whole-recording clinical interpretation the direct optimization target. Experiments show that GEPA substantially improves physician-aligned whole-recording report quality over ERIA’s raw policy and that the improvement transfers beyond the optimization task. The optimized policy achieves competitive performance on CerebraGloss-Bench for short-segment clinical interpretation and on BrainBench Foundational Analysis for broader EEG analysis ( Gu et al., 2026 ; Zhou et al., 2026a ) . These results suggest that improving how a grounded EEG agent gathers and integrates evidence can benefit both clinical reporting and broader EEG-analysis capability. Our contributions are threefold: (1) we introduce a grounded single-controller architecture for local EEG analysis; (2) we develop a physician-report-driven approach to optimizing tool-use policy without EEG-specific controller fine-tuning; and (3) we show that the resulting policy improves both clinical EEG reporting and transfer to independent EEG benchmarks.",
+   "text_with_context": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting | Introduction\n\n. The controller weights, specialist tools, and safety constraints remain fixed; only the natural-language policy governing analysis and report synthesis is optimized. We use GEPA (Genetic-Pareto) to improve this policy from execution trajectories and textual feedback ( Agrawal et al., 2026 ) . Physician-authored reports provide the feedback signal, making whole-recording clinical interpretation the direct optimization target. Experiments show that GEPA substantially improves physician-aligned whole-recording report quality over ERIA’s raw policy and that the improvement transfers beyond the optimization task. The optimized policy achieves competitive performance on CerebraGloss-Bench for short-segment clinical interpretation and on BrainBench Foundational Analysis for broader EEG analysis ( Gu et al., 2026 ; Zhou et al., 2026a ) . These results suggest that improving how a grounded EEG agent gathers and integrates evidence can benefit both clinical reporting and broader EEG-analysis capability. Our contributions are threefold: (1) we introduce a grounded single-controller architecture for local EEG analysis; (2) we develop a physician-report-driven approach to optimizing tool-use policy without EEG-specific controller fine-tuning; and (3) we show that the resulting policy improves both clinical EEG reporting and transfer to independent EEG benchmarks.",
+   "title": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01394v1#S1",
+   "pdf_url": "https://arxiv.org/pdf/2611.01394v1",
+   "source_sha256": "ea2022a5ba2fe23f88441a9951ffa4be087a06367de9e2bfa8e5aa860e31b21c"
+  },
+  {
+   "chunk_id": "2410.01553v2_c0029",
+   "arxiv_id": "2410.01553v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2410.01553v2#S7",
+   "section": "limitations",
+   "subsection": "",
+   "high_value": true,
+   "text": ". The extension of our findings to other domains and tasks remains unexplored, indicating that further validation and adjustments will be necessary before applying this approach to different fields. Finally, although we employed three medical experts for human evaluation, increasing the number and diversity of qualified domain experts would improve the statistical significance and robustness of our findings. Additionally, future work should consider issues of fairness, generalizability, and potential biases inherent in LLMs, particularly when expanding the evaluation across specialties, modalities, and patient populations.",
+   "text_with_context": "MedQA-CS: Objective Structured Clinical Examination (OSCE)-Style Benchmark for Evaluating LLM Clinical Skills | Limitations\n\n. The extension of our findings to other domains and tasks remains unexplored, indicating that further validation and adjustments will be necessary before applying this approach to different fields. Finally, although we employed three medical experts for human evaluation, increasing the number and diversity of qualified domain experts would improve the statistical significance and robustness of our findings. Additionally, future work should consider issues of fairness, generalizability, and potential biases inherent in LLMs, particularly when expanding the evaluation across specialties, modalities, and patient populations.",
+   "title": "MedQA-CS: Objective Structured Clinical Examination (OSCE)-Style Benchmark for Evaluating LLM Clinical Skills",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2410.01553v2#S7",
+   "pdf_url": "https://arxiv.org/pdf/2410.01553v2",
+   "source_sha256": "20419d1a9de3b1a1425c7169da6cac0c436fb3a68c05ed7d0481b9301c590654"
+  },
+  {
+   "chunk_id": "2611.01394v1_c0003",
+   "arxiv_id": "2611.01394v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01394v1#S1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": ". Accurate event detection alone is therefore insufficient; evidence must be gathered across the recording and integrated into a coherent report. On the other hand, a practical clinical system must also operate under deployment constraints. Local inference can be especially attractive for sensitive clinical data because it allows institutions to keep patient information within their own infrastructure and reduces reliance on external model providers ( Griot et al., 2025 ) . This creates a practical tension: clinical EEG systems should support broad, evidence-based interpretation without requiring excessively large or complex deployment stacks. Existing work has approached this problem from two complementary directions. The first develops EEG-language systems that produce clinical descriptions, reports, or interpretations directly from EEG signals or learned EEG representations. This direction includes report-generation systems such as EEGtoText ( Biswal et al., 2019 ) and CELM ( Pradeepkumar et al., 2026 ) , as well as vision-language interpretation models such as CerebraGloss ( Gu et al., 2026 ) . Collectively, these approaches demonstrate increasingly capable mappings between EEG and clinical language, including long-recording report generation and fine-grained interpretation. These approaches, however, remain encoded within a fixed learned model or inference pipeline rather than an adaptive process in which a controller can actively select, combine, and revisit complementary specialist analyses. A second direction treats EEG and broader neuroscience analysis as an agentic process",
+   "text_with_context": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting | Introduction\n\n. Accurate event detection alone is therefore insufficient; evidence must be gathered across the recording and integrated into a coherent report. On the other hand, a practical clinical system must also operate under deployment constraints. Local inference can be especially attractive for sensitive clinical data because it allows institutions to keep patient information within their own infrastructure and reduces reliance on external model providers ( Griot et al., 2025 ) . This creates a practical tension: clinical EEG systems should support broad, evidence-based interpretation without requiring excessively large or complex deployment stacks. Existing work has approached this problem from two complementary directions. The first develops EEG-language systems that produce clinical descriptions, reports, or interpretations directly from EEG signals or learned EEG representations. This direction includes report-generation systems such as EEGtoText ( Biswal et al., 2019 ) and CELM ( Pradeepkumar et al., 2026 ) , as well as vision-language interpretation models such as CerebraGloss ( Gu et al., 2026 ) . Collectively, these approaches demonstrate increasingly capable mappings between EEG and clinical language, including long-recording report generation and fine-grained interpretation. These approaches, however, remain encoded within a fixed learned model or inference pipeline rather than an adaptive process in which a controller can actively select, combine, and revisit complementary specialist analyses. A second direction treats EEG and broader neuroscience analysis as an agentic process",
+   "title": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01394v1#S1",
+   "pdf_url": "https://arxiv.org/pdf/2611.01394v1",
+   "source_sha256": "ea2022a5ba2fe23f88441a9951ffa4be087a06367de9e2bfa8e5aa860e31b21c"
+  },
+  {
+   "chunk_id": "2611.01394v1_c0007",
+   "arxiv_id": "2611.01394v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01394v1#S6",
+   "section": "conclusion",
+   "subsection": "",
+   "high_value": true,
+   "text": "We presented ERIA, a tool-using framework for clinical EEG reporting in which a local language-model controller coordinates specialized EEG analyses and synthesizes their outputs into a final interpretation. Optimizing only the controller’s natural-language policy with GEPA increased the protected-test physician-aligned score from 0.5052 to 0.6024 without retraining the controller or specialist models. Trajectory analysis indicates that this improvement is accompanied by broader recording coverage and greater corroboration of uncertain findings, rather than a change in report phrasing alone. The optimized policy also transfers beyond the clinical-report objective, improving conversational QA on CerebraGloss-Bench and increasing BrainBench Foundational Analysis score. These findings support policy-level optimization as a practical way to improve how grounded biomedical agents deploy existing analytical capabilities without increasing controller scale or retraining their underlying models. Future work should extend the evaluation to prospective, multi-institutional settings and include direct assessment by EEG specialists rather than relying solely on automated report-level evaluation.",
+   "text_with_context": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting | Conclusion\n\nWe presented ERIA, a tool-using framework for clinical EEG reporting in which a local language-model controller coordinates specialized EEG analyses and synthesizes their outputs into a final interpretation. Optimizing only the controller’s natural-language policy with GEPA increased the protected-test physician-aligned score from 0.5052 to 0.6024 without retraining the controller or specialist models. Trajectory analysis indicates that this improvement is accompanied by broader recording coverage and greater corroboration of uncertain findings, rather than a change in report phrasing alone. The optimized policy also transfers beyond the clinical-report objective, improving conversational QA on CerebraGloss-Bench and increasing BrainBench Foundational Analysis score. These findings support policy-level optimization as a practical way to improve how grounded biomedical agents deploy existing analytical capabilities without increasing controller scale or retraining their underlying models. Future work should extend the evaluation to prospective, multi-institutional settings and include direct assessment by EEG specialists rather than relying solely on automated report-level evaluation.",
+   "title": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01394v1#S6",
+   "pdf_url": "https://arxiv.org/pdf/2611.01394v1",
+   "source_sha256": "ea2022a5ba2fe23f88441a9951ffa4be087a06367de9e2bfa8e5aa860e31b21c"
+  },
+  {
+   "chunk_id": "2611.01394v1_paragraph_408cea153ae26a76_0",
+   "text": "The protected-test improvement, together with the trajectory analysis, indicates that optimizing the natural-language policy materially changes how ERIA allocates analytical effort rather than merely altering report phrasing. In particular, the selected policy favors broader temporal coverage, state-aware interpretation, and corroboration of uncertain evidence. The external evaluations further suggest that these improvements largely transfer beyond the clinical-reporting objective: GEPA improves conversational QA on CerebraGloss-Bench and Foundational Analysis on BrainBench, preserves MCQ accuracy, and incurs only a modest decrease in description ROUGE-1. Some limitations should be considered when interpreting these results. First, the GEPA-selected policy introduced one instruction that was not supported by ERIA’s available specialist capabilities: it encouraged inspection of sleep spindles, K-complexes, and vertex waves despite the absence of a dedicated detector for these graphoelements. We retain the selected policy unchanged for the reported evaluations rather than manually correcting this instruction after observing it. This case illustrates that reflective policy optimization can improve analysis behavior while still introducing instructions that are inconsistent with the current toolset. Future implementations could validate proposed policy instructions against machine-readable tool contracts before deployment. Second, the physician-aligned score measures agreement with a clinical reference report rather than independently establishing waveform-level ground truth. Reference reports may omit findings, and two clinically acceptable interpretations can differ in wording, emphasis, or level of detail. The evaluator accommodates unavailable domains and scores reports at the level of clinical concepts, but direct review by EEG specialists remains necessary to establish real-world clinical utility. Finally, the clinical evaluation is retrospective and based on a single private collection of 200 matched EEG–report studies, including 100 protected test cases. Evaluation across additional institutions, acquisition environments, patient populations, and reporting styles will be necessary to establish the robustness of the learned policy. The external benchmarks broaden the evaluation across datasets and tasks, but they do not replace prospective multi-site clinical assessment.",
+   "arxiv_id": "2611.01394v1",
+   "title": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01394v1",
+   "html_url": "https://arxiv.org/html/2611.01394v1#S5.SS0.SSS0.Px3",
+   "source_url": "https://arxiv.org/html/2611.01394v1#S5.SS0.SSS0.Px3",
+   "page_number": null,
+   "source_sha256": "ea2022a5ba2fe23f88441a9951ffa4be087a06367de9e2bfa8e5aa860e31b21c",
+   "source_anchor": "S5.SS0.SSS0.Px3",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Results and Discussion",
+   "subsection": "",
+   "section_id": "S5",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "recovered_paragraph",
+   "paragraph_id": "S5.SS0.SSS0.Px3",
+   "paragraph_heading": "Discussion and Limitations.",
+   "same_text_in_baseline": false,
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "text_normalization": "html_text_whitespace_and_math_alttext"
+  },
+  {
+   "chunk_id": "2611.01394v1_paragraph_aa0f601408509dec_0",
+   "text": "The tool library is organized around evidence categories emphasized in ACNS Guideline 7 for routine EEG reporting ( Tatum et al., 2016 ) . ERIA operationalizes these categories through complementary deterministic analyses, learned clinical models, and local knowledge retrieval. Table 1 summarizes the core EEG-analysis tools. For several learned tools, we did not identify a released model that simultaneously matched the required output space and provided suitable performance for the intended role. We therefore trained task-specific models or prediction heads on external public datasets where necessary, while reusing released models when an appropriate model was available. Core ERIA EEG-analysis tools. “Ours” indicates that the task-specific model or prediction head was trained by us. Detailed training procedures are provided in the appendix. Following the coarse-to-fine temporal analysis strategy used in EEGAgent ( Zhao et al., 2026 ) , ERIA combines tools operating at different temporal resolutions. The 10-s coarse screen can survey longer intervals for slowing or seizure-like activity, after which the controller can inspect candidate regions using the 2.5-s event classifier. Sleep and background are assessed over 30-s epochs, whereas the IED screen uses densely overlapping 1-s windows. For longer scans, adjacent positive windows are merged into candidate intervals that the controller can inspect at finer resolution. Technical reliability is also exposed to the controller rather than hidden inside the tools. Each analysis applies its own training-matched preprocessing and signal-quality checks and returns a quality note or warning when the analyzed signal required an intervention or may limit interpretation. For example, if a tool imputes a small number of missing samples before inference, that intervention is included in the returned quality note. This allows ERIA to account for technical uncertainty when interpreting tool outputs.",
+   "arxiv_id": "2611.01394v1",
+   "title": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01394v1",
+   "html_url": "https://arxiv.org/html/2611.01394v1#S3.SS0.SSS0.Px2",
+   "source_url": "https://arxiv.org/html/2611.01394v1#S3.SS0.SSS0.Px2",
+   "page_number": null,
+   "source_sha256": "ea2022a5ba2fe23f88441a9951ffa4be087a06367de9e2bfa8e5aa860e31b21c",
+   "source_anchor": "S3.SS0.SSS0.Px2",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "ERIA",
+   "subsection": "",
+   "section_id": "S3",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "recovered_paragraph",
+   "paragraph_id": "S3.SS0.SSS0.Px2",
+   "paragraph_heading": "Guideline-Informed Specialist Toolset.",
+   "same_text_in_baseline": false,
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "text_normalization": "html_text_whitespace_and_math_alttext"
+  },
+  {
+   "chunk_id": "2611.01394v1_c0000",
+   "arxiv_id": "2611.01394v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01394v1#abstract1",
+   "section": "abstract",
+   "subsection": "",
+   "high_value": true,
+   "text": "Clinical EEG interpretation is substantially more complex than classifying short signal segments; it must assess technical quality, characterize background and behavioral states across long recordings, identify interictal and ictal abnormalities, reconcile uncertain evidence, and synthesize these findings into a clinically meaningful report. We introduce ERIA (EEG Reporting and Instruction-Optimized Agent), a locally deployable EEG interpretation framework that enables a single 27B language-model controller to analyze whole-recording EEGs by orchestrating specialized parametric and signal-processing tools. ERIA combines specialized tools for detecting background abnormality, sleep–wake states, seizure-like activity, and interictal epileptiform discharges with deterministic spectral, amplitude, symmetry, montage, and signal-quality analyses, covering multiple clinically relevant domains reflected in EEG reporting guidelines. Rather than relying on EEG-specific controller fine-tuning, a proprietary frontier model, or multi-agent orchestration, ERIA keeps the controller weights, specialist tools, and safety constraints fixed and optimizes only its natural-language analysis policy with GEPA (Genetic-Pareto), a reflective prompt optimizer, using feedback from expert-written EEG reports. Compared with the raw policy, GEPA substantially improves physician-aligned whole-recording report quality, while the resulting policy transfers to external EEG benchmarks. We evaluate performance on CerebraGloss-Bench short-segment clinical interpretation and BrainBench Foundational Analysis, where ERIA performs competitively with the models evaluated in the original benchmarks",
+   "text_with_context": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting | Abstract\n\nClinical EEG interpretation is substantially more complex than classifying short signal segments; it must assess technical quality, characterize background and behavioral states across long recordings, identify interictal and ictal abnormalities, reconcile uncertain evidence, and synthesize these findings into a clinically meaningful report. We introduce ERIA (EEG Reporting and Instruction-Optimized Agent), a locally deployable EEG interpretation framework that enables a single 27B language-model controller to analyze whole-recording EEGs by orchestrating specialized parametric and signal-processing tools. ERIA combines specialized tools for detecting background abnormality, sleep–wake states, seizure-like activity, and interictal epileptiform discharges with deterministic spectral, amplitude, symmetry, montage, and signal-quality analyses, covering multiple clinically relevant domains reflected in EEG reporting guidelines. Rather than relying on EEG-specific controller fine-tuning, a proprietary frontier model, or multi-agent orchestration, ERIA keeps the controller weights, specialist tools, and safety constraints fixed and optimizes only its natural-language analysis policy with GEPA (Genetic-Pareto), a reflective prompt optimizer, using feedback from expert-written EEG reports. Compared with the raw policy, GEPA substantially improves physician-aligned whole-recording report quality, while the resulting policy transfers to external EEG benchmarks. We evaluate performance on CerebraGloss-Bench short-segment clinical interpretation and BrainBench Foundational Analysis, where ERIA performs competitively with the models evaluated in the original benchmarks",
+   "title": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01394v1#abstract1",
+   "pdf_url": "https://arxiv.org/pdf/2611.01394v1",
+   "source_sha256": "ea2022a5ba2fe23f88441a9951ffa4be087a06367de9e2bfa8e5aa860e31b21c"
+  },
+  {
+   "chunk_id": "2611.01394v1_paragraph_6acb35058f19c0ac_0",
+   "text": "ERIA uses GEPA to improve the mutable analysis policy ( Agrawal et al., 2026 ) . We refer to ERIA’s initial mutable analysis policy before GEPA optimization as the raw policy . Figure 2 summarizes this process. For each candidate policy, the frozen ERIA agent executes the EEG-analysis task and produces both a complete execution trajectory and a final report. The clinical evaluator independently compares the report against the physician reference and returns the domain scores and textual feedback described above. GEPA optimization of ERIA’s natural-language analysis policy. The reflector uses execution trajectories and clinical-evaluator feedback to propose policy revisions. Candidate policies are first tested on the sampled optimization cases and, when improved, evaluated on the validation partition for selection. The controller, specialist tools, and safety constraints remain fixed, and the protected test set is inaccessible throughout optimization. The LLM-based GEPA reflector receives the complete execution trajectory, generated and reference reports, evaluator domain scores and feedback, and aggregate score. Fixed safety instructions and tool descriptions are provided as read-only context, while GEPA modifies only the mutable analysis policy. Candidate policies are evaluated on sampled optimization cases and, when improved, on the validation partition for selection. The protected test partition remains inaccessible throughout optimization, after which the selected policy is frozen for subsequent clinical and external evaluations.",
+   "arxiv_id": "2611.01394v1",
+   "title": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01394v1",
+   "html_url": "https://arxiv.org/html/2611.01394v1#S3.SS0.SSS0.Px4",
+   "source_url": "https://arxiv.org/html/2611.01394v1#S3.SS0.SSS0.Px4",
+   "page_number": null,
+   "source_sha256": "ea2022a5ba2fe23f88441a9951ffa4be087a06367de9e2bfa8e5aa860e31b21c",
+   "source_anchor": "S3.SS0.SSS0.Px4",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "ERIA",
+   "subsection": "",
+   "section_id": "S3",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "recovered_paragraph",
+   "paragraph_id": "S3.SS0.SSS0.Px4",
+   "paragraph_heading": "GEPA Policy Optimization.",
+   "same_text_in_baseline": false,
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "text_normalization": "html_text_whitespace_and_math_alttext"
+  },
+  {
+   "chunk_id": "2611.01394v1_paragraph_4e3be099752bdeb6_0",
+   "text": "ERIA uses a locally served Qwen3.8-27B controller ( Qwen Team, 2026b ) in a ReAct-style reasoning-and-action loop ( Yao et al., 2023 ) . At each iteration, the controller can issue one or more tool calls with temporal, spatial, or analysis-specific arguments. Tool outputs are returned to the controller and incorporated into subsequent reasoning. This cycle continues until the controller determines that sufficient evidence has been gathered to answer the request. For clinical reporting, the collected evidence is synthesized into a structured EEG report. The system prompt is separated into a fixed component and a mutable analysis policy. The fixed component specifies the system scope, safety constraints, and evidence-grounding rules, which require learned-model outputs to be treated as supporting evidence rather than direct diagnoses. The mutable policy instead governs how the controller explores the recording, selects and revisits analyses, reconciles complementary evidence, and constructs the final response. GEPA modifies only this policy. For report-generation requests, ERIA follows the structured format used by the reference EEG reports in our paired clinical dataset, covering technical information, background activity, activation procedures, sleep, interictal activity, ictal activity, impression, and clinical correlation.",
+   "arxiv_id": "2611.01394v1",
+   "title": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01394v1",
+   "html_url": "https://arxiv.org/html/2611.01394v1#S3.SS0.SSS0.Px1",
+   "source_url": "https://arxiv.org/html/2611.01394v1#S3.SS0.SSS0.Px1",
+   "page_number": null,
+   "source_sha256": "ea2022a5ba2fe23f88441a9951ffa4be087a06367de9e2bfa8e5aa860e31b21c",
+   "source_anchor": "S3.SS0.SSS0.Px1",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "ERIA",
+   "subsection": "",
+   "section_id": "S3",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "recovered_paragraph",
+   "paragraph_id": "S3.SS0.SSS0.Px1",
+   "paragraph_heading": "Single-Controller Agent.",
+   "same_text_in_baseline": false,
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "text_normalization": "html_text_whitespace_and_math_alttext"
+  },
+  {
+   "chunk_id": "2611.01394v1_paragraph_849fe3c6168d998d_0",
+   "text": "We first evaluate ERIA using a private dataset of 200 routine clinical EEG studies and matched clinically-generated reports. These EEG reports were authored by board-certified epileptologists according to the ACNS guidelines. Following the optimization protocol described above, the dataset is split at the recording level into 50 optimization cases, 50 validation cases, and 100 protected test cases. Note that this dataset was not used to develop any of the tools that the controller uses to generate reports. For all experiments, ERIA utilized the Qwen3.8-27B controller served locally through Ollama with temperature 0, a 65,536-token context window, a maximum output length of 8,192 tokens, and at most 60 ReAct iterations per request. To compare ERIA’s reports with epileptologist reports, we utilized a physician-aligned evaluator, which was instantiated with GPT-OSS-120b using high reasoning effort and temperature 0. We selected this model because it combines structured-output capabilities with strong performance on health-oriented evaluation, including HealthBench ( OpenAI, 2025 ) . Its suitability for clinical-text review is further supported by a study evaluating GPT-OSS-120b as a second reviewer of real-world internal-medicine reports ( Skrabic et al., 2026 ) . Optimization Setup : GEPA reflection uses Qwen3.5-122B-A10B-NVFP4 . Because reflection operates over long execution contexts and requires synthesizing complex intermediate evidence, we selected Qwen3.5-122B-A10B for its strong reasoning, instruction-following, and long-context capabilities ( Qwen Team, 2026a ) . The NVFP4 checkpoint enables efficient local execution of the reflector. GEPA is initialized from ERIA’s raw mutable analysis policy and uses a budget of 750 metric calls ( Agrawal et al., 2026 ) , with three optimization cases sampled per iteration. GEPA optimization was performed on a single NVIDIA DGX Spark and required approximately 4–5 days. The controller, evaluator, and reflector were executed sequentially during optimization to remain within a single-machine setup.",
+   "arxiv_id": "2611.01394v1",
+   "title": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01394v1",
+   "html_url": "https://arxiv.org/html/2611.01394v1#S4.SS0.SSS0.Px1",
+   "source_url": "https://arxiv.org/html/2611.01394v1#S4.SS0.SSS0.Px1",
+   "page_number": null,
+   "source_sha256": "ea2022a5ba2fe23f88441a9951ffa4be087a06367de9e2bfa8e5aa860e31b21c",
+   "source_anchor": "S4.SS0.SSS0.Px1",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Experimental Setup",
+   "subsection": "",
+   "section_id": "S4",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "recovered_paragraph",
+   "paragraph_id": "S4.SS0.SSS0.Px1",
+   "paragraph_heading": "Internal Evaluation.",
+   "same_text_in_baseline": false,
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "text_normalization": "html_text_whitespace_and_math_alttext"
+  },
+  {
+   "chunk_id": "2611.01394v1_c0004",
+   "arxiv_id": "2611.01394v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01394v1#S1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": ". A second direction treats EEG and broader neuroscience analysis as an agentic process. Systems such as EEGAgent ( Zhao et al., 2026 ) , BrainAgent ( Zhou et al., 2026b ) , and NS-Copilot ( Liu et al., 2026 ) use language-model reasoning to coordinate analytical tools, pretrained models, or executable workflows, while BrainBench extends evaluation toward comprehensive instruction-conditioned EEG analysis ( Zhou et al., 2026a ) . These approaches make evidence acquisition and multi-step analysis more flexible, but current systems typically rely on at least one of very large controllers, hosted frontier models, multi-agent coordination, or computationally heavier closed-loop execution. Moreover, whole-recording clinical report quality has not been rigorously evaluated against paired physician-authored references in this agentic setting. Here we introduce ERIA , an E EG R eporting and I nstruction-Optimized A gent, to bridge these two directions. ERIA retains the explicit evidence gathering of a tool-using agent while using a single 27B controller designed for local execution. Rather than mapping EEG representations directly into report text, the controller reasons over outputs from specialist EEG analyses and determines how those findings should be combined into a clinical interpretation. Its toolset is selected to cover the principal information categories required for clinical EEG reporting according to the ACNS guidelines ( Tatum et al., 2016 ; Kane et al., 2017 ) . We improve ERIA without EEG-specific fine-tuning of the controller or additional language-model agents. The controller weights, specialist tools, and safety constraints remain fixed; only the natural-language policy governing analysis and report synthesis is optimized",
+   "text_with_context": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting | Introduction\n\n. A second direction treats EEG and broader neuroscience analysis as an agentic process. Systems such as EEGAgent ( Zhao et al., 2026 ) , BrainAgent ( Zhou et al., 2026b ) , and NS-Copilot ( Liu et al., 2026 ) use language-model reasoning to coordinate analytical tools, pretrained models, or executable workflows, while BrainBench extends evaluation toward comprehensive instruction-conditioned EEG analysis ( Zhou et al., 2026a ) . These approaches make evidence acquisition and multi-step analysis more flexible, but current systems typically rely on at least one of very large controllers, hosted frontier models, multi-agent coordination, or computationally heavier closed-loop execution. Moreover, whole-recording clinical report quality has not been rigorously evaluated against paired physician-authored references in this agentic setting. Here we introduce ERIA , an E EG R eporting and I nstruction-Optimized A gent, to bridge these two directions. ERIA retains the explicit evidence gathering of a tool-using agent while using a single 27B controller designed for local execution. Rather than mapping EEG representations directly into report text, the controller reasons over outputs from specialist EEG analyses and determines how those findings should be combined into a clinical interpretation. Its toolset is selected to cover the principal information categories required for clinical EEG reporting according to the ACNS guidelines ( Tatum et al., 2016 ; Kane et al., 2017 ) . We improve ERIA without EEG-specific fine-tuning of the controller or additional language-model agents. The controller weights, specialist tools, and safety constraints remain fixed; only the natural-language policy governing analysis and report synthesis is optimized",
+   "title": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01394v1#S1",
+   "pdf_url": "https://arxiv.org/pdf/2611.01394v1",
+   "source_sha256": "ea2022a5ba2fe23f88441a9951ffa4be087a06367de9e2bfa8e5aa860e31b21c"
+  },
+  {
+   "chunk_id": "2611.01394v1_c0001",
+   "arxiv_id": "2611.01394v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01394v1#abstract1",
+   "section": "abstract",
+   "subsection": "",
+   "high_value": true,
+   "text": ". We evaluate performance on CerebraGloss-Bench short-segment clinical interpretation and BrainBench Foundational Analysis, where ERIA performs competitively with the models evaluated in the original benchmarks. These results show that carefully selected specialist tools and language-level policy optimization can extend the clinical and general EEG capabilities of a single locally executable model while preserving local inference, traceable tool use, and a comparatively simple deployment architecture.",
+   "text_with_context": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting | Abstract\n\n. We evaluate performance on CerebraGloss-Bench short-segment clinical interpretation and BrainBench Foundational Analysis, where ERIA performs competitively with the models evaluated in the original benchmarks. These results show that carefully selected specialist tools and language-level policy optimization can extend the clinical and general EEG capabilities of a single locally executable model while preserving local inference, traceable tool use, and a comparatively simple deployment architecture.",
+   "title": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01394v1#abstract1",
+   "pdf_url": "https://arxiv.org/pdf/2611.01394v1",
+   "source_sha256": "ea2022a5ba2fe23f88441a9951ffa4be087a06367de9e2bfa8e5aa860e31b21c"
+  },
+  {
+   "chunk_id": "2611.01394v1_paragraph_7959507ba9f55360_0",
+   "text": "We next examine whether a policy optimized exclusively from whole-recording clinical reports remains useful on independent EEG tasks. Table 3 summarizes performance on CerebraGloss-Bench and BrainBench Foundational Analysis. External EEG evaluation. The reference column reports CerebraGloss-3B for CerebraGloss-Bench and the strongest reported Foundational Analysis score for BrainBench. CerebraGloss-Bench : The optimized policy preserves MCQ accuracy at 71.11% while improving conversational QA from 3.60 to 3.87. Description ROUGE-1 decreases modestly from 30.70 to 30.17. One raw-policy case failed to produce a valid output; following the CerebraGloss-Bench evaluation convention, this case was excluded from score aggregation rather than assigned a score of zero. The benchmark also represents a substantially different analysis setting from ERIA’s optimization task. CerebraGloss-3B is explicitly post-trained for fine-grained EEG interpretation from rendered waveform images, whereas ERIA is optimized for whole-recording clinical reporting and accesses the underlying signal through specialist analytical tools rather than visual waveform input. We therefore use CerebraGloss-Bench as a transfer test rather than as a comparison between equivalent model architectures. For context, CerebraGloss-3B was the strongest model across these tasks in the original benchmark, with MCQ, ROUGE-1, and QA scores of 80.00, 44.19, and 4.76, respectively, while GPT-5 was among the strongest general-purpose baselines with corresponding scores of 70.00, 37.07, and 4.58 ( Gu et al., 2026 ) . The conversational QA score requires an additional qualification because it depends on an LLM judge. The released CerebraGloss evaluator uses GPT-5 to score responses against the expert reference. Re-evaluating the released CerebraGloss-3B predictions with the current version of that protocol produces a score of 4.13 rather than the originally reported 4.76. Because the released evaluator calls an unpinned model endpoint, historical and current QA scores are not guaranteed to be directly comparable. We therefore use the reproduced 4.13 score when comparing against ERIA’s current results and retain 4.76 only as the published historical value. BrainBench Foundational Analysis : Here, the raw ERIA policy obtains a difficulty-weighted score of 85.86, while the GEPA-selected policy reaches 86.89, an absolute improvement of 1.03 points. The strongest Foundational Analysis score reported in the original BrainBench evaluation is 84.97 under CodeAct, while the strongest BrainAgent result is 81.47 ( Zhou et al., 2026a ) . Both ERIA configurations exceed the highest score reported in that evaluation. This comparison is most appropriately interpreted at the system level. BrainBench performance depends on the language model together with its execution strategy and analytical capabilities, rather than on the controller in isolation. ERIA similarly uses a capability-oriented benchmark interface while retaining its single-controller architecture. The absolute score therefore reflects the complete controller–tool system, whereas the difference between the raw and GEPA policies more specifically measures the effect of the learned analysis strategy.",
+   "arxiv_id": "2611.01394v1",
+   "title": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01394v1",
+   "html_url": "https://arxiv.org/html/2611.01394v1#S5.SS0.SSS0.Px2",
+   "source_url": "https://arxiv.org/html/2611.01394v1#S5.SS0.SSS0.Px2",
+   "page_number": null,
+   "source_sha256": "ea2022a5ba2fe23f88441a9951ffa4be087a06367de9e2bfa8e5aa860e31b21c",
+   "source_anchor": "S5.SS0.SSS0.Px2",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Results and Discussion",
+   "subsection": "",
+   "section_id": "S5",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "recovered_paragraph",
+   "paragraph_id": "S5.SS0.SSS0.Px2",
+   "paragraph_heading": "External EEG Transfer.",
+   "same_text_in_baseline": false,
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "text_normalization": "html_text_whitespace_and_math_alttext"
+  },
+  {
+   "chunk_id": "2611.01394v1_paragraph_958ebec7b639e581_0",
+   "text": "Table 2 summarizes both the clinical evaluation and the changes in ERIA’s execution behavior after GEPA policy optimization. On the validation partition, the aggregate clinical score increases from 0.5099 to 0.6277, corresponding to an absolute gain of 0.1178 and a 23.1% relative increase. More importantly, the improvement persists on the protected test partition; its test score rises from 0.5052 to 0.6024, an absolute improvement of 0.0972 and a 19.2% relative increase over the raw policy. The similar improvement on validation and protected test cases indicates that the selected policy transfers beyond the examples used for policy selection. Clinical performance and behavioral changes after GEPA optimization. Panel A reports the aggregate physician-aligned clinical score. In Panel B, tool-call counts, controller iterations, and calls per iteration are averages per case across the 50 validation cases; percentages denote the fraction of cases or retrieval queries satisfying the indicated criterion. The trajectory comparison shows that the improvement is accompanied by a substantial change in how ERIA gathers evidence. The clearest difference is more systematic coverage of behavioral state. The optimized policy explicitly encourages examination of early, middle, and late portions of the recording and greater attention to state transitions. As a result, the proportion of validation cases in which sleep/wake evidence is sampled from all three portions increases from 40% to 98%, while use of sleep_wake_staging more than doubles. Technical-quality assessment also becomes considerably more active. Instead of allowing a recording-level quality concern to dominate the interpretation, the optimized policy encourages localization of poor-quality channels or intervals and continued analysis of the usable signal. This behavior is reflected in the increase from 2.18 to 5.62 assess_signal_quality calls per case and in the policy’s explicit distinction between technical limitation and clinical abnormality. GEPA also increases corroboration of potentially abnormal findings. The selected instructions discourage treating low interhemispheric correlation as sufficient evidence of focal abnormality and direct the controller to investigate disagreement between coarse and fine event classifiers. Correspondingly, use of hemispheric_symmetry , fine_event_classifier , and ied_candidate_screen all increases. The optimized policy further distinguishes physiological slowing during drowsiness or sleep from pathological slowing in a clearly awake background, making the final Normal/Abnormal decision more dependent on clinically supported findings rather than isolated detector outputs. Knowledge retrieval becomes more targeted as well. State-related queries account for 63.2% of retrieval calls after optimization, compared with 46.9% under the raw policy, with the selected policy placing greater emphasis on state-dependent background characteristics, normative interpretation, and terminology relevant to epileptiform or ictal findings. Overall, GEPA changes the allocation of analysis rather than simply increasing the length of the reasoning process. ERIA performs 46.78 tool calls per case after optimization compared with 33.72 under the raw policy, yet the mean number of controller iterations decreases from 10.58 to 9.34. Tool calls per iteration therefore rise from 3.20 to 5.19. The optimized controller gathers broader and more corroborative evidence within fewer reasoning rounds.",
+   "arxiv_id": "2611.01394v1",
+   "title": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01394v1",
+   "html_url": "https://arxiv.org/html/2611.01394v1#S5.SS0.SSS0.Px1",
+   "source_url": "https://arxiv.org/html/2611.01394v1#S5.SS0.SSS0.Px1",
+   "page_number": null,
+   "source_sha256": "ea2022a5ba2fe23f88441a9951ffa4be087a06367de9e2bfa8e5aa860e31b21c",
+   "source_anchor": "S5.SS0.SSS0.Px1",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Results and Discussion",
+   "subsection": "",
+   "section_id": "S5",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "recovered_paragraph",
+   "paragraph_id": "S5.SS0.SSS0.Px1",
+   "paragraph_heading": "Clinical Report Quality.",
+   "same_text_in_baseline": false,
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "text_normalization": "html_text_whitespace_and_math_alttext"
+  },
+  {
+   "chunk_id": "2611.01394v1_paragraph_12bf9f89f243d628_0",
+   "text": "Agentic systems instead allow a language model to control the analytical process. EEGAgent is the closest architectural predecessor to ERIA, but relies on the substantially larger Qwen3-235B controller to dynamically select parametric and signal-processing tools, inspect their outputs, retrieve domain knowledge, and generate structured EEG reports ( Zhao et al., 2026 ) . Its report-generation experiment is presented as a feasibility study because matched EEG–report pairs were unavailable; consequently, its analysis policy was neither optimized using clinical-report feedback nor quantitatively evaluated against paired references. Other work increases analytical flexibility through multi-agent orchestration. BrainAgent uses a hierarchical supervisor-and-specialist architecture for broader brain-signal analysis and is evaluated with large and proprietary language-model backbones, including Qwen-Max and GPT-4o ( Zhou et al., 2026b ) . NS-Copilot similarly coordinates multiple agents for model selection, code generation, execution diagnosis, and iterative replanning; all four of its agents are powered by GPT-5.2, with GPT-5.2-Codex additionally used to establish its execution threshold ( Liu et al., 2026 ) . BrainBench further broadens evaluation toward instruction-conditioned EEG analysis across multiple domains and provides a useful testbed for agentic EEG systems ( Zhou et al., 2026a ) . In contrast, ERIA focuses on a single locally executable 27B controller and asks whether its clinical and general EEG capabilities can be improved through better tool-use policy rather than additional agents or scale.",
+   "arxiv_id": "2611.01394v1",
+   "title": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01394v1",
+   "html_url": "https://arxiv.org/html/2611.01394v1#S2.SS0.SSS0.Px2",
+   "source_url": "https://arxiv.org/html/2611.01394v1#S2.SS0.SSS0.Px2",
+   "page_number": null,
+   "source_sha256": "ea2022a5ba2fe23f88441a9951ffa4be087a06367de9e2bfa8e5aa860e31b21c",
+   "source_anchor": "S2.SS0.SSS0.Px2",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Related Work",
+   "subsection": "",
+   "section_id": "S2",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "recovered_paragraph",
+   "paragraph_id": "S2.SS0.SSS0.Px2",
+   "paragraph_heading": "Agentic EEG and Neuroscience Analysis.",
+   "same_text_in_baseline": false,
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "text_normalization": "html_text_whitespace_and_math_alttext"
+  },
+  {
+   "chunk_id": "2611.01394v1_paragraph_a7606ea6d5c64504_0",
+   "text": "Language-model behavior can also be improved without modifying model weights. Reflexion uses linguistic feedback from previous attempts to guide subsequent decisions ( Shinn et al., 2023 ) , while Self-Refine iteratively generates feedback and revises outputs without additional training ( Madaan et al., 2023 ) . GEPA extends this principle to optimization of language-model programs by reflecting over execution trajectories and textual feedback to propose improved natural-language instructions ( Agrawal et al., 2026 ) . ERIA applies this idea to grounded clinical EEG analysis by optimizing the policy governing evidence acquisition, verification, and synthesis, with expert-written EEG reports providing the feedback signal.",
+   "arxiv_id": "2611.01394v1",
+   "title": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01394v1",
+   "html_url": "https://arxiv.org/html/2611.01394v1#S2.SS0.SSS0.Px3",
+   "source_url": "https://arxiv.org/html/2611.01394v1#S2.SS0.SSS0.Px3",
+   "page_number": null,
+   "source_sha256": "ea2022a5ba2fe23f88441a9951ffa4be087a06367de9e2bfa8e5aa860e31b21c",
+   "source_anchor": "S2.SS0.SSS0.Px3",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Related Work",
+   "subsection": "",
+   "section_id": "S2",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "recovered_paragraph",
+   "paragraph_id": "S2.SS0.SSS0.Px3",
+   "paragraph_heading": "Language-Level Optimization of Agent Policies.",
+   "same_text_in_baseline": false,
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "text_normalization": "html_text_whitespace_and_math_alttext"
+  },
+  {
+   "chunk_id": "2611.01394v1_paragraph_78ebfa5f5097f0e3_0",
+   "text": "We further assess ERIA on two independent EEG benchmarks, neither of which contributes examples to GEPA optimization or policy selection. CerebraGloss-Bench : This benchmark contains 90 10-second, 19-channel EEG segments designed for fine-grained clinical interpretation ( Gu et al., 2026 ) . Although the benchmark was introduced for vision-language models operating on rendered EEG waveforms, ERIA instead analyzes the raw EEG signals to test whether its tool-based analysis policy transfers to the clinical interpretation setting. We report results on the benchmark’s three language-based tasks: multiple-choice clinical interpretation, free-text EEG description, and conversational question answering, using accuracy, ROUGE-1, and the benchmark’s LLM-based conversational score, respectively. The image-space waveform-localization task is excluded because ERIA does not produce image-space bounding boxes. BrainBench : This benchmark evaluates instruction-conditioned EEG analysis across heterogeneous analytical workflows and is organized into four subsets: Foundational Analysis, Sleep Assessment, Neurocognitive Assessment, and Physiological Integration ( Zhou et al., 2026a ) . Here we evaluate ERIA on Foundational Analysis , comprising 40 tasks and 950 instances spanning recording inspection, preprocessing, feature extraction, spectral and spatiotemporal analysis, connectivity, and evidence-grounded interpretation. This subset most directly matches ERIA’s intended scope of general and clinical EEG analysis, whereas the remaining subsets target capabilities that extend beyond ERIA’s intended scope. We follow the official BrainBench evaluation protocol and report its difficulty-weighted subset score on a 0–100 scale. External evaluation of the frozen ERIA agent was performed on a single NVIDIA RTX 4090. The larger evaluator and reflector are used only during offline policy optimization and are not required for deployment-time execution of ERIA.",
+   "arxiv_id": "2611.01394v1",
+   "title": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01394v1",
+   "html_url": "https://arxiv.org/html/2611.01394v1#S4.SS0.SSS0.Px2",
+   "source_url": "https://arxiv.org/html/2611.01394v1#S4.SS0.SSS0.Px2",
+   "page_number": null,
+   "source_sha256": "ea2022a5ba2fe23f88441a9951ffa4be087a06367de9e2bfa8e5aa860e31b21c",
+   "source_anchor": "S4.SS0.SSS0.Px2",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Experimental Setup",
+   "subsection": "",
+   "section_id": "S4",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "recovered_paragraph",
+   "paragraph_id": "S4.SS0.SSS0.Px2",
+   "paragraph_heading": "External Evaluation.",
+   "same_text_in_baseline": false,
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "text_normalization": "html_text_whitespace_and_math_alttext"
+  },
+  {
+   "chunk_id": "2611.01394v1_paragraph_6065e83e35f1f727_0",
+   "text": "Optimizing an agent for clinical reporting requires a report-level objective rather than the score of any individual detector. We therefore use a separate LLM-based clinical evaluator that compares an ERIA-generated report with its clinical reference. The evaluator receives only the generated report and reference report. It scores seven clinical domains using \\{0,1,2,\\mathrm{NA}\\} , where 0 denotes incorrect, 1 partially correct, 2 clinically equivalent, and NA indicates that the domain cannot be assessed from the physician reference report. The evaluated domains are background, ictal activity, interictal epileptiform activity, overall classification, state/sleep, focal or regional abnormality, and impression. Activation procedures are excluded from evaluation because their performance and timing depend on the acquisition protocol and are not available to ERIA from the EEG waveform alone. We use fixed weights of 0.25 , 0.20 , 0.15 , 0.10 , 0.10 , 0.10 , and 0.10 , respectively. The weights are set a priori to place greater emphasis on background and ictal/interictal findings while retaining coverage of the remaining reporting domains, consistent with the central role of these elements in established EEG reporting frameworks ( Tatum et al., 2016 ; Beniczky et al., 2013 ) . For aggregation, evaluator scores are normalized to [0,1] , with NA domains excluded. The aggregate score for case i is S_{i}=\\sum_{d}w_{d}\\,s_{i,d}\\,/\\,\\sum_{d}w_{d} , where d ranges over \\mathcal{D}_{i} , w_{d} is the fixed weight assigned to domain d , s_{i,d}\\in\\{0,0.5,1\\} is the normalized domain score, and \\mathcal{D}_{i} is the set of domains that are applicable and assessable from the physician report. Renormalizing over \\mathcal{D}_{i} prevents unavailable reference information from lowering the score. In addition to the numerical domain scores, the evaluator produces domain-specific feedback and an overall textual critique.",
+   "arxiv_id": "2611.01394v1",
+   "title": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01394v1",
+   "html_url": "https://arxiv.org/html/2611.01394v1#S3.SS0.SSS0.Px3",
+   "source_url": "https://arxiv.org/html/2611.01394v1#S3.SS0.SSS0.Px3",
+   "page_number": null,
+   "source_sha256": "ea2022a5ba2fe23f88441a9951ffa4be087a06367de9e2bfa8e5aa860e31b21c",
+   "source_anchor": "S3.SS0.SSS0.Px3",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "ERIA",
+   "subsection": "",
+   "section_id": "S3",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "recovered_paragraph",
+   "paragraph_id": "S3.SS0.SSS0.Px3",
+   "paragraph_heading": "Physician-Aligned Clinical Evaluator.",
+   "same_text_in_baseline": false,
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "text_normalization": "html_text_whitespace_and_math_alttext"
+  },
+  {
+   "chunk_id": "2611.01394v1_c0010",
+   "arxiv_id": "2611.01394v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01394v1#S6.SSx3",
+   "section": "conclusion",
+   "subsection": "reproducibility statement",
+   "high_value": true,
+   "text": "We support reproducibility by reporting the ERIA architecture, specialist-tool provenance, clinical evaluation protocol, GEPA optimization procedure, model configurations, data partitions, and external benchmark protocols in the main text. The appendix provides additional implementation and preprocessing details, specialist-model training and evaluation procedures, GEPA implementation details, and the BrainBench evaluation interface. Source code, including prompt configurations and evaluation scripts, will be made publicly available upon acceptance. Public datasets and benchmark resources used by the specialist models and external evaluations are identified with their corresponding sources; the private clinical EEG–report collection used for the internal evaluation is not distributed with the submission. This work was supported by an institutional seed grant and a PhD student fellowship.",
+   "text_with_context": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting | Conclusion > Reproducibility Statement\n\nWe support reproducibility by reporting the ERIA architecture, specialist-tool provenance, clinical evaluation protocol, GEPA optimization procedure, model configurations, data partitions, and external benchmark protocols in the main text. The appendix provides additional implementation and preprocessing details, specialist-model training and evaluation procedures, GEPA implementation details, and the BrainBench evaluation interface. Source code, including prompt configurations and evaluation scripts, will be made publicly available upon acceptance. Public datasets and benchmark resources used by the specialist models and external evaluations are identified with their corresponding sources; the private clinical EEG–report collection used for the internal evaluation is not distributed with the submission. This work was supported by an institutional seed grant and a PhD student fellowship.",
+   "title": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01394v1#S6.SSx3",
+   "pdf_url": "https://arxiv.org/pdf/2611.01394v1",
+   "source_sha256": "ea2022a5ba2fe23f88441a9951ffa4be087a06367de9e2bfa8e5aa860e31b21c"
+  },
+  {
+   "chunk_id": "2611.01394v1_c0006",
+   "arxiv_id": "2611.01394v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01394v1#S3",
+   "section": "eria",
+   "subsection": "",
+   "high_value": false,
+   "text": "ERIA’s inference workflow. A single local language-model controller selects specialist EEG analyses and reasons over their structured outputs rather than consuming waveform samples directly. The resulting evidence is iteratively gathered and synthesized into a structured EEG report. ERIA analyzes EEG through a single language-model controller that orchestrates specialist signal-analysis and clinical tools. The controller does not consume waveform samples directly; instead, it receives the user request, selects tools, observes their structured outputs, and gathers additional evidence as needed. Figure 1 summarizes the agent workflow.",
+   "text_with_context": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting | Eria\n\nERIA’s inference workflow. A single local language-model controller selects specialist EEG analyses and reasons over their structured outputs rather than consuming waveform samples directly. The resulting evidence is iteratively gathered and synthesized into a structured EEG report. ERIA analyzes EEG through a single language-model controller that orchestrates specialist signal-analysis and clinical tools. The controller does not consume waveform samples directly; instead, it receives the user request, selects tools, observes their structured outputs, and gathers additional evidence as needed. Figure 1 summarizes the agent workflow.",
+   "title": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01394v1#S3",
+   "pdf_url": "https://arxiv.org/pdf/2611.01394v1",
+   "source_sha256": "ea2022a5ba2fe23f88441a9951ffa4be087a06367de9e2bfa8e5aa860e31b21c"
+  },
+  {
+   "chunk_id": "2611.01394v1_table_73e166fbe4d2eb83_12",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nERIA: An Instruction-Optimized Agent for Clinical EEG Reporting\nTable 1: Core ERIA EEG-analysis tools. “Ours” indicates that the task-specific model or prediction head was trained by us. Detailed training procedures are provided in the appendix.\nRow group: Learned clinical tools; Tool: ied_candidate_screen; Method / source: SpikeNet2 (released); no ERIA fine-tuning ( Li et al., 2025 ); Scale: 1 s, 0.25 s stride; 19 \\rightarrow 37 ch.; Returned evidence: IED probabilities; candidate intervals",
+   "arxiv_id": "2611.01394v1",
+   "title": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01394v1",
+   "html_url": "https://arxiv.org/html/2611.01394v1#S3.T1",
+   "source_url": "https://arxiv.org/html/2611.01394v1#S3.T1",
+   "page_number": null,
+   "source_sha256": "ea2022a5ba2fe23f88441a9951ffa4be087a06367de9e2bfa8e5aa860e31b21c",
+   "source_anchor": "S3.T1",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "ERIA",
+   "subsection": "",
+   "section_id": "S3",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S3.T1",
+   "table_row": 12,
+   "row_label": "ied_candidate_screen",
+   "caption": "Table 1: Core ERIA EEG-analysis tools. “Ours” indicates that the task-specific model or prediction head was trained by us. Detailed training procedures are provided in the appendix.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Tool",
+     "source_id": "S3.T1.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Method / source",
+     "source_id": "S3.T1.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Scale",
+     "source_id": "S3.T1.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "Returned evidence",
+     "source_id": "S3.T1.2.1.4"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 12,
+     "column": 0,
+     "text": "ied_candidate_screen",
+     "source_id": "S3.T1.2.15.1"
+    },
+    {
+     "row": 12,
+     "column": 1,
+     "text": "SpikeNet2 (released); no ERIA fine-tuning ( Li et al., 2025 )",
+     "source_id": "S3.T1.2.15.2"
+    },
+    {
+     "row": 12,
+     "column": 2,
+     "text": "1 s, 0.25 s stride; 19 \\rightarrow 37 ch.",
+     "source_id": "S3.T1.2.15.3"
+    },
+    {
+     "row": 12,
+     "column": 3,
+     "text": "IED probabilities; candidate intervals",
+     "source_id": "S3.T1.2.15.4"
+    }
+   ],
+   "source_notes": [],
+   "row_group": "Learned clinical tools"
+  },
+  {
+   "chunk_id": "2611.01394v1_c0009",
+   "arxiv_id": "2611.01394v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01394v1#S6.SSx2",
+   "section": "conclusion",
+   "subsection": "ethics statement",
+   "high_value": true,
+   "text": "Our institutional review board approved the study in which we utilized EEG recordings and respective clinical reports of patients who opted in for retrospective data use for research.",
+   "text_with_context": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting | Conclusion > Ethics Statement\n\nOur institutional review board approved the study in which we utilized EEG recordings and respective clinical reports of patients who opted in for retrospective data use for research.",
+   "title": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01394v1#S6.SSx2",
+   "pdf_url": "https://arxiv.org/pdf/2611.01394v1",
+   "source_sha256": "ea2022a5ba2fe23f88441a9951ffa4be087a06367de9e2bfa8e5aa860e31b21c"
+  },
+  {
+   "chunk_id": "2611.01394v1_table_2cdcf8e8868b7420_1",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nERIA: An Instruction-Optimized Agent for Clinical EEG Reporting\nTable 2: Clinical performance and behavioral changes after GEPA optimization. Panel A reports the aggregate physician-aligned clinical score. In Panel B, tool-call counts, controller iterations, and calls per iteration are averages per case across the 50 validation cases; percentages denote the fraction of cases or retrieval queries satisfying the indicated criterion.\nRow group: A. Clinical report quality; Measure: Validation aggregate score; Raw: 0.5099; GEPA: 0.6277",
+   "arxiv_id": "2611.01394v1",
+   "title": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01394v1",
+   "html_url": "https://arxiv.org/html/2611.01394v1#S5.T2",
+   "source_url": "https://arxiv.org/html/2611.01394v1#S5.T2",
+   "page_number": null,
+   "source_sha256": "ea2022a5ba2fe23f88441a9951ffa4be087a06367de9e2bfa8e5aa860e31b21c",
+   "source_anchor": "S5.T2",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Results and Discussion",
+   "subsection": "",
+   "section_id": "S5",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S5.T2",
+   "table_row": 1,
+   "row_label": "Validation aggregate score",
+   "caption": "Table 2: Clinical performance and behavioral changes after GEPA optimization. Panel A reports the aggregate physician-aligned clinical score. In Panel B, tool-call counts, controller iterations, and calls per iteration are averages per case across the 50 validation cases; percentages denote the fraction of cases or retrieval queries satisfying the indicated criterion.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Measure",
+     "source_id": "S5.T2.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Raw",
+     "source_id": "S5.T2.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "GEPA",
+     "source_id": "S5.T2.2.1.3"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 1,
+     "column": 0,
+     "text": "Validation aggregate score",
+     "source_id": "S5.T2.2.3.1"
+    },
+    {
+     "row": 1,
+     "column": 1,
+     "text": "0.5099",
+     "source_id": "S5.T2.2.3.2"
+    },
+    {
+     "row": 1,
+     "column": 2,
+     "text": "0.6277",
+     "source_id": "S5.T2.2.3.3"
+    }
+   ],
+   "source_notes": [],
+   "row_group": "A. Clinical report quality"
+  },
+  {
+   "chunk_id": "2611.01394v1_paragraph_8e45eb9560ed827b_0",
+   "text": "EEG-to-language systems aim to translate neural recordings into clinically meaningful text. EEGtoText predicts a predefined set of EEG phenotypes and uses them to generate structured report sections, with attention providing localization of supporting signal regions ( Biswal et al., 2019 ) . CELM extends report generation to long-duration recordings by encoding EEG into latent representations that are aligned with a local language model and decoded into structured clinical reports ( Pradeepkumar et al., 2026 ) . Although effective for long-context reporting, CELM follows a learned latent EEG-to-language pathway rather than exposing independently interpretable specialist analyses that can be selectively queried or revisited during inference. CerebraGloss takes a different approach, fine-tuning a vision-language model on rendered EEG waveforms and clinical instruction–response data for fine-grained interpretation of short EEG segments ( Gu et al., 2026 ) . These approaches demonstrate strong EEG-to-language capabilities, but their analytical pathways remain fixed after training rather than being dynamically assembled from complementary specialist analyses.",
+   "arxiv_id": "2611.01394v1",
+   "title": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01394v1",
+   "html_url": "https://arxiv.org/html/2611.01394v1#S2.SS0.SSS0.Px1",
+   "source_url": "https://arxiv.org/html/2611.01394v1#S2.SS0.SSS0.Px1",
+   "page_number": null,
+   "source_sha256": "ea2022a5ba2fe23f88441a9951ffa4be087a06367de9e2bfa8e5aa860e31b21c",
+   "source_anchor": "S2.SS0.SSS0.Px1",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Related Work",
+   "subsection": "",
+   "section_id": "S2",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "recovered_paragraph",
+   "paragraph_id": "S2.SS0.SSS0.Px1",
+   "paragraph_heading": "EEG-to-Language and Clinical Report Generation.",
+   "same_text_in_baseline": false,
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "text_normalization": "html_text_whitespace_and_math_alttext"
+  },
+  {
+   "chunk_id": "2611.01394v1_table_2cdcf8e8868b7420_11",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nERIA: An Instruction-Optimized Agent for Clinical EEG Reporting\nTable 2: Clinical performance and behavioral changes after GEPA optimization. Panel A reports the aggregate physician-aligned clinical score. In Panel B, tool-call counts, controller iterations, and calls per iteration are averages per case across the 50 validation cases; percentages denote the fraction of cases or retrieval queries satisfying the indicated criterion.\nRow group: B. Validation-set execution behavior; Measure: Total tool calls; Raw: 33.72; GEPA: 46.78",
+   "arxiv_id": "2611.01394v1",
+   "title": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01394v1",
+   "html_url": "https://arxiv.org/html/2611.01394v1#S5.T2",
+   "source_url": "https://arxiv.org/html/2611.01394v1#S5.T2",
+   "page_number": null,
+   "source_sha256": "ea2022a5ba2fe23f88441a9951ffa4be087a06367de9e2bfa8e5aa860e31b21c",
+   "source_anchor": "S5.T2",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Results and Discussion",
+   "subsection": "",
+   "section_id": "S5",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S5.T2",
+   "table_row": 11,
+   "row_label": "Total tool calls",
+   "caption": "Table 2: Clinical performance and behavioral changes after GEPA optimization. Panel A reports the aggregate physician-aligned clinical score. In Panel B, tool-call counts, controller iterations, and calls per iteration are averages per case across the 50 validation cases; percentages denote the fraction of cases or retrieval queries satisfying the indicated criterion.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Measure",
+     "source_id": "S5.T2.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Raw",
+     "source_id": "S5.T2.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "GEPA",
+     "source_id": "S5.T2.2.1.3"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 11,
+     "column": 0,
+     "text": "Total tool calls",
+     "source_id": "S5.T2.2.14.1"
+    },
+    {
+     "row": 11,
+     "column": 1,
+     "text": "33.72",
+     "source_id": "S5.T2.2.14.2"
+    },
+    {
+     "row": 11,
+     "column": 2,
+     "text": "46.78",
+     "source_id": "S5.T2.2.14.3"
+    }
+   ],
+   "source_notes": [],
+   "row_group": "B. Validation-set execution behavior"
+  },
+  {
+   "chunk_id": "2611.01394v1_c0002",
+   "arxiv_id": "2611.01394v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01394v1#S1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": "Expert visual review of patient data is still the standard practice for many clinical data modalities. This burden not only contributes to physician burnout but also introduces reviewer bias and errors in clinical decisions ( Agarwal et al., 1998 ) . This is especially true in neurology, where experts spend a significant amount of time visually reviewing and interpreting lengthy multi-channel time series of brain electrical activity, known as electroencephalography (EEG). EEG is a fundamental technology in neurological care, particularly in epilepsy, where it is one of the earliest tests performed due to its convenience and cost-effectiveness. However, expert EEG review is time-consuming, laborious, and error prone. As a result, there is a significant opportunity to augment the clinical EEG review process with machine learning (ML) ( Tveit et al., 2023 ) . However, there are several challenges associated with developing a clinical-grade ML-based EEG review system. Clinical EEG interpretation is fundamentally a whole-recording reporting problem and must integrate technical quality, patient behavioral states, background activity, focal and generalized abnormalities, and an overall clinical interpretation. Established EEG reporting guidance from the American Clinical Neurophysiology Society (ACNS) reflects this breadth and emphasizes both systematic description of the recording and synthesis of the findings into a clinically meaningful interpretation ( Tatum et al., 2016 ; Kane et al., 2017 ) . Accurate event detection alone is therefore insufficient; evidence must be gathered across the recording and integrated into a coherent report. On the other hand, a practical clinical system must also operate under deployment constraints",
+   "text_with_context": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting | Introduction\n\nExpert visual review of patient data is still the standard practice for many clinical data modalities. This burden not only contributes to physician burnout but also introduces reviewer bias and errors in clinical decisions ( Agarwal et al., 1998 ) . This is especially true in neurology, where experts spend a significant amount of time visually reviewing and interpreting lengthy multi-channel time series of brain electrical activity, known as electroencephalography (EEG). EEG is a fundamental technology in neurological care, particularly in epilepsy, where it is one of the earliest tests performed due to its convenience and cost-effectiveness. However, expert EEG review is time-consuming, laborious, and error prone. As a result, there is a significant opportunity to augment the clinical EEG review process with machine learning (ML) ( Tveit et al., 2023 ) . However, there are several challenges associated with developing a clinical-grade ML-based EEG review system. Clinical EEG interpretation is fundamentally a whole-recording reporting problem and must integrate technical quality, patient behavioral states, background activity, focal and generalized abnormalities, and an overall clinical interpretation. Established EEG reporting guidance from the American Clinical Neurophysiology Society (ACNS) reflects this breadth and emphasizes both systematic description of the recording and synthesis of the findings into a clinically meaningful interpretation ( Tatum et al., 2016 ; Kane et al., 2017 ) . Accurate event detection alone is therefore insufficient; evidence must be gathered across the recording and integrated into a coherent report. On the other hand, a practical clinical system must also operate under deployment constraints",
+   "title": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01394v1#S1",
+   "pdf_url": "https://arxiv.org/pdf/2611.01394v1",
+   "source_sha256": "ea2022a5ba2fe23f88441a9951ffa4be087a06367de9e2bfa8e5aa860e31b21c"
+  },
+  {
+   "chunk_id": "2611.01394v1_c0008",
+   "arxiv_id": "2611.01394v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01394v1#S6.SSx1",
+   "section": "conclusion",
+   "subsection": "ai use statement",
+   "high_value": true,
+   "text": "Generative AI tools were used to aid and polish writing, support literature retrieval and discovery, and assist with research ideation and execution, including feedback on research methodology and experimental design. All AI-assisted content was reviewed and verified by the authors, who take full responsibility for the final manuscript, analyses, and reported results.",
+   "text_with_context": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting | Conclusion > Ai Use Statement\n\nGenerative AI tools were used to aid and polish writing, support literature retrieval and discovery, and assist with research ideation and execution, including feedback on research methodology and experimental design. All AI-assisted content was reviewed and verified by the authors, who take full responsibility for the final manuscript, analyses, and reported results.",
+   "title": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01394v1#S6.SSx1",
+   "pdf_url": "https://arxiv.org/pdf/2611.01394v1",
+   "source_sha256": "ea2022a5ba2fe23f88441a9951ffa4be087a06367de9e2bfa8e5aa860e31b21c"
+  },
+  {
+   "chunk_id": "2611.01394v1_table_2cdcf8e8868b7420_2",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nERIA: An Instruction-Optimized Agent for Clinical EEG Reporting\nTable 2: Clinical performance and behavioral changes after GEPA optimization. Panel A reports the aggregate physician-aligned clinical score. In Panel B, tool-call counts, controller iterations, and calls per iteration are averages per case across the 50 validation cases; percentages denote the fraction of cases or retrieval queries satisfying the indicated criterion.\nRow group: A. Clinical report quality; Measure: Protected test aggregate score; Raw: 0.5052; GEPA: 0.6024",
+   "arxiv_id": "2611.01394v1",
+   "title": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01394v1",
+   "html_url": "https://arxiv.org/html/2611.01394v1#S5.T2",
+   "source_url": "https://arxiv.org/html/2611.01394v1#S5.T2",
+   "page_number": null,
+   "source_sha256": "ea2022a5ba2fe23f88441a9951ffa4be087a06367de9e2bfa8e5aa860e31b21c",
+   "source_anchor": "S5.T2",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Results and Discussion",
+   "subsection": "",
+   "section_id": "S5",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S5.T2",
+   "table_row": 2,
+   "row_label": "Protected test aggregate score",
+   "caption": "Table 2: Clinical performance and behavioral changes after GEPA optimization. Panel A reports the aggregate physician-aligned clinical score. In Panel B, tool-call counts, controller iterations, and calls per iteration are averages per case across the 50 validation cases; percentages denote the fraction of cases or retrieval queries satisfying the indicated criterion.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Measure",
+     "source_id": "S5.T2.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Raw",
+     "source_id": "S5.T2.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "GEPA",
+     "source_id": "S5.T2.2.1.3"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 2,
+     "column": 0,
+     "text": "Protected test aggregate score",
+     "source_id": "S5.T2.2.4.1"
+    },
+    {
+     "row": 2,
+     "column": 1,
+     "text": "0.5052",
+     "source_id": "S5.T2.2.4.2"
+    },
+    {
+     "row": 2,
+     "column": 2,
+     "text": "0.6024",
+     "source_id": "S5.T2.2.4.3"
+    }
+   ],
+   "source_notes": [],
+   "row_group": "A. Clinical report quality"
+  },
+  {
+   "chunk_id": "2611.01394v1_table_dfcfedc87b2586a3_3",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nERIA: An Instruction-Optimized Agent for Clinical EEG Reporting\nTable 3: External EEG evaluation. The reference column reports CerebraGloss-3B for CerebraGloss-Bench and the strongest reported Foundational Analysis score for BrainBench.\nBenchmark: CerebraGloss-Bench; Metric: Conversational QA; Raw: 3.60; GEPA: 3.87; Reference: 4.13",
+   "arxiv_id": "2611.01394v1",
+   "title": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01394v1",
+   "html_url": "https://arxiv.org/html/2611.01394v1#S5.T3",
+   "source_url": "https://arxiv.org/html/2611.01394v1#S5.T3",
+   "page_number": null,
+   "source_sha256": "ea2022a5ba2fe23f88441a9951ffa4be087a06367de9e2bfa8e5aa860e31b21c",
+   "source_anchor": "S5.T3",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Results and Discussion",
+   "subsection": "",
+   "section_id": "S5",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S5.T3",
+   "table_row": 3,
+   "row_label": "CerebraGloss-Bench",
+   "caption": "Table 3: External EEG evaluation. The reference column reports CerebraGloss-3B for CerebraGloss-Bench and the strongest reported Foundational Analysis score for BrainBench.",
+   "header_provenance": "latexml_guessed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Benchmark",
+     "source_id": "S5.T3.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Metric",
+     "source_id": "S5.T3.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "Raw",
+     "source_id": "S5.T3.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "GEPA",
+     "source_id": "S5.T3.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "Reference",
+     "source_id": "S5.T3.2.1.5"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 3,
+     "column": 0,
+     "text": "CerebraGloss-Bench",
+     "source_id": "S5.T3.2.4.1"
+    },
+    {
+     "row": 3,
+     "column": 1,
+     "text": "Conversational QA",
+     "source_id": "S5.T3.2.4.2"
+    },
+    {
+     "row": 3,
+     "column": 2,
+     "text": "3.60",
+     "source_id": "S5.T3.2.4.3"
+    },
+    {
+     "row": 3,
+     "column": 3,
+     "text": "3.87",
+     "source_id": "S5.T3.2.4.4"
+    },
+    {
+     "row": 3,
+     "column": 4,
+     "text": "4.13",
+     "source_id": "S5.T3.2.4.5"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.01394v1_table_2cdcf8e8868b7420_12",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nERIA: An Instruction-Optimized Agent for Clinical EEG Reporting\nTable 2: Clinical performance and behavioral changes after GEPA optimization. Panel A reports the aggregate physician-aligned clinical score. In Panel B, tool-call counts, controller iterations, and calls per iteration are averages per case across the 50 validation cases; percentages denote the fraction of cases or retrieval queries satisfying the indicated criterion.\nRow group: B. Validation-set execution behavior; Measure: Controller iterations; Raw: 10.58; GEPA: 9.34",
+   "arxiv_id": "2611.01394v1",
+   "title": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01394v1",
+   "html_url": "https://arxiv.org/html/2611.01394v1#S5.T2",
+   "source_url": "https://arxiv.org/html/2611.01394v1#S5.T2",
+   "page_number": null,
+   "source_sha256": "ea2022a5ba2fe23f88441a9951ffa4be087a06367de9e2bfa8e5aa860e31b21c",
+   "source_anchor": "S5.T2",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Results and Discussion",
+   "subsection": "",
+   "section_id": "S5",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "linearized_table",
+   "table_id": "S5.T2",
+   "table_row": 12,
+   "row_label": "Controller iterations",
+   "caption": "Table 2: Clinical performance and behavioral changes after GEPA optimization. Panel A reports the aggregate physician-aligned clinical score. In Panel B, tool-call counts, controller iterations, and calls per iteration are averages per case across the 50 validation cases; percentages denote the fraction of cases or retrieval queries satisfying the indicated criterion.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Measure",
+     "source_id": "S5.T2.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "Raw",
+     "source_id": "S5.T2.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "GEPA",
+     "source_id": "S5.T2.2.1.3"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 12,
+     "column": 0,
+     "text": "Controller iterations",
+     "source_id": "S5.T2.2.15.1"
+    },
+    {
+     "row": 12,
+     "column": 1,
+     "text": "10.58",
+     "source_id": "S5.T2.2.15.2"
+    },
+    {
+     "row": 12,
+     "column": 2,
+     "text": "9.34",
+     "source_id": "S5.T2.2.15.3"
+    }
+   ],
+   "source_notes": [],
+   "row_group": "B. Validation-set execution behavior"
+  }
+ ],
+ "evidence_management": {
+  "protected_ids": [
+   "2611.01394v1_c0005",
+   "2410.01553v2_c0029",
+   "2611.01394v1_c0003",
+   "2611.01394v1_c0007",
+   "2611.01394v1_paragraph_408cea153ae26a76_0",
+   "2611.01394v1_paragraph_aa0f601408509dec_0",
+   "2611.01394v1_c0000",
+   "2611.01394v1_paragraph_6acb35058f19c0ac_0",
+   "2611.01394v1_paragraph_4e3be099752bdeb6_0",
+   "2611.01394v1_paragraph_849fe3c6168d998d_0",
+   "2611.01394v1_c0004",
+   "2611.01394v1_c0001",
+   "2611.01394v1_paragraph_7959507ba9f55360_0",
+   "2611.01394v1_paragraph_958ebec7b639e581_0",
+   "2611.01394v1_paragraph_12bf9f89f243d628_0",
+   "2611.01394v1_paragraph_a7606ea6d5c64504_0",
+   "2611.01394v1_paragraph_78ebfa5f5097f0e3_0",
+   "2611.01394v1_paragraph_6065e83e35f1f727_0",
+   "2611.01394v1_c0010",
+   "2611.01394v1_c0006",
+   "2611.01394v1_table_73e166fbe4d2eb83_12",
+   "2611.01394v1_c0009",
+   "2611.01394v1_table_2cdcf8e8868b7420_1",
+   "2611.01394v1_paragraph_8e45eb9560ed827b_0",
+   "2611.01394v1_table_2cdcf8e8868b7420_11",
+   "2611.01394v1_c0002",
+   "2611.01394v1_c0008",
+   "2611.01394v1_table_2cdcf8e8868b7420_2",
+   "2611.01394v1_table_dfcfedc87b2586a3_3",
+   "2611.01394v1_table_2cdcf8e8868b7420_12"
+  ],
+  "supplementary_ids": [],
+  "searches": [
+   {
+    "query": "A neurology network wants to automate EEG report drafting without sending patient data to external providers. How does ERIA work, how much did policy optimization improve report quality, how did it do on external benchmarks, and what limits apply before clinical use?",
+    "purpose": "original question",
+    "role": "original",
+    "chunk_ids": [
+     "2611.01394v1_c0005",
+     "2410.01553v2_c0029",
+     "2611.01394v1_c0003",
+     "2611.01394v1_c0007",
+     "2611.01394v1_paragraph_408cea153ae26a76_0",
+     "2611.01394v1_paragraph_aa0f601408509dec_0",
+     "2611.01394v1_c0002",
+     "2611.01394v1_c0000",
+     "2611.01394v1_paragraph_849fe3c6168d998d_0",
+     "2611.01394v1_c0004",
+     "2611.01394v1_paragraph_6acb35058f19c0ac_0",
+     "2611.01394v1_paragraph_4e3be099752bdeb6_0",
+     "2611.01394v1_c0010",
+     "2611.01394v1_paragraph_7959507ba9f55360_0",
+     "2611.01394v1_paragraph_a7606ea6d5c64504_0",
+     "2611.01394v1_paragraph_78ebfa5f5097f0e3_0",
+     "2611.01394v1_paragraph_12bf9f89f243d628_0",
+     "2611.01394v1_paragraph_6065e83e35f1f727_0",
+     "2611.01394v1_c0001",
+     "2410.01553v2_c0028",
+     "2611.01394v1_c0009",
+     "2611.01394v1_paragraph_958ebec7b639e581_0",
+     "2608.21326v1_c0022",
+     "2402.09742v4_c0028",
+     "2611.01394v1_paragraph_8e45eb9560ed827b_0",
+     "2611.01394v1_c0006",
+     "2402.09742v4_c0000",
+     "2611.01394v1_table_dfcfedc87b2586a3_4",
+     "2611.01394v1_table_2cdcf8e8868b7420_5",
+     "2611.01394v1_table_2cdcf8e8868b7420_2"
+    ],
+    "error": null
+   },
+   {
+    "query": "How does ERIA work?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.01394v1_c0006",
+     "2611.01394v1_table_73e166fbe4d2eb83_12",
+     "2611.01394v1_paragraph_4e3be099752bdeb6_0",
+     "2611.01394v1_paragraph_12bf9f89f243d628_0",
+     "2611.01394v1_paragraph_aa0f601408509dec_0",
+     "2611.01394v1_c0001",
+     "2611.01394v1_c0008",
+     "2611.01394v1_paragraph_a7606ea6d5c64504_0",
+     "2611.01394v1_paragraph_8e45eb9560ed827b_0",
+     "2611.01394v1_c0000",
+     "2611.01394v1_c0007",
+     "2611.01394v1_c0010",
+     "2611.01394v1_paragraph_6acb35058f19c0ac_0",
+     "2611.01394v1_paragraph_78ebfa5f5097f0e3_0",
+     "2611.01394v1_c0004",
+     "2611.01394v1_c0005",
+     "2611.01394v1_paragraph_849fe3c6168d998d_0",
+     "2611.01394v1_table_73e166fbe4d2eb83_1",
+     "2611.01394v1_paragraph_408cea153ae26a76_0",
+     "2611.01394v1_table_73e166fbe4d2eb83_3",
+     "2611.01394v1_paragraph_6065e83e35f1f727_0",
+     "2611.01394v1_table_73e166fbe4d2eb83_6",
+     "2611.01394v1_table_73e166fbe4d2eb83_4",
+     "2611.01394v1_c0003",
+     "2611.01394v1_paragraph_7959507ba9f55360_0",
+     "2611.01394v1_table_73e166fbe4d2eb83_2",
+     "2611.01394v1_table_73e166fbe4d2eb83_7",
+     "2611.01394v1_paragraph_958ebec7b639e581_0",
+     "2611.01394v1_c0009",
+     "2611.01394v1_table_73e166fbe4d2eb83_13"
+    ],
+    "error": null
+   },
+   {
+    "query": "ERIA how much did policy optimization improve report quality?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.01394v1_paragraph_958ebec7b639e581_0",
+     "2611.01394v1_c0005",
+     "2611.01394v1_paragraph_7959507ba9f55360_0",
+     "2611.01394v1_paragraph_6acb35058f19c0ac_0",
+     "2611.01394v1_c0000",
+     "2611.01394v1_paragraph_408cea153ae26a76_0",
+     "2611.01394v1_table_2cdcf8e8868b7420_1",
+     "2611.01394v1_c0007",
+     "2611.01394v1_paragraph_849fe3c6168d998d_0",
+     "2611.01394v1_paragraph_78ebfa5f5097f0e3_0",
+     "2611.01394v1_table_2cdcf8e8868b7420_2",
+     "2611.01394v1_table_2cdcf8e8868b7420_5",
+     "2611.01394v1_table_2cdcf8e8868b7420_10",
+     "2611.01394v1_c0004",
+     "2611.01394v1_c0001",
+     "2611.01394v1_paragraph_4e3be099752bdeb6_0",
+     "2611.01394v1_table_2cdcf8e8868b7420_11",
+     "2611.01394v1_paragraph_a7606ea6d5c64504_0",
+     "2611.01394v1_table_2cdcf8e8868b7420_4",
+     "2611.01394v1_table_2cdcf8e8868b7420_7",
+     "2611.01394v1_paragraph_6065e83e35f1f727_0",
+     "2611.01394v1_table_2cdcf8e8868b7420_8",
+     "2611.01394v1_table_2cdcf8e8868b7420_12",
+     "2611.01394v1_paragraph_aa0f601408509dec_0",
+     "2611.01394v1_table_2cdcf8e8868b7420_3",
+     "2611.01394v1_table_2cdcf8e8868b7420_6",
+     "2611.01394v1_table_2cdcf8e8868b7420_13",
+     "2611.01394v1_table_2cdcf8e8868b7420_9",
+     "2611.01394v1_paragraph_12bf9f89f243d628_0",
+     "2611.01394v1_table_73e166fbe4d2eb83_2"
+    ],
+    "error": null
+   },
+   {
+    "query": "ERIA how did it do on external benchmarks?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.01394v1_paragraph_7959507ba9f55360_0",
+     "2611.01394v1_paragraph_78ebfa5f5097f0e3_0",
+     "2611.01394v1_c0010",
+     "2611.01394v1_c0000",
+     "2611.01394v1_table_dfcfedc87b2586a3_1",
+     "2611.01394v1_paragraph_408cea153ae26a76_0",
+     "2611.01394v1_c0001",
+     "2611.01394v1_table_dfcfedc87b2586a3_3",
+     "2611.01394v1_table_dfcfedc87b2586a3_4",
+     "2611.01394v1_table_dfcfedc87b2586a3_2",
+     "2611.01394v1_paragraph_aa0f601408509dec_0",
+     "2611.01394v1_paragraph_849fe3c6168d998d_0",
+     "2611.01394v1_paragraph_6acb35058f19c0ac_0",
+     "2611.01394v1_paragraph_12bf9f89f243d628_0",
+     "2611.01394v1_c0005",
+     "2611.01394v1_c0006",
+     "2611.01394v1_paragraph_958ebec7b639e581_0",
+     "2611.01394v1_c0007",
+     "2611.01394v1_c0003",
+     "2611.01394v1_table_73e166fbe4d2eb83_12",
+     "2611.01394v1_paragraph_4e3be099752bdeb6_0",
+     "2611.01394v1_paragraph_6065e83e35f1f727_0",
+     "2611.01394v1_c0004",
+     "2611.01394v1_table_2cdcf8e8868b7420_11",
+     "2611.01394v1_table_2cdcf8e8868b7420_1",
+     "2611.01394v1_table_2cdcf8e8868b7420_12",
+     "2611.01394v1_table_73e166fbe4d2eb83_1",
+     "2611.01394v1_c0008",
+     "2611.01394v1_paragraph_a7606ea6d5c64504_0",
+     "2611.01394v1_table_73e166fbe4d2eb83_6"
+    ],
+    "error": null
+   },
+   {
+    "query": "ERIA what limits apply before clinical use?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.01394v1_paragraph_aa0f601408509dec_0",
+     "2611.01394v1_paragraph_4e3be099752bdeb6_0",
+     "2611.01394v1_paragraph_6acb35058f19c0ac_0",
+     "2611.01394v1_c0009",
+     "2611.01394v1_paragraph_6065e83e35f1f727_0",
+     "2611.01394v1_paragraph_408cea153ae26a76_0",
+     "2611.01394v1_paragraph_958ebec7b639e581_0",
+     "2611.01394v1_c0001",
+     "2611.01394v1_c0005",
+     "2611.01394v1_c0000",
+     "2611.01394v1_paragraph_8e45eb9560ed827b_0",
+     "2611.01394v1_table_2cdcf8e8868b7420_1",
+     "2611.01394v1_table_2cdcf8e8868b7420_6",
+     "2611.01394v1_c0004",
+     "2611.01394v1_table_2cdcf8e8868b7420_11",
+     "2611.01394v1_paragraph_849fe3c6168d998d_0",
+     "2611.01394v1_paragraph_a7606ea6d5c64504_0",
+     "2611.01394v1_table_73e166fbe4d2eb83_12",
+     "2611.01394v1_table_2cdcf8e8868b7420_12",
+     "2611.01394v1_paragraph_12bf9f89f243d628_0",
+     "2611.01394v1_table_2cdcf8e8868b7420_2",
+     "2611.01394v1_c0008",
+     "2611.01394v1_c0003",
+     "2611.01394v1_c0007",
+     "2611.01394v1_table_2cdcf8e8868b7420_7",
+     "2611.01394v1_table_2cdcf8e8868b7420_4",
+     "2611.01394v1_table_2cdcf8e8868b7420_3",
+     "2611.01394v1_table_dfcfedc87b2586a3_3",
+     "2611.01394v1_c0006",
+     "2611.01394v1_table_2cdcf8e8868b7420_10"
+    ],
+    "error": null
+   }
+  ],
+  "tokens": 7973,
+  "base_tokens": 7973,
+  "base_budget": 8000,
+  "conclusion_tokens": 0,
+  "conclusion_allowance": 800,
+  "conclusion_ids": [],
+  "conclusion_considered": [
+   {
+    "paper": "2611.01394v1",
+    "conclusion": null,
+    "rank": null
+   }
+  ],
+  "trimmed_for_request_size": [],
+  "notes": [
+   {
+    "kind": "incomplete_tables",
+    "tables": [
+     "2611.01394v1_table_73e166fbe4d2eb83",
+     "2611.01394v1_table_2cdcf8e8868b7420",
+     "2611.01394v1_table_dfcfedc87b2586a3"
+    ],
+    "paper": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting",
+    "text": "3 tables from ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting are only partly in the evidence (Table 1: Core ERIA EEG-analysis tools: 1 of 13 rows; Table 2: Clinical performance and behavioral changes after G: 4 of 13 rows; Table 3: External EEG evaluation: 1 of 4 rows), so comparisons across those tables may be incomplete."
+   }
+  ],
+  "component_searches": [
+   {
+    "query": "How does ERIA work?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.01394v1_c0006",
+     "2611.01394v1_table_73e166fbe4d2eb83_12",
+     "2611.01394v1_paragraph_4e3be099752bdeb6_0",
+     "2611.01394v1_paragraph_12bf9f89f243d628_0",
+     "2611.01394v1_paragraph_aa0f601408509dec_0",
+     "2611.01394v1_c0001",
+     "2611.01394v1_c0008",
+     "2611.01394v1_paragraph_a7606ea6d5c64504_0",
+     "2611.01394v1_paragraph_8e45eb9560ed827b_0",
+     "2611.01394v1_c0000",
+     "2611.01394v1_c0007",
+     "2611.01394v1_c0010",
+     "2611.01394v1_paragraph_6acb35058f19c0ac_0",
+     "2611.01394v1_paragraph_78ebfa5f5097f0e3_0",
+     "2611.01394v1_c0004",
+     "2611.01394v1_c0005",
+     "2611.01394v1_paragraph_849fe3c6168d998d_0",
+     "2611.01394v1_table_73e166fbe4d2eb83_1",
+     "2611.01394v1_paragraph_408cea153ae26a76_0",
+     "2611.01394v1_table_73e166fbe4d2eb83_3",
+     "2611.01394v1_paragraph_6065e83e35f1f727_0",
+     "2611.01394v1_table_73e166fbe4d2eb83_6",
+     "2611.01394v1_table_73e166fbe4d2eb83_4",
+     "2611.01394v1_c0003",
+     "2611.01394v1_paragraph_7959507ba9f55360_0",
+     "2611.01394v1_table_73e166fbe4d2eb83_2",
+     "2611.01394v1_table_73e166fbe4d2eb83_7",
+     "2611.01394v1_paragraph_958ebec7b639e581_0",
+     "2611.01394v1_c0009",
+     "2611.01394v1_table_73e166fbe4d2eb83_13"
+    ],
+    "error": null
+   },
+   {
+    "query": "ERIA how much did policy optimization improve report quality?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.01394v1_paragraph_958ebec7b639e581_0",
+     "2611.01394v1_c0005",
+     "2611.01394v1_paragraph_7959507ba9f55360_0",
+     "2611.01394v1_paragraph_6acb35058f19c0ac_0",
+     "2611.01394v1_c0000",
+     "2611.01394v1_paragraph_408cea153ae26a76_0",
+     "2611.01394v1_table_2cdcf8e8868b7420_1",
+     "2611.01394v1_c0007",
+     "2611.01394v1_paragraph_849fe3c6168d998d_0",
+     "2611.01394v1_paragraph_78ebfa5f5097f0e3_0",
+     "2611.01394v1_table_2cdcf8e8868b7420_2",
+     "2611.01394v1_table_2cdcf8e8868b7420_5",
+     "2611.01394v1_table_2cdcf8e8868b7420_10",
+     "2611.01394v1_c0004",
+     "2611.01394v1_c0001",
+     "2611.01394v1_paragraph_4e3be099752bdeb6_0",
+     "2611.01394v1_table_2cdcf8e8868b7420_11",
+     "2611.01394v1_paragraph_a7606ea6d5c64504_0",
+     "2611.01394v1_table_2cdcf8e8868b7420_4",
+     "2611.01394v1_table_2cdcf8e8868b7420_7",
+     "2611.01394v1_paragraph_6065e83e35f1f727_0",
+     "2611.01394v1_table_2cdcf8e8868b7420_8",
+     "2611.01394v1_table_2cdcf8e8868b7420_12",
+     "2611.01394v1_paragraph_aa0f601408509dec_0",
+     "2611.01394v1_table_2cdcf8e8868b7420_3",
+     "2611.01394v1_table_2cdcf8e8868b7420_6",
+     "2611.01394v1_table_2cdcf8e8868b7420_13",
+     "2611.01394v1_table_2cdcf8e8868b7420_9",
+     "2611.01394v1_paragraph_12bf9f89f243d628_0",
+     "2611.01394v1_table_73e166fbe4d2eb83_2"
+    ],
+    "error": null
+   },
+   {
+    "query": "ERIA how did it do on external benchmarks?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.01394v1_paragraph_7959507ba9f55360_0",
+     "2611.01394v1_paragraph_78ebfa5f5097f0e3_0",
+     "2611.01394v1_c0010",
+     "2611.01394v1_c0000",
+     "2611.01394v1_table_dfcfedc87b2586a3_1",
+     "2611.01394v1_paragraph_408cea153ae26a76_0",
+     "2611.01394v1_c0001",
+     "2611.01394v1_table_dfcfedc87b2586a3_3",
+     "2611.01394v1_table_dfcfedc87b2586a3_4",
+     "2611.01394v1_table_dfcfedc87b2586a3_2",
+     "2611.01394v1_paragraph_aa0f601408509dec_0",
+     "2611.01394v1_paragraph_849fe3c6168d998d_0",
+     "2611.01394v1_paragraph_6acb35058f19c0ac_0",
+     "2611.01394v1_paragraph_12bf9f89f243d628_0",
+     "2611.01394v1_c0005",
+     "2611.01394v1_c0006",
+     "2611.01394v1_paragraph_958ebec7b639e581_0",
+     "2611.01394v1_c0007",
+     "2611.01394v1_c0003",
+     "2611.01394v1_table_73e166fbe4d2eb83_12",
+     "2611.01394v1_paragraph_4e3be099752bdeb6_0",
+     "2611.01394v1_paragraph_6065e83e35f1f727_0",
+     "2611.01394v1_c0004",
+     "2611.01394v1_table_2cdcf8e8868b7420_11",
+     "2611.01394v1_table_2cdcf8e8868b7420_1",
+     "2611.01394v1_table_2cdcf8e8868b7420_12",
+     "2611.01394v1_table_73e166fbe4d2eb83_1",
+     "2611.01394v1_c0008",
+     "2611.01394v1_paragraph_a7606ea6d5c64504_0",
+     "2611.01394v1_table_73e166fbe4d2eb83_6"
+    ],
+    "error": null
+   },
+   {
+    "query": "ERIA what limits apply before clinical use?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.01394v1_paragraph_aa0f601408509dec_0",
+     "2611.01394v1_paragraph_4e3be099752bdeb6_0",
+     "2611.01394v1_paragraph_6acb35058f19c0ac_0",
+     "2611.01394v1_c0009",
+     "2611.01394v1_paragraph_6065e83e35f1f727_0",
+     "2611.01394v1_paragraph_408cea153ae26a76_0",
+     "2611.01394v1_paragraph_958ebec7b639e581_0",
+     "2611.01394v1_c0001",
+     "2611.01394v1_c0005",
+     "2611.01394v1_c0000",
+     "2611.01394v1_paragraph_8e45eb9560ed827b_0",
+     "2611.01394v1_table_2cdcf8e8868b7420_1",
+     "2611.01394v1_table_2cdcf8e8868b7420_6",
+     "2611.01394v1_c0004",
+     "2611.01394v1_table_2cdcf8e8868b7420_11",
+     "2611.01394v1_paragraph_849fe3c6168d998d_0",
+     "2611.01394v1_paragraph_a7606ea6d5c64504_0",
+     "2611.01394v1_table_73e166fbe4d2eb83_12",
+     "2611.01394v1_table_2cdcf8e8868b7420_12",
+     "2611.01394v1_paragraph_12bf9f89f243d628_0",
+     "2611.01394v1_table_2cdcf8e8868b7420_2",
+     "2611.01394v1_c0008",
+     "2611.01394v1_c0003",
+     "2611.01394v1_c0007",
+     "2611.01394v1_table_2cdcf8e8868b7420_7",
+     "2611.01394v1_table_2cdcf8e8868b7420_4",
+     "2611.01394v1_table_2cdcf8e8868b7420_3",
+     "2611.01394v1_table_dfcfedc87b2586a3_3",
+     "2611.01394v1_c0006",
+     "2611.01394v1_table_2cdcf8e8868b7420_10"
+    ],
+    "error": null
+   }
+  ]
+ },
+ "assistance": {
+  "mode": "standard",
+  "activated": false,
+  "route": null
+ },
+ "plan": null,
+ "synthesis_report": {
+  "schema_errors": [],
+  "dropped": [],
+  "contract_repairs": [],
+  "component_map_errors": []
+ },
+ "review_report": {
+  "withheld_no_decision": [],
+  "invalid_decisions": [],
+  "duplicate_decisions": [],
+  "repairs": [],
+  "dropped_limitations": [],
+  "component_check_errors": []
+ },
+ "precheck_flags": {
+  "8": [
+   {
+    "number": "30.70",
+    "issues": [
+     "subject_mismatch"
+    ]
+   },
+   {
+    "number": "30.17",
+    "issues": [
+     "subject_mismatch"
+    ]
+   }
+  ],
+  "9": [
+   {
+    "number": "4.13",
+    "issues": [
+     "subject_mismatch"
+    ]
+   }
+  ]
+ },
+ "review": {
+  "coverage": "full",
+  "gap": ""
+ },
+ "attempts": [
+  {
+   "attempt": 1,
+   "mode": "standard",
+   "resumed_from": [],
+   "status": "complete",
+   "seconds": 178.313,
+   "timings": {
+    "evidence": 10.28,
+    "synthesis": 102.195,
+    "review": 65.75,
+    "publication": 0.043
+   }
+  }
+ ],
+ "human_review": {
+  "status": "pending",
+  "reviewer": null
+ },
+ "approved": false,
+ "engine": "s3-standard",
+ "components": [
+  "How does ERIA work?",
+  "ERIA how much did policy optimization improve report quality?",
+  "ERIA how did it do on external benchmarks?",
+  "ERIA what limits apply before clinical use?"
+ ]
+}

@@ -1,0 +1,200 @@
+{
+  "agreemate": {
+    "claim": {
+      "text": "The researchers reported fairness scores of -0.4385 with chain-of-thought (CoT) and 0.3021 without CoT. The condition without CoT had the higher score.",
+      "kind": "finding",
+      "support": [
+        {
+          "chunk_id": "2412.18690v1_table_5bd4fffb5c9a7277_4",
+          "quote": "Metric: Fairness; With COT: -0.4385; Without COT: 0.3021"
+        }
+      ]
+    },
+    "before": {
+      "claim_index": 0,
+      "producer_status": "review",
+      "status": "review",
+      "reason": "comparison wording or scope is unbound or ambiguous",
+      "current_decision": null,
+      "current_numeric": "contradicted"
+    },
+    "after": {
+      "claim_index": 0,
+      "producer_status": "proposed",
+      "status": "accept",
+      "reason": "scope, role, value, and exact delivered evidence agree",
+      "current_decision": null,
+      "current_numeric": null,
+      "proposal": {
+        "scope": {
+          "subject": "AgreeMate: Teaching LLMs to Haggle",
+          "setting": "Table 3: Comparison of Metrics for Combinations with and without COT",
+          "metric": "Fairness"
+        },
+        "before": {
+          "lower": "-0.4385",
+          "upper": "-0.4385",
+          "form": "point",
+          "unit": "score",
+          "locators": [
+            {
+              "chunk_id": "2412.18690v1_table_5bd4fffb5c9a7277_4",
+              "selector": "S6.T3.2.5.2"
+            }
+          ]
+        },
+        "after": {
+          "lower": "0.3021",
+          "upper": "0.3021",
+          "form": "point",
+          "unit": "score",
+          "locators": [
+            {
+              "chunk_id": "2412.18690v1_table_5bd4fffb5c9a7277_4",
+              "selector": "S6.T3.2.5.3"
+            }
+          ]
+        }
+      },
+      "source_role_labels": {
+        "before": "With COT",
+        "after": "Without COT"
+      },
+      "source_links": [
+        {
+          "locator": {
+            "chunk_id": "2412.18690v1_table_5bd4fffb5c9a7277_4",
+            "selector": "S6.T3.2.5.2"
+          },
+          "paper": "2412.18690v1",
+          "source_url": "https://arxiv.org/html/2412.18690v1#S6.T3",
+          "source_sha256": "14c2c2989b9a7a5cc60de5366b0b1c7cb37351598c29d7dd330a09ff8142527a",
+          "passage_sha256": "a326e785a847230e6a93fb8dabc042de5657122690fec07f2a3b23eaf3307d03",
+          "source_text": "-0.4385",
+          "header_path": [
+            "With COT"
+          ],
+          "header_cell_id": "S6.T3.2.1.2",
+          "table_id": "S6.T3"
+        },
+        {
+          "locator": {
+            "chunk_id": "2412.18690v1_table_5bd4fffb5c9a7277_4",
+            "selector": "S6.T3.2.5.3"
+          },
+          "paper": "2412.18690v1",
+          "source_url": "https://arxiv.org/html/2412.18690v1#S6.T3",
+          "source_sha256": "14c2c2989b9a7a5cc60de5366b0b1c7cb37351598c29d7dd330a09ff8142527a",
+          "passage_sha256": "a326e785a847230e6a93fb8dabc042de5657122690fec07f2a3b23eaf3307d03",
+          "source_text": "0.3021",
+          "header_path": [
+            "Without COT"
+          ],
+          "header_cell_id": "S6.T3.2.1.3",
+          "table_id": "S6.T3"
+        }
+      ]
+    }
+  },
+  "training-counts": {
+    "claim": {
+      "text": "The synthetic training dataset contained 11,000 SQL task conversations and 4,000 entity (account) extraction tasks. SQL task conversations were the larger group.",
+      "kind": "finding",
+      "support": [
+        {
+          "chunk_id": "2506.23273v2_table_73e166fbe4d2eb83_3",
+          "quote": "Task Type: SQL Task Conversations; Count: 11,000"
+        },
+        {
+          "chunk_id": "2506.23273v2_table_73e166fbe4d2eb83_2",
+          "quote": "Task Type: Entity (Account) Extraction Tasks; Count: 4,000"
+        }
+      ]
+    },
+    "before": {
+      "claim_index": 0,
+      "producer_status": "review",
+      "status": "review",
+      "reason": "cited passages have no registered comparison",
+      "current_decision": null,
+      "current_numeric": "uncertain"
+    },
+    "after": {
+      "claim_index": 0,
+      "producer_status": "proposed",
+      "status": "accept",
+      "reason": "scope, role, value, and exact delivered evidence agree",
+      "current_decision": null,
+      "current_numeric": null,
+      "proposal": {
+        "scope": {
+          "subject": "FinStat2SQL: A Text2SQL Pipeline for Financial Statement Analysis",
+          "setting": "Table 1: Synthetic training dataset composition.",
+          "metric": "count"
+        },
+        "before": {
+          "lower": "11000",
+          "upper": "11000",
+          "form": "point",
+          "unit": "count",
+          "locators": [
+            {
+              "chunk_id": "2506.23273v2_table_73e166fbe4d2eb83_3",
+              "selector": "S3.T1.2.4.2"
+            }
+          ]
+        },
+        "after": {
+          "lower": "4000",
+          "upper": "4000",
+          "form": "point",
+          "unit": "count",
+          "locators": [
+            {
+              "chunk_id": "2506.23273v2_table_73e166fbe4d2eb83_2",
+              "selector": "S3.T1.2.3.2"
+            }
+          ]
+        }
+      },
+      "source_role_labels": {
+        "before": "SQL Task Conversations",
+        "after": "Entity (Account) Extraction Tasks"
+      },
+      "source_links": [
+        {
+          "locator": {
+            "chunk_id": "2506.23273v2_table_73e166fbe4d2eb83_3",
+            "selector": "S3.T1.2.4.2"
+          },
+          "paper": "2506.23273v2",
+          "source_url": "https://arxiv.org/html/2506.23273v2#S3.T1",
+          "source_sha256": "bf7b111b9d6e2a5c3ee1278ae405fa0f71dde693754633daaf106f9fe92cabbc",
+          "passage_sha256": "478f2692cf052c0c7041e108a141c98dabada8af39b674dd6753d534925d41dc",
+          "source_text": "11,000",
+          "header_path": [
+            "Count"
+          ],
+          "header_cell_id": "S3.T1.2.1.2",
+          "table_id": "S3.T1"
+        },
+        {
+          "locator": {
+            "chunk_id": "2506.23273v2_table_73e166fbe4d2eb83_2",
+            "selector": "S3.T1.2.3.2"
+          },
+          "paper": "2506.23273v2",
+          "source_url": "https://arxiv.org/html/2506.23273v2#S3.T1",
+          "source_sha256": "bf7b111b9d6e2a5c3ee1278ae405fa0f71dde693754633daaf106f9fe92cabbc",
+          "passage_sha256": "706f122fc78035c1c0bce3a434eec7b02f02e4c87ce1be085cdf7dad71b5ce5b",
+          "source_text": "4,000",
+          "header_path": [
+            "Count"
+          ],
+          "header_cell_id": "S3.T1.2.1.2",
+          "table_id": "S3.T1"
+        }
+      ]
+    }
+  }
+}

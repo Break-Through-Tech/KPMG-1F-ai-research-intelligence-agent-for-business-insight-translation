@@ -1,0 +1,128 @@
+{
+  "python": "3.14.2 (tags/v3.14.2:df79316, Dec  5 2025, 17:18:21) [MSC v.1944 64 bit (AMD64)]",
+  "executable": "C:\\Users\\ngkho\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+  "os": "Windows-11-10.0.26300-SP0",
+  "branch": [
+    "khoi/research-evidence-integration"
+  ],
+  "head": [
+    "9994eed920d0afd9ee5f36769077a05137763d6e"
+  ],
+  "worktree": "C:\\Users\\ngkho\\.codex\\worktrees\\research-evidence-integration\\KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation",
+  "tracked_modified": [
+    "experiments/table-endpoint/capped_codex_ui.py",
+    "experiments/table-endpoint/live_backend.py",
+    "experiments/table-endpoint/recorded_backend.py",
+    "ui-consult/app.js",
+    "ui-consult/chart-svg.js",
+    "ui-consult/consult.css",
+    "ui-consult/design/EVIDENCE-VISUALIZATION-SPEC.md",
+    "ui-consult/design/INTEGRATION-AND-QA.md",
+    "ui-consult/evidence.js",
+    "ui-consult/index.html",
+    "ui-consult/mock-api.js",
+    "ui-consult/serve.py",
+    "ui-consult/tests/evidence.test.js",
+    "ui-consult/tests/test_serve.py"
+  ],
+  "staged": [],
+  "untracked": [
+    "experiments/agentic/AB-EVALUATION-PLAN.md",
+    "experiments/agentic/AUDIT-RESPONSE.md",
+    "experiments/agentic/HANDOFF.md",
+    "experiments/agentic/README.md",
+    "experiments/agentic/ab_eval.py",
+    "experiments/agentic/ab_questions.json",
+    "experiments/agentic/ab_run.py",
+    "experiments/agentic/agents.py",
+    "experiments/agentic/contracts.py",
+    "experiments/agentic/envelope.py",
+    "experiments/agentic/fake_provider.py",
+    "experiments/agentic/numeric_checks.py",
+    "experiments/agentic/route.py",
+    "experiments/agentic/test_ab_dryrun.py",
+    "experiments/agentic/test_ab_harness.py",
+    "experiments/agentic/test_adversarial.py",
+    "experiments/agentic/test_agentic.py",
+    "experiments/agentic/test_audit2.py",
+    "experiments/agentic/test_audit3.py",
+    "experiments/agentic/test_audit4.py",
+    "experiments/agentic/test_audit5.py",
+    "experiments/agentic/test_integration.py",
+    "experiments/table-endpoint/ab_profile.py",
+    "experiments/table-endpoint/call_ledger.py",
+    "experiments/table-endpoint/chart_preview.py",
+    "experiments/table-endpoint/evidence_compaction.py",
+    "experiments/table-endpoint/progress.py",
+    "experiments/table-endpoint/test_ab_profile.py",
+    "experiments/table-endpoint/test_call_ledger.py",
+    "experiments/table-endpoint/test_chart_first.py"
+  ],
+  "corpus_path": "D:\\KPMG-demo-corpus\\main-727b0b3\\data\\processed\\demo-bundles\\demo-100",
+  "corpus": {
+    "kind": "bounded_search_views_v1",
+    "status": "complete",
+    "strategy": "token224_parent",
+    "embedding_model": "all-MiniLM-L6-v2",
+    "distance": "squared_l2",
+    "human_acceptance": "pending",
+    "parent_count": 7667,
+    "view_count": 11030,
+    "artifact_sha256": {
+      "parents.jsonl": "78d8efd7c9df075be09ffa5f3a9c7ca79c54efa2d7caf75c8f0329ea72ff41aa",
+      "views.json": "c6c1563ee6888887d354ec6a27e61de4b931f534f9142fbab2e94a30ad5ec5d3",
+      "vectors.npy": "50468962cff785b71c4de72f9e7436b656bcf30d8df801b2681473873d23bd14"
+    }
+  },
+  "hashes": {
+    "D:\\KPMG-demo-corpus\\main-727b0b3\\data\\processed\\demo-bundles\\demo-100\\manifest.json": "7ed723faea8a31a2efb6738223d86edbcb58c047c1ebe356d1f20ab3ece1e587",
+    "D:\\KPMG-demo-corpus\\table-endpoint-exp\\table-audit-demo-100.json": "f7d54aaa3e8f469a2fe7ab549d555416a391b11e3fcf21a1f90bae7cabf23af9",
+    "C:\\Users\\ngkho\\.codex\\worktrees\\research-evidence-integration\\KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation\\experiments\\agentic\\ab_questions.json": "86828ce949f5c7708bd10770597215e6c31ba8aea030e3409df453b895b49668",
+    "C:\\Users\\ngkho\\.codex\\worktrees\\research-evidence-integration\\KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation\\experiments\\agentic\\numeric_checks.py": "9a8f8df61d7780ae7e27958caaa5e5dda669f94055ccd78bcfea7d81afe99051",
+    "C:\\Users\\ngkho\\.cache\\huggingface\\hub\\models--sentence-transformers--all-MiniLM-L6-v2\\snapshots\\1110a243fdf4706b3f48f1d95db1a4f5529b4d41\\config.json": "953f9c0d463486b10a6871cc2fd59f223b2c70184f49815e7efbcab5d8908b41",
+    "C:\\Users\\ngkho\\KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation\\data\\processed\\model-cache\\models--cross-encoder--ms-marco-MiniLM-L6-v2\\snapshots\\233902d25c440f23af6f7d6e94d2946bac0bee0a\\config.json": "380e02c93f431831be65d99a4e7e5f67c133985bf2e77d9d4eba46847190bacc"
+  },
+  "encoder": "C:\\Users\\ngkho\\.cache\\huggingface\\hub\\models--sentence-transformers--all-MiniLM-L6-v2\\snapshots\\1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+  "reranker": "C:\\Users\\ngkho\\KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation\\data\\processed\\model-cache\\models--cross-encoder--ms-marco-MiniLM-L6-v2\\snapshots\\233902d25c440f23af6f7d6e94d2946bac0bee0a",
+  "model_weight_hashes": {
+    "C:\\Users\\ngkho\\.cache\\huggingface\\hub\\models--sentence-transformers--all-MiniLM-L6-v2\\snapshots\\1110a243fdf4706b3f48f1d95db1a4f5529b4d41\\model.safetensors": "53aa51172d142c89d9012cce15ae4d6cc0ca6895895114379cacb4fab128d9db",
+    "C:\\Users\\ngkho\\KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation\\data\\processed\\model-cache\\models--cross-encoder--ms-marco-MiniLM-L6-v2\\snapshots\\233902d25c440f23af6f7d6e94d2946bac0bee0a\\model.safetensors": "821d1aa69520101d6e0737f78a042ae25b19e5cb9160701909d10434f4aeb0ae"
+  },
+  "audit_count": 436,
+  "packages": {
+    "numpy": "2.4.4",
+    "torch": "2.14.1",
+    "sentence-transformers": "6.1.0",
+    "beautifulsoup4": "4.15.0",
+    "jsonschema": "4.26.0"
+  },
+  "ledger": {
+    "path": "D:\\KPMG-demo-corpus\\table-endpoint-exp\\codex-authorization-40.ledger.sqlite3",
+    "before": "ac497432a376b039e1a67a5c8430c96c61b56bdf49f513b2e994c07c91c12986",
+    "after": "ac497432a376b039e1a67a5c8430c96c61b56bdf49f513b2e994c07c91c12986",
+    "integrity": "ok",
+    "outcomes": [
+      [
+        "completed",
+        "ok",
+        19
+      ],
+      [
+        "failed",
+        "provider_error",
+        1
+      ]
+    ],
+    "caps": 0,
+    "locked": null
+  },
+  "executed": [
+    "retrieval.run",
+    "validation.run",
+    "tables.run",
+    "localization.saved",
+    "localization.historical_retrieval"
+  ],
+  "provider_modules_loaded": [],
+  "no_generation_provider_calls": true
+}

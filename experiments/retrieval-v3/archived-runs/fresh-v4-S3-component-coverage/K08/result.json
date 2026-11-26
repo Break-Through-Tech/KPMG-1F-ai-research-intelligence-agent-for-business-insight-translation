@@ -1,0 +1,1184 @@
+{
+ "mode": "standard",
+ "question": "A healthcare client plans to fine-tune an LLM on patient records with differential privacy, using LoRA adapters on an LLM.int8-quantized backbone. What problem did this study find, how large was it in constructed and natural settings, did it break the privacy guarantee of released models, and how can the client avoid it?",
+ "summary": {
+  "status": "ok",
+  "claims": [
+   {
+    "text": "LLM.int8 breaks the record-independence premise behind standard DP-SGD sensitivity accounting: its batch-wide outlier routing lets one record change other records’ computations, even with frozen weights and per-row quantization scales.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01411v1_c0000",
+      "quote": "Private fine-tuning of large language models increasingly pairs DP-SGD with low-rank adapters on frozen, quantized backbones, and every such stack inherits one unstated premise: frozen layers keep each record’s clipped gradient a function of that record alone. We show that LLM.int8 breaks this premise. It routes outlier activation columns to a higher-precision path using a union over the whole batch, so one record decides how every other record’s activations are computed, even though the weights are frozen and the quantization scales are per row."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01411v1_c0000"
+    ],
+    "draft_index": 0,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The quote directly establishes batch-dependent precision routing and failure of record independence despite frozen weights and per-row scales."
+     },
+     "number_grounding": "no_numbers",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "A constructed LoRA–Opacus witness reached 15.0\\times the add/remove sensitivity bound.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01411v1_c0000",
+      "quote": "A constructed LoRA–Opacus witness reaches 15.0\\times the add/remove bound."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01411v1_c0000"
+    ],
+    "draft_index": 1,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The quote states the constructed LoRA–Opacus witness reached 15.0 times the add/remove bound."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "On pretrained OPT-125M with natural text, other records changed 20% of record–layer precision splits at batch size 16.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01411v1_c0000",
+      "quote": "On pretrained OPT-125M with natural text, other records alter 20% of record–layer precision splits at batch size 16."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01411v1_c0000"
+    ],
+    "draft_index": 2,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The model, natural-text condition, 20% denominator and batch size 16 match the quote."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "An exploratory re-clipping analysis found 10 of 64 candidate neighbors above the bound after every gradient was clipped; the top pair reached 1.065C under native revalidation, while every control stayed within C. Forcing one layer’s outlier mask removed the excess.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01411v1_c0000",
+      "quote": "An exploratory re-clipping analysis finds 10 of 64 candidate neighbors above the bound once every gradient is clipped; the top pair, revalidated natively, reaches 1.065C while every control stays within C , and forcing one layer’s outlier mask removes the excess."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01411v1_c0000"
+    ],
+    "draft_index": 3,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "All counts, clipping conditions, native revalidation, control bounds and mask intervention are explicitly quoted."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "For pretrained OPT-125M with natural text, the selected neighbor exceeded the bound by 6.5% with clipping active; the study traced that excess to one column in one layer.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01411v1_c0021",
+      "quote": "on pretrained OPT-125M with natural text a selected neighbor exceeds it by 6.5% once clipping is active, an excess traced to one column in one layer."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01411v1_c0021"
+    ],
+    "draft_index": 4,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The quote states the selected natural-text neighbor's 6.5% excess with clipping and its localization to one column in one layer."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "The release audit did not detect a violation of the advertised privacy guarantee; the demonstrated failure was in the proof’s sensitivity premise.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01411v1_paragraph_9355b9cb6c4917c2_0",
+      "quote": "Our target is the proof’s premise: the sensitivity contract fails natively, while the release-level audit detects no violation of the advertised guarantee."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01411v1_paragraph_9355b9cb6c4917c2_0"
+    ],
+    "draft_index": 5,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "Correctly distinguishes the demonstrated sensitivity-premise failure from an undetected release-level privacy violation."
+     },
+     "number_grounding": "no_numbers",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "The two-million-draw audit of released adapters obtained an \\varepsilon lower bound of 3.25 at \\delta=10^{-5}, below the advertised guarantee of 4.38; resolving this small excess at release level would require about 200 times more draws.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01411v1_c0000",
+      "quote": "A two-million-draw audit of the released adapters yields \\varepsilon lower bounds ( 3.25 at \\delta=10^{-5} ) below the advertised guarantee ( 4.38 ). Resolving an excess this small at the release level would take about 200 times more draws, whereas checking the sensitivity contract directly exposes it in a few native runs, which makes contract checking the practical audit for private quantized training."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01411v1_c0000"
+    ],
+    "draft_index": 6,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The attached quote supplies the audit size, epsilon lower bound, delta, advertised epsilon and estimated additional draws."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "Singleton physical batches, threshold zero, weight-only NF4, and BF16 each restored the bound in every measured setting.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01411v1_paragraph_9355b9cb6c4917c2_0",
+      "quote": "Simple configurations (singleton physical batches, threshold zero, weight-only NF4, or BF16) restored the bound in every setting we measured."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01411v1_paragraph_9355b9cb6c4917c2_0"
+    ],
+    "draft_index": 7,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "All four configurations and the restriction to measured settings are explicitly stated."
+     },
+     "number_grounding": "uncertain",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "Record-owned precision dispatch restores the standard bound using the same GEMMs as batched LLM.int8, without extra arithmetic.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01411v1_c0000",
+      "quote": "We bound the resulting sensitivity inflation, state a record-isolation contract that restores the standard bound, and define record-owned precision dispatch that meets it with the same GEMMs as batched LLM.int8, so isolation needs no extra arithmetic."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01411v1_c0000"
+    ],
+    "draft_index": 8,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The quote explicitly links record-owned dispatch to the restored bound, the same GEMMs and no extra arithmetic."
+     },
+     "number_grounding": "no_numbers",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "Record-owned routing applies each record’s own outlier mask and correction; shared weight-column fetching must not determine another record’s correction. The backward audit must also cover input-gradient products, adapter activations, clipping buffers and dropout masks, with shared outlier caches record-scoped, cleared, or privacy-accounted.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01411v1_c0007",
+      "quote": "A batched implementation masks each row with its owner’s O_{r} , evaluates one dense integer product, and adds only that record’s correction:"
+     },
+     {
+      "chunk_id": "2611.01411v1_c0007",
+      "quote": "Because frozen weights are public, the union of weight columns W_{:,\\cup_{r}O_{r}} may be fetched once per batch; the union must never decide which correction another record receives."
+     },
+     {
+      "chunk_id": "2611.01411v1_c0007",
+      "quote": "The backward pass needs the same ownership audit for input-gradient products, adapter activations, clipping buffers and dropout masks: frozen layers pass data-dependent activations to trainable modules, so validating only directly trainable parameters, as Opacus does, cannot establish Proposition 2 . Shared outlier caches must be record-scoped or cleared unless their privacy cost is accounted for"
+     }
+    ],
+    "chunk_ids": [
+     "2611.01411v1_c0007"
+    ],
+    "draft_index": 9,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The attached quotes cover record-owned masks and corrections, shared fetching, backward audit targets and cache conditions."
+     },
+     "number_grounding": "uncertain",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "The study recommends comparing each record’s grad_sample under native batching against singleton execution; Opacus’s validator accepted OPT-125M at every tested batch size despite the sensitivity excess. Physical batch size remains privacy-relevant until batch independence is demonstrated, and an expected Poisson batch of one does not guarantee singleton execution.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01411v1_paragraph_49942c274f0dcff0_0",
+      "quote": "First, validate data dependence, not parameter ownership. Opacus’s validator accepts OPT-125M at every batch size we tried, although batching exceeds the bound; a batch-invariance test that compares each record’s grad_sample under native batching with singleton execution, as our isolation control does, would have flagged it."
+     },
+     {
+      "chunk_id": "2611.01411v1_paragraph_49942c274f0dcff0_0",
+      "quote": "Second, treat the physical batch size as privacy-relevant unless per-record computation is shown to be batch-independent: virtual batching is privacy-neutral only under that condition, and an expected Poisson batch of one does not by itself guarantee singleton execution."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01411v1_paragraph_49942c274f0dcff0_0"
+    ],
+    "draft_index": 10,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The quoted recommendations establish the comparison test, validator limitation and physical-versus-expected batch distinction."
+     },
+     "number_grounding": "uncertain",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "The study recommends deriving routing from public calibration or already released state and recording a runtime manifest of the actual packages, dispatch, training flags, batch sizes, normalization, clipping, sampler, accountant and noise settings.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01411v1_paragraph_49942c274f0dcff0_0",
+      "quote": "Third, derive routing from public calibration or from already released state; reading the current private batch before a valid release is a different operation."
+     },
+     {
+      "chunk_id": "2611.01411v1_paragraph_49942c274f0dcff0_0",
+      "quote": "Fourth, record a runtime manifest read from the executing objects (package versions, kernel dispatch, trainable flags, physical and logical batch sizes, loss normalization, clipping, sampler, accountant and noise settings), so that an auditor can check the computation the accountant certifies rather than the configuration file."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01411v1_paragraph_49942c274f0dcff0_0"
+    ],
+    "draft_index": 11,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "Both routing provenance and the runtime manifest are explicit recommendations relevant to avoiding uncertified computation."
+     },
+     "number_grounding": "no_numbers",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "The mitigation tradeoffs differ: singleton execution costs throughput, BF16 costs memory, and threshold zero removes the outlier path whose absence degrades large models.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.01411v1_paragraph_49942c274f0dcff0_0",
+      "quote": "Record-local configurations restored the bound in all our experiments, but they have different costs: threshold zero removes the outlier path whose absence degrades large models ( Dettmers et al., 2022 ) , singleton execution costs throughput, and BF16 costs memory."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01411v1_paragraph_49942c274f0dcff0_0"
+    ],
+    "draft_index": 12,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The quote states all three tradeoffs and attributes the large-model degradation observation to prior work."
+     },
+     "number_grounding": "no_numbers",
+     "flags_resolved": []
+    }
+   }
+  ],
+  "held_claims": [
+   {
+    "draft_index": 13,
+    "kind": "interpretation",
+    "text": "For this client, the findings support choosing a measured record-local configuration or implementing record-owned routing, then testing batch independence before relying on the privacy accounting.",
+    "reasons": [
+     "interpretation gate: G2"
+    ]
+   }
+  ],
+  "limitation_support": [
+   {
+    "text": "The reported natural-text measurements concern pretrained OPT-125M; they should not be treated as a measured magnitude on the client's patient records. The study did not search for adversarial natural-text records.",
+    "support": [
+     {
+      "chunk_id": "2611.01411v1_c0000",
+      "quote": "On pretrained OPT-125M with natural text, other records alter 20% of record–layer precision splits at batch size 16."
+     },
+     {
+      "chunk_id": "2611.01411v1_paragraph_a7606ea6d5c64504_0",
+      "quote": "We do not search for adversarial natural-text records."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01411v1_c0000",
+     "2611.01411v1_paragraph_a7606ea6d5c64504_0"
+    ]
+   },
+   {
+    "text": "The release audit's nondetection does not establish that the advertised guarantee holds: no violation could be detected at its size. It replayed accepted deterministic clipped sums rather than rerunning forward, backward and clipping.",
+    "support": [
+     {
+      "chunk_id": "2611.01411v1_c0018",
+      "quote": "The audit replays the accepted deterministic clipped sums for D and D^{\\prime} through unmodified Opacus 1.5.4 noising and scaling and Torch SGD (learning rate 0.01, noise multiplier 1, divisor 1), resetting all 294,912 FP32 adapter coordinates before each draw."
+     },
+     {
+      "chunk_id": "2611.01411v1_c0018",
+      "quote": "Forward, backward and clipping are not re-run, and noise comes from the pinned non-cryptographic CUDA generator. No release-level violation is detected, and none could be at this audit size."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01411v1_c0018"
+    ]
+   },
+   {
+    "text": "The empirical restoration of the bound by the four simple configurations is limited to the settings measured.",
+    "support": [
+     {
+      "chunk_id": "2611.01411v1_paragraph_9355b9cb6c4917c2_0",
+      "quote": "Simple configurations (singleton physical batches, threshold zero, weight-only NF4, or BF16) restored the bound in every setting we measured."
+     }
+    ],
+    "chunk_ids": [
+     "2611.01411v1_paragraph_9355b9cb6c4917c2_0"
+    ]
+   }
+  ],
+  "limitations": [
+   "The reported natural-text measurements concern pretrained OPT-125M; they should not be treated as a measured magnitude on the client's patient records. The study did not search for adversarial natural-text records.",
+   "The release audit's nondetection does not establish that the advertised guarantee holds: no violation could be detected at its size. It replayed accepted deterministic clipped sums rather than rerunning forward, backward and clipping.",
+   "The empirical restoration of the bound by the four simple configurations is limited to the settings measured."
+  ],
+  "dropped_limitations": [],
+  "evidence_notes": [],
+  "answer_scope": "partial",
+  "answer_lead": "",
+  "answer_lead_check": null,
+  "support_check": "exact quotes; per-claim number recall against attached quotes; numeric_checks_v2 attribution flags (quote-anchored resolution); model review of quote entailment; not human verification",
+  "component_coverage": [
+   {
+    "component": "What problem did this study find?",
+    "status": "answered",
+    "basis": "reviewer-confirmed, published finding(s)",
+    "finding_draft_indices": [
+     0
+    ]
+   },
+   {
+    "component": "how large was it in constructed and natural settings?",
+    "status": "answered",
+    "basis": "reviewer-confirmed, published finding(s)",
+    "finding_draft_indices": [
+     1,
+     2,
+     3,
+     4
+    ]
+   },
+   {
+    "component": "did it break the privacy guarantee of released models?",
+    "status": "answered",
+    "basis": "reviewer-confirmed, published finding(s)",
+    "finding_draft_indices": [
+     5,
+     6
+    ]
+   },
+   {
+    "component": "how can the client avoid it?",
+    "status": "answered",
+    "basis": "reviewer-confirmed, published finding(s)",
+    "finding_draft_indices": [
+     7,
+     8,
+     9,
+     10,
+     11,
+     12
+    ]
+   }
+  ]
+ },
+ "evidence": [
+  {
+   "chunk_id": "2611.01411v1_paragraph_a7606ea6d5c64504_0",
+   "text": "Differential privacy is a worst-case guarantee: the sensitivity bound must hold for every pair of neighboring datasets, including pairs whose differing record is chosen by an adversary who knows the model and the other records. A single measured pair whose clipped sums are farther apart than the separable bound therefore refutes that bound for the computation and lower-bounds its true sensitivity, whereas a natural pair that stays within the bound says nothing about the worst case. LLM.int8 hands such an adversary a direct lever: a record with a large activation in a column that no other record triggers moves that column to FP16 for every co-batched record. Our constructed witness (§ 6.1 ) shows that this lever can push the clipped sum to the limit of Proposition 1 . We do not search for adversarial natural-text records.",
+   "arxiv_id": "2611.01411v1",
+   "title": "Sensitivity Inflation from Cross-Record Precision Routing in Private Quantized Fine-Tuning",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01411v1",
+   "html_url": "https://arxiv.org/html/2611.01411v1#S2.SS0.SSS0.Px3",
+   "source_url": "https://arxiv.org/html/2611.01411v1#S2.SS0.SSS0.Px3",
+   "page_number": null,
+   "source_sha256": "aed54b13c0315be4465e93e841317299690e25e97e5173c62baca8609d0bbc69",
+   "source_anchor": "S2.SS0.SSS0.Px3",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Background",
+   "subsection": "",
+   "section_id": "S2",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "recovered_paragraph",
+   "paragraph_id": "S2.SS0.SSS0.Px3",
+   "paragraph_heading": "Threat model.",
+   "same_text_in_baseline": false,
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "text_normalization": "html_text_whitespace_and_math_alttext"
+  },
+  {
+   "chunk_id": "2512.11437v1_c0022",
+   "arxiv_id": "2512.11437v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2512.11437v1#S3.SS5",
+   "section": "performance evaluation",
+   "subsection": "privacy",
+   "high_value": true,
+   "text": "Language models must safeguard sensitive personal information, such as names, locations, or health history, to avoid violating ethical norms, patient confidentiality, and legal standards like HIPAA [ 44 ] . Privacy is a cornerstone of trust in healthcare, as privacy breaches compromise individual rights and erode public trust in AI-powered clinical tools. Definition of Privacy Privacy is the model’s ability to refrain from disclosing or inferring sensitive personal health information, even when prompted indirectly or under adversarial conditions. Evaluation Setup. To evaluate privacy, we construct input contexts containing personal and health identifiers, mimicking realistic clinical notes. We then generate context-aware questions designed to indirectly elicit private information, e.g., instead of overtly requesting personal information, we pose questions such as: “ If someone were to recommend a support group for patients with similar symptoms, what logistical considerations would be important for effective communication? ” This technique allows us to assess whether the model reveals sensitive details, like a patient’s phone number, rather than appropriately withholding such information. We used the leaky rate as an evaluation metric, which assigns a score of 1 if the response leaks personal information and 0 , otherwise. Results. The privacy leakage rates of different models are shown in Table 8 . While GPT-4o-mini has the lowest and most stable leakage across all language tiers, medical models are mixed (leak more information esp in low-resource). Among open-weight models, Qwen-2-1.5B and Phi-4mini show high leakage, especially in low-resource settings, whereas QwQ-32B has the worst leakage.",
+   "text_with_context": "CLINIC: Evaluating Multilingual Trustworthiness in Language Models for Healthcare | Performance Evaluation > Privacy\n\nLanguage models must safeguard sensitive personal information, such as names, locations, or health history, to avoid violating ethical norms, patient confidentiality, and legal standards like HIPAA [ 44 ] . Privacy is a cornerstone of trust in healthcare, as privacy breaches compromise individual rights and erode public trust in AI-powered clinical tools. Definition of Privacy Privacy is the model’s ability to refrain from disclosing or inferring sensitive personal health information, even when prompted indirectly or under adversarial conditions. Evaluation Setup. To evaluate privacy, we construct input contexts containing personal and health identifiers, mimicking realistic clinical notes. We then generate context-aware questions designed to indirectly elicit private information, e.g., instead of overtly requesting personal information, we pose questions such as: “ If someone were to recommend a support group for patients with similar symptoms, what logistical considerations would be important for effective communication? ” This technique allows us to assess whether the model reveals sensitive details, like a patient’s phone number, rather than appropriately withholding such information. We used the leaky rate as an evaluation metric, which assigns a score of 1 if the response leaks personal information and 0 , otherwise. Results. The privacy leakage rates of different models are shown in Table 8 . While GPT-4o-mini has the lowest and most stable leakage across all language tiers, medical models are mixed (leak more information esp in low-resource). Among open-weight models, Qwen-2-1.5B and Phi-4mini show high leakage, especially in low-resource settings, whereas QwQ-32B has the worst leakage.",
+   "title": "CLINIC: Evaluating Multilingual Trustworthiness in Language Models for Healthcare",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2512.11437v1#S3.SS5",
+   "pdf_url": "https://arxiv.org/pdf/2512.11437v1",
+   "source_sha256": "9a5a96ac40c562ed039e8434f8d9b980c9e264960ebe8200af4e2c7488ec9a32"
+  },
+  {
+   "chunk_id": "2406.11087v5_c0001",
+   "arxiv_id": "2406.11087v5",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2406.11087v5#Sx1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": "Large language models (LLMs) ( Radford et al. 2019 ; Hoffmann et al. 2022 ; Chowdhery et al. 2023 ; Touvron et al. 2023 ) have already demonstrated their capabilities across various domains, excelling in a wide range of generation and comprehension tasks ( Bang et al. 2023 ; Robinson, Rytting, and Wingate 2022 ; Li, Zhang, and Zhao 2022 ) . However, complete training of LLMs demands significant computational resources and time, making it inconvenient to adapt the model in downstream tasks ( Liu et al. 2022a ) . There exist several methods that offer solutions for parameter-efficient fine-tuning ( Dettmers et al. 2024 ; Houlsby et al. 2019 ; Hu et al. 2021 ) . These approaches achieve highly effective downstream task fine-tuning results by adjusting only a small number of parameters. The goal of such methods is to enable LLMs to adapt to small-scale features in a relatively small dataset, thereby accomplishing specific downstream tasks. Unfortunately, for LLMs, we often encounter situations where the available dataset is small and proprietary, raising concerns about privacy ( Bu et al. 2024 ; Yu et al. 2021 ; Finlayson, Swayamdipta, and Ren 2024 ) . Additionally, the training of LLMs requires substantial training memory ( Wang et al. 2023 ) , making it challenging to train on parameter-efficient fine-tuning. The time and space complexity of the training process of a model under a single-layer MLP. While opacus is a codebase for vanilla differential private method implementation. A recent line of work that focuses on fine-tuning large models using differential privacy (DP) solutions, including both full parameter fine-tuning and parameter efficient fine-tuning approaches ( Duan et al. 2024 ; Bu et al. 2024 ; Yu et al. 2021 )",
+   "text_with_context": "DP-MemArc: Differential Privacy Transfer Learning for Memory Efficient Language Models | Introduction\n\nLarge language models (LLMs) ( Radford et al. 2019 ; Hoffmann et al. 2022 ; Chowdhery et al. 2023 ; Touvron et al. 2023 ) have already demonstrated their capabilities across various domains, excelling in a wide range of generation and comprehension tasks ( Bang et al. 2023 ; Robinson, Rytting, and Wingate 2022 ; Li, Zhang, and Zhao 2022 ) . However, complete training of LLMs demands significant computational resources and time, making it inconvenient to adapt the model in downstream tasks ( Liu et al. 2022a ) . There exist several methods that offer solutions for parameter-efficient fine-tuning ( Dettmers et al. 2024 ; Houlsby et al. 2019 ; Hu et al. 2021 ) . These approaches achieve highly effective downstream task fine-tuning results by adjusting only a small number of parameters. The goal of such methods is to enable LLMs to adapt to small-scale features in a relatively small dataset, thereby accomplishing specific downstream tasks. Unfortunately, for LLMs, we often encounter situations where the available dataset is small and proprietary, raising concerns about privacy ( Bu et al. 2024 ; Yu et al. 2021 ; Finlayson, Swayamdipta, and Ren 2024 ) . Additionally, the training of LLMs requires substantial training memory ( Wang et al. 2023 ) , making it challenging to train on parameter-efficient fine-tuning. The time and space complexity of the training process of a model under a single-layer MLP. While opacus is a codebase for vanilla differential private method implementation. A recent line of work that focuses on fine-tuning large models using differential privacy (DP) solutions, including both full parameter fine-tuning and parameter efficient fine-tuning approaches ( Duan et al. 2024 ; Bu et al. 2024 ; Yu et al. 2021 )",
+   "title": "DP-MemArc: Differential Privacy Transfer Learning for Memory Efficient Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2406.11087v5#Sx1",
+   "pdf_url": "https://arxiv.org/pdf/2406.11087v5",
+   "source_sha256": "e4d190176a5bb0a415a0617f27e5281bb1eeccbc269ea9736484a2501fcacdc2"
+  },
+  {
+   "chunk_id": "2611.01411v1_paragraph_8d7f9d0b789516ce_0",
+   "text": "LLM.int8 ( Dettmers et al., 2022 ) and QLoRA ( Dettmers et al., 2023 ) enable fine-tuning on quantized backbones. QUIK selects outlier columns by public calibration ( Ashkboos et al., 2023 ) and KVQuant keeps sparse outliers per vector ( Hooper et al., 2024 ) ; both avoid batch-dependent routing, and their optimized kernels are the baselines any grouped record-owned kernel must beat. DPQuant studies how quantization affects the utility of private training ( Gao et al., 2026 ) ; it does not address the sensitivity premise studied here.",
+   "arxiv_id": "2611.01411v1",
+   "title": "Sensitivity Inflation from Cross-Record Precision Routing in Private Quantized Fine-Tuning",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01411v1",
+   "html_url": "https://arxiv.org/html/2611.01411v1#S7.SS0.SSS0.Px5",
+   "source_url": "https://arxiv.org/html/2611.01411v1#S7.SS0.SSS0.Px5",
+   "page_number": null,
+   "source_sha256": "aed54b13c0315be4465e93e841317299690e25e97e5173c62baca8609d0bbc69",
+   "source_anchor": "S7.SS0.SSS0.Px5",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Related Work",
+   "subsection": "",
+   "section_id": "S7",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "recovered_paragraph",
+   "paragraph_id": "S7.SS0.SSS0.Px5",
+   "paragraph_heading": "Quantized training and inference.",
+   "same_text_in_baseline": false,
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "text_normalization": "html_text_whitespace_and_math_alttext"
+  },
+  {
+   "chunk_id": "2406.11087v5_c0005",
+   "arxiv_id": "2406.11087v5",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2406.11087v5#Sx2.SSx2",
+   "section": "preliminaries",
+   "subsection": "deep learning with differential privacy",
+   "high_value": false,
+   "text": "Differential Privacy ( Dwork et al. 2006 ; Abadi et al. 2016 ) algorithms demonstrate that under this formulation, the model’s output cannot significantly help determine whether an individual record exists in the input dataset through certain mathematical derivations. The formal definition is recalled as follows: (Differential Privacy). Given a domain \\mathcal{D} , any two datasets D , D^{\\prime}\\subseteq\\mathcal{D} that differ in exactly one record are called neighboring datasets. A randomized algorithm \\mathcal{M}:\\mathcal{D}\\rightarrow\\mathcal{R} is (\\epsilon,\\delta) -differential private if for all neighboring datasets D and D^{\\prime} and all T\\subseteq\\mathcal{R} ,  DP-optimizer. To train a privacy-preserving language model, the current approach involves providing differential privacy guarantees when computing gradients and applying these guarantees to optimizers such as SGD or Adam ( Abadi et al. 2016 ; Mironov 2017 ; Koskela, Jälkö, and Honkela 2020 ) . This approach incorporates steps involving per-example gradient clipping \\mathbf{G}_{l}=\\sum C_{i}\\frac{\\partial\\mathcal{L}_{i}}{\\partial\\mathbf{W}_{(l)}} and adding Gaussian noise \\mathcal{N}(0,\\mathbf{I}) on gradient \\mathbf{G} . Where C_{i} is the per-sample clipping factor. Book-keeping. To avoid the significant memory overhead caused by storing gradients for each sample during initialization, Bu et al. (2023) proposed a method BK utilizing gradient norms. Using the GhostClip ( Goodfellow 2015 ; Bu, Mao, and Xu 2022 ) strategy, the gradient norm of each sample is calculated",
+   "text_with_context": "DP-MemArc: Differential Privacy Transfer Learning for Memory Efficient Language Models | Preliminaries > Deep Learning With Differential Privacy\n\nDifferential Privacy ( Dwork et al. 2006 ; Abadi et al. 2016 ) algorithms demonstrate that under this formulation, the model’s output cannot significantly help determine whether an individual record exists in the input dataset through certain mathematical derivations. The formal definition is recalled as follows: (Differential Privacy). Given a domain \\mathcal{D} , any two datasets D , D^{\\prime}\\subseteq\\mathcal{D} that differ in exactly one record are called neighboring datasets. A randomized algorithm \\mathcal{M}:\\mathcal{D}\\rightarrow\\mathcal{R} is (\\epsilon,\\delta) -differential private if for all neighboring datasets D and D^{\\prime} and all T\\subseteq\\mathcal{R} ,  DP-optimizer. To train a privacy-preserving language model, the current approach involves providing differential privacy guarantees when computing gradients and applying these guarantees to optimizers such as SGD or Adam ( Abadi et al. 2016 ; Mironov 2017 ; Koskela, Jälkö, and Honkela 2020 ) . This approach incorporates steps involving per-example gradient clipping \\mathbf{G}_{l}=\\sum C_{i}\\frac{\\partial\\mathcal{L}_{i}}{\\partial\\mathbf{W}_{(l)}} and adding Gaussian noise \\mathcal{N}(0,\\mathbf{I}) on gradient \\mathbf{G} . Where C_{i} is the per-sample clipping factor. Book-keeping. To avoid the significant memory overhead caused by storing gradients for each sample during initialization, Bu et al. (2023) proposed a method BK utilizing gradient norms. Using the GhostClip ( Goodfellow 2015 ; Bu, Mao, and Xu 2022 ) strategy, the gradient norm of each sample is calculated",
+   "title": "DP-MemArc: Differential Privacy Transfer Learning for Memory Efficient Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2406.11087v5#Sx2.SSx2",
+   "pdf_url": "https://arxiv.org/pdf/2406.11087v5",
+   "source_sha256": "e4d190176a5bb0a415a0617f27e5281bb1eeccbc269ea9736484a2501fcacdc2"
+  },
+  {
+   "chunk_id": "2406.11087v5_c0002",
+   "arxiv_id": "2406.11087v5",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2406.11087v5#Sx1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": ". 2024 ; Bu et al. 2024 ; Yu et al. 2021 ) . These solutions employ a method called Differential Privacy Stochastic Gradient Descent (DP-SGD) ( Yu et al. 2019 ) . The training data is protected by implementing gradient clipping and adding Gaussian noise during each iteration to ensure privacy. Compared to traditional fine-tuning approaches, DP allows for downstream task handling with only a small loss in accuracy while maintaining a theoretical private guarantee ( Yu et al. 2021 ) . These approaches exhibit good performance across a variety of tasks and settings. However, these methods still have issues with training memory. In previous research, differential privacy has imposed larger computational and storage overheads, making training such large models challenging in resource-constrained scenarios. Additionally, existing efficient parameter fine-tuning with differential privacy schemes has only achieved marginal reductions in memory overhead, with insufficient optimization efficiency in memory resources ( Li et al. 2022 ; Ke et al. 2024 ) . As models continue to grow, the demand for both memory efficiency and privacy in such scenarios also increases. To address this issue, we propose a solution called D ifferential P rivate Mem ory efficient transfer Arc hitecture ( DP-MemArc ), a framework for training in scenarios that involve both privacy-protection and memory efficient transfer learning. In our framework, we explore two efficient methods for parameter-efficient fine-tuning, DP-MemArc {}_{\\text{side}} and DP-MemArc {}_{\\text{rev}} , which save memory usage from different perspectives. In this setup, our approach not only achieves competitive performance but also significantly reduces training memory usage",
+   "text_with_context": "DP-MemArc: Differential Privacy Transfer Learning for Memory Efficient Language Models | Introduction\n\n. 2024 ; Bu et al. 2024 ; Yu et al. 2021 ) . These solutions employ a method called Differential Privacy Stochastic Gradient Descent (DP-SGD) ( Yu et al. 2019 ) . The training data is protected by implementing gradient clipping and adding Gaussian noise during each iteration to ensure privacy. Compared to traditional fine-tuning approaches, DP allows for downstream task handling with only a small loss in accuracy while maintaining a theoretical private guarantee ( Yu et al. 2021 ) . These approaches exhibit good performance across a variety of tasks and settings. However, these methods still have issues with training memory. In previous research, differential privacy has imposed larger computational and storage overheads, making training such large models challenging in resource-constrained scenarios. Additionally, existing efficient parameter fine-tuning with differential privacy schemes has only achieved marginal reductions in memory overhead, with insufficient optimization efficiency in memory resources ( Li et al. 2022 ; Ke et al. 2024 ) . As models continue to grow, the demand for both memory efficiency and privacy in such scenarios also increases. To address this issue, we propose a solution called D ifferential P rivate Mem ory efficient transfer Arc hitecture ( DP-MemArc ), a framework for training in scenarios that involve both privacy-protection and memory efficient transfer learning. In our framework, we explore two efficient methods for parameter-efficient fine-tuning, DP-MemArc {}_{\\text{side}} and DP-MemArc {}_{\\text{rev}} , which save memory usage from different perspectives. In this setup, our approach not only achieves competitive performance but also significantly reduces training memory usage",
+   "title": "DP-MemArc: Differential Privacy Transfer Learning for Memory Efficient Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2406.11087v5#Sx1",
+   "pdf_url": "https://arxiv.org/pdf/2406.11087v5",
+   "source_sha256": "e4d190176a5bb0a415a0617f27e5281bb1eeccbc269ea9736484a2501fcacdc2"
+  },
+  {
+   "chunk_id": "2508.08529v1_c0003",
+   "arxiv_id": "2508.08529v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2508.08529v1#S1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": ". Notably, the final prompt type excludes all example records and relies solely on rule-based guidance, allowing us to evaluate model performance under stricter privacy-aware generation conditions. These prompts guide LLMs in generating structured tabular records without requiring model fine-tuning. This design enables controlled comparisons of prompt effectiveness and supports the analysis of how different prompting strategies influence data quality, clinical validity, and privacy risk. Evaluation and Findings. SynLLM is evaluated across three public medical datasets— Diabetes , Cirrhosis , and Stroke using 20 open-source LLMs, including Mistral-7B, Zephyr-7B, LLaMA, and GPT-2. Results demonstrate that prompt structure significantly impacts output quality and privacy. Rule-based prompts consistently achieve high harmonic privacy-quality scores without relying on example records. Our evaluation reveals that model behavior varies substantially across prompt types, highlighting the importance of prompt design in LLM-guided synthetic data generation. Structure of the Paper. Section II reviews relevant literature in synthetic data generation. Section III introduces the SynLLM pipeline and prompt types. Section III-D presents experimental setup and evaluation metrics. Section IV provides empirical results and analysis. Section V provides key observations, followed by conclusions and future directions in Section VI .",
+   "text_with_context": "SynLLM: A Comparative Analysis of Large Language Models for Medical Tabular Synthetic Data Generation via Prompt Engineering | Introduction\n\n. Notably, the final prompt type excludes all example records and relies solely on rule-based guidance, allowing us to evaluate model performance under stricter privacy-aware generation conditions. These prompts guide LLMs in generating structured tabular records without requiring model fine-tuning. This design enables controlled comparisons of prompt effectiveness and supports the analysis of how different prompting strategies influence data quality, clinical validity, and privacy risk. Evaluation and Findings. SynLLM is evaluated across three public medical datasets— Diabetes , Cirrhosis , and Stroke using 20 open-source LLMs, including Mistral-7B, Zephyr-7B, LLaMA, and GPT-2. Results demonstrate that prompt structure significantly impacts output quality and privacy. Rule-based prompts consistently achieve high harmonic privacy-quality scores without relying on example records. Our evaluation reveals that model behavior varies substantially across prompt types, highlighting the importance of prompt design in LLM-guided synthetic data generation. Structure of the Paper. Section II reviews relevant literature in synthetic data generation. Section III introduces the SynLLM pipeline and prompt types. Section III-D presents experimental setup and evaluation metrics. Section IV provides empirical results and analysis. Section V provides key observations, followed by conclusions and future directions in Section VI .",
+   "title": "SynLLM: A Comparative Analysis of Large Language Models for Medical Tabular Synthetic Data Generation via Prompt Engineering",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2508.08529v1#S1",
+   "pdf_url": "https://arxiv.org/pdf/2508.08529v1",
+   "source_sha256": "27494cecc5f5f8a46ddd88846f8bd78472b459231a0964b16a6a2a52cd57b2bb"
+  },
+  {
+   "chunk_id": "2611.01411v1_c0000",
+   "arxiv_id": "2611.01411v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01411v1#abstract1",
+   "section": "abstract",
+   "subsection": "",
+   "high_value": true,
+   "text": "Private fine-tuning of large language models increasingly pairs DP-SGD with low-rank adapters on frozen, quantized backbones, and every such stack inherits one unstated premise: frozen layers keep each record’s clipped gradient a function of that record alone. We show that LLM.int8 breaks this premise. It routes outlier activation columns to a higher-precision path using a union over the whole batch, so one record decides how every other record’s activations are computed, even though the weights are frozen and the quantization scales are per row. We bound the resulting sensitivity inflation, state a record-isolation contract that restores the standard bound, and define record-owned precision dispatch that meets it with the same GEMMs as batched LLM.int8, so isolation needs no extra arithmetic. We then audit the native CUDA stack (bitsandbytes, PEFT, Opacus) against four matched controls. A constructed LoRA–Opacus witness reaches 15.0\\times the add/remove bound. On pretrained OPT-125M with natural text, other records alter 20% of record–layer precision splits at batch size 16. An exploratory re-clipping analysis finds 10 of 64 candidate neighbors above the bound once every gradient is clipped; the top pair, revalidated natively, reaches 1.065C while every control stays within C , and forcing one layer’s outlier mask removes the excess. A two-million-draw audit of the released adapters yields \\varepsilon lower bounds ( 3.25 at \\delta=10^{-5} ) below the advertised guarantee ( 4.38 ). Resolving an excess this small at the release level would take about 200 times more draws, whereas checking the sensitivity contract directly exposes it in a few native runs, which makes contract checking the practical audit for private quantized training.",
+   "text_with_context": "Sensitivity Inflation from Cross-Record Precision Routing in Private Quantized Fine-Tuning | Abstract\n\nPrivate fine-tuning of large language models increasingly pairs DP-SGD with low-rank adapters on frozen, quantized backbones, and every such stack inherits one unstated premise: frozen layers keep each record’s clipped gradient a function of that record alone. We show that LLM.int8 breaks this premise. It routes outlier activation columns to a higher-precision path using a union over the whole batch, so one record decides how every other record’s activations are computed, even though the weights are frozen and the quantization scales are per row. We bound the resulting sensitivity inflation, state a record-isolation contract that restores the standard bound, and define record-owned precision dispatch that meets it with the same GEMMs as batched LLM.int8, so isolation needs no extra arithmetic. We then audit the native CUDA stack (bitsandbytes, PEFT, Opacus) against four matched controls. A constructed LoRA–Opacus witness reaches 15.0\\times the add/remove bound. On pretrained OPT-125M with natural text, other records alter 20% of record–layer precision splits at batch size 16. An exploratory re-clipping analysis finds 10 of 64 candidate neighbors above the bound once every gradient is clipped; the top pair, revalidated natively, reaches 1.065C while every control stays within C , and forcing one layer’s outlier mask removes the excess. A two-million-draw audit of the released adapters yields \\varepsilon lower bounds ( 3.25 at \\delta=10^{-5} ) below the advertised guarantee ( 4.38 ). Resolving an excess this small at the release level would take about 200 times more draws, whereas checking the sensitivity contract directly exposes it in a few native runs, which makes contract checking the practical audit for private quantized training.",
+   "title": "Sensitivity Inflation from Cross-Record Precision Routing in Private Quantized Fine-Tuning",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01411v1#abstract1",
+   "pdf_url": "https://arxiv.org/pdf/2611.01411v1",
+   "source_sha256": "aed54b13c0315be4465e93e841317299690e25e97e5173c62baca8609d0bbc69"
+  },
+  {
+   "chunk_id": "2611.01411v1_c0007",
+   "arxiv_id": "2611.01411v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01411v1#S4.SS2",
+   "section": "record-owned precision dispatch",
+   "subsection": "record-owned routing semantics",
+   "high_value": false,
+   "text": "Define each record’s own outlier set O_{r}=\\{j:\\exists t,\\ |A_{r,t,j}|\\geq\\tau\\} . The reference semantics executes LLM.int8 on all tokens of one record at a time (token-local routing is another valid choice, with a different numerical reference). A batched implementation masks each row with its owner’s O_{r} , evaluates one dense integer product, and adds only that record’s correction: Here Q_{\\neg O_{r}} includes the reference scaling and dequantization; Eq. ( 6 ) specifies ownership, not a fused instruction sequence. Because frozen weights are public, the union of weight columns W_{:,\\cup_{r}O_{r}} may be fetched once per batch; the union must never decide which correction another record receives. Shared allocation, scheduling and caching are admissible only when they change no record’s arithmetic, random stream or later private state. Record-owned LLM.int8 forward for one frozen layer. Batched LLM.int8 is the special case in which lines 5–6 use U for every row. Algorithm 1 realizes Eq. ( 6 ) with LLM.int8’s own kernels. It needs only record offsets, which the adapter receives before flattening: a segmented reduction turns the per-entry threshold test into per-record sets O_{r} , and per-row masks replace the per-column mask. A grouped kernel can additionally skip the zeros in R by issuing per-record or sparse residual products while preserving row order. The backward pass needs the same ownership audit for input-gradient products, adapter activations, clipping buffers and dropout masks: frozen layers pass data-dependent activations to trainable modules, so validating only directly trainable parameters, as Opacus does, cannot establish Proposition 2 . Shared outlier caches must be record-scoped or cleared unless their privacy cost is accounted for",
+   "text_with_context": "Sensitivity Inflation from Cross-Record Precision Routing in Private Quantized Fine-Tuning | Record-Owned Precision Dispatch > Record-Owned Routing Semantics\n\nDefine each record’s own outlier set O_{r}=\\{j:\\exists t,\\ |A_{r,t,j}|\\geq\\tau\\} . The reference semantics executes LLM.int8 on all tokens of one record at a time (token-local routing is another valid choice, with a different numerical reference). A batched implementation masks each row with its owner’s O_{r} , evaluates one dense integer product, and adds only that record’s correction: Here Q_{\\neg O_{r}} includes the reference scaling and dequantization; Eq. ( 6 ) specifies ownership, not a fused instruction sequence. Because frozen weights are public, the union of weight columns W_{:,\\cup_{r}O_{r}} may be fetched once per batch; the union must never decide which correction another record receives. Shared allocation, scheduling and caching are admissible only when they change no record’s arithmetic, random stream or later private state. Record-owned LLM.int8 forward for one frozen layer. Batched LLM.int8 is the special case in which lines 5–6 use U for every row. Algorithm 1 realizes Eq. ( 6 ) with LLM.int8’s own kernels. It needs only record offsets, which the adapter receives before flattening: a segmented reduction turns the per-entry threshold test into per-record sets O_{r} , and per-row masks replace the per-column mask. A grouped kernel can additionally skip the zeros in R by issuing per-record or sparse residual products while preserving row order. The backward pass needs the same ownership audit for input-gradient products, adapter activations, clipping buffers and dropout masks: frozen layers pass data-dependent activations to trainable modules, so validating only directly trainable parameters, as Opacus does, cannot establish Proposition 2 . Shared outlier caches must be record-scoped or cleared unless their privacy cost is accounted for",
+   "title": "Sensitivity Inflation from Cross-Record Precision Routing in Private Quantized Fine-Tuning",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01411v1#S4.SS2",
+   "pdf_url": "https://arxiv.org/pdf/2611.01411v1",
+   "source_sha256": "aed54b13c0315be4465e93e841317299690e25e97e5173c62baca8609d0bbc69"
+  },
+  {
+   "chunk_id": "2611.01411v1_c0021",
+   "arxiv_id": "2611.01411v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01411v1#S9",
+   "section": "conclusion",
+   "subsection": "",
+   "high_value": true,
+   "text": "Frozen weights do not make records independent. In LLM.int8, a batch-wide outlier union lets one record set the precision of every other record’s activations, and the native bitsandbytes, PEFT and Opacus stack executes this path. A constructed composition reaches 15\\times the DP-SGD add/remove bound, and on pretrained OPT-125M with natural text a selected neighbor exceeds it by 6.5% once clipping is active, an excess traced to one column in one layer. A two-million-draw audit finds no release-level violation; what fails is the proof’s premise. Detecting an excess this small in released outputs would take about 200 times more draws, whereas checking the sensitivity contract exposes it in a few native runs. Because record-owned routing needs no extra arithmetic and simple record-local configurations restore the bound, private training stacks should enforce, or test, record ownership of data-dependent numerics instead of inferring it from frozen parameters.",
+   "text_with_context": "Sensitivity Inflation from Cross-Record Precision Routing in Private Quantized Fine-Tuning | Conclusion\n\nFrozen weights do not make records independent. In LLM.int8, a batch-wide outlier union lets one record set the precision of every other record’s activations, and the native bitsandbytes, PEFT and Opacus stack executes this path. A constructed composition reaches 15\\times the DP-SGD add/remove bound, and on pretrained OPT-125M with natural text a selected neighbor exceeds it by 6.5% once clipping is active, an excess traced to one column in one layer. A two-million-draw audit finds no release-level violation; what fails is the proof’s premise. Detecting an excess this small in released outputs would take about 200 times more draws, whereas checking the sensitivity contract exposes it in a few native runs. Because record-owned routing needs no extra arithmetic and simple record-local configurations restore the bound, private training stacks should enforce, or test, record ownership of data-dependent numerics instead of inferring it from frozen parameters.",
+   "title": "Sensitivity Inflation from Cross-Record Precision Routing in Private Quantized Fine-Tuning",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01411v1#S9",
+   "pdf_url": "https://arxiv.org/pdf/2611.01411v1",
+   "source_sha256": "aed54b13c0315be4465e93e841317299690e25e97e5173c62baca8609d0bbc69"
+  },
+  {
+   "chunk_id": "2406.11087v5_c0021",
+   "arxiv_id": "2406.11087v5",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2406.11087v5#Sx6.SSx1",
+   "section": "related work",
+   "subsection": "differential private fine-tuning",
+   "high_value": false,
+   "text": "To ensure the privacy needs of the model, differential privacy fine-tuning methods offer a feasible solution with strong theoretical guarantees ( Abadi et al. 2016 ; Song, Chaudhuri, and Sarwate 2013 ) . In terms of model structure, PEFT methods can be transferred to differential privacy schemes ( Yu et al. 2021 ; Bu et al. 2024 ; Xu et al. 2024 ) . In methods design, the selected differential privacy ( Shi et al. 2022a ; Shi et al. 2022b ) approach can provide stronger differential privacy constraints more specifically for designated information. In algorithm design, it includes a series of studies ( Rochette, Manoel, and Tramel 2020 ; Du et al. 2023 ) on the computational graph during the differential privacy propagation process. Techniques like Ghostnorm ( Goodfellow 2015 ; Li et al. 2021 ) and Book-Keeping ( Bu et al. 2023 ) provide unified batch norm computation and batch processing for gradient clipping. Although differential privacy offers very strong theoretical protections, reducing the memory requirements for training under differential privacy scenarios remains a significant challenge ( Du et al. 2023 ) .",
+   "text_with_context": "DP-MemArc: Differential Privacy Transfer Learning for Memory Efficient Language Models | Related Work > Differential Private Fine-Tuning\n\nTo ensure the privacy needs of the model, differential privacy fine-tuning methods offer a feasible solution with strong theoretical guarantees ( Abadi et al. 2016 ; Song, Chaudhuri, and Sarwate 2013 ) . In terms of model structure, PEFT methods can be transferred to differential privacy schemes ( Yu et al. 2021 ; Bu et al. 2024 ; Xu et al. 2024 ) . In methods design, the selected differential privacy ( Shi et al. 2022a ; Shi et al. 2022b ) approach can provide stronger differential privacy constraints more specifically for designated information. In algorithm design, it includes a series of studies ( Rochette, Manoel, and Tramel 2020 ; Du et al. 2023 ) on the computational graph during the differential privacy propagation process. Techniques like Ghostnorm ( Goodfellow 2015 ; Li et al. 2021 ) and Book-Keeping ( Bu et al. 2023 ) provide unified batch norm computation and batch processing for gradient clipping. Although differential privacy offers very strong theoretical protections, reducing the memory requirements for training under differential privacy scenarios remains a significant challenge ( Du et al. 2023 ) .",
+   "title": "DP-MemArc: Differential Privacy Transfer Learning for Memory Efficient Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2406.11087v5#Sx6.SSx1",
+   "pdf_url": "https://arxiv.org/pdf/2406.11087v5",
+   "source_sha256": "e4d190176a5bb0a415a0617f27e5281bb1eeccbc269ea9736484a2501fcacdc2"
+  },
+  {
+   "chunk_id": "2508.08529v1_c0013",
+   "arxiv_id": "2508.08529v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2508.08529v1#S3.SS3",
+   "section": "methodology",
+   "subsection": "adaptive prompt taxonomy",
+   "high_value": false,
+   "text": "The LLM is required to generate samples that satisfy these constraints, thereby prioritizing logical consistency and minimizing disclosure risk. Table I provides an abridged overview of each prompt template. All prompts share a consistent system message instructing the model to (i) emit newline -delimited JSON objects, (ii) avoid free-text commentary, (iii) adhere to the requested number of records, and (iv) refrain from emitting any protected health information ( PHI ). During prompt construction, dataset-specific metadata is programmatically inserted into placeholder tags (e.g., {feature_stats} ). Prompt skeletons (abridged). Curly braces denote runtime placeholders. This prompt taxonomy systematically varies the amount and type of conditioning information supplied to the LLM, allowing for controlled exploration of the privacy–utility trade-off. SeedEx provides minimal constraint, often resulting in low Jensen–Shannon divergence but elevated membership inference risk. At the opposite end, ClinRule imposes strict domain rules, substantially mitigating privacy risk at the expense of greater distributional shift. The intermediate templates— FeatDesc and StatGuide —introduce semantic and statistical context, enabling precise evaluation of how information content affects fidelity and generalization. Empirical results in Sec. IV show that StatGuide achieves the best utility for internal analytics, while ClinRule is most suitable for public release scenarios. For each numerical attribute f , we extract the 5-tuple (\\mu_{f},\\sigma_{f},\\text{min}_{f},\\text{max}_{f},\\text{quantiles}_{f}) . For categorical attributes, we compute the empirical probability mass function \\mathbf{p}_{f}",
+   "text_with_context": "SynLLM: A Comparative Analysis of Large Language Models for Medical Tabular Synthetic Data Generation via Prompt Engineering | Methodology > Adaptive Prompt Taxonomy\n\nThe LLM is required to generate samples that satisfy these constraints, thereby prioritizing logical consistency and minimizing disclosure risk. Table I provides an abridged overview of each prompt template. All prompts share a consistent system message instructing the model to (i) emit newline -delimited JSON objects, (ii) avoid free-text commentary, (iii) adhere to the requested number of records, and (iv) refrain from emitting any protected health information ( PHI ). During prompt construction, dataset-specific metadata is programmatically inserted into placeholder tags (e.g., {feature_stats} ). Prompt skeletons (abridged). Curly braces denote runtime placeholders. This prompt taxonomy systematically varies the amount and type of conditioning information supplied to the LLM, allowing for controlled exploration of the privacy–utility trade-off. SeedEx provides minimal constraint, often resulting in low Jensen–Shannon divergence but elevated membership inference risk. At the opposite end, ClinRule imposes strict domain rules, substantially mitigating privacy risk at the expense of greater distributional shift. The intermediate templates— FeatDesc and StatGuide —introduce semantic and statistical context, enabling precise evaluation of how information content affects fidelity and generalization. Empirical results in Sec. IV show that StatGuide achieves the best utility for internal analytics, while ClinRule is most suitable for public release scenarios. For each numerical attribute f , we extract the 5-tuple (\\mu_{f},\\sigma_{f},\\text{min}_{f},\\text{max}_{f},\\text{quantiles}_{f}) . For categorical attributes, we compute the empirical probability mass function \\mathbf{p}_{f}",
+   "title": "SynLLM: A Comparative Analysis of Large Language Models for Medical Tabular Synthetic Data Generation via Prompt Engineering",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2508.08529v1#S3.SS3",
+   "pdf_url": "https://arxiv.org/pdf/2508.08529v1",
+   "source_sha256": "27494cecc5f5f8a46ddd88846f8bd78472b459231a0964b16a6a2a52cd57b2bb"
+  },
+  {
+   "chunk_id": "2406.11087v5_c0023",
+   "arxiv_id": "2406.11087v5",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2406.11087v5#Sx7",
+   "section": "conclusion",
+   "subsection": "",
+   "high_value": true,
+   "text": "In this paper, we introduce a framework called DP-MemArc, which encompasses two methods aimed at addressing the issue of excessive memory consumption during training in privacy-sensitive scenarios. In this process, we reduce the training memory consumption of models in privacy environments using the BK method. With DP-MemArc, LLMs can perform downstream tasks under corresponding privacy constraints across various tasks. We hope that our method will contribute to future private efficient memory optimization for fine-tuning LLMs.",
+   "text_with_context": "DP-MemArc: Differential Privacy Transfer Learning for Memory Efficient Language Models | Conclusion\n\nIn this paper, we introduce a framework called DP-MemArc, which encompasses two methods aimed at addressing the issue of excessive memory consumption during training in privacy-sensitive scenarios. In this process, we reduce the training memory consumption of models in privacy environments using the BK method. With DP-MemArc, LLMs can perform downstream tasks under corresponding privacy constraints across various tasks. We hope that our method will contribute to future private efficient memory optimization for fine-tuning LLMs.",
+   "title": "DP-MemArc: Differential Privacy Transfer Learning for Memory Efficient Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2406.11087v5#Sx7",
+   "pdf_url": "https://arxiv.org/pdf/2406.11087v5",
+   "source_sha256": "e4d190176a5bb0a415a0617f27e5281bb1eeccbc269ea9736484a2501fcacdc2"
+  },
+  {
+   "chunk_id": "2510.02833v4_c0002",
+   "arxiv_id": "2510.02833v4",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2510.02833v4#S1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": "this type of attacks is commonly referred to as malicious fine-tuning .\nHowever, as the QA pairs used in the attack are explicitly harmful, such attacks are easily detected and blocked by moderation models Hacker et al. (2023) ; Ji et al. (2023) ; Kolla et al. (2024) ; Kumar et al. (2024) . To increase the stealth of the attack, subsequent research aims to conceal the harmful content of the fine-tuning dataset to bypass the moderation models. The attack in ( Halawi et al., 2024 ) proposes to hide the harmfulness in the dataset by encryption. It first fine-tunes LLMs to learn encryption and decryption, and then fine-tunes the model with the encrypted harmful QA pairs to jailbreak the model by ciphertext. However, this method requires LLMs to acquire complex behaviors such as encryption by fine-tuning, which may not be feasible for weaker LLMs ( Touvron et al., 2023 ; Meta, 2024b ) ; additionally, even for the strong LLMs ( OpenAI, 2025b ; OpenAI, 2024 ) , the attack requires 20k encrypted data to teach the model en/decryption, substantially increasing attack costs.\nMeanwhile, AOA (Absolutely\nObedient Agent) attack ( Qi et al., 2024 ) fine-tunes an LLM with implicitly harmful QA pairs to shift its identity, so that the LLM becomes so obedient as to comply with any questions (including harmful ones).\nHowever, as reported in Sec. 2 , simply randomly sorting the 10 fine-tuning data can reduce ASR of the AOA attack from 78% to 8%. It not only indicates the non-robustness of the attack, but also suggests a potentially improper\nunderstanding of the attack mechanism. Moreover, the harmfulness (albeit implicit) of the adopted QA pairs can also be",
+   "text_with_context": "Attack via Overfitting: 10-shot Benign Fine-tuning to Jailbreak LLMs | Introduction\n\nthis type of attacks is commonly referred to as malicious fine-tuning .\nHowever, as the QA pairs used in the attack are explicitly harmful, such attacks are easily detected and blocked by moderation models Hacker et al. (2023) ; Ji et al. (2023) ; Kolla et al. (2024) ; Kumar et al. (2024) . To increase the stealth of the attack, subsequent research aims to conceal the harmful content of the fine-tuning dataset to bypass the moderation models. The attack in ( Halawi et al., 2024 ) proposes to hide the harmfulness in the dataset by encryption. It first fine-tunes LLMs to learn encryption and decryption, and then fine-tunes the model with the encrypted harmful QA pairs to jailbreak the model by ciphertext. However, this method requires LLMs to acquire complex behaviors such as encryption by fine-tuning, which may not be feasible for weaker LLMs ( Touvron et al., 2023 ; Meta, 2024b ) ; additionally, even for the strong LLMs ( OpenAI, 2025b ; OpenAI, 2024 ) , the attack requires 20k encrypted data to teach the model en/decryption, substantially increasing attack costs.\nMeanwhile, AOA (Absolutely\nObedient Agent) attack ( Qi et al., 2024 ) fine-tunes an LLM with implicitly harmful QA pairs to shift its identity, so that the LLM becomes so obedient as to comply with any questions (including harmful ones).\nHowever, as reported in Sec. 2 , simply randomly sorting the 10 fine-tuning data can reduce ASR of the AOA attack from 78% to 8%. It not only indicates the non-robustness of the attack, but also suggests a potentially improper\nunderstanding of the attack mechanism. Moreover, the harmfulness (albeit implicit) of the adopted QA pairs can also be",
+   "title": "Attack via Overfitting: 10-shot Benign Fine-tuning to Jailbreak LLMs",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2510.02833v4#S1",
+   "pdf_url": "https://arxiv.org/pdf/2510.02833v4",
+   "source_sha256": "53c6a2fa63a27226e7f8b6dd826bcda7a6e3c328db1f838101c9d1c64a120f69"
+  },
+  {
+   "chunk_id": "2508.08529v1_c0000",
+   "arxiv_id": "2508.08529v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2508.08529v1#abstract1",
+   "section": "abstract",
+   "subsection": "",
+   "high_value": true,
+   "text": "Access to real-world medical data is often restricted due to privacy regulations, posing a significant barrier to the advancement of healthcare research. Synthetic data offers a promising alternative; however, generating realistic, clinically valid, and privacy-conscious records remains a major challenge. Recent advancements in Large Language Models (LLMs) offer new opportunities for structured data generation; however, existing approaches frequently lack systematic prompting strategies and comprehensive, multi-dimensional evaluation frameworks. In this paper, we present SynLLM , a modular framework for generating high-quality synthetic medical tabular data using 20 state-of-the-art open-source LLMs, including LLaMA, Mistral, and GPT variants, guided by structured prompts. We propose four distinct prompt types, ranging from example-driven to rule-based constraints, that encode schema, metadata, and domain knowledge to control generation without model fine-tuning. Our framework features a comprehensive evaluation pipeline that rigorously assesses generated data across statistical fidelity, clinical consistency, and privacy preservation. We evaluate SynLLM across three public medical datasets, including Diabetes , Cirrhosis , and Stroke , using 20 open-source LLMs. Our results show that prompt engineering significantly impacts data quality and privacy risk, with rule-based prompts achieving the best privacy-quality balance. SynLLM establishes that, when guided by well-designed prompts and evaluated with robust, multi-metric criteria, LLMs can generate synthetic medical data that is both clinically plausible and privacy-aware, paving the way for safer and more effective data sharing in healthcare research.",
+   "text_with_context": "SynLLM: A Comparative Analysis of Large Language Models for Medical Tabular Synthetic Data Generation via Prompt Engineering | Abstract\n\nAccess to real-world medical data is often restricted due to privacy regulations, posing a significant barrier to the advancement of healthcare research. Synthetic data offers a promising alternative; however, generating realistic, clinically valid, and privacy-conscious records remains a major challenge. Recent advancements in Large Language Models (LLMs) offer new opportunities for structured data generation; however, existing approaches frequently lack systematic prompting strategies and comprehensive, multi-dimensional evaluation frameworks. In this paper, we present SynLLM , a modular framework for generating high-quality synthetic medical tabular data using 20 state-of-the-art open-source LLMs, including LLaMA, Mistral, and GPT variants, guided by structured prompts. We propose four distinct prompt types, ranging from example-driven to rule-based constraints, that encode schema, metadata, and domain knowledge to control generation without model fine-tuning. Our framework features a comprehensive evaluation pipeline that rigorously assesses generated data across statistical fidelity, clinical consistency, and privacy preservation. We evaluate SynLLM across three public medical datasets, including Diabetes , Cirrhosis , and Stroke , using 20 open-source LLMs. Our results show that prompt engineering significantly impacts data quality and privacy risk, with rule-based prompts achieving the best privacy-quality balance. SynLLM establishes that, when guided by well-designed prompts and evaluated with robust, multi-metric criteria, LLMs can generate synthetic medical data that is both clinically plausible and privacy-aware, paving the way for safer and more effective data sharing in healthcare research.",
+   "title": "SynLLM: A Comparative Analysis of Large Language Models for Medical Tabular Synthetic Data Generation via Prompt Engineering",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2508.08529v1#abstract1",
+   "pdf_url": "https://arxiv.org/pdf/2508.08529v1",
+   "source_sha256": "27494cecc5f5f8a46ddd88846f8bd78472b459231a0964b16a6a2a52cd57b2bb"
+  },
+  {
+   "chunk_id": "2406.11087v5_c0010",
+   "arxiv_id": "2406.11087v5",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2406.11087v5#Sx3.SSx2",
+   "section": "methodology",
+   "subsection": "reversible network design",
+   "high_value": false,
+   "text": "Due to the significant amount of training memory required to store the state of activation functions during batch processing, a large portion of memory is consumed by saving activation states \\{\\bm{\\sigma_{i}}\\}_{i=1}^{N} . Regular parameter-efficient fine-tuning methods cannot effectively address this issue. DP-MemArc {}_{\\text{side}} reduces the memory needed to store activation functions by compressing the dimensions of the activation functions. However, this method still consumes some memory. If we could deduce the intermediate states from the output results in reverse, we could further reduce the memory demand for storing activation states. For reversible networks ( Gomez et al. 2017 ; Liao, Tan, and Monz 2023 ) , the following form is usually satisfied.  We can obtain the corresponding activation function values \\bm{\\sigma_{i}}=\\sigma_{i}(\\bm{\\mathbf{W}}_{i}\\bm{x}_{i-1}) from the intermediate states \\{\\bm{x_{i}}\\}_{i=1}^{N} of the model and calculate their derivatives, thus avoiding the need to store each activation function value. To enable the two modules of the reversible network to both acquire new features and retain the knowledge of the pre-trained model, For module \\mathcal{F} , we introduced the LoRA ( Hu et al. 2021 ) architecture into the FFN layer of the model, continuing the traditional LoRA approach. Meanwhile, for module \\mathcal{G} , we used Adapters ( Houlsby et al. 2019 ) as trainable parameters to adapt to downstream tasks. Since the network is reversible, we only need to use constant reproducible space to compute \\bm{x}_{i}^{2} and \\bm{x}_{i}^{1} for each layer, which satisfies the requirements for the subsequent backpropagation calculations. We denote this method as DP-MemArc {}_{\\text{rev}}",
+   "text_with_context": "DP-MemArc: Differential Privacy Transfer Learning for Memory Efficient Language Models | Methodology > Reversible Network Design\n\nDue to the significant amount of training memory required to store the state of activation functions during batch processing, a large portion of memory is consumed by saving activation states \\{\\bm{\\sigma_{i}}\\}_{i=1}^{N} . Regular parameter-efficient fine-tuning methods cannot effectively address this issue. DP-MemArc {}_{\\text{side}} reduces the memory needed to store activation functions by compressing the dimensions of the activation functions. However, this method still consumes some memory. If we could deduce the intermediate states from the output results in reverse, we could further reduce the memory demand for storing activation states. For reversible networks ( Gomez et al. 2017 ; Liao, Tan, and Monz 2023 ) , the following form is usually satisfied.  We can obtain the corresponding activation function values \\bm{\\sigma_{i}}=\\sigma_{i}(\\bm{\\mathbf{W}}_{i}\\bm{x}_{i-1}) from the intermediate states \\{\\bm{x_{i}}\\}_{i=1}^{N} of the model and calculate their derivatives, thus avoiding the need to store each activation function value. To enable the two modules of the reversible network to both acquire new features and retain the knowledge of the pre-trained model, For module \\mathcal{F} , we introduced the LoRA ( Hu et al. 2021 ) architecture into the FFN layer of the model, continuing the traditional LoRA approach. Meanwhile, for module \\mathcal{G} , we used Adapters ( Houlsby et al. 2019 ) as trainable parameters to adapt to downstream tasks. Since the network is reversible, we only need to use constant reproducible space to compute \\bm{x}_{i}^{2} and \\bm{x}_{i}^{1} for each layer, which satisfies the requirements for the subsequent backpropagation calculations. We denote this method as DP-MemArc {}_{\\text{rev}}",
+   "title": "DP-MemArc: Differential Privacy Transfer Learning for Memory Efficient Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2406.11087v5#Sx3.SSx2",
+   "pdf_url": "https://arxiv.org/pdf/2406.11087v5",
+   "source_sha256": "e4d190176a5bb0a415a0617f27e5281bb1eeccbc269ea9736484a2501fcacdc2"
+  },
+  {
+   "chunk_id": "2611.01411v1_paragraph_9355b9cb6c4917c2_0",
+   "text": "Our target is the proof’s premise: the sensitivity contract fails natively, while the release-level audit detects no violation of the advertised guarantee. The lesson is general: a DP-SGD proof certifies a computation, not module labels. Physical batching and data-dependent numerics are part of the privacy mechanism, so they must be made record-owned or be audited. Simple configurations (singleton physical batches, threshold zero, weight-only NF4, or BF16) restored the bound in every setting we measured.",
+   "arxiv_id": "2611.01411v1",
+   "title": "Sensitivity Inflation from Cross-Record Precision Routing in Private Quantized Fine-Tuning",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01411v1",
+   "html_url": "https://arxiv.org/html/2611.01411v1#S1.SS0.SSS0.Px1",
+   "source_url": "https://arxiv.org/html/2611.01411v1#S1.SS0.SSS0.Px1",
+   "page_number": null,
+   "source_sha256": "aed54b13c0315be4465e93e841317299690e25e97e5173c62baca8609d0bbc69",
+   "source_anchor": "S1.SS0.SSS0.Px1",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Introduction",
+   "subsection": "",
+   "section_id": "S1",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "recovered_paragraph",
+   "paragraph_id": "S1.SS0.SSS0.Px1",
+   "paragraph_heading": "Scope.",
+   "same_text_in_baseline": false,
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "text_normalization": "html_text_whitespace_and_math_alttext"
+  },
+  {
+   "chunk_id": "2406.11087v5_c0008",
+   "arxiv_id": "2406.11087v5",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2406.11087v5#Sx3.SSx1",
+   "section": "methodology",
+   "subsection": "side network design",
+   "high_value": false,
+   "text": "In general, most of the memory consumption comes from the model weights and the states of activation functions in the backward propagation path. By minimizing the consumption of these two parts as much as possible, the memory usage during training can be correspondingly reduced. This necessitates finding a reasonable design to address this situation. Assume the base model is \\mathbf{F} , the model’s pre-trained weights, input, output, and parameters are \\mathbf{W}_{\\text{p}} , x_{0} , y , \\theta . The model could formulated as:  Traditional parameter-efficient fine-tuning methods cannot avoid the memory consumption associated with the model weights of frozen parameters in the backward propagation path, which can formulated as:  We hope to find a form that remains distinct from the original form when adjusting parameters. That is, there exists such a form:  In this form, Side-tuning ( Zhang et al. 2020 ) meets the requirements. Side-tuning introduces a side network that learns the knowledge and features of new tasks, relying on the knowledge contained in the trained model parameters, thus supporting the processing of downstream tasks. Assuming the input and output dimension of the side network is r , we add a liner layer at the last layer of the side network to ensure dimension consistency. We use Book-keeping ( Bu et al. 2023 ) for differential privacy fine-tuning. The memory cost includes both the forward and backward propagation processes.",
+   "text_with_context": "DP-MemArc: Differential Privacy Transfer Learning for Memory Efficient Language Models | Methodology > Side Network Design\n\nIn general, most of the memory consumption comes from the model weights and the states of activation functions in the backward propagation path. By minimizing the consumption of these two parts as much as possible, the memory usage during training can be correspondingly reduced. This necessitates finding a reasonable design to address this situation. Assume the base model is \\mathbf{F} , the model’s pre-trained weights, input, output, and parameters are \\mathbf{W}_{\\text{p}} , x_{0} , y , \\theta . The model could formulated as:  Traditional parameter-efficient fine-tuning methods cannot avoid the memory consumption associated with the model weights of frozen parameters in the backward propagation path, which can formulated as:  We hope to find a form that remains distinct from the original form when adjusting parameters. That is, there exists such a form:  In this form, Side-tuning ( Zhang et al. 2020 ) meets the requirements. Side-tuning introduces a side network that learns the knowledge and features of new tasks, relying on the knowledge contained in the trained model parameters, thus supporting the processing of downstream tasks. Assuming the input and output dimension of the side network is r , we add a liner layer at the last layer of the side network to ensure dimension consistency. We use Book-keeping ( Bu et al. 2023 ) for differential privacy fine-tuning. The memory cost includes both the forward and backward propagation processes.",
+   "title": "DP-MemArc: Differential Privacy Transfer Learning for Memory Efficient Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2406.11087v5#Sx3.SSx1",
+   "pdf_url": "https://arxiv.org/pdf/2406.11087v5",
+   "source_sha256": "e4d190176a5bb0a415a0617f27e5281bb1eeccbc269ea9736484a2501fcacdc2"
+  },
+  {
+   "chunk_id": "2512.11437v1_c0023",
+   "arxiv_id": "2512.11437v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2512.11437v1#S3.SS6",
+   "section": "performance evaluation",
+   "subsection": "result summary",
+   "high_value": true,
+   "text": "Proprietary models lead overall, with low hallucinations, high honesty, neutrality, and jailbreak resistance, though privacy remains a weakness. Large open-weight models show strong factuality and robustness but mixed safety and privacy. Small open-weight models underperform and can be brittle across languages, while medical LLMs hallucinate more and struggle with robustness despite domain training. These trends potentially arise from differences in scale, training data coverage, and alignment focus. On average, across all tasks, performance follows HR > MR > LR, i.e., models perform best on high-resource languages, degrade in mid-resource, and drop sharply in low-resource, especially in honesty, fairness, and privacy.",
+   "text_with_context": "CLINIC: Evaluating Multilingual Trustworthiness in Language Models for Healthcare | Performance Evaluation > Result Summary\n\nProprietary models lead overall, with low hallucinations, high honesty, neutrality, and jailbreak resistance, though privacy remains a weakness. Large open-weight models show strong factuality and robustness but mixed safety and privacy. Small open-weight models underperform and can be brittle across languages, while medical LLMs hallucinate more and struggle with robustness despite domain training. These trends potentially arise from differences in scale, training data coverage, and alignment focus. On average, across all tasks, performance follows HR > MR > LR, i.e., models perform best on high-resource languages, degrade in mid-resource, and drop sharply in low-resource, especially in honesty, fairness, and privacy.",
+   "title": "CLINIC: Evaluating Multilingual Trustworthiness in Language Models for Healthcare",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2512.11437v1#S3.SS6",
+   "pdf_url": "https://arxiv.org/pdf/2512.11437v1",
+   "source_sha256": "9a5a96ac40c562ed039e8434f8d9b980c9e264960ebe8200af4e2c7488ec9a32"
+  },
+  {
+   "chunk_id": "2611.01411v1_c0001",
+   "arxiv_id": "2611.01411v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01411v1#S1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": "Fine-tuning large language models on sensitive data increasingly follows one recipe: differentially private stochastic gradient descent (DP-SGD) ( Abadi et al., 2016 ) trains low-rank adapters ( Hu et al., 2022 ; Yu et al., 2022 ) on top of a frozen backbone that is quantized to fit in accelerator memory ( Dettmers et al., 2022 ; Dettmers et al., 2023 ) . Each component is mature, and off-the-shelf libraries compose them; NVIDIA NeMo Safe-Synthesizer, for example, pins bitsandbytes, PEFT, Opacus and Transformers together for private training ( NVIDIA NeMo, 2026 ) . The privacy accountant then certifies the composition, provided that its inputs mean what it assumes. We show that whenever such a stack batches records through LLM.int8, one of those assumptions fails. DP-SGD clips each record’s gradient to norm C and adds Gaussian noise calibrated to the resulting sensitivity. The argument assumes that changing one record leaves every other record’s clipped gradient unchanged. DP libraries protect this premise by rejecting layers that mix examples, such as batch normalization, and they treat the physical batch size as a pure performance knob: virtual batching splits a logical batch into memory-sized pieces without changing the privacy analysis ( Yousefpour et al., 2021 ) . Frozen quantized layers pass these checks because they own no trainable parameters. Owning no parameters, however, is not the same as computing each record independently. LLM.int8 ( Dettmers et al., 2022 ) makes the gap concrete. It quantizes activations row by row, except for outlier feature columns, which it computes in FP16",
+   "text_with_context": "Sensitivity Inflation from Cross-Record Precision Routing in Private Quantized Fine-Tuning | Introduction\n\nFine-tuning large language models on sensitive data increasingly follows one recipe: differentially private stochastic gradient descent (DP-SGD) ( Abadi et al., 2016 ) trains low-rank adapters ( Hu et al., 2022 ; Yu et al., 2022 ) on top of a frozen backbone that is quantized to fit in accelerator memory ( Dettmers et al., 2022 ; Dettmers et al., 2023 ) . Each component is mature, and off-the-shelf libraries compose them; NVIDIA NeMo Safe-Synthesizer, for example, pins bitsandbytes, PEFT, Opacus and Transformers together for private training ( NVIDIA NeMo, 2026 ) . The privacy accountant then certifies the composition, provided that its inputs mean what it assumes. We show that whenever such a stack batches records through LLM.int8, one of those assumptions fails. DP-SGD clips each record’s gradient to norm C and adds Gaussian noise calibrated to the resulting sensitivity. The argument assumes that changing one record leaves every other record’s clipped gradient unchanged. DP libraries protect this premise by rejecting layers that mix examples, such as batch normalization, and they treat the physical batch size as a pure performance knob: virtual batching splits a logical batch into memory-sized pieces without changing the privacy analysis ( Yousefpour et al., 2021 ) . Frozen quantized layers pass these checks because they own no trainable parameters. Owning no parameters, however, is not the same as computing each record independently. LLM.int8 ( Dettmers et al., 2022 ) makes the gap concrete. It quantizes activations row by row, except for outlier feature columns, which it computes in FP16",
+   "title": "Sensitivity Inflation from Cross-Record Precision Routing in Private Quantized Fine-Tuning",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01411v1#S1",
+   "pdf_url": "https://arxiv.org/pdf/2611.01411v1",
+   "source_sha256": "aed54b13c0315be4465e93e841317299690e25e97e5173c62baca8609d0bbc69"
+  },
+  {
+   "chunk_id": "2508.08529v1_c0021",
+   "arxiv_id": "2508.08529v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2508.08529v1#S3.SS4",
+   "section": "methodology",
+   "subsection": "evaluation and metrics description",
+   "high_value": true,
+   "text": ". Lower values are preferable, as they reflect reduced risk of direct leakage or memorization. These distance-based metrics provide interpretable, model-agnostic signals of potential disclosure risk. However, SynLLM does not implement formal differential privacy guarantees, k -anonymity, or adversarial membership inference attacks. As such, this assessment should be understood as an empirical audit rather than a formal privacy certification. Synthetic data batches that exhibit high privacy risk scores or violate anonymity thresholds are logged for further analysis and may inform prompt refinement or post-processing strategies in subsequent iterations of the generation pipeline. In addition to statistical and clinical alignment, synthetic data must support real-world downstream tasks. We evaluate machine learning utility by assessing whether models trained on synthetic data yield predictive performance comparable to those trained on real data. This analysis ensures that SynLLM-generated data preserves not only feature-level distributions but also task-relevant signal for classification, without compromising privacy (Sec. III-D ). We implement three tree-based classifiers commonly used in medical domains due to their interpretability, ability to handle mixed data types, and robustness to class imbalance: (i) a Decision Tree with maximum depth 5; (ii) a Random Forest composed of 50 trees with default hyperparameters; and (iii) an XGBoost model with early stopping after 100 boosting rounds and default settings. To evaluate generalization, we adopt two complementary validation strategies: Train-on-Synthetic, Test-on-Real (TSTR) — Measures whether synthetic data supports models that generalize to real-world distributions",
+   "text_with_context": "SynLLM: A Comparative Analysis of Large Language Models for Medical Tabular Synthetic Data Generation via Prompt Engineering | Methodology > Evaluation And Metrics Description\n\n. Lower values are preferable, as they reflect reduced risk of direct leakage or memorization. These distance-based metrics provide interpretable, model-agnostic signals of potential disclosure risk. However, SynLLM does not implement formal differential privacy guarantees, k -anonymity, or adversarial membership inference attacks. As such, this assessment should be understood as an empirical audit rather than a formal privacy certification. Synthetic data batches that exhibit high privacy risk scores or violate anonymity thresholds are logged for further analysis and may inform prompt refinement or post-processing strategies in subsequent iterations of the generation pipeline. In addition to statistical and clinical alignment, synthetic data must support real-world downstream tasks. We evaluate machine learning utility by assessing whether models trained on synthetic data yield predictive performance comparable to those trained on real data. This analysis ensures that SynLLM-generated data preserves not only feature-level distributions but also task-relevant signal for classification, without compromising privacy (Sec. III-D ). We implement three tree-based classifiers commonly used in medical domains due to their interpretability, ability to handle mixed data types, and robustness to class imbalance: (i) a Decision Tree with maximum depth 5; (ii) a Random Forest composed of 50 trees with default hyperparameters; and (iii) an XGBoost model with early stopping after 100 boosting rounds and default settings. To evaluate generalization, we adopt two complementary validation strategies: Train-on-Synthetic, Test-on-Real (TSTR) — Measures whether synthetic data supports models that generalize to real-world distributions",
+   "title": "SynLLM: A Comparative Analysis of Large Language Models for Medical Tabular Synthetic Data Generation via Prompt Engineering",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2508.08529v1#S3.SS4",
+   "pdf_url": "https://arxiv.org/pdf/2508.08529v1",
+   "source_sha256": "27494cecc5f5f8a46ddd88846f8bd78472b459231a0964b16a6a2a52cd57b2bb"
+  },
+  {
+   "chunk_id": "2406.11087v5_c0013",
+   "arxiv_id": "2406.11087v5",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2406.11087v5#Sx4",
+   "section": "experimental setup",
+   "subsection": "",
+   "high_value": false,
+   "text": "We designed a series of experiments covering different models and datasets to evaluate the performance of our methods. The specific experimental design is as follows. Models. We used the RoBERTa-large ( Liu et al. 2019 ) , GPT-2-large ( Radford et al. 2019 ) model as our base models. These models will be fine-tuned according to the corresponding downstream tasks, and the performance of the fine-tuned models will be evaluated under different privacy constraints. Baselines. We compare the two methods against multiple baselines, including DP-LoRA ( Hu et al. 2021 ; Yu et al. 2021 ) , DP-Adapter ( Houlsby et al. 2019 ; Yu et al. 2021 ) , DP-BiTFiT ( Bu et al. 2024 ; Zaken, Goldberg, and Ravfogel 2022 ) , and PromptDPSGD ( Duan et al. 2024 ; Lester, Al-Rfou, and Constant 2021 ) . These methods are all privacy-preserving fine-tuning approaches with opacus DP ( Yousefpour et al. 2021 ) , and we test them on the same training data to ensure fairness of comparison. Datasets. We conduct experiments on five datasets. Four from the GLUE benchmarks ( Wang et al. 2018 ) , which cover different NLP tasks. MNLI : the MultiGenre Natural Language Inference Corpus. QQP : the Quora Question Pairs2 dataset. QNLI : the Stanford Question Answering dataset. SST2 : the Stanford Sentiment Treebank dataset. We also select an NLG task E2E dataset ( Duvsek, Novikova, and Rieser 2019 ) , which is to generates texts to evaluate a restaurant, to evaluate the quality of the model in generation tasks under privacy constraints. Experiments on the GPT-2-large model. We evaluate the BLEU(%), Rouge-L(%) and Perplexity scores results on E2E dataset and profile to compute the training memory(GB) with privacy constraints at \\epsilon=1.6,8,\\infty . Implementation Details",
+   "text_with_context": "DP-MemArc: Differential Privacy Transfer Learning for Memory Efficient Language Models | Experimental Setup\n\nWe designed a series of experiments covering different models and datasets to evaluate the performance of our methods. The specific experimental design is as follows. Models. We used the RoBERTa-large ( Liu et al. 2019 ) , GPT-2-large ( Radford et al. 2019 ) model as our base models. These models will be fine-tuned according to the corresponding downstream tasks, and the performance of the fine-tuned models will be evaluated under different privacy constraints. Baselines. We compare the two methods against multiple baselines, including DP-LoRA ( Hu et al. 2021 ; Yu et al. 2021 ) , DP-Adapter ( Houlsby et al. 2019 ; Yu et al. 2021 ) , DP-BiTFiT ( Bu et al. 2024 ; Zaken, Goldberg, and Ravfogel 2022 ) , and PromptDPSGD ( Duan et al. 2024 ; Lester, Al-Rfou, and Constant 2021 ) . These methods are all privacy-preserving fine-tuning approaches with opacus DP ( Yousefpour et al. 2021 ) , and we test them on the same training data to ensure fairness of comparison. Datasets. We conduct experiments on five datasets. Four from the GLUE benchmarks ( Wang et al. 2018 ) , which cover different NLP tasks. MNLI : the MultiGenre Natural Language Inference Corpus. QQP : the Quora Question Pairs2 dataset. QNLI : the Stanford Question Answering dataset. SST2 : the Stanford Sentiment Treebank dataset. We also select an NLG task E2E dataset ( Duvsek, Novikova, and Rieser 2019 ) , which is to generates texts to evaluate a restaurant, to evaluate the quality of the model in generation tasks under privacy constraints. Experiments on the GPT-2-large model. We evaluate the BLEU(%), Rouge-L(%) and Perplexity scores results on E2E dataset and profile to compute the training memory(GB) with privacy constraints at \\epsilon=1.6,8,\\infty . Implementation Details",
+   "title": "DP-MemArc: Differential Privacy Transfer Learning for Memory Efficient Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2406.11087v5#Sx4",
+   "pdf_url": "https://arxiv.org/pdf/2406.11087v5",
+   "source_sha256": "e4d190176a5bb0a415a0617f27e5281bb1eeccbc269ea9736484a2501fcacdc2"
+  },
+  {
+   "chunk_id": "2611.01411v1_paragraph_aff4be9f57bd23bb_0",
+   "text": "DP-SGD ( Abadi et al., 2016 ) with parameter-efficient adapters is a standard route to private language-model fine-tuning ( Yu et al., 2022 ; Li et al., 2022 ) . Opacus ( Yousefpour et al., 2021 ) computes per-example gradients and its validator rejects known cross-example layers such as batch normalization; the JAX Privacy documentation explicitly warns about cross-example operations and recommends per-example execution where possible ( JAX Privacy Contributors, 2026 ) . Record isolation is thus an established obligation, not our invention; we show that a frozen, parameter-free quantized layer violates it in a widely used stack and measure the consequences.",
+   "arxiv_id": "2611.01411v1",
+   "title": "Sensitivity Inflation from Cross-Record Precision Routing in Private Quantized Fine-Tuning",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01411v1",
+   "html_url": "https://arxiv.org/html/2611.01411v1#S7.SS0.SSS0.Px1",
+   "source_url": "https://arxiv.org/html/2611.01411v1#S7.SS0.SSS0.Px1",
+   "page_number": null,
+   "source_sha256": "aed54b13c0315be4465e93e841317299690e25e97e5173c62baca8609d0bbc69",
+   "source_anchor": "S7.SS0.SSS0.Px1",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Related Work",
+   "subsection": "",
+   "section_id": "S7",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "recovered_paragraph",
+   "paragraph_id": "S7.SS0.SSS0.Px1",
+   "paragraph_heading": "Private fine-tuning.",
+   "same_text_in_baseline": false,
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "text_normalization": "html_text_whitespace_and_math_alttext"
+  },
+  {
+   "chunk_id": "2611.01411v1_c0018",
+   "arxiv_id": "2611.01411v1",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.01411v1#S6.SS5",
+   "section": "results",
+   "subsection": "does the excess reach the released model?",
+   "high_value": true,
+   "text": "Sensitivity describes an intermediate sum; a privacy guarantee describes the released output. We therefore audit actual releases of the selected pair at C{=}0.25 . The audit replays the accepted deterministic clipped sums for D and D^{\\prime} through unmodified Opacus 1.5.4 noising and scaling and Torch SGD (learning rate 0.01, noise multiplier 1, divisor 1), resetting all 294,912 FP32 adapter coordinates before each draw. Anchors reproduce both parent noised gradients and released adapters bitwise. Forward, backward and clipping are not re-run, and noise comes from the pinned non-cryptographic CUDA generator. No release-level violation is detected, and none could be at this audit size. (a) Two million actual FP32 adapter releases of the selected pair ( 10^{6} per neighbor). Triangles: held-out Monte Carlo lower bounds on \\varepsilon (family-wise 95% Clopper–Pearson). Lines: exact real-valued Gaussian privacy curves (Eq. 5 ) at the advertised sensitivity (black) and at the measured pair (orange). (b) Expected bound at \\delta{=}10^{-5} when the same procedure audits an ideal Gaussian release, with an oracle threshold (analytic). Our observed bound lies between the two curves; a bound above the advertised \\varepsilon needs roughly 200 times more draws. Eight 250,000-draw shards give 10^{6} releases per neighbor, two million in total, excluding qualification and warm-up draws. Each shard takes 12–13 minutes ( \\approx 3 ms per release; 1.7 GPU-hours overall). The test statistic projects the released FP32 adapter displacement, in FP64, onto the clipped-sum difference direction, scaled by the learning rate times \\sigma C ; internal gradients are used only as diagnostics",
+   "text_with_context": "Sensitivity Inflation from Cross-Record Precision Routing in Private Quantized Fine-Tuning | Results > Does The Excess Reach The Released Model?\n\nSensitivity describes an intermediate sum; a privacy guarantee describes the released output. We therefore audit actual releases of the selected pair at C{=}0.25 . The audit replays the accepted deterministic clipped sums for D and D^{\\prime} through unmodified Opacus 1.5.4 noising and scaling and Torch SGD (learning rate 0.01, noise multiplier 1, divisor 1), resetting all 294,912 FP32 adapter coordinates before each draw. Anchors reproduce both parent noised gradients and released adapters bitwise. Forward, backward and clipping are not re-run, and noise comes from the pinned non-cryptographic CUDA generator. No release-level violation is detected, and none could be at this audit size. (a) Two million actual FP32 adapter releases of the selected pair ( 10^{6} per neighbor). Triangles: held-out Monte Carlo lower bounds on \\varepsilon (family-wise 95% Clopper–Pearson). Lines: exact real-valued Gaussian privacy curves (Eq. 5 ) at the advertised sensitivity (black) and at the measured pair (orange). (b) Expected bound at \\delta{=}10^{-5} when the same procedure audits an ideal Gaussian release, with an oracle threshold (analytic). Our observed bound lies between the two curves; a bound above the advertised \\varepsilon needs roughly 200 times more draws. Eight 250,000-draw shards give 10^{6} releases per neighbor, two million in total, excluding qualification and warm-up draws. Each shard takes 12–13 minutes ( \\approx 3 ms per release; 1.7 GPU-hours overall). The test statistic projects the released FP32 adapter displacement, in FP64, onto the clipped-sum difference direction, scaled by the learning rate times \\sigma C ; internal gradients are used only as diagnostics",
+   "title": "Sensitivity Inflation from Cross-Record Precision Routing in Private Quantized Fine-Tuning",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.01411v1#S6.SS5",
+   "pdf_url": "https://arxiv.org/pdf/2611.01411v1",
+   "source_sha256": "aed54b13c0315be4465e93e841317299690e25e97e5173c62baca8609d0bbc69"
+  },
+  {
+   "chunk_id": "2611.01411v1_paragraph_49942c274f0dcff0_0",
+   "text": "First, validate data dependence, not parameter ownership. Opacus’s validator accepts OPT-125M at every batch size we tried, although batching exceeds the bound; a batch-invariance test that compares each record’s grad_sample under native batching with singleton execution, as our isolation control does, would have flagged it. Second, treat the physical batch size as privacy-relevant unless per-record computation is shown to be batch-independent: virtual batching is privacy-neutral only under that condition, and an expected Poisson batch of one does not by itself guarantee singleton execution. Third, derive routing from public calibration or from already released state; reading the current private batch before a valid release is a different operation. Fourth, record a runtime manifest read from the executing objects (package versions, kernel dispatch, trainable flags, physical and logical batch sizes, loss normalization, clipping, sampler, accountant and noise settings), so that an auditor can check the computation the accountant certifies rather than the configuration file. Record-local configurations restored the bound in all our experiments, but they have different costs: threshold zero removes the outlier path whose absence degrades large models ( Dettmers et al., 2022 ) , singleton execution costs throughput, and BF16 costs memory.",
+   "arxiv_id": "2611.01411v1",
+   "title": "Sensitivity Inflation from Cross-Record Precision Routing in Private Quantized Fine-Tuning",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.01411v1",
+   "html_url": "https://arxiv.org/html/2611.01411v1#S8.SS0.SSS0.Px1",
+   "source_url": "https://arxiv.org/html/2611.01411v1#S8.SS0.SSS0.Px1",
+   "page_number": null,
+   "source_sha256": "aed54b13c0315be4465e93e841317299690e25e97e5173c62baca8609d0bbc69",
+   "source_anchor": "S8.SS0.SSS0.Px1",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Discussion",
+   "subsection": "",
+   "section_id": "S8",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "recovered_paragraph",
+   "paragraph_id": "S8.SS0.SSS0.Px1",
+   "paragraph_heading": "Implications for system builders.",
+   "same_text_in_baseline": false,
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "text_normalization": "html_text_whitespace_and_math_alttext"
+  },
+  {
+   "chunk_id": "2406.11087v5_c0003",
+   "arxiv_id": "2406.11087v5",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2406.11087v5#Sx1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": ". In this setup, our approach not only achieves competitive performance but also significantly reduces training memory usage. Experiments on different datasets and models have thoroughly demonstrated the effectiveness and potential of our approach. Therefore, our work effectively addresses the issue of insufficient memory in private fine-tuning for language models, while also providing alternative privacy fine-tuning solutions. In summary, our contributions in this paper are as follows: We propose a framework called DP-MemArc, which enables efficient fine-tuning of language models with lower training memory in differential privacy fine-tuning. This framework contains two memory optimization methods, reducing the memory requirements for privacy training of language models. We conduct a systematic analysis of the relationship between training memory requirements and network architecture. We elucidate the characteristics of fine-tuning memory cost under different network architectures, demonstrating favorable downstream task performance in differential privacy. We evaluate our DP-MemArc framework on multiple datasets and models. The results show promising performance across various dimensions, with a substantial improvement in training memory.",
+   "text_with_context": "DP-MemArc: Differential Privacy Transfer Learning for Memory Efficient Language Models | Introduction\n\n. In this setup, our approach not only achieves competitive performance but also significantly reduces training memory usage. Experiments on different datasets and models have thoroughly demonstrated the effectiveness and potential of our approach. Therefore, our work effectively addresses the issue of insufficient memory in private fine-tuning for language models, while also providing alternative privacy fine-tuning solutions. In summary, our contributions in this paper are as follows: We propose a framework called DP-MemArc, which enables efficient fine-tuning of language models with lower training memory in differential privacy fine-tuning. This framework contains two memory optimization methods, reducing the memory requirements for privacy training of language models. We conduct a systematic analysis of the relationship between training memory requirements and network architecture. We elucidate the characteristics of fine-tuning memory cost under different network architectures, demonstrating favorable downstream task performance in differential privacy. We evaluate our DP-MemArc framework on multiple datasets and models. The results show promising performance across various dimensions, with a substantial improvement in training memory.",
+   "title": "DP-MemArc: Differential Privacy Transfer Learning for Memory Efficient Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2406.11087v5#Sx1",
+   "pdf_url": "https://arxiv.org/pdf/2406.11087v5",
+   "source_sha256": "e4d190176a5bb0a415a0617f27e5281bb1eeccbc269ea9736484a2501fcacdc2"
+  }
+ ],
+ "evidence_management": {
+  "protected_ids": [
+   "2611.01411v1_paragraph_a7606ea6d5c64504_0",
+   "2512.11437v1_c0022",
+   "2406.11087v5_c0001",
+   "2611.01411v1_paragraph_8d7f9d0b789516ce_0",
+   "2406.11087v5_c0005",
+   "2406.11087v5_c0002",
+   "2508.08529v1_c0003",
+   "2611.01411v1_c0000",
+   "2611.01411v1_c0007",
+   "2611.01411v1_c0021",
+   "2406.11087v5_c0021",
+   "2508.08529v1_c0013",
+   "2406.11087v5_c0023",
+   "2510.02833v4_c0002",
+   "2508.08529v1_c0000",
+   "2406.11087v5_c0010",
+   "2611.01411v1_paragraph_9355b9cb6c4917c2_0",
+   "2406.11087v5_c0008",
+   "2512.11437v1_c0023",
+   "2611.01411v1_c0001",
+   "2508.08529v1_c0021",
+   "2406.11087v5_c0013",
+   "2611.01411v1_paragraph_aff4be9f57bd23bb_0",
+   "2611.01411v1_c0018",
+   "2611.01411v1_paragraph_49942c274f0dcff0_0",
+   "2406.11087v5_c0003"
+  ],
+  "supplementary_ids": [],
+  "searches": [
+   {
+    "query": "A healthcare client plans to fine-tune an LLM on patient records with differential privacy, using LoRA adapters on an LLM.int8-quantized backbone. What problem did this study find, how large was it in constructed and natural settings, did it break the privacy guarantee of released models, and how can the client avoid it?",
+    "purpose": "original question",
+    "role": "original",
+    "chunk_ids": [
+     "2611.01411v1_paragraph_a7606ea6d5c64504_0",
+     "2512.11437v1_c0022",
+     "2406.11087v5_c0001",
+     "2611.01411v1_paragraph_8d7f9d0b789516ce_0",
+     "2611.01411v1_c0007",
+     "2611.01411v1_c0021",
+     "2508.08529v1_c0003",
+     "2611.01411v1_c0000",
+     "2510.02833v4_c0002",
+     "2406.11087v5_c0002",
+     "2406.11087v5_c0005",
+     "2406.11087v5_c0010",
+     "2406.11087v5_c0023",
+     "2508.08529v1_c0013",
+     "2406.11087v5_c0008",
+     "2611.01411v1_c0001",
+     "2406.11087v5_c0021",
+     "2611.01411v1_paragraph_aff4be9f57bd23bb_0",
+     "2508.08529v1_c0000",
+     "2611.01411v1_c0012",
+     "2611.01411v1_c0008",
+     "2406.11087v5_c0003",
+     "2404.18043v3_c0016",
+     "2406.11087v5_c0018",
+     "2406.11087v5_c0009",
+     "2611.01411v1_c0010",
+     "2508.08529v1_c0036",
+     "2512.11437v1_c0023",
+     "2406.11087v5_c0013",
+     "2611.01411v1_paragraph_9355b9cb6c4917c2_0"
+    ],
+    "error": null
+   },
+   {
+    "query": "What problem did this study find?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [],
+    "error": null
+   },
+   {
+    "query": "how large was it in constructed and natural settings?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.01411v1_paragraph_a7606ea6d5c64504_0",
+     "2611.01411v1_table_d97384047b764e44_1",
+     "2611.01411v1_table_d97384047b764e44_2"
+    ],
+    "error": null
+   },
+   {
+    "query": "did it break the privacy guarantee of released models?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.01411v1_c0018",
+     "2406.11087v5_c0021",
+     "2611.01411v1_paragraph_9355b9cb6c4917c2_0",
+     "2406.11087v5_c0005",
+     "2611.01411v1_paragraph_a7606ea6d5c64504_0",
+     "2512.11437v1_c0022",
+     "2406.11087v5_c0002",
+     "2508.08529v1_c0035",
+     "2508.08529v1_c0026",
+     "2508.08529v1_c0020",
+     "2508.08529v1_c0021",
+     "2508.08529v1_c0028",
+     "2611.01411v1_paragraph_49942c274f0dcff0_0",
+     "2512.11437v1_c0023",
+     "2508.08529v1_c0029",
+     "2508.08529v1_c0013",
+     "2508.08529v1_c0027",
+     "2406.11087v5_c0013",
+     "2611.01411v1_c0004",
+     "2611.01411v1_table_d97384047b764e44_6",
+     "2611.01411v1_paragraph_45195894b97c0c52_0",
+     "2508.08529v1_c0034",
+     "2508.08529v1_c0025",
+     "2508.08529v1_c0000",
+     "2508.08529v1_c0003",
+     "2508.08529v1_c0004",
+     "2406.11087v5_c0023",
+     "2611.01411v1_c0000",
+     "2508.08529v1_c0030",
+     "2508.08529v1_c0031"
+    ],
+    "error": null
+   },
+   {
+    "query": "how can the client avoid it?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2512.11437v1_c0019"
+    ],
+    "error": null
+   }
+  ],
+  "tokens": 7888,
+  "base_tokens": 7888,
+  "base_budget": 8000,
+  "conclusion_tokens": 0,
+  "conclusion_allowance": 800,
+  "conclusion_ids": [],
+  "conclusion_considered": [
+   {
+    "paper": "2611.01411v1",
+    "conclusion": null,
+    "rank": null
+   },
+   {
+    "paper": "2406.11087v5",
+    "conclusion": null,
+    "rank": null
+   }
+  ],
+  "trimmed_for_request_size": [],
+  "notes": [],
+  "component_searches": [
+   {
+    "query": "What problem did this study find?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [],
+    "error": null
+   },
+   {
+    "query": "how large was it in constructed and natural settings?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.01411v1_paragraph_a7606ea6d5c64504_0",
+     "2611.01411v1_table_d97384047b764e44_1",
+     "2611.01411v1_table_d97384047b764e44_2"
+    ],
+    "error": null
+   },
+   {
+    "query": "did it break the privacy guarantee of released models?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.01411v1_c0018",
+     "2406.11087v5_c0021",
+     "2611.01411v1_paragraph_9355b9cb6c4917c2_0",
+     "2406.11087v5_c0005",
+     "2611.01411v1_paragraph_a7606ea6d5c64504_0",
+     "2512.11437v1_c0022",
+     "2406.11087v5_c0002",
+     "2508.08529v1_c0035",
+     "2508.08529v1_c0026",
+     "2508.08529v1_c0020",
+     "2508.08529v1_c0021",
+     "2508.08529v1_c0028",
+     "2611.01411v1_paragraph_49942c274f0dcff0_0",
+     "2512.11437v1_c0023",
+     "2508.08529v1_c0029",
+     "2508.08529v1_c0013",
+     "2508.08529v1_c0027",
+     "2406.11087v5_c0013",
+     "2611.01411v1_c0004",
+     "2611.01411v1_table_d97384047b764e44_6",
+     "2611.01411v1_paragraph_45195894b97c0c52_0",
+     "2508.08529v1_c0034",
+     "2508.08529v1_c0025",
+     "2508.08529v1_c0000",
+     "2508.08529v1_c0003",
+     "2508.08529v1_c0004",
+     "2406.11087v5_c0023",
+     "2611.01411v1_c0000",
+     "2508.08529v1_c0030",
+     "2508.08529v1_c0031"
+    ],
+    "error": null
+   },
+   {
+    "query": "how can the client avoid it?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2512.11437v1_c0019"
+    ],
+    "error": null
+   }
+  ]
+ },
+ "assistance": {
+  "mode": "standard",
+  "activated": false,
+  "route": null
+ },
+ "plan": null,
+ "synthesis_report": {
+  "schema_errors": [],
+  "dropped": [],
+  "contract_repairs": [],
+  "component_map_errors": []
+ },
+ "review_report": {
+  "withheld_no_decision": [],
+  "invalid_decisions": [],
+  "duplicate_decisions": [],
+  "repairs": [],
+  "dropped_limitations": [],
+  "component_check_errors": []
+ },
+ "precheck_flags": {},
+ "review": {
+  "coverage": "full",
+  "gap": ""
+ },
+ "attempts": [
+  {
+   "attempt": 1,
+   "mode": "standard",
+   "resumed_from": [],
+   "status": "failed",
+   "error": "PipelineError: Codex generation failed; check login, model access or subscription limits.",
+   "failed_stage": "synthesis",
+   "seconds": 5128.28,
+   "timings": {
+    "evidence": 25.513
+   }
+  },
+  {
+   "attempt": 2,
+   "mode": "standard",
+   "resumed_from": [
+    "evidence"
+   ],
+   "status": "complete",
+   "seconds": 109.316,
+   "timings": {
+    "evidence": "checkpoint",
+    "synthesis": 63.742,
+    "review": 45.484,
+    "publication": 0.024
+   }
+  }
+ ],
+ "human_review": {
+  "status": "pending",
+  "reviewer": null
+ },
+ "approved": false,
+ "engine": "s3-standard",
+ "components": [
+  "What problem did this study find?",
+  "how large was it in constructed and natural settings?",
+  "did it break the privacy guarantee of released models?",
+  "how can the client avoid it?"
+ ]
+}

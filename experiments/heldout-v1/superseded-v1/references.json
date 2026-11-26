@@ -1,0 +1,373 @@
+[
+ {
+  "id": "H01",
+  "category": "table",
+  "question": "In the metadata-driven RAG study on FinanceBench, what F1-scores did the Naive RAG baseline, the best-performing architecture and the authors’ proposed custom-reranker architecture achieve, and which configuration performed worst?",
+  "required_points": [
+   {
+    "point_id": "H01.1",
+    "expected": "Naive RAG baseline F1 = 32.9.",
+    "anchors": [
+     [
+      "2510.24402v1_c0036"
+     ],
+     [
+      "2510.24402v1_table_de629a5f57790c34_1"
+     ]
+    ],
+    "paper": "2510.24402v1"
+   },
+   {
+    "point_id": "H01.2",
+    "expected": "Best: Architecture 4 (filtering, rewriting, Cohere reranker on contextual chunks) F1 = 44.4; proposed custom metadata-aware reranker F1 = 43.2.",
+    "anchors": [
+     [
+      "2510.24402v1_c0036"
+     ]
+    ],
+    "paper": "2510.24402v1"
+   },
+   {
+    "point_id": "H01.3",
+    "expected": "Worst: hybrid retrieval on standard chunks without reranking, F1 = 30.4 (below Naive RAG).",
+    "anchors": [
+     [
+      "2510.24402v1_c0036"
+     ],
+     [
+      "2510.24402v1_c0037"
+     ],
+     [
+      "2510.24402v1_table_de629a5f57790c34_2"
+     ]
+    ],
+    "paper": "2510.24402v1"
+   }
+  ],
+  "human_verified": false
+ },
+ {
+  "id": "H02",
+  "category": "numeric",
+  "question": "On M3ToolEval, how did CodeAct compare with text or JSON actions, and how large was the gap between the best open-source and closed-source models?",
+  "required_points": [
+   {
+    "point_id": "H02.1",
+    "expected": "CodeAct had higher success for 12 of 17 LLMs and needed fewer average turns for 12 of 17.",
+    "anchors": [
+     [
+      "2402.01030v4_c0011"
+     ]
+    ],
+    "paper": "2402.01030v4"
+   },
+   {
+    "point_id": "H02.2",
+    "expected": "Best model gpt-4-1106-preview: +20.7% absolute success over the next-best format (text) with 2.1 fewer turns on average.",
+    "anchors": [
+     [
+      "2402.01030v4_c0011"
+     ]
+    ],
+    "paper": "2402.01030v4"
+   },
+   {
+    "point_id": "H02.3",
+    "expected": "Best open-source model 13.4% vs gpt-4-1106-preview 74.4%.",
+    "anchors": [
+     [
+      "2402.01030v4_c0011"
+     ]
+    ],
+    "paper": "2402.01030v4"
+   }
+  ],
+  "human_verified": false
+ },
+ {
+  "id": "H03",
+  "category": "table",
+  "question": "Which domains and source datasets make up CodeActInstruct, and how many instances does each contribute for trajectory generation?",
+  "required_points": [
+   {
+    "point_id": "H03.1",
+    "expected": "Web search: HotpotQA 3,000; math reasoning: MATH 5,586.",
+    "anchors": [
+     [
+      "2402.01030v4_table_624c7108f2ab0b02_1",
+      "2402.01030v4_table_624c7108f2ab0b02_2"
+     ]
+    ],
+    "paper": "2402.01030v4"
+   },
+   {
+    "point_id": "H03.2",
+    "expected": "Code generation: APPS 4,439; tabular reasoning: WikiTableQuestion 3,000; embodied planning: ALFWorld 3,553.",
+    "anchors": [
+     [
+      "2402.01030v4_table_624c7108f2ab0b02_3",
+      "2402.01030v4_table_624c7108f2ab0b02_4",
+      "2402.01030v4_table_624c7108f2ab0b02_5"
+     ]
+    ],
+    "paper": "2402.01030v4"
+   }
+  ],
+  "human_verified": false
+ },
+ {
+  "id": "H04",
+  "category": "multi-paper",
+  "question": "How do QuantMCP and the metadata-driven financial RAG architecture each try to keep LLM answers about financial information accurate?",
+  "required_points": [
+   {
+    "point_id": "H04.1",
+    "expected": "QuantMCP: the LLM decides what data is needed and calls MCP tools; all specific financial data points are fetched from live authoritative APIs rather than the model’s memory, returned in structured form.",
+    "anchors": [
+     [
+      "2506.06622v2_c0010"
+     ],
+     [
+      "2506.06622v2_c0009"
+     ]
+    ],
+    "paper": "2506.06622v2"
+   },
+   {
+    "point_id": "H04.2",
+    "expected": "Metadata-driven RAG: LLM-generated document- and chunk-level metadata, pre-retrieval file filtering and query rewriting, metadata-enriched (contextual) chunk embeddings and reranking to retrieve better evidence from filings.",
+    "anchors": [
+     [
+      "2510.24402v1_c0002"
+     ],
+     [
+      "2510.24402v1_c0000"
+     ]
+    ],
+    "paper": "2510.24402v1"
+   }
+  ],
+  "human_verified": false
+ },
+ {
+  "id": "H05",
+  "category": "numeric",
+  "question": "In AgentLAB, how did long-horizon attacks compare with a one-shot injection baseline, how vulnerable was GPT-5.1, and which agent resisted?",
+  "required_points": [
+   {
+    "point_id": "H05.1",
+    "expected": "GPT-4o ASR rose from 62.50% (one-shot) to 79.9% (long-horizon).",
+    "anchors": [
+     [
+      "2602.16901v1_c0020"
+     ]
+    ],
+    "paper": "2602.16901v1"
+   },
+   {
+    "point_id": "H05.2",
+    "expected": "Average ASR on GPT-5.1 exceeded about 70%.",
+    "anchors": [
+     [
+      "2602.16901v1_c0020"
+     ]
+    ],
+    "paper": "2602.16901v1"
+   },
+   {
+    "point_id": "H05.3",
+    "expected": "Claude-4.5 had 0% ASR under both attack strategies.",
+    "anchors": [
+     [
+      "2602.16901v1_c0020"
+     ]
+    ],
+    "paper": "2602.16901v1"
+   }
+  ],
+  "human_verified": false
+ },
+ {
+  "id": "H06",
+  "category": "qualitative",
+  "question": "In the study of persona assignments for LLM agents, which kinds of agent tasks were most and least sensitive to demographic personas, and how large were the largest reported drops?",
+  "required_points": [
+   {
+    "point_id": "H06.1",
+    "expected": "Technical tasks (OS Interaction, Database) were relatively stable, typically within 2–5%.",
+    "anchors": [
+     [
+      "2602.12285v1_c0008"
+     ]
+    ],
+    "paper": "2602.12285v1"
+   },
+   {
+    "point_id": "H06.2",
+    "expected": "Multi-step reasoning/planning tasks were most vulnerable: DeepSeek V3 Card Game down up to 26.2%; ALFWorld shifts up to 14%.",
+    "anchors": [
+     [
+      "2602.12285v1_c0008"
+     ],
+     [
+      "2602.12285v1_c0009"
+     ]
+    ],
+    "paper": "2602.12285v1"
+   },
+   {
+    "point_id": "H06.3",
+    "expected": "GPT-4o-mini dropped up to 19% under racial personas.",
+    "anchors": [
+     [
+      "2602.12285v1_c0008"
+     ]
+    ],
+    "paper": "2602.12285v1"
+   }
+  ],
+  "human_verified": false
+ },
+ {
+  "id": "H07",
+  "category": "numeric",
+  "question": "How did SkillSentry change LLM agents’ task success and runtime cost?",
+  "required_points": [
+   {
+    "point_id": "H07.1",
+    "expected": "Average task success rose from 62.6% to 77.7% across four agent-model configurations (24.1% relative).",
+    "anchors": [
+     [
+      "2608.09253v1_c0030"
+     ]
+    ],
+    "paper": "2608.09253v1"
+   },
+   {
+    "point_id": "H07.2",
+    "expected": "Inference turns +7.8% and token cost +8.7%.",
+    "anchors": [
+     [
+      "2608.09253v1_c0033"
+     ]
+    ],
+    "paper": "2608.09253v1"
+   },
+   {
+    "point_id": "H07.3",
+    "expected": "SkillSentry’s own computation was about 0.8% of total execution time.",
+    "anchors": [
+     [
+      "2608.09253v1_c0033"
+     ]
+    ],
+    "paper": "2608.09253v1"
+   }
+  ],
+  "human_verified": false
+ },
+ {
+  "id": "H08",
+  "category": "limitations",
+  "question": "What dataset was SpeechT-RAG evaluated on, and what limitation do the authors attribute to that choice?",
+  "required_points": [
+   {
+    "point_id": "H08.1",
+    "expected": "DAIC-WOZ: 189 clinical interview recordings; results on the development set (35 interviews, 12 depressed).",
+    "anchors": [
+     [
+      "2502.10950v2_c0014"
+     ]
+    ],
+    "paper": "2502.10950v2"
+   },
+   {
+    "point_id": "H08.2",
+    "expected": "Reliance on a single dataset (the only public speech-depression resource) may limit generalizability; scarcity stems from privacy and ethical constraints on mental-health data.",
+    "anchors": [
+     [
+      "2502.10950v2_c0023"
+     ]
+    ],
+    "paper": "2502.10950v2"
+   }
+  ],
+  "human_verified": false
+ },
+ {
+  "id": "H09",
+  "category": "qualitative",
+  "question": "In SynLLM, which prompting strategy gave the best privacy–utility balance, what trade-off did example-based prompts show, and what limitation applies to its privacy evaluation?",
+  "required_points": [
+   {
+    "point_id": "H09.1",
+    "expected": "ClinRule (no data examples, only declarative clinical rules) achieved the highest harmonic privacy–utility scores.",
+    "anchors": [
+     [
+      "2508.08529v1_c0034"
+     ]
+    ],
+    "paper": "2508.08529v1"
+   },
+   {
+    "point_id": "H09.2",
+    "expected": "Prompts with real data examples gave high TSTR/distributional scores but increased privacy risk.",
+    "anchors": [
+     [
+      "2508.08529v1_c0034"
+     ]
+    ],
+    "paper": "2508.08529v1"
+   },
+   {
+    "point_id": "H09.3",
+    "expected": "Privacy metrics are heuristic/empirical; formal differential privacy or white-box adversarial testing is left to future work.",
+    "anchors": [
+     [
+      "2508.08529v1_c0035"
+     ]
+    ],
+    "paper": "2508.08529v1"
+   }
+  ],
+  "human_verified": false
+ },
+ {
+  "id": "H10",
+  "category": "limitations",
+  "question": "In the medical-guideline causality extraction study, how did BERT-family models compare with GPT-4 and LLAMA2, and what limited LLAMA2’s practical use?",
+  "required_points": [
+   {
+    "point_id": "H10.1",
+    "expected": "BioBERT average F1 0.72; LLAMA2 average Jaccard distance 0.40.",
+    "anchors": [
+     [
+      "2407.10020v1_c0031"
+     ]
+    ],
+    "paper": "2407.10020v1"
+   },
+   {
+    "point_id": "H10.2",
+    "expected": "LLAMA2 failed to predict labels for many cases (38%, 21%, 26% of labels omitted at 3, 5, 10 epochs), possibly due to fine-tuning on a small dataset.",
+    "anchors": [
+     [
+      "2407.10020v1_c0030"
+     ]
+    ],
+    "paper": "2407.10020v1"
+   },
+   {
+    "point_id": "H10.3",
+    "expected": "The authors conclude BERT-based models remain state of the art for causality extraction; GPT-4 understands medical text well without fine-tuning but cannot do token classification.",
+    "anchors": [
+     [
+      "2407.10020v1_c0030"
+     ]
+    ],
+    "paper": "2407.10020v1"
+   }
+  ],
+  "human_verified": false
+ }
+]

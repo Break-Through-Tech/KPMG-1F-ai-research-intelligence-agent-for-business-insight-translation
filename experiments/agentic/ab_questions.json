@@ -1,0 +1,59 @@
+{
+  "schema": "ab-questions-v1",
+  "experiment": "ab-agentic-1",
+  "notes": "Required points are anchored to exact text in the pinned demo-100 corpus (chunk IDs below). They define what a complete answer should cover; they are NOT model outputs and NOT reference answers. Anchors are literal substrings of the cited chunks (checked by test_ab_harness.py when the bundle is present). Whether an answer states a point CORRECTLY is a human judgment recorded in the review sheet.",
+  "corpus": {
+    "bundle": "D:/KPMG-demo-corpus/main-727b0b3/data/processed/demo-bundles/demo-100",
+    "parents_sha256": "78d8efd7c9df075be09ffa5f3a9c7ca79c54efa2d7caf75c8f0329ea72ff41aa",
+    "retrieval_method": "document-table-balanced-facets-v1",
+    "top_k": 8,
+    "export": "D:/KPMG-demo-corpus/main-727b0b3",
+    "table_audit": "D:/KPMG-demo-corpus/table-endpoint-exp/table-audit-demo-100.json"
+  },
+  "sequence": [
+    ["Q2", "baseline"], ["Q2", "agentic"], ["Q3", "baseline"], ["Q3", "agentic"]
+  ],
+  "max_calls": {"baseline": 2, "agentic": 5, "total": 14},
+  "questions": {
+    "Q2": {
+      "text": "Compare how Agent-SafetyBench and TravelPlanner evaluate LLM agents, and what safety or success rates does each report?",
+      "type": "multi-part comparison, two sources",
+      "why": "Single-query baseline retrieval (checked 2026-11-18, 0 model calls) returned Agent-SafetyBench passages and no TravelPlanner passage although TravelPlanner is in the index.",
+      "required_points": [
+        {"id": "Q2-P1", "description": "How Agent-SafetyBench evaluates agents: 349 interaction environments, 2,000 test cases, 8 risk categories, 10 failure modes.",
+         "source_chunks": ["2412.14470v2_c0000", "2412.14470v2_c0003", "2412.14470v2_c0007"], "anchors": ["349", "2,000", "8", "10"]},
+        {"id": "Q2-P2", "description": "Agent-SafetyBench result: 16 LLM agents evaluated; none achieves a safety score above 60%.",
+         "source_chunks": ["2412.14470v2_c0000", "2412.14470v2_c0004", "2412.14470v2_c0018", "2412.14470v2_c0025"], "anchors": ["16", "60%"]},
+        {"id": "Q2-P3", "description": "How TravelPlanner evaluates agents: travel-planning sandbox with tools, nearly four million data records, 1,225 curated planning intents with reference plans.",
+         "source_chunks": ["2402.01622v4_c0000", "2402.01622v4_c0012"], "anchors": ["1,225"]},
+        {"id": "Q2-P4", "description": "TravelPlanner result: GPT-4 achieves a success rate of only 0.6% (0.6% final pass rate for GPT-4-Turbo with ReAct in the two-stage mode).",
+         "source_chunks": ["2402.01622v4_c0000", "2402.01622v4_c0018", "2402.01622v4_c0024"], "anchors": ["0.6"]}
+      ],
+      "review_criteria": [
+        "The two measures stay distinct: Agent-SafetyBench reports safety scores; TravelPlanner reports success / final pass rates. They must not be presented as the same metric or ranked against each other.",
+        "Each number is attributed to the correct benchmark and model.",
+        "If one benchmark is not covered by the evidence, the answer says so instead of inventing it (abstaining on one part is acceptable; a false abstention is when the evidence shown covers it)."
+      ]
+    },
+    "Q3": {
+      "text": "By how much did the CU-DPO training method improve strategy-selection accuracy, and on how many base models?",
+      "type": "numerical comparison with ranges and tables",
+      "why": "Numeric precision: ranges, a count of models, and table rows that the numeric checks must not misattribute.",
+      "required_points": [
+        {"id": "Q3-P1", "description": "Strategy-selection accuracy improves from 35-46% to 68-78% (ranges, not a single number).",
+         "source_chunks": ["2602.00931v2_c0000"], "anchors": ["35", "46", "68", "78"]},
+        {"id": "Q3-P2", "description": "Across seven base models.",
+         "source_chunks": ["2602.00931v2_c0000"], "anchors": ["seven"]}
+      ],
+      "optional_points": [
+        {"id": "Q3-O1", "description": "Downstream reasoning gains of up to +6.6 points on in-distribution datasets (not asked; credit only if stated correctly).",
+         "source_chunks": ["2602.00931v2_c0000"], "anchors": ["6.6"]}
+      ],
+      "review_criteria": [
+        "Ranges are preserved; any single improvement figure is clearly labelled as derived, never presented as reported.",
+        "Per-model figures, if given, come from cited table rows and match the right model and column.",
+        "Strategy-selection accuracy is not confused with downstream accuracy gains."
+      ]
+    }
+  }
+}

@@ -1,0 +1,41 @@
+# Question | Blinded label prefix | Required points in locked order (C correct, P partial, O omitted, I inconclusive) | Outcome | Rationale
+G01|32db0866|CC|complete|Original and pretrained F1 and overall scores match the labeled cells. The cited difference row reports both additional gains.
+G01|d0628931|CC|complete|Both metric pairs and both reported gains match the cited Original, Continual Pretrained, and Diff rows.
+G02|76eef6a3|OO|partial_answer|Supported general observation about subjective judgments and scale, but neither between-model nor within-model score variation is stated.
+G02|c104533c|OO|partial_answer|Supported general account of residual subjectivity, with both specific variability findings missing.
+G03|41e83477|CC|complete|Correct inclusion/exclusion, hierarchical structure and 10K sets. The three levels, branching and 39 nodes are supported by the same study.
+G03|a08e2b43|CC|complete|Correct hierarchy and topical constraints, 10K sets, and correctly sourced example and 3+9+27 calculation.
+G04|0b0fd5e7|CC|complete|All four Recall@5 values, method variants and category winners match the cited rows.
+G04|d67a9101|PP|partial_answer|Adversarial figures and DPR winner match both citations. Both multi-hop scores and the multi-hop winner are absent from the final claims despite available rows.
+G05|18a5498d|CC|complete|All four recall values and the two declines match Table 2. The percent presentation is an inference from the table's 0–100 recall scale; the column labels omit a percent sign.
+G05|d8df962b|OO|false_abstention|Both required rows with all four results reached synthesis. The final answer has no claim. The visible note records a hold but does not establish whether the held draft was correct.
+G06|9da5fcab|CCC|complete|49 frames, 685 manually coded MetaNet metaphors, and 82 studies are all supported by alternate source passages; the hierarchy and examples match the citations.
+G06|ea74aae5|CCC|complete|Counts, both method stages, iterative refinement and hierarchy examples match the abstract and methods/result citations.
+G07|5ddf39d6|CC|justified_abstention|Cited survey of nine secondary studies and the empirical gap justify refusing a causal incident-reduction figure. No rate is invented.
+G07|844f53c4|CC|justified_abstention|Correctly describes the review scope and the missing causal incident comparison. Framework names, period and study count are cited.
+G08|b3dc19a6|OOO|evidence_limited_abstention|The delivered packet lacks the 74.72 row and any equivalent passage. Cited user-visible limitations correctly give 74.77 and reconcile the scopes; record this separately without treating it as a published answer. 76.78 is correctly attributed only to AffectAgent.
+G08|be3a8908|CCC|complete|Both means and the qualified explanation are supported. It separates long-context QA from multimodal emotion recognition without attributing a causal reason to the small score difference.
+G09|9e9b81da|CC|justified_abstention|The paper calls its contribution conceptual and identifies empirical patient-awareness work as future research. Answer correctly declines to give a survey percentage.
+G09|dd328f59|CC|justified_abstention|Correctly bounds the absence of a measured percentage to this paper and specifies the survey evidence needed. The cited conceptual scope and future investigation support the refusal.
+G10|70be870b|IC|inconclusive|Original Limitations prose lists what/how/why; original Table 6 caption lists how/what/which and other; why has count zero. The answer accurately surfaces the conflict and correctly explains extractive-vs-generative transfer. Do not adjudicate the disputed exclusion list here.
+G10|7c1b7038|IC|inconclusive|Correctly highlights the conflict between Limitations prose and Table 6, including the zero why row. The extractive scope and multiple-choice setup are supported. Requires independent ruling on the locked exclusion-list point.
+G11|2e1d347e|CC|complete|All four figures match Table 4 and are correctly described as shares of analyzed errors, with the denominator clarified by the surrounding prose.
+G11|3e731255|OO|false_abstention|Both table rows and the error-distribution prose reached synthesis. No answer was published. Two holds are visible; the quality of held text was not scored.
+G12|5508c896|C|complete|Correct VQA task and scope caveat. All four optional approximate bitrate savings match the reported codecs and maintained task accuracy; no inference-time savings are asserted.
+G12|7d0219de|C|complete|The published text explicitly refers to VQA accuracy and the evaluated benchmarks, and cautions against generalizing to visual fidelity or every downstream task. Benchmark names and bitrate figures are not required by the locked point.
+G13|1249d5c5|PC|partial_answer|Correctly identifies redundant messaging, interruptions and organizational structure, but omits the leadership element. Partner-state modeling and feedback-based correction are both supported.
+G13|1d7c7634|PP|partial_answer|Correct coordination bottleneck and partner-state modeling, but omits leadership and the feedback/error-correction component required by the key.
+G14|1844729e|CC|complete|Explains reduced information asymmetry and persisting undervaluation. The cited p=0.14 and p=0.17 match their comparisons. Read disappearance of evaluative advantage as loss of significance because the answer expressly says so and disclaims proof of a significant decline.
+G14|506c17dc|CP|partial_answer|Correct information-asymmetry benefit and managerial risk caveat, including p=0.14. Says incentive misalignment remains, but does not identify undervaluation of GPT-assisted analyst effort as the mechanism.
+G15|27fbd0e6|C|justified_abstention|Cites the actual structured observations and explicit future-work statement for full uncurated inputs. Correctly declines to invent a same-agent difference.
+G15|634840ed|C|justified_abstention|Correctly identifies recorded structured-input setup and the missing matched comparison; the quoted original discussion supports both.
+G16|1e15bbe7|CP|partial_answer|Supported distinction between hardware energy efficiency and private fine-tuning. It says two methods exist without naming the side-network or reversible-network methods in the key.
+G16|b13b56a9|CC|complete|Hardware/deployment focus, fine-tuning stage, side and reversible techniques, and differential privacy are correctly cited.
+G17|98de2ad7|CC|complete|All four competencies and the excavated-material gap match the abstract. The optional pre-Qin examples match the dataset passage.
+G17|bde57267|CC|complete|All four competencies and the excavated-document coverage gap are correctly attributed to the abstract.
+G18|1209c8f2|CC|complete|Both dataset counts and the feedback, prompts, rubrics, scores and revisions are supported by the cited passages.
+G18|f63942e6|CC|complete|The 564 and 8,240 totals and the paired data and feedback types all match the cited passages.
+G19|16aad9ff|CC|complete|Correctly contrasts extracting existing monetary allocations from evidence spans with registered models producing scenario outputs subject to acceptance checks.
+G19|82b5dac5|PC|partial_answer|Correctly describes retrieval and allocation as tasks and reports accurate evaluation metrics, but does not establish the source of the monetary outputs. Keeps evaluation percentages distinct from budgets. Economist Agent portion is complete.
+G20|75159313|CC|complete|Correct external-audit and data-protection distinction, configurable operating constraints and context-dependent/human conflict resolution. The complementarity inference is appropriately qualified.
+G20|a7e552f5|CP|partial_answer|Correct external-scrutiny and configurable-rule contrast, including the reported owners' approval role. Omits the proposed conflict-resolution mechanism; configurable rules alone do not satisfy that reference point.

@@ -1,0 +1,104 @@
+{
+ "B0": {
+  "calls": 18,
+  "failed_calls": 2,
+  "failure_categories": [
+   "timeout"
+  ],
+  "first_pass_failed_questions": [
+   "G04",
+   "G08"
+  ],
+  "final_execution_errors": [],
+  "median_s_final_attempt": 51.5,
+  "p90_s_final_attempt": 189.8,
+  "median_s_incl_failed_attempt": 53.3,
+  "p90_s_incl_failed_attempt": 351.4,
+  "mean_request_tokens_per_q": 18688,
+  "mean_evidence_tokens_per_q": 14745,
+  "actual_input_tokens": 290526,
+  "seconds": {
+   "G01": 55,
+   "G02": 39,
+   "G03": 24,
+   "G04": 58,
+   "G05": 190,
+   "G06": 51,
+   "G07": 52,
+   "G08": 47,
+   "G09": 198,
+   "G10": 22
+  },
+  "quote_items": 48,
+  "quote_not_exact": []
+ },
+ "B1": {
+  "calls": 23,
+  "failed_calls": 3,
+  "failure_categories": [
+   "timeout"
+  ],
+  "first_pass_failed_questions": [
+   "G02",
+   "G04",
+   "G08"
+  ],
+  "final_execution_errors": [],
+  "median_s_final_attempt": 69.7,
+  "p90_s_final_attempt": 175.9,
+  "median_s_incl_failed_attempt": 171.3,
+  "p90_s_incl_failed_attempt": 381.1,
+  "mean_request_tokens_per_q": 51610,
+  "mean_evidence_tokens_per_q": 46108,
+  "actual_input_tokens": 606740,
+  "seconds": {
+   "G01": 66,
+   "G02": 49,
+   "G03": 176,
+   "G04": 74,
+   "G05": 87,
+   "G06": 187,
+   "G07": 65,
+   "G08": 55,
+   "G09": 167,
+   "G10": 22
+  },
+  "quote_items": 63,
+  "quote_not_exact": []
+ },
+ "M1": {
+  "calls": 38,
+  "failed_calls": 4,
+  "failure_categories": [
+   "timeout"
+  ],
+  "first_pass_failed_questions": [
+   "G02",
+   "G03",
+   "G06",
+   "G08"
+  ],
+  "final_execution_errors": [],
+  "median_s_final_attempt": 71.9,
+  "p90_s_final_attempt": 104.2,
+  "median_s_incl_failed_attempt": 156.2,
+  "p90_s_incl_failed_attempt": 423.1,
+  "mean_request_tokens_per_q": 65480,
+  "mean_evidence_tokens_per_q": 59700,
+  "actual_input_tokens": 838765,
+  "seconds": {
+   "G01": 75,
+   "G02": 59,
+   "G03": 83,
+   "G04": 82,
+   "G05": 230,
+   "G06": 104,
+   "G07": 60,
+   "G08": 63,
+   "G09": 58,
+   "G10": 68
+  },
+  "quote_items": 41,
+  "quote_not_exact": []
+ }
+}

@@ -1,0 +1,829 @@
+{
+  "development": [
+    {
+      "id": "ev01",
+      "eligible": false,
+      "question": "What overall accuracy did the trip-planning system, single-agent baseline, and workflow multi-agent baseline achieve?",
+      "parts": [
+        {
+          "id": "ev01-f01",
+          "papers": [
+            "2605.00276v1"
+          ],
+          "gold": [],
+          "original_ids": [
+            "2605.00276v1_c0000",
+            "2605.00276v1_c0004",
+            "2605.00276v1_c0021",
+            "2605.00276v1_c0026"
+          ],
+          "quotes": [
+            "achieves 77.4% accuracy",
+            "77.4% overall accuracy",
+            "highest overall accuracy of 77.4%",
+            "achieves 77.4% accuracy"
+          ]
+        },
+        {
+          "id": "ev01-f02",
+          "papers": [
+            "2605.00276v1"
+          ],
+          "gold": [],
+          "original_ids": [
+            "2605.00276v1_c0004",
+            "2605.00276v1_c0021"
+          ],
+          "quotes": [
+            "30.4% for single-agent",
+            "Single-Agent ( 30.4% )"
+          ]
+        },
+        {
+          "id": "ev01-f03",
+          "papers": [
+            "2605.00276v1"
+          ],
+          "gold": [],
+          "original_ids": [
+            "2605.00276v1_c0004",
+            "2605.00276v1_c0021"
+          ],
+          "quotes": [
+            "23.6% for workflow-based multi-agent baselines",
+            "Swarm ( 23.6% )"
+          ]
+        }
+      ],
+      "papers_absent": [
+        "2605.00276v1"
+      ],
+      "reason": "At least one fact lacks a literal same-version demo passage, or no facts are asserted."
+    },
+    {
+      "id": "ev02",
+      "eligible": false,
+      "question": "What does the orchestration agent do in the trip-planning architecture?",
+      "parts": [
+        {
+          "id": "ev02-f01",
+          "papers": [
+            "2605.00276v1"
+          ],
+          "gold": [],
+          "original_ids": [
+            "2605.00276v1_c0015",
+            "2605.00276v1_c0017",
+            "2605.00276v1_c0022"
+          ],
+          "quotes": [
+            "decomposes high-level goals into sub-tasks",
+            "decomposes the goal into a strategic plan composed of interdependent sub-tasks",
+            "manages sub-task decomposition"
+          ]
+        },
+        {
+          "id": "ev02-f02",
+          "papers": [
+            "2605.00276v1"
+          ],
+          "gold": [],
+          "original_ids": [
+            "2605.00276v1_c0015",
+            "2605.00276v1_c0017"
+          ],
+          "quotes": [
+            "selects the appropriate specialized agents and dispatches tasks to them",
+            "delegates these sub-tasks to the appropriate specialized agents"
+          ]
+        },
+        {
+          "id": "ev02-f03",
+          "papers": [
+            "2605.00276v1"
+          ],
+          "gold": [],
+          "original_ids": [
+            "2605.00276v1_c0015",
+            "2605.00276v1_c0017"
+          ],
+          "quotes": [
+            "integrates the results into a coherent itinerary",
+            "is then synthesized and returned to the Orchestrator"
+          ]
+        },
+        {
+          "id": "ev02-f04",
+          "papers": [
+            "2605.00276v1"
+          ],
+          "gold": [],
+          "original_ids": [
+            "2605.00276v1_c0015",
+            "2605.00276v1_c0017",
+            "2605.00276v1_c0022"
+          ],
+          "quotes": [
+            "perform re-thinking when inconsistencies or infeasibility are detected",
+            "will rethink the action if it receives some error information",
+            "triggers re-thinking when necessary"
+          ]
+        }
+      ],
+      "papers_absent": [
+        "2605.00276v1"
+      ],
+      "reason": "At least one fact lacks a literal same-version demo passage, or no facts are asserted."
+    },
+    {
+      "id": "ev03",
+      "eligible": false,
+      "question": "Did using multiple agents always outperform one agent in the trip-planning experiments?",
+      "parts": [
+        {
+          "id": "ev03-f01",
+          "papers": [
+            "2605.00276v1"
+          ],
+          "gold": [],
+          "original_ids": [
+            "2605.00276v1_c0004",
+            "2605.00276v1_c0021",
+            "2605.00276v1_c0022"
+          ],
+          "quotes": [
+            "single-agent and 23.6% for workflow-based multi-agent baselines",
+            "Single-Agent ( 30.4% ) and Swarm ( 23.6% )",
+            "Single-Agent model outperforms the generic multi-agent Swarm framework"
+          ]
+        },
+        {
+          "id": "ev03-f02",
+          "papers": [
+            "2605.00276v1"
+          ],
+          "gold": [],
+          "original_ids": [
+            "2605.00276v1_c0018",
+            "2605.00276v1_c0021",
+            "2605.00276v1_c0022"
+          ],
+          "quotes": [
+            "our proposed agentic system consistently performs the best",
+            "highest overall accuracy of 77.4%",
+            "when multi-agent collaboration is well designed and strategically orchestrated"
+          ]
+        }
+      ],
+      "papers_absent": [
+        "2605.00276v1"
+      ],
+      "reason": "At least one fact lacks a literal same-version demo passage, or no facts are asserted."
+    },
+    {
+      "id": "ev04",
+      "eligible": false,
+      "question": "How did GA/NPO and RMU differ under dialogue-conditioned unlearning evaluation?",
+      "parts": [
+        {
+          "id": "ev04-f01",
+          "papers": [
+            "2603.00823v2"
+          ],
+          "gold": [],
+          "original_ids": [
+            "2603.00823v2_c0018",
+            "2603.00823v2_c0018"
+          ],
+          "quotes": [
+            "many GA- and NPO-based models exhibit increased accuracy under dialogue-conditioned interaction",
+            "target knowledge appears suppressed in single-turn evaluation, it can re-emerge through multi-turn interaction"
+          ]
+        },
+        {
+          "id": "ev04-f02",
+          "papers": [
+            "2603.00823v2"
+          ],
+          "gold": [],
+          "original_ids": [
+            "2603.00823v2_c0018",
+            "2603.00823v2_c0018"
+          ],
+          "quotes": [
+            "RMU demonstrates comparatively stable robustness under interaction",
+            "RMU models show minimal performance change between the Base and dialogue-conditioned settings"
+          ]
+        },
+        {
+          "id": "ev04-f03",
+          "papers": [
+            "2603.00823v2"
+          ],
+          "gold": [],
+          "original_ids": [
+            "2603.00823v2_c0004"
+          ],
+          "quotes": [
+            "for RMU, exposure to forget-set content can substantially impair"
+          ]
+        }
+      ],
+      "papers_absent": [
+        "2603.00823v2"
+      ],
+      "reason": "At least one fact lacks a literal same-version demo passage, or no facts are asserted."
+    },
+    {
+      "id": "ev05",
+      "eligible": true,
+      "question": "How did binary DPO and CU-DPO compare at 25% and 50% training data?",
+      "parts": [
+        {
+          "id": "ev05-f01",
+          "papers": [
+            "2602.00931v2"
+          ],
+          "gold": [
+            "2602.00931v2_c0022"
+          ],
+          "original_ids": [
+            "2602.00931v2_c0022"
+          ],
+          "quotes": [
+            "Under data scarcity (25%), binary DPO holds a slight advantage"
+          ]
+        },
+        {
+          "id": "ev05-f02",
+          "papers": [
+            "2602.00931v2"
+          ],
+          "gold": [
+            "2602.00931v2_c0022"
+          ],
+          "original_ids": [
+            "2602.00931v2_c0022"
+          ],
+          "quotes": [
+            "CU- DPO overtakes binary DPO at 50% data"
+          ]
+        },
+        {
+          "id": "ev05-f03",
+          "papers": [
+            "2602.00931v2"
+          ],
+          "gold": [
+            "2602.00931v2_c0022"
+          ],
+          "original_ids": [
+            "2602.00931v2_c0022"
+          ],
+          "quotes": [
+            "We use win rate rather than Pass@1 to isolate optimization efficiency"
+          ]
+        }
+      ],
+      "papers_absent": [],
+      "reason": null
+    },
+    {
+      "id": "ev06",
+      "eligible": true,
+      "question": "What does MCP-Atlas measure, and how large is its benchmark?",
+      "parts": [
+        {
+          "id": "ev06-f01",
+          "papers": [
+            "2602.00933v3"
+          ],
+          "gold": [
+            "2602.00933v3_c0001",
+            "2602.00933v3_c0002"
+          ],
+          "original_ids": [
+            "2602.00933v3_c0001",
+            "2602.00933v3_c0002"
+          ],
+          "quotes": [
+            "measuring tool-use competency against production MCP servers",
+            "large-scale real-server benchmark"
+          ]
+        },
+        {
+          "id": "ev06-f02",
+          "papers": [
+            "2602.00933v3"
+          ],
+          "gold": [
+            "2602.00933v3_c0001",
+            "2602.00933v3_c0003",
+            "2602.00933v3_c0004"
+          ],
+          "original_ids": [
+            "2602.00933v3_c0001",
+            "2602.00933v3_c0003",
+            "2602.00933v3_c0004"
+          ],
+          "quotes": [
+            "1,000 natural-language tasks written and verified by human experts spanning 36 real MCP servers and 220 tools",
+            "1,000 tasks across 36 production MCP servers and 220 tools",
+            "1,000 tasks across 36 production MCP servers and 220 tools"
+          ]
+        },
+        {
+          "id": "ev06-f03",
+          "papers": [
+            "2602.00933v3"
+          ],
+          "gold": [
+            "2602.00933v3_c0001",
+            "2602.00933v3_c0002"
+          ],
+          "original_ids": [
+            "2602.00933v3_c0001",
+            "2602.00933v3_c0002"
+          ],
+          "quotes": [
+            "This answer-centric scoring permits valid alternative tool-call trajectories to receive credit",
+            "alternative tool-call paths that yield the same factual claims receive full credit"
+          ]
+        }
+      ],
+      "papers_absent": [],
+      "reason": null
+    },
+    {
+      "id": "ev07",
+      "eligible": false,
+      "question": "Why should ClawHub scanner verdicts not be treated as human ground truth?",
+      "parts": [
+        {
+          "id": "ev07-f01",
+          "papers": [
+            "2606.01494v1"
+          ],
+          "gold": [],
+          "original_ids": [
+            "2606.01494v1_c0000"
+          ],
+          "quotes": [
+            "labels are the registry’s automated verdicts, not human-annotated ground truth"
+          ]
+        },
+        {
+          "id": "ev07-f02",
+          "papers": [
+            "2606.01494v1"
+          ],
+          "gold": [],
+          "original_ids": [
+            "2606.01494v1_c0000",
+            "2606.01494v1_c0007"
+          ],
+          "quotes": [
+            "Rather than estimating malicious-skill prevalence, we study scanner disagreement",
+            "rather than estimating how many skills are vulnerable or malicious under a single detector"
+          ]
+        }
+      ],
+      "papers_absent": [
+        "2606.01494v1"
+      ],
+      "reason": "At least one fact lacks a literal same-version demo passage, or no facts are asserted."
+    },
+    {
+      "id": "ev08",
+      "eligible": false,
+      "question": "Why does TimeSage-MT evaluate analytical trajectories rather than only whether code executes?",
+      "parts": [
+        {
+          "id": "ev08-f01",
+          "papers": [
+            "2606.01498v1"
+          ],
+          "gold": [],
+          "original_ids": [
+            "2606.01498v1_c0002",
+            "2606.01498v1_c0003"
+          ],
+          "quotes": [
+            "Multi-turn agent outputs can appear convincing even when the underlying analysis violates assumptions, ignores earlier turns, or relies on unsupported reasoning",
+            "Multi-turn agent outputs can appear convincing even when the underlying analysis violates assumptions, ignores earlier turns, or relies on unsupported reasoning"
+          ]
+        },
+        {
+          "id": "ev08-f02",
+          "papers": [
+            "2606.01498v1"
+          ],
+          "gold": [],
+          "original_ids": [
+            "2606.01498v1_c0002"
+          ],
+          "quotes": [
+            "remember prior results across turns ( C4 )"
+          ]
+        },
+        {
+          "id": "ev08-f03",
+          "papers": [
+            "2606.01498v1"
+          ],
+          "gold": [],
+          "original_ids": [
+            "2606.01498v1_c0002"
+          ],
+          "quotes": [
+            "chain dependent analyzes ( C5 )"
+          ]
+        },
+        {
+          "id": "ev08-f04",
+          "papers": [
+            "2606.01498v1"
+          ],
+          "gold": [],
+          "original_ids": [
+            "2606.01498v1_c0002"
+          ],
+          "quotes": [
+            "calibrate uncertainty ( C8 )"
+          ]
+        },
+        {
+          "id": "ev08-f05",
+          "papers": [
+            "2606.01498v1"
+          ],
+          "gold": [],
+          "original_ids": [
+            "2606.01498v1_c0006"
+          ],
+          "quotes": [
+            "per-turn answer accuracy and capability-level reasoning behavior"
+          ]
+        }
+      ],
+      "papers_absent": [
+        "2606.01498v1"
+      ],
+      "reason": "At least one fact lacks a literal same-version demo passage, or no facts are asserted."
+    },
+    {
+      "id": "ev09",
+      "eligible": false,
+      "question": "Does ORCA make end-to-end report generation faster in proportion to its prefill and KV-cache savings?",
+      "parts": [
+        {
+          "id": "ev09-f01",
+          "papers": [
+            "2608.00345v1"
+          ],
+          "gold": [],
+          "original_ids": [
+            "2608.00345v1_c0019"
+          ],
+          "quotes": [
+            "Prefill latency and KV-cache memory fall steeply"
+          ]
+        },
+        {
+          "id": "ev09-f02",
+          "papers": [
+            "2608.00345v1"
+          ],
+          "gold": [],
+          "original_ids": [
+            "2608.00345v1_c0019"
+          ],
+          "quotes": [
+            "End-to-end report time moves little across budgets, since these short runs are decode dominated"
+          ]
+        }
+      ],
+      "papers_absent": [
+        "2608.00345v1"
+      ],
+      "reason": "At least one fact lacks a literal same-version demo passage, or no facts are asserted."
+    },
+    {
+      "id": "ev10",
+      "eligible": false,
+      "question": "What changed when agents saw identical numerical evidence under different substantive framing?",
+      "parts": [
+        {
+          "id": "ev10-f01",
+          "papers": [
+            "2608.00339v1"
+          ],
+          "gold": [],
+          "original_ids": [
+            "2608.00339v1_c0000"
+          ],
+          "quotes": [
+            "draw different conclusions from identical numerical data when the substantive framing changes"
+          ]
+        },
+        {
+          "id": "ev10-f02",
+          "papers": [
+            "2608.00339v1"
+          ],
+          "gold": [],
+          "original_ids": [
+            "2608.00339v1_c0000",
+            "2608.00339v1_c0003"
+          ],
+          "quotes": [
+            "they search more extensively, choose different analytical specifications",
+            "They may run more analyses, choose different specifications"
+          ]
+        }
+      ],
+      "papers_absent": [
+        "2608.00339v1"
+      ],
+      "reason": "At least one fact lacks a literal same-version demo passage, or no facts are asserted."
+    },
+    {
+      "id": "ev11",
+      "eligible": false,
+      "question": "When should a banking team consider multiple agents, and what should it validate in a pilot?",
+      "parts": [
+        {
+          "id": "ev11-f01",
+          "papers": [
+            "2605.00276v1"
+          ],
+          "gold": [],
+          "original_ids": [
+            "2605.00276v1_c0021",
+            "2605.00276v1_c0022"
+          ],
+          "quotes": [
+            "Single-Agent ( 30.4% ) and Swarm ( 23.6% )",
+            "Single-Agent model outperforms the generic multi-agent Swarm framework"
+          ]
+        },
+        {
+          "id": "ev11-f02",
+          "papers": [
+            "2605.00276v1"
+          ],
+          "gold": [],
+          "original_ids": [
+            "2605.00276v1_c0022",
+            "2605.00276v1_c0026"
+          ],
+          "quotes": [
+            "when multi-agent collaboration is well designed and strategically orchestrated",
+            "centrally orchestrated multi-agent framework"
+          ]
+        }
+      ],
+      "papers_absent": [
+        "2605.00276v1"
+      ],
+      "reason": "At least one fact lacks a literal same-version demo passage, or no facts are asserted."
+    },
+    {
+      "id": "ev12",
+      "eligible": false,
+      "question": "What exact percentage improvement in banking performance is established by the trip-planning paper?",
+      "parts": [],
+      "papers_absent": [],
+      "reason": "At least one fact lacks a literal same-version demo passage, or no facts are asserted."
+    },
+    {
+      "id": "ev13",
+      "eligible": false,
+      "question": "What measured wheat-yield gains are demonstrated by this collection of AI papers?",
+      "parts": [],
+      "papers_absent": [],
+      "reason": "At least one fact lacks a literal same-version demo passage, or no facts are asserted."
+    },
+    {
+      "id": "ev14",
+      "eligible": false,
+      "question": "Can the trip-planning experiments establish that coordination alone caused the full performance gain?",
+      "parts": [
+        {
+          "id": "ev14-f01",
+          "papers": [
+            "2605.00276v1"
+          ],
+          "gold": [],
+          "original_ids": [
+            "2605.00276v1_c0004",
+            "2605.00276v1_c0026"
+          ],
+          "quotes": [
+            "hierarchical Agentic AI System that explicitly models orchestration, collaboration, and self-correction",
+            "centrally orchestrated multi-agent framework"
+          ]
+        }
+      ],
+      "papers_absent": [
+        "2605.00276v1"
+      ],
+      "reason": "At least one fact lacks a literal same-version demo passage, or no facts are asserted."
+    }
+  ],
+  "kir": {
+    "records": 100,
+    "expected_papers": 26,
+    "exact_version_overlap": [
+      "2506.23273v2"
+    ],
+    "base_id_overlap": [
+      "2506.23273"
+    ],
+    "complete_overlap_questions": 3,
+    "selected": 0,
+    "reason": "Independent benchmark has no authorized development split. Paper metadata only."
+  },
+  "selected": [
+    {
+      "id": "Q2",
+      "question": "Compare how Agent-SafetyBench and TravelPlanner evaluate LLM agents, and what safety or success rates does each report?",
+      "parts": [
+        {
+          "id": "Q2-P1",
+          "papers": [
+            "2412.14470v2"
+          ],
+          "gold": [
+            "2412.14470v2_c0000"
+          ],
+          "anchors": [
+            "349",
+            "2,000",
+            "8",
+            "10"
+          ]
+        },
+        {
+          "id": "Q2-P2",
+          "papers": [
+            "2412.14470v2"
+          ],
+          "gold": [
+            "2412.14470v2_c0000",
+            "2412.14470v2_c0004",
+            "2412.14470v2_c0025"
+          ],
+          "anchors": [
+            "16",
+            "60%"
+          ]
+        },
+        {
+          "id": "Q2-P3",
+          "papers": [
+            "2402.01622v4"
+          ],
+          "gold": [
+            "2402.01622v4_c0000",
+            "2402.01622v4_c0012"
+          ],
+          "anchors": [
+            "1,225"
+          ]
+        },
+        {
+          "id": "Q2-P4",
+          "papers": [
+            "2402.01622v4"
+          ],
+          "gold": [
+            "2402.01622v4_c0000",
+            "2402.01622v4_c0018",
+            "2402.01622v4_c0024"
+          ],
+          "anchors": [
+            "0.6"
+          ]
+        }
+      ],
+      "label": "pinned reviewed source anchors"
+    },
+    {
+      "id": "ev05",
+      "question": "How did binary DPO and CU-DPO compare at 25% and 50% training data?",
+      "parts": [
+        {
+          "id": "ev05-f01",
+          "papers": [
+            "2602.00931v2"
+          ],
+          "gold": [
+            "2602.00931v2_c0022"
+          ],
+          "original_ids": [
+            "2602.00931v2_c0022"
+          ],
+          "quotes": [
+            "Under data scarcity (25%), binary DPO holds a slight advantage"
+          ]
+        },
+        {
+          "id": "ev05-f02",
+          "papers": [
+            "2602.00931v2"
+          ],
+          "gold": [
+            "2602.00931v2_c0022"
+          ],
+          "original_ids": [
+            "2602.00931v2_c0022"
+          ],
+          "quotes": [
+            "CU- DPO overtakes binary DPO at 50% data"
+          ]
+        },
+        {
+          "id": "ev05-f03",
+          "papers": [
+            "2602.00931v2"
+          ],
+          "gold": [
+            "2602.00931v2_c0022"
+          ],
+          "original_ids": [
+            "2602.00931v2_c0022"
+          ],
+          "quotes": [
+            "We use win rate rather than Pass@1 to isolate optimization efficiency"
+          ]
+        }
+      ],
+      "label": "development; source anchors rechecked; provisional"
+    },
+    {
+      "id": "ev06",
+      "question": "What does MCP-Atlas measure, and how large is its benchmark?",
+      "parts": [
+        {
+          "id": "ev06-f01",
+          "papers": [
+            "2602.00933v3"
+          ],
+          "gold": [
+            "2602.00933v3_c0001",
+            "2602.00933v3_c0002"
+          ],
+          "original_ids": [
+            "2602.00933v3_c0001",
+            "2602.00933v3_c0002"
+          ],
+          "quotes": [
+            "measuring tool-use competency against production MCP servers",
+            "large-scale real-server benchmark"
+          ]
+        },
+        {
+          "id": "ev06-f02",
+          "papers": [
+            "2602.00933v3"
+          ],
+          "gold": [
+            "2602.00933v3_c0001",
+            "2602.00933v3_c0003",
+            "2602.00933v3_c0004"
+          ],
+          "original_ids": [
+            "2602.00933v3_c0001",
+            "2602.00933v3_c0003",
+            "2602.00933v3_c0004"
+          ],
+          "quotes": [
+            "1,000 natural-language tasks written and verified by human experts spanning 36 real MCP servers and 220 tools",
+            "1,000 tasks across 36 production MCP servers and 220 tools",
+            "1,000 tasks across 36 production MCP servers and 220 tools"
+          ]
+        },
+        {
+          "id": "ev06-f03",
+          "papers": [
+            "2602.00933v3"
+          ],
+          "gold": [
+            "2602.00933v3_c0001",
+            "2602.00933v3_c0002"
+          ],
+          "original_ids": [
+            "2602.00933v3_c0001",
+            "2602.00933v3_c0002"
+          ],
+          "quotes": [
+            "This answer-centric scoring permits valid alternative tool-call trajectories to receive credit",
+            "alternative tool-call paths that yield the same factual claims receive full credit"
+          ]
+        }
+      ],
+      "label": "development; source anchors rechecked; provisional"
+    }
+  ]
+}

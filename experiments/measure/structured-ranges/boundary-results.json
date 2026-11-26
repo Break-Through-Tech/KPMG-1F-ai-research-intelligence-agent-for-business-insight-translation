@@ -1,0 +1,300 @@
+[
+  {
+    "claim": {
+      "text": "On French elementary tasks, strategy selection accuracy improved from 35–46% to 68–78% across seven base models.",
+      "kind": "finding",
+      "support": [
+        {
+          "chunk_id": "2602.00931v2_c0000",
+          "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+        }
+      ]
+    },
+    "reviewed": false,
+    "expected_supported": false,
+    "adapter": {
+      "status": "accept",
+      "reason": "both role values and bound scope agree"
+    },
+    "baseline": "accept",
+    "baseline_detail": {
+      "status": "grounded",
+      "contradictions": [],
+      "uncertain": [],
+      "mentions": [
+        {
+          "number": "35",
+          "status": "grounded",
+          "issues": [],
+          "subject": null,
+          "metric": "accuracy",
+          "unit": null
+        },
+        {
+          "number": "46",
+          "status": "grounded",
+          "issues": [],
+          "subject": null,
+          "metric": "accuracy",
+          "unit": "percent"
+        },
+        {
+          "number": "68",
+          "status": "grounded",
+          "issues": [],
+          "subject": null,
+          "metric": "accuracy",
+          "unit": null
+        },
+        {
+          "number": "78",
+          "status": "grounded",
+          "issues": [],
+          "subject": null,
+          "metric": "accuracy",
+          "unit": "percent"
+        }
+      ]
+    },
+    "matches": {
+      "subject": [],
+      "metric": [
+        "strategy_selection_accuracy"
+      ],
+      "setting": [],
+      "population": [
+        "seven_models"
+      ],
+      "direction": [
+        "increase"
+      ]
+    },
+    "parsed": true
+  },
+  {
+    "claim": {
+      "text": "Preference accuracy improved from 35–46% to 68–78%. Strategy selection accuracy was discussed across seven base models.",
+      "kind": "finding",
+      "support": [
+        {
+          "chunk_id": "2602.00931v2_c0000",
+          "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+        }
+      ]
+    },
+    "reviewed": false,
+    "expected_supported": false,
+    "adapter": {
+      "status": "accept",
+      "reason": "both role values and bound scope agree"
+    },
+    "baseline": "accept",
+    "baseline_detail": {
+      "status": "grounded",
+      "contradictions": [],
+      "uncertain": [],
+      "mentions": [
+        {
+          "number": "35",
+          "status": "grounded",
+          "issues": [],
+          "subject": null,
+          "metric": "accuracy",
+          "unit": null
+        },
+        {
+          "number": "46",
+          "status": "grounded",
+          "issues": [],
+          "subject": null,
+          "metric": "accuracy",
+          "unit": "percent"
+        },
+        {
+          "number": "68",
+          "status": "grounded",
+          "issues": [],
+          "subject": null,
+          "metric": "accuracy",
+          "unit": null
+        },
+        {
+          "number": "78",
+          "status": "grounded",
+          "issues": [],
+          "subject": null,
+          "metric": "accuracy",
+          "unit": "percent"
+        }
+      ]
+    },
+    "matches": {
+      "subject": [],
+      "metric": [
+        "strategy_selection_accuracy"
+      ],
+      "setting": [],
+      "population": [
+        "seven_models"
+      ],
+      "direction": [
+        "increase"
+      ]
+    },
+    "parsed": true
+  },
+  {
+    "claim": {
+      "text": "Strategy selection accuracy improved from 35–46% to 68–78% across seven base models during clinical deployment.",
+      "kind": "finding",
+      "support": [
+        {
+          "chunk_id": "2602.00931v2_c0000",
+          "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+        }
+      ]
+    },
+    "reviewed": false,
+    "expected_supported": false,
+    "adapter": {
+      "status": "reject",
+      "reason": "different setting"
+    },
+    "baseline": "reject",
+    "baseline_detail": {
+      "status": "contradicted",
+      "contradictions": [
+        "setting_transfer"
+      ],
+      "uncertain": [],
+      "mentions": [
+        {
+          "number": "35",
+          "status": "contradicted",
+          "issues": [
+            "setting_transfer"
+          ],
+          "subject": null,
+          "metric": "accuracy",
+          "unit": null
+        },
+        {
+          "number": "46",
+          "status": "contradicted",
+          "issues": [
+            "setting_transfer"
+          ],
+          "subject": null,
+          "metric": "accuracy",
+          "unit": "percent"
+        },
+        {
+          "number": "68",
+          "status": "contradicted",
+          "issues": [
+            "setting_transfer"
+          ],
+          "subject": null,
+          "metric": "accuracy",
+          "unit": null
+        },
+        {
+          "number": "78",
+          "status": "contradicted",
+          "issues": [
+            "setting_transfer"
+          ],
+          "subject": null,
+          "metric": "accuracy",
+          "unit": "percent"
+        }
+      ]
+    },
+    "matches": {
+      "subject": [],
+      "metric": [
+        "strategy_selection_accuracy"
+      ],
+      "setting": [
+        "hospital"
+      ],
+      "population": [
+        "seven_models"
+      ],
+      "direction": [
+        "increase"
+      ]
+    },
+    "parsed": true
+  },
+  {
+    "claim": {
+      "text": "Strategy selection accuracy ranged from 35% to 46% before training and from 68% to 78% afterward across seven base models.",
+      "kind": "finding",
+      "support": [
+        {
+          "chunk_id": "2602.00931v2_c0000",
+          "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+        }
+      ]
+    },
+    "reviewed": false,
+    "expected_supported": true,
+    "adapter": {
+      "status": "review",
+      "reason": "comparison form unsupported"
+    },
+    "baseline": "accept",
+    "baseline_detail": {
+      "status": "grounded",
+      "contradictions": [],
+      "uncertain": [],
+      "mentions": [
+        {
+          "number": "35",
+          "status": "grounded",
+          "issues": [],
+          "subject": null,
+          "metric": "accuracy",
+          "unit": "percent"
+        },
+        {
+          "number": "46",
+          "status": "grounded",
+          "issues": [],
+          "subject": null,
+          "metric": "accuracy",
+          "unit": "percent"
+        },
+        {
+          "number": "68",
+          "status": "grounded",
+          "issues": [],
+          "subject": null,
+          "metric": null,
+          "unit": "percent"
+        },
+        {
+          "number": "78",
+          "status": "grounded",
+          "issues": [],
+          "subject": null,
+          "metric": null,
+          "unit": "percent"
+        }
+      ]
+    },
+    "matches": {
+      "subject": [],
+      "metric": [
+        "strategy_selection_accuracy"
+      ],
+      "setting": [],
+      "population": [
+        "seven_models"
+      ],
+      "direction": []
+    },
+    "parsed": false
+  }
+]

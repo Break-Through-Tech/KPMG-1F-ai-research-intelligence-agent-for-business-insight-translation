@@ -1,0 +1,4445 @@
+{
+  "branch": "khoi/research-evidence-integration",
+  "head": "9994eed920d0afd9ee5f36769077a05137763d6e",
+  "python": "3.14.2 (tags/v3.14.2:df79316, Dec  5 2025, 17:18:21) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "input_hashes": {
+    "C:\\Users\\ngkho\\.codex\\worktrees\\research-evidence-integration\\KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation\\experiments\\measure\\run-02\\verification.json": "ef6fec148257ea6217a458e1694bceeea6e779e8f4295fa3cd5077830b1604a9",
+    "C:\\Users\\ngkho\\.codex\\worktrees\\research-evidence-integration\\KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation\\experiments\\agentic\\numeric_checks.py": "9a8f8df61d7780ae7e27958caaa5e5dda669f94055ccd78bcfea7d81afe99051",
+    "C:\\Users\\ngkho\\.codex\\worktrees\\research-evidence-integration\\KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation\\experiments\\measure\\run-02\\tables-dom-normalized.json": "2e14f710711f7593c5f7cbb2d543f90c90061270b06f517c29b4400ed680cc7f",
+    "C:\\Users\\ngkho\\.codex\\worktrees\\research-evidence-integration\\KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation\\experiments\\agentic\\ab_questions.json": "86828ce949f5c7708bd10770597215e6c31ba8aea030e3409df453b895b49668",
+    "C:\\Users\\ngkho\\.codex\\worktrees\\research-evidence-integration\\KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation\\experiments\\measure\\structured-ranges\\adapter.py": "e0b51c65e40dd15108e1135e85442f9705c294f6f0a6d353bc1e2da76c8522fe",
+    "C:\\Users\\ngkho\\.codex\\worktrees\\research-evidence-integration\\KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation\\experiments\\measure\\structured-ranges\\fixtures.py": "6a17a29c6b9dcd1097d0f1827e1158fb9f9be2c1474e77de29ba42fe1f3847de",
+    "C:\\Users\\ngkho\\.codex\\worktrees\\research-evidence-integration\\KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation\\experiments\\measure\\structured-ranges\\run.py": "dcd51bb9f881a928e4d3a942c7b413576465acccdabbfd40b8bd0241f7e12cfc"
+  },
+  "provider_calls": 0,
+  "ledger_access": "none",
+  "cohorts": {
+    "draft": {
+      "baseline": {
+        "total": 10,
+        "supported": 2,
+        "unsupported": 8,
+        "unadjudicated_semantics": 0,
+        "correct_acceptances": 2,
+        "wrong_acceptances": 3,
+        "wrong_rejections": 0,
+        "supported_referred": 0,
+        "rejected_unsupported": 5,
+        "review": 0,
+        "outcomes": {
+          "reject": 5,
+          "accept": 5
+        }
+      },
+      "adapter": {
+        "total": 10,
+        "supported": 2,
+        "unsupported": 8,
+        "unadjudicated_semantics": 0,
+        "correct_acceptances": 2,
+        "wrong_acceptances": 1,
+        "wrong_rejections": 0,
+        "supported_referred": 0,
+        "rejected_unsupported": 6,
+        "review": 1,
+        "outcomes": {
+          "reject": 6,
+          "accept": 3,
+          "review": 1
+        }
+      }
+    },
+    "established audit": {
+      "baseline": {
+        "total": 33,
+        "supported": 19,
+        "unsupported": 14,
+        "unadjudicated_semantics": 0,
+        "correct_acceptances": 18,
+        "wrong_acceptances": 3,
+        "wrong_rejections": 1,
+        "supported_referred": 0,
+        "rejected_unsupported": 11,
+        "review": 0,
+        "outcomes": {
+          "reject": 12,
+          "accept": 21
+        }
+      },
+      "adapter": {
+        "total": 33,
+        "supported": 19,
+        "unsupported": 14,
+        "unadjudicated_semantics": 0,
+        "correct_acceptances": 18,
+        "wrong_acceptances": 0,
+        "wrong_rejections": 1,
+        "supported_referred": 0,
+        "rejected_unsupported": 14,
+        "review": 0,
+        "outcomes": {
+          "reject": 15,
+          "accept": 18
+        }
+      }
+    },
+    "new source-grounded draft": {
+      "baseline": {
+        "total": 16,
+        "supported": 5,
+        "unsupported": 6,
+        "unadjudicated_semantics": 5,
+        "correct_acceptances": 0,
+        "wrong_acceptances": 0,
+        "wrong_rejections": 5,
+        "supported_referred": 0,
+        "rejected_unsupported": 6,
+        "review": 1,
+        "outcomes": {
+          "reject": 15,
+          "review": 1
+        }
+      },
+      "adapter": {
+        "total": 16,
+        "supported": 5,
+        "unsupported": 6,
+        "unadjudicated_semantics": 5,
+        "correct_acceptances": 4,
+        "wrong_acceptances": 0,
+        "wrong_rejections": 0,
+        "supported_referred": 1,
+        "rejected_unsupported": 6,
+        "review": 6,
+        "outcomes": {
+          "accept": 4,
+          "reject": 6,
+          "review": 6
+        }
+      }
+    }
+  },
+  "supported_nonrange_controls": {
+    "baseline": {
+      "total": 18,
+      "supported": 18,
+      "unsupported": 0,
+      "unadjudicated_semantics": 0,
+      "correct_acceptances": 17,
+      "wrong_acceptances": 0,
+      "wrong_rejections": 1,
+      "supported_referred": 0,
+      "rejected_unsupported": 0,
+      "review": 0,
+      "outcomes": {
+        "accept": 17,
+        "reject": 1
+      }
+    },
+    "adapter": {
+      "total": 18,
+      "supported": 18,
+      "unsupported": 0,
+      "unadjudicated_semantics": 0,
+      "correct_acceptances": 17,
+      "wrong_acceptances": 0,
+      "wrong_rejections": 1,
+      "supported_referred": 0,
+      "rejected_unsupported": 0,
+      "review": 0,
+      "outcomes": {
+        "accept": 17,
+        "reject": 1
+      }
+    }
+  },
+  "source_findings": {
+    "cu": {
+      "paper": "2602.00931v2",
+      "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+      "method": "exact abstract finding and declared scope",
+      "citations": [
+        {
+          "chunk_id": "2602.00931v2_c0000",
+          "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+          "source_text": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks.",
+          "source_sha256": null,
+          "cell_ids": [],
+          "span": [
+            968,
+            1248
+          ]
+        }
+      ],
+      "scope": {
+        "subject": "CU-DPO",
+        "metric": "strategy_selection_accuracy",
+        "setting": "math_benchmark",
+        "population": "seven_models",
+        "direction": "increase"
+      },
+      "roles": {
+        "before": {
+          "lower": "35",
+          "upper": "46",
+          "unit": "percent",
+          "form": "range"
+        },
+        "after": {
+          "lower": "68",
+          "upper": "78",
+          "unit": "percent",
+          "form": "range"
+        }
+      },
+      "required_scope": [
+        "metric",
+        "population"
+      ],
+      "ambiguity": []
+    },
+    "hammer": {
+      "paper": "2509.25240v1",
+      "source_url": "https://arxiv.org/html/2509.25240v1#S5.T1",
+      "method": "derived min/max over explicitly named, audited table rows",
+      "citations": [
+        {
+          "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_1",
+          "source_url": "https://arxiv.org/html/2509.25240v1#S5.T1",
+          "source_text": "Derived source table row (HTML cell serialization, not verbatim prose).\nHAMMER: Hamiltonian Curiosity Augmented Large Language Model Reinforcement\nTable 1: Main results comparing baseline (B) and HAMMER (H), with k=100 for AIME 2024/2025 and AMC 2023, k=32 for Olympiad, and \\mathbf{Diff}=\\mathbf{Avg}_{\\text{H}}-\\mathbf{Avg}_{\\text{B}} .\nMethod: Qwen3-1.7B-DAPO; Dataset: AIME 2024; pass@1 / B: 36.3; pass@1 / H: 39.3; pass@10 / B: 61.0; pass@10 / H: 64.7; pass@k / B: 69.0; pass@k / H: 74.3; cons@k / B: 43.3; cons@k / H: 43.3; Avg. / B: 52.4; Avg. / H: 55.4; Diff.: +3.0",
+          "source_sha256": "4e615ff86053e113babb214ff67e1b9630d52415db1684cfa6216d5844123bd5",
+          "cell_ids": [
+            "S5.T1.4.1.3.3",
+            "S5.T1.4.1.3.4"
+          ],
+          "span": null
+        },
+        {
+          "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_2",
+          "source_url": "https://arxiv.org/html/2509.25240v1#S5.T1",
+          "source_text": "Derived source table row (HTML cell serialization, not verbatim prose).\nHAMMER: Hamiltonian Curiosity Augmented Large Language Model Reinforcement\nTable 1: Main results comparing baseline (B) and HAMMER (H), with k=100 for AIME 2024/2025 and AMC 2023, k=32 for Olympiad, and \\mathbf{Diff}=\\mathbf{Avg}_{\\text{H}}-\\mathbf{Avg}_{\\text{B}} .\nMethod: Qwen3-1.7B-DAPO; Dataset: AIME 2025; pass@1 / B: 25.3; pass@1 / H: 31.0; pass@10 / B: 39.7; pass@10 / H: 48.7; pass@k / B: 56.3; pass@k / H: 59.7; cons@k / B: 30.0; cons@k / H: 30.0; Avg. / B: 37.8; Avg. / H: 42.3; Diff.: +4.5",
+          "source_sha256": "4e615ff86053e113babb214ff67e1b9630d52415db1684cfa6216d5844123bd5",
+          "cell_ids": [
+            "S5.T1.4.1.4.2",
+            "S5.T1.4.1.4.3"
+          ],
+          "span": null
+        }
+      ],
+      "scope": {
+        "subject": "Qwen3-1.7B-DAPO",
+        "metric": "pass@1",
+        "setting": "benchmark",
+        "population": "aime_two_years",
+        "qualifier": "k=100",
+        "direction": "increase"
+      },
+      "roles": {
+        "before": {
+          "lower": "25.3",
+          "upper": "36.3",
+          "unit": "score",
+          "form": "range"
+        },
+        "after": {
+          "lower": "31.0",
+          "upper": "39.3",
+          "unit": "score",
+          "form": "range"
+        }
+      },
+      "required_scope": [
+        "metric",
+        "population"
+      ],
+      "ambiguity": []
+    },
+    "auc": {
+      "paper": "2604.00324v1",
+      "source_url": "https://arxiv.org/html/2604.00324v1#A1.T1",
+      "method": "derived min/max over explicitly named, audited table rows",
+      "citations": [
+        {
+          "chunk_id": "2604.00324v1_table_99d7ef000b02b530_1",
+          "source_url": "https://arxiv.org/html/2604.00324v1#A1.T1",
+          "source_text": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Persistent Vulnerability of Aligned AI Systems\nTable A.1 : AUC results for random baseline experiments\nTask: IOI; ACDC AUC: 0.95; Random AUC: 0.50",
+          "source_sha256": "3eabd23101417afdcc74b7bdbe70b3997c5d7b3d75777ffb2f42566b6515bdb2",
+          "cell_ids": [
+            "A1.T1.5.2.3",
+            "A1.T1.5.2.2"
+          ],
+          "span": null
+        },
+        {
+          "chunk_id": "2604.00324v1_table_99d7ef000b02b530_2",
+          "source_url": "https://arxiv.org/html/2604.00324v1#A1.T1",
+          "source_text": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Persistent Vulnerability of Aligned AI Systems\nTable A.1 : AUC results for random baseline experiments\nTask: Docstring; ACDC AUC: 0.92; Random AUC: 0.50",
+          "source_sha256": "3eabd23101417afdcc74b7bdbe70b3997c5d7b3d75777ffb2f42566b6515bdb2",
+          "cell_ids": [
+            "A1.T1.5.3.3",
+            "A1.T1.5.3.2"
+          ],
+          "span": null
+        }
+      ],
+      "scope": {
+        "subject": "ACDC",
+        "metric": "auc",
+        "setting": "random_baseline_experiment",
+        "population": "ioi_docstring",
+        "direction": "increase"
+      },
+      "roles": {
+        "before": {
+          "lower": "0.50",
+          "upper": "0.50",
+          "unit": "proportion",
+          "form": "range"
+        },
+        "after": {
+          "lower": "0.92",
+          "upper": "0.95",
+          "unit": "proportion",
+          "form": "range"
+        }
+      },
+      "required_scope": [
+        "metric",
+        "population"
+      ],
+      "ambiguity": []
+    }
+  },
+  "source_order_checks": {
+    "hammer": {
+      "projected_sources": [
+        "Before: [25.3,36.3]. After: [31.0,39.3].",
+        "After: [31.0,39.3]. Before: [25.3,36.3]."
+      ],
+      "same_bindings": true,
+      "original_chunk_ids": [
+        "2509.25240v1_table_0ff9b02ec9b484d0_1",
+        "2509.25240v1_table_0ff9b02ec9b484d0_2"
+      ],
+      "kind": "derived sentence-order stress test"
+    },
+    "auc": {
+      "projected_sources": [
+        "Before: [0.50,0.50]. After: [0.92,0.95].",
+        "After: [0.92,0.95]. Before: [0.50,0.50]."
+      ],
+      "same_bindings": true,
+      "original_chunk_ids": [
+        "2604.00324v1_table_99d7ef000b02b530_1",
+        "2604.00324v1_table_99d7ef000b02b530_2"
+      ],
+      "kind": "derived sentence-order stress test"
+    }
+  },
+  "cases": [
+    {
+      "name": "unsigned 3.2% against -3.2% (Codex)",
+      "cohort": "established audit",
+      "category": "sign",
+      "reviewed": true,
+      "expected_supported": false,
+      "claim": {
+        "text": "Accuracy changed by 3.2% after pruning.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-1",
+            "quote": "Accuracy changed by -3.2% after pruning."
+          }
+        ]
+      },
+      "baseline": "reject",
+      "baseline_detail": {
+        "status": "contradicted",
+        "contradictions": [
+          "sign_flip"
+        ],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "3.2",
+            "status": "contradicted",
+            "issues": [
+              "sign_flip"
+            ],
+            "subject": null,
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "reject",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "decrease stated for -3.2% (valid)",
+      "cohort": "established audit",
+      "category": "sign",
+      "reviewed": true,
+      "expected_supported": true,
+      "claim": {
+        "text": "Accuracy decreased by 3.2% after pruning.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-2",
+            "quote": "Accuracy changed by -3.2% after pruning."
+          }
+        ]
+      },
+      "baseline": "accept",
+      "baseline_detail": {
+        "status": "grounded",
+        "contradictions": [],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "3.2",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "accept",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "-3.2% against -3.2% (valid)",
+      "cohort": "established audit",
+      "category": "sign",
+      "reviewed": true,
+      "expected_supported": true,
+      "claim": {
+        "text": "Accuracy changed by -3.2% after pruning.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-3",
+            "quote": "Accuracy changed by -3.2% after pruning."
+          }
+        ]
+      },
+      "baseline": "accept",
+      "baseline_detail": {
+        "status": "grounded",
+        "contradictions": [],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "3.2",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "accept",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "negated claim (Codex)",
+      "cohort": "established audit",
+      "category": "negation",
+      "reviewed": true,
+      "expected_supported": false,
+      "claim": {
+        "text": "Model X did not reach 78.0% accuracy on the benchmark.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-4",
+            "quote": "Model X reached 78.0% accuracy on the benchmark."
+          }
+        ]
+      },
+      "baseline": "reject",
+      "baseline_detail": {
+        "status": "contradicted",
+        "contradictions": [
+          "negation_mismatch"
+        ],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "78.0",
+            "status": "contradicted",
+            "issues": [
+              "negation_mismatch"
+            ],
+            "subject": "Model X",
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "reject",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "negation kept (valid)",
+      "cohort": "established audit",
+      "category": "negation",
+      "reviewed": true,
+      "expected_supported": true,
+      "claim": {
+        "text": "Model X did not reach 80.0% accuracy on the benchmark.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-5",
+            "quote": "Model X did not reach 80.0% accuracy on the benchmark."
+          }
+        ]
+      },
+      "baseline": "accept",
+      "baseline_detail": {
+        "status": "grounded",
+        "contradictions": [],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "80.0",
+            "status": "grounded",
+            "issues": [],
+            "subject": "Model X",
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "accept",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "\"not only\" is not a negation (valid)",
+      "cohort": "established audit",
+      "category": "negation",
+      "reviewed": true,
+      "expected_supported": true,
+      "claim": {
+        "text": "Model X not only reached 78.0% accuracy on the benchmark.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-6",
+            "quote": "Model X reached 78.0% accuracy on the benchmark."
+          }
+        ]
+      },
+      "baseline": "accept",
+      "baseline_detail": {
+        "status": "grounded",
+        "contradictions": [],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "78.0",
+            "status": "grounded",
+            "issues": [],
+            "subject": "Model X",
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "accept",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "benchmark result moved to clinical notes (Codex)",
+      "cohort": "established audit",
+      "category": "setting or subject",
+      "reviewed": true,
+      "expected_supported": false,
+      "claim": {
+        "text": "Model X reached 78.0% accuracy on clinical notes in hospitals.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-7",
+            "quote": "Model X reached 78.0% accuracy on the benchmark."
+          }
+        ]
+      },
+      "baseline": "reject",
+      "baseline_detail": {
+        "status": "contradicted",
+        "contradictions": [
+          "setting_transfer"
+        ],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "78.0",
+            "status": "contradicted",
+            "issues": [
+              "setting_transfer"
+            ],
+            "subject": "Model X",
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "reject",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "benchmark result kept on the benchmark (valid)",
+      "cohort": "established audit",
+      "category": "setting or subject",
+      "reviewed": true,
+      "expected_supported": true,
+      "claim": {
+        "text": "Model X reached 78.0% accuracy on the benchmark.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-8",
+            "quote": "Model X reached 78.0% accuracy on the benchmark."
+          }
+        ]
+      },
+      "baseline": "accept",
+      "baseline_detail": {
+        "status": "grounded",
+        "contradictions": [],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "78.0",
+            "status": "grounded",
+            "issues": [],
+            "subject": "Model X",
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "accept",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "clinical result kept clinical (valid)",
+      "cohort": "established audit",
+      "category": "setting or subject",
+      "reviewed": true,
+      "expected_supported": true,
+      "claim": {
+        "text": "Model X reached 78.0% accuracy on clinical notes.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-9",
+            "quote": "Model X reached 78.0% accuracy on clinical notes from two hospitals."
+          }
+        ]
+      },
+      "baseline": "accept",
+      "baseline_detail": {
+        "status": "grounded",
+        "contradictions": [],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "78.0",
+            "status": "grounded",
+            "issues": [],
+            "subject": "Model X",
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "accept",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "0.5 seconds as 500 milliseconds (Codex, valid)",
+      "cohort": "established audit",
+      "category": "unit conversion",
+      "reviewed": true,
+      "expected_supported": true,
+      "claim": {
+        "text": "Latency was 0.5 seconds per query.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-10",
+            "quote": "Latency was 500 milliseconds per query."
+          }
+        ]
+      },
+      "baseline": "accept",
+      "baseline_detail": {
+        "status": "grounded",
+        "contradictions": [],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "0.5",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": "latency",
+            "unit": "seconds"
+          }
+        ]
+      },
+      "adapter": "accept",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "3 ms against 3 s",
+      "cohort": "established audit",
+      "category": "unit conversion",
+      "reviewed": true,
+      "expected_supported": false,
+      "claim": {
+        "text": "Latency was 3 ms per query.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-11",
+            "quote": "Latency was 3 s per query."
+          }
+        ]
+      },
+      "baseline": "reject",
+      "baseline_detail": {
+        "status": "contradicted",
+        "contradictions": [
+          "unit_mismatch"
+        ],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "3",
+            "status": "contradicted",
+            "issues": [
+              "unit_mismatch"
+            ],
+            "subject": null,
+            "metric": "latency",
+            "unit": "ms"
+          }
+        ]
+      },
+      "adapter": "reject",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "$2 million as $2,000,000 (valid)",
+      "cohort": "established audit",
+      "category": "unit conversion",
+      "reviewed": true,
+      "expected_supported": true,
+      "claim": {
+        "text": "The pilot cost $2 million.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-12",
+            "quote": "The pilot cost $2,000,000."
+          }
+        ]
+      },
+      "baseline": "accept",
+      "baseline_detail": {
+        "status": "grounded",
+        "contradictions": [],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "2",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": "cost",
+            "unit": "currency+million"
+          }
+        ]
+      },
+      "adapter": "accept",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "population paraphrase is not rejected (Codex)",
+      "cohort": "established audit",
+      "category": "scope or condition",
+      "reviewed": true,
+      "expected_supported": true,
+      "claim": {
+        "text": "12% of surveyed hospitals reported errors.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-13",
+            "quote": "12% of hospital sites in the survey reported errors."
+          }
+        ]
+      },
+      "baseline": "accept",
+      "baseline_detail": {
+        "status": "grounded",
+        "contradictions": [],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "12",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": "errors",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "accept",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "same population, reordered (valid)",
+      "cohort": "established audit",
+      "category": "scope or condition",
+      "reviewed": true,
+      "expected_supported": true,
+      "claim": {
+        "text": "12% of hospitals reported errors in the survey.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-14",
+            "quote": "In the survey, 12% of hospitals reported errors."
+          }
+        ]
+      },
+      "baseline": "accept",
+      "baseline_detail": {
+        "status": "grounded",
+        "contradictions": [],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "12",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": "errors",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "accept",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "case 1: 78% (benchmark) claimed for hospitals",
+      "cohort": "established audit",
+      "category": "setting or subject",
+      "reviewed": true,
+      "expected_supported": false,
+      "claim": {
+        "text": "Model X reached 78% accuracy in hospitals.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-15",
+            "quote": "Model X reached 78% accuracy on the benchmark and 64% accuracy in hospitals."
+          }
+        ]
+      },
+      "baseline": "reject",
+      "baseline_detail": {
+        "status": "contradicted",
+        "contradictions": [
+          "setting_transfer"
+        ],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "78",
+            "status": "contradicted",
+            "issues": [
+              "setting_transfer"
+            ],
+            "subject": "Model X",
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "reject",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "case 1 twin: 64% in hospitals",
+      "cohort": "established audit",
+      "category": "setting or subject",
+      "reviewed": true,
+      "expected_supported": true,
+      "claim": {
+        "text": "Model X reached 64% accuracy in hospitals.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-16",
+            "quote": "Model X reached 78% accuracy on the benchmark and 64% accuracy in hospitals."
+          }
+        ]
+      },
+      "baseline": "accept",
+      "baseline_detail": {
+        "status": "grounded",
+        "contradictions": [],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "64",
+            "status": "grounded",
+            "issues": [],
+            "subject": "Model X",
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "accept",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "case 1 twin: 78% on the benchmark",
+      "cohort": "established audit",
+      "category": "setting or subject",
+      "reviewed": true,
+      "expected_supported": true,
+      "claim": {
+        "text": "Model X reached 78% accuracy on the benchmark.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-17",
+            "quote": "Model X reached 78% accuracy on the benchmark and 64% accuracy in hospitals."
+          }
+        ]
+      },
+      "baseline": "accept",
+      "baseline_detail": {
+        "status": "grounded",
+        "contradictions": [],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "78",
+            "status": "grounded",
+            "issues": [],
+            "subject": "Model X",
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "accept",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "case 1 reverse: 64% (hospitals) claimed for the benchmark",
+      "cohort": "established audit",
+      "category": "setting or subject",
+      "reviewed": true,
+      "expected_supported": false,
+      "claim": {
+        "text": "Model X reached 64% accuracy on the benchmark.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-18",
+            "quote": "Model X reached 78% accuracy on the benchmark and 64% accuracy in hospitals."
+          }
+        ]
+      },
+      "baseline": "reject",
+      "baseline_detail": {
+        "status": "contradicted",
+        "contradictions": [
+          "setting_mismatch"
+        ],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "64",
+            "status": "contradicted",
+            "issues": [
+              "setting_mismatch"
+            ],
+            "subject": "Model X",
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "reject",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "case 2: 78% overall (condition belongs to 90%)",
+      "cohort": "established audit",
+      "category": "scope or condition",
+      "reviewed": true,
+      "expected_supported": true,
+      "claim": {
+        "text": "Model X reached 78% accuracy overall.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-19",
+            "quote": "Model X reached 78% accuracy overall and 90% only on English tasks."
+          }
+        ]
+      },
+      "baseline": "accept",
+      "baseline_detail": {
+        "status": "grounded",
+        "contradictions": [],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "78",
+            "status": "grounded",
+            "issues": [],
+            "subject": "Model X",
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "accept",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "case 2 twin: 90% claimed overall",
+      "cohort": "established audit",
+      "category": "other",
+      "reviewed": true,
+      "expected_supported": false,
+      "claim": {
+        "text": "Model X reached 90% accuracy overall.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-20",
+            "quote": "Model X reached 78% accuracy overall and 90% only on English tasks."
+          }
+        ]
+      },
+      "baseline": "reject",
+      "baseline_detail": {
+        "status": "contradicted",
+        "contradictions": [
+          "missing_condition"
+        ],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "90",
+            "status": "contradicted",
+            "issues": [
+              "missing_condition"
+            ],
+            "subject": "Model X",
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "reject",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "case 2 twin: 90% with its condition",
+      "cohort": "established audit",
+      "category": "scope or condition",
+      "reviewed": true,
+      "expected_supported": true,
+      "claim": {
+        "text": "Model X reached 90% accuracy only on English tasks.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-21",
+            "quote": "Model X reached 78% accuracy overall and 90% only on English tasks."
+          }
+        ]
+      },
+      "baseline": "accept",
+      "baseline_detail": {
+        "status": "grounded",
+        "contradictions": [],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "90",
+            "status": "grounded",
+            "issues": [],
+            "subject": "Model X",
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "accept",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "case 2 twin: 90% with a changed condition",
+      "cohort": "established audit",
+      "category": "scope or condition",
+      "reviewed": true,
+      "expected_supported": false,
+      "claim": {
+        "text": "Model X reached 90% accuracy only on Spanish tasks.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-22",
+            "quote": "Model X reached 78% accuracy overall and 90% only on English tasks."
+          }
+        ]
+      },
+      "baseline": "reject",
+      "baseline_detail": {
+        "status": "contradicted",
+        "contradictions": [
+          "changed_condition"
+        ],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "90",
+            "status": "contradicted",
+            "issues": [
+              "changed_condition"
+            ],
+            "subject": "Model X",
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "reject",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "shared lead-in condition applies to all values",
+      "cohort": "established audit",
+      "category": "scope or condition",
+      "reviewed": true,
+      "expected_supported": false,
+      "claim": {
+        "text": "Model X reached 78% accuracy.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-23",
+            "quote": "Only on English tasks, Model X reached 78% accuracy and Model Y reached 64% accuracy."
+          }
+        ]
+      },
+      "baseline": "reject",
+      "baseline_detail": {
+        "status": "contradicted",
+        "contradictions": [
+          "missing_condition"
+        ],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "78",
+            "status": "contradicted",
+            "issues": [
+              "missing_condition"
+            ],
+            "subject": "Model X",
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "reject",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "shared lead-in condition kept",
+      "cohort": "established audit",
+      "category": "scope or condition",
+      "reviewed": true,
+      "expected_supported": true,
+      "claim": {
+        "text": "Model X reached 78% accuracy only on English tasks.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-24",
+            "quote": "Only on English tasks, Model X reached 78% accuracy and Model Y reached 64% accuracy."
+          }
+        ]
+      },
+      "baseline": "accept",
+      "baseline_detail": {
+        "status": "grounded",
+        "contradictions": [],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "78",
+            "status": "grounded",
+            "issues": [],
+            "subject": "Model X",
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "accept",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "shared lead-in setting applies to all values",
+      "cohort": "established audit",
+      "category": "scope or condition",
+      "reviewed": true,
+      "expected_supported": false,
+      "claim": {
+        "text": "Model X reached 78% accuracy in hospitals.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-25",
+            "quote": "On the benchmark, Model X reached 78% accuracy and Model Y reached 64% accuracy."
+          }
+        ]
+      },
+      "baseline": "reject",
+      "baseline_detail": {
+        "status": "contradicted",
+        "contradictions": [
+          "setting_transfer"
+        ],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "78",
+            "status": "contradicted",
+            "issues": [
+              "setting_transfer"
+            ],
+            "subject": "Model X",
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "reject",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "single-number trailing condition applies",
+      "cohort": "established audit",
+      "category": "scope or condition",
+      "reviewed": true,
+      "expected_supported": false,
+      "claim": {
+        "text": "Model X reached 78% accuracy.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-26",
+            "quote": "Model X reached 78% accuracy, only on English tasks."
+          }
+        ]
+      },
+      "baseline": "reject",
+      "baseline_detail": {
+        "status": "contradicted",
+        "contradictions": [
+          "missing_condition"
+        ],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "78",
+            "status": "contradicted",
+            "issues": [
+              "missing_condition"
+            ],
+            "subject": "Model X",
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "reject",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "elliptical clause inherits its subject",
+      "cohort": "established audit",
+      "category": "setting or subject",
+      "reviewed": true,
+      "expected_supported": true,
+      "claim": {
+        "text": "Model X reached 64% accuracy in hospitals.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-27",
+            "quote": "Model X reached 78% accuracy on the benchmark and 64% accuracy in hospitals."
+          }
+        ]
+      },
+      "baseline": "accept",
+      "baseline_detail": {
+        "status": "grounded",
+        "contradictions": [],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "64",
+            "status": "grounded",
+            "issues": [],
+            "subject": "Model X",
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "accept",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "thousands separator",
+      "cohort": "established audit",
+      "category": "other",
+      "reviewed": true,
+      "expected_supported": true,
+      "claim": {
+        "text": "Agreement reached 91.4% in 1,240 cases.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-28",
+            "quote": "Agreement reached 91.4% in 1,240 cases."
+          }
+        ]
+      },
+      "baseline": "accept",
+      "baseline_detail": {
+        "status": "grounded",
+        "contradictions": [],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "91.4",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": "agreement",
+            "unit": "percent"
+          },
+          {
+            "number": "1,240",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": "agreement",
+            "unit": null
+          }
+        ]
+      },
+      "adapter": "accept",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "correct paired ranges",
+      "cohort": "established audit",
+      "category": "CU-DPO range",
+      "reviewed": true,
+      "expected_supported": true,
+      "claim": {
+        "text": "Strategy selection accuracy improved from 35–46% to 68–78% across seven base models.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.00931v2_c0000",
+            "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+          }
+        ]
+      },
+      "baseline": "accept",
+      "baseline_detail": {
+        "status": "grounded",
+        "contradictions": [],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "35",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": "accuracy",
+            "unit": null
+          },
+          {
+            "number": "46",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": "accuracy",
+            "unit": "percent"
+          },
+          {
+            "number": "68",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": "accuracy",
+            "unit": null
+          },
+          {
+            "number": "78",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "accept",
+      "reason": "both role values and bound scope agree",
+      "source": "cu",
+      "applied": true,
+      "parsed_scope": {
+        "subject": [],
+        "metric": [
+          "strategy_selection_accuracy"
+        ],
+        "setting": [],
+        "population": [
+          "seven_models"
+        ],
+        "direction": [
+          "increase"
+        ]
+      },
+      "parsed_roles": {
+        "before": {
+          "lower": "35",
+          "upper": "46",
+          "unit": "percent",
+          "form": "range"
+        },
+        "after": {
+          "lower": "68",
+          "upper": "78",
+          "unit": "percent",
+          "form": "range"
+        }
+      }
+    },
+    {
+      "name": "reversed ranges",
+      "cohort": "established audit",
+      "category": "CU-DPO range",
+      "reviewed": true,
+      "expected_supported": false,
+      "claim": {
+        "text": "Strategy selection accuracy improved from 68–78% to 35–46% across seven base models.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.00931v2_c0000",
+            "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+          }
+        ]
+      },
+      "baseline": "accept",
+      "baseline_detail": {
+        "status": "grounded",
+        "contradictions": [],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "68",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": "accuracy",
+            "unit": null
+          },
+          {
+            "number": "78",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": "accuracy",
+            "unit": "percent"
+          },
+          {
+            "number": "35",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": "accuracy",
+            "unit": null
+          },
+          {
+            "number": "46",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "reject",
+      "reason": "before value, shape, or unit differs",
+      "source": "cu",
+      "applied": true,
+      "parsed_scope": {
+        "subject": [],
+        "metric": [
+          "strategy_selection_accuracy"
+        ],
+        "setting": [],
+        "population": [
+          "seven_models"
+        ],
+        "direction": [
+          "increase"
+        ]
+      },
+      "parsed_roles": {
+        "before": {
+          "lower": "68",
+          "upper": "78",
+          "unit": "percent",
+          "form": "range"
+        },
+        "after": {
+          "lower": "35",
+          "upper": "46",
+          "unit": "percent",
+          "form": "range"
+        }
+      }
+    },
+    {
+      "name": "regrouped endpoints",
+      "cohort": "established audit",
+      "category": "CU-DPO range",
+      "reviewed": true,
+      "expected_supported": false,
+      "claim": {
+        "text": "Strategy selection accuracy improved from 35–78% to 46–68% across seven base models.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.00931v2_c0000",
+            "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+          }
+        ]
+      },
+      "baseline": "accept",
+      "baseline_detail": {
+        "status": "grounded",
+        "contradictions": [],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "35",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": "accuracy",
+            "unit": null
+          },
+          {
+            "number": "78",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": "accuracy",
+            "unit": "percent"
+          },
+          {
+            "number": "46",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": "accuracy",
+            "unit": null
+          },
+          {
+            "number": "68",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "reject",
+      "reason": "before value, shape, or unit differs",
+      "source": "cu",
+      "applied": true,
+      "parsed_scope": {
+        "subject": [],
+        "metric": [
+          "strategy_selection_accuracy"
+        ],
+        "setting": [],
+        "population": [
+          "seven_models"
+        ],
+        "direction": [
+          "increase"
+        ]
+      },
+      "parsed_roles": {
+        "before": {
+          "lower": "35",
+          "upper": "78",
+          "unit": "percent",
+          "form": "range"
+        },
+        "after": {
+          "lower": "46",
+          "upper": "68",
+          "unit": "percent",
+          "form": "range"
+        }
+      }
+    },
+    {
+      "name": "collapsed endpoints",
+      "cohort": "established audit",
+      "category": "CU-DPO range",
+      "reviewed": true,
+      "expected_supported": false,
+      "claim": {
+        "text": "Strategy selection accuracy improved from 35% to 78% across seven base models.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.00931v2_c0000",
+            "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+          }
+        ]
+      },
+      "baseline": "accept",
+      "baseline_detail": {
+        "status": "grounded",
+        "contradictions": [],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "35",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": "accuracy",
+            "unit": "percent"
+          },
+          {
+            "number": "78",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "reject",
+      "reason": "before value, shape, or unit differs",
+      "source": "cu",
+      "applied": true,
+      "parsed_scope": {
+        "subject": [],
+        "metric": [
+          "strategy_selection_accuracy"
+        ],
+        "setting": [],
+        "population": [
+          "seven_models"
+        ],
+        "direction": [
+          "increase"
+        ]
+      },
+      "parsed_roles": {
+        "before": {
+          "lower": "35",
+          "upper": "35",
+          "unit": "percent",
+          "form": "point"
+        },
+        "after": {
+          "lower": "78",
+          "upper": "78",
+          "unit": "percent",
+          "form": "point"
+        }
+      }
+    },
+    {
+      "name": "equivalent under-18 qualifier",
+      "cohort": "established audit",
+      "category": "population paraphrase",
+      "reviewed": true,
+      "expected_supported": true,
+      "claim": {
+        "text": "Accuracy reached 78% only for participants under age 18.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-33",
+            "quote": "Accuracy reached 78% only for minors under age 18."
+          }
+        ]
+      },
+      "baseline": "reject",
+      "baseline_detail": {
+        "status": "contradicted",
+        "contradictions": [
+          "changed_condition"
+        ],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "78",
+            "status": "contradicted",
+            "issues": [
+              "changed_condition"
+            ],
+            "subject": null,
+            "metric": "accuracy",
+            "unit": "percent"
+          },
+          {
+            "number": "18",
+            "status": "contradicted",
+            "issues": [
+              "changed_condition"
+            ],
+            "subject": null,
+            "metric": "accuracy",
+            "unit": null
+          }
+        ]
+      },
+      "adapter": "reject",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "percent vs percentage points",
+      "cohort": "draft",
+      "category": "units",
+      "reviewed": false,
+      "expected_supported": false,
+      "claim": {
+        "text": "Accuracy increased by 10% on the benchmark.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-34",
+            "quote": "Accuracy increased by 10 percentage points on the benchmark."
+          }
+        ]
+      },
+      "baseline": "reject",
+      "baseline_detail": {
+        "status": "contradicted",
+        "contradictions": [
+          "unit_mismatch"
+        ],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "10",
+            "status": "contradicted",
+            "issues": [
+              "unit_mismatch"
+            ],
+            "subject": null,
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "reject",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "different denominator",
+      "cohort": "draft",
+      "category": "denominator/condition",
+      "reviewed": false,
+      "expected_supported": false,
+      "claim": {
+        "text": "78% of all cases passed.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-35",
+            "quote": "78% of the 30 English cases passed."
+          }
+        ]
+      },
+      "baseline": "accept",
+      "baseline_detail": {
+        "status": "grounded",
+        "contradictions": [],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "78",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": null,
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "accept",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "valid phrasing with unit",
+      "cohort": "draft",
+      "category": "unit conversion",
+      "reviewed": false,
+      "expected_supported": true,
+      "claim": {
+        "text": "Latency was 60 seconds per run.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-36",
+            "quote": "Latency was one minute (1 minute) per run."
+          }
+        ]
+      },
+      "baseline": "accept",
+      "baseline_detail": {
+        "status": "grounded",
+        "contradictions": [],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "60",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": "latency",
+            "unit": "seconds"
+          }
+        ]
+      },
+      "adapter": "accept",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "unsupported setting with missing benchmark word",
+      "cohort": "draft",
+      "category": "setting",
+      "reviewed": false,
+      "expected_supported": false,
+      "claim": {
+        "text": "Model X reached 78% accuracy in clinical deployment.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-37",
+            "quote": "Model X reached 78% accuracy on simulated cases."
+          }
+        ]
+      },
+      "baseline": "reject",
+      "baseline_detail": {
+        "status": "contradicted",
+        "contradictions": [
+          "setting_transfer"
+        ],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "78",
+            "status": "contradicted",
+            "issues": [
+              "setting_transfer"
+            ],
+            "subject": "Model X",
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "reject",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "negative sign",
+      "cohort": "draft",
+      "category": "sign",
+      "reviewed": false,
+      "expected_supported": false,
+      "claim": {
+        "text": "Model X's performance changed by -5%.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "frozen-audit-38",
+            "quote": "Model X's performance changed by +5%."
+          }
+        ]
+      },
+      "baseline": "reject",
+      "baseline_detail": {
+        "status": "contradicted",
+        "contradictions": [
+          "sign_flip"
+        ],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "5",
+            "status": "contradicted",
+            "issues": [
+              "sign_flip"
+            ],
+            "subject": "Model X",
+            "metric": null,
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "reject",
+      "applied": false,
+      "reason": "non-range control; unchanged checker"
+    },
+    {
+      "name": "reference range paraphrase",
+      "cohort": "draft",
+      "category": "CU-DPO range",
+      "reviewed": false,
+      "expected_supported": true,
+      "claim": {
+        "text": "Across seven models, strategy selection accuracy went from 35–46% to 68–78%.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.00931v2_c0000",
+            "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+          }
+        ]
+      },
+      "baseline": "accept",
+      "baseline_detail": {
+        "status": "grounded",
+        "contradictions": [],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "35",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": "accuracy",
+            "unit": null
+          },
+          {
+            "number": "46",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": "accuracy",
+            "unit": "percent"
+          },
+          {
+            "number": "68",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": "accuracy",
+            "unit": null
+          },
+          {
+            "number": "78",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "accept",
+      "reason": "both role values and bound scope agree",
+      "source": "cu",
+      "applied": true,
+      "parsed_scope": {
+        "subject": [],
+        "metric": [
+          "strategy_selection_accuracy"
+        ],
+        "setting": [],
+        "population": [
+          "seven_models"
+        ],
+        "direction": []
+      },
+      "parsed_roles": {
+        "before": {
+          "lower": "35",
+          "upper": "46",
+          "unit": "percent",
+          "form": "range"
+        },
+        "after": {
+          "lower": "68",
+          "upper": "78",
+          "unit": "percent",
+          "form": "range"
+        }
+      }
+    },
+    {
+      "name": "different setting, right range",
+      "cohort": "draft",
+      "category": "CU-DPO setting",
+      "reviewed": false,
+      "expected_supported": false,
+      "claim": {
+        "text": "Strategy selection accuracy in hospitals went from 35–46% to 68–78%.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.00931v2_c0000",
+            "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+          }
+        ]
+      },
+      "baseline": "reject",
+      "baseline_detail": {
+        "status": "contradicted",
+        "contradictions": [
+          "setting_transfer"
+        ],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "35",
+            "status": "contradicted",
+            "issues": [
+              "setting_transfer"
+            ],
+            "subject": null,
+            "metric": "accuracy",
+            "unit": null
+          },
+          {
+            "number": "46",
+            "status": "contradicted",
+            "issues": [
+              "setting_transfer"
+            ],
+            "subject": null,
+            "metric": "accuracy",
+            "unit": "percent"
+          },
+          {
+            "number": "68",
+            "status": "contradicted",
+            "issues": [
+              "setting_transfer"
+            ],
+            "subject": null,
+            "metric": "accuracy",
+            "unit": null
+          },
+          {
+            "number": "78",
+            "status": "contradicted",
+            "issues": [
+              "setting_transfer"
+            ],
+            "subject": null,
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "reject",
+      "reason": "different setting",
+      "source": "cu",
+      "applied": true,
+      "parsed_scope": {
+        "subject": [],
+        "metric": [
+          "strategy_selection_accuracy"
+        ],
+        "setting": [
+          "hospital"
+        ],
+        "population": [],
+        "direction": []
+      },
+      "parsed_roles": {
+        "before": {
+          "lower": "35",
+          "upper": "46",
+          "unit": "percent",
+          "form": "range"
+        },
+        "after": {
+          "lower": "68",
+          "upper": "78",
+          "unit": "percent",
+          "form": "range"
+        }
+      }
+    },
+    {
+      "name": "wrong metric, same figure",
+      "cohort": "draft",
+      "category": "CU-DPO metric",
+      "reviewed": false,
+      "expected_supported": false,
+      "claim": {
+        "text": "Downstream reasoning gains were 68–78% across seven base models.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.00931v2_c0000",
+            "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+          }
+        ]
+      },
+      "baseline": "accept",
+      "baseline_detail": {
+        "status": "grounded",
+        "contradictions": [],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "68",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "78",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": null,
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "reject",
+      "reason": "different metric",
+      "source": "cu",
+      "applied": true,
+      "parsed_scope": {
+        "subject": [],
+        "metric": [
+          "downstream_reasoning"
+        ],
+        "setting": [],
+        "population": [
+          "seven_models"
+        ],
+        "direction": []
+      },
+      "parsed_roles": null
+    },
+    {
+      "name": "wrong comparison interpretation",
+      "cohort": "draft",
+      "category": "CU-DPO units",
+      "reviewed": false,
+      "expected_supported": false,
+      "claim": {
+        "text": "Strategy selection accuracy was 68–78 percentage points higher.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.00931v2_c0000",
+            "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+          }
+        ]
+      },
+      "baseline": "reject",
+      "baseline_detail": {
+        "status": "contradicted",
+        "contradictions": [
+          "unit_mismatch"
+        ],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "68",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": "accuracy",
+            "unit": null
+          },
+          {
+            "number": "78",
+            "status": "contradicted",
+            "issues": [
+              "unit_mismatch"
+            ],
+            "subject": null,
+            "metric": "accuracy",
+            "unit": "pp"
+          }
+        ]
+      },
+      "adapter": "review",
+      "reason": "unbound population",
+      "source": "cu",
+      "applied": true,
+      "parsed_scope": {
+        "subject": [],
+        "metric": [
+          "strategy_selection_accuracy"
+        ],
+        "setting": [],
+        "population": [],
+        "direction": []
+      },
+      "parsed_roles": null
+    },
+    {
+      "name": "count outside numerical token parser",
+      "cohort": "draft",
+      "category": "CU-DPO model count",
+      "reviewed": false,
+      "expected_supported": false,
+      "claim": {
+        "text": "Across nine base models, strategy selection accuracy reached 68–78%.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2602.00931v2_c0000",
+            "quote": "On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks."
+          }
+        ]
+      },
+      "baseline": "accept",
+      "baseline_detail": {
+        "status": "grounded",
+        "contradictions": [],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "68",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": "accuracy",
+            "unit": null
+          },
+          {
+            "number": "78",
+            "status": "grounded",
+            "issues": [],
+            "subject": null,
+            "metric": "accuracy",
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "reject",
+      "reason": "different population",
+      "source": "cu",
+      "applied": true,
+      "parsed_scope": {
+        "subject": [],
+        "metric": [
+          "strategy_selection_accuracy"
+        ],
+        "setting": [],
+        "population": [
+          "nine_models"
+        ],
+        "direction": []
+      },
+      "parsed_roles": null
+    },
+    {
+      "name": "HAMMER brackets, treatment named first",
+      "source": "hammer",
+      "expected": "accept",
+      "reviewed": false,
+      "note": null,
+      "expected_supported": true,
+      "claim": {
+        "text": "Qwen3-1.7B-DAPO pass@1 for AIME 2024 and AIME 2025 (k=100); treatment: [31.0,39.3]; baseline: [25.3,36.3].",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_2",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nHAMMER: Hamiltonian Curiosity Augmented Large Language Model Reinforcement\nTable 1: Main results comparing baseline (B) and HAMMER (H), with k=100 for AIME 2024/2025 and AMC 2023, k=32 for Olympiad, and \\mathbf{Diff}=\\mathbf{Avg}_{\\text{H}}-\\mathbf{Avg}_{\\text{B}} .\nMethod: Qwen3-1.7B-DAPO; Dataset: AIME 2025; pass@1 / B: 25.3; pass@1 / H: 31.0; pass@10 / B: 39.7; pass@10 / H: 48.7; pass@k / B: 56.3; pass@k / H: 59.7; cons@k / B: 30.0; cons@k / H: 30.0; Avg. / B: 37.8; Avg. / H: 42.3; Diff.: +4.5"
+          },
+          {
+            "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_1",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nHAMMER: Hamiltonian Curiosity Augmented Large Language Model Reinforcement\nTable 1: Main results comparing baseline (B) and HAMMER (H), with k=100 for AIME 2024/2025 and AMC 2023, k=32 for Olympiad, and \\mathbf{Diff}=\\mathbf{Avg}_{\\text{H}}-\\mathbf{Avg}_{\\text{B}} .\nMethod: Qwen3-1.7B-DAPO; Dataset: AIME 2024; pass@1 / B: 36.3; pass@1 / H: 39.3; pass@10 / B: 61.0; pass@10 / H: 64.7; pass@k / B: 69.0; pass@k / H: 74.3; cons@k / B: 43.3; cons@k / H: 43.3; Avg. / B: 52.4; Avg. / H: 55.4; Diff.: +3.0"
+          }
+        ]
+      },
+      "cohort": "new source-grounded draft",
+      "baseline": "reject",
+      "baseline_detail": {
+        "status": "contradicted",
+        "contradictions": [
+          "subject_mismatch"
+        ],
+        "uncertain": [
+          "context_unconfirmed",
+          "metric_unconfirmed",
+          "subject_unconfirmed"
+        ],
+        "mentions": [
+          {
+            "number": "1.7",
+            "status": "uncertain",
+            "issues": [
+              "metric_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "AIME 2024",
+            "metric": "pass@1",
+            "unit": "billion"
+          },
+          {
+            "number": "1",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed",
+              "metric_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "Qwen3-1.7B-DAPO",
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "2024",
+            "status": "uncertain",
+            "issues": [
+              "metric_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "Qwen3-1.7B-DAPO",
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "2025",
+            "status": "uncertain",
+            "issues": [
+              "metric_unconfirmed"
+            ],
+            "subject": null,
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "100",
+            "status": "contradicted",
+            "issues": [
+              "subject_mismatch"
+            ],
+            "subject": "AIME 2025",
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "31.0",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed"
+            ],
+            "subject": null,
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "39.3",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed"
+            ],
+            "subject": null,
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "25.3",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed"
+            ],
+            "subject": null,
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "36.3",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed"
+            ],
+            "subject": null,
+            "metric": null,
+            "unit": null
+          }
+        ]
+      },
+      "adapter": "accept",
+      "reason": "both role values and bound scope agree",
+      "applied": true,
+      "parsed_scope": {
+        "subject": [
+          "Qwen3-1.7B-DAPO"
+        ],
+        "metric": [
+          "pass@1"
+        ],
+        "setting": [],
+        "population": [
+          "aime_two_years"
+        ],
+        "qualifier": [
+          "k=100"
+        ],
+        "direction": []
+      },
+      "parsed_roles": {
+        "after": {
+          "lower": "31.0",
+          "upper": "39.3",
+          "unit": "score",
+          "form": "range"
+        },
+        "before": {
+          "lower": "25.3",
+          "upper": "36.3",
+          "unit": "score",
+          "form": "range"
+        }
+      }
+    },
+    {
+      "name": "HAMMER from/to with an alternate population order",
+      "source": "hammer",
+      "expected": "accept",
+      "reviewed": false,
+      "note": null,
+      "expected_supported": true,
+      "claim": {
+        "text": "Qwen3-1.7B-DAPO pass@1 for AIME 2025 and AIME 2024 (k=100) increased from 25.3–36.3 to 31.0–39.3.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_1",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nHAMMER: Hamiltonian Curiosity Augmented Large Language Model Reinforcement\nTable 1: Main results comparing baseline (B) and HAMMER (H), with k=100 for AIME 2024/2025 and AMC 2023, k=32 for Olympiad, and \\mathbf{Diff}=\\mathbf{Avg}_{\\text{H}}-\\mathbf{Avg}_{\\text{B}} .\nMethod: Qwen3-1.7B-DAPO; Dataset: AIME 2024; pass@1 / B: 36.3; pass@1 / H: 39.3; pass@10 / B: 61.0; pass@10 / H: 64.7; pass@k / B: 69.0; pass@k / H: 74.3; cons@k / B: 43.3; cons@k / H: 43.3; Avg. / B: 52.4; Avg. / H: 55.4; Diff.: +3.0"
+          },
+          {
+            "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_2",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nHAMMER: Hamiltonian Curiosity Augmented Large Language Model Reinforcement\nTable 1: Main results comparing baseline (B) and HAMMER (H), with k=100 for AIME 2024/2025 and AMC 2023, k=32 for Olympiad, and \\mathbf{Diff}=\\mathbf{Avg}_{\\text{H}}-\\mathbf{Avg}_{\\text{B}} .\nMethod: Qwen3-1.7B-DAPO; Dataset: AIME 2025; pass@1 / B: 25.3; pass@1 / H: 31.0; pass@10 / B: 39.7; pass@10 / H: 48.7; pass@k / B: 56.3; pass@k / H: 59.7; cons@k / B: 30.0; cons@k / H: 30.0; Avg. / B: 37.8; Avg. / H: 42.3; Diff.: +4.5"
+          }
+        ]
+      },
+      "cohort": "new source-grounded draft",
+      "baseline": "reject",
+      "baseline_detail": {
+        "status": "contradicted",
+        "contradictions": [
+          "subject_mismatch"
+        ],
+        "uncertain": [
+          "context_unconfirmed",
+          "metric_unconfirmed",
+          "subject_unconfirmed"
+        ],
+        "mentions": [
+          {
+            "number": "1.7",
+            "status": "uncertain",
+            "issues": [
+              "metric_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "AIME 2025",
+            "metric": "pass@1",
+            "unit": "billion"
+          },
+          {
+            "number": "1",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed",
+              "metric_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "Qwen3-1.7B-DAPO",
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "2025",
+            "status": "uncertain",
+            "issues": [
+              "metric_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "Qwen3-1.7B-DAPO",
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "2024",
+            "status": "uncertain",
+            "issues": [
+              "metric_unconfirmed"
+            ],
+            "subject": null,
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "100",
+            "status": "contradicted",
+            "issues": [
+              "subject_mismatch"
+            ],
+            "subject": "AIME 2024",
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "25.3",
+            "status": "uncertain",
+            "issues": [
+              "subject_unconfirmed"
+            ],
+            "subject": "AIME 2024",
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "36.3",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "AIME 2024",
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "31.0",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "AIME 2024",
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "39.3",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "AIME 2024",
+            "metric": null,
+            "unit": null
+          }
+        ]
+      },
+      "adapter": "accept",
+      "reason": "both role values and bound scope agree",
+      "applied": true,
+      "parsed_scope": {
+        "subject": [
+          "Qwen3-1.7B-DAPO"
+        ],
+        "metric": [
+          "pass@1"
+        ],
+        "setting": [],
+        "population": [
+          "aime_two_years"
+        ],
+        "qualifier": [
+          "k=100"
+        ],
+        "direction": [
+          "increase"
+        ]
+      },
+      "parsed_roles": {
+        "before": {
+          "lower": "25.3",
+          "upper": "36.3",
+          "unit": "score",
+          "form": "range"
+        },
+        "after": {
+          "lower": "31.0",
+          "upper": "39.3",
+          "unit": "score",
+          "form": "range"
+        }
+      }
+    },
+    {
+      "name": "HAMMER reversed roles",
+      "source": "hammer",
+      "expected": "reject",
+      "reviewed": false,
+      "note": null,
+      "expected_supported": false,
+      "claim": {
+        "text": "Qwen3-1.7B-DAPO pass@1 for AIME 2024 and AIME 2025 (k=100); treatment: [25.3,36.3]; baseline: [31.0,39.3].",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_1",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nHAMMER: Hamiltonian Curiosity Augmented Large Language Model Reinforcement\nTable 1: Main results comparing baseline (B) and HAMMER (H), with k=100 for AIME 2024/2025 and AMC 2023, k=32 for Olympiad, and \\mathbf{Diff}=\\mathbf{Avg}_{\\text{H}}-\\mathbf{Avg}_{\\text{B}} .\nMethod: Qwen3-1.7B-DAPO; Dataset: AIME 2024; pass@1 / B: 36.3; pass@1 / H: 39.3; pass@10 / B: 61.0; pass@10 / H: 64.7; pass@k / B: 69.0; pass@k / H: 74.3; cons@k / B: 43.3; cons@k / H: 43.3; Avg. / B: 52.4; Avg. / H: 55.4; Diff.: +3.0"
+          },
+          {
+            "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_2",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nHAMMER: Hamiltonian Curiosity Augmented Large Language Model Reinforcement\nTable 1: Main results comparing baseline (B) and HAMMER (H), with k=100 for AIME 2024/2025 and AMC 2023, k=32 for Olympiad, and \\mathbf{Diff}=\\mathbf{Avg}_{\\text{H}}-\\mathbf{Avg}_{\\text{B}} .\nMethod: Qwen3-1.7B-DAPO; Dataset: AIME 2025; pass@1 / B: 25.3; pass@1 / H: 31.0; pass@10 / B: 39.7; pass@10 / H: 48.7; pass@k / B: 56.3; pass@k / H: 59.7; cons@k / B: 30.0; cons@k / H: 30.0; Avg. / B: 37.8; Avg. / H: 42.3; Diff.: +4.5"
+          }
+        ]
+      },
+      "cohort": "new source-grounded draft",
+      "baseline": "reject",
+      "baseline_detail": {
+        "status": "contradicted",
+        "contradictions": [
+          "subject_mismatch"
+        ],
+        "uncertain": [
+          "context_unconfirmed",
+          "metric_unconfirmed",
+          "subject_unconfirmed"
+        ],
+        "mentions": [
+          {
+            "number": "1.7",
+            "status": "uncertain",
+            "issues": [
+              "metric_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "AIME 2024",
+            "metric": "pass@1",
+            "unit": "billion"
+          },
+          {
+            "number": "1",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed",
+              "metric_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "Qwen3-1.7B-DAPO",
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "2024",
+            "status": "uncertain",
+            "issues": [
+              "metric_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "Qwen3-1.7B-DAPO",
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "2025",
+            "status": "uncertain",
+            "issues": [
+              "metric_unconfirmed"
+            ],
+            "subject": null,
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "100",
+            "status": "contradicted",
+            "issues": [
+              "subject_mismatch"
+            ],
+            "subject": "AIME 2025",
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "25.3",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed"
+            ],
+            "subject": null,
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "36.3",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed"
+            ],
+            "subject": null,
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "31.0",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed"
+            ],
+            "subject": null,
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "39.3",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed"
+            ],
+            "subject": null,
+            "metric": null,
+            "unit": null
+          }
+        ]
+      },
+      "adapter": "reject",
+      "reason": "before value, shape, or unit differs",
+      "applied": true,
+      "parsed_scope": {
+        "subject": [
+          "Qwen3-1.7B-DAPO"
+        ],
+        "metric": [
+          "pass@1"
+        ],
+        "setting": [],
+        "population": [
+          "aime_two_years"
+        ],
+        "qualifier": [
+          "k=100"
+        ],
+        "direction": []
+      },
+      "parsed_roles": {
+        "after": {
+          "lower": "25.3",
+          "upper": "36.3",
+          "unit": "score",
+          "form": "range"
+        },
+        "before": {
+          "lower": "31.0",
+          "upper": "39.3",
+          "unit": "score",
+          "form": "range"
+        }
+      }
+    },
+    {
+      "name": "HAMMER misplaced range endpoint",
+      "source": "hammer",
+      "expected": "reject",
+      "reviewed": false,
+      "note": null,
+      "expected_supported": false,
+      "claim": {
+        "text": "Qwen3-1.7B-DAPO pass@1 for AIME 2024 and AIME 2025 (k=100); baseline: [25.3,39.3]; treatment: [31.0,36.3].",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_1",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nHAMMER: Hamiltonian Curiosity Augmented Large Language Model Reinforcement\nTable 1: Main results comparing baseline (B) and HAMMER (H), with k=100 for AIME 2024/2025 and AMC 2023, k=32 for Olympiad, and \\mathbf{Diff}=\\mathbf{Avg}_{\\text{H}}-\\mathbf{Avg}_{\\text{B}} .\nMethod: Qwen3-1.7B-DAPO; Dataset: AIME 2024; pass@1 / B: 36.3; pass@1 / H: 39.3; pass@10 / B: 61.0; pass@10 / H: 64.7; pass@k / B: 69.0; pass@k / H: 74.3; cons@k / B: 43.3; cons@k / H: 43.3; Avg. / B: 52.4; Avg. / H: 55.4; Diff.: +3.0"
+          },
+          {
+            "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_2",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nHAMMER: Hamiltonian Curiosity Augmented Large Language Model Reinforcement\nTable 1: Main results comparing baseline (B) and HAMMER (H), with k=100 for AIME 2024/2025 and AMC 2023, k=32 for Olympiad, and \\mathbf{Diff}=\\mathbf{Avg}_{\\text{H}}-\\mathbf{Avg}_{\\text{B}} .\nMethod: Qwen3-1.7B-DAPO; Dataset: AIME 2025; pass@1 / B: 25.3; pass@1 / H: 31.0; pass@10 / B: 39.7; pass@10 / H: 48.7; pass@k / B: 56.3; pass@k / H: 59.7; cons@k / B: 30.0; cons@k / H: 30.0; Avg. / B: 37.8; Avg. / H: 42.3; Diff.: +4.5"
+          }
+        ]
+      },
+      "cohort": "new source-grounded draft",
+      "baseline": "reject",
+      "baseline_detail": {
+        "status": "contradicted",
+        "contradictions": [
+          "subject_mismatch"
+        ],
+        "uncertain": [
+          "context_unconfirmed",
+          "metric_unconfirmed",
+          "subject_unconfirmed"
+        ],
+        "mentions": [
+          {
+            "number": "1.7",
+            "status": "uncertain",
+            "issues": [
+              "metric_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "AIME 2024",
+            "metric": "pass@1",
+            "unit": "billion"
+          },
+          {
+            "number": "1",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed",
+              "metric_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "Qwen3-1.7B-DAPO",
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "2024",
+            "status": "uncertain",
+            "issues": [
+              "metric_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "Qwen3-1.7B-DAPO",
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "2025",
+            "status": "uncertain",
+            "issues": [
+              "metric_unconfirmed"
+            ],
+            "subject": null,
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "100",
+            "status": "contradicted",
+            "issues": [
+              "subject_mismatch"
+            ],
+            "subject": "AIME 2025",
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "25.3",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed"
+            ],
+            "subject": null,
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "39.3",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed"
+            ],
+            "subject": null,
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "31.0",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed"
+            ],
+            "subject": null,
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "36.3",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed"
+            ],
+            "subject": null,
+            "metric": null,
+            "unit": null
+          }
+        ]
+      },
+      "adapter": "reject",
+      "reason": "before value, shape, or unit differs",
+      "applied": true,
+      "parsed_scope": {
+        "subject": [
+          "Qwen3-1.7B-DAPO"
+        ],
+        "metric": [
+          "pass@1"
+        ],
+        "setting": [],
+        "population": [
+          "aime_two_years"
+        ],
+        "qualifier": [
+          "k=100"
+        ],
+        "direction": []
+      },
+      "parsed_roles": {
+        "before": {
+          "lower": "25.3",
+          "upper": "39.3",
+          "unit": "score",
+          "form": "range"
+        },
+        "after": {
+          "lower": "31.0",
+          "upper": "36.3",
+          "unit": "score",
+          "form": "range"
+        }
+      }
+    },
+    {
+      "name": "HAMMER omitted dataset pair",
+      "source": "hammer",
+      "expected": "review",
+      "reviewed": false,
+      "note": null,
+      "expected_supported": null,
+      "claim": {
+        "text": "Qwen3-1.7B-DAPO pass@1 ranged from 25.3–36.3 to 31.0–39.3.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_1",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nHAMMER: Hamiltonian Curiosity Augmented Large Language Model Reinforcement\nTable 1: Main results comparing baseline (B) and HAMMER (H), with k=100 for AIME 2024/2025 and AMC 2023, k=32 for Olympiad, and \\mathbf{Diff}=\\mathbf{Avg}_{\\text{H}}-\\mathbf{Avg}_{\\text{B}} .\nMethod: Qwen3-1.7B-DAPO; Dataset: AIME 2024; pass@1 / B: 36.3; pass@1 / H: 39.3; pass@10 / B: 61.0; pass@10 / H: 64.7; pass@k / B: 69.0; pass@k / H: 74.3; cons@k / B: 43.3; cons@k / H: 43.3; Avg. / B: 52.4; Avg. / H: 55.4; Diff.: +3.0"
+          },
+          {
+            "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_2",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nHAMMER: Hamiltonian Curiosity Augmented Large Language Model Reinforcement\nTable 1: Main results comparing baseline (B) and HAMMER (H), with k=100 for AIME 2024/2025 and AMC 2023, k=32 for Olympiad, and \\mathbf{Diff}=\\mathbf{Avg}_{\\text{H}}-\\mathbf{Avg}_{\\text{B}} .\nMethod: Qwen3-1.7B-DAPO; Dataset: AIME 2025; pass@1 / B: 25.3; pass@1 / H: 31.0; pass@10 / B: 39.7; pass@10 / H: 48.7; pass@k / B: 56.3; pass@k / H: 59.7; cons@k / B: 30.0; cons@k / H: 30.0; Avg. / B: 37.8; Avg. / H: 42.3; Diff.: +4.5"
+          }
+        ]
+      },
+      "cohort": "new source-grounded draft",
+      "baseline": "review",
+      "baseline_detail": {
+        "status": "uncertain",
+        "contradictions": [],
+        "uncertain": [
+          "context_unconfirmed",
+          "metric_unconfirmed",
+          "subject_unconfirmed"
+        ],
+        "mentions": [
+          {
+            "number": "1.7",
+            "status": "uncertain",
+            "issues": [
+              "metric_unconfirmed"
+            ],
+            "subject": null,
+            "metric": "pass@1",
+            "unit": "billion"
+          },
+          {
+            "number": "1",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed",
+              "metric_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "Qwen3-1.7B-DAPO",
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "25.3",
+            "status": "uncertain",
+            "issues": [
+              "subject_unconfirmed"
+            ],
+            "subject": "Qwen3-1.7B-DAPO",
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "36.3",
+            "status": "uncertain",
+            "issues": [
+              "subject_unconfirmed"
+            ],
+            "subject": "Qwen3-1.7B-DAPO",
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "31.0",
+            "status": "uncertain",
+            "issues": [
+              "subject_unconfirmed"
+            ],
+            "subject": "Qwen3-1.7B-DAPO",
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "39.3",
+            "status": "uncertain",
+            "issues": [
+              "subject_unconfirmed"
+            ],
+            "subject": "Qwen3-1.7B-DAPO",
+            "metric": "pass@1",
+            "unit": null
+          }
+        ]
+      },
+      "adapter": "review",
+      "reason": "unbound population",
+      "applied": true,
+      "parsed_scope": {
+        "subject": [
+          "Qwen3-1.7B-DAPO"
+        ],
+        "metric": [
+          "pass@1"
+        ],
+        "setting": [],
+        "population": [],
+        "qualifier": [],
+        "direction": []
+      },
+      "parsed_roles": {
+        "before": {
+          "lower": "25.3",
+          "upper": "36.3",
+          "unit": "score",
+          "form": "range"
+        },
+        "after": {
+          "lower": "31.0",
+          "upper": "39.3",
+          "unit": "score",
+          "form": "range"
+        }
+      }
+    },
+    {
+      "name": "HAMMER alternate reporting condition",
+      "source": "hammer",
+      "expected": "reject",
+      "reviewed": false,
+      "note": null,
+      "expected_supported": false,
+      "claim": {
+        "text": "Qwen3-1.7B-DAPO pass@1 for AIME 2024 and AIME 2025 (k=32) increased from 25.3–36.3 to 31.0–39.3.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_1",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nHAMMER: Hamiltonian Curiosity Augmented Large Language Model Reinforcement\nTable 1: Main results comparing baseline (B) and HAMMER (H), with k=100 for AIME 2024/2025 and AMC 2023, k=32 for Olympiad, and \\mathbf{Diff}=\\mathbf{Avg}_{\\text{H}}-\\mathbf{Avg}_{\\text{B}} .\nMethod: Qwen3-1.7B-DAPO; Dataset: AIME 2024; pass@1 / B: 36.3; pass@1 / H: 39.3; pass@10 / B: 61.0; pass@10 / H: 64.7; pass@k / B: 69.0; pass@k / H: 74.3; cons@k / B: 43.3; cons@k / H: 43.3; Avg. / B: 52.4; Avg. / H: 55.4; Diff.: +3.0"
+          },
+          {
+            "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_2",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nHAMMER: Hamiltonian Curiosity Augmented Large Language Model Reinforcement\nTable 1: Main results comparing baseline (B) and HAMMER (H), with k=100 for AIME 2024/2025 and AMC 2023, k=32 for Olympiad, and \\mathbf{Diff}=\\mathbf{Avg}_{\\text{H}}-\\mathbf{Avg}_{\\text{B}} .\nMethod: Qwen3-1.7B-DAPO; Dataset: AIME 2025; pass@1 / B: 25.3; pass@1 / H: 31.0; pass@10 / B: 39.7; pass@10 / H: 48.7; pass@k / B: 56.3; pass@k / H: 59.7; cons@k / B: 30.0; cons@k / H: 30.0; Avg. / B: 37.8; Avg. / H: 42.3; Diff.: +4.5"
+          }
+        ]
+      },
+      "cohort": "new source-grounded draft",
+      "baseline": "reject",
+      "baseline_detail": {
+        "status": "contradicted",
+        "contradictions": [
+          "subject_mismatch"
+        ],
+        "uncertain": [
+          "context_unconfirmed",
+          "metric_unconfirmed",
+          "subject_unconfirmed"
+        ],
+        "mentions": [
+          {
+            "number": "1.7",
+            "status": "uncertain",
+            "issues": [
+              "metric_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "AIME 2024",
+            "metric": "pass@1",
+            "unit": "billion"
+          },
+          {
+            "number": "1",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed",
+              "metric_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "Qwen3-1.7B-DAPO",
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "2024",
+            "status": "uncertain",
+            "issues": [
+              "metric_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "Qwen3-1.7B-DAPO",
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "2025",
+            "status": "uncertain",
+            "issues": [
+              "metric_unconfirmed"
+            ],
+            "subject": null,
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "32",
+            "status": "contradicted",
+            "issues": [
+              "subject_mismatch"
+            ],
+            "subject": "AIME 2025",
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "25.3",
+            "status": "uncertain",
+            "issues": [
+              "subject_unconfirmed"
+            ],
+            "subject": "AIME 2025",
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "36.3",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "AIME 2025",
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "31.0",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "AIME 2025",
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "39.3",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "AIME 2025",
+            "metric": null,
+            "unit": null
+          }
+        ]
+      },
+      "adapter": "reject",
+      "reason": "different qualifier",
+      "applied": true,
+      "parsed_scope": {
+        "subject": [
+          "Qwen3-1.7B-DAPO"
+        ],
+        "metric": [
+          "pass@1"
+        ],
+        "setting": [],
+        "population": [
+          "aime_two_years"
+        ],
+        "qualifier": [
+          "k=32"
+        ],
+        "direction": [
+          "increase"
+        ]
+      },
+      "parsed_roles": {
+        "before": {
+          "lower": "25.3",
+          "upper": "36.3",
+          "unit": "score",
+          "form": "range"
+        },
+        "after": {
+          "lower": "31.0",
+          "upper": "39.3",
+          "unit": "score",
+          "form": "range"
+        }
+      }
+    },
+    {
+      "name": "HAMMER missing cited endpoint row",
+      "source": "hammer",
+      "expected": "review",
+      "reviewed": false,
+      "note": null,
+      "expected_supported": null,
+      "claim": {
+        "text": "Qwen3-1.7B-DAPO pass@1 for AIME 2024 and AIME 2025 (k=100) increased from 25.3–36.3 to 31.0–39.3.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_1",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nHAMMER: Hamiltonian Curiosity Augmented Large Language Model Reinforcement\nTable 1: Main results comparing baseline (B) and HAMMER (H), with k=100 for AIME 2024/2025 and AMC 2023, k=32 for Olympiad, and \\mathbf{Diff}=\\mathbf{Avg}_{\\text{H}}-\\mathbf{Avg}_{\\text{B}} .\nMethod: Qwen3-1.7B-DAPO; Dataset: AIME 2024; pass@1 / B: 36.3; pass@1 / H: 39.3; pass@10 / B: 61.0; pass@10 / H: 64.7; pass@k / B: 69.0; pass@k / H: 74.3; cons@k / B: 43.3; cons@k / H: 43.3; Avg. / B: 52.4; Avg. / H: 55.4; Diff.: +3.0"
+          }
+        ]
+      },
+      "cohort": "new source-grounded draft",
+      "baseline": "reject",
+      "baseline_detail": {
+        "status": "contradicted",
+        "contradictions": [
+          "numbers_absent",
+          "subject_mismatch"
+        ],
+        "uncertain": [
+          "context_unconfirmed",
+          "metric_unconfirmed",
+          "subject_unconfirmed"
+        ],
+        "mentions": [
+          {
+            "number": "1.7",
+            "status": "uncertain",
+            "issues": [
+              "metric_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "AIME 2024",
+            "metric": "pass@1",
+            "unit": "billion"
+          },
+          {
+            "number": "1",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed",
+              "metric_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "Qwen3-1.7B-DAPO",
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "2024",
+            "status": "uncertain",
+            "issues": [
+              "metric_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "Qwen3-1.7B-DAPO",
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "2025",
+            "status": "uncertain",
+            "issues": [
+              "metric_unconfirmed"
+            ],
+            "subject": null,
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "100",
+            "status": "contradicted",
+            "issues": [
+              "subject_mismatch"
+            ],
+            "subject": "AIME 2025",
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "25.3",
+            "status": "contradicted",
+            "issues": [
+              "numbers_absent"
+            ],
+            "subject": "AIME 2025",
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "36.3",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "AIME 2025",
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "31.0",
+            "status": "contradicted",
+            "issues": [
+              "numbers_absent"
+            ],
+            "subject": "AIME 2025",
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "39.3",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "AIME 2025",
+            "metric": null,
+            "unit": null
+          }
+        ]
+      },
+      "adapter": "review",
+      "reason": "cited output does not bind every required source span",
+      "applied": true,
+      "parsed_scope": {},
+      "parsed_roles": null
+    },
+    {
+      "name": "HAMMER both measures named",
+      "source": "hammer",
+      "expected": "review",
+      "reviewed": false,
+      "note": null,
+      "expected_supported": null,
+      "claim": {
+        "text": "Qwen3-1.7B-DAPO pass@1 and pass@10 for AIME 2024 and AIME 2025 (k=100) increased from 25.3–36.3 to 31.0–39.3.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_1",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nHAMMER: Hamiltonian Curiosity Augmented Large Language Model Reinforcement\nTable 1: Main results comparing baseline (B) and HAMMER (H), with k=100 for AIME 2024/2025 and AMC 2023, k=32 for Olympiad, and \\mathbf{Diff}=\\mathbf{Avg}_{\\text{H}}-\\mathbf{Avg}_{\\text{B}} .\nMethod: Qwen3-1.7B-DAPO; Dataset: AIME 2024; pass@1 / B: 36.3; pass@1 / H: 39.3; pass@10 / B: 61.0; pass@10 / H: 64.7; pass@k / B: 69.0; pass@k / H: 74.3; cons@k / B: 43.3; cons@k / H: 43.3; Avg. / B: 52.4; Avg. / H: 55.4; Diff.: +3.0"
+          },
+          {
+            "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_2",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nHAMMER: Hamiltonian Curiosity Augmented Large Language Model Reinforcement\nTable 1: Main results comparing baseline (B) and HAMMER (H), with k=100 for AIME 2024/2025 and AMC 2023, k=32 for Olympiad, and \\mathbf{Diff}=\\mathbf{Avg}_{\\text{H}}-\\mathbf{Avg}_{\\text{B}} .\nMethod: Qwen3-1.7B-DAPO; Dataset: AIME 2025; pass@1 / B: 25.3; pass@1 / H: 31.0; pass@10 / B: 39.7; pass@10 / H: 48.7; pass@k / B: 56.3; pass@k / H: 59.7; cons@k / B: 30.0; cons@k / H: 30.0; Avg. / B: 37.8; Avg. / H: 42.3; Diff.: +4.5"
+          }
+        ]
+      },
+      "cohort": "new source-grounded draft",
+      "baseline": "reject",
+      "baseline_detail": {
+        "status": "contradicted",
+        "contradictions": [
+          "subject_mismatch"
+        ],
+        "uncertain": [
+          "context_unconfirmed",
+          "metric_unconfirmed",
+          "subject_unconfirmed"
+        ],
+        "mentions": [
+          {
+            "number": "1.7",
+            "status": "uncertain",
+            "issues": [
+              "metric_unconfirmed"
+            ],
+            "subject": null,
+            "metric": "pass@1",
+            "unit": "billion"
+          },
+          {
+            "number": "1",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed",
+              "metric_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "Qwen3-1.7B-DAPO",
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "10",
+            "status": "uncertain",
+            "issues": [
+              "metric_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "AIME 2024",
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "2024",
+            "status": "uncertain",
+            "issues": [
+              "metric_unconfirmed"
+            ],
+            "subject": null,
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "2025",
+            "status": "uncertain",
+            "issues": [
+              "metric_unconfirmed"
+            ],
+            "subject": null,
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "100",
+            "status": "contradicted",
+            "issues": [
+              "subject_mismatch"
+            ],
+            "subject": "AIME 2025",
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "25.3",
+            "status": "uncertain",
+            "issues": [
+              "subject_unconfirmed"
+            ],
+            "subject": "AIME 2025",
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "36.3",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "AIME 2025",
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "31.0",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "AIME 2025",
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "39.3",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "AIME 2025",
+            "metric": null,
+            "unit": null
+          }
+        ]
+      },
+      "adapter": "review",
+      "reason": "multiple metric bindings",
+      "applied": true,
+      "parsed_scope": {
+        "subject": [
+          "Qwen3-1.7B-DAPO"
+        ],
+        "metric": [
+          "pass@1",
+          "pass@10"
+        ],
+        "setting": [],
+        "population": [
+          "aime_two_years"
+        ],
+        "qualifier": [
+          "k=100"
+        ],
+        "direction": [
+          "increase"
+        ]
+      },
+      "parsed_roles": {
+        "before": {
+          "lower": "25.3",
+          "upper": "36.3",
+          "unit": "score",
+          "form": "range"
+        },
+        "after": {
+          "lower": "31.0",
+          "upper": "39.3",
+          "unit": "score",
+          "form": "range"
+        }
+      }
+    },
+    {
+      "name": "HAMMER wrong reported direction",
+      "source": "hammer",
+      "expected": "reject",
+      "reviewed": false,
+      "note": null,
+      "expected_supported": false,
+      "claim": {
+        "text": "Qwen3-1.7B-DAPO pass@1 for AIME 2024 and AIME 2025 (k=100) decreased from 25.3–36.3 to 31.0–39.3.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_1",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nHAMMER: Hamiltonian Curiosity Augmented Large Language Model Reinforcement\nTable 1: Main results comparing baseline (B) and HAMMER (H), with k=100 for AIME 2024/2025 and AMC 2023, k=32 for Olympiad, and \\mathbf{Diff}=\\mathbf{Avg}_{\\text{H}}-\\mathbf{Avg}_{\\text{B}} .\nMethod: Qwen3-1.7B-DAPO; Dataset: AIME 2024; pass@1 / B: 36.3; pass@1 / H: 39.3; pass@10 / B: 61.0; pass@10 / H: 64.7; pass@k / B: 69.0; pass@k / H: 74.3; cons@k / B: 43.3; cons@k / H: 43.3; Avg. / B: 52.4; Avg. / H: 55.4; Diff.: +3.0"
+          },
+          {
+            "chunk_id": "2509.25240v1_table_0ff9b02ec9b484d0_2",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nHAMMER: Hamiltonian Curiosity Augmented Large Language Model Reinforcement\nTable 1: Main results comparing baseline (B) and HAMMER (H), with k=100 for AIME 2024/2025 and AMC 2023, k=32 for Olympiad, and \\mathbf{Diff}=\\mathbf{Avg}_{\\text{H}}-\\mathbf{Avg}_{\\text{B}} .\nMethod: Qwen3-1.7B-DAPO; Dataset: AIME 2025; pass@1 / B: 25.3; pass@1 / H: 31.0; pass@10 / B: 39.7; pass@10 / H: 48.7; pass@k / B: 56.3; pass@k / H: 59.7; cons@k / B: 30.0; cons@k / H: 30.0; Avg. / B: 37.8; Avg. / H: 42.3; Diff.: +4.5"
+          }
+        ]
+      },
+      "cohort": "new source-grounded draft",
+      "baseline": "reject",
+      "baseline_detail": {
+        "status": "contradicted",
+        "contradictions": [
+          "subject_mismatch"
+        ],
+        "uncertain": [
+          "context_unconfirmed",
+          "metric_unconfirmed",
+          "subject_unconfirmed"
+        ],
+        "mentions": [
+          {
+            "number": "1.7",
+            "status": "uncertain",
+            "issues": [
+              "metric_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "AIME 2024",
+            "metric": "pass@1",
+            "unit": "billion"
+          },
+          {
+            "number": "1",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed",
+              "metric_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "Qwen3-1.7B-DAPO",
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "2024",
+            "status": "uncertain",
+            "issues": [
+              "metric_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "Qwen3-1.7B-DAPO",
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "2025",
+            "status": "uncertain",
+            "issues": [
+              "metric_unconfirmed"
+            ],
+            "subject": null,
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "100",
+            "status": "contradicted",
+            "issues": [
+              "subject_mismatch"
+            ],
+            "subject": "AIME 2025",
+            "metric": "pass@1",
+            "unit": null
+          },
+          {
+            "number": "25.3",
+            "status": "uncertain",
+            "issues": [
+              "subject_unconfirmed"
+            ],
+            "subject": "AIME 2025",
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "36.3",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "AIME 2025",
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "31.0",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "AIME 2025",
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "39.3",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "AIME 2025",
+            "metric": null,
+            "unit": null
+          }
+        ]
+      },
+      "adapter": "reject",
+      "reason": "different direction",
+      "applied": true,
+      "parsed_scope": {
+        "subject": [
+          "Qwen3-1.7B-DAPO"
+        ],
+        "metric": [
+          "pass@1"
+        ],
+        "setting": [],
+        "population": [
+          "aime_two_years"
+        ],
+        "qualifier": [
+          "k=100"
+        ],
+        "direction": [
+          "decrease"
+        ]
+      },
+      "parsed_roles": {
+        "before": {
+          "lower": "25.3",
+          "upper": "36.3",
+          "unit": "score",
+          "form": "range"
+        },
+        "after": {
+          "lower": "31.0",
+          "upper": "39.3",
+          "unit": "score",
+          "form": "range"
+        }
+      }
+    },
+    {
+      "name": "AUC closed intervals",
+      "source": "auc",
+      "expected": "accept",
+      "reviewed": false,
+      "note": null,
+      "expected_supported": true,
+      "claim": {
+        "text": "ACDC AUC across IOI and Docstring changed from [0.50,0.50] to [0.92,0.95].",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2604.00324v1_table_99d7ef000b02b530_1",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Persistent Vulnerability of Aligned AI Systems\nTable A.1 : AUC results for random baseline experiments\nTask: IOI; ACDC AUC: 0.95; Random AUC: 0.50"
+          },
+          {
+            "chunk_id": "2604.00324v1_table_99d7ef000b02b530_2",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Persistent Vulnerability of Aligned AI Systems\nTable A.1 : AUC results for random baseline experiments\nTask: Docstring; ACDC AUC: 0.92; Random AUC: 0.50"
+          }
+        ]
+      },
+      "cohort": "new source-grounded draft",
+      "baseline": "reject",
+      "baseline_detail": {
+        "status": "contradicted",
+        "contradictions": [
+          "subject_mismatch"
+        ],
+        "uncertain": [
+          "subject_unconfirmed"
+        ],
+        "mentions": [
+          {
+            "number": "0.50",
+            "status": "uncertain",
+            "issues": [
+              "subject_unconfirmed"
+            ],
+            "subject": "Docstring",
+            "metric": "auc",
+            "unit": null
+          },
+          {
+            "number": "0.50",
+            "status": "uncertain",
+            "issues": [
+              "subject_unconfirmed"
+            ],
+            "subject": "Docstring",
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "0.92",
+            "status": "contradicted",
+            "issues": [
+              "subject_mismatch"
+            ],
+            "subject": "Docstring",
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "0.95",
+            "status": "contradicted",
+            "issues": [
+              "subject_mismatch"
+            ],
+            "subject": "Docstring",
+            "metric": null,
+            "unit": null
+          }
+        ]
+      },
+      "adapter": "accept",
+      "reason": "both role values and bound scope agree",
+      "applied": true,
+      "parsed_scope": {
+        "subject": [
+          "ACDC"
+        ],
+        "metric": [
+          "auc"
+        ],
+        "population": [
+          "ioi_docstring"
+        ],
+        "direction": []
+      },
+      "parsed_roles": {
+        "before": {
+          "lower": "0.50",
+          "upper": "0.50",
+          "unit": "proportion",
+          "form": "range"
+        },
+        "after": {
+          "lower": "0.92",
+          "upper": "0.95",
+          "unit": "proportion",
+          "form": "range"
+        }
+      }
+    },
+    {
+      "name": "AUC consistent scale conversion",
+      "source": "auc",
+      "expected": "accept",
+      "reviewed": false,
+      "note": null,
+      "expected_supported": true,
+      "claim": {
+        "text": "ACDC AUC across IOI and Docstring changed from 50–50% to 92–95%.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2604.00324v1_table_99d7ef000b02b530_1",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Persistent Vulnerability of Aligned AI Systems\nTable A.1 : AUC results for random baseline experiments\nTask: IOI; ACDC AUC: 0.95; Random AUC: 0.50"
+          },
+          {
+            "chunk_id": "2604.00324v1_table_99d7ef000b02b530_2",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Persistent Vulnerability of Aligned AI Systems\nTable A.1 : AUC results for random baseline experiments\nTask: Docstring; ACDC AUC: 0.92; Random AUC: 0.50"
+          }
+        ]
+      },
+      "cohort": "new source-grounded draft",
+      "baseline": "reject",
+      "baseline_detail": {
+        "status": "contradicted",
+        "contradictions": [
+          "numbers_absent"
+        ],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "50",
+            "status": "contradicted",
+            "issues": [
+              "numbers_absent"
+            ],
+            "subject": "Docstring",
+            "metric": "auc",
+            "unit": null
+          },
+          {
+            "number": "50",
+            "status": "contradicted",
+            "issues": [
+              "numbers_absent"
+            ],
+            "subject": "Docstring",
+            "metric": null,
+            "unit": "percent"
+          },
+          {
+            "number": "92",
+            "status": "contradicted",
+            "issues": [
+              "numbers_absent"
+            ],
+            "subject": "Docstring",
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "95",
+            "status": "contradicted",
+            "issues": [
+              "numbers_absent"
+            ],
+            "subject": "Docstring",
+            "metric": null,
+            "unit": "percent"
+          }
+        ]
+      },
+      "adapter": "accept",
+      "reason": "both role values and bound scope agree",
+      "applied": true,
+      "parsed_scope": {
+        "subject": [
+          "ACDC"
+        ],
+        "metric": [
+          "auc"
+        ],
+        "population": [
+          "ioi_docstring"
+        ],
+        "direction": []
+      },
+      "parsed_roles": {
+        "before": {
+          "lower": "50",
+          "upper": "50",
+          "unit": "percent",
+          "form": "range"
+        },
+        "after": {
+          "lower": "92",
+          "upper": "95",
+          "unit": "percent",
+          "form": "range"
+        }
+      }
+    },
+    {
+      "name": "AUC levels expressed as a percentage-point delta",
+      "source": "auc",
+      "expected": "reject",
+      "reviewed": false,
+      "note": null,
+      "expected_supported": false,
+      "claim": {
+        "text": "ACDC AUC across IOI and Docstring changed from 50–50 percentage points to 92–95 percentage points.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2604.00324v1_table_99d7ef000b02b530_1",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Persistent Vulnerability of Aligned AI Systems\nTable A.1 : AUC results for random baseline experiments\nTask: IOI; ACDC AUC: 0.95; Random AUC: 0.50"
+          },
+          {
+            "chunk_id": "2604.00324v1_table_99d7ef000b02b530_2",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Persistent Vulnerability of Aligned AI Systems\nTable A.1 : AUC results for random baseline experiments\nTask: Docstring; ACDC AUC: 0.92; Random AUC: 0.50"
+          }
+        ]
+      },
+      "cohort": "new source-grounded draft",
+      "baseline": "reject",
+      "baseline_detail": {
+        "status": "contradicted",
+        "contradictions": [
+          "numbers_absent"
+        ],
+        "uncertain": [],
+        "mentions": [
+          {
+            "number": "50",
+            "status": "contradicted",
+            "issues": [
+              "numbers_absent"
+            ],
+            "subject": "Docstring",
+            "metric": "auc",
+            "unit": null
+          },
+          {
+            "number": "50",
+            "status": "contradicted",
+            "issues": [
+              "numbers_absent"
+            ],
+            "subject": "Docstring",
+            "metric": null,
+            "unit": "pp"
+          },
+          {
+            "number": "92",
+            "status": "contradicted",
+            "issues": [
+              "numbers_absent"
+            ],
+            "subject": "Docstring",
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "95",
+            "status": "contradicted",
+            "issues": [
+              "numbers_absent"
+            ],
+            "subject": "Docstring",
+            "metric": null,
+            "unit": "pp"
+          }
+        ]
+      },
+      "adapter": "reject",
+      "reason": "before value, shape, or unit differs",
+      "applied": true,
+      "parsed_scope": {
+        "subject": [
+          "ACDC"
+        ],
+        "metric": [
+          "auc"
+        ],
+        "population": [
+          "ioi_docstring"
+        ],
+        "direction": []
+      },
+      "parsed_roles": {
+        "before": {
+          "lower": "50",
+          "upper": "50",
+          "unit": "percentage_points",
+          "form": "range"
+        },
+        "after": {
+          "lower": "92",
+          "upper": "95",
+          "unit": "percentage_points",
+          "form": "range"
+        }
+      }
+    },
+    {
+      "name": "AUC different task cohort",
+      "source": "auc",
+      "expected": "reject",
+      "reviewed": false,
+      "note": null,
+      "expected_supported": false,
+      "claim": {
+        "text": "ACDC AUC across IOI and Greater-Than changed from [0.50,0.50] to [0.92,0.95].",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2604.00324v1_table_99d7ef000b02b530_1",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Persistent Vulnerability of Aligned AI Systems\nTable A.1 : AUC results for random baseline experiments\nTask: IOI; ACDC AUC: 0.95; Random AUC: 0.50"
+          },
+          {
+            "chunk_id": "2604.00324v1_table_99d7ef000b02b530_2",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Persistent Vulnerability of Aligned AI Systems\nTable A.1 : AUC results for random baseline experiments\nTask: Docstring; ACDC AUC: 0.92; Random AUC: 0.50"
+          }
+        ]
+      },
+      "cohort": "new source-grounded draft",
+      "baseline": "reject",
+      "baseline_detail": {
+        "status": "contradicted",
+        "contradictions": [
+          "subject_mismatch"
+        ],
+        "uncertain": [
+          "subject_unconfirmed"
+        ],
+        "mentions": [
+          {
+            "number": "0.50",
+            "status": "uncertain",
+            "issues": [
+              "subject_unconfirmed"
+            ],
+            "subject": "Greater-Than",
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "0.50",
+            "status": "uncertain",
+            "issues": [
+              "subject_unconfirmed"
+            ],
+            "subject": "Greater-Than",
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "0.92",
+            "status": "contradicted",
+            "issues": [
+              "subject_mismatch"
+            ],
+            "subject": "Greater-Than",
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "0.95",
+            "status": "contradicted",
+            "issues": [
+              "subject_mismatch"
+            ],
+            "subject": "Greater-Than",
+            "metric": null,
+            "unit": null
+          }
+        ]
+      },
+      "adapter": "reject",
+      "reason": "different population",
+      "applied": true,
+      "parsed_scope": {
+        "subject": [
+          "ACDC"
+        ],
+        "metric": [
+          "auc"
+        ],
+        "population": [
+          "ioi_greater_than"
+        ],
+        "direction": []
+      },
+      "parsed_roles": {
+        "before": {
+          "lower": "0.50",
+          "upper": "0.50",
+          "unit": "proportion",
+          "form": "range"
+        },
+        "after": {
+          "lower": "0.92",
+          "upper": "0.95",
+          "unit": "proportion",
+          "form": "range"
+        }
+      }
+    },
+    {
+      "name": "AUC one comparison with two possible cohorts",
+      "source": "auc",
+      "expected": "review",
+      "reviewed": false,
+      "note": null,
+      "expected_supported": null,
+      "claim": {
+        "text": "ACDC AUC for IOI and Docstring or IOI and Greater-Than changed from [0.50,0.50] to [0.92,0.95].",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2604.00324v1_table_99d7ef000b02b530_1",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Persistent Vulnerability of Aligned AI Systems\nTable A.1 : AUC results for random baseline experiments\nTask: IOI; ACDC AUC: 0.95; Random AUC: 0.50"
+          },
+          {
+            "chunk_id": "2604.00324v1_table_99d7ef000b02b530_2",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Persistent Vulnerability of Aligned AI Systems\nTable A.1 : AUC results for random baseline experiments\nTask: Docstring; ACDC AUC: 0.92; Random AUC: 0.50"
+          }
+        ]
+      },
+      "cohort": "new source-grounded draft",
+      "baseline": "reject",
+      "baseline_detail": {
+        "status": "contradicted",
+        "contradictions": [
+          "subject_mismatch"
+        ],
+        "uncertain": [
+          "context_unconfirmed",
+          "subject_unconfirmed"
+        ],
+        "mentions": [
+          {
+            "number": "0.50",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "Greater-Than",
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "0.50",
+            "status": "uncertain",
+            "issues": [
+              "context_unconfirmed",
+              "subject_unconfirmed"
+            ],
+            "subject": "Greater-Than",
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "0.92",
+            "status": "contradicted",
+            "issues": [
+              "subject_mismatch"
+            ],
+            "subject": "Greater-Than",
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "0.95",
+            "status": "contradicted",
+            "issues": [
+              "subject_mismatch"
+            ],
+            "subject": "Greater-Than",
+            "metric": null,
+            "unit": null
+          }
+        ]
+      },
+      "adapter": "review",
+      "reason": "multiple population bindings",
+      "applied": true,
+      "parsed_scope": {
+        "subject": [
+          "ACDC"
+        ],
+        "metric": [
+          "auc"
+        ],
+        "population": [
+          "ioi_docstring",
+          "ioi_greater_than"
+        ],
+        "direction": []
+      },
+      "parsed_roles": {
+        "before": {
+          "lower": "0.50",
+          "upper": "0.50",
+          "unit": "proportion",
+          "form": "range"
+        },
+        "after": {
+          "lower": "0.92",
+          "upper": "0.95",
+          "unit": "proportion",
+          "form": "range"
+        }
+      }
+    },
+    {
+      "name": "AUC out-of-grammar inequality",
+      "source": "auc",
+      "expected": "review",
+      "reviewed": false,
+      "note": null,
+      "expected_supported": null,
+      "claim": {
+        "text": "ACDC AUC across IOI and Docstring changed from [0.50,0.50] to under 0.95.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2604.00324v1_table_99d7ef000b02b530_1",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Persistent Vulnerability of Aligned AI Systems\nTable A.1 : AUC results for random baseline experiments\nTask: IOI; ACDC AUC: 0.95; Random AUC: 0.50"
+          },
+          {
+            "chunk_id": "2604.00324v1_table_99d7ef000b02b530_2",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Persistent Vulnerability of Aligned AI Systems\nTable A.1 : AUC results for random baseline experiments\nTask: Docstring; ACDC AUC: 0.92; Random AUC: 0.50"
+          }
+        ]
+      },
+      "cohort": "new source-grounded draft",
+      "baseline": "reject",
+      "baseline_detail": {
+        "status": "contradicted",
+        "contradictions": [
+          "subject_mismatch"
+        ],
+        "uncertain": [
+          "subject_unconfirmed"
+        ],
+        "mentions": [
+          {
+            "number": "0.50",
+            "status": "uncertain",
+            "issues": [
+              "subject_unconfirmed"
+            ],
+            "subject": "Docstring",
+            "metric": "auc",
+            "unit": null
+          },
+          {
+            "number": "0.50",
+            "status": "uncertain",
+            "issues": [
+              "subject_unconfirmed"
+            ],
+            "subject": "Docstring",
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "0.95",
+            "status": "contradicted",
+            "issues": [
+              "subject_mismatch"
+            ],
+            "subject": "Docstring",
+            "metric": null,
+            "unit": null
+          }
+        ]
+      },
+      "adapter": "review",
+      "reason": "unmapped claim qualifier",
+      "applied": true,
+      "parsed_scope": {},
+      "parsed_roles": null
+    },
+    {
+      "name": "AUC source-preserving wording outside grammar",
+      "source": "auc",
+      "expected": "review",
+      "reviewed": false,
+      "note": "Supported prose, but an unsupported parse form; remains a review referral.",
+      "expected_supported": true,
+      "claim": {
+        "text": "ACDC AUC across IOI and Docstring was 0.50 for both tasks at baseline; the ACDC scores spanned 0.92–0.95.",
+        "kind": "finding",
+        "support": [
+          {
+            "chunk_id": "2604.00324v1_table_99d7ef000b02b530_1",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Persistent Vulnerability of Aligned AI Systems\nTable A.1 : AUC results for random baseline experiments\nTask: IOI; ACDC AUC: 0.95; Random AUC: 0.50"
+          },
+          {
+            "chunk_id": "2604.00324v1_table_99d7ef000b02b530_2",
+            "quote": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Persistent Vulnerability of Aligned AI Systems\nTable A.1 : AUC results for random baseline experiments\nTask: Docstring; ACDC AUC: 0.92; Random AUC: 0.50"
+          }
+        ]
+      },
+      "cohort": "new source-grounded draft",
+      "baseline": "reject",
+      "baseline_detail": {
+        "status": "contradicted",
+        "contradictions": [
+          "subject_mismatch"
+        ],
+        "uncertain": [
+          "subject_unconfirmed"
+        ],
+        "mentions": [
+          {
+            "number": "0.50",
+            "status": "uncertain",
+            "issues": [
+              "subject_unconfirmed"
+            ],
+            "subject": "Docstring",
+            "metric": "auc",
+            "unit": null
+          },
+          {
+            "number": "0.92",
+            "status": "contradicted",
+            "issues": [
+              "subject_mismatch"
+            ],
+            "subject": "ACDC",
+            "metric": null,
+            "unit": null
+          },
+          {
+            "number": "0.95",
+            "status": "contradicted",
+            "issues": [
+              "subject_mismatch"
+            ],
+            "subject": "ACDC",
+            "metric": null,
+            "unit": null
+          }
+        ]
+      },
+      "adapter": "review",
+      "reason": "comparison form unsupported",
+      "applied": true,
+      "parsed_scope": {
+        "subject": [
+          "ACDC"
+        ],
+        "metric": [
+          "auc"
+        ],
+        "population": [
+          "ioi_docstring"
+        ],
+        "direction": []
+      },
+      "parsed_roles": null
+    }
+  ]
+}

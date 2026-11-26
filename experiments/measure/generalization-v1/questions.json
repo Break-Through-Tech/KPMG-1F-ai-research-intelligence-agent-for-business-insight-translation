@@ -1,0 +1,82 @@
+[
+  {
+    "id": "G01",
+    "text": "How did the Original and Continual Pretrained models compare on chabsa F1 and the overall metric in the Japanese finance study's main results table?"
+  },
+  {
+    "id": "G02",
+    "text": "What weakness do the SelfScore authors acknowledge about using language models to judge response helpfulness and difficulty?"
+  },
+  {
+    "id": "G03",
+    "text": "How does QTree represent what a coverage-conditioned request should and should not discuss, and how large is the dataset?"
+  },
+  {
+    "id": "G04",
+    "text": "On LoCoMo's Recall@5 retrieval test, what were the multi-hop and adversarial results for the DPR baseline and MemInsight's Llama v3 Priority variant? Which did better in each category?"
+  },
+  {
+    "id": "G05",
+    "text": "In SWRouter's interference experiment, how did top-1 and top-3 recall differ with one versus three unrelated turns inserted?"
+  },
+  {
+    "id": "G06",
+    "text": "How did the Narrative Frames authors build their taxonomy, and how many frames resulted?"
+  },
+  {
+    "id": "G07",
+    "text": "What measured reduction in real-world AI incidents does the rapid tertiary review of governance principles attribute to adoption of its most cited frameworks?"
+  },
+  {
+    "id": "G08",
+    "text": "Order-preserving RAG reports beating a full long-context input, while AffectAgent's Rewrite-Retrieve-Read baseline trails its no-retrieval setup. What were the two AffectAgent-study means, and how can both studies' results be true?"
+  },
+  {
+    "id": "G09",
+    "text": "What percentage of surveyed patients already knew that an autonomous diagnostic agent had made their decision, according to the sub-Saharan Africa study itself?"
+  },
+  {
+    "id": "G10",
+    "text": "Which Natural Questions formats did the context-faithfulness experiment leave out, and why should its findings be applied cautiously to generative QA?"
+  },
+  {
+    "id": "G11",
+    "text": "In SimGRAG's error analysis, how frequently did the query-to-pattern and pattern-to-subgraph steps fail on MetaQA 2-hop and FactKG?"
+  },
+  {
+    "id": "G12",
+    "text": "When prompt-guided image prefiltering reports lower bitrate at unchanged accuracy, what downstream task does that evidence cover and what broader conclusion should a reader avoid?"
+  },
+  {
+    "id": "G13",
+    "text": "What collaboration bottleneck does the organized embodied-agent study try to address, and what does the Blocks World study add to help agents coordinate?"
+  },
+  {
+    "id": "G14",
+    "text": "The consulting disclosure experiment reports a benefit from mandatory GPT-use disclosure but no significant reduction in total agency costs. How do the authors reconcile those findings?"
+  },
+  {
+    "id": "G15",
+    "text": "How much better or worse did the same agents perform in Orak when given the full, uncurated game state instead of the structured text observations?"
+  },
+  {
+    "id": "G16",
+    "text": "How do the hardware accelerator survey and DP-MemArc tackle efficiency at different stages, and what other requirement does DP-MemArc explicitly address?"
+  },
+  {
+    "id": "G17",
+    "text": "What are the four competencies AncientBench measures, and what kind of Chinese source material was underserved by earlier benchmarks?"
+  },
+  {
+    "id": "G18",
+    "text": "What does the SEFORA dataset pair with student drafts, and how many drafts and instructor annotations does it contain?"
+  },
+  {
+    "id": "G19",
+    "text": "How does the CREWS early-warning finance study use agents differently from the AI Economist Agent study? Identify the role of evidence and the source of quantitative outputs in each."
+  },
+  {
+    "id": "G20",
+    "text": "How do the OpenMined external-scrutiny article and the customizable ethical guardrails article address different points of control in AI governance?"
+  }
+]

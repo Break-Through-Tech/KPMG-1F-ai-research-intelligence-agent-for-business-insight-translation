@@ -1,0 +1,1627 @@
+{
+ "mode": "standard",
+ "question": "A video platform needs safety moderation for a multimodal assistant at scale. How does PGuard perform on image-text safety, how does a two-tier setup with an external guard perform and what does it save, what memory does PGuard need, and what overhead should the platform expect on its own serving stack?",
+ "summary": {
+  "status": "ok",
+  "claims": [
+   {
+    "text": "On multimodal query safety, PGuard-ema (Qwen3.5-9B) achieved the highest average F_{1}, 0.741, versus 0.638 for HiddenDetect and 0.474 for Llama Guard 4. HiddenDetect remained stronger on MM-SafetyBench and FigStep.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02791v2_c0028",
+      "quote": "In Table 3 , PGuard -ema (Qwen3.5-9B) achieves the highest average query F_{1} of 0.741, compared with 0.638 for HiddenDetect and 0.474 for Llama Guard 4. HiddenDetect remains stronger on MM-SafetyBench and FigStep."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02791v2_c0028"
+    ],
+    "draft_index": 0,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The quotes state all query scores and the benchmark-specific qualification."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "On multimodal response safety, PGuard-gru led the evaluated methods with an average F_{1} of 0.798.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02791v2_c0028",
+      "quote": "The same training recipe applies to multimodal backbones, which fuse visual and textual information before PGuard extracts their representations."
+     },
+     {
+      "chunk_id": "2611.02791v2_c0028",
+      "quote": "For responses, PGuard -gru leads the evaluated methods with an average F_{1} of 0.798. Multimodal safety evaluation."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02791v2_c0028"
+    ],
+    "draft_index": 1,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The response result is explicitly within the multimodal evaluation."
+     },
+     "number_grounding": "uncertain",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "The two-tier cascade scores all traffic with native PGuard and escalates only flagged content to an external reasoning guardrail for fine-grained adjudication.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02791v2_c0016",
+      "quote": "PGuard also supports a two-tier cascade in which the native variant performs token-level scoring on all traffic, while only flagged content is escalated to an external reasoning guardrail for fine-grained adjudication (Section 4.8 )."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02791v2_c0016"
+    ],
+    "draft_index": 2,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "Accurately describes the requested cascade, but supplies no measured performance or savings."
+     },
+     "number_grounding": "no_numbers",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "The two-tier evaluation used S-Eval-Jailbreak, with Qwen3.5-Flash as both PGuard backbone and response generator. Regenerated responses and jailbreak prompts selected to increase risky responses provided a stress test approximating risky online traffic.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02791v2_c0039",
+      "quote": "Table 16 evaluates the two-tier deployment on S-Eval-Jailbreak, with Qwen3.5-Flash serving as both the PGuard backbone and the response generator. We regenerate the responses and cascade PGuard with an external reasoning-based guardrail. Jailbreak prompts are selected to increase the occurrence of risky responses, providing a stress test that approximates risky online traffic"
+     }
+    ],
+    "chunk_ids": [
+     "2611.02791v2_c0039"
+    ],
+    "draft_index": 3,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "All evaluation conditions and the qualified traffic approximation are explicitly stated."
+     },
+     "number_grounding": "no_numbers",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "PGuard guard weights require 0.03–0.41 GiB per GPU. Peak workspace remains below 0.5 GiB per GPU for stateless PGuard and below 3.1 GiB per GPU for EMA-attention.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02791v2_c0038",
+      "quote": "Table 15 reports guard weights of 0.03–0.41 GiB per GPU, together with per-request state and peak workspace. Peak workspace remains below 0.5 GiB per GPU for the stateless variant and below 3.1 GiB per GPU for EMA-attention."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02791v2_c0038"
+    ],
+    "draft_index": 4,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "Weight and workspace figures retain the source’s per-GPU denominators and variant distinctions."
+     },
+     "number_grounding": "grounded",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "Sequence variants also maintain persistent state tensors in GPU memory for each active request, with a dedicated slot throughout the request's lifetime.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02791v2_c0017",
+      "quote": "For sequence-based variants, the runtime maintains persistent state tensors for each active request in GPU memory.\nEach request is assigned a dedicated slot throughout its lifetime, enabling state retrieval independently of changes in batch composition introduced by the scheduler."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02791v2_c0017"
+    ],
+    "draft_index": 5,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The quote establishes persistent GPU state and lifetime slots for active requests."
+     },
+     "number_grounding": "no_numbers",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "With each backbone's best combination of optimizations, stateless PGuard's maximum TTFT and TPOT increases were 1.54% and 1.78%, respectively; output throughput dropped by at most 1.73%.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02791v2_c0036",
+      "quote": "Table 11 reports TTFT, TPOT, and output throughput changes with each backbone’s best combination of optimizations across three backbones and input lengths of 2048–8192 tokens."
+     },
+     {
+      "chunk_id": "2611.02791v2_c0036",
+      "quote": "For the stateless variant, the maxima are 1.54% and 1.78%, respectively; for EMA-attention, they are 3.56% and 2.40%."
+     },
+     {
+      "chunk_id": "2611.02791v2_c0036",
+      "quote": "Among the available measurements, the largest increases are 3.56% for TTFT and 3.07% for TPOT."
+     },
+     {
+      "chunk_id": "2611.02791v2_c0036",
+      "quote": "Output throughput drops by at most 1.73% for the stateless variant and 2.26% for EMA-attention."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02791v2_c0036"
+    ],
+    "draft_index": 7,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The quoted metric ordering and stateless maxima support every reported percentage."
+     },
+     "number_grounding": "uncertain",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "With each backbone's best combination of optimizations, EMA-attention's maximum TTFT and TPOT increases were 3.56% and 2.40%, respectively; output throughput dropped by at most 2.26%.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02791v2_c0036",
+      "quote": "Table 11 reports TTFT, TPOT, and output throughput changes with each backbone’s best combination of optimizations across three backbones and input lengths of 2048–8192 tokens."
+     },
+     {
+      "chunk_id": "2611.02791v2_c0036",
+      "quote": "Among the available measurements, the largest increases are 3.56% for TTFT and 3.07% for TPOT. For the stateless variant, the maxima are 1.54% and 1.78%, respectively; for EMA-attention, they are 3.56% and 2.40%."
+     },
+     {
+      "chunk_id": "2611.02791v2_c0036",
+      "quote": "Output throughput drops by at most 1.73% for the stateless variant and 2.26% for EMA-attention."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02791v2_c0036"
+    ],
+    "draft_index": 8,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The quotes explicitly establish EMA-attention latency and throughput maxima under the stated optimizations."
+     },
+     "number_grounding": "uncertain",
+     "flags_resolved": []
+    }
+   },
+   {
+    "text": "With each backbone's best combination of optimizations, GRU's maximum TTFT increase was 1.38% and maximum TPOT increase was 3.07%.",
+    "kind": "finding",
+    "support": [
+     {
+      "chunk_id": "2611.02791v2_c0036",
+      "quote": "Table 11 reports TTFT, TPOT, and output throughput changes with each backbone’s best combination of optimizations across three backbones and input lengths of 2048–8192 tokens."
+     },
+     {
+      "chunk_id": "2611.02791v2_c0036",
+      "quote": "Among the available measurements, the largest increases are 3.56% for TTFT and 3.07% for TPOT."
+     },
+     {
+      "chunk_id": "2611.02791v2_c0036",
+      "quote": "The GRU variant has maxima of 1.38% and 3.07%."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02791v2_c0036"
+    ],
+    "draft_index": 9,
+    "verification": {
+     "review": {
+      "quotes_entail": true,
+      "reason": "The quoted metric ordering establishes the two GRU latency maxima."
+     },
+     "number_grounding": "uncertain",
+     "flags_resolved": []
+    }
+   }
+  ],
+  "held_claims": [
+   {
+    "draft_index": 6,
+    "kind": "finding",
+    "text": "Serving overhead was measured with SGLang on L20Z GPUs at concurrency 8 and 256 requests per scenario, using input lengths of 2048, 4096, or 8192 tokens and output length 512 tokens. Each configuration was paired with the bare backbone on the same node, alternating order across 4 rounds.",
+    "reasons": [
+     "P5: unresolved number-attribution flag(s): 8 subject_mismatch"
+    ]
+   },
+   {
+    "draft_index": 10,
+    "kind": "finding",
+    "text": "In the multimodal cost–accuracy evaluation, PGuard-ema achieved 0.797 macro F_{1} at 1.019 \\times normalized serving cost, or 1.9% additional serving cost. Cost was measured with SGLang on the same GPU under saturation relative to the bare backbone.",
+    "reasons": [
+     "P5: unresolved number-attribution flag(s): 0.797 metric_mismatch"
+    ]
+   },
+   {
+    "draft_index": 11,
+    "kind": "interpretation",
+    "text": "For a platform choosing a serving budget, these measurements support benchmarking the integration on its own stack before committing to an overhead target: the reported evaluation uses SGLang, and integration costs include kernel launches, state updates, and host–device synchronization.",
+    "reasons": [
+     "interpretation gate: G4"
+    ]
+   }
+  ],
+  "limitation_support": [
+   {
+    "text": "The cascade evaluation is a stress test using regenerated responses and jailbreak prompts selected to increase risky responses.",
+    "support": [
+     {
+      "chunk_id": "2611.02791v2_c0039",
+      "quote": "We regenerate the responses and cascade PGuard with an external reasoning-based guardrail. Jailbreak prompts are selected to increase the occurrence of risky responses, providing a stress test that approximates risky online traffic"
+     }
+    ],
+    "chunk_ids": [
+     "2611.02791v2_c0039"
+    ]
+   },
+   {
+    "text": "Sequence variants require persistent GPU state for each active request, in addition to guard weights and workspace.",
+    "support": [
+     {
+      "chunk_id": "2611.02791v2_c0017",
+      "quote": "For sequence-based variants, the runtime maintains persistent state tensors for each active request in GPU memory."
+     },
+     {
+      "chunk_id": "2611.02791v2_c0038",
+      "quote": "Table 15 reports guard weights of 0.03–0.41 GiB per GPU, together with per-request state and peak workspace."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02791v2_c0017",
+     "2611.02791v2_c0038"
+    ]
+   },
+   {
+    "text": "Reported serving measurements use SGLang on L20Z GPUs; vLLM adaptation was still underway.",
+    "support": [
+     {
+      "chunk_id": "2611.02791v2_c0036",
+      "quote": "We measure the serving cost of PGuard with SGLang on L20Z GPUs."
+     },
+     {
+      "chunk_id": "2611.02791v2_c0042",
+      "quote": "We are also extending the integration to vLLM, with adaptation work currently underway."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02791v2_c0036",
+     "2611.02791v2_c0042"
+    ]
+   },
+   {
+    "text": "The jailbreak evaluation uses static benchmarks and does not establish robustness against adaptive attacks involving multi-turn interactions.",
+    "support": [
+     {
+      "chunk_id": "2611.02791v2_paragraph_07ae0e871707be65_0",
+      "quote": "Our current jailbreak evaluation relies on static benchmarks and does not establish robustness against adaptive attacks involving multi-turn interactions."
+     }
+    ],
+    "chunk_ids": [
+     "2611.02791v2_paragraph_07ae0e871707be65_0"
+    ]
+   }
+  ],
+  "limitations": [
+   "The cascade evaluation is a stress test using regenerated responses and jailbreak prompts selected to increase risky responses.",
+   "Sequence variants require persistent GPU state for each active request, in addition to guard weights and workspace.",
+   "Reported serving measurements use SGLang on L20Z GPUs; vLLM adaptation was still underway.",
+   "The jailbreak evaluation uses static benchmarks and does not establish robustness against adaptive attacks involving multi-turn interactions."
+  ],
+  "dropped_limitations": [],
+  "evidence_notes": [],
+  "answer_scope": "partial",
+  "answer_lead": "The supplied passages do not establish cascade accuracy or savings, numerical per-request state or GRU workspace requirements, or overhead on the platform’s own stack. Some drafted findings could not be verified against their attached quotes and are withheld.",
+  "answer_lead_check": null,
+  "support_check": "exact quotes; per-claim number recall against attached quotes; numeric_checks_v2 attribution flags (quote-anchored resolution); model review of quote entailment; not human verification",
+  "component_coverage": [
+   {
+    "component": "How does PGuard perform on image-text safety?",
+    "status": "answered",
+    "basis": "reviewer-confirmed, published finding(s)",
+    "finding_draft_indices": [
+     0,
+     1
+    ]
+   },
+   {
+    "component": "PGuard how does a two-tier setup with an external guard perform?",
+    "status": "not_retrieved",
+    "basis": "no reviewer confirmation",
+    "note": "Not found in the retrieved evidence: PGuard how does a two-tier setup with an external guard perform? This does not mean the paper does not report it."
+   },
+   {
+    "component": "PGuard what does it save?",
+    "status": "not_retrieved",
+    "basis": "no reviewer confirmation",
+    "note": "Not found in the retrieved evidence: PGuard what does it save? This does not mean the paper does not report it."
+   },
+   {
+    "component": "what memory does PGuard need?",
+    "status": "partial",
+    "basis": "reviewer-confirmed, published finding(s)",
+    "finding_draft_indices": [
+     4,
+     5
+    ]
+   },
+   {
+    "component": "PGuard what overhead should the platform expect on its own serving stack?",
+    "status": "partial",
+    "basis": "reviewer-confirmed, published finding(s)",
+    "finding_draft_indices": [
+     7,
+     8,
+     9
+    ]
+   }
+  ]
+ },
+ "evidence": [
+  {
+   "chunk_id": "2611.02791v2_paragraph_6cd0501e91cc6bbe_0",
+   "text": "PGuard brings together representation-based safety detection and serving-engine integration, evaluating detection quality alongside runtime overhead. Its stateless and sequence variants offer different accuracy–cost trade-offs within a shared SGLang integration (Section 3 ). The evaluation spans dense and MoE backbones, text-only and multimodal models, and parameter scales from 8B to 122B (Section 4.6 ). The planned release includes the guard models, evaluation pipeline, and serving integration.",
+   "arxiv_id": "2611.02791v2",
+   "title": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02791v2",
+   "html_url": "https://arxiv.org/html/2611.02791v2#S5.SS0.SSS0.Px5",
+   "source_url": "https://arxiv.org/html/2611.02791v2#S5.SS0.SSS0.Px5",
+   "page_number": null,
+   "source_sha256": "054f018a596f629e0871b54490665a0bd59fa0e13741d4097e351302625d791c",
+   "source_anchor": "S5.SS0.SSS0.Px5",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Background and Related Work",
+   "subsection": "",
+   "section_id": "S5",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "recovered_paragraph",
+   "paragraph_id": "S5.SS0.SSS0.Px5",
+   "paragraph_heading": "Positioning of PGuard .",
+   "same_text_in_baseline": false,
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "text_normalization": "html_text_whitespace_and_math_alttext"
+  },
+  {
+   "chunk_id": "2611.02791v2_c0001",
+   "arxiv_id": "2611.02791v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02791v2#abstract1",
+   "section": "abstract",
+   "subsection": "",
+   "high_value": true,
+   "text": "Its design also accounts for the execution characteristics of LLM serving frameworks, such as SGLang, optimizing computation and data access to minimize additional runtime and synchronization overhead.\nAs a result, PGuard incurs only 0.82 – 2.26\\% end-to-end overhead on the hundred-billion-parameter backbone Qwen3.5-122B-A10B served by SGLang.\nExtensive evaluations across more than 30 benchmarks spanning text and multimodal safety, jailbreaks, cyber and CBRN risks, multilingual scenarios, and real-world traffic demonstrate state-of-the-art performance among native guardrails.\nOn text queries with Qwen3.5-9B, PGuard achieves an average F_{1} score of 0.836, approaching dedicated external guardrails, while supporting deployment-time configuration of category-specific thresholds and enforcement actions.",
+   "text_with_context": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models | Abstract\n\nIts design also accounts for the execution characteristics of LLM serving frameworks, such as SGLang, optimizing computation and data access to minimize additional runtime and synchronization overhead.\nAs a result, PGuard incurs only 0.82 – 2.26\\% end-to-end overhead on the hundred-billion-parameter backbone Qwen3.5-122B-A10B served by SGLang.\nExtensive evaluations across more than 30 benchmarks spanning text and multimodal safety, jailbreaks, cyber and CBRN risks, multilingual scenarios, and real-world traffic demonstrate state-of-the-art performance among native guardrails.\nOn text queries with Qwen3.5-9B, PGuard achieves an average F_{1} score of 0.836, approaching dedicated external guardrails, while supporting deployment-time configuration of category-specific thresholds and enforcement actions.",
+   "title": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02791v2#abstract1",
+   "pdf_url": "https://arxiv.org/pdf/2611.02791v2",
+   "source_sha256": "054f018a596f629e0871b54490665a0bd59fa0e13741d4097e351302625d791c"
+  },
+  {
+   "chunk_id": "2611.02791v2_c0002",
+   "arxiv_id": "2611.02791v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02791v2#S1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": "Large language models (LLMs) and multimodal large language models (MLLMs) are increasingly deployed in interactive applications, including agentic generation, voice chat, and incremental content rendering.\nIn these settings, model responses are streamed to users as tokens are generated, rather than being presented only after generation is complete, shifting safety moderation from a post-generation task to an online streaming requirement.\nSpecifically, a moderation decision made only after generation completes cannot prevent harmful content that has already been exposed to users.\nEffective moderation must therefore keep pace with token generation while introducing minimal computational overhead to remain practical at serving scale. Existing guardrails address this requirement through two broad approaches. External guardrails, such as Qwen3Guard [ Zhao and others, 2025 ] , employ separate models to classify user inputs and model responses.\nAlthough they can achieve strong detection accuracy, they introduce additional inference costs.\nMore importantly, post-hoc moderation can only identify unsafe content after it has been generated, whereas streaming moderation requires frequent inference by a separate model to detect risks during generation.\nFurthermore, operating outside the foundation model limits their ability to directly leverage its internal representations. Native guardrails instead exploit signals from the protected model itself. HiddenDetect [ Jiang and others, 2025b ] detects input-side risks before generation, while NExT-Guard [ Fang et al., 2026a ] monitors internal features at the token level.",
+   "text_with_context": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models | Introduction\n\nLarge language models (LLMs) and multimodal large language models (MLLMs) are increasingly deployed in interactive applications, including agentic generation, voice chat, and incremental content rendering.\nIn these settings, model responses are streamed to users as tokens are generated, rather than being presented only after generation is complete, shifting safety moderation from a post-generation task to an online streaming requirement.\nSpecifically, a moderation decision made only after generation completes cannot prevent harmful content that has already been exposed to users.\nEffective moderation must therefore keep pace with token generation while introducing minimal computational overhead to remain practical at serving scale. Existing guardrails address this requirement through two broad approaches. External guardrails, such as Qwen3Guard [ Zhao and others, 2025 ] , employ separate models to classify user inputs and model responses.\nAlthough they can achieve strong detection accuracy, they introduce additional inference costs.\nMore importantly, post-hoc moderation can only identify unsafe content after it has been generated, whereas streaming moderation requires frequent inference by a separate model to detect risks during generation.\nFurthermore, operating outside the foundation model limits their ability to directly leverage its internal representations. Native guardrails instead exploit signals from the protected model itself. HiddenDetect [ Jiang and others, 2025b ] detects input-side risks before generation, while NExT-Guard [ Fang et al., 2026a ] monitors internal features at the token level.",
+   "title": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02791v2#S1",
+   "pdf_url": "https://arxiv.org/pdf/2611.02791v2",
+   "source_sha256": "054f018a596f629e0871b54490665a0bd59fa0e13741d4097e351302625d791c"
+  },
+  {
+   "chunk_id": "2611.02791v2_c0006",
+   "arxiv_id": "2611.02791v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02791v2#S1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": "On the 100B-scale Qwen3.5-122B-A10B backbone, end-to-end latency overhead remains below 1.3\\% for stateless and 2.4\\% for sequence variants.\nThese results demonstrate that native guardrails can achieve competitive detection quality while imposing limited overhead on large-scale model serving. Our main contributions are: We propose PGuard , a native streaming guardrail that leverages dynamic layer gating to extract token-wise safety representations from a frozen backbone. We further introduce complementary stateless and sequence-based modeling architectures to support both independent token classification and sequential risk modeling. We develop a serving-aware execution strategy that coordinates safety computation with the scheduling and execution mechanisms of model inference engines. Our SGLang integration supports both modeling variants while minimizing redundant computation and synchronization overhead, without modifying the inference engine’s codebase. We conduct extensive evaluations across more than 30 text and multimodal safety benchmarks and real-world traffic. Our analysis demonstrates the benefits of sequence modeling, characterizes the trade-offs between detection quality and serving overhead, and examines the complementary roles of native screening and external adjudication.",
+   "text_with_context": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models | Introduction\n\nOn the 100B-scale Qwen3.5-122B-A10B backbone, end-to-end latency overhead remains below 1.3\\% for stateless and 2.4\\% for sequence variants.\nThese results demonstrate that native guardrails can achieve competitive detection quality while imposing limited overhead on large-scale model serving. Our main contributions are: We propose PGuard , a native streaming guardrail that leverages dynamic layer gating to extract token-wise safety representations from a frozen backbone. We further introduce complementary stateless and sequence-based modeling architectures to support both independent token classification and sequential risk modeling. We develop a serving-aware execution strategy that coordinates safety computation with the scheduling and execution mechanisms of model inference engines. Our SGLang integration supports both modeling variants while minimizing redundant computation and synchronization overhead, without modifying the inference engine’s codebase. We conduct extensive evaluations across more than 30 text and multimodal safety benchmarks and real-world traffic. Our analysis demonstrates the benefits of sequence modeling, characterizes the trade-offs between detection quality and serving overhead, and examines the complementary roles of native screening and external adjudication.",
+   "title": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02791v2#S1",
+   "pdf_url": "https://arxiv.org/pdf/2611.02791v2",
+   "source_sha256": "054f018a596f629e0871b54490665a0bd59fa0e13741d4097e351302625d791c"
+  },
+  {
+   "chunk_id": "2611.02791v2_c0000",
+   "arxiv_id": "2611.02791v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02791v2#abstract1",
+   "section": "abstract",
+   "subsection": "",
+   "high_value": true,
+   "text": "As streaming generation becomes the dominant serving paradigm for both text-only and multimodal large language models, ensuring safety throughout the generation process has become a critical challenge.\nConventional external guardrails address this challenge at the cost of additional inference overhead and a potential gap between their safety judgments and the backbone model’s internal representations.\nMeanwhile, frontier foundation models possess increasingly sophisticated semantic understanding and rich internal representations, offering an opportunity to build safety capabilities directly into the backbone.\nMotivated by this, we introduce PGuard , a native, streaming, and plug-in guardrail that transforms safety monitoring from an external serving dependency into an integrated capability of the backbone model. PGuard directly leverages the backbone’s intermediate representations for token-level safety detection, without altering its original inference pathway or generation behavior.\nSpecifically, dynamic layer gating selectively aggregates residual-stream representations across layers to extract safety-relevant signals during both prefill and autoregressive decoding.\nTo balance detection accuracy and computational efficiency, PGuard supports multiple representation-modeling architectures, including a lightweight stateless variant and sequence-aware variants built on multi-scale causal EMA-attention and GRU-based recurrent modules.\nIts design also accounts for the execution characteristics of LLM serving frameworks, such as SGLang, optimizing computation and data access to minimize additional runtime and synchronization overhead.",
+   "text_with_context": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models | Abstract\n\nAs streaming generation becomes the dominant serving paradigm for both text-only and multimodal large language models, ensuring safety throughout the generation process has become a critical challenge.\nConventional external guardrails address this challenge at the cost of additional inference overhead and a potential gap between their safety judgments and the backbone model’s internal representations.\nMeanwhile, frontier foundation models possess increasingly sophisticated semantic understanding and rich internal representations, offering an opportunity to build safety capabilities directly into the backbone.\nMotivated by this, we introduce PGuard , a native, streaming, and plug-in guardrail that transforms safety monitoring from an external serving dependency into an integrated capability of the backbone model. PGuard directly leverages the backbone’s intermediate representations for token-level safety detection, without altering its original inference pathway or generation behavior.\nSpecifically, dynamic layer gating selectively aggregates residual-stream representations across layers to extract safety-relevant signals during both prefill and autoregressive decoding.\nTo balance detection accuracy and computational efficiency, PGuard supports multiple representation-modeling architectures, including a lightweight stateless variant and sequence-aware variants built on multi-scale causal EMA-attention and GRU-based recurrent modules.\nIts design also accounts for the execution characteristics of LLM serving frameworks, such as SGLang, optimizing computation and data access to minimize additional runtime and synchronization overhead.",
+   "title": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02791v2#abstract1",
+   "pdf_url": "https://arxiv.org/pdf/2611.02791v2",
+   "source_sha256": "054f018a596f629e0871b54490665a0bd59fa0e13741d4097e351302625d791c"
+  },
+  {
+   "chunk_id": "2611.02791v2_c0039",
+   "arxiv_id": "2611.02791v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02791v2#S4.SS8",
+   "section": "experiments",
+   "subsection": "deployment on the cost–accuracy spectrum",
+   "high_value": false,
+   "text": "Figure 7 summarizes the trade-off between detection accuracy and serving cost. GradSafe is omitted because it requires a backward pass to obtain gradients, which lies outside the serving forward path. Accuracy is measured on the benchmark suites above. Cost follows Section 3.2 , with each configuration served by SGLang on the same GPU under saturation and normalized to the bare backbone. Serving a second large guard model raises normalized cost to as much as 2.7 \\times . The plotted prior native guardrails achieve 0.64–0.74 macro F_{1} with 4–18% overhead. PGuard combines competitive accuracy with substantially lower serving overhead. On text, PGuard -gru reaches 0.848 macro F_{1} , exceeding Qwen3Guard-Gen’s 0.840, at 1.036 \\times normalized cost. On multimodal inputs, PGuard -ema achieves 0.797 macro F_{1} at 1.019 \\times cost, compared with 0.638 for the strongest prior native entry. These operating points pair strong detection quality with only 3.6% and 1.9% additional serving cost for text and multimodal inputs, respectively. The cost–accuracy plane of the evaluated guardrails. Cost is the serving overhead measured with SGLang on the same GPU driven to saturation and normalized by the bare backbone; accuracy is the macro F_{1} of the corresponding task suites. For deployments with a larger accuracy budget, the native variant composes with an external adjudicator instead of replacing it. Table 16 evaluates the two-tier deployment on S-Eval-Jailbreak, with Qwen3.5-Flash serving as both the PGuard backbone and the response generator. We regenerate the responses and cascade PGuard with an external reasoning-based guardrail. Jailbreak prompts are selected to increase the occurrence of risky responses, providing a stress test that approximates risky online traffic",
+   "text_with_context": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models | Experiments > Deployment On The Cost–Accuracy Spectrum\n\nFigure 7 summarizes the trade-off between detection accuracy and serving cost. GradSafe is omitted because it requires a backward pass to obtain gradients, which lies outside the serving forward path. Accuracy is measured on the benchmark suites above. Cost follows Section 3.2 , with each configuration served by SGLang on the same GPU under saturation and normalized to the bare backbone. Serving a second large guard model raises normalized cost to as much as 2.7 \\times . The plotted prior native guardrails achieve 0.64–0.74 macro F_{1} with 4–18% overhead. PGuard combines competitive accuracy with substantially lower serving overhead. On text, PGuard -gru reaches 0.848 macro F_{1} , exceeding Qwen3Guard-Gen’s 0.840, at 1.036 \\times normalized cost. On multimodal inputs, PGuard -ema achieves 0.797 macro F_{1} at 1.019 \\times cost, compared with 0.638 for the strongest prior native entry. These operating points pair strong detection quality with only 3.6% and 1.9% additional serving cost for text and multimodal inputs, respectively. The cost–accuracy plane of the evaluated guardrails. Cost is the serving overhead measured with SGLang on the same GPU driven to saturation and normalized by the bare backbone; accuracy is the macro F_{1} of the corresponding task suites. For deployments with a larger accuracy budget, the native variant composes with an external adjudicator instead of replacing it. Table 16 evaluates the two-tier deployment on S-Eval-Jailbreak, with Qwen3.5-Flash serving as both the PGuard backbone and the response generator. We regenerate the responses and cascade PGuard with an external reasoning-based guardrail. Jailbreak prompts are selected to increase the occurrence of risky responses, providing a stress test that approximates risky online traffic",
+   "title": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02791v2#S4.SS8",
+   "pdf_url": "https://arxiv.org/pdf/2611.02791v2",
+   "source_sha256": "054f018a596f629e0871b54490665a0bd59fa0e13741d4097e351302625d791c"
+  },
+  {
+   "chunk_id": "2611.02791v2_c0009",
+   "arxiv_id": "2611.02791v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02791v2#S2.SS1",
+   "section": "methodology",
+   "subsection": "problem formulation and design goals",
+   "high_value": false,
+   "text": "Here, \\mathcal{Y} denotes the shared set of risk categories across safety tasks, and {\\bm{r}}_{t} contains the predicted probability of each category at position t .\nA position is flagged if the predicted probability of any risk category exceeds its corresponding threshold. A production-ready native guardrail must satisfy four design goals, which guide the design of PGuard : Competitive detection performance. The guardrail should perform competitively with dedicated external detectors. Native integration with generation. Risk scoring should leverage the backbone’s forward pass, enabling per-position detection during prefill and decode without modifying the backbone’s computation. Low serving overhead. The additional computation should contribute only a small fraction of the end-to-end serving cost, targeting a few percent overhead on production backbones. Broad risk coverage. A unified training framework should support text and multimodal inputs, jailbreaks, multilingual content, and emerging risks under a shared label taxonomy. Figure 1 illustrates the PGuard architecture. The frozen backbone supplies residual-stream features from selected layers. Dynamic layer gating fuses the captured features at each position, and the fused feature is modeled either by a stateless variant or by a sequence variant based on multi-scale causal EMA-attention or a GRU-based recurrent module. The risk classifiers then produce risk scores under the unified taxonomy during both prefill and decode.",
+   "text_with_context": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models | Methodology > Problem Formulation And Design Goals\n\nHere, \\mathcal{Y} denotes the shared set of risk categories across safety tasks, and {\\bm{r}}_{t} contains the predicted probability of each category at position t .\nA position is flagged if the predicted probability of any risk category exceeds its corresponding threshold. A production-ready native guardrail must satisfy four design goals, which guide the design of PGuard : Competitive detection performance. The guardrail should perform competitively with dedicated external detectors. Native integration with generation. Risk scoring should leverage the backbone’s forward pass, enabling per-position detection during prefill and decode without modifying the backbone’s computation. Low serving overhead. The additional computation should contribute only a small fraction of the end-to-end serving cost, targeting a few percent overhead on production backbones. Broad risk coverage. A unified training framework should support text and multimodal inputs, jailbreaks, multilingual content, and emerging risks under a shared label taxonomy. Figure 1 illustrates the PGuard architecture. The frozen backbone supplies residual-stream features from selected layers. Dynamic layer gating fuses the captured features at each position, and the fused feature is modeled either by a stateless variant or by a sequence variant based on multi-scale causal EMA-attention or a GRU-based recurrent module. The risk classifiers then produce risk scores under the unified taxonomy during both prefill and decode.",
+   "title": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02791v2#S2.SS1",
+   "pdf_url": "https://arxiv.org/pdf/2611.02791v2",
+   "source_sha256": "054f018a596f629e0871b54490665a0bd59fa0e13741d4097e351302625d791c"
+  },
+  {
+   "chunk_id": "2611.02791v2_c0005",
+   "arxiv_id": "2611.02791v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02791v2#S1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": "Beyond SGLang, we are currently working on a vLLM integration to extend the same serving-aware execution design to another widely used inference and serving engine. We evaluate PGuard on more than 30 benchmarks covering text and multimodal safety, jailbreaks, cyber and CBRN risks, multilingual scenarios, and real-world traffic.\nOn text-query benchmarks with Qwen3.5-9B, PGuard achieves an average F_{1} score of 0.836, approaching that of Qwen3Guard.\nOn multimodal query benchmarks with Qwen3.5-9B, it achieves an average F_{1} score of 0.741, compared with 0.638 for HiddenDetect and 0.474 for Llama Guard 4.\nOn the 100B-scale Qwen3.5-122B-A10B backbone, end-to-end latency overhead remains below 1.3\\% for stateless and 2.4\\% for sequence variants.",
+   "text_with_context": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models | Introduction\n\nBeyond SGLang, we are currently working on a vLLM integration to extend the same serving-aware execution design to another widely used inference and serving engine. We evaluate PGuard on more than 30 benchmarks covering text and multimodal safety, jailbreaks, cyber and CBRN risks, multilingual scenarios, and real-world traffic.\nOn text-query benchmarks with Qwen3.5-9B, PGuard achieves an average F_{1} score of 0.836, approaching that of Qwen3Guard.\nOn multimodal query benchmarks with Qwen3.5-9B, it achieves an average F_{1} score of 0.741, compared with 0.638 for HiddenDetect and 0.474 for Llama Guard 4.\nOn the 100B-scale Qwen3.5-122B-A10B backbone, end-to-end latency overhead remains below 1.3\\% for stateless and 2.4\\% for sequence variants.",
+   "title": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02791v2#S1",
+   "pdf_url": "https://arxiv.org/pdf/2611.02791v2",
+   "source_sha256": "054f018a596f629e0871b54490665a0bd59fa0e13741d4097e351302625d791c"
+  },
+  {
+   "chunk_id": "2611.02791v2_c0004",
+   "arxiv_id": "2611.02791v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02791v2#S1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": "Based on these representations, PGuard supports two complementary modeling paradigms. The stateless variant classifies each token position independently, while the sequence variants explicitly model dependencies across positions to capture how risks emerge and evolve during generation.\nWe instantiate sequence modeling with multi-scale causal EMA-attention and GRU-based recurrent modules, offering different trade-offs between detection quality and computational cost.\nTo enable localized safety supervision without requiring exhaustive token-level annotations, PGuard adopts segment-level supervision, computing loss only at annotated positions and for tasks with available labels.\nOur experiments show that sequence modeling improves response-level detection over the stateless variant across both text and multimodal tasks. Beyond detection efficacy, deploying native guardrails efficiently requires coordinating safety computation with the backbone’s generation process.\nMainstream language model inference and serving engines (e.g., vLLM [ Kwon et al., 2023 ] and SGLang [ Zheng et al., 2024 ] ) coordinate batching, parallel execution, and GPU synchronization to sustain high throughput.\nAccessing intermediate representations and reporting risk scores introduces additional dependencies into this execution process.\nIn particular, poorly placed synchronization can stall active batches, making the resulting overhead substantially greater than the guard computation itself. PGuard therefore incorporates serving-engine constraints into its execution design. We integrate PGuard with SGLang, aligning risk computation and reporting with the engine’s scheduling mechanisms. The integration supports both stateless and sequence variants without modifying the SGLang codebase.",
+   "text_with_context": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models | Introduction\n\nBased on these representations, PGuard supports two complementary modeling paradigms. The stateless variant classifies each token position independently, while the sequence variants explicitly model dependencies across positions to capture how risks emerge and evolve during generation.\nWe instantiate sequence modeling with multi-scale causal EMA-attention and GRU-based recurrent modules, offering different trade-offs between detection quality and computational cost.\nTo enable localized safety supervision without requiring exhaustive token-level annotations, PGuard adopts segment-level supervision, computing loss only at annotated positions and for tasks with available labels.\nOur experiments show that sequence modeling improves response-level detection over the stateless variant across both text and multimodal tasks. Beyond detection efficacy, deploying native guardrails efficiently requires coordinating safety computation with the backbone’s generation process.\nMainstream language model inference and serving engines (e.g., vLLM [ Kwon et al., 2023 ] and SGLang [ Zheng et al., 2024 ] ) coordinate batching, parallel execution, and GPU synchronization to sustain high throughput.\nAccessing intermediate representations and reporting risk scores introduces additional dependencies into this execution process.\nIn particular, poorly placed synchronization can stall active batches, making the resulting overhead substantially greater than the guard computation itself. PGuard therefore incorporates serving-engine constraints into its execution design. We integrate PGuard with SGLang, aligning risk computation and reporting with the engine’s scheduling mechanisms. The integration supports both stateless and sequence variants without modifying the SGLang codebase.",
+   "title": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02791v2#S1",
+   "pdf_url": "https://arxiv.org/pdf/2611.02791v2",
+   "source_sha256": "054f018a596f629e0871b54490665a0bd59fa0e13741d4097e351302625d791c"
+  },
+  {
+   "chunk_id": "2611.02791v2_c0038",
+   "arxiv_id": "2611.02791v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02791v2#S4.SS7",
+   "section": "experiments",
+   "subsection": "serving efficiency",
+   "high_value": false,
+   "text": ". PGuard maintains a small memory footprint alongside the backbone. Table 15 reports guard weights of 0.03–0.41 GiB per GPU, together with per-request state and peak workspace. Peak workspace remains below 0.5 GiB per GPU for the stateless variant and below 3.1 GiB per GPU for EMA-attention. The small memory overhead supports large-scale deployment of PGuard . Memory overhead of PGuard .",
+   "text_with_context": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models | Experiments > Serving Efficiency\n\n. PGuard maintains a small memory footprint alongside the backbone. Table 15 reports guard weights of 0.03–0.41 GiB per GPU, together with per-request state and peak workspace. Peak workspace remains below 0.5 GiB per GPU for the stateless variant and below 3.1 GiB per GPU for EMA-attention. The small memory overhead supports large-scale deployment of PGuard . Memory overhead of PGuard .",
+   "title": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02791v2#S4.SS7",
+   "pdf_url": "https://arxiv.org/pdf/2611.02791v2",
+   "source_sha256": "054f018a596f629e0871b54490665a0bd59fa0e13741d4097e351302625d791c"
+  },
+  {
+   "chunk_id": "2611.02791v2_c0015",
+   "arxiv_id": "2611.02791v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02791v2#S2.SS6",
+   "section": "methodology",
+   "subsection": "streaming detection and decision",
+   "high_value": false,
+   "text": "For each position and task c , the classifier outputs a probability distribution P_{c}(\\cdot\\mid x_{1:t}) over the task-specific categories \\mathcal{Y}_{c}\\subseteq\\mathcal{Y} .\nA position is flagged for an unsafe category y\\in\\mathcal{Y}_{c} when P_{c}(y\\mid x_{1:t})\\geq\\tau_{c,y} .\nEach trained PGuard model uses its own calibrated thresholds, configured separately for query and response stages and for text-only and image-text inputs (Appendix B ).\nDuring prefill, the query-side verdict is derived from scores at selected positions or their aggregation, depending on the application’s policy, and is available before response generation begins.\nDuring decode, the hidden state at position t is used to assess the content up to and including token x_{t} , while the same forward pass predicts the next token x_{t+1} .\nVerdict consumption is configurable at deployment: applications can selectively enable task groups and determine how flagged content is handled, including reporting, interrupting, or steering generation. To further reduce serving overhead, PGuard supports sampled scoring, exploiting the observation that safety risks typically manifest across phrases or passages rather than in isolated tokens.\nUnder this option, PGuard performs classification and reports risk scores only once every p tokens, skipping the classification path at intermediate steps (Section 3.2 ).\nFor sequence variants, however, the recurrent or attention-based state is still updated at every token, ensuring that each reported score incorporates evidence from the entire processed prefix.",
+   "text_with_context": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models | Methodology > Streaming Detection And Decision\n\nFor each position and task c , the classifier outputs a probability distribution P_{c}(\\cdot\\mid x_{1:t}) over the task-specific categories \\mathcal{Y}_{c}\\subseteq\\mathcal{Y} .\nA position is flagged for an unsafe category y\\in\\mathcal{Y}_{c} when P_{c}(y\\mid x_{1:t})\\geq\\tau_{c,y} .\nEach trained PGuard model uses its own calibrated thresholds, configured separately for query and response stages and for text-only and image-text inputs (Appendix B ).\nDuring prefill, the query-side verdict is derived from scores at selected positions or their aggregation, depending on the application’s policy, and is available before response generation begins.\nDuring decode, the hidden state at position t is used to assess the content up to and including token x_{t} , while the same forward pass predicts the next token x_{t+1} .\nVerdict consumption is configurable at deployment: applications can selectively enable task groups and determine how flagged content is handled, including reporting, interrupting, or steering generation. To further reduce serving overhead, PGuard supports sampled scoring, exploiting the observation that safety risks typically manifest across phrases or passages rather than in isolated tokens.\nUnder this option, PGuard performs classification and reports risk scores only once every p tokens, skipping the classification path at intermediate steps (Section 3.2 ).\nFor sequence variants, however, the recurrent or attention-based state is still updated at every token, ensuring that each reported score incorporates evidence from the entire processed prefix.",
+   "title": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02791v2#S2.SS6",
+   "pdf_url": "https://arxiv.org/pdf/2611.02791v2",
+   "source_sha256": "054f018a596f629e0871b54490665a0bd59fa0e13741d4097e351302625d791c"
+  },
+  {
+   "chunk_id": "2611.02791v2_paragraph_07ae0e871707be65_0",
+   "text": "The effectiveness of PGuard depends on the extent to which safety-relevant information is encoded in the backbone’s intermediate representations. Attacks that induce harmful behavior without producing sufficiently informative signals in the captured representations may evade detection. Deep role-playing and fictional framing are potential examples that warrant targeted investigation. Furthermore, adapting PGuard to a new backbone requires calibration-set pretraining for layer selection, followed by guard-module training, even when the new backbone belongs to the same model family. These requirements introduce additional costs when deploying PGuard across different backbones. Our current jailbreak evaluation relies on static benchmarks and does not establish robustness against adaptive attacks involving multi-turn interactions. Evaluating PGuard under dynamic red-teaming scenarios is therefore an important direction for future work. In addition, the framework leaves intervention policies to the deployment, motivating further investigation into how streaming risk scores can be translated into effective runtime actions. More expressive sequence models, including recurrent–EMA combinations and full self-attention, also merit exploration when serving budgets permit. Finally, we plan to extend the evaluation to larger backbones and additional modalities, and to release the guard models, benchmark pipeline, and SGLang serving integration alongside this work.",
+   "arxiv_id": "2611.02791v2",
+   "title": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02791v2",
+   "html_url": "https://arxiv.org/html/2611.02791v2#S6.SS0.SSS0.Px1",
+   "source_url": "https://arxiv.org/html/2611.02791v2#S6.SS0.SSS0.Px1",
+   "page_number": null,
+   "source_sha256": "054f018a596f629e0871b54490665a0bd59fa0e13741d4097e351302625d791c",
+   "source_anchor": "S6.SS0.SSS0.Px1",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "Conclusion",
+   "subsection": "",
+   "section_id": "S6",
+   "subsection_id": "",
+   "appendix_id": "",
+   "document_region": "main",
+   "representation": "recovered_paragraph",
+   "paragraph_id": "S6.SS0.SSS0.Px1",
+   "paragraph_heading": "Limitations.",
+   "same_text_in_baseline": false,
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "text_normalization": "html_text_whitespace_and_math_alttext"
+  },
+  {
+   "chunk_id": "2611.02791v2_c0042",
+   "arxiv_id": "2611.02791v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02791v2#S6",
+   "section": "conclusion",
+   "subsection": "",
+   "high_value": true,
+   "text": "We presented PGuard , a native streaming guardrail that operates directly on the intermediate representations of a frozen backbone. Through dynamic layer gating, PGuard aggregates residual-stream features from selected layers, enabling a trained guard module to produce risk scores throughout both prefill and autoregressive decoding. We further explored three guard configurations: a stateless variant and two sequence-aware variants based on EMA-attention and GRU, offering different trade-offs between detection performance and serving efficiency. Our evaluation across more than 30 benchmarks demonstrates that PGuard achieves competitive detection performance against dedicated external guardrails while consistently outperforming existing native baselines in aggregate. Its streaming predictions enable early detection of unsafe responses, allowing potential risks to be identified before generation is complete. Integrated into SGLang, PGuard incurs only 3.56% and 3.07% increases in TTFT and TPOT, respectively, across the evaluated serving configurations.\nThese results demonstrate the practical viability of native guardrails for online safety screening, while retaining the option of external adjudication for flagged traffic.\nWe are also extending the integration to vLLM, with adaptation work currently underway.",
+   "text_with_context": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models | Conclusion\n\nWe presented PGuard , a native streaming guardrail that operates directly on the intermediate representations of a frozen backbone. Through dynamic layer gating, PGuard aggregates residual-stream features from selected layers, enabling a trained guard module to produce risk scores throughout both prefill and autoregressive decoding. We further explored three guard configurations: a stateless variant and two sequence-aware variants based on EMA-attention and GRU, offering different trade-offs between detection performance and serving efficiency. Our evaluation across more than 30 benchmarks demonstrates that PGuard achieves competitive detection performance against dedicated external guardrails while consistently outperforming existing native baselines in aggregate. Its streaming predictions enable early detection of unsafe responses, allowing potential risks to be identified before generation is complete. Integrated into SGLang, PGuard incurs only 3.56% and 3.07% increases in TTFT and TPOT, respectively, across the evaluated serving configurations.\nThese results demonstrate the practical viability of native guardrails for online safety screening, while retaining the option of external adjudication for flagged traffic.\nWe are also extending the integration to vLLM, with adaptation work currently underway.",
+   "title": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02791v2#S6",
+   "pdf_url": "https://arxiv.org/pdf/2611.02791v2",
+   "source_sha256": "054f018a596f629e0871b54490665a0bd59fa0e13741d4097e351302625d791c"
+  },
+  {
+   "chunk_id": "2611.02791v2_c0020",
+   "arxiv_id": "2611.02791v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02791v2#S3.SS2",
+   "section": "system implementation",
+   "subsection": "algorithm–system co-optimization",
+   "high_value": false,
+   "text": "We eliminate this redundant computation by decoupling state updates from risk scoring.\nFor the EMA-attention and GRU variants, every token continues to update the corresponding state to preserve the sequence context, whereas the scoring path is executed only at positions selected for reporting. Selective guard scoring during decode. The captured decode graph is split into segments. The backbone and the state update are replayed at every step. The PGuard scoring segment is replayed only at the sampled steps (steps 2 and 5 in this example) and is skipped at all other steps. SGLang captures backbone and guard operations into a single CUDA graph.\nAs a result, each graph replay executes the entire scoring path, even at positions where the resulting scores are not reported.\nTo avoid this, we split the decode graph into two segments. The first segment covers the backbone forward pass and the sequence-state update, and is replayed at every step. The second segment covers the guard scoring path, and is replayed only at the sampled steps (Figure 3 ). With a reporting interval of p tokens, this removes approximately 1-1/p of the scoring executions. Prefill is the primary source of PGuard ’s overhead in our workloads. While the backbone processes prompt tokens in parallel, a straightforward EMA implementation updates the guard state sequentially, one token at a time.\nThese sequential updates limit parallelism and incur repeated kernel-launch overhead.",
+   "text_with_context": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models | System Implementation > Algorithm–System Co-Optimization\n\nWe eliminate this redundant computation by decoupling state updates from risk scoring.\nFor the EMA-attention and GRU variants, every token continues to update the corresponding state to preserve the sequence context, whereas the scoring path is executed only at positions selected for reporting. Selective guard scoring during decode. The captured decode graph is split into segments. The backbone and the state update are replayed at every step. The PGuard scoring segment is replayed only at the sampled steps (steps 2 and 5 in this example) and is skipped at all other steps. SGLang captures backbone and guard operations into a single CUDA graph.\nAs a result, each graph replay executes the entire scoring path, even at positions where the resulting scores are not reported.\nTo avoid this, we split the decode graph into two segments. The first segment covers the backbone forward pass and the sequence-state update, and is replayed at every step. The second segment covers the guard scoring path, and is replayed only at the sampled steps (Figure 3 ). With a reporting interval of p tokens, this removes approximately 1-1/p of the scoring executions. Prefill is the primary source of PGuard ’s overhead in our workloads. While the backbone processes prompt tokens in parallel, a straightforward EMA implementation updates the guard state sequentially, one token at a time.\nThese sequential updates limit parallelism and incur repeated kernel-launch overhead.",
+   "title": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02791v2#S3.SS2",
+   "pdf_url": "https://arxiv.org/pdf/2611.02791v2",
+   "source_sha256": "054f018a596f629e0871b54490665a0bd59fa0e13741d4097e351302625d791c"
+  },
+  {
+   "chunk_id": "2611.02791v2_c0019",
+   "arxiv_id": "2611.02791v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02791v2#S3.SS2",
+   "section": "system implementation",
+   "subsection": "algorithm–system co-optimization",
+   "high_value": false,
+   "text": "Directly integrating a native guardrail into the backbone forward pass can increase serving latency, even when the guard head is lightweight.\nThe overhead arises not only from risk-score computation but also from repeated kernel launches, sequential state updates, and host–device synchronization. Stage-level profiling reveals two primary sources of overhead. The first is redundant work .\nUnder PGuard ’s sampled reporting policy, risk scores are consumed only at selected positions, yet naively executing the guard at every token incurs unnecessary computation.\nThe second is inefficient execution . Sequential state updates constrain prefill parallelism, small operators trigger repeated kernel launches, and host–device synchronization can stall the submission of subsequent backbone operations. We address these bottlenecks through coordinated algorithmic and runtime optimizations.\nSpecifically, we decouple state updates from risk scoring by computing risk scores only at positions selected for reporting, parallelize guard-state computation during prefill, move synchronization off the serving critical path, and fuse compatible operations to reduce kernel-launch overhead. Under a sampled reporting policy, applications consume a risk score every p tokens. Computing scores at intermediate positions therefore incurs unnecessary overhead.\nWe eliminate this redundant computation by decoupling state updates from risk scoring.",
+   "text_with_context": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models | System Implementation > Algorithm–System Co-Optimization\n\nDirectly integrating a native guardrail into the backbone forward pass can increase serving latency, even when the guard head is lightweight.\nThe overhead arises not only from risk-score computation but also from repeated kernel launches, sequential state updates, and host–device synchronization. Stage-level profiling reveals two primary sources of overhead. The first is redundant work .\nUnder PGuard ’s sampled reporting policy, risk scores are consumed only at selected positions, yet naively executing the guard at every token incurs unnecessary computation.\nThe second is inefficient execution . Sequential state updates constrain prefill parallelism, small operators trigger repeated kernel launches, and host–device synchronization can stall the submission of subsequent backbone operations. We address these bottlenecks through coordinated algorithmic and runtime optimizations.\nSpecifically, we decouple state updates from risk scoring by computing risk scores only at positions selected for reporting, parallelize guard-state computation during prefill, move synchronization off the serving critical path, and fuse compatible operations to reduce kernel-launch overhead. Under a sampled reporting policy, applications consume a risk score every p tokens. Computing scores at intermediate positions therefore incurs unnecessary overhead.\nWe eliminate this redundant computation by decoupling state updates from risk scoring.",
+   "title": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02791v2#S3.SS2",
+   "pdf_url": "https://arxiv.org/pdf/2611.02791v2",
+   "source_sha256": "054f018a596f629e0871b54490665a0bd59fa0e13741d4097e351302625d791c"
+  },
+  {
+   "chunk_id": "2611.02791v2_c0037",
+   "arxiv_id": "2611.02791v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02791v2#S4.SS7",
+   "section": "experiments",
+   "subsection": "serving efficiency",
+   "high_value": false,
+   "text": ". For TTFT and TPOT, positive values indicate increased latency. For throughput, positive values indicate reduced output throughput. Lower is better for all metrics. Tables 12 and 13 add the optimizations one at a time in the listed order. The full ladders reduce output throughput loss from 2.42–3.67% to 0.16–1.21% for the stateless variant and from 4.55–5.28% to 1.53–1.99% for EMA-attention. Selective decode scoring improves throughput across all three backbones, lowering throughput loss by 0.41–2.43 percentage points for the stateless variant and 0.92–2.19 percentage points for EMA-attention. The gains of the fusion and asynchronous copy steps depend on the backbone. Cumulative ablation of the stateless variant. Each cell reports the output throughput loss (%) relative to the bare backbone. Cumulative ablation of the EMA-attention variant. Each cell reports the output throughput loss (%) relative to the bare backbone. Table 14 reports the end-to-end output throughput loss of the GRU variant relative to the bare backbone, with input/output lengths of 4096/512, concurrency 8, 256 requests, and four paired rounds. Lower values indicate less serving overhead. Async risk copy provides the largest reduction among adjacent reported configurations, bringing throughput loss to 1.16–1.75% across the three backbones. With selective decode scoring, the loss is further reduced to 0.90–1.09% across the three backbones. End-to-end output throughput (TPS) loss (%) relative to the bare backbone (lower is better), with input/output lengths 4096/512, concurrency 8, 256 requests, and four paired rounds. PGuard maintains a small memory footprint alongside the backbone. Table 15 reports guard weights of 0.03–0.41 GiB per GPU, together with per-request state and peak workspace",
+   "text_with_context": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models | Experiments > Serving Efficiency\n\n. For TTFT and TPOT, positive values indicate increased latency. For throughput, positive values indicate reduced output throughput. Lower is better for all metrics. Tables 12 and 13 add the optimizations one at a time in the listed order. The full ladders reduce output throughput loss from 2.42–3.67% to 0.16–1.21% for the stateless variant and from 4.55–5.28% to 1.53–1.99% for EMA-attention. Selective decode scoring improves throughput across all three backbones, lowering throughput loss by 0.41–2.43 percentage points for the stateless variant and 0.92–2.19 percentage points for EMA-attention. The gains of the fusion and asynchronous copy steps depend on the backbone. Cumulative ablation of the stateless variant. Each cell reports the output throughput loss (%) relative to the bare backbone. Cumulative ablation of the EMA-attention variant. Each cell reports the output throughput loss (%) relative to the bare backbone. Table 14 reports the end-to-end output throughput loss of the GRU variant relative to the bare backbone, with input/output lengths of 4096/512, concurrency 8, 256 requests, and four paired rounds. Lower values indicate less serving overhead. Async risk copy provides the largest reduction among adjacent reported configurations, bringing throughput loss to 1.16–1.75% across the three backbones. With selective decode scoring, the loss is further reduced to 0.90–1.09% across the three backbones. End-to-end output throughput (TPS) loss (%) relative to the bare backbone (lower is better), with input/output lengths 4096/512, concurrency 8, 256 requests, and four paired rounds. PGuard maintains a small memory footprint alongside the backbone. Table 15 reports guard weights of 0.03–0.41 GiB per GPU, together with per-request state and peak workspace",
+   "title": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02791v2#S4.SS7",
+   "pdf_url": "https://arxiv.org/pdf/2611.02791v2",
+   "source_sha256": "054f018a596f629e0871b54490665a0bd59fa0e13741d4097e351302625d791c"
+  },
+  {
+   "chunk_id": "2611.02791v2_c0017",
+   "arxiv_id": "2611.02791v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02791v2#S3.SS1",
+   "section": "system implementation",
+   "subsection": "inference engine integration",
+   "high_value": false,
+   "text": "We integrate PGuard into SGLang [ Zheng et al., 2024 ] , with runtime support for feature capture, per-request state management, and streaming risk-score delivery. The integration supports the stateless, EMA-attention, and GRU variants through a shared engine interface. Figure 2 illustrates the integration. At each selected layer, the runtime captures the same residual-stream representation used during training (Section 2.2 ).\nFor backbones that maintain hidden-state and residual tensors separately, the runtime reconstructs this representation by summing the two tensors.\nThis operation is performed solely for feature extraction and does not alter the backbone’s forward computation. The resulting risk scores are exposed as response metadata, leaving the original token logits and sampling path unchanged. PGuard integrated into the SGLang serving engine. PGuard runs as a side path of the backbone forward pass. Hidden states from the selected layers are sent to the PGuard head, which reads and updates a per-request state for the EMA-attention and GRU variants. The resulting risk scores are streamed to downstream applications together with the generated tokens. For sequence-based variants, the runtime maintains persistent state tensors for each active request in GPU memory.\nEach request is assigned a dedicated slot throughout its lifetime, enabling state retrieval independently of changes in batch composition introduced by the scheduler.\nDuring both chunked prefill and auto-regressive decoding, the runtime retrieves the state associated with the request, updates it with newly processed features, and writes the updated state back to the corresponding slot.\nFor the GRU variant, prefill does not process query tokens recurrently.",
+   "text_with_context": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models | System Implementation > Inference Engine Integration\n\nWe integrate PGuard into SGLang [ Zheng et al., 2024 ] , with runtime support for feature capture, per-request state management, and streaming risk-score delivery. The integration supports the stateless, EMA-attention, and GRU variants through a shared engine interface. Figure 2 illustrates the integration. At each selected layer, the runtime captures the same residual-stream representation used during training (Section 2.2 ).\nFor backbones that maintain hidden-state and residual tensors separately, the runtime reconstructs this representation by summing the two tensors.\nThis operation is performed solely for feature extraction and does not alter the backbone’s forward computation. The resulting risk scores are exposed as response metadata, leaving the original token logits and sampling path unchanged. PGuard integrated into the SGLang serving engine. PGuard runs as a side path of the backbone forward pass. Hidden states from the selected layers are sent to the PGuard head, which reads and updates a per-request state for the EMA-attention and GRU variants. The resulting risk scores are streamed to downstream applications together with the generated tokens. For sequence-based variants, the runtime maintains persistent state tensors for each active request in GPU memory.\nEach request is assigned a dedicated slot throughout its lifetime, enabling state retrieval independently of changes in batch composition introduced by the scheduler.\nDuring both chunked prefill and auto-regressive decoding, the runtime retrieves the state associated with the request, updates it with newly processed features, and writes the updated state back to the corresponding slot.\nFor the GRU variant, prefill does not process query tokens recurrently.",
+   "title": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02791v2#S3.SS1",
+   "pdf_url": "https://arxiv.org/pdf/2611.02791v2",
+   "source_sha256": "054f018a596f629e0871b54490665a0bd59fa0e13741d4097e351302625d791c"
+  },
+  {
+   "chunk_id": "2611.02791v2_c0023",
+   "arxiv_id": "2611.02791v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02791v2#S3.SS2",
+   "section": "system implementation",
+   "subsection": "algorithm–system co-optimization",
+   "high_value": false,
+   "text": "Together, these changes avoid unnecessary host–device synchronization during prefill. During decode, we overlap risk-score delivery with ongoing engine execution and align result consumption with the engine’s existing synchronization schedule. Asynchronous staging in pinned host memory supports this overlap without introducing an additional synchronization barrier for score delivery. The guard head consists of many small matrix operations, each requiring a separate GPU kernel launch and memory access.\nFor small inputs, these overheads can dominate the actual computation and result in poor GPU utilization.\nTo address this, we fuse compatible operations into larger matrix multiplications. In the multi-task classifier, all nine task heads share the same input features. We concatenate the weights of their first layers into a single matrix and arrange the weights of their output layers into a block-diagonal matrix.\nThis enables all nine heads to be evaluated using only two matrix multiplications, rather than eighteen.\nThe fused weights are constructed once during model loading, eliminating the need for weight assembly during serving.\nThis design reduces kernel-launch overhead and improves GPU utilization. Together, these optimizations align guard execution with application reporting requirements while preserving complete sequence-state updates.\nBy exploiting parallelism, reducing synchronization, and consolidating small operations, they mitigate the computational and runtime overhead of native guardrail integration along the serving critical path.",
+   "text_with_context": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models | System Implementation > Algorithm–System Co-Optimization\n\nTogether, these changes avoid unnecessary host–device synchronization during prefill. During decode, we overlap risk-score delivery with ongoing engine execution and align result consumption with the engine’s existing synchronization schedule. Asynchronous staging in pinned host memory supports this overlap without introducing an additional synchronization barrier for score delivery. The guard head consists of many small matrix operations, each requiring a separate GPU kernel launch and memory access.\nFor small inputs, these overheads can dominate the actual computation and result in poor GPU utilization.\nTo address this, we fuse compatible operations into larger matrix multiplications. In the multi-task classifier, all nine task heads share the same input features. We concatenate the weights of their first layers into a single matrix and arrange the weights of their output layers into a block-diagonal matrix.\nThis enables all nine heads to be evaluated using only two matrix multiplications, rather than eighteen.\nThe fused weights are constructed once during model loading, eliminating the need for weight assembly during serving.\nThis design reduces kernel-launch overhead and improves GPU utilization. Together, these optimizations align guard execution with application reporting requirements while preserving complete sequence-state updates.\nBy exploiting parallelism, reducing synchronization, and consolidating small operations, they mitigate the computational and runtime overhead of native guardrail integration along the serving critical path.",
+   "title": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02791v2#S3.SS2",
+   "pdf_url": "https://arxiv.org/pdf/2611.02791v2",
+   "source_sha256": "054f018a596f629e0871b54490665a0bd59fa0e13741d4097e351302625d791c"
+  },
+  {
+   "chunk_id": "2611.02791v2_c0010",
+   "arxiv_id": "2611.02791v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02791v2#S2.SS2",
+   "section": "methodology",
+   "subsection": "multi-layer hidden state extraction",
+   "high_value": false,
+   "text": "Safety-relevant information is not distributed uniformly across layers. At each capture layer, PGuard reads the residual stream , i.e., the tensor that enters that layer. The capture is read-only and adds no state to the frozen backbone. Training and serving capture the residual stream at matching layer boundaries, reconstructing it from separate hidden-state and residual buffers where necessary (Section 3.1 ). Let \\mathcal{L}=\\{l_{1},\\ldots,l_{m}\\} denote the set of capture layers. For a sequence of T positions, feature extraction produces a tensor {\\bm{F}}\\in{\\mathbb{R}}^{m\\times T\\times d} , where d is the backbone hidden size.\nIn an MLLM, the visual tokens simply occupy positions in the same sequence as text tokens.\nThus, image and text evidence is fused by the backbone before feature extraction.",
+   "text_with_context": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models | Methodology > Multi-Layer Hidden State Extraction\n\nSafety-relevant information is not distributed uniformly across layers. At each capture layer, PGuard reads the residual stream , i.e., the tensor that enters that layer. The capture is read-only and adds no state to the frozen backbone. Training and serving capture the residual stream at matching layer boundaries, reconstructing it from separate hidden-state and residual buffers where necessary (Section 3.1 ). Let \\mathcal{L}=\\{l_{1},\\ldots,l_{m}\\} denote the set of capture layers. For a sequence of T positions, feature extraction produces a tensor {\\bm{F}}\\in{\\mathbb{R}}^{m\\times T\\times d} , where d is the backbone hidden size.\nIn an MLLM, the visual tokens simply occupy positions in the same sequence as text tokens.\nThus, image and text evidence is fused by the backbone before feature extraction.",
+   "title": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02791v2#S2.SS2",
+   "pdf_url": "https://arxiv.org/pdf/2611.02791v2",
+   "source_sha256": "054f018a596f629e0871b54490665a0bd59fa0e13741d4097e351302625d791c"
+  },
+  {
+   "chunk_id": "2611.02791v2_c0003",
+   "arxiv_id": "2611.02791v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02791v2#S1",
+   "section": "introduction",
+   "subsection": "",
+   "high_value": true,
+   "text": "Despite this progress, existing native approaches remain constrained by the effectiveness of their safety representations and the runtime cost of extracting and processing them. Our evaluations further show that existing native approaches lag behind leading external guardrails in aggregate detection performance while still incurring appreciable serving overhead. These limitations motivate a more effective way to leverage the backbone’s internal representations for native safety modeling.\nThe intermediate representations of a frontier foundation model encode rich semantic and contextual information about the content being generated, providing a natural basis for identifying safety risks without duplicating much of the computation performed by a separate guardrail model.\nHowever, effectively translating these representations into safety signals raises two challenges. First, safety-relevant features are not uniformly distributed across layers or token positions, making adaptive layer selection important for effective representation extraction.\nSecond, risks may emerge from relationships among tokens and evolve as a response unfolds, which cannot always be captured by classifying each position independently.\nAddressing these challenges requires both adaptive representation extraction and effective modeling of dependencies across token positions. To address these challenges, we present PGuard , a native, streaming, and plug-in guardrail built on a frozen foundation model backbone. PGuard introduces dynamic layer gating to adaptively select and aggregate residual-stream representations at each token position, enabling the guardrail to capture safety-relevant features across different layers.",
+   "text_with_context": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models | Introduction\n\nDespite this progress, existing native approaches remain constrained by the effectiveness of their safety representations and the runtime cost of extracting and processing them. Our evaluations further show that existing native approaches lag behind leading external guardrails in aggregate detection performance while still incurring appreciable serving overhead. These limitations motivate a more effective way to leverage the backbone’s internal representations for native safety modeling.\nThe intermediate representations of a frontier foundation model encode rich semantic and contextual information about the content being generated, providing a natural basis for identifying safety risks without duplicating much of the computation performed by a separate guardrail model.\nHowever, effectively translating these representations into safety signals raises two challenges. First, safety-relevant features are not uniformly distributed across layers or token positions, making adaptive layer selection important for effective representation extraction.\nSecond, risks may emerge from relationships among tokens and evolve as a response unfolds, which cannot always be captured by classifying each position independently.\nAddressing these challenges requires both adaptive representation extraction and effective modeling of dependencies across token positions. To address these challenges, we present PGuard , a native, streaming, and plug-in guardrail built on a frozen foundation model backbone. PGuard introduces dynamic layer gating to adaptively select and aggregate residual-stream representations at each token position, enabling the guardrail to capture safety-relevant features across different layers.",
+   "title": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02791v2#S1",
+   "pdf_url": "https://arxiv.org/pdf/2611.02791v2",
+   "source_sha256": "054f018a596f629e0871b54490665a0bd59fa0e13741d4097e351302625d791c"
+  },
+  {
+   "chunk_id": "2611.02791v2_c0028",
+   "arxiv_id": "2611.02791v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02791v2#S4.SS2",
+   "section": "experiments",
+   "subsection": "main results",
+   "high_value": true,
+   "text": "For responses, PGuard -gru (Qwen3.5-9B) leads the PGuard variants at 0.860, below Qwen3Guard-Gen-8B (0.866) and YuFeng-XGuard-8B (0.881). On Qwen3-8B, PGuard -ema achieves 0.858, exceeding SCM-7B by 7.6 percentage points and exceeding Qwen3Guard-Stream-8B (0.830). Sequence variants consistently outperform the stateless variant in average F_{1} on both query and response safety across both backbones, with gains ranging from 0.3 to 6.5 percentage points. Query safety evaluation on text benchmarks. OAI-Mod denotes OpenAI Moderation; WGMix denotes WildGuardMix. The highest F_{1} in each column is shown in bold . Response safety evaluation on text benchmarks. Q3G-Test denotes the Qwen3Guard test set; WGMix denotes WildGuardMix. The highest F_{1} in each column is shown in bold . The same training recipe applies to multimodal backbones, which fuse visual and textual information before PGuard extracts their representations. In Table 3 , PGuard -ema (Qwen3.5-9B) achieves the highest average query F_{1} of 0.741, compared with 0.638 for HiddenDetect and 0.474 for Llama Guard 4. HiddenDetect remains stronger on MM-SafetyBench and FigStep. For responses, PGuard -gru leads the evaluated methods with an average F_{1} of 0.798. Multimodal safety evaluation. The highest F_{1} in each column is shown in bold . Table 4 evaluates detection on the static jailbreak benchmarks. PGuard -ema (Qwen3-8B) achieves an average F_{1} of 0.946, ranking first among native guardrails and second overall. It trails YuFeng-XGuard-8B (0.972) and exceeds Qwen3Guard-Gen (0.928). On S-Eval-JB, its F_{1} of 0.896 exceeds NExT-Guard on the same backbone by 12.5 percentage points, while YuFeng-XGuard-8B leads at 0.944",
+   "text_with_context": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models | Experiments > Main Results\n\nFor responses, PGuard -gru (Qwen3.5-9B) leads the PGuard variants at 0.860, below Qwen3Guard-Gen-8B (0.866) and YuFeng-XGuard-8B (0.881). On Qwen3-8B, PGuard -ema achieves 0.858, exceeding SCM-7B by 7.6 percentage points and exceeding Qwen3Guard-Stream-8B (0.830). Sequence variants consistently outperform the stateless variant in average F_{1} on both query and response safety across both backbones, with gains ranging from 0.3 to 6.5 percentage points. Query safety evaluation on text benchmarks. OAI-Mod denotes OpenAI Moderation; WGMix denotes WildGuardMix. The highest F_{1} in each column is shown in bold . Response safety evaluation on text benchmarks. Q3G-Test denotes the Qwen3Guard test set; WGMix denotes WildGuardMix. The highest F_{1} in each column is shown in bold . The same training recipe applies to multimodal backbones, which fuse visual and textual information before PGuard extracts their representations. In Table 3 , PGuard -ema (Qwen3.5-9B) achieves the highest average query F_{1} of 0.741, compared with 0.638 for HiddenDetect and 0.474 for Llama Guard 4. HiddenDetect remains stronger on MM-SafetyBench and FigStep. For responses, PGuard -gru leads the evaluated methods with an average F_{1} of 0.798. Multimodal safety evaluation. The highest F_{1} in each column is shown in bold . Table 4 evaluates detection on the static jailbreak benchmarks. PGuard -ema (Qwen3-8B) achieves an average F_{1} of 0.946, ranking first among native guardrails and second overall. It trails YuFeng-XGuard-8B (0.972) and exceeds Qwen3Guard-Gen (0.928). On S-Eval-JB, its F_{1} of 0.896 exceeds NExT-Guard on the same backbone by 12.5 percentage points, while YuFeng-XGuard-8B leads at 0.944",
+   "title": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02791v2#S4.SS2",
+   "pdf_url": "https://arxiv.org/pdf/2611.02791v2",
+   "source_sha256": "054f018a596f629e0871b54490665a0bd59fa0e13741d4097e351302625d791c"
+  },
+  {
+   "chunk_id": "2611.02791v2_c0011",
+   "arxiv_id": "2611.02791v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02791v2#S2.SS3",
+   "section": "methodology",
+   "subsection": "dynamic layer gating",
+   "high_value": false,
+   "text": "The most discriminative safety signals can emerge at different depths across inputs and even across positions within the same input.\nTo accommodate this variation, PGuard employs dynamic layer gating in two stages.\nDuring calibration-set pretraining, with the backbone frozen, the gate operates over a larger candidate set of layers, and the learned gating profiles determine the capture-layer set \\mathcal{L} .\nDuring full training and deployment, the gate operates over this fixed set and adaptively weights the captured representations at each position.\nWe formulate the gate over \\mathcal{L} , with the same formulation applied to the candidate set during pretraining.\nThe gate computes a score for each position-layer pair: where {\\bm{w}}_{g} is a learned projection and \\mathcal{I}_{t} contains the indices of the top- L layers by score ranked by their scores at position t . During training, Gumbel noise is added to the scores before selection.\nIn full training and deployment, we set L=|\\mathcal{L}| , allowing all captured layers to participate while retaining position-specific weights. The fused representation is then computed as yielding a position-adaptive soft mixture of the captured layer representation.\nThis gating mechanism allows a single training recipe to accommodate backbones of different depths by learning layer preferences independently at each position (Section 4.5 analyzes the learned gating profiles).",
+   "text_with_context": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models | Methodology > Dynamic Layer Gating\n\nThe most discriminative safety signals can emerge at different depths across inputs and even across positions within the same input.\nTo accommodate this variation, PGuard employs dynamic layer gating in two stages.\nDuring calibration-set pretraining, with the backbone frozen, the gate operates over a larger candidate set of layers, and the learned gating profiles determine the capture-layer set \\mathcal{L} .\nDuring full training and deployment, the gate operates over this fixed set and adaptively weights the captured representations at each position.\nWe formulate the gate over \\mathcal{L} , with the same formulation applied to the candidate set during pretraining.\nThe gate computes a score for each position-layer pair: where {\\bm{w}}_{g} is a learned projection and \\mathcal{I}_{t} contains the indices of the top- L layers by score ranked by their scores at position t . During training, Gumbel noise is added to the scores before selection.\nIn full training and deployment, we set L=|\\mathcal{L}| , allowing all captured layers to participate while retaining position-specific weights. The fused representation is then computed as yielding a position-adaptive soft mixture of the captured layer representation.\nThis gating mechanism allows a single training recipe to accommodate backbones of different depths by learning layer preferences independently at each position (Section 4.5 analyzes the learned gating profiles).",
+   "title": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02791v2#S2.SS3",
+   "pdf_url": "https://arxiv.org/pdf/2611.02791v2",
+   "source_sha256": "054f018a596f629e0871b54490665a0bd59fa0e13741d4097e351302625d791c"
+  },
+  {
+   "chunk_id": "2611.02791v2_c0036",
+   "arxiv_id": "2611.02791v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02791v2#S4.SS7",
+   "section": "experiments",
+   "subsection": "serving efficiency",
+   "high_value": false,
+   "text": "We measure the serving cost of PGuard with SGLang on L20Z GPUs. Appendix D lists the serving configuration of each backbone in Table 21 . Each run uses a concurrency of 8 and 256 requests per scenario. The input length is 2048, 4096, or 8192 tokens, and the output length is 512 tokens. Each configuration is paired with a run of the bare backbone on the same node, and the two runs alternate in order across 4 rounds. We report the relative increase of time to first token (TTFT) and time per output token (TPOT), together with the relative loss of output throughput. The bare backbone and PGuard use the same memory fraction for static allocation. Table 11 reports TTFT, TPOT, and output throughput changes with each backbone’s best combination of optimizations across three backbones and input lengths of 2048–8192 tokens. Among the available measurements, the largest increases are 3.56% for TTFT and 3.07% for TPOT. For the stateless variant, the maxima are 1.54% and 1.78%, respectively; for EMA-attention, they are 3.56% and 2.40%. The GRU variant has maxima of 1.38% and 3.07%. Output throughput drops by at most 1.73% for the stateless variant and 2.26% for EMA-attention. Most entries stay below 2.5%, and all entries stay below 3.6%. This overhead is small and acceptable for large-scale production serving. Relative changes in TTFT, TPOT, and output throughput (Thpt.) of PGuard compared with the bare backbone, with an output length of 512 tokens. Each backbone uses its best combination of optimizations. For TTFT and TPOT, positive values indicate increased latency. For throughput, positive values indicate reduced output throughput. Lower is better for all metrics. Tables 12 and 13 add the optimizations one at a time in the listed order",
+   "text_with_context": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models | Experiments > Serving Efficiency\n\nWe measure the serving cost of PGuard with SGLang on L20Z GPUs. Appendix D lists the serving configuration of each backbone in Table 21 . Each run uses a concurrency of 8 and 256 requests per scenario. The input length is 2048, 4096, or 8192 tokens, and the output length is 512 tokens. Each configuration is paired with a run of the bare backbone on the same node, and the two runs alternate in order across 4 rounds. We report the relative increase of time to first token (TTFT) and time per output token (TPOT), together with the relative loss of output throughput. The bare backbone and PGuard use the same memory fraction for static allocation. Table 11 reports TTFT, TPOT, and output throughput changes with each backbone’s best combination of optimizations across three backbones and input lengths of 2048–8192 tokens. Among the available measurements, the largest increases are 3.56% for TTFT and 3.07% for TPOT. For the stateless variant, the maxima are 1.54% and 1.78%, respectively; for EMA-attention, they are 3.56% and 2.40%. The GRU variant has maxima of 1.38% and 3.07%. Output throughput drops by at most 1.73% for the stateless variant and 2.26% for EMA-attention. Most entries stay below 2.5%, and all entries stay below 3.6%. This overhead is small and acceptable for large-scale production serving. Relative changes in TTFT, TPOT, and output throughput (Thpt.) of PGuard compared with the bare backbone, with an output length of 512 tokens. Each backbone uses its best combination of optimizations. For TTFT and TPOT, positive values indicate increased latency. For throughput, positive values indicate reduced output throughput. Lower is better for all metrics. Tables 12 and 13 add the optimizations one at a time in the listed order",
+   "title": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02791v2#S4.SS7",
+   "pdf_url": "https://arxiv.org/pdf/2611.02791v2",
+   "source_sha256": "054f018a596f629e0871b54490665a0bd59fa0e13741d4097e351302625d791c"
+  },
+  {
+   "chunk_id": "2611.02791v2_table_12908efa1134d9fc_1",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nPGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models\nTable 21: Serving configuration of each backbone. Memory fractions are listed for the stateless, EMA-attention, and GRU variants, respectively.\nBackbone: Qwen3.5-9B; TP: 1; SGLang: 0.5.11; Capture indices: 20, 24, 28; Memory fraction: 0.9 / 0.8 / 0.8",
+   "arxiv_id": "2611.02791v2",
+   "title": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02791v2",
+   "html_url": "https://arxiv.org/html/2611.02791v2#A4.T21",
+   "source_url": "https://arxiv.org/html/2611.02791v2#A4.T21",
+   "page_number": null,
+   "source_sha256": "054f018a596f629e0871b54490665a0bd59fa0e13741d4097e351302625d791c",
+   "source_anchor": "A4.T21",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "",
+   "subsection": "",
+   "section_id": "",
+   "subsection_id": "",
+   "appendix_id": "A4",
+   "document_region": "appendix",
+   "representation": "linearized_table",
+   "table_id": "A4.T21",
+   "table_row": 1,
+   "row_label": "Qwen3.5-9B",
+   "caption": "Table 21: Serving configuration of each backbone. Memory fractions are listed for the stateless, EMA-attention, and GRU variants, respectively.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Backbone",
+     "source_id": "A4.T21.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "TP",
+     "source_id": "A4.T21.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "SGLang",
+     "source_id": "A4.T21.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "Capture indices",
+     "source_id": "A4.T21.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "Memory fraction",
+     "source_id": "A4.T21.2.1.5"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 1,
+     "column": 0,
+     "text": "Qwen3.5-9B",
+     "source_id": "A4.T21.2.2.1"
+    },
+    {
+     "row": 1,
+     "column": 1,
+     "text": "1",
+     "source_id": "A4.T21.2.2.2"
+    },
+    {
+     "row": 1,
+     "column": 2,
+     "text": "0.5.11",
+     "source_id": "A4.T21.2.2.3"
+    },
+    {
+     "row": 1,
+     "column": 3,
+     "text": "20, 24, 28",
+     "source_id": "A4.T21.2.2.4"
+    },
+    {
+     "row": 1,
+     "column": 4,
+     "text": "0.9 / 0.8 / 0.8",
+     "source_id": "A4.T21.2.2.5"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02791v2_table_12908efa1134d9fc_2",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nPGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models\nTable 21: Serving configuration of each backbone. Memory fractions are listed for the stateless, EMA-attention, and GRU variants, respectively.\nBackbone: Qwen3.5-35B-A3B; TP: 2; SGLang: 0.5.11; Capture indices: 20, 24, 28; Memory fraction: 0.9 / 0.8 / 0.8",
+   "arxiv_id": "2611.02791v2",
+   "title": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02791v2",
+   "html_url": "https://arxiv.org/html/2611.02791v2#A4.T21",
+   "source_url": "https://arxiv.org/html/2611.02791v2#A4.T21",
+   "page_number": null,
+   "source_sha256": "054f018a596f629e0871b54490665a0bd59fa0e13741d4097e351302625d791c",
+   "source_anchor": "A4.T21",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "",
+   "subsection": "",
+   "section_id": "",
+   "subsection_id": "",
+   "appendix_id": "A4",
+   "document_region": "appendix",
+   "representation": "linearized_table",
+   "table_id": "A4.T21",
+   "table_row": 2,
+   "row_label": "Qwen3.5-35B-A3B",
+   "caption": "Table 21: Serving configuration of each backbone. Memory fractions are listed for the stateless, EMA-attention, and GRU variants, respectively.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Backbone",
+     "source_id": "A4.T21.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "TP",
+     "source_id": "A4.T21.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "SGLang",
+     "source_id": "A4.T21.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "Capture indices",
+     "source_id": "A4.T21.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "Memory fraction",
+     "source_id": "A4.T21.2.1.5"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 2,
+     "column": 0,
+     "text": "Qwen3.5-35B-A3B",
+     "source_id": "A4.T21.2.3.1"
+    },
+    {
+     "row": 2,
+     "column": 1,
+     "text": "2",
+     "source_id": "A4.T21.2.3.2"
+    },
+    {
+     "row": 2,
+     "column": 2,
+     "text": "0.5.11",
+     "source_id": "A4.T21.2.3.3"
+    },
+    {
+     "row": 2,
+     "column": 3,
+     "text": "20, 24, 28",
+     "source_id": "A4.T21.2.3.4"
+    },
+    {
+     "row": 2,
+     "column": 4,
+     "text": "0.9 / 0.8 / 0.8",
+     "source_id": "A4.T21.2.3.5"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02791v2_table_12908efa1134d9fc_3",
+   "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nPGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models\nTable 21: Serving configuration of each backbone. Memory fractions are listed for the stateless, EMA-attention, and GRU variants, respectively.\nBackbone: Qwen3.5-122B-A10B; TP: 4; SGLang: 0.5.11; Capture indices: EMA-attention: 32, 36, 40 Stateless/GRU: 36, 40, 44; Memory fraction: 0.9 / 0.8 / 0.8",
+   "arxiv_id": "2611.02791v2",
+   "title": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models",
+   "source": "html",
+   "pdf_url": "https://arxiv.org/pdf/2611.02791v2",
+   "html_url": "https://arxiv.org/html/2611.02791v2#A4.T21",
+   "source_url": "https://arxiv.org/html/2611.02791v2#A4.T21",
+   "page_number": null,
+   "source_sha256": "054f018a596f629e0871b54490665a0bd59fa0e13741d4097e351302625d791c",
+   "source_anchor": "A4.T21",
+   "extractor_version": "html-evidence-v2.1-stage-a",
+   "section": "",
+   "subsection": "",
+   "section_id": "",
+   "subsection_id": "",
+   "appendix_id": "A4",
+   "document_region": "appendix",
+   "representation": "linearized_table",
+   "table_id": "A4.T21",
+   "table_row": 3,
+   "row_label": "Qwen3.5-122B-A10B",
+   "caption": "Table 21: Serving configuration of each backbone. Memory fractions are listed for the stateless, EMA-attention, and GRU variants, respectively.",
+   "header_provenance": "first_row_assumed",
+   "header_review": "pending_human_verification",
+   "html_version_verified": false,
+   "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+   "table_headers": [
+    {
+     "column": 0,
+     "text": "Backbone",
+     "source_id": "A4.T21.2.1.1"
+    },
+    {
+     "column": 1,
+     "text": "TP",
+     "source_id": "A4.T21.2.1.2"
+    },
+    {
+     "column": 2,
+     "text": "SGLang",
+     "source_id": "A4.T21.2.1.3"
+    },
+    {
+     "column": 3,
+     "text": "Capture indices",
+     "source_id": "A4.T21.2.1.4"
+    },
+    {
+     "column": 4,
+     "text": "Memory fraction",
+     "source_id": "A4.T21.2.1.5"
+    }
+   ],
+   "table_cells": [
+    {
+     "row": 3,
+     "column": 0,
+     "text": "Qwen3.5-122B-A10B",
+     "source_id": "A4.T21.2.4.1"
+    },
+    {
+     "row": 3,
+     "column": 1,
+     "text": "4",
+     "source_id": "A4.T21.2.4.2"
+    },
+    {
+     "row": 3,
+     "column": 2,
+     "text": "0.5.11",
+     "source_id": "A4.T21.2.4.3"
+    },
+    {
+     "row": 3,
+     "column": 3,
+     "text": "EMA-attention: 32, 36, 40 Stateless/GRU: 36, 40, 44",
+     "source_id": "A4.T21.2.4.4"
+    },
+    {
+     "row": 3,
+     "column": 4,
+     "text": "0.9 / 0.8 / 0.8",
+     "source_id": "A4.T21.2.4.5"
+    }
+   ],
+   "source_notes": []
+  },
+  {
+   "chunk_id": "2611.02791v2_c0025",
+   "arxiv_id": "2611.02791v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02791v2#S4.SS1",
+   "section": "experiments",
+   "subsection": "experimental setup",
+   "high_value": false,
+   "text": ". [2023] and WildChat Zhao and others [2024] for text, and ShareGPT4V Chen and others [2023] , LLaVA-Instruct Liu et al. [2023] , and MMStar Chen and others [2024] for image-text inputs. We compare PGuard with native and external guardrails. Native guardrails derive safety signals from the protected backbone; external guardrails run a separate safety model over the query and response. Native guardrails : GradSafe Xie and others [2024] (Llama-2-7B Touvron et al. [2023] ), SIREN Jiao et al. [2026] (Llama-3.1-8B Grattafiori et al. [2024] ), NExT-Guard Fang et al. [2026a] (Qwen3-8B), HiddenDetect Jiang and others [2025b] (LLaVA-1.6-7B Li et al. [2024] ). External guardrails : SCM-7B Li et al. [2025b] (Qwen2.5-7B Yang et al. [2024] ), Qwen3Guard-Stream-8B Zhao and others [2025] (Qwen3-8B Yang and others [2025] ), Qwen3Guard-Gen-8B Zhao and others [2025] , WildGuard-7B Han et al. [2024] , PolyGuard-Qwen-7B Kumar and others [2025] ,",
+   "text_with_context": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models | Experiments > Experimental Setup\n\n. [2023] and WildChat Zhao and others [2024] for text, and ShareGPT4V Chen and others [2023] , LLaVA-Instruct Liu et al. [2023] , and MMStar Chen and others [2024] for image-text inputs. We compare PGuard with native and external guardrails. Native guardrails derive safety signals from the protected backbone; external guardrails run a separate safety model over the query and response. Native guardrails : GradSafe Xie and others [2024] (Llama-2-7B Touvron et al. [2023] ), SIREN Jiao et al. [2026] (Llama-3.1-8B Grattafiori et al. [2024] ), NExT-Guard Fang et al. [2026a] (Qwen3-8B), HiddenDetect Jiang and others [2025b] (LLaVA-1.6-7B Li et al. [2024] ). External guardrails : SCM-7B Li et al. [2025b] (Qwen2.5-7B Yang et al. [2024] ), Qwen3Guard-Stream-8B Zhao and others [2025] (Qwen3-8B Yang and others [2025] ), Qwen3Guard-Gen-8B Zhao and others [2025] , WildGuard-7B Han et al. [2024] , PolyGuard-Qwen-7B Kumar and others [2025] ,",
+   "title": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02791v2#S4.SS1",
+   "pdf_url": "https://arxiv.org/pdf/2611.02791v2",
+   "source_sha256": "054f018a596f629e0871b54490665a0bd59fa0e13741d4097e351302625d791c"
+  },
+  {
+   "chunk_id": "2611.02791v2_c0007",
+   "arxiv_id": "2611.02791v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02791v2#S2",
+   "section": "methodology",
+   "subsection": "",
+   "high_value": false,
+   "text": "Overview of PGuard . (a) PGuard extracts intermediate representations from selected layers of a frozen backbone during prefill and decode. (b) Dynamic layer gating combines layer features for stateless, EMA-attention, or GRU modeling, and task-specific classifiers produce risk scores. Serving co-design integrates selective computation, parallelism, non-blocking execution, and fusion (Section 3 ). (c) Per-token risk scores are returned through engine metadata, and the application applies its policy when a score crosses the threshold.",
+   "text_with_context": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models | Methodology\n\nOverview of PGuard . (a) PGuard extracts intermediate representations from selected layers of a frozen backbone during prefill and decode. (b) Dynamic layer gating combines layer features for stateless, EMA-attention, or GRU modeling, and task-specific classifiers produce risk scores. Serving co-design integrates selective computation, parallelism, non-blocking execution, and fusion (Section 3 ). (c) Per-token risk scores are returned through engine metadata, and the application applies its policy when a score crosses the threshold.",
+   "title": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02791v2#S2",
+   "pdf_url": "https://arxiv.org/pdf/2611.02791v2",
+   "source_sha256": "054f018a596f629e0871b54490665a0bd59fa0e13741d4097e351302625d791c"
+  },
+  {
+   "chunk_id": "2611.02791v2_c0016",
+   "arxiv_id": "2611.02791v2",
+   "page_number": null,
+   "html_url": "https://arxiv.org/html/2611.02791v2#S2.SS6",
+   "section": "methodology",
+   "subsection": "streaming detection and decision",
+   "high_value": false,
+   "text": "For sequence variants, however, the recurrent or attention-based state is still updated at every token, ensuring that each reported score incorporates evidence from the entire processed prefix.\nThe early-interception analysis in Section 4.4 uses the full per-token scoring trajectory rather than sampled scores. PGuard also supports a two-tier cascade in which the native variant performs token-level scoring on all traffic, while only flagged content is escalated to an external reasoning guardrail for fine-grained adjudication (Section 4.8 ).",
+   "text_with_context": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models | Methodology > Streaming Detection And Decision\n\nFor sequence variants, however, the recurrent or attention-based state is still updated at every token, ensuring that each reported score incorporates evidence from the entire processed prefix.\nThe early-interception analysis in Section 4.4 uses the full per-token scoring trajectory rather than sampled scores. PGuard also supports a two-tier cascade in which the native variant performs token-level scoring on all traffic, while only flagged content is escalated to an external reasoning guardrail for fine-grained adjudication (Section 4.8 ).",
+   "title": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models",
+   "source": "html",
+   "source_url": "https://arxiv.org/html/2611.02791v2#S2.SS6",
+   "pdf_url": "https://arxiv.org/pdf/2611.02791v2",
+   "source_sha256": "054f018a596f629e0871b54490665a0bd59fa0e13741d4097e351302625d791c"
+  }
+ ],
+ "evidence_management": {
+  "protected_ids": [
+   "2611.02791v2_paragraph_6cd0501e91cc6bbe_0",
+   "2611.02791v2_c0001",
+   "2611.02791v2_c0002",
+   "2611.02791v2_c0006",
+   "2611.02791v2_c0000",
+   "2611.02791v2_c0039",
+   "2611.02791v2_c0009",
+   "2611.02791v2_c0005",
+   "2611.02791v2_c0004",
+   "2611.02791v2_c0038",
+   "2611.02791v2_c0015",
+   "2611.02791v2_paragraph_07ae0e871707be65_0",
+   "2611.02791v2_c0042",
+   "2611.02791v2_c0020",
+   "2611.02791v2_c0019",
+   "2611.02791v2_c0037",
+   "2611.02791v2_c0017",
+   "2611.02791v2_c0023",
+   "2611.02791v2_c0010",
+   "2611.02791v2_c0003",
+   "2611.02791v2_c0028",
+   "2611.02791v2_c0011",
+   "2611.02791v2_c0036",
+   "2611.02791v2_table_12908efa1134d9fc_1",
+   "2611.02791v2_table_12908efa1134d9fc_2",
+   "2611.02791v2_table_12908efa1134d9fc_3",
+   "2611.02791v2_c0025",
+   "2611.02791v2_c0007",
+   "2611.02791v2_c0016"
+  ],
+  "supplementary_ids": [],
+  "searches": [
+   {
+    "query": "A video platform needs safety moderation for a multimodal assistant at scale. How does PGuard perform on image-text safety, how does a two-tier setup with an external guard perform and what does it save, what memory does PGuard need, and what overhead should the platform expect on its own serving stack?",
+    "purpose": "original question",
+    "role": "original",
+    "chunk_ids": [
+     "2611.02791v2_paragraph_6cd0501e91cc6bbe_0",
+     "2611.02791v2_c0001",
+     "2611.02791v2_c0002",
+     "2611.02791v2_c0006",
+     "2611.02791v2_c0000",
+     "2611.02791v2_c0005",
+     "2611.02791v2_c0004",
+     "2611.02791v2_c0039",
+     "2611.02791v2_c0009",
+     "2611.02791v2_paragraph_07ae0e871707be65_0",
+     "2611.02791v2_c0019",
+     "2611.02791v2_paragraph_958ebec7b639e581_0",
+     "2611.02791v2_c0038",
+     "2611.02791v2_c0015",
+     "2611.02791v2_c0042",
+     "2611.02791v2_c0003",
+     "2611.02791v2_c0028",
+     "2611.02791v2_c0011",
+     "2611.02791v2_c0037",
+     "2611.02791v2_c0023",
+     "2611.02791v2_c0010",
+     "2611.02791v2_c0020",
+     "2611.02791v2_c0036",
+     "2611.02791v2_table_de629a5f57790c34_9",
+     "2611.02791v2_c0017",
+     "2611.02791v2_table_de629a5f57790c34_11",
+     "2611.02791v2_table_de629a5f57790c34_10",
+     "2611.02791v2_table_de629a5f57790c34_2",
+     "2611.02791v2_table_de629a5f57790c34_5",
+     "2611.02791v2_table_de629a5f57790c34_14"
+    ],
+    "error": null
+   },
+   {
+    "query": "How does PGuard perform on image-text safety?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02791v2_c0010",
+     "2611.02791v2_c0015",
+     "2611.02791v2_paragraph_6cd0501e91cc6bbe_0",
+     "2611.02791v2_c0025",
+     "2611.02791v2_c0000",
+     "2611.02791v2_c0001",
+     "2611.02791v2_c0027",
+     "2611.02791v2_c0028",
+     "2611.02791v2_c0005",
+     "2611.02791v2_c0009",
+     "2611.02791v2_c0004",
+     "2611.02791v2_c0011",
+     "2611.02791v2_c0024",
+     "2611.02791v2_c0030",
+     "2611.02791v2_table_de629a5f57790c34_9",
+     "2611.02791v2_table_b0dc99546ec1da3a_9",
+     "2611.02791v2_table_b0dc99546ec1da3a_10",
+     "2611.02791v2_table_de629a5f57790c34_10",
+     "2611.02791v2_table_de629a5f57790c34_11",
+     "2611.02791v2_table_b0dc99546ec1da3a_11",
+     "2611.02791v2_c0035",
+     "2611.02791v2_table_de629a5f57790c34_13",
+     "2611.02791v2_table_de629a5f57790c34_12",
+     "2611.02791v2_c0014",
+     "2611.02791v2_table_b0dc99546ec1da3a_14",
+     "2611.02791v2_table_a71b89a253252614_1",
+     "2611.02791v2_table_b0dc99546ec1da3a_12",
+     "2611.02791v2_table_de629a5f57790c34_14",
+     "2611.02791v2_table_b0dc99546ec1da3a_13",
+     "2611.02791v2_table_b0dc99546ec1da3a_6"
+    ],
+    "error": null
+   },
+   {
+    "query": "PGuard how does a two-tier setup with an external guard perform?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02791v2_c0039",
+     "2611.02791v2_c0041",
+     "2611.02791v2_c0040",
+     "2611.02791v2_c0042",
+     "2611.02791v2_c0016",
+     "2611.02791v2_c0009",
+     "2611.02791v2_table_8367a3a6c0cb18d6_3",
+     "2611.02791v2_c0020",
+     "2611.02791v2_c0019",
+     "2611.02791v2_table_8367a3a6c0cb18d6_1",
+     "2611.02791v2_c0025",
+     "2611.02791v2_table_8367a3a6c0cb18d6_2",
+     "2611.02791v2_c0002",
+     "2611.02791v2_c0003",
+     "2611.02791v2_c0023",
+     "2611.02791v2_c0000",
+     "2611.02791v2_c0011",
+     "2611.02791v2_c0004",
+     "2611.02791v2_c0038",
+     "2611.02791v2_paragraph_07ae0e871707be65_0",
+     "2611.02791v2_paragraph_6cd0501e91cc6bbe_0",
+     "2611.02791v2_c0024",
+     "2611.02791v2_c0017",
+     "2611.02791v2_c0001",
+     "2611.02791v2_c0028",
+     "2611.02791v2_c0015",
+     "2611.02791v2_paragraph_a19424faf87d2fb7_0",
+     "2611.02791v2_c0031",
+     "2611.02791v2_table_dda9dc168318c057_1",
+     "2611.02791v2_c0029"
+    ],
+    "error": null
+   },
+   {
+    "query": "PGuard what does it save?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02791v2_c0000",
+     "2611.02791v2_c0038",
+     "2611.02791v2_c0020",
+     "2611.02791v2_c0001",
+     "2611.02791v2_c0009",
+     "2611.02791v2_c0042",
+     "2611.02791v2_paragraph_6cd0501e91cc6bbe_0",
+     "2611.02791v2_c0037",
+     "2611.02791v2_c0015",
+     "2611.02791v2_c0017",
+     "2611.02791v2_c0007",
+     "2611.02791v2_paragraph_07ae0e871707be65_0",
+     "2611.02791v2_c0039",
+     "2611.02791v2_table_dda9dc168318c057_9",
+     "2611.02791v2_c0016",
+     "2611.02791v2_table_dda9dc168318c057_12",
+     "2611.02791v2_table_dda9dc168318c057_10",
+     "2611.02791v2_paragraph_a19424faf87d2fb7_0",
+     "2611.02791v2_c0010",
+     "2611.02791v2_table_dda9dc168318c057_11",
+     "2611.02791v2_c0040",
+     "2611.02791v2_table_dda9dc168318c057_13",
+     "2611.02791v2_c0018",
+     "2611.02791v2_c0014",
+     "2611.02791v2_c0005",
+     "2611.02791v2_table_dda9dc168318c057_14",
+     "2611.02791v2_c0004",
+     "2611.02791v2_c0029",
+     "2611.02791v2_table_dda9dc168318c057_3",
+     "2611.02791v2_table_12908efa1134d9fc_1"
+    ],
+    "error": null
+   },
+   {
+    "query": "what memory does PGuard need?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02791v2_c0038",
+     "2611.02791v2_table_12908efa1134d9fc_3",
+     "2611.02791v2_table_12908efa1134d9fc_2",
+     "2611.02791v2_c0037",
+     "2611.02791v2_table_12908efa1134d9fc_1",
+     "2611.02791v2_c0017",
+     "2611.02791v2_c0036",
+     "2611.02791v2_c0023",
+     "2611.02791v2_c0001",
+     "2611.02791v2_c0000",
+     "2611.02791v2_c0005",
+     "2611.02791v2_c0020",
+     "2611.02791v2_paragraph_6cd0501e91cc6bbe_0",
+     "2611.02791v2_paragraph_07ae0e871707be65_0",
+     "2611.02791v2_c0034",
+     "2611.02791v2_c0042",
+     "2611.02791v2_table_d5792bb45c04ea6b_1",
+     "2611.02791v2_c0016",
+     "2611.02791v2_table_dda9dc168318c057_10",
+     "2611.02791v2_c0039",
+     "2611.02791v2_c0004",
+     "2611.02791v2_c0007",
+     "2611.02791v2_table_d5792bb45c04ea6b_6",
+     "2611.02791v2_table_dda9dc168318c057_13",
+     "2611.02791v2_table_dda9dc168318c057_9",
+     "2611.02791v2_table_dda9dc168318c057_12",
+     "2611.02791v2_table_dda9dc168318c057_11",
+     "2611.02791v2_table_dda9dc168318c057_14",
+     "2611.02791v2_table_d5792bb45c04ea6b_5",
+     "2611.02791v2_table_d5792bb45c04ea6b_2"
+    ],
+    "error": null
+   },
+   {
+    "query": "PGuard what overhead should the platform expect on its own serving stack?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02791v2_c0001",
+     "2611.02791v2_c0039",
+     "2611.02791v2_c0019",
+     "2611.02791v2_paragraph_6cd0501e91cc6bbe_0",
+     "2611.02791v2_c0038",
+     "2611.02791v2_c0005",
+     "2611.02791v2_c0009",
+     "2611.02791v2_c0006",
+     "2611.02791v2_c0015",
+     "2611.02791v2_c0023",
+     "2611.02791v2_c0036",
+     "2611.02791v2_c0037",
+     "2611.02791v2_c0004",
+     "2611.02791v2_c0020",
+     "2611.02791v2_c0000",
+     "2611.02791v2_c0017",
+     "2611.02791v2_c0042",
+     "2611.02791v2_paragraph_07ae0e871707be65_0",
+     "2611.02791v2_c0007",
+     "2611.02791v2_c0003",
+     "2611.02791v2_c0022",
+     "2611.02791v2_table_12908efa1134d9fc_1",
+     "2611.02791v2_c0002",
+     "2611.02791v2_table_12908efa1134d9fc_3",
+     "2611.02791v2_table_12908efa1134d9fc_2",
+     "2611.02791v2_c0010",
+     "2611.02791v2_c0031",
+     "2611.02791v2_c0021",
+     "2611.02791v2_c0034",
+     "2611.02791v2_paragraph_408cea153ae26a76_0"
+    ],
+    "error": null
+   }
+  ],
+  "tokens": 7739,
+  "base_tokens": 7739,
+  "base_budget": 8000,
+  "conclusion_tokens": 0,
+  "conclusion_allowance": 800,
+  "conclusion_ids": [],
+  "conclusion_considered": [
+   {
+    "paper": "2611.02791v2",
+    "conclusion": null,
+    "rank": null
+   }
+  ],
+  "trimmed_for_request_size": [],
+  "notes": [],
+  "component_searches": [
+   {
+    "query": "How does PGuard perform on image-text safety?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02791v2_c0010",
+     "2611.02791v2_c0015",
+     "2611.02791v2_paragraph_6cd0501e91cc6bbe_0",
+     "2611.02791v2_c0025",
+     "2611.02791v2_c0000",
+     "2611.02791v2_c0001",
+     "2611.02791v2_c0027",
+     "2611.02791v2_c0028",
+     "2611.02791v2_c0005",
+     "2611.02791v2_c0009",
+     "2611.02791v2_c0004",
+     "2611.02791v2_c0011",
+     "2611.02791v2_c0024",
+     "2611.02791v2_c0030",
+     "2611.02791v2_table_de629a5f57790c34_9",
+     "2611.02791v2_table_b0dc99546ec1da3a_9",
+     "2611.02791v2_table_b0dc99546ec1da3a_10",
+     "2611.02791v2_table_de629a5f57790c34_10",
+     "2611.02791v2_table_de629a5f57790c34_11",
+     "2611.02791v2_table_b0dc99546ec1da3a_11",
+     "2611.02791v2_c0035",
+     "2611.02791v2_table_de629a5f57790c34_13",
+     "2611.02791v2_table_de629a5f57790c34_12",
+     "2611.02791v2_c0014",
+     "2611.02791v2_table_b0dc99546ec1da3a_14",
+     "2611.02791v2_table_a71b89a253252614_1",
+     "2611.02791v2_table_b0dc99546ec1da3a_12",
+     "2611.02791v2_table_de629a5f57790c34_14",
+     "2611.02791v2_table_b0dc99546ec1da3a_13",
+     "2611.02791v2_table_b0dc99546ec1da3a_6"
+    ],
+    "error": null
+   },
+   {
+    "query": "PGuard how does a two-tier setup with an external guard perform?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02791v2_c0039",
+     "2611.02791v2_c0041",
+     "2611.02791v2_c0040",
+     "2611.02791v2_c0042",
+     "2611.02791v2_c0016",
+     "2611.02791v2_c0009",
+     "2611.02791v2_table_8367a3a6c0cb18d6_3",
+     "2611.02791v2_c0020",
+     "2611.02791v2_c0019",
+     "2611.02791v2_table_8367a3a6c0cb18d6_1",
+     "2611.02791v2_c0025",
+     "2611.02791v2_table_8367a3a6c0cb18d6_2",
+     "2611.02791v2_c0002",
+     "2611.02791v2_c0003",
+     "2611.02791v2_c0023",
+     "2611.02791v2_c0000",
+     "2611.02791v2_c0011",
+     "2611.02791v2_c0004",
+     "2611.02791v2_c0038",
+     "2611.02791v2_paragraph_07ae0e871707be65_0",
+     "2611.02791v2_paragraph_6cd0501e91cc6bbe_0",
+     "2611.02791v2_c0024",
+     "2611.02791v2_c0017",
+     "2611.02791v2_c0001",
+     "2611.02791v2_c0028",
+     "2611.02791v2_c0015",
+     "2611.02791v2_paragraph_a19424faf87d2fb7_0",
+     "2611.02791v2_c0031",
+     "2611.02791v2_table_dda9dc168318c057_1",
+     "2611.02791v2_c0029"
+    ],
+    "error": null
+   },
+   {
+    "query": "PGuard what does it save?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02791v2_c0000",
+     "2611.02791v2_c0038",
+     "2611.02791v2_c0020",
+     "2611.02791v2_c0001",
+     "2611.02791v2_c0009",
+     "2611.02791v2_c0042",
+     "2611.02791v2_paragraph_6cd0501e91cc6bbe_0",
+     "2611.02791v2_c0037",
+     "2611.02791v2_c0015",
+     "2611.02791v2_c0017",
+     "2611.02791v2_c0007",
+     "2611.02791v2_paragraph_07ae0e871707be65_0",
+     "2611.02791v2_c0039",
+     "2611.02791v2_table_dda9dc168318c057_9",
+     "2611.02791v2_c0016",
+     "2611.02791v2_table_dda9dc168318c057_12",
+     "2611.02791v2_table_dda9dc168318c057_10",
+     "2611.02791v2_paragraph_a19424faf87d2fb7_0",
+     "2611.02791v2_c0010",
+     "2611.02791v2_table_dda9dc168318c057_11",
+     "2611.02791v2_c0040",
+     "2611.02791v2_table_dda9dc168318c057_13",
+     "2611.02791v2_c0018",
+     "2611.02791v2_c0014",
+     "2611.02791v2_c0005",
+     "2611.02791v2_table_dda9dc168318c057_14",
+     "2611.02791v2_c0004",
+     "2611.02791v2_c0029",
+     "2611.02791v2_table_dda9dc168318c057_3",
+     "2611.02791v2_table_12908efa1134d9fc_1"
+    ],
+    "error": null
+   },
+   {
+    "query": "what memory does PGuard need?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02791v2_c0038",
+     "2611.02791v2_table_12908efa1134d9fc_3",
+     "2611.02791v2_table_12908efa1134d9fc_2",
+     "2611.02791v2_c0037",
+     "2611.02791v2_table_12908efa1134d9fc_1",
+     "2611.02791v2_c0017",
+     "2611.02791v2_c0036",
+     "2611.02791v2_c0023",
+     "2611.02791v2_c0001",
+     "2611.02791v2_c0000",
+     "2611.02791v2_c0005",
+     "2611.02791v2_c0020",
+     "2611.02791v2_paragraph_6cd0501e91cc6bbe_0",
+     "2611.02791v2_paragraph_07ae0e871707be65_0",
+     "2611.02791v2_c0034",
+     "2611.02791v2_c0042",
+     "2611.02791v2_table_d5792bb45c04ea6b_1",
+     "2611.02791v2_c0016",
+     "2611.02791v2_table_dda9dc168318c057_10",
+     "2611.02791v2_c0039",
+     "2611.02791v2_c0004",
+     "2611.02791v2_c0007",
+     "2611.02791v2_table_d5792bb45c04ea6b_6",
+     "2611.02791v2_table_dda9dc168318c057_13",
+     "2611.02791v2_table_dda9dc168318c057_9",
+     "2611.02791v2_table_dda9dc168318c057_12",
+     "2611.02791v2_table_dda9dc168318c057_11",
+     "2611.02791v2_table_dda9dc168318c057_14",
+     "2611.02791v2_table_d5792bb45c04ea6b_5",
+     "2611.02791v2_table_d5792bb45c04ea6b_2"
+    ],
+    "error": null
+   },
+   {
+    "query": "PGuard what overhead should the platform expect on its own serving stack?",
+    "purpose": "question component",
+    "role": "component",
+    "chunk_ids": [
+     "2611.02791v2_c0001",
+     "2611.02791v2_c0039",
+     "2611.02791v2_c0019",
+     "2611.02791v2_paragraph_6cd0501e91cc6bbe_0",
+     "2611.02791v2_c0038",
+     "2611.02791v2_c0005",
+     "2611.02791v2_c0009",
+     "2611.02791v2_c0006",
+     "2611.02791v2_c0015",
+     "2611.02791v2_c0023",
+     "2611.02791v2_c0036",
+     "2611.02791v2_c0037",
+     "2611.02791v2_c0004",
+     "2611.02791v2_c0020",
+     "2611.02791v2_c0000",
+     "2611.02791v2_c0017",
+     "2611.02791v2_c0042",
+     "2611.02791v2_paragraph_07ae0e871707be65_0",
+     "2611.02791v2_c0007",
+     "2611.02791v2_c0003",
+     "2611.02791v2_c0022",
+     "2611.02791v2_table_12908efa1134d9fc_1",
+     "2611.02791v2_c0002",
+     "2611.02791v2_table_12908efa1134d9fc_3",
+     "2611.02791v2_table_12908efa1134d9fc_2",
+     "2611.02791v2_c0010",
+     "2611.02791v2_c0031",
+     "2611.02791v2_c0021",
+     "2611.02791v2_c0034",
+     "2611.02791v2_paragraph_408cea153ae26a76_0"
+    ],
+    "error": null
+   }
+  ]
+ },
+ "assistance": {
+  "mode": "standard",
+  "activated": false,
+  "route": null
+ },
+ "plan": null,
+ "synthesis_report": {
+  "schema_errors": [],
+  "dropped": [],
+  "contract_repairs": [],
+  "component_map_errors": []
+ },
+ "review_report": {
+  "withheld_no_decision": [],
+  "invalid_decisions": [],
+  "duplicate_decisions": [],
+  "repairs": [],
+  "dropped_limitations": [],
+  "component_check_errors": []
+ },
+ "precheck_flags": {
+  "6": [
+   {
+    "number": "8",
+    "issues": [
+     "subject_mismatch"
+    ]
+   }
+  ],
+  "10": [
+   {
+    "number": "0.797",
+    "issues": [
+     "metric_mismatch"
+    ]
+   }
+  ]
+ },
+ "review": {
+  "coverage": "partial",
+  "gap": "The supplied passages do not establish cascade accuracy or savings, numerical per-request state or GRU workspace requirements, or overhead on the platform’s own stack."
+ },
+ "attempts": [
+  {
+   "attempt": 1,
+   "mode": "standard",
+   "resumed_from": [],
+   "status": "complete",
+   "seconds": 153.219,
+   "timings": {
+    "evidence": 34.125,
+    "synthesis": 73.548,
+    "review": 45.44,
+    "publication": 0.045
+   }
+  }
+ ],
+ "human_review": {
+  "status": "pending",
+  "reviewer": null
+ },
+ "approved": false,
+ "engine": "s3-standard",
+ "components": [
+  "How does PGuard perform on image-text safety?",
+  "PGuard how does a two-tier setup with an external guard perform?",
+  "PGuard what does it save?",
+  "what memory does PGuard need?",
+  "PGuard what overhead should the platform expect on its own serving stack?"
+ ]
+}

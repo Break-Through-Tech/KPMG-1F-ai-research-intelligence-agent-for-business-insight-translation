@@ -1,0 +1,1415 @@
+{
+  "provider_calls": 0,
+  "outcomes": {
+    "accept": 4,
+    "reject": 5,
+    "review": 6
+  },
+  "cases": [
+    {
+      "name": "saved-0",
+      "expected": "accept",
+      "human_reviewed": false,
+      "valid": true,
+      "original_unchanged": true,
+      "question": "What numerical comparison is supported for Continuous-Utility Direct Preference Optimization?",
+      "claim": "On mathematical reasoning benchmarks, CU-DPO improved strategy-selection accuracy from 35–46% to 68–78% across seven base models.",
+      "observation": {
+        "round": 1,
+        "index_sha256": "78d8efd7c9df075be09ffa5f3a9c7ca79c54efa2d7caf75c8f0329ea72ff41aa",
+        "evidence": [
+          {
+            "section": "abstract",
+            "pdf_url": "https://arxiv.org/pdf/2602.00931v2",
+            "html_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+            "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+            "title": "Continuous-Utility Direct Preference Optimization",
+            "source": "html",
+            "arxiv_id": "2602.00931v2",
+            "chunk_id": "2602.00931v2_c0000",
+            "text": "Large language model reasoning is often treated as a monolithic capability, relying on binary preference supervision that fails to capture partial progress or fine-grained reasoning quality. We introduce continuous utility direct preference optimization ( CU- DPO ) , a framework that aligns models to a portfolio of prompt-based cognitive strategies by replacing binary labels with continuous scores that capture fine-grained reasoning quality. We prove that learning with K strategies yields a \\Theta(K\\log K) improvement in sample complexity over binary preferences, and that DPO converges to the entropy-regularized utility-maximizing policy. To exploit this signal, we propose a two-stage training pipeline: (i) strategy selection, which optimizes the model to choose the best strategy for a given problem via best-vs-all comparisons, and (ii) execution refinement, which trains the model to correctly execute the selected strategy using margin-stratified pairs. On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks.",
+            "page_number": null
+          }
+        ],
+        "claims": [
+          {
+            "claim_index": 0,
+            "producer_status": "proposed",
+            "status": "accept",
+            "reason": "scope, role, value, and exact delivered evidence agree",
+            "current_decision": "accepted",
+            "current_numeric": "uncertain",
+            "proposal": {
+              "scope": {
+                "subject": "CU- DPO",
+                "metric": "strategy selection accuracy",
+                "setting": "mathematical reasoning benchmarks",
+                "population": "seven base models"
+              },
+              "before": {
+                "lower": "35",
+                "upper": "46",
+                "form": "range",
+                "unit": "percent",
+                "locators": [
+                  {
+                    "chunk_id": "2602.00931v2_c0000",
+                    "selector": [
+                      1056,
+                      1062
+                    ]
+                  }
+                ]
+              },
+              "after": {
+                "lower": "68",
+                "upper": "78",
+                "form": "range",
+                "unit": "percent",
+                "locators": [
+                  {
+                    "chunk_id": "2602.00931v2_c0000",
+                    "selector": [
+                      1066,
+                      1072
+                    ]
+                  }
+                ]
+              }
+            },
+            "source_role_labels": {
+              "before": "the before range",
+              "after": "the after range"
+            },
+            "source_links": [
+              {
+                "locator": {
+                  "chunk_id": "2602.00931v2_c0000",
+                  "selector": [
+                    1056,
+                    1062
+                  ]
+                },
+                "paper": "2602.00931v2",
+                "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+                "source_sha256": null,
+                "passage_sha256": "6a4943b4e6384785a7c3d96deccab341d7040027805a3f87e362e5a55139cb79",
+                "source_text": "35–46%",
+                "header_path": [],
+                "header_cell_id": null,
+                "table_id": null
+              },
+              {
+                "locator": {
+                  "chunk_id": "2602.00931v2_c0000",
+                  "selector": [
+                    1066,
+                    1072
+                  ]
+                },
+                "paper": "2602.00931v2",
+                "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+                "source_sha256": null,
+                "passage_sha256": "6a4943b4e6384785a7c3d96deccab341d7040027805a3f87e362e5a55139cb79",
+                "source_text": "68–78%",
+                "header_path": [],
+                "header_cell_id": null,
+                "table_id": null
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "saved-4",
+      "expected": "accept",
+      "human_reviewed": false,
+      "valid": true,
+      "original_unchanged": true,
+      "question": "What numerical comparison is supported for Continuous-Utility Direct Preference Optimization?",
+      "claim": "CU-DPO improved strategy-selection accuracy from 35–46% to 68–78% across seven base models on mathematical reasoning benchmarks.",
+      "observation": {
+        "round": 1,
+        "index_sha256": "78d8efd7c9df075be09ffa5f3a9c7ca79c54efa2d7caf75c8f0329ea72ff41aa",
+        "evidence": [
+          {
+            "section": "abstract",
+            "pdf_url": "https://arxiv.org/pdf/2602.00931v2",
+            "html_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+            "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+            "title": "Continuous-Utility Direct Preference Optimization",
+            "source": "html",
+            "arxiv_id": "2602.00931v2",
+            "chunk_id": "2602.00931v2_c0000",
+            "text": "Large language model reasoning is often treated as a monolithic capability, relying on binary preference supervision that fails to capture partial progress or fine-grained reasoning quality. We introduce continuous utility direct preference optimization ( CU- DPO ) , a framework that aligns models to a portfolio of prompt-based cognitive strategies by replacing binary labels with continuous scores that capture fine-grained reasoning quality. We prove that learning with K strategies yields a \\Theta(K\\log K) improvement in sample complexity over binary preferences, and that DPO converges to the entropy-regularized utility-maximizing policy. To exploit this signal, we propose a two-stage training pipeline: (i) strategy selection, which optimizes the model to choose the best strategy for a given problem via best-vs-all comparisons, and (ii) execution refinement, which trains the model to correctly execute the selected strategy using margin-stratified pairs. On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks.",
+            "page_number": null
+          }
+        ],
+        "claims": [
+          {
+            "claim_index": 0,
+            "producer_status": "proposed",
+            "status": "accept",
+            "reason": "scope, role, value, and exact delivered evidence agree",
+            "current_decision": "accepted",
+            "current_numeric": "uncertain",
+            "proposal": {
+              "scope": {
+                "subject": "CU- DPO",
+                "metric": "strategy selection accuracy",
+                "setting": "mathematical reasoning benchmarks",
+                "population": "seven base models"
+              },
+              "before": {
+                "lower": "35",
+                "upper": "46",
+                "form": "range",
+                "unit": "percent",
+                "locators": [
+                  {
+                    "chunk_id": "2602.00931v2_c0000",
+                    "selector": [
+                      1056,
+                      1062
+                    ]
+                  }
+                ]
+              },
+              "after": {
+                "lower": "68",
+                "upper": "78",
+                "form": "range",
+                "unit": "percent",
+                "locators": [
+                  {
+                    "chunk_id": "2602.00931v2_c0000",
+                    "selector": [
+                      1066,
+                      1072
+                    ]
+                  }
+                ]
+              }
+            },
+            "source_role_labels": {
+              "before": "the before range",
+              "after": "the after range"
+            },
+            "source_links": [
+              {
+                "locator": {
+                  "chunk_id": "2602.00931v2_c0000",
+                  "selector": [
+                    1056,
+                    1062
+                  ]
+                },
+                "paper": "2602.00931v2",
+                "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+                "source_sha256": null,
+                "passage_sha256": "6a4943b4e6384785a7c3d96deccab341d7040027805a3f87e362e5a55139cb79",
+                "source_text": "35–46%",
+                "header_path": [],
+                "header_cell_id": null,
+                "table_id": null
+              },
+              {
+                "locator": {
+                  "chunk_id": "2602.00931v2_c0000",
+                  "selector": [
+                    1066,
+                    1072
+                  ]
+                },
+                "paper": "2602.00931v2",
+                "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+                "source_sha256": null,
+                "passage_sha256": "6a4943b4e6384785a7c3d96deccab341d7040027805a3f87e362e5a55139cb79",
+                "source_text": "68–78%",
+                "header_path": [],
+                "header_cell_id": null,
+                "table_id": null
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "reversed",
+      "expected": "reject",
+      "human_reviewed": false,
+      "valid": false,
+      "original_unchanged": true,
+      "question": "What numerical comparison is supported for Continuous-Utility Direct Preference Optimization?",
+      "claim": "On mathematical reasoning benchmarks, CU-DPO improved strategy-selection accuracy from 68–78% to 35–46% across seven base models.",
+      "observation": {
+        "round": 1,
+        "index_sha256": "78d8efd7c9df075be09ffa5f3a9c7ca79c54efa2d7caf75c8f0329ea72ff41aa",
+        "evidence": [
+          {
+            "section": "abstract",
+            "pdf_url": "https://arxiv.org/pdf/2602.00931v2",
+            "html_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+            "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+            "title": "Continuous-Utility Direct Preference Optimization",
+            "source": "html",
+            "arxiv_id": "2602.00931v2",
+            "chunk_id": "2602.00931v2_c0000",
+            "text": "Large language model reasoning is often treated as a monolithic capability, relying on binary preference supervision that fails to capture partial progress or fine-grained reasoning quality. We introduce continuous utility direct preference optimization ( CU- DPO ) , a framework that aligns models to a portfolio of prompt-based cognitive strategies by replacing binary labels with continuous scores that capture fine-grained reasoning quality. We prove that learning with K strategies yields a \\Theta(K\\log K) improvement in sample complexity over binary preferences, and that DPO converges to the entropy-regularized utility-maximizing policy. To exploit this signal, we propose a two-stage training pipeline: (i) strategy selection, which optimizes the model to choose the best strategy for a given problem via best-vs-all comparisons, and (ii) execution refinement, which trains the model to correctly execute the selected strategy using margin-stratified pairs. On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks.",
+            "page_number": null
+          }
+        ],
+        "claims": [
+          {
+            "claim_index": 0,
+            "producer_status": "reject",
+            "status": "reject",
+            "reason": "direction wording conflicts with the linked endpoints",
+            "current_decision": "accepted",
+            "current_numeric": "uncertain"
+          }
+        ]
+      }
+    },
+    {
+      "name": "mixed",
+      "expected": "reject",
+      "human_reviewed": false,
+      "valid": false,
+      "original_unchanged": true,
+      "question": "What numerical comparison is supported for Continuous-Utility Direct Preference Optimization?",
+      "claim": "On mathematical reasoning benchmarks, CU-DPO improved strategy-selection accuracy from 35–78% to 46–68% across seven base models.",
+      "observation": {
+        "round": 1,
+        "index_sha256": "78d8efd7c9df075be09ffa5f3a9c7ca79c54efa2d7caf75c8f0329ea72ff41aa",
+        "evidence": [
+          {
+            "section": "abstract",
+            "pdf_url": "https://arxiv.org/pdf/2602.00931v2",
+            "html_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+            "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+            "title": "Continuous-Utility Direct Preference Optimization",
+            "source": "html",
+            "arxiv_id": "2602.00931v2",
+            "chunk_id": "2602.00931v2_c0000",
+            "text": "Large language model reasoning is often treated as a monolithic capability, relying on binary preference supervision that fails to capture partial progress or fine-grained reasoning quality. We introduce continuous utility direct preference optimization ( CU- DPO ) , a framework that aligns models to a portfolio of prompt-based cognitive strategies by replacing binary labels with continuous scores that capture fine-grained reasoning quality. We prove that learning with K strategies yields a \\Theta(K\\log K) improvement in sample complexity over binary preferences, and that DPO converges to the entropy-regularized utility-maximizing policy. To exploit this signal, we propose a two-stage training pipeline: (i) strategy selection, which optimizes the model to choose the best strategy for a given problem via best-vs-all comparisons, and (ii) execution refinement, which trains the model to correctly execute the selected strategy using margin-stratified pairs. On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks.",
+            "page_number": null
+          }
+        ],
+        "claims": [
+          {
+            "claim_index": 0,
+            "producer_status": "reject",
+            "status": "reject",
+            "reason": "direction wording conflicts with the linked endpoints",
+            "current_decision": "accepted",
+            "current_numeric": "uncertain"
+          }
+        ]
+      }
+    },
+    {
+      "name": "collapsed",
+      "expected": "reject",
+      "human_reviewed": false,
+      "valid": false,
+      "original_unchanged": true,
+      "question": "What numerical comparison is supported for Continuous-Utility Direct Preference Optimization?",
+      "claim": "On mathematical reasoning benchmarks, CU-DPO improved strategy-selection accuracy from 35% to 78% across seven base models.",
+      "observation": {
+        "round": 1,
+        "index_sha256": "78d8efd7c9df075be09ffa5f3a9c7ca79c54efa2d7caf75c8f0329ea72ff41aa",
+        "evidence": [
+          {
+            "section": "abstract",
+            "pdf_url": "https://arxiv.org/pdf/2602.00931v2",
+            "html_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+            "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+            "title": "Continuous-Utility Direct Preference Optimization",
+            "source": "html",
+            "arxiv_id": "2602.00931v2",
+            "chunk_id": "2602.00931v2_c0000",
+            "text": "Large language model reasoning is often treated as a monolithic capability, relying on binary preference supervision that fails to capture partial progress or fine-grained reasoning quality. We introduce continuous utility direct preference optimization ( CU- DPO ) , a framework that aligns models to a portfolio of prompt-based cognitive strategies by replacing binary labels with continuous scores that capture fine-grained reasoning quality. We prove that learning with K strategies yields a \\Theta(K\\log K) improvement in sample complexity over binary preferences, and that DPO converges to the entropy-regularized utility-maximizing policy. To exploit this signal, we propose a two-stage training pipeline: (i) strategy selection, which optimizes the model to choose the best strategy for a given problem via best-vs-all comparisons, and (ii) execution refinement, which trains the model to correctly execute the selected strategy using margin-stratified pairs. On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks.",
+            "page_number": null
+          }
+        ],
+        "claims": [
+          {
+            "claim_index": 0,
+            "producer_status": "proposed",
+            "status": "reject",
+            "reason": "before value, form, or unit differs",
+            "current_decision": "accepted",
+            "current_numeric": "uncertain",
+            "proposal": {
+              "scope": {
+                "subject": "CU- DPO",
+                "metric": "strategy selection accuracy",
+                "setting": "mathematical reasoning benchmarks",
+                "population": "seven base models"
+              },
+              "before": {
+                "lower": "35",
+                "upper": "35",
+                "form": "point",
+                "unit": "percent",
+                "locators": [
+                  {
+                    "chunk_id": "2602.00931v2_c0000",
+                    "selector": [
+                      1056,
+                      1062
+                    ]
+                  }
+                ]
+              },
+              "after": {
+                "lower": "78",
+                "upper": "78",
+                "form": "point",
+                "unit": "percent",
+                "locators": [
+                  {
+                    "chunk_id": "2602.00931v2_c0000",
+                    "selector": [
+                      1066,
+                      1072
+                    ]
+                  }
+                ]
+              }
+            },
+            "source_role_labels": {
+              "before": "the before range",
+              "after": "the after range"
+            },
+            "source_links": [
+              {
+                "locator": {
+                  "chunk_id": "2602.00931v2_c0000",
+                  "selector": [
+                    1056,
+                    1062
+                  ]
+                },
+                "paper": "2602.00931v2",
+                "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+                "source_sha256": null,
+                "passage_sha256": "6a4943b4e6384785a7c3d96deccab341d7040027805a3f87e362e5a55139cb79",
+                "source_text": "35–46%",
+                "header_path": [],
+                "header_cell_id": null,
+                "table_id": null
+              },
+              {
+                "locator": {
+                  "chunk_id": "2602.00931v2_c0000",
+                  "selector": [
+                    1066,
+                    1072
+                  ]
+                },
+                "paper": "2602.00931v2",
+                "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+                "source_sha256": null,
+                "passage_sha256": "6a4943b4e6384785a7c3d96deccab341d7040027805a3f87e362e5a55139cb79",
+                "source_text": "68–78%",
+                "header_path": [],
+                "header_cell_id": null,
+                "table_id": null
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "metric",
+      "expected": "review",
+      "human_reviewed": false,
+      "valid": false,
+      "original_unchanged": true,
+      "question": "What numerical comparison is supported for Continuous-Utility Direct Preference Optimization?",
+      "claim": "On mathematical reasoning benchmarks, CU-DPO improved preference accuracy from 35–46% to 68–78% across seven base models.",
+      "observation": {
+        "round": 1,
+        "index_sha256": "78d8efd7c9df075be09ffa5f3a9c7ca79c54efa2d7caf75c8f0329ea72ff41aa",
+        "evidence": [
+          {
+            "section": "abstract",
+            "pdf_url": "https://arxiv.org/pdf/2602.00931v2",
+            "html_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+            "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+            "title": "Continuous-Utility Direct Preference Optimization",
+            "source": "html",
+            "arxiv_id": "2602.00931v2",
+            "chunk_id": "2602.00931v2_c0000",
+            "text": "Large language model reasoning is often treated as a monolithic capability, relying on binary preference supervision that fails to capture partial progress or fine-grained reasoning quality. We introduce continuous utility direct preference optimization ( CU- DPO ) , a framework that aligns models to a portfolio of prompt-based cognitive strategies by replacing binary labels with continuous scores that capture fine-grained reasoning quality. We prove that learning with K strategies yields a \\Theta(K\\log K) improvement in sample complexity over binary preferences, and that DPO converges to the entropy-regularized utility-maximizing policy. To exploit this signal, we propose a two-stage training pipeline: (i) strategy selection, which optimizes the model to choose the best strategy for a given problem via best-vs-all comparisons, and (ii) execution refinement, which trains the model to correctly execute the selected strategy using margin-stratified pairs. On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks.",
+            "page_number": null
+          }
+        ],
+        "claims": [
+          {
+            "claim_index": 0,
+            "producer_status": "review",
+            "status": "review",
+            "reason": "comparison wording or scope is unbound or ambiguous",
+            "current_decision": "accepted",
+            "current_numeric": "uncertain"
+          }
+        ]
+      }
+    },
+    {
+      "name": "setting",
+      "expected": "review",
+      "human_reviewed": false,
+      "valid": false,
+      "original_unchanged": true,
+      "question": "What numerical comparison is supported for Continuous-Utility Direct Preference Optimization?",
+      "claim": "On clinical deployment, CU-DPO improved strategy-selection accuracy from 35–46% to 68–78% across seven base models.",
+      "observation": {
+        "round": 1,
+        "index_sha256": "78d8efd7c9df075be09ffa5f3a9c7ca79c54efa2d7caf75c8f0329ea72ff41aa",
+        "evidence": [
+          {
+            "section": "abstract",
+            "pdf_url": "https://arxiv.org/pdf/2602.00931v2",
+            "html_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+            "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+            "title": "Continuous-Utility Direct Preference Optimization",
+            "source": "html",
+            "arxiv_id": "2602.00931v2",
+            "chunk_id": "2602.00931v2_c0000",
+            "text": "Large language model reasoning is often treated as a monolithic capability, relying on binary preference supervision that fails to capture partial progress or fine-grained reasoning quality. We introduce continuous utility direct preference optimization ( CU- DPO ) , a framework that aligns models to a portfolio of prompt-based cognitive strategies by replacing binary labels with continuous scores that capture fine-grained reasoning quality. We prove that learning with K strategies yields a \\Theta(K\\log K) improvement in sample complexity over binary preferences, and that DPO converges to the entropy-regularized utility-maximizing policy. To exploit this signal, we propose a two-stage training pipeline: (i) strategy selection, which optimizes the model to choose the best strategy for a given problem via best-vs-all comparisons, and (ii) execution refinement, which trains the model to correctly execute the selected strategy using margin-stratified pairs. On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks.",
+            "page_number": null
+          }
+        ],
+        "claims": [
+          {
+            "claim_index": 0,
+            "producer_status": "review",
+            "status": "review",
+            "reason": "comparison wording or scope is unbound or ambiguous",
+            "current_decision": "held",
+            "current_numeric": "contradicted"
+          }
+        ]
+      }
+    },
+    {
+      "name": "unit",
+      "expected": "reject",
+      "human_reviewed": false,
+      "valid": false,
+      "original_unchanged": true,
+      "question": "What numerical comparison is supported for Continuous-Utility Direct Preference Optimization?",
+      "claim": "On mathematical reasoning benchmarks, CU-DPO improved strategy-selection accuracy from 35–46% to 68–78 percentage points across seven base models.",
+      "observation": {
+        "round": 1,
+        "index_sha256": "78d8efd7c9df075be09ffa5f3a9c7ca79c54efa2d7caf75c8f0329ea72ff41aa",
+        "evidence": [
+          {
+            "section": "abstract",
+            "pdf_url": "https://arxiv.org/pdf/2602.00931v2",
+            "html_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+            "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+            "title": "Continuous-Utility Direct Preference Optimization",
+            "source": "html",
+            "arxiv_id": "2602.00931v2",
+            "chunk_id": "2602.00931v2_c0000",
+            "text": "Large language model reasoning is often treated as a monolithic capability, relying on binary preference supervision that fails to capture partial progress or fine-grained reasoning quality. We introduce continuous utility direct preference optimization ( CU- DPO ) , a framework that aligns models to a portfolio of prompt-based cognitive strategies by replacing binary labels with continuous scores that capture fine-grained reasoning quality. We prove that learning with K strategies yields a \\Theta(K\\log K) improvement in sample complexity over binary preferences, and that DPO converges to the entropy-regularized utility-maximizing policy. To exploit this signal, we propose a two-stage training pipeline: (i) strategy selection, which optimizes the model to choose the best strategy for a given problem via best-vs-all comparisons, and (ii) execution refinement, which trains the model to correctly execute the selected strategy using margin-stratified pairs. On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks.",
+            "page_number": null
+          }
+        ],
+        "claims": [
+          {
+            "claim_index": 0,
+            "producer_status": "proposed",
+            "status": "reject",
+            "reason": "after value, form, or unit differs",
+            "current_decision": "held",
+            "current_numeric": "contradicted",
+            "proposal": {
+              "scope": {
+                "subject": "CU- DPO",
+                "metric": "strategy selection accuracy",
+                "setting": "mathematical reasoning benchmarks",
+                "population": "seven base models"
+              },
+              "before": {
+                "lower": "35",
+                "upper": "46",
+                "form": "range",
+                "unit": "percent",
+                "locators": [
+                  {
+                    "chunk_id": "2602.00931v2_c0000",
+                    "selector": [
+                      1056,
+                      1062
+                    ]
+                  }
+                ]
+              },
+              "after": {
+                "lower": "68",
+                "upper": "78",
+                "form": "range",
+                "unit": "percentage_points",
+                "locators": [
+                  {
+                    "chunk_id": "2602.00931v2_c0000",
+                    "selector": [
+                      1066,
+                      1072
+                    ]
+                  }
+                ]
+              }
+            },
+            "source_role_labels": {
+              "before": "the before range",
+              "after": "the after range"
+            },
+            "source_links": [
+              {
+                "locator": {
+                  "chunk_id": "2602.00931v2_c0000",
+                  "selector": [
+                    1056,
+                    1062
+                  ]
+                },
+                "paper": "2602.00931v2",
+                "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+                "source_sha256": null,
+                "passage_sha256": "6a4943b4e6384785a7c3d96deccab341d7040027805a3f87e362e5a55139cb79",
+                "source_text": "35–46%",
+                "header_path": [],
+                "header_cell_id": null,
+                "table_id": null
+              },
+              {
+                "locator": {
+                  "chunk_id": "2602.00931v2_c0000",
+                  "selector": [
+                    1066,
+                    1072
+                  ]
+                },
+                "paper": "2602.00931v2",
+                "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+                "source_sha256": null,
+                "passage_sha256": "6a4943b4e6384785a7c3d96deccab341d7040027805a3f87e362e5a55139cb79",
+                "source_text": "68–78%",
+                "header_path": [],
+                "header_cell_id": null,
+                "table_id": null
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "short-quote",
+      "expected": "review",
+      "human_reviewed": false,
+      "valid": true,
+      "original_unchanged": true,
+      "question": "What numerical comparison is supported for Continuous-Utility Direct Preference Optimization?",
+      "claim": "On mathematical reasoning benchmarks, CU-DPO improved strategy-selection accuracy from 35–46% to 68–78% across seven base models.",
+      "observation": {
+        "round": 1,
+        "index_sha256": "78d8efd7c9df075be09ffa5f3a9c7ca79c54efa2d7caf75c8f0329ea72ff41aa",
+        "evidence": [
+          {
+            "section": "abstract",
+            "pdf_url": "https://arxiv.org/pdf/2602.00931v2",
+            "html_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+            "source_url": "https://arxiv.org/html/2602.00931v2#abstract1",
+            "title": "Continuous-Utility Direct Preference Optimization",
+            "source": "html",
+            "arxiv_id": "2602.00931v2",
+            "chunk_id": "2602.00931v2_c0000",
+            "text": "Large language model reasoning is often treated as a monolithic capability, relying on binary preference supervision that fails to capture partial progress or fine-grained reasoning quality. We introduce continuous utility direct preference optimization ( CU- DPO ) , a framework that aligns models to a portfolio of prompt-based cognitive strategies by replacing binary labels with continuous scores that capture fine-grained reasoning quality. We prove that learning with K strategies yields a \\Theta(K\\log K) improvement in sample complexity over binary preferences, and that DPO converges to the entropy-regularized utility-maximizing policy. To exploit this signal, we propose a two-stage training pipeline: (i) strategy selection, which optimizes the model to choose the best strategy for a given problem via best-vs-all comparisons, and (ii) execution refinement, which trains the model to correctly execute the selected strategy using margin-stratified pairs. On mathematical reasoning benchmarks, CU- DPO improves strategy selection accuracy from 35–46% to 68–78% across seven base models, yielding consistent downstream reasoning gains of up to +6.6 points on in-distribution datasets with effective transfer to out-of-distribution tasks.",
+            "page_number": null
+          }
+        ],
+        "claims": [
+          {
+            "claim_index": 0,
+            "producer_status": "review",
+            "status": "review",
+            "reason": "the cited source does not bind both operands with their full scope",
+            "current_decision": "accepted",
+            "current_numeric": "uncertain"
+          }
+        ]
+      }
+    },
+    {
+      "name": "fairness",
+      "expected": "accept",
+      "human_reviewed": false,
+      "valid": true,
+      "original_unchanged": true,
+      "question": "What numerical comparison is supported for AgreeMate: Teaching LLMs to Haggle?",
+      "claim": "For Fairness (AgreeMate: Teaching LLMs to Haggle, Table 3: Comparison of Metrics for Combinations with and without COT), With COT was -0.4385 and Without COT was 0.3021.",
+      "observation": {
+        "round": 1,
+        "index_sha256": "78d8efd7c9df075be09ffa5f3a9c7ca79c54efa2d7caf75c8f0329ea72ff41aa",
+        "evidence": [
+          {
+            "chunk_id": "2412.18690v1_table_5bd4fffb5c9a7277_4",
+            "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgreeMate: Teaching LLMs to Haggle\nTable 3: Comparison of Metrics for Combinations with and without COT\nMetric: Fairness; With COT: -0.4385; Without COT: 0.3021",
+            "arxiv_id": "2412.18690v1",
+            "title": "AgreeMate: Teaching LLMs to Haggle",
+            "source": "html",
+            "pdf_url": "https://arxiv.org/pdf/2412.18690v1",
+            "html_url": "https://arxiv.org/html/2412.18690v1#S6.T3",
+            "source_url": "https://arxiv.org/html/2412.18690v1#S6.T3",
+            "page_number": null,
+            "source_sha256": "14c2c2989b9a7a5cc60de5366b0b1c7cb37351598c29d7dd330a09ff8142527a",
+            "source_anchor": "S6.T3",
+            "extractor_version": "html-evidence-v2.1-stage-a",
+            "section": "Experiments",
+            "subsection": "Size Comparison & CoT Analysis",
+            "section_id": "S6",
+            "subsection_id": "S6.SS4",
+            "appendix_id": "",
+            "document_region": "main",
+            "representation": "linearized_table",
+            "table_id": "S6.T3",
+            "table_row": 4,
+            "row_label": "Fairness",
+            "caption": "Table 3: Comparison of Metrics for Combinations with and without COT",
+            "header_provenance": "latexml_guessed",
+            "header_review": "pending_human_verification",
+            "html_version_verified": false,
+            "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+            "table_headers": [
+              {
+                "column": 0,
+                "text": "Metric",
+                "source_id": "S6.T3.2.1.1"
+              },
+              {
+                "column": 1,
+                "text": "With COT",
+                "source_id": "S6.T3.2.1.2"
+              },
+              {
+                "column": 2,
+                "text": "Without COT",
+                "source_id": "S6.T3.2.1.3"
+              }
+            ],
+            "table_cells": [
+              {
+                "row": 4,
+                "column": 0,
+                "text": "Fairness",
+                "source_id": "S6.T3.2.5.1"
+              },
+              {
+                "row": 4,
+                "column": 1,
+                "text": "-0.4385",
+                "source_id": "S6.T3.2.5.2"
+              },
+              {
+                "row": 4,
+                "column": 2,
+                "text": "0.3021",
+                "source_id": "S6.T3.2.5.3"
+              }
+            ],
+            "source_notes": []
+          }
+        ],
+        "claims": [
+          {
+            "claim_index": 0,
+            "producer_status": "proposed",
+            "status": "accept",
+            "reason": "scope, role, value, and exact delivered evidence agree",
+            "current_decision": "held",
+            "current_numeric": "contradicted",
+            "proposal": {
+              "scope": {
+                "subject": "AgreeMate: Teaching LLMs to Haggle",
+                "metric": "Fairness",
+                "setting": "Table 3: Comparison of Metrics for Combinations with and without COT"
+              },
+              "before": {
+                "lower": "-0.4385",
+                "upper": "-0.4385",
+                "form": "point",
+                "unit": "score",
+                "locators": [
+                  {
+                    "chunk_id": "2412.18690v1_table_5bd4fffb5c9a7277_4",
+                    "selector": "S6.T3.2.5.2"
+                  }
+                ]
+              },
+              "after": {
+                "lower": "0.3021",
+                "upper": "0.3021",
+                "form": "point",
+                "unit": "score",
+                "locators": [
+                  {
+                    "chunk_id": "2412.18690v1_table_5bd4fffb5c9a7277_4",
+                    "selector": "S6.T3.2.5.3"
+                  }
+                ]
+              }
+            },
+            "source_role_labels": {
+              "before": "With COT",
+              "after": "Without COT"
+            },
+            "source_links": [
+              {
+                "locator": {
+                  "chunk_id": "2412.18690v1_table_5bd4fffb5c9a7277_4",
+                  "selector": "S6.T3.2.5.2"
+                },
+                "paper": "2412.18690v1",
+                "source_url": "https://arxiv.org/html/2412.18690v1#S6.T3",
+                "source_sha256": "14c2c2989b9a7a5cc60de5366b0b1c7cb37351598c29d7dd330a09ff8142527a",
+                "passage_sha256": "a326e785a847230e6a93fb8dabc042de5657122690fec07f2a3b23eaf3307d03",
+                "source_text": "-0.4385",
+                "header_path": [
+                  "With COT"
+                ],
+                "header_cell_id": "S6.T3.2.1.2",
+                "table_id": "S6.T3"
+              },
+              {
+                "locator": {
+                  "chunk_id": "2412.18690v1_table_5bd4fffb5c9a7277_4",
+                  "selector": "S6.T3.2.5.3"
+                },
+                "paper": "2412.18690v1",
+                "source_url": "https://arxiv.org/html/2412.18690v1#S6.T3",
+                "source_sha256": "14c2c2989b9a7a5cc60de5366b0b1c7cb37351598c29d7dd330a09ff8142527a",
+                "passage_sha256": "a326e785a847230e6a93fb8dabc042de5657122690fec07f2a3b23eaf3307d03",
+                "source_text": "0.3021",
+                "header_path": [
+                  "Without COT"
+                ],
+                "header_cell_id": "S6.T3.2.1.3",
+                "table_id": "S6.T3"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "sign",
+      "expected": "reject",
+      "human_reviewed": false,
+      "valid": false,
+      "original_unchanged": true,
+      "question": "What numerical comparison is supported for AgreeMate: Teaching LLMs to Haggle?",
+      "claim": "For Fairness (AgreeMate: Teaching LLMs to Haggle, Table 3: Comparison of Metrics for Combinations with and without COT), With COT was 0.4385 and Without COT was 0.3021.",
+      "observation": {
+        "round": 1,
+        "index_sha256": "78d8efd7c9df075be09ffa5f3a9c7ca79c54efa2d7caf75c8f0329ea72ff41aa",
+        "evidence": [
+          {
+            "chunk_id": "2412.18690v1_table_5bd4fffb5c9a7277_4",
+            "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgreeMate: Teaching LLMs to Haggle\nTable 3: Comparison of Metrics for Combinations with and without COT\nMetric: Fairness; With COT: -0.4385; Without COT: 0.3021",
+            "arxiv_id": "2412.18690v1",
+            "title": "AgreeMate: Teaching LLMs to Haggle",
+            "source": "html",
+            "pdf_url": "https://arxiv.org/pdf/2412.18690v1",
+            "html_url": "https://arxiv.org/html/2412.18690v1#S6.T3",
+            "source_url": "https://arxiv.org/html/2412.18690v1#S6.T3",
+            "page_number": null,
+            "source_sha256": "14c2c2989b9a7a5cc60de5366b0b1c7cb37351598c29d7dd330a09ff8142527a",
+            "source_anchor": "S6.T3",
+            "extractor_version": "html-evidence-v2.1-stage-a",
+            "section": "Experiments",
+            "subsection": "Size Comparison & CoT Analysis",
+            "section_id": "S6",
+            "subsection_id": "S6.SS4",
+            "appendix_id": "",
+            "document_region": "main",
+            "representation": "linearized_table",
+            "table_id": "S6.T3",
+            "table_row": 4,
+            "row_label": "Fairness",
+            "caption": "Table 3: Comparison of Metrics for Combinations with and without COT",
+            "header_provenance": "latexml_guessed",
+            "header_review": "pending_human_verification",
+            "html_version_verified": false,
+            "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+            "table_headers": [
+              {
+                "column": 0,
+                "text": "Metric",
+                "source_id": "S6.T3.2.1.1"
+              },
+              {
+                "column": 1,
+                "text": "With COT",
+                "source_id": "S6.T3.2.1.2"
+              },
+              {
+                "column": 2,
+                "text": "Without COT",
+                "source_id": "S6.T3.2.1.3"
+              }
+            ],
+            "table_cells": [
+              {
+                "row": 4,
+                "column": 0,
+                "text": "Fairness",
+                "source_id": "S6.T3.2.5.1"
+              },
+              {
+                "row": 4,
+                "column": 1,
+                "text": "-0.4385",
+                "source_id": "S6.T3.2.5.2"
+              },
+              {
+                "row": 4,
+                "column": 2,
+                "text": "0.3021",
+                "source_id": "S6.T3.2.5.3"
+              }
+            ],
+            "source_notes": []
+          }
+        ],
+        "claims": [
+          {
+            "claim_index": 0,
+            "producer_status": "proposed",
+            "status": "reject",
+            "reason": "before value, form, or unit differs",
+            "current_decision": "held",
+            "current_numeric": "contradicted",
+            "proposal": {
+              "scope": {
+                "subject": "AgreeMate: Teaching LLMs to Haggle",
+                "metric": "Fairness",
+                "setting": "Table 3: Comparison of Metrics for Combinations with and without COT"
+              },
+              "before": {
+                "lower": "0.4385",
+                "upper": "0.4385",
+                "form": "point",
+                "unit": "score",
+                "locators": [
+                  {
+                    "chunk_id": "2412.18690v1_table_5bd4fffb5c9a7277_4",
+                    "selector": "S6.T3.2.5.2"
+                  }
+                ]
+              },
+              "after": {
+                "lower": "0.3021",
+                "upper": "0.3021",
+                "form": "point",
+                "unit": "score",
+                "locators": [
+                  {
+                    "chunk_id": "2412.18690v1_table_5bd4fffb5c9a7277_4",
+                    "selector": "S6.T3.2.5.3"
+                  }
+                ]
+              }
+            },
+            "source_role_labels": {
+              "before": "With COT",
+              "after": "Without COT"
+            },
+            "source_links": [
+              {
+                "locator": {
+                  "chunk_id": "2412.18690v1_table_5bd4fffb5c9a7277_4",
+                  "selector": "S6.T3.2.5.2"
+                },
+                "paper": "2412.18690v1",
+                "source_url": "https://arxiv.org/html/2412.18690v1#S6.T3",
+                "source_sha256": "14c2c2989b9a7a5cc60de5366b0b1c7cb37351598c29d7dd330a09ff8142527a",
+                "passage_sha256": "a326e785a847230e6a93fb8dabc042de5657122690fec07f2a3b23eaf3307d03",
+                "source_text": "-0.4385",
+                "header_path": [
+                  "With COT"
+                ],
+                "header_cell_id": "S6.T3.2.1.2",
+                "table_id": "S6.T3"
+              },
+              {
+                "locator": {
+                  "chunk_id": "2412.18690v1_table_5bd4fffb5c9a7277_4",
+                  "selector": "S6.T3.2.5.3"
+                },
+                "paper": "2412.18690v1",
+                "source_url": "https://arxiv.org/html/2412.18690v1#S6.T3",
+                "source_sha256": "14c2c2989b9a7a5cc60de5366b0b1c7cb37351598c29d7dd330a09ff8142527a",
+                "passage_sha256": "a326e785a847230e6a93fb8dabc042de5657122690fec07f2a3b23eaf3307d03",
+                "source_text": "0.3021",
+                "header_path": [
+                  "Without COT"
+                ],
+                "header_cell_id": "S6.T3.2.1.3",
+                "table_id": "S6.T3"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "wrong-cell",
+      "expected": "review",
+      "human_reviewed": false,
+      "valid": false,
+      "original_unchanged": true,
+      "question": "What numerical comparison is supported for AgreeMate: Teaching LLMs to Haggle?",
+      "claim": "For Fairness (AgreeMate: Teaching LLMs to Haggle, Table 3: Comparison of Metrics for Combinations with and without COT), With COT was -0.4385 and Without COT was 0.3021.",
+      "observation": {
+        "round": 1,
+        "index_sha256": "78d8efd7c9df075be09ffa5f3a9c7ca79c54efa2d7caf75c8f0329ea72ff41aa",
+        "evidence": [
+          {
+            "chunk_id": "2412.18690v1_table_5bd4fffb5c9a7277_4",
+            "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgreeMate: Teaching LLMs to Haggle\nTable 3: Comparison of Metrics for Combinations with and without COT\nMetric: Fairness; With COT: -0.4385; Without COT: 0.3021",
+            "arxiv_id": "2412.18690v1",
+            "title": "AgreeMate: Teaching LLMs to Haggle",
+            "source": "html",
+            "pdf_url": "https://arxiv.org/pdf/2412.18690v1",
+            "html_url": "https://arxiv.org/html/2412.18690v1#S6.T3",
+            "source_url": "https://arxiv.org/html/2412.18690v1#S6.T3",
+            "page_number": null,
+            "source_sha256": "14c2c2989b9a7a5cc60de5366b0b1c7cb37351598c29d7dd330a09ff8142527a",
+            "source_anchor": "S6.T3",
+            "extractor_version": "html-evidence-v2.1-stage-a",
+            "section": "Experiments",
+            "subsection": "Size Comparison & CoT Analysis",
+            "section_id": "S6",
+            "subsection_id": "S6.SS4",
+            "appendix_id": "",
+            "document_region": "main",
+            "representation": "linearized_table",
+            "table_id": "S6.T3",
+            "table_row": 4,
+            "row_label": "Fairness",
+            "caption": "Table 3: Comparison of Metrics for Combinations with and without COT",
+            "header_provenance": "latexml_guessed",
+            "header_review": "pending_human_verification",
+            "html_version_verified": false,
+            "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+            "table_headers": [
+              {
+                "column": 0,
+                "text": "Metric",
+                "source_id": "S6.T3.2.1.1"
+              },
+              {
+                "column": 1,
+                "text": "With COT",
+                "source_id": "S6.T3.2.1.2"
+              },
+              {
+                "column": 2,
+                "text": "Without COT",
+                "source_id": "S6.T3.2.1.3"
+              }
+            ],
+            "table_cells": [
+              {
+                "row": 4,
+                "column": 0,
+                "text": "Fairness",
+                "source_id": "S6.T3.2.5.1"
+              },
+              {
+                "row": 4,
+                "column": 1,
+                "text": "-0.4385",
+                "source_id": "foreign-cell"
+              },
+              {
+                "row": 4,
+                "column": 2,
+                "text": "0.3021",
+                "source_id": "S6.T3.2.5.3"
+              }
+            ],
+            "source_notes": []
+          }
+        ],
+        "claims": [
+          {
+            "claim_index": 0,
+            "producer_status": "review",
+            "status": "review",
+            "reason": "cited passages have no registered comparison",
+            "current_decision": "held",
+            "current_numeric": "contradicted"
+          }
+        ]
+      }
+    },
+    {
+      "name": "wrong-version",
+      "expected": "review",
+      "human_reviewed": false,
+      "valid": false,
+      "original_unchanged": true,
+      "question": "What numerical comparison is supported for AgreeMate: Teaching LLMs to Haggle?",
+      "claim": "For Fairness (AgreeMate: Teaching LLMs to Haggle, Table 3: Comparison of Metrics for Combinations with and without COT), With COT was -0.4385 and Without COT was 0.3021.",
+      "observation": {
+        "round": 1,
+        "index_sha256": "78d8efd7c9df075be09ffa5f3a9c7ca79c54efa2d7caf75c8f0329ea72ff41aa",
+        "evidence": [
+          {
+            "chunk_id": "2412.18690v1_table_5bd4fffb5c9a7277_4",
+            "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgreeMate: Teaching LLMs to Haggle\nTable 3: Comparison of Metrics for Combinations with and without COT\nMetric: Fairness; With COT: -0.4385; Without COT: 0.3021",
+            "arxiv_id": "2412.18690v2",
+            "title": "AgreeMate: Teaching LLMs to Haggle",
+            "source": "html",
+            "pdf_url": "https://arxiv.org/pdf/2412.18690v1",
+            "html_url": "https://arxiv.org/html/2412.18690v1#S6.T3",
+            "source_url": "https://arxiv.org/html/2412.18690v1#S6.T3",
+            "page_number": null,
+            "source_sha256": "14c2c2989b9a7a5cc60de5366b0b1c7cb37351598c29d7dd330a09ff8142527a",
+            "source_anchor": "S6.T3",
+            "extractor_version": "html-evidence-v2.1-stage-a",
+            "section": "Experiments",
+            "subsection": "Size Comparison & CoT Analysis",
+            "section_id": "S6",
+            "subsection_id": "S6.SS4",
+            "appendix_id": "",
+            "document_region": "main",
+            "representation": "linearized_table",
+            "table_id": "S6.T3",
+            "table_row": 4,
+            "row_label": "Fairness",
+            "caption": "Table 3: Comparison of Metrics for Combinations with and without COT",
+            "header_provenance": "latexml_guessed",
+            "header_review": "pending_human_verification",
+            "html_version_verified": false,
+            "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+            "table_headers": [
+              {
+                "column": 0,
+                "text": "Metric",
+                "source_id": "S6.T3.2.1.1"
+              },
+              {
+                "column": 1,
+                "text": "With COT",
+                "source_id": "S6.T3.2.1.2"
+              },
+              {
+                "column": 2,
+                "text": "Without COT",
+                "source_id": "S6.T3.2.1.3"
+              }
+            ],
+            "table_cells": [
+              {
+                "row": 4,
+                "column": 0,
+                "text": "Fairness",
+                "source_id": "S6.T3.2.5.1"
+              },
+              {
+                "row": 4,
+                "column": 1,
+                "text": "-0.4385",
+                "source_id": "S6.T3.2.5.2"
+              },
+              {
+                "row": 4,
+                "column": 2,
+                "text": "0.3021",
+                "source_id": "S6.T3.2.5.3"
+              }
+            ],
+            "source_notes": []
+          }
+        ],
+        "claims": [
+          {
+            "claim_index": 0,
+            "producer_status": "review",
+            "status": "review",
+            "reason": "cited passages have no registered comparison",
+            "current_decision": "held",
+            "current_numeric": "contradicted"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ambiguous-audit",
+      "expected": "review",
+      "human_reviewed": false,
+      "valid": true,
+      "original_unchanged": true,
+      "question": "What numerical comparison is supported for AgreeMate: Teaching LLMs to Haggle?",
+      "claim": "For Fairness (AgreeMate: Teaching LLMs to Haggle, Table 3: Comparison of Metrics for Combinations with and without COT), With COT was -0.4385 and Without COT was 0.3021.",
+      "observation": {
+        "round": 1,
+        "index_sha256": "78d8efd7c9df075be09ffa5f3a9c7ca79c54efa2d7caf75c8f0329ea72ff41aa",
+        "evidence": [
+          {
+            "chunk_id": "2412.18690v1_table_5bd4fffb5c9a7277_4",
+            "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nAgreeMate: Teaching LLMs to Haggle\nTable 3: Comparison of Metrics for Combinations with and without COT\nMetric: Fairness; With COT: -0.4385; Without COT: 0.3021",
+            "arxiv_id": "2412.18690v1",
+            "title": "AgreeMate: Teaching LLMs to Haggle",
+            "source": "html",
+            "pdf_url": "https://arxiv.org/pdf/2412.18690v1",
+            "html_url": "https://arxiv.org/html/2412.18690v1#S6.T3",
+            "source_url": "https://arxiv.org/html/2412.18690v1#S6.T3",
+            "page_number": null,
+            "source_sha256": "14c2c2989b9a7a5cc60de5366b0b1c7cb37351598c29d7dd330a09ff8142527a",
+            "source_anchor": "S6.T3",
+            "extractor_version": "html-evidence-v2.1-stage-a",
+            "section": "Experiments",
+            "subsection": "Size Comparison & CoT Analysis",
+            "section_id": "S6",
+            "subsection_id": "S6.SS4",
+            "appendix_id": "",
+            "document_region": "main",
+            "representation": "linearized_table",
+            "table_id": "S6.T3",
+            "table_row": 4,
+            "row_label": "Fairness",
+            "caption": "Table 3: Comparison of Metrics for Combinations with and without COT",
+            "header_provenance": "latexml_guessed",
+            "header_review": "pending_human_verification",
+            "html_version_verified": false,
+            "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+            "table_headers": [
+              {
+                "column": 0,
+                "text": "Metric",
+                "source_id": "S6.T3.2.1.1"
+              },
+              {
+                "column": 1,
+                "text": "With COT",
+                "source_id": "S6.T3.2.1.2"
+              },
+              {
+                "column": 2,
+                "text": "Without COT",
+                "source_id": "S6.T3.2.1.3"
+              }
+            ],
+            "table_cells": [
+              {
+                "row": 4,
+                "column": 0,
+                "text": "Fairness",
+                "source_id": "S6.T3.2.5.1"
+              },
+              {
+                "row": 4,
+                "column": 1,
+                "text": "-0.4385",
+                "source_id": "S6.T3.2.5.2"
+              },
+              {
+                "row": 4,
+                "column": 2,
+                "text": "0.3021",
+                "source_id": "S6.T3.2.5.3"
+              }
+            ],
+            "source_notes": []
+          }
+        ],
+        "claims": [
+          {
+            "claim_index": 0,
+            "producer_status": "review",
+            "status": "review",
+            "reason": "cited passages have no registered comparison",
+            "current_decision": "held",
+            "current_numeric": "contradicted"
+          }
+        ]
+      }
+    },
+    {
+      "name": "auc",
+      "expected": "accept",
+      "human_reviewed": false,
+      "valid": true,
+      "original_unchanged": true,
+      "question": "What numerical comparison is supported for The Persistent Vulnerability of Aligned AI Systems?",
+      "claim": "For AUC (The Persistent Vulnerability of Aligned AI Systems, Table A.1 : AUC results for random baseline experiments, IOI), ACDC AUC was 95% and Random AUC was 50%.",
+      "observation": {
+        "round": 1,
+        "index_sha256": "78d8efd7c9df075be09ffa5f3a9c7ca79c54efa2d7caf75c8f0329ea72ff41aa",
+        "evidence": [
+          {
+            "chunk_id": "2604.00324v1_table_99d7ef000b02b530_1",
+            "text": "Derived source table row (HTML cell serialization, not verbatim prose).\nThe Persistent Vulnerability of Aligned AI Systems\nTable A.1 : AUC results for random baseline experiments\nTask: IOI; ACDC AUC: 0.95; Random AUC: 0.50",
+            "arxiv_id": "2604.00324v1",
+            "title": "The Persistent Vulnerability of Aligned AI Systems",
+            "source": "html",
+            "pdf_url": "https://arxiv.org/pdf/2604.00324v1",
+            "html_url": "https://arxiv.org/html/2604.00324v1#A1.T1",
+            "source_url": "https://arxiv.org/html/2604.00324v1#A1.T1",
+            "page_number": null,
+            "source_sha256": "3eabd23101417afdcc74b7bdbe70b3997c5d7b3d75777ffb2f42566b6515bdb2",
+            "source_anchor": "A1.T1",
+            "extractor_version": "html-evidence-v2.1-stage-a",
+            "section": "Experimental Details",
+            "subsection": "Additional Analysis",
+            "section_id": "A1.S3",
+            "subsection_id": "A1.S3.SS6",
+            "appendix_id": "A1",
+            "document_region": "appendix",
+            "representation": "linearized_table",
+            "table_id": "A1.T1",
+            "table_row": 1,
+            "row_label": "IOI",
+            "caption": "Table A.1 : AUC results for random baseline experiments",
+            "header_provenance": "latexml_guessed",
+            "header_review": "pending_human_verification",
+            "html_version_verified": false,
+            "version_binding": "caller_supplied_frozen_metadata_and_local_source_hash",
+            "table_headers": [
+              {
+                "column": 0,
+                "text": "Task",
+                "source_id": "A1.T1.5.1.1"
+              },
+              {
+                "column": 1,
+                "text": "ACDC AUC",
+                "source_id": "A1.T1.5.1.2"
+              },
+              {
+                "column": 2,
+                "text": "Random AUC",
+                "source_id": "A1.T1.5.1.3"
+              }
+            ],
+            "table_cells": [
+              {
+                "row": 1,
+                "column": 0,
+                "text": "IOI",
+                "source_id": "A1.T1.5.2.1"
+              },
+              {
+                "row": 1,
+                "column": 1,
+                "text": "0.95",
+                "source_id": "A1.T1.5.2.2"
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "text": "0.50",
+                "source_id": "A1.T1.5.2.3"
+              }
+            ],
+            "source_notes": []
+          }
+        ],
+        "claims": [
+          {
+            "claim_index": 0,
+            "producer_status": "proposed",
+            "status": "accept",
+            "reason": "scope, role, value, and exact delivered evidence agree",
+            "current_decision": "held",
+            "current_numeric": "contradicted",
+            "proposal": {
+              "scope": {
+                "subject": "The Persistent Vulnerability of Aligned AI Systems",
+                "metric": "AUC",
+                "setting": "Table A.1 : AUC results for random baseline experiments",
+                "population": "IOI"
+              },
+              "before": {
+                "lower": "95",
+                "upper": "95",
+                "form": "point",
+                "unit": "percent",
+                "locators": [
+                  {
+                    "chunk_id": "2604.00324v1_table_99d7ef000b02b530_1",
+                    "selector": "A1.T1.5.2.2"
+                  }
+                ]
+              },
+              "after": {
+                "lower": "50",
+                "upper": "50",
+                "form": "point",
+                "unit": "percent",
+                "locators": [
+                  {
+                    "chunk_id": "2604.00324v1_table_99d7ef000b02b530_1",
+                    "selector": "A1.T1.5.2.3"
+                  }
+                ]
+              }
+            },
+            "source_role_labels": {
+              "before": "ACDC AUC",
+              "after": "Random AUC"
+            },
+            "source_links": [
+              {
+                "locator": {
+                  "chunk_id": "2604.00324v1_table_99d7ef000b02b530_1",
+                  "selector": "A1.T1.5.2.2"
+                },
+                "paper": "2604.00324v1",
+                "source_url": "https://arxiv.org/html/2604.00324v1#A1.T1",
+                "source_sha256": "3eabd23101417afdcc74b7bdbe70b3997c5d7b3d75777ffb2f42566b6515bdb2",
+                "passage_sha256": "0931c4a9313e17e34766bc44ea6c76cbe6a47633ab244b8526e5ee9a4ec133f1",
+                "source_text": "0.95",
+                "header_path": [
+                  "ACDC AUC"
+                ],
+                "header_cell_id": "A1.T1.5.1.2",
+                "table_id": "A1.T1"
+              },
+              {
+                "locator": {
+                  "chunk_id": "2604.00324v1_table_99d7ef000b02b530_1",
+                  "selector": "A1.T1.5.2.3"
+                },
+                "paper": "2604.00324v1",
+                "source_url": "https://arxiv.org/html/2604.00324v1#A1.T1",
+                "source_sha256": "3eabd23101417afdcc74b7bdbe70b3997c5d7b3d75777ffb2f42566b6515bdb2",
+                "passage_sha256": "0931c4a9313e17e34766bc44ea6c76cbe6a47633ab244b8526e5ee9a4ec133f1",
+                "source_text": "0.50",
+                "header_path": [
+                  "Random AUC"
+                ],
+                "header_cell_id": "A1.T1.5.1.3",
+                "table_id": "A1.T1"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

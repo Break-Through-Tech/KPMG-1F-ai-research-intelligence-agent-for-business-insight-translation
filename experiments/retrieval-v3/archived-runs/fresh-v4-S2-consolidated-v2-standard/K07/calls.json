@@ -1,0 +1,50 @@
+[
+ {
+  "attempt": 1,
+  "calls": 2,
+  "requests_estimated": [
+   {
+    "profile": "codex",
+    "profile_measured": true,
+    "evidence_tokens_est": 11568,
+    "request_tokens_est": 14399,
+    "provider_input_bound": 27058,
+    "output_reserve": 8000,
+    "actual_input_tokens": 20635,
+    "actual_output_tokens": 1629,
+    "allowed": true
+   },
+   {
+    "profile": "codex",
+    "profile_measured": true,
+    "evidence_tokens_est": 11568,
+    "request_tokens_est": 17205,
+    "provider_input_bound": 30285,
+    "output_reserve": 8000,
+    "actual_input_tokens": 22463,
+    "actual_output_tokens": 698,
+    "allowed": true
+   }
+  ],
+  "actual_usage": [
+   [
+    {
+     "input_tokens": 20635,
+     "cached_input_tokens": 0,
+     "cache_write_input_tokens": 0,
+     "output_tokens": 1629,
+     "reasoning_output_tokens": 65
+    }
+   ],
+   [
+    {
+     "input_tokens": 22463,
+     "cached_input_tokens": 0,
+     "cache_write_input_tokens": 0,
+     "output_tokens": 698,
+     "reasoning_output_tokens": 0
+    }
+   ]
+  ]
+ }
+]

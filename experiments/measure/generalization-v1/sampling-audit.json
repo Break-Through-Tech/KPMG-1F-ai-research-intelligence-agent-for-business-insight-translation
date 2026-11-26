@@ -1,0 +1,374 @@
+{
+  "pool": [
+    {
+      "id": "9971bf6aa4a703b4",
+      "rank_sha256": "9971bf6aa4a703b4dfc2ef857fc05031bd57ac1d6e97a20b6ad8b65c1ff3be51",
+      "category": "fact",
+      "papers": [
+        "2405.17602v1"
+      ],
+      "source_ids": [
+        "2405.17602v1_c0000",
+        "2405.17602v1_c0000"
+      ],
+      "status": "reserve"
+    },
+    {
+      "id": "33f05be56b19aa70",
+      "rank_sha256": "33f05be56b19aa70b4a69eedcb9bf8b7b7e81ad5af6e657b45dd4c985b3b9342",
+      "category": "fact",
+      "papers": [
+        "2407.01158v2"
+      ],
+      "source_ids": [
+        "2407.01158v2_c0000",
+        "2407.01158v2_c0000"
+      ],
+      "status": "selected"
+    },
+    {
+      "id": "299a9f8d437c3948",
+      "rank_sha256": "299a9f8d437c3948a6c47361ae94f62a1ecbb96d068f54dca9d016fd336e2cff",
+      "category": "fact",
+      "papers": [
+        "2603.17192v1"
+      ],
+      "source_ids": [
+        "2603.17192v1_c0000",
+        "2603.17192v1_c0000",
+        "2603.17192v1_c0000"
+      ],
+      "status": "selected"
+    },
+    {
+      "id": "90329cccb145b6eb",
+      "rank_sha256": "90329cccb145b6eb116505b2643f4f03688818536ca269b0ef1b28f2dc3a9198",
+      "category": "fact",
+      "papers": [
+        "2607.00274v1"
+      ],
+      "source_ids": [
+        "2607.00274v1_c0000",
+        "2607.00274v1_c0000"
+      ],
+      "status": "selected"
+    },
+    {
+      "id": "5b87caf931d82823",
+      "rank_sha256": "5b87caf931d828232dad1a5f74b25072a950dda6954f6be2316b7e89f1aa37fc",
+      "category": "fact",
+      "papers": [
+        "2512.17756v1"
+      ],
+      "source_ids": [
+        "2512.17756v1_c0000",
+        "2512.17756v1_c0000"
+      ],
+      "status": "selected"
+    },
+    {
+      "id": "27fc7236016a133c",
+      "rank_sha256": "27fc7236016a133c0f673cc3e37d739b7e4144c8f6c23c59309ba479dc50e31c",
+      "category": "table",
+      "papers": [
+        "2503.21760v2"
+      ],
+      "source_ids": [
+        "2503.21760v2_table_2cdcf8e8868b7420_1",
+        "2503.21760v2_table_2cdcf8e8868b7420_2"
+      ],
+      "status": "selected"
+    },
+    {
+      "id": "c33e8b79da7e0961",
+      "rank_sha256": "c33e8b79da7e096115e06b842c3d053e5f5059e7c55c249005638425cc1a9d0f",
+      "category": "table",
+      "papers": [
+        "2609.11414v1"
+      ],
+      "source_ids": [
+        "2609.11414v1_table_56917df0cb9a7147_1",
+        "2609.11414v1_table_56917df0cb9a7147_2"
+      ],
+      "status": "selected"
+    },
+    {
+      "id": "1ed77a2ddc9219f4",
+      "rank_sha256": "1ed77a2ddc9219f4bbe91ebeadc9f3c55f6ed887cb9a2733c64a7034d9328c91",
+      "category": "table",
+      "papers": [
+        "2409.19854v1"
+      ],
+      "source_ids": [
+        "2409.19854v1_table_de629a5f57790c34_1",
+        "2409.19854v1_table_de629a5f57790c34_2"
+      ],
+      "status": "selected"
+    },
+    {
+      "id": "032f658a355fb3ba",
+      "rank_sha256": "032f658a355fb3baf7f4fa08c8383b3578742b09f511c82a11d271844fbf6663",
+      "category": "table",
+      "papers": [
+        "2412.15272v2"
+      ],
+      "source_ids": [
+        "2412.15272v2_table_b6c0a7cb19779ac5_1",
+        "2412.15272v2_table_b6c0a7cb19779ac5_2"
+      ],
+      "status": "selected"
+    },
+    {
+      "id": "d747f8e00a911691",
+      "rank_sha256": "d747f8e00a91169164afcb65d4f1ff4c51e461450b7448673a0f4409e55799f0",
+      "category": "table",
+      "papers": [
+        "2609.39199v1"
+      ],
+      "source_ids": [
+        "2609.39199v1_table_b0755faaa482a8c3_1",
+        "2609.39199v1_table_b0755faaa482a8c3_2"
+      ],
+      "status": "reserve"
+    },
+    {
+      "id": "e8c4a06b00202fd4",
+      "rank_sha256": "e8c4a06b00202fd4ddedad6e1f5a546a7e1d018c8a67acaecd68a823b68d2d0c",
+      "category": "multi",
+      "papers": [
+        "2501.15067v1",
+        "2502.06864v1"
+      ],
+      "source_ids": [
+        "2501.15067v1_c0000",
+        "2502.06864v1_c0000"
+      ],
+      "status": "reserve"
+    },
+    {
+      "id": "84c5e35f0ba9bb36",
+      "rank_sha256": "84c5e35f0ba9bb366a706026695fbedebe5fd7f1ee82bfb0279c6811ab055425",
+      "category": "multi",
+      "papers": [
+        "2504.05104v2",
+        "2606.20041v2"
+      ],
+      "source_ids": [
+        "2504.05104v2_c0000",
+        "2606.20041v2_c0000"
+      ],
+      "status": "selected"
+    },
+    {
+      "id": "46069174dd495241",
+      "rank_sha256": "46069174dd495241b083589e7e352b6735d09727988df779c72f4e99eaa4ca7f",
+      "category": "multi",
+      "papers": [
+        "2403.12482v2",
+        "2404.00246v1"
+      ],
+      "source_ids": [
+        "2403.12482v2_c0000",
+        "2404.00246v1_c0000"
+      ],
+      "status": "selected"
+    },
+    {
+      "id": "1c428dc43167307c",
+      "rank_sha256": "1c428dc43167307cd0ed1a8d40f99c6e6b21e29d871bfe407103fd8f50c51252",
+      "category": "multi",
+      "papers": [
+        "2401.09890v1",
+        "2406.11087v5"
+      ],
+      "source_ids": [
+        "2401.09890v1_c0000",
+        "2406.11087v5_c0000"
+      ],
+      "status": "selected"
+    },
+    {
+      "id": "49cfe03019fb9d3c",
+      "rank_sha256": "49cfe03019fb9d3cf581f193b9d1c6c899b21503d71cdda22f1d1d22ef80f9cd",
+      "category": "multi",
+      "papers": [
+        "2411.14442v2",
+        "2502.05219v1"
+      ],
+      "source_ids": [
+        "2502.05219v1_c0000",
+        "2411.14442v2_c0000"
+      ],
+      "status": "selected"
+    },
+    {
+      "id": "c7f0a3b781f98e7c",
+      "rank_sha256": "c7f0a3b781f98e7ce24615842c543396ed27aa9bd9dac69dcaf5052cee9792da",
+      "category": "limits",
+      "papers": [
+        "2409.10955v2"
+      ],
+      "source_ids": [
+        "2409.10955v2_c0029",
+        "2409.10955v2_c0029"
+      ],
+      "status": "selected"
+    },
+    {
+      "id": "59966ba3d7e46841",
+      "rank_sha256": "59966ba3d7e468419c2ffe24a33c31b6c257b34db9e5a3936b05cbadb10503b5",
+      "category": "limits",
+      "papers": [
+        "2410.16285v1"
+      ],
+      "source_ids": [
+        "2410.16285v1_c0033",
+        "2410.16285v1_c0033"
+      ],
+      "status": "selected"
+    },
+    {
+      "id": "c85b86a8d1eb9761",
+      "rank_sha256": "c85b86a8d1eb976182f0f3e2c7d70a0e656af286abc8936c5f6b3de70b5db1c9",
+      "category": "limits",
+      "papers": [
+        "2508.08345v2"
+      ],
+      "source_ids": [
+        "2508.08345v2_c0000",
+        "2508.08345v2_c0000"
+      ],
+      "status": "reserve"
+    },
+    {
+      "id": "a266d40d453d72c1",
+      "rank_sha256": "a266d40d453d72c1c30ba4d9c8d40da6bcdcf74fc133ad973d7c55ed89ccd7ca",
+      "category": "limits",
+      "papers": [
+        "2604.00314v1"
+      ],
+      "source_ids": [
+        "2604.00314v1_c0000"
+      ],
+      "status": "selected"
+    },
+    {
+      "id": "083982d191946d6b",
+      "rank_sha256": "083982d191946d6b0c83ad3e3790a5b1f6a324d5105a4d912828a3b701fb7a0b",
+      "category": "conflict",
+      "papers": [
+        "2409.01666v1",
+        "2604.12735v2"
+      ],
+      "source_ids": [
+        "2409.01666v1_c0002",
+        "2604.12735v2_table_b0755faaa482a8c3_1",
+        "2604.12735v2_table_b0755faaa482a8c3_2"
+      ],
+      "status": "selected"
+    },
+    {
+      "id": "421e0452c5fe3ce4",
+      "rank_sha256": "421e0452c5fe3ce4cd0dba9c91f24a15a5f0a0bde0d624c9406648d74d0d1b2f",
+      "category": "conflict",
+      "papers": [
+        "2504.01566v1"
+      ],
+      "source_ids": [
+        "2504.01566v1_c0000",
+        "2504.01566v1_c0000"
+      ],
+      "status": "selected"
+    },
+    {
+      "id": "4f4aad7ee325155a",
+      "rank_sha256": "4f4aad7ee325155adaacc21c3b9c559109eb668a1fb45338f0088868187a36b6",
+      "category": "conflict",
+      "papers": [
+        "2406.01749v1"
+      ],
+      "source_ids": [
+        "2406.01749v1_c0014",
+        "2406.01749v1_c0017"
+      ],
+      "status": "reserve"
+    },
+    {
+      "id": "d6e0d20cd8faa6fe",
+      "rank_sha256": "d6e0d20cd8faa6fe49a29ad995dbcc0b5b0a7101121d4933b210af8d8a14196c",
+      "category": "refusal",
+      "papers": [
+        "2412.06681v2"
+      ],
+      "source_ids": [
+        "2412.06681v2_c0000",
+        "2412.06681v2_c0062"
+      ],
+      "status": "reserve"
+    },
+    {
+      "id": "b0bd561f09aa61a3",
+      "rank_sha256": "b0bd561f09aa61a353a22e4c7a680266a9c2df53a6cecc67a24543429a0983cc",
+      "category": "refusal",
+      "papers": [
+        "2608.21326v1"
+      ],
+      "source_ids": [
+        "2608.21326v1_c0028",
+        "2608.21326v1_c0028"
+      ],
+      "status": "selected"
+    },
+    {
+      "id": "30a1bda514da6914",
+      "rank_sha256": "30a1bda514da691440f71307ac2ed6935304528cd012ba561f819f008bce1289",
+      "category": "refusal",
+      "papers": [
+        "2506.03610v3"
+      ],
+      "source_ids": [
+        "2506.03610v3_paragraph_52626a427280cc64_0"
+      ],
+      "status": "selected"
+    },
+    {
+      "id": "91ef1139dd800ded",
+      "rank_sha256": "91ef1139dd800ded19dd075450e201f81d9dbb5b4214483e29862e58d2d0ef31",
+      "category": "refusal",
+      "papers": [
+        "2505.23417v1"
+      ],
+      "source_ids": [
+        "2505.23417v1_c0000",
+        "2505.23417v1_c0000"
+      ],
+      "status": "selected"
+    }
+  ],
+  "excluded_known_open": [
+    "2402.01622",
+    "2402.08416",
+    "2402.12713",
+    "2408.13687",
+    "2412.14470",
+    "2412.18690",
+    "2506.23273",
+    "2508.03553",
+    "2510.02243",
+    "2602.00931",
+    "2602.00933",
+    "2602.07294",
+    "2603.00829",
+    "2604.00324",
+    "2605.00276"
+  ],
+  "selected_counts": {
+    "fact": 4,
+    "table": 4,
+    "multi": 4,
+    "limits": 3,
+    "conflict": 2,
+    "refusal": 3
+  },
+  "sealed_benchmark_access": false
+}

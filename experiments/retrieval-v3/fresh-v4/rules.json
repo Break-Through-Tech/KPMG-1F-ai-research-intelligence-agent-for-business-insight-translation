@@ -1,0 +1,22 @@
+{
+ "version": "fresh-v4",
+ "arms": {
+  "S3": "component-coverage candidate (frozen, s3-freeze.json)",
+  "S2": "frozen consolidated-v2 Standard"
+ },
+ "points": 50,
+ "completeness": "Each required point scores 1 (accurately published with an entailing citation), 0.5 (partly) or 0. Facts count only in published findings or cited limitations (never interpretations, uncited leads, coverage notes or withheld drafts). Points marked \"both required\" need both parts for 1. Alternative anchors are equivalent only when they support every required component (checked by build_set.py). Evidence-limit points (K06.5, K07.5, K09.5, K10.5) score 1 when a cited limitation states the item is not established and gives the study scope; a fabricated value scores 0 and is a misleading claim.",
+ "misleading_probes": "K03.4 (ERIA beating the CerebraGloss-3B MCQ reference), K05.3 (ranking HaloGuard against PGuard from their different metrics), K08.4 (claiming released models violated their guarantee), K09.2 (presenting the CPU 3.7x as a GPU speedup), K04 (presenting Table 1 dagger rows as a head-to-head win over co-evolution: protocol-distinct).",
+ "safety": "Zero citation-grounding failures (a correct statement not entailed by its own attached quotes), zero misleading or fabricated claims, 100% exact quotes, 100% numerical correctness, and no uncited statement that a paper or study does not report or establish something.",
+ "acceptance_S3": {
+  "completeness": ">= 80% of points (>= 40 of 50)",
+  "safety": "as above",
+  "improvement": "S3 points >= S2 points + 2 on the same questions",
+  "execution": "10/10 complete (at most one resume each) and >= 9/10 first pass",
+  "latency": "median total <= 120 s and p90 total <= 180 s (including failed attempts)",
+  "tokens": "S3 actual provider input tokens <= 1.15 x S2 on the same questions",
+  "fully_answered": "reported, not gated"
+ },
+ "calls": "Expected 40 (20 + 20); persistent hard cap 50 across both arms (25 each), retries included.",
+ "decision": "S3 qualifies -> S3 is the supervised-demonstration engine. S3 misses 80% but is safe and >= S2 + 2 -> S3 with disclosed completeness. Otherwise S2. B0 only if both V2 engines fail safety."
+}

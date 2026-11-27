@@ -2062,7 +2062,7 @@
       renderDemo(updated, number, answer);
       loadRecentBriefs();
       if (selected) answer.querySelector('.brief')?.selectWorkspace?.(selected.split('-').at(-1));
-    }, () => openWorkspace('business')) : null;
+    }, () => { if (!(demo.business_hint?.missing?.length && !insight)) openWorkspace('business'); }) : null;
     answer.startAutomaticBusiness = businessForm ? () => businessForm.startBusiness(true) : null;
     /* Answer caveats: only what is specifically missing or in conflict, said once, near the answer. */
     const asides = h('div', {class: 'answer-asides'});

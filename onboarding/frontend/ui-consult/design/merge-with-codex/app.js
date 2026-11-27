@@ -224,17 +224,10 @@
     const evidence = demo?.result?.evidence || [];
     const papers = new Set(evidence.map(p => p.arxiv_id || p.title || 'unknown')).size;
     $('#tab-sources-count').textContent = hasBrief && papers ? String(papers) : '';
-    const stack = $('#source-stack');
-    stack.hidden = !hasBrief || !evidence.length;
-    if (!stack.hidden) {
-      stack.replaceChildren(icon('layers'), h('span', {text: `${papers} paper${papers === 1 ? '' : 's'}`}));
-      stack.setAttribute('aria-label', `${evidence.length} source passages from ${papers} paper${papers === 1 ? '' : 's'}. Open Sources.`);
-    }
     const action = $('#brief-action');
     action.hidden = !hasBrief || !turn.tools;
     if (!action.hidden) action.replaceChildren(icon(demo.library ? 'shield' : 'bookmark'), h('span', {class: 'btn-text', text: demo.library ? 'Review' : 'Save'}));
   }
-  $('#source-stack').addEventListener('click', () => setTab('sources', {focus: true}));
   $('#brief-action').addEventListener('click', event => activeTurn?.tools?.reveal('brief', event.currentTarget));
 
   /* ---------- Segmented controls & reading preferences ---------- */
@@ -667,7 +660,18 @@
   }
 
   function cited(tag, item, demo, number, className) {
-    const node = h(tag, {class: className}, h('span', {class: 'cited-text', math: item.text}));
+    const text = h('span', {class: 'cited-text', math: item.text});
+    const node = h(tag, {class: className}, text);
+    const last = text.lastChild;
+    const ending = last?.nodeType === Node.TEXT_NODE
+      ? last.data.match(/(?:[+−-]?\d+(?:[.,]\d+)? percentage points[.!?]?|\S{1,24})\s*$/u) : null;
+    let citationParent = node;
+    // Keep a small citation cluster with the last word of the finding.
+    if (className === 'claim' && ending && item.chunk_ids.length > 0 && item.chunk_ids.length <= 3 &&
+        (ending.index === 0 || /\s/u.test(last.data[ending.index - 1]))) {
+      citationParent = h('span', {class: 'citation-tail'}, last.splitText(ending.index));
+      text.append(citationParent);
+    }
     for (const id of item.chunk_ids) {
       const index = demo.result.evidence.findIndex(passage => passage.chunk_id === id);
       if (index < 0) throw new Error('Unknown citation');
@@ -693,7 +697,7 @@
         closePreview();
         showEvidence(demo, number, index, citation, item);
       });
-      node.append(' ', citation);
+      citationParent.append(' ', citation);
     }
     return node;
   }
@@ -1641,16 +1645,6 @@
     }));
     return group;
   }
-  function answerActions(demo, tools) {
-    const saved = demo.library
-      ? h('span', {class: 'answer-saved'}, icon('check'), h('span', {text: 'Saved in Library'}))
-      : h('button', {type: 'button', class: 'text-btn', onclick: () => tools.reveal('brief')}, icon('bookmark'), h('span', {text: 'Save'}));
-    const menu = h('details', {class: 'export-menu'},
-      h('summary', {class: 'text-btn'}, icon('download'), h('span', {text: 'Export'})),
-      h('div', {class: 'export-pop'}, exportControls(demo, tools.number), snapshotButton(demo),
-        h('p', {class: 'export-note', text: `Exports contain the answer as generated and its sources. They do not include the review record; current review: ${humanReview(demo).short}.`})));
-    return h('div', {class: 'answer-actions'}, saved, menu);
-  }
   // What a reviewer should resolve, taken from the answer as shown (material notes first, then routine checks).
   function issueList(number) {
     const turn = document.getElementById(`turn-${number}`);
@@ -1998,17 +1992,7 @@
     if (window.MOCK_API === true) paneAnswer.append(h('p', {class: 'mock-stamp', role: 'note'}, icon('info'),
       h('span', {text: 'Mock data for interface testing. Papers, numbers and tables are invented and are not research output.'})));
 
-    /* Quiet source line: the lead paper and the retrieved passage count; opens Sources. */
     const citedPapers = studies.filter(study => study.citations.length);
-    if (evidence.length) {
-      const lead = (citedPapers.length ? citedPapers : studies);
-      paneAnswer.append(h('p', {class: 'answer-source-line'},
-        h('button', {type: 'button', class: 'paper-chip', title: lead[0].title, 'aria-label': `Sources: ${lead[0].title}. Open Sources for this answer.`,
-          onclick: () => setTab('sources', {focus: true})}, icon('layers'), h('span', {text: sectionTitle(lead[0].title)})),
-        lead.length > 1 ? h('span', {class: 'source-more', text: `+${plural(lead.length - 1, 'paper')}`}) : null,
-        h('span', {class: 'source-count', text: demo.curated_preview
-          ? `${plural(evidence.length, 'source passage')} · Demo with added examples` : `${plural(evidence.length, 'passage')} retrieved`})));
-    }
 
     /* ---- The answer ---- */
     const claims = summary.claims.filter(claim => claim.kind !== 'interpretation');
@@ -2148,33 +2132,24 @@
       for (const limit of insight.limitations || []) notes.business.push({text: limit, label: 'Limit'});
     }
 
-    /* ---- Actions right below the response ---- */
+    /* Reading footer. Source and review metadata live in their dedicated views. */
     const review = humanReview(demo);
     const quoteChecked = isSynthesis(demo) || Boolean(summary.support_check);
-    const actions = h('div', {class: 'answer-actions', role: 'group', 'aria-label': 'Answer actions'},
-      demo.library
-        ? h('button', {type: 'button', class: 'act-btn', onclick: () => openWorkspace('review')}, icon('check'), h('span', {text: 'Saved'}), h('span', {class: 'act-sub', text: '· Review'}))
-        : h('button', {type: 'button', class: 'act-btn', onclick: () => tools.reveal('brief')}, icon('bookmark'), h('span', {text: 'Save'})),
-      h('details', {class: 'export-menu'},
-        h('summary', {class: 'act-btn'}, icon('download'), h('span', {text: 'Export'})),
-        h('div', {class: 'export-pop'}, exportControls(demo, number), snapshotButton(demo),
+    const moreActions = h('details', {class: 'answer-more'},
+      h('summary', {class: 'act-btn'}, h('span', {text: 'More actions'}), icon('down')),
+      h('div', {class: 'answer-more-body'},
+        tools.listenPanel,
+        view?.status === 'available' && claimNodes.length ? h('div', {class: 'answer-explanation'},
+          h('p', {id: `a${number}-explain-label`, text: 'Explanation style'}), explanationSwitch(`a${number}-explain-label`)) : null,
+        h('div', {class: 'answer-downloads'}, h('p', {text: 'Export answer'}), exportControls(demo, number), snapshotButton(demo),
           h('p', {class: 'export-note', text: demo.curated_preview ? 'The export includes the examples added for this demo.'
-            : `Exports contain the answer as generated and its sources, not the review record. Current review: ${review.short}.`}))),
-      tools.listenButton,
-      evidence.length ? h('button', {type: 'button', class: 'act-btn', onclick: () => setTab('sources', {focus: true})}, icon('layers'), h('span', {text: 'Sources'})) : null,
-      insight?.implications?.length ? h('button', {type: 'button', class: 'act-btn act-quiet', onclick: () => openWorkspace('business')}, icon('bulb'), h('span', {text: 'Business insight'})) : null,
-      view?.status === 'available' && claimNodes.length ? h('div', {class: 'act-switch'}, h('span', {id: `a${number}-explain-label`, class: 'sr-only', text: 'Explanation style'}), explanationSwitch(`a${number}-explain-label`)) : null);
-    paneAnswer.append(actions, tools.listenPanel);
-
-    /* Slim line: research notes and the real review status; opens Workspace. */
-    const noteCount = h('span', {class: 'strip-count'});
-    paneAnswer.append(h('button', {type: 'button', class: 'answer-note-strip', onclick: () => openWorkspace('notes')},
-      h('span', {class: 'strip-title'}, icon('info'), h('span', {text: 'Research notes'})),
-      h('span', {class: 'facet'}, icon(quoteChecked ? 'check' : 'info'), h('span', {text: quoteChecked ? 'Quotes matched' : 'Quote check not recorded'})),
-      abstained ? h('span', {class: 'facet warn'}, icon('alert'), h('span', {text: 'No answer'})) : partial ? h('span', {class: 'facet warn'}, icon('alert'), h('span', {text: 'Partial'})) : null,
-      h('span', {class: `facet ${review.tone === 'ok' ? 'ok' : review.tone === 'bad' ? 'bad' : ''}`}, icon(review.tone === 'ok' ? 'check' : 'shield'),
-        h('span', {text: review.tone === 'draft' ? (demo.library ? 'Not reviewed by a person' : 'Not saved or reviewed') : review.short})),
-      noteCount, icon('chevron')));
+            : `Exports contain the original draft and sources. Review record: ${review.short}.`}))));
+    moreActions.addEventListener('toggle', () => { if (moreActions.open) tools.prepareListen(); });
+    paneAnswer.append(h('footer', {class: 'answer-footer'},
+      h('div', {class: 'answer-footer-meta'},
+        h('button', {type: 'button', class: 'act-btn', onclick: () => openWorkspace('notes')}, icon('info'), h('span', {text: 'Research notes'})),
+        demo.curated_preview ? h('span', {class: 'answer-demo-label', text: 'Demo with added examples'}) : null),
+      moreActions));
 
     /* ---- Workspace: Business insight / Research notes / Review ---- */
     const wsTabs = h('div', {class: 'ws-tabs', role: 'tablist', 'aria-label': 'Workspace sections'});
@@ -2266,12 +2241,6 @@
       group(insight ? `Risks and limits of the ${insight.industry} insight` : 'Business risks', notes.business),
       group('Other notes', notes.other),
       h('button', {type: 'button', class: 'quiet-btn ws-jump', onclick: () => selectWorkspace('review', true)}, icon('shield'), h('span', {text: 'Review checks'}))].filter(Boolean));
-    const countNotes = () => {
-      const n = notesPanel.querySelectorAll('.notes-list > li').length;
-      noteCount.textContent = n ? plural(n, 'note') : '';
-    };
-    countNotes();
-
     // Review: the saved brief's actual status and what a person needs to check.
     const reviewPanel = wsSection('review', 'Review');
     const checklist = h('ol', {class: 'checklist'}, checks.map(item => h('li', null, h('span', {class: 'box', 'aria-hidden': 'true'}),
@@ -2293,9 +2262,8 @@
     ctx.addCaveat = (content, table) => {
       discrepancyList.append(typeof content === 'string' ? h('li', {text: content}) : h('li', null, content));
       discrepancyBox.hidden = false;
-      countNotes();
       if (!discrepancyAside) discrepancyAside = aside(h('button', {type: 'button', class: 'inline-link',
-        onclick: () => table ? openTo(tableAnchor(table)) : openWorkspace('notes')}, h('span', {text: 'Check model count'})));
+        onclick: () => table ? openTo(tableAnchor(table)) : openWorkspace('notes')}, h('span', {text: 'Model count differs'})));
       refreshIssues(number);
     };
     const reviewIssues = new Set();
@@ -2468,14 +2436,13 @@
 
   function answerTools(demo, number, answer, onChanged) {
     const real = isReal(demo);
-    const listenPanel = h('div', {class: 'listen-panel', id: `a${number}-panel-listen`, hidden: true});
+    const listenPanel = h('div', {class: 'listen-panel', id: `a${number}-panel-listen`});
     let listenBuilt = false;
-    const listenButton = h('button', {type: 'button', class: 'act-btn', 'aria-expanded': 'false', 'aria-controls': listenPanel.id}, icon('volume'), h('span', {text: 'Listen'}));
-    listenButton.addEventListener('click', () => {
-      const open = listenPanel.hidden;
-      if (open && !listenBuilt) { ResearchSpeech.attach(listenPanel, ResearchSpeech.result(demo, number)); listenBuilt = true; }
-      listenPanel.hidden = !open; listenButton.setAttribute('aria-expanded', String(open));
-    });
+    function prepareListen() {
+      if (listenBuilt) return;
+      ResearchSpeech.attach(listenPanel, ResearchSpeech.result(demo, number));
+      listenBuilt = true;
+    }
     // Run details and the raw JSON are built only when the diagnostics fold is opened.
     const diagnostics = h('details', {class: 'fold'}, h('summary', {text: real ? 'Run details and result JSON' : 'Run details and demo JSON'}));
     diagnostics.addEventListener('toggle', () => {
@@ -2488,9 +2455,8 @@
     });
     const open = key => {
       if (key === 'brief') return openReview(demo, number, onChanged, document.activeElement);
-      if (key === 'listen' && listenPanel.hidden) listenButton.click();
     };
-    return {number, open, reveal: key => open(key), inspect: trigger => showEvidence(demo, number, 0, trigger), listenButton, listenPanel, diagnostics};
+    return {number, open, reveal: key => open(key), inspect: trigger => showEvidence(demo, number, 0, trigger), prepareListen, listenPanel, diagnostics};
   }
   function snapshotButton(demo) {
     return btn('Export snapshot JSON', () => {

@@ -65,7 +65,6 @@
   }
 
   const stage = $('#stage'), thread = $('#thread'), scroller = $('#scroll'), dock = $('#dock');
-  new ResizeObserver(() => document.documentElement.style.setProperty('--dock-h', `${Math.ceil(dock.getBoundingClientRect().height)}px`)).observe(dock);
   const form = $('#composer'), queryInput = $('#query'), submit = $('#submit'), scenarioSelect = $('#scenario');
   const industryInput = $('#industry'), suggestions = $('#suggestions'), jumpLatest = $('#jump-latest');
   const inspector = $('#inspector'), inspectorBody = $('#inspector-body'), inspectorHeading = $('#inspector-heading');
@@ -150,36 +149,27 @@
     else if (currentView === 'thread' && activeTurn) $('#main').append(dock);
     dock.hidden = currentView === 'library' || (currentView === 'thread' && !activeTurn);
   }
-  // The requested view is recorded immediately; an animated change applies whichever view is
-  // requested last, so a quick Library → brief switch cannot be overtaken by a pending transition.
-  let targetView = null;
   // Navigation token (audit M2): every navigation advances it; a slow saved-brief response may
   // change the view only if its token is still current when it arrives.
   const nav = AsyncGuards.createNavGuard();
-  function setView(requested, animate = true) {
-    if ((targetView ?? stage.dataset.view) === requested) return;
+  function setView(view) {
+    if (stage.dataset.view === view) return;
     nav.bump();
-    targetView = requested;
-    const change = () => {
-      const view = targetView;
-      if (stage.dataset.view === view) return;
-      currentView = view;
-      stage.dataset.view = view;
-      stage.classList.toggle('is-home', view === 'home');
-      $('#hero').hidden = view !== 'home'; thread.hidden = view !== 'thread'; $('#library-view').hidden = view !== 'library';
-      $('#examples').hidden = view !== 'home' || recordedMode || pageMode === 'mock' || pageMode === 'offline';
-      $('#thread-title').classList.toggle('show', view === 'thread');
-      $('#nav-research').toggleAttribute('aria-current', view !== 'library');
-      if (view !== 'library') $('#nav-research').setAttribute('aria-current', 'page');
-      $('#library-open').toggleAttribute('aria-current', view === 'library');
-      if (view === 'library') $('#library-open').setAttribute('aria-current', 'page');
-      if (view !== 'thread') { suggestions.hidden = true; jumpLatest.hidden = true; }
-      placeDock();
-      autosize();
-      syncTopbar();
-      if (view !== 'thread') scroller.scrollTop = 0;
-    };
-    if (animate) morph(change); else change();
+    currentView = view;
+    stage.dataset.view = view;
+    stage.classList.toggle('is-home', view === 'home');
+    $('#hero').hidden = view !== 'home'; thread.hidden = view !== 'thread'; $('#library-view').hidden = view !== 'library';
+    $('#examples').hidden = view !== 'home' || recordedMode || pageMode === 'mock' || pageMode === 'offline';
+    $('#thread-title').classList.toggle('show', view === 'thread');
+    $('#nav-research').toggleAttribute('aria-current', view !== 'library');
+    if (view !== 'library') $('#nav-research').setAttribute('aria-current', 'page');
+    $('#library-open').toggleAttribute('aria-current', view === 'library');
+    if (view === 'library') $('#library-open').setAttribute('aria-current', 'page');
+    if (view !== 'thread') { suggestions.hidden = true; jumpLatest.hidden = true; }
+    placeDock();
+    autosize();
+    syncTopbar();
+    if (view !== 'thread') scroller.scrollTop = 0;
   }
   $('#nav-research').addEventListener('click', () => setView(activeTurn ? 'thread' : 'home'));
 
@@ -192,8 +182,7 @@
     const selected = tabButtons.find(button => button.getAttribute('aria-selected') === 'true');
     if (!selected || $('#view-tabs').hidden) return;
     tabIndicator.classList.toggle('instant', !animate);
-    tabIndicator.style.width = `${selected.offsetWidth}px`;
-    tabIndicator.style.transform = `translateX(${selected.offsetLeft}px)`;
+    tabIndicator.style.transform = `translateX(${selected.offsetLeft}px) scaleX(${selected.offsetWidth})`;
   }
   addEventListener('resize', () => moveIndicator(false));
   document.addEventListener('reading-preferences-applied', () => requestAnimationFrame(() => moveIndicator(false)));
@@ -215,9 +204,13 @@
   }
   tabButtons.forEach(button => button.addEventListener('click', () => setTab(button.dataset.tab)));
   $('#view-tabs').addEventListener('keydown', event => {
-    if (!['ArrowRight', 'ArrowLeft'].includes(event.key)) return;
+    if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(event.key)) return;
     const index = tabButtons.indexOf(document.activeElement);
-    const next = tabButtons[(index + (event.key === 'ArrowRight' ? 1 : tabButtons.length - 1)) % tabButtons.length];
+    if (index < 0) return;
+    event.preventDefault();
+    const nextIndex = event.key === 'Home' ? 0 : event.key === 'End' ? tabButtons.length - 1
+      : (index + (event.key === 'ArrowRight' ? 1 : tabButtons.length - 1)) % tabButtons.length;
+    const next = tabButtons[nextIndex];
     next.click(); next.focus();
   });
   function syncTopbar() {
@@ -231,17 +224,10 @@
     const evidence = demo?.result?.evidence || [];
     const papers = new Set(evidence.map(p => p.arxiv_id || p.title || 'unknown')).size;
     $('#tab-sources-count').textContent = hasBrief && papers ? String(papers) : '';
-    const stack = $('#source-stack');
-    stack.hidden = !hasBrief || !evidence.length;
-    if (!stack.hidden) {
-      stack.replaceChildren(icon('layers'), h('span', {text: `${papers} paper${papers === 1 ? '' : 's'}`}));
-      stack.setAttribute('aria-label', `${evidence.length} source passages from ${papers} paper${papers === 1 ? '' : 's'}. Open Sources.`);
-    }
     const action = $('#brief-action');
     action.hidden = !hasBrief || !turn.tools;
     if (!action.hidden) action.replaceChildren(icon(demo.library ? 'shield' : 'bookmark'), h('span', {class: 'btn-text', text: demo.library ? 'Review' : 'Save'}));
   }
-  $('#source-stack').addEventListener('click', () => setTab('sources', {focus: true}));
   $('#brief-action').addEventListener('click', event => activeTurn?.tools?.reveal('brief', event.currentTarget));
 
   /* ---------- Segmented controls & reading preferences ---------- */
@@ -343,7 +329,7 @@
     $('#settings-summary').textContent = parts.join(' · ');
     const current = industryInput.value.trim().toLowerCase();
     for (const toggle of inlineIndustry) toggle.setAttribute('aria-pressed', String(toggle.dataset.industry === current));
-    $('#industry-inline').hidden = $('#industry-field').hidden;
+    $('#industry-inline').hidden = recordedMode || $('#industry-field').hidden;
   }
   function requestBusinessInsights(query) {
     // Summary-only answers: keep the question, open settings at the industry field.
@@ -482,7 +468,9 @@
 
   /* ---------- Evidence inspector ---------- */
   function setInspector(open, trigger = null) {
+    returnFocus?.closest('.ev-table tbody tr')?.removeAttribute('data-inspected');
     if (open && trigger) returnFocus = trigger;
+    if (open) returnFocus?.closest('.ev-table tbody tr')?.setAttribute('data-inspected', '');
     const wasOpen = document.body.classList.contains('insp-open');
     if (open && document.body.classList.contains('review-open')) { document.body.classList.remove('review-open'); $('#review-drawer').inert = true; }
     document.body.classList.toggle('insp-open', open);
@@ -536,7 +524,6 @@
         if (anchor) anchor.before(label, grid, status); else passageView.append(label, grid, status);
       }
       tidySource(passageView, passage);
-      passageView.classList.remove('swap'); void passageView.offsetWidth; passageView.classList.add('swap');
       ResearchSpeech.attach(passageView, {id: `source:${number}:${passage.chunk_id}`,
         label: `Citation ${index + 1} · ${citationSourceContext(passage)}`, text: ResearchSpeech.source(passage, index + 1)});
       document.querySelectorAll('.source-row[data-active]').forEach(row => row.removeAttribute('data-active'));
@@ -558,6 +545,14 @@
     }
     inspectorBody.scrollTop = 0;
     setInspector(true, trigger);
+    const activeChoice = $('.source-tab[aria-pressed="true"]', choices);
+    if (activeChoice) {
+      const strip = choices.getBoundingClientRect();
+      const item = activeChoice.getBoundingClientRect();
+      if (item.left < strip.left || item.right > strip.right) {
+        choices.scrollLeft += item.left - strip.left - (strip.width - item.width) / 2;
+      }
+    }
     if (trigger || focusWasInContent) inspectorHeading.focus({preventScroll: true});
   }
 
@@ -667,7 +662,18 @@
   }
 
   function cited(tag, item, demo, number, className) {
-    const node = h(tag, {class: className}, h('span', {class: 'cited-text', math: item.text}));
+    const text = h('span', {class: 'cited-text', math: item.text});
+    const node = h(tag, {class: className}, text);
+    const last = text.lastChild;
+    const ending = last?.nodeType === Node.TEXT_NODE
+      ? last.data.match(/(?:[+−-]?\d+(?:[.,]\d+)? percentage points[.!?]?|\S{1,24})\s*$/u) : null;
+    let citationParent = node;
+    // Keep a small citation cluster with the last word of the finding.
+    if (className === 'claim' && ending && item.chunk_ids.length > 0 && item.chunk_ids.length <= 3 &&
+        (ending.index === 0 || /\s/u.test(last.data[ending.index - 1]))) {
+      citationParent = h('span', {class: 'citation-tail'}, last.splitText(ending.index));
+      text.append(citationParent);
+    }
     for (const id of item.chunk_ids) {
       const index = demo.result.evidence.findIndex(passage => passage.chunk_id === id);
       if (index < 0) throw new Error('Unknown citation');
@@ -693,7 +699,7 @@
         closePreview();
         showEvidence(demo, number, index, citation, item);
       });
-      node.append(' ', citation);
+      citationParent.append(' ', citation);
     }
     return node;
   }
@@ -1157,12 +1163,10 @@
     const paired = plan.form === 'paired_dot';
     const metrics = plan.panels;
     const choices = ctx.chartChoice || (ctx.chartChoice = new Map());
-    const preferred = metrics.findIndex(panel => panel.unit && panel.unit.zero);
-    let choice = initial !== undefined ? initial
-      : choices.has(table.key) ? choices.get(table.key) : preferred >= 0 ? preferred : (metrics.length > 1 ? 'all' : 0);
+    let choice = initial ?? choices.get(table.key) ?? 0;
     const title = h('h4', {class: 'chart-title'});
     const unitLine = h('p', {class: 'chart-unit'});
-    const takeawayData = ctx.takeaway ? ctx.takeaway(table) : null;
+    const takeawayData = ctx.compact && ctx.takeaway ? ctx.takeaway(table) : null;
     const takeaway = takeawayData ? h('p', {class: 'chart-takeaway'},
       h('span', {class: 'term', text: 'From the answer'}), h('span', {math: takeawayData.text}),
       takeawayData.citations.length ? h('span', {class: 'cites'}, takeawayData.citations.map(n => h('span', {class: 'cite-num', text: String(n)}))) : null) : null;
@@ -1170,7 +1174,7 @@
     const options = [...metrics.map((panel, index) => ({value: index, label: panel.header})),
       ...(metrics.length > 1 ? [{value: 'all', label: 'All metrics'}] : [])];
     const buttons = options.map(option => {
-      const button = h('button', {type: 'button', role: 'radio', class: 'seg-btn', onclick: () => { picked = true; show(option.value, true); }});
+      const button = h('button', {type: 'button', role: 'radio', class: 'seg-btn', onclick: () => show(option.value, true)});
       texText(button, option.label);
       button.dataset.metric = String(option.value);
       return button;
@@ -1181,19 +1185,18 @@
       event.preventDefault();
       const index = options.findIndex(option => option.value === choice);
       const step = event.key === 'ArrowRight' || event.key === 'ArrowDown' ? 1 : options.length - 1;
-      picked = true; show(options[(index + step) % options.length].value, true);
+      show(options[(index + step) % options.length].value, true);
     });
     const legend = paired ? h('p', {class: 'chart-legend'},
       h('span', {class: 'key'}, h('span', {class: 'swatch a', 'aria-hidden': 'true'}), h('span', {text: plan.category.values[0]})),
-      h('span', {class: 'key'}, h('span', {class: 'swatch b', 'aria-hidden': 'true'}), h('span', {text: plan.category.values[1]})),
-      h('span', {class: 'legend-note', text: `Labels as written in the “${plan.category.header}” column.`})) : null;
+      h('span', {class: 'key'}, h('span', {class: 'swatch b', 'aria-hidden': 'true'}), h('span', {text: plan.category.values[1]}))) : null;
     const frame = h('div', {class: 'chart-frame'});
     const hint = scrollHint();
-    const why = h('p', {class: 'chart-why'});
     const foot = h('p', {class: 'chart-foot'});
     const glossHost = h('div', {class: 'gloss-host'});
-    wrap.append(...[h('div', {class: 'chart-head'}, title, unitLine, glossHost, takeaway, metrics.length > 1 || metrics[0]?.unit?.zero ? chartOptions(selector) : null), legend, hint, frame, why, foot].filter(Boolean)); // append(null) would print "null"
-    let chart = null, picked = false;
+    const definitions = h('details', {class: 'fold chart-notes'}, h('summary', {text: 'Metric definitions'}), glossHost);
+    wrap.append(...[h('div', {class: 'chart-head'}, title, unitLine, takeaway, metrics.length > 1 ? selector : null), legend, hint, frame, foot, definitions].filter(Boolean));
+    let chart = null;
     const draw = options => {
       if (!chart) return;
       chart.update(Math.round(frame.clientWidth || wrap.clientWidth || 0), options);
@@ -1210,9 +1213,9 @@
       texText(unitLine, `${EM.chartTitle(table, plan, panel)}. ${panel
         ? (panel.unit && panel.unit.zero ? `Unit: ${panel.unit.label}, as stated in the table.` : 'The paper gives no unit for these values.')
         : 'Each measure has its own scale.'}`);
-      glossHost.replaceChildren(glossLine([...(panel ? [panel.header] : metrics.map(m => m.header))]) || '');
-      why.textContent = panel && !bars ? 'No unit with a true zero is stated, so values are compared by position rather than bar length.' : '';
-      why.hidden = !why.textContent;
+      const glossary = glossLine(panel ? [panel.header] : metrics.map(m => m.header));
+      glossHost.replaceChildren(...(glossary ? [glossary] : []));
+      definitions.hidden = !glossary;
       foot.textContent = bars
         ? 'Bars start at zero on one shared scale. Values exactly as written; nothing computed or ranked.'
         : 'Scale: lowest to highest printed value, labelled at both ends. Values exactly as written; nothing computed or ranked.'
@@ -1220,7 +1223,6 @@
       buttons.forEach(button => {
         const selected = button.dataset.metric === String(next);
         button.setAttribute('aria-checked', String(selected));
-        button.setAttribute('aria-selected', String(selected));
         button.tabIndex = selected ? 0 : -1;
       });
       chart = ChartSvg.mount({document, frame, table, plan, title: tableTitle(table),
@@ -1230,12 +1232,9 @@
       if (focusSelector) buttons.find(button => button.dataset.metric === String(next))?.focus();
     }
     show(choice);
-    // "All metrics" side by side is the default only when it fits; on a narrower frame the chart
-    // opens on the first metric instead of scrolling (the reader can still choose "All metrics").
     requestAnimationFrame(() => {
       if (!wrap.isConnected) return;
       draw({force: true});
-      if (!picked && choice === 'all' && frame.classList.contains('scrolls')) show(0);
     });
     // Redraw only while attached; a detached chart stops observing (audit L2).
     const observer = new ResizeObserver(() => { if (wrap.isConnected) draw(); else observer.disconnect(); });
@@ -1302,7 +1301,7 @@
   function viewBody(table, plan, ctx, analysis, view) {
     const title = tableTitle(table);
     const open = (row, cell, trigger) => openRowSource(ctx, table, row, cell, trigger);
-    if (view.kind === 'paired' || view.kind === 'dots') return chartView(table, plan, ctx, plan.panels.length > 1 ? 'all' : 0);
+    if (view.kind === 'paired' || view.kind === 'dots') return chartView(table, plan, ctx);
     if (view.kind === 'bars') return chartView(table, plan, ctx, plan.panels.findIndex(panel => panel.unit && panel.unit.zero));
     if (view.kind === 'heatmap') return heatmapView(table, ctx, view);
     // SVG views share one frame with a resize observer, like chartView.
@@ -1584,10 +1583,10 @@
 
 
   /* ---------- Answer reading helpers (answer-first layout, 2026-11-22) ---------- */
-  // Group consecutive findings into short paragraphs (three sentences at most) for continuous reading.
+  // Keep supporting findings in short groups without changing their wording or order.
   function paragraphs(items) {
     const out = [];
-    for (let i = 0; i < items.length; i += 3) out.push(items.slice(i, i + 3));
+    for (let i = 0; i < items.length; i += 2) out.push(items.slice(i, i + 2));
     return out;
   }
   // Selective emphasis: bold quantities exactly as written (percentages, ranges, signed points), nothing else.
@@ -1647,16 +1646,6 @@
       if (status && /download requested/.test(status.textContent)) status.textContent = status.textContent.replace(/Pending review; not approved\./, `Review record: ${humanReview(demo).short}.`);
     }));
     return group;
-  }
-  function answerActions(demo, tools) {
-    const saved = demo.library
-      ? h('span', {class: 'answer-saved'}, icon('check'), h('span', {text: 'Saved in Library'}))
-      : h('button', {type: 'button', class: 'text-btn', onclick: () => tools.reveal('brief')}, icon('bookmark'), h('span', {text: 'Save'}));
-    const menu = h('details', {class: 'export-menu'},
-      h('summary', {class: 'text-btn'}, icon('download'), h('span', {text: 'Export'})),
-      h('div', {class: 'export-pop'}, exportControls(demo, tools.number), snapshotButton(demo),
-        h('p', {class: 'export-note', text: `Exports contain the answer as generated and its sources. They do not include the review record; current review: ${humanReview(demo).short}.`})));
-    return h('div', {class: 'answer-actions'}, saved, menu);
   }
   // What a reviewer should resolve, taken from the answer as shown (material notes first, then routine checks).
   function issueList(number) {
@@ -1977,11 +1966,11 @@
       workflow: h('input', {type: 'text', maxLength: 600, value: previous.workflow || ''}),
       decision: h('input', {type: 'text', maxLength: 600, value: previous.decision || ''}),
     };
-    const customize = h('details', {class: 'fold'},
-      h('summary', {text: 'Customize'}),
-      ...[['industry', 'Industry'], ['workflow', 'Business Workflow'], ['decision', 'Decision']]
-        .map(([name, label]) => h('label', {class: 'field'}, h('span', {text: label}), fields[name])));
-    const send = h('button', {type: 'submit', class: 'act-btn', 'data-business-trigger': '',
+    const customize = h('details', {class: 'fold business-context'},
+      h('summary', {text: 'Customize business context'}),
+      h('div', {class: 'business-fields'}, [['industry', 'Industry'], ['workflow', 'Business workflow'], ['decision', 'Decision']]
+        .map(([name, label]) => h('label', {class: 'field'}, h('span', {text: label}), fields[name]))));
+    const send = h('button', {type: 'submit', class: 'solid-btn', 'data-business-trigger': '',
       text: demo.result.business_insight ? 'Generate another interpretation' : 'Generate business insights'});
     const start = async (automatic = false) => {
       if (answer.businessPending) return;
@@ -2023,10 +2012,11 @@
         disable(false);
       }
     };
-    const form = h('form', {class: 'review-form', onsubmit: event => {
+    const form = h('form', {class: 'business-form', onsubmit: event => {
       event.preventDefault();
       void start();
-    }}, h('p', {class: 'section-note', text: 'Uses the saved question and findings. Use only public research and non-confidential context.'}), customize, send);
+    }}, h('p', {class: 'section-note', text: 'Uses the saved question and findings. Use only public research and non-confidential context.'}),
+    h('div', {class: 'business-form-actions'}, send, customize));
     form.startBusiness = start;
     return form;
   }
@@ -2081,17 +2071,7 @@
     if (window.MOCK_API === true) paneAnswer.append(h('p', {class: 'mock-stamp', role: 'note'}, icon('info'),
       h('span', {text: 'Mock data for interface testing. Papers, numbers and tables are invented and are not research output.'})));
 
-    /* Quiet source line: the lead paper and the retrieved passage count; opens Sources. */
     const citedPapers = studies.filter(study => study.citations.length);
-    if (evidence.length) {
-      const lead = (citedPapers.length ? citedPapers : studies);
-      paneAnswer.append(h('p', {class: 'answer-source-line'},
-        h('button', {type: 'button', class: 'paper-chip', title: lead[0].title, 'aria-label': `Sources: ${lead[0].title}. Open Sources for this answer.`,
-          onclick: () => setTab('sources', {focus: true})}, icon('layers'), h('span', {text: sectionTitle(lead[0].title)})),
-        lead.length > 1 ? h('span', {class: 'source-more', text: `+${plural(lead.length - 1, 'paper')}`}) : null,
-        h('span', {class: 'source-count', text: demo.curated_preview
-          ? `${plural(evidence.length, 'source passage')} · Demo with added examples` : `${plural(evidence.length, 'passage')} retrieved`})));
-    }
 
     /* ---- The answer ---- */
     const claims = summary.claims.filter(claim => claim.kind !== 'interpretation');
@@ -2265,35 +2245,29 @@
     }
     paneAnswer.append(businessSection);
 
-    /* ---- Actions right below the response ---- */
+    /* Reading footer. Source and review metadata live in their dedicated views. */
     const review = humanReview(demo);
     const quoteChecked = isSynthesis(demo) || Boolean(summary.support_check);
-    const actions = h('div', {class: 'answer-actions', role: 'group', 'aria-label': 'Answer actions'},
-      demo.library
-        ? h('button', {type: 'button', class: 'act-btn', onclick: () => openWorkspace('review')}, icon('check'), h('span', {text: 'Saved'}), h('span', {class: 'act-sub', text: '· Review'}))
-        : h('button', {type: 'button', class: 'act-btn', onclick: () => tools.reveal('brief')}, icon('bookmark'), h('span', {text: 'Save'})),
-      h('details', {class: 'export-menu'},
-        h('summary', {class: 'act-btn'}, icon('download'), h('span', {text: 'Export'})),
-        h('div', {class: 'export-pop'}, exportControls(demo, number), snapshotButton(demo),
+    const moreActions = h('details', {class: 'answer-more'},
+      h('summary', {class: 'act-btn'}, h('span', {text: 'More actions'}), icon('down')),
+      h('div', {class: 'answer-more-body'},
+        tools.listenPanel,
+        view?.status === 'available' && claimNodes.length ? h('div', {class: 'answer-explanation'},
+          h('p', {id: `a${number}-explain-label`, text: 'Explanation style'}), explanationSwitch(`a${number}-explain-label`)) : null,
+        h('div', {class: 'answer-downloads'}, h('p', {text: 'Export answer'}), exportControls(demo, number), snapshotButton(demo),
           h('p', {class: 'export-note', text: demo.curated_preview ? 'The export includes the examples added for this demo.'
-            : `Exports contain the answer as generated and its sources, not the review record. Current review: ${review.short}.`}))),
-      tools.listenButton,
-      evidence.length ? h('button', {type: 'button', class: 'act-btn', onclick: () => setTab('sources', {focus: true})}, icon('layers'), h('span', {text: 'Sources'})) : null,
-      businessForm && !insight
-        ? h('button', {type: 'button', class: 'act-btn act-quiet', 'data-business-trigger': '',
-          onclick: () => businessForm.requestSubmit()}, icon('bulb'), h('span', {text: 'Generate business insights'})) : null,
-      view?.status === 'available' && claimNodes.length ? h('div', {class: 'act-switch'}, h('span', {id: `a${number}-explain-label`, class: 'sr-only', text: 'Explanation style'}), explanationSwitch(`a${number}-explain-label`)) : null);
-    paneAnswer.append(actions, tools.listenPanel);
-
-    /* Slim line: research notes and the real review status; opens Workspace. */
-    const noteCount = h('span', {class: 'strip-count'});
-    paneAnswer.append(h('button', {type: 'button', class: 'answer-note-strip', onclick: () => openWorkspace('notes')},
-      h('span', {class: 'strip-title'}, icon('info'), h('span', {text: 'Research notes'})),
-      h('span', {class: 'facet'}, icon(quoteChecked ? 'check' : 'info'), h('span', {text: quoteChecked ? 'Quotes matched' : 'Quote check not recorded'})),
-      abstained ? h('span', {class: 'facet warn'}, icon('alert'), h('span', {text: 'No answer'})) : partial ? h('span', {class: 'facet warn'}, icon('alert'), h('span', {text: 'Partial'})) : null,
-      h('span', {class: `facet ${review.tone === 'ok' ? 'ok' : review.tone === 'bad' ? 'bad' : ''}`}, icon(review.tone === 'ok' ? 'check' : 'shield'),
-        h('span', {text: review.tone === 'draft' ? (demo.library ? 'Not reviewed by a person' : 'Not saved or reviewed') : review.short})),
-      noteCount, icon('chevron')));
+            : `Exports contain the original draft and sources. Review record: ${review.short}.`}))));
+    moreActions.addEventListener('toggle', () => { if (moreActions.open) tools.prepareListen(); });
+    const businessEntry = insight?.implications?.length
+      ? btn('View business insight', () => openWorkspace('business'), 'act-btn business-entry')
+      : businessForm ? h('button', {type: 'button', class: 'act-btn business-entry', 'data-business-trigger': '',
+        onclick: () => businessForm.requestSubmit()}, h('span', {text: 'Generate business insights'})) : null;
+    paneAnswer.append(h('footer', {class: 'answer-footer'},
+      h('div', {class: 'answer-footer-meta'},
+        h('button', {type: 'button', class: 'act-btn', onclick: () => openWorkspace('notes')}, icon('info'), h('span', {text: 'Research notes'})),
+        businessEntry,
+        demo.curated_preview ? h('span', {class: 'answer-demo-label', text: 'Demo with added examples'}) : null),
+      moreActions));
 
     /* ---- Workspace: Business insight / Research notes / Review ---- */
     const wsTabs = h('div', {class: 'ws-tabs', role: 'tablist', 'aria-label': 'Workspace sections'});
@@ -2321,10 +2295,38 @@
     });
     paneWorkspace.append(h('header', {class: 'pane-head'}, h('h2', {class: 'pane-title', id: `a${number}-workspace`, tabIndex: -1, text: 'Workspace'})), wsTabs, wsBody);
 
+    // Business insight: read the saved interpretation first, with detail and generation on demand.
     const businessPanel = insight || businessForm || stage === 'business' ? wsSection('business', 'Business insight') : null;
-    if (businessForm) businessPanel.append(businessForm);
+    if (businessPanel) {
+      businessPanel.classList.add('business-panel');
+      businessPanel.append(h('header', {class: 'business-heading'},
+        h('h3', {text: insight && insight.industry !== 'Industry unspecified' ? `Business insight · ${insight.industry}` : 'Business insight'}),
+        insight ? h('p', {class: 'section-note', text: 'A business interpretation of the evidence. The cited studies did not test this application.'}) : null));
+    }
+    if (stage === 'business' && businessPanel) {
+      businessPanel.append(h('p', {class: 'aside-line warn', role: 'status', text: demo.error.message}));
+    }
     if (insight) {
       const panel = businessPanel;
+      if (result.provenance?.agentic) {
+        const dropped = (result.provenance.agentic.business_screening || []).filter(item => item.status === 'removed').length;
+        panel.append(h('p', {class: 'aside-line warn'}, icon('alert'), h('span', {text: `Drafted by the business insight agent and not checked by the verification agent or a person. ${plural(dropped, 'unsupported statement')} ${dropped === 1 ? 'was' : 'were'} withheld.`})));
+      }
+      if (!insight.implications.length) panel.append(h('p', {class: 'muted', text: 'No supported business implications.'}));
+      const more = h('details', {class: 'fold more-insights'}, h('summary', {text: `More interpretations (${Math.max(0, insight.implications.length - 1)})`}));
+      insight.implications.forEach((implication, i) => {
+        (i ? more : panel).append(h('article', {class: 'insight-result'},
+          cited('p', implication, demo, number, 'insight-text'),
+          implication.suggested_action ? h('section', {class: 'insight-action'}, h('h4', {class: 'ws-h', text: 'Suggested action'}), h('p', {math: implication.suggested_action})) : null,
+          implication.assumptions?.length ? h('details', {class: 'fold insight-assumptions'},
+            h('summary', {text: `Assumptions (${implication.assumptions.length})`}), bullets(implication.assumptions)) : null));
+      });
+      if (insight.implications.length > 1) panel.append(more);
+      const risks = insight.risks || [], limitations = insight.limitations || [];
+      if (risks.length || limitations.length) panel.append(h('details', {class: 'fold insight-limits'},
+        h('summary', {text: `Risks and limitations (${risks.length + limitations.length})`}),
+        risks.length ? h('section', null, h('h4', {class: 'ws-h', text: 'Risks'}), bullets(risks)) : null,
+        limitations.length ? h('section', null, h('h4', {class: 'ws-h', text: 'Limitations'}), bullets(limitations)) : null));
       const checkpoint = result.regulatory_checkpoint;
       if (checkpoint) {
         const assessed = checkpoint.status === 'assessed';
@@ -2344,6 +2346,10 @@
         panel.append(reg);
       }
     }
+    if (businessForm) {
+      businessPanel.append(insight?.implications?.length ? h('details', {class: 'fold business-update'},
+        h('summary', {text: 'Update business insight'}), businessForm) : businessForm);
+    }
 
     // Research notes: discrepancies first, then what was checked, then risks and limits.
     const notesPanel = wsSection('notes', 'Research notes');
@@ -2357,27 +2363,26 @@
     const completeness = abstained ? 'No answer: the retrieved evidence did not support one.'
       : partial ? (gap ? `Partial. Missing: ${gap}` : 'Partial. The review marked the answer as incomplete.')
         : summary.answer_scope === 'full' ? 'The automated review judged that the answer covers the question.' : 'Not assessed for this answer.';
-    const card = (title, text, tone = '') => h('article', {class: `check-card ${tone}`}, h('h3', {class: 'ws-h', text: title}), h('p', {text}));
+    const check = (title, status, explanation, tone = '') => h('details', {class: 'fold check-row'},
+      h('summary', null, h('span', {class: 'check-label', text: title}),
+        h('span', {class: `check-status ${tone}`, text: status})),
+      h('p', {text: explanation}));
     const group = (title, items) => items.length ? h('section', {class: 'ws-group'}, h('h3', {class: 'ws-h', text: title}),
       h('ul', {class: 'notes-list'}, items.map(item => typeof item === 'string' ? h('li', {math: item}) : item.chunk_ids ? cited('li', item, demo, number)
         : h('li', null, item.label ? h('span', {class: 'li-label', text: `${item.label}. `}) : null, h('span', {math: item.text}))))) : null;
-    notesPanel.append(discrepancyBox,
-      h('div', {class: 'check-grid'},
-        card('Quotations', quoteChecked ? 'Every quote attached to a statement was found word-for-word in its source paper. This does not show that the quote supports the statement.' : 'This saved result does not record a quote check.'),
-        card('Claim support', support),
-        card('Completeness', completeness, partial || abstained ? 'warn' : ''),
-        card('Human approval', review.long, review.tone === 'ok' ? 'ok' : '')),
+    notesPanel.append(...[discrepancyBox,
+      h('div', {class: 'check-list'},
+        check('Quotations', quoteChecked ? 'Quotes matched' : 'Not recorded',
+          quoteChecked ? 'Every quote attached to a statement was found word-for-word in its source paper. This does not show that the quote supports the statement.' : 'This saved result does not record a quote check.'),
+        check('Claim support', result.provenance?.agentic || summary.quality_review ? 'Model reviewed' : quoteChecked ? 'Meaning not checked' : 'Not recorded', support),
+        check('Completeness', abstained ? 'No answer' : partial ? 'Partial' : summary.answer_scope === 'full' ? 'Marked complete' : 'Not assessed',
+          completeness, partial || abstained ? 'warn' : ''),
+        check('Human approval', review.short, review.long, review.tone)),
       group('What the answer does not cover', notes.coverage),
       group('Limitations of the evidence', notes.limits),
       group(insight ? `Risks and limits of the ${insight.industry} insight` : 'Business risks', notes.business),
       group('Other notes', notes.other),
-      h('button', {type: 'button', class: 'quiet-btn ws-jump', onclick: () => selectWorkspace('review', true)}, icon('shield'), h('span', {text: 'Review checks'})));
-    const countNotes = () => {
-      const n = notesPanel.querySelectorAll('.notes-list > li').length;
-      noteCount.textContent = n ? plural(n, 'note') : '';
-    };
-    countNotes();
-
+      h('button', {type: 'button', class: 'quiet-btn ws-jump', onclick: () => selectWorkspace('review', true)}, icon('shield'), h('span', {text: 'Review checks'}))].filter(Boolean));
     // Review: the saved brief's actual status and what a person needs to check.
     const reviewPanel = wsSection('review', 'Review');
     const checklist = h('ol', {class: 'checklist'}, checks.map(item => h('li', null, h('span', {class: 'box', 'aria-hidden': 'true'}),
@@ -2392,16 +2397,15 @@
         : 'Save this draft as a brief first; reviews attach to a saved version.'}),
       h('h3', {class: 'ws-h', text: 'Checks before relying on this answer'}), checklist,
       h('p', {class: 'section-note', text: `Exports do not include the review record. Compare an exported file with saved version ${demo.library?.version?.number ?? '—'} before claiming it was approved.`})));
-    selectWorkspace(insight ? 'business' : 'notes');
+    selectWorkspace(businessPanel ? 'business' : 'notes');
 
     /* A table-level count check: one actionable link near the answer; details in Research notes and Evidence. */
     let discrepancyAside = null;
     ctx.addCaveat = (content, table) => {
       discrepancyList.append(typeof content === 'string' ? h('li', {text: content}) : h('li', null, content));
       discrepancyBox.hidden = false;
-      countNotes();
       if (!discrepancyAside) discrepancyAside = aside(h('button', {type: 'button', class: 'inline-link',
-        onclick: () => table ? openTo(tableAnchor(table)) : openWorkspace('notes')}, h('span', {text: 'Check model count'})));
+        onclick: () => table ? openTo(tableAnchor(table)) : openWorkspace('notes')}, h('span', {text: 'Model count differs'})));
       refreshIssues(number);
     };
     const reviewIssues = new Set();
@@ -2428,13 +2432,15 @@
     const sourceRow = index => {
       const passage = evidence[index];
       const count = statementCount(passage);
-      const where = passage.representation === 'linearized_table'
-        ? [(passage.caption || '').split(/[:.]/)[0].trim() || 'Table', passage.row_label, settingOf(passage)].filter(Boolean).join(' · ')
+      const isTableRow = passage.representation === 'linearized_table';
+      const where = isTableRow
+        ? [(passage.caption || '').split(/[:.]/)[0].trim() || 'Table', passage.row_label].filter(Boolean).join(' · ')
         : sourceLocation(passage);
+      const detail = (isTableRow ? settingOf(passage) : null) || kindOf(passage);
       const open = h('button', {type: 'button', class: 'source-row', 'aria-label': `Open source ${index + 1}, ${citationSourceContext(passage)}`,
         onclick: () => showEvidence(demo, number, index, open)},
         h('span', {class: 'cite-num', text: String(index + 1)}),
-        h('span', {class: 'row-where'}, texText(h('span', {class: 'row-loc'}), where), h('span', {class: 'row-kind', text: kindOf(passage)})),
+        h('span', {class: 'row-where'}, texText(h('span', {class: 'row-loc'}), where), h('span', {class: 'row-kind', text: detail})),
         h('span', {class: `row-use ${count ? 'is-cited' : ''}`, text: count ? `Cited by ${plural(count, 'statement')}` : 'Retrieved, not cited'}));
       open.dataset.passage = index;
       return h('li', null, open);
@@ -2574,14 +2580,13 @@
 
   function answerTools(demo, number, answer, onChanged) {
     const real = isReal(demo);
-    const listenPanel = h('div', {class: 'listen-panel', id: `a${number}-panel-listen`, hidden: true});
+    const listenPanel = h('div', {class: 'listen-panel', id: `a${number}-panel-listen`});
     let listenBuilt = false;
-    const listenButton = h('button', {type: 'button', class: 'act-btn', 'aria-expanded': 'false', 'aria-controls': listenPanel.id}, icon('volume'), h('span', {text: 'Listen'}));
-    listenButton.addEventListener('click', () => {
-      const open = listenPanel.hidden;
-      if (open && !listenBuilt) { ResearchSpeech.attach(listenPanel, ResearchSpeech.result(demo, number)); listenBuilt = true; }
-      listenPanel.hidden = !open; listenButton.setAttribute('aria-expanded', String(open));
-    });
+    function prepareListen() {
+      if (listenBuilt) return;
+      ResearchSpeech.attach(listenPanel, ResearchSpeech.result(demo, number));
+      listenBuilt = true;
+    }
     // Run details and the raw JSON are built only when the diagnostics fold is opened.
     const diagnostics = h('details', {class: 'fold'}, h('summary', {text: real ? 'Run details and result JSON' : 'Run details and demo JSON'}));
     diagnostics.addEventListener('toggle', () => {
@@ -2594,9 +2599,8 @@
     });
     const open = key => {
       if (key === 'brief') return openReview(demo, number, onChanged, document.activeElement);
-      if (key === 'listen' && listenPanel.hidden) listenButton.click();
     };
-    return {number, open, reveal: key => open(key), inspect: trigger => showEvidence(demo, number, 0, trigger), listenButton, listenPanel, diagnostics};
+    return {number, open, reveal: key => open(key), inspect: trigger => showEvidence(demo, number, 0, trigger), prepareListen, listenPanel, diagnostics};
   }
   function snapshotButton(demo) {
     return btn('Export snapshot JSON', () => {
@@ -3179,7 +3183,7 @@
   const briefSearch = $('#brief-search'), briefArchived = $('#brief-archived');
   let offset = 0, loadSequence = 0;
   // The library is a page of the workspace rather than a modal; this keeps the shared call sites unchanged.
-  const libraryDialog = {get open() { return currentView === 'library'; }, close() { setView(activeTurn ? 'thread' : 'home', false); }};
+  const libraryDialog = {get open() { return currentView === 'library'; }, close() { setView(activeTurn ? 'thread' : 'home'); }};
   function openSnapshot(demo) {
     // Replays are display-only: never feed them into live conversation history.
     const number = ++turnNumber;
@@ -3433,7 +3437,7 @@
       const status = h('span');
       $('#recent-briefs').replaceChildren(...data.briefs.slice(0, recordedMode ? 6 : 4).map(brief => recordedMode ? exampleCard(brief, status) : briefRow(brief, status)));
       $('#recent-briefs').classList.toggle('example-grid', recordedMode);
-      $('#recent-heading').textContent = recordedMode ? 'Saved research to explore' : 'Recent research';
+      $('#recent-heading').textContent = recordedMode ? 'Recent briefs' : 'Recent research';
       $('#recent-all').textContent = recordedMode ? 'All saved research' : 'Open library';
       $('#recent-section').hidden = !data.briefs.length;
     } catch { $('#recent-section').hidden = true; }
@@ -3677,8 +3681,8 @@
       else setMode('demo', 'This backend serves prepared fixture examples only. Questions are not researched.');
       $('#risk-field').hidden = !indexedMode || mock;
       if (recordedMode) {
-        $('#hero-title').textContent = 'What would you like to research?';
-        $('#hero-sub').textContent = 'Answers from the indexed research papers, with every claim linked to the passage or table cell it came from. Asking new questions is not available in this copy, so start from saved research below.';
+        $('#hero-title').textContent = 'Saved research';
+        $('#hero-sub').textContent = 'Open an answer to read its findings and inspect the original evidence.';
         form.hidden = true; $('#industry-inline').hidden = true; $('#examples').hidden = true;
         composerNote.textContent = '';
       } else if (!liveSynthesis) {
@@ -3743,7 +3747,7 @@
       $('#examples').hidden = true;
     }).finally(() => { setQuestionBusy(false); autosize(); });
   }
-  syncTheme(); syncPrefs(); setView('home', false); autosize();
+  syncTheme(); syncPrefs(); setView('home'); autosize();
   /* ---------- Chart gallery (test page: ?gallery=1, needs serve.py --serve-tests) ----------
      Renders real verified tables from the research index, exported read-only into a test fixture,
      through the same renderEvidenceTable path an answer uses. It is labelled as not an answer:
@@ -3783,7 +3787,7 @@
     thread.append(turn);
     for (const other of thread.querySelectorAll('.turn:not(.gallery)')) other.hidden = true;
     turn.hidden = false;
-    setView('thread', false);
+    setView('thread');
     $('#thread-title').textContent = 'Chart gallery (test page)';
   }
 

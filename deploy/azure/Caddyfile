@@ -1,0 +1,7 @@
+# Installed to /etc/caddy/Caddyfile by deploy/azure/install.sh.
+# Caddy obtains and renews the Let's Encrypt certificate for the VM's Azure DNS name
+# and forwards to the app on loopback with the original Host header.
+@DOMAIN@ {
+	encode zstd gzip
+	reverse_proxy 127.0.0.1:8821
+}

@@ -1,0 +1,216 @@
+{
+  "model_listed_in_local_cache": true,
+  "cli_version": "codex-cli 0.167.0-alpha.3.2",
+  "b2_init_seconds": 47.99644410004839,
+  "identity": {
+    "collection": "experimental_complete_parent_search",
+    "count": 7667,
+    "metadata": {
+      "embedding_model": "all-MiniLM-L6-v2",
+      "strategy": "token224_parent",
+      "search_views": 11030,
+      "human_acceptance": "pending"
+    },
+    "indexed_records_sha256": "78d8efd7c9df075be09ffa5f3a9c7ca79c54efa2d7caf75c8f0329ea72ff41aa",
+    "embedding_bytes_sha256": "50468962cff785b71c4de72f9e7436b656bcf30d8df801b2681473873d23bd14",
+    "identity_limits": "Local artifact integrity; source certification and human acceptance remain pending.",
+    "candidate_algorithm": "document-table-balanced-facets-v1",
+    "algorithm_sha256": {
+      "b2.py": "476518d6a2424c229d2afd78cef5b281e85dbc766eee9ada5f4963bb35aa9fc3",
+      "retriever.py": "1c2a1400d76e1b6add0f96493e5f92acc0a6913440234fb28934203080eefb41",
+      "balanced_retriever.py": "267ff7113339a262c15669ae09d4058f4e6d869918650b12636963cb43d66307",
+      "evidence_coverage.py": "f177c97a502727ccd4b57cd3ea5d20637c5e789d2f346ef4b244ed7d0d8549ff",
+      "search_index.py": "02fb4a261d862bc47283f290ee5c1c42d8fcb798dd501887f237c76f51b77900",
+      "search_chunks.py": "103a3b5440879a5300ece876c5fadd0f77dc4f9dc3f6a65b79f94432a9ca7f16",
+      "semantic_views.py": "0d727cb00e82884a68d9a5d8c6e7ac6bbd9fc3e942ec41e1a75d43631f1556f7"
+    },
+    "table_comparisons": true
+  },
+  "provider_invocations": 0,
+  "original_query_only": [
+    {
+      "id": "F01",
+      "chunk_ids": [
+        "2506.20821v1_c0017",
+        "2506.20821v1_c0016",
+        "2506.20821v1_table_de629a5f57790c34_2",
+        "2506.20821v1_table_de629a5f57790c34_4",
+        "2506.20821v1_table_de629a5f57790c34_1",
+        "2506.20821v1_table_de629a5f57790c34_5",
+        "2506.20821v1_c0018",
+        "2506.20821v1_c0019"
+      ],
+      "points_with_exact_anchors": [
+        "F01.1"
+      ],
+      "required_point_count": 2,
+      "seconds": 12.070954700000584
+    },
+    {
+      "id": "F02",
+      "chunk_ids": [
+        "2512.20002v3_table_dda9dc168318c057_9",
+        "2512.20002v3_c0023",
+        "2512.20002v3_table_73e166fbe4d2eb83_1",
+        "2512.20002v3_table_dda9dc168318c057_8",
+        "2512.20002v3_table_dda9dc168318c057_4",
+        "2512.20002v3_table_dda9dc168318c057_1",
+        "2512.20002v3_table_dda9dc168318c057_7",
+        "2512.20002v3_c0021"
+      ],
+      "points_with_exact_anchors": [
+        "F02.1"
+      ],
+      "required_point_count": 2,
+      "seconds": 4.505493400036357
+    },
+    {
+      "id": "F03",
+      "chunk_ids": [
+        "2405.17602v1_c0024",
+        "2405.17602v1_table_d97384047b764e44_1",
+        "2405.17602v1_c0021",
+        "2405.17602v1_c0022",
+        "2405.17602v1_table_d97384047b764e44_3",
+        "2405.17602v1_table_d97384047b764e44_2",
+        "2405.17602v1_table_d97384047b764e44_9",
+        "2405.17602v1_c0011"
+      ],
+      "points_with_exact_anchors": [
+        "F03.1",
+        "F03.2"
+      ],
+      "required_point_count": 2,
+      "seconds": 4.905615999945439
+    },
+    {
+      "id": "F04",
+      "chunk_ids": [
+        "2410.11321v1_c0022",
+        "2410.11321v1_c0020",
+        "2410.11321v1_c0018",
+        "2410.11321v1_c0019",
+        "2501.15067v1_c0008",
+        "2410.11321v1_c0021",
+        "2501.15067v1_c0030",
+        "2501.15067v1_c0000"
+      ],
+      "points_with_exact_anchors": [
+        "F04.1"
+      ],
+      "required_point_count": 2,
+      "seconds": 3.9292982999468222
+    },
+    {
+      "id": "F05",
+      "chunk_ids": [
+        "2404.18043v3_c0014",
+        "2404.18043v3_c0016",
+        "2404.18043v3_c0011",
+        "2502.18471v2_c0005",
+        "2502.18471v2_c0008",
+        "2404.18043v3_c0012",
+        "2502.18471v2_c0019",
+        "2502.18471v2_c0022"
+      ],
+      "points_with_exact_anchors": [],
+      "required_point_count": 3,
+      "seconds": 8.639608600060456
+    },
+    {
+      "id": "F06",
+      "chunk_ids": [
+        "2406.01749v1_c0006",
+        "2406.01749v1_c0013",
+        "2406.01749v1_c0012",
+        "2406.01749v1_c0015",
+        "2406.01749v1_c0017",
+        "2406.01749v1_c0010",
+        "2406.01749v1_table_de629a5f57790c34_13",
+        "2406.01749v1_c0008"
+      ],
+      "points_with_exact_anchors": [
+        "F06.1",
+        "F06.2",
+        "F06.3"
+      ],
+      "required_point_count": 3,
+      "seconds": 4.822839599917643
+    },
+    {
+      "id": "F07",
+      "chunk_ids": [
+        "2502.13294v2_c0015",
+        "2502.13294v2_c0014",
+        "2502.13294v2_c0010",
+        "2502.13294v2_c0030",
+        "2501.17755v2_c0015",
+        "2501.17755v2_c0000",
+        "2502.13294v2_c0008",
+        "2502.13294v2_c0012"
+      ],
+      "points_with_exact_anchors": [
+        "F07.1",
+        "F07.2"
+      ],
+      "required_point_count": 2,
+      "seconds": 6.330063399975188
+    },
+    {
+      "id": "F08",
+      "chunk_ids": [
+        "2412.06681v2_c0019",
+        "2412.06681v2_c0062",
+        "2412.06681v2_c0060",
+        "2412.06681v2_c0055",
+        "2606.28456v1_c0028",
+        "2412.06681v2_c0057",
+        "2412.06681v2_c0039",
+        "2412.06681v2_c0034"
+      ],
+      "points_with_exact_anchors": [
+        "F08.2"
+      ],
+      "required_point_count": 2,
+      "seconds": 4.240076199988835
+    },
+    {
+      "id": "F09",
+      "chunk_ids": [
+        "2503.20518v1_c0000",
+        "2503.20518v1_c0017",
+        "2503.20518v1_c0002",
+        "2503.20518v1_c0001",
+        "2503.20518v1_c0014",
+        "2503.20518v1_c0011",
+        "2503.20518v1_c0013",
+        "2503.20518v1_c0004"
+      ],
+      "points_with_exact_anchors": [
+        "F09.1",
+        "F09.2"
+      ],
+      "required_point_count": 2,
+      "seconds": 2.99729379999917
+    },
+    {
+      "id": "F10",
+      "chunk_ids": [
+        "2410.11321v1_c0023",
+        "2506.23123v1_c0343",
+        "2410.11321v1_c0020",
+        "2503.05773v1_c0007",
+        "2502.13294v2_c0033",
+        "2506.23123v1_c0058",
+        "2506.23123v1_c0055",
+        "2410.11321v1_c0019"
+      ],
+      "points_with_exact_anchors": [
+        "F10.1",
+        "F10.2"
+      ],
+      "required_point_count": 2,
+      "seconds": 11.317394100013189
+    }
+  ]
+}

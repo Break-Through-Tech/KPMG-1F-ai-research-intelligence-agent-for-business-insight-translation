@@ -1,0 +1,52 @@
+[
+  {
+    "id": "F01",
+    "category": "table",
+    "question": "On the image-based and table-based questions in MultiFinRAG's evaluation, how many questions were in each group, and how did the Gemma baseline and MultiFinRAG with Gemma score in each?"
+  },
+  {
+    "id": "F02",
+    "category": "table",
+    "question": "In LoFT-LLM's dataset summary, what were the sampling frequency, total time points, and prediction target for FundAR and Solar?"
+  },
+  {
+    "id": "F03",
+    "category": "table",
+    "question": "For Cora and Arxiv in the topology-aware text generation study, how many graph nodes did each dataset have, and which used a random rather than a time-based split?"
+  },
+  {
+    "id": "F04",
+    "category": "multi-paper",
+    "question": "I'm comparing CG-RAG and SAM-RAG for a literature assistant. How does each use a different signal to decide which material to bring into the answer?"
+  },
+  {
+    "id": "F05",
+    "category": "multi-paper",
+    "question": "Where did the data come from in the real-estate contract extraction study and in the FinBloom Financial Context Dataset, and how did each use that data to adapt a model?"
+  },
+  {
+    "id": "F06",
+    "category": "methodology",
+    "question": "In the conversational-grounding study, how can a listener's response distinguish explicit grounding, implicit grounding, and a clarification request?"
+  },
+  {
+    "id": "F07",
+    "category": "methodology",
+    "question": "How did the systematic review of responsible-AI governance tools build its search vocabulary, and why did it reject studies that use AI for financial auditing?"
+  },
+  {
+    "id": "F08",
+    "category": "limitations",
+    "question": "What makes it difficult for LLM agents to represent both variation in individual choices and differences between population groups in transportation simulations?"
+  },
+  {
+    "id": "F09",
+    "category": "limitations",
+    "question": "Did the robot-versus-chatbot study find that an empathetic tone or physical embodiment increased willingness to help? What did it actually measure as willingness to help?"
+  },
+  {
+    "id": "F10",
+    "category": "limitations",
+    "question": "In SAM-RAG's limitations, what distinct risks do the authors identify for fairness and privacy, and what could give rise to each?"
+  }
+]

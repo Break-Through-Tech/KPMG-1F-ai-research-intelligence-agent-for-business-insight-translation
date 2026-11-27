@@ -1,5 +1,6 @@
 """Lazy BYOK generation and interim summary adapter for workflow v1."""
 import json
+import sys
 from copy import deepcopy
 from src.research_pipeline import PipelineError
 
@@ -8,6 +9,43 @@ SUMMARY_PROMPT_VERSION = 'workflow-summary-v1'
 
 class SchemaResponseError(PipelineError):
     """An actual response violated its requested schema; details stay private."""
+
+
+TRANSIENT_STATUS = frozenset({500, 502, 503, 504})
+
+
+class ProviderUnavailable(PipelineError):
+    """The provider answered with a transient server error (5xx); nothing was generated or approved."""
+
+
+class IncompleteResponse(ValueError):
+    """A structured reply did not finish normally. Carries only the provider's finish reason and token counts."""
+    def __init__(self, finish_reason, usage=None):
+        super().__init__('Structured generation did not complete')
+        self.finish_reason, self.usage = finish_reason, usage or {}
+
+
+def _usage(response):
+    usage = getattr(response, 'usage_metadata', None)
+    return {name: getattr(usage, name + '_token_count', None) for name in ('prompt', 'candidates', 'thoughts')
+            if usage is not None and getattr(usage, name + '_token_count', None) is not None}
+
+
+def log_provider_failure(stage, error):
+    """One sanitized operator log line: categories and counts only, never keys, prompts or model text."""
+    fields = {'stage': stage, 'error': type(error).__name__}
+    for attr in ('code', 'status'):
+        value = getattr(error, attr, None)
+        if isinstance(value, (int, str)) and len(str(value)) <= 40:
+            fields['api_' + attr] = value
+    if isinstance(error, IncompleteResponse):
+        fields['finish_reason'] = str(error.finish_reason)[:40]
+        fields.update({'tokens_' + k: v for k, v in error.usage.items()})
+    for attr in ('validator', 'json_path'):
+        value = getattr(error, attr, None)
+        if isinstance(value, str):
+            fields['schema_' + attr] = value[:120]
+    print('provider-failure ' + ' '.join(f'{k}={v}' for k, v in fields.items()), file=sys.stderr, flush=True)
 
 
 def summarize_with_generation(query, passages, *, generate):
@@ -22,7 +60,7 @@ def summarize_with_generation(query, passages, *, generate):
     return json.loads(generate(prompt))
 
 
-def create_generate(config=None):
+def create_generate(config=None, *, http_client=None):
     """Build only the explicitly selected BYOK client; never fall back providers.
 
     Config/keys are loaded only when generation is requested. Keys are not part
@@ -35,6 +73,8 @@ def create_generate(config=None):
         config = GenerationConfig.from_environment()
     if not isinstance(config, GenerationConfig):
         raise PipelineError('Generation requires a validated GenerationConfig.')
+    if http_client is not None and config.provider not in {'openai', 'openai_compatible'}:
+        raise PipelineError('A custom HTTP client requires an OpenAI adapter.')
     try:
         if config.provider == 'gemini':
             from google import genai
@@ -51,7 +91,8 @@ def create_generate(config=None):
                     config=types.GenerateContentConfig(**options))
                 if response_schema is not None and (not response.candidates or
                         response.candidates[0].finish_reason != 'STOP'):
-                    raise ValueError('Structured generation did not complete')
+                    reason = response.candidates[0].finish_reason if response.candidates else 'NO_CANDIDATES'
+                    raise IncompleteResponse(getattr(reason, 'name', reason), _usage(response))
                 return response.text
         elif config.provider == 'bedrock':
             import boto3
@@ -93,7 +134,7 @@ def create_generate(config=None):
             # the named OpenAI provider or receiving another provider's key.
             client = OpenAI(api_key=config.api_key,
                 base_url=config.base_url or 'https://api.openai.com/v1',
-                timeout=60, max_retries=0)
+                timeout=60, max_retries=0, **({'http_client': http_client} if http_client is not None else {}))
             def invoke(prompt, response_schema=None):
                 output_format = {'type':'json_object'} if response_schema is None else {
                     'type':'json_schema', 'json_schema': {'name':'research_output',
@@ -119,10 +160,15 @@ def create_generate(config=None):
                 from jsonschema import Draft202012Validator
                 Draft202012Validator.check_schema(schema)
             text = invoke(prompt, schema)
-        except Exception:
-            raise PipelineError('Selected generation provider failed; check model access, '
-                                'credentials, region, response format and quota. '
-                                'No provider fallback or approval occurred.') from None
+        except Exception as error:
+            log_provider_failure('request', error)
+            # A provider-side server error (5xx) is transient and says nothing about the request; callers may
+            # retry it under their own quota. Client errors (4xx, including 429 quota) and every format or
+            # validation failure stay final.
+            kind = ProviderUnavailable if getattr(error, 'code', None) in TRANSIENT_STATUS else PipelineError
+            raise kind('Selected generation provider failed; check model access, '
+                       'credentials, region, response format and quota. '
+                       'No provider fallback or approval occurred.') from None
         if not isinstance(text,str) or not text.strip():
             raise PipelineError('Selected generation provider returned empty output; no result was approved.')
         if schema is not None:
@@ -139,7 +185,8 @@ def create_generate(config=None):
                 parsed = json.loads(text, object_pairs_hook=pairs, parse_constant=nonfinite)
                 json.dumps(parsed, allow_nan=False)
                 Draft202012Validator(schema).validate(parsed)
-            except Exception:
+            except Exception as error:
+                log_provider_failure('local_schema', error)
                 raise SchemaResponseError('Selected provider response failed JSON Schema validation; '
                                     'no result was approved.') from None
         return text

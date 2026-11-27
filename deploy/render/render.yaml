@@ -1,0 +1,44 @@
+# Native Python Render Blueprint for the supervised research preview.
+# Template only: applying it creates a billable Standard service and disk.
+# Not applied, and no service was created. See DEPLOYMENT-READINESS.md.
+services:
+  - type: web
+    name: kpmg-research-preview
+    runtime: python
+    repo: https://github.com/Break-Through-Tech/KPMG-1F-ai-research-intelligence-agent-for-business-insight-translation
+    branch: deploy/render-native
+    plan: standard            # 1 CPU / 2 GB. Starter (512 MB) cannot hold the encoder, reranker and index.
+    numInstances: 1           # The SQLite state disk supports exactly one instance.
+    region: oregon
+    autoDeployTrigger: "off"  # Deploy manually after review.
+    buildCommand: bash deploy/render/build.sh
+    startCommand: python -B deploy/render/start.py
+    healthCheckPath: /healthz
+    disk:
+      name: kpmg-preview-state
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: KPMG_DEPLOY_MODE
+        value: fixture        # Switch to real only after corpus clearance and the asset fetch exist.
+      - key: KPMG_STATE_DIR
+        value: /var/data
+      - key: RESEARCH_ENGINE
+        value: baseline       # Baseline stays the default until integration approval.
+      - key: S2_PAPER_BALANCE
+        value: "0"            # B1 stays off.
+      - key: KPMG_REVIEW_PASSWORD
+        generateValue: true
+      # Real mode only (leave unset for the fixture):
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: KPMG_GEMINI_DEDICATED_FREE
+        sync: false
+      # Real mode index source: leave both unset to load the three files from
+      # /var/data/assets/demo-100/ at startup, or set them to download at build.
+      - key: KPMG_ARTIFACT_BASE_URL
+        sync: false
+      - key: KPMG_ARTIFACT_TOKEN
+        sync: false

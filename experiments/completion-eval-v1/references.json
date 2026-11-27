@@ -1,0 +1,536 @@
+[
+ {
+  "id": "C01",
+  "category": "numeric / risk",
+  "question": "A client wants to roll out AI coding assistants. How reliably do mainstream LLMs refuse malicious code-generation requests, how do jailbreak techniques change that, and which models resisted best in the MalwareBench study?",
+  "required_points": [
+   {
+    "point_id": "C01.1",
+    "expected": "Average rejection rate for malicious content is 60.93%, falling to 39.92% when combined with jailbreak attack algorithms.",
+    "anchors": [
+     [
+      "2506.10022v1_c0000"
+     ]
+    ],
+    "paper": "2506.10022v1"
+   },
+   {
+    "point_id": "C01.2",
+    "expected": "About 50.35% of jailbreak attempts induced responses containing malicious content.",
+    "anchors": [
+     [
+      "2506.10022v1_c0015"
+     ]
+    ],
+    "paper": "2506.10022v1"
+   },
+   {
+    "point_id": "C01.3",
+    "expected": "Most resistant: OpenAI-o1 (refuse rate 77.29%) and, among open models, CodeLlama-70B-Instruct (76.86%).",
+    "anchors": [
+     [
+      "2506.10022v1_c0015"
+     ]
+    ],
+    "paper": "2506.10022v1"
+   }
+  ],
+  "human_verified": false
+ },
+ {
+  "id": "C02",
+  "category": "governance / cost",
+  "question": "For role-based access to sensitive answers, how does sudoLLM behave when it is unsure, does it hurt normal task performance, how well does it hold up against an adversary who knows the mechanism, and what did the experiments cost?",
+  "required_points": [
+   {
+    "point_id": "C02.1",
+    "expected": "The BFT strategy fails closed (refuses when in doubt), whereas base and vanilla fine-tuned models fail open.",
+    "anchors": [
+     [
+      "2505.14607v3_c0018"
+     ]
+    ],
+    "paper": "2505.14607v3"
+   },
+   {
+    "point_id": "C02.2",
+    "expected": "No significant task-performance degradation from multi-role (VFT/BFT) fine-tuning versus the base model.",
+    "anchors": [
+     [
+      "2505.14607v3_c0018"
+     ]
+    ],
+    "paper": "2505.14607v3"
+   },
+   {
+    "point_id": "C02.3",
+    "expected": "Signature-user detection succeeds 94.5% of the time (P>0.7) and 93.9% (P>0.8); an adversary with full knowledge cannot circumvent it.",
+    "anchors": [
+     [
+      "2505.14607v3_c0022"
+     ]
+    ],
+    "paper": "2505.14607v3"
+   },
+   {
+    "point_id": "C02.4",
+    "expected": "Total compute cost about 1,700 USD for API-based LLMs and about 100 GPU-hours for local small models.",
+    "anchors": [
+     [
+      "2505.14607v3_c0014"
+     ]
+    ],
+    "paper": "2505.14607v3"
+   }
+  ],
+  "human_verified": false
+ },
+ {
+  "id": "C03",
+  "category": "qualitative / risk",
+  "question": "What did the Ctrl data-curation study find about protecting LLMs from harmful content in training data and from malicious fine-tuning, and what trade-offs or residual risks did it report?",
+  "required_points": [
+   {
+    "point_id": "C03.1",
+    "expected": "Curating clean texts (Ctrl) mitigated harmful texts (datasets with 5% harmful texts) across LLMs and often also improved helpfulness.",
+    "anchors": [
+     [
+      "2405.19358v2_c0020"
+     ]
+    ],
+    "paper": "2405.19358v2"
+   },
+   {
+    "point_id": "C03.2",
+    "expected": "Helpfulness can drop in some cases (e.g. Llama-3-8B with instruction-following attack data); smaller models such as ChatGLM-6B are more susceptible.",
+    "anchors": [
+     [
+      "2405.19358v2_c0020"
+     ]
+    ],
+    "paper": "2405.19358v2"
+   },
+   {
+    "point_id": "C03.3",
+    "expected": "Downstream attacks used only 50 or 10 fine-tuning samples; Ctrl reduced attack effectiveness in most cases but less for fragile models, and defenders should invest in alignment at pre-training.",
+    "anchors": [
+     [
+      "2405.19358v2_c0021"
+     ]
+    ],
+    "paper": "2405.19358v2"
+   }
+  ],
+  "human_verified": false
+ },
+ {
+  "id": "C04",
+  "category": "numeric / limitations",
+  "question": "How much did adding knowledge graphs improve LLM numerical reasoning on financial documents, and what limits how far a finance team could rely on that result?",
+  "required_points": [
+   {
+    "point_id": "C04.1",
+    "expected": "KGs gave +6.41 percentage points execution accuracy (51.93% to 58.34%), about 12.3% relative, with a Llama model.",
+    "anchors": [
+     [
+      "2601.07754v1_c0012"
+     ]
+    ],
+    "paper": "2601.07754v1"
+   },
+   {
+    "point_id": "C04.2",
+    "expected": "Limitations: only FinQA; only open-source LLMs (no comparison with proprietary-model work); KG schema variance may bottleneck localized financial datasets.",
+    "anchors": [
+     [
+      "2601.07754v1_c0015"
+     ]
+    ],
+    "paper": "2601.07754v1"
+   }
+  ],
+  "human_verified": false
+ },
+ {
+  "id": "C05",
+  "category": "cost-performance",
+  "question": "What cost-performance trade-off did the Aviary study report for a small trained open-source agent versus a frontier model and human experts on scientific tasks, and what caveats apply?",
+  "required_points": [
+   {
+    "point_id": "C05.1",
+    "expected": "The trained Llama-3.1-8B agent matched Claude 3.5 Sonnet majority-voting accuracy on SeqQA at about 100x less cost; not achieved on LitQA2, where its voting still beat a single Sonnet rollout at 3x less cost.",
+    "anchors": [
+     [
+      "2412.21154v1_c0028"
+     ]
+    ],
+    "paper": "2412.21154v1"
+   },
+   {
+    "point_id": "C05.2",
+    "expected": "Cost per SeqQA trajectory: $0.07 with Claude 3.5 Sonnet vs $0.00066 with Llama-3.1-8B; human PhD contractors cost $4-$12 per question.",
+    "anchors": [
+     [
+      "2412.21154v1_c0030"
+     ]
+    ],
+    "paper": "2412.21154v1"
+   },
+   {
+    "point_id": "C05.3",
+    "expected": "Caveats: comparisons with humans and prior results are not exactly matched; benchmark contamination risk (LitQA2 re-hosted without canary).",
+    "anchors": [
+     [
+      "2412.21154v1_c0030"
+     ]
+    ],
+    "paper": "2412.21154v1"
+   }
+  ],
+  "human_verified": false
+ },
+ {
+  "id": "C06",
+  "category": "numeric / robustness",
+  "question": "When source data are sparse or contradictory, how robust was MultiRAG compared with the ChatKBQA baseline?",
+  "required_points": [
+   {
+    "point_id": "C06.1",
+    "expected": "On sparser Books and Stocks data, MultiRAG improved more than 10% on average over state-of-the-art methods.",
+    "anchors": [
+     [
+      "2508.03553v1_c0026"
+     ]
+    ],
+    "paper": "2508.03553v1"
+   },
+   {
+    "point_id": "C06.2",
+    "expected": "With relationship masking on Stocks, MultiRAG F1 fell 78.6% to 71.0%, while ChatKBQA fell 68.0% to 62.0% (Books 59.1% to 53.0%).",
+    "anchors": [
+     [
+      "2508.03553v1_c0027"
+     ]
+    ],
+    "paper": "2508.03553v1"
+   },
+   {
+    "point_id": "C06.3",
+    "expected": "With inconsistent added triples, MultiRAG F1 fell only from 74.9% to 73.4/72.9/71.4%, while ChatKBQA fell from 74.2% to 69.7/64.3/55.8%.",
+    "anchors": [
+     [
+      "2508.03553v1_c0028"
+     ]
+    ],
+    "paper": "2508.03553v1"
+   }
+  ],
+  "human_verified": false
+ },
+ {
+  "id": "C07",
+  "category": "cross-paper",
+  "question": "KG²RAG and MultiRAG both use knowledge graphs to make retrieval-augmented answers more reliable. What problem does each target, how does each work, and what gains did each report?",
+  "required_points": [
+   {
+    "point_id": "C07.1",
+    "expected": "KG²RAG: after semantic retrieval of seed chunks, KG-guided chunk expansion and KG-based organization supply fact-level relationships for more diverse, coherent context.",
+    "anchors": [
+     [
+      "2502.06864v1_c0000"
+     ]
+    ],
+    "paper": "2502.06864v1"
+   },
+   {
+    "point_id": "C07.2",
+    "expected": "KG²RAG gains: at least 8% over baselines in the fullwiki setting; at least 2.5% and 6.4% on Shuffle-HotpotQA (distractor, fullwiki).",
+    "anchors": [
+     [
+      "2502.06864v1_c0019"
+     ]
+    ],
+    "paper": "2502.06864v1"
+   },
+   {
+    "point_id": "C07.3",
+    "expected": "MultiRAG: multi-source line graphs aggregate sources, and multi-level (graph and node) confidence filters low-quality or inconsistent knowledge, targeting sparse and conflicting multi-source data; >10% gain on sparse datasets.",
+    "anchors": [
+     [
+      "2508.03553v1_c0004",
+      "2508.03553v1_c0026"
+     ]
+    ],
+    "paper": "2508.03553v1"
+   }
+  ],
+  "human_verified": false
+ },
+ {
+  "id": "C08",
+  "category": "qualitative / limitations",
+  "question": "What did the Financial Bias Indicators (FBI) study find about irrational financial biases in LLMs, how did model size and bias-mitigation prompts affect them, and how far do the findings generalize?",
+  "required_points": [
+   {
+    "point_id": "C08.1",
+    "expected": "Within a model family, bias tends to decrease as model size grows, but not consistently across families (design and training also matter).",
+    "anchors": [
+     [
+      "2402.12713v2_c0024"
+     ]
+    ],
+    "paper": "2402.12713v2"
+   },
+   {
+    "point_id": "C08.2",
+    "expected": "Mitigation: CoT helped originally more-biased models but hurt well-performing ones; Entity Replace performed best; FinCausal used recalled causal knowledge.",
+    "anchors": [
+     [
+      "2402.12713v2_c0022"
+     ]
+    ],
+    "paper": "2402.12713v2"
+   },
+   {
+    "point_id": "C08.3",
+    "expected": "Limitation: focused on the Chinese A-share market, so findings may not generalize to other cultures or regions.",
+    "anchors": [
+     [
+      "2402.12713v2_c0028"
+     ]
+    ],
+    "paper": "2402.12713v2"
+   }
+  ],
+  "human_verified": false
+ },
+ {
+  "id": "C09",
+  "category": "numeric / applications",
+  "question": "What is the LLM Pro Finance Suite, how did it perform on financial tasks across languages, and what gap remained?",
+  "required_points": [
+   {
+    "point_id": "C09.1",
+    "expected": "Five instruction-tuned models (8B-70B) fine-tuned on a corpus with over 50% finance data in English, French and German; consistent improvement over baselines on finance tasks and financial translation.",
+    "anchors": [
+     [
+      "2511.08621v1_c0000"
+     ]
+    ],
+    "paper": "2511.08621v1"
+   },
+   {
+    "point_id": "C09.2",
+    "expected": "Improvement is largest in French; English-level performance is not yet reached on all languages; English financial-acronym accuracy stagnates around 0.50.",
+    "anchors": [
+     [
+      "2511.08621v1_c0016"
+     ]
+    ],
+    "paper": "2511.08621v1"
+   }
+  ],
+  "human_verified": false
+ },
+ {
+  "id": "C10",
+  "category": "qualitative / adoption",
+  "question": "According to the overview of LLMs in finance, where are LLMs strongest, where are they limited, and what role do the authors see for them in computational finance?",
+  "required_points": [
+   {
+    "point_id": "C10.1",
+    "expected": "Strong zero-shot learning and mathematical reasoning; sentiment analysis is their strongest suit.",
+    "anchors": [
+     [
+      "2401.11641v5_c0043"
+     ]
+    ],
+    "paper": "2401.11641v5"
+   },
+   {
+    "point_id": "C10.2",
+    "expected": "Limited in optimization and quantitative trading; cannot directly do computational tasks; an auxiliary role feeding existing quantitative models, not a standalone solution.",
+    "anchors": [
+     [
+      "2401.11641v5_c0044"
+     ]
+    ],
+    "paper": "2401.11641v5"
+   }
+  ],
+  "human_verified": false
+ },
+ {
+  "id": "C11",
+  "category": "numeric / governance",
+  "question": "For vendor due diligence, what did the Foundation Model Transparency Index find about how transparent major foundation-model developers are, and where is transparency weakest?",
+  "required_points": [
+   {
+    "point_id": "C11.1",
+    "expected": "FMTI uses 100 indicators; leading developers were not transparent in 2023, with material improvement in 2024.",
+    "anchors": [
+     [
+      "2506.23123v1_c0014"
+     ]
+    ],
+    "paper": "2506.23123v1"
+   },
+   {
+    "point_id": "C11.2",
+    "expected": "In 2024, 11 of 14 developers scored below 65.",
+    "anchors": [
+     [
+      "2506.23123v1_c0274"
+     ]
+    ],
+    "paper": "2506.23123v1"
+   },
+   {
+    "point_id": "C11.3",
+    "expected": "Weakest: the impact subdomain; no developer scores on affected market sectors, affected individuals, usage reports or geographic statistics.",
+    "anchors": [
+     [
+      "2506.23123v1_c0286"
+     ]
+    ],
+    "paper": "2506.23123v1"
+   }
+  ],
+  "human_verified": false
+ },
+ {
+  "id": "C12",
+  "category": "limitations / risk",
+  "question": "What challenges does the survey of reasoning LLMs in medicine identify for safely deploying them in clinical settings?",
+  "required_points": [
+   {
+    "point_id": "C12.1",
+    "expected": "Chain-of-thought steps are not guaranteed to be medically sound; reasoning must be grounded in authoritative knowledge and evidence-based guidelines.",
+    "anchors": [
+     [
+      "2508.19097v1_c0033"
+     ]
+    ],
+    "paper": "2508.19097v1"
+   },
+   {
+    "point_id": "C12.2",
+    "expected": "High-stakes errors and training-data bias (health disparities) require context-aware safety mechanisms and incorporation of guidelines, ethics and regulation.",
+    "anchors": [
+     [
+      "2508.19097v1_c0034"
+     ]
+    ],
+    "paper": "2508.19097v1"
+   }
+  ],
+  "human_verified": false
+ },
+ {
+  "id": "C13",
+  "category": "qualitative / customer experience",
+  "question": "What trade-off do proactive LLM agents face between completing tasks and involving users, and what did BAO achieve?",
+  "required_points": [
+   {
+    "point_id": "C13.1",
+    "expected": "Passive agents cannot efficiently adapt to user intentions while overusing human feedback burdens users: a Pareto frontier between task performance and user engagement.",
+    "anchors": [
+     [
+      "2602.11351v2_c0000"
+     ]
+    ],
+    "paper": "2602.11351v2"
+   },
+   {
+    "point_id": "C13.2",
+    "expected": "BAO improved task performance with lower user effort, surpassing proactive RL baselines and comparable or superior to commercial LLM agents on UserRL.",
+    "anchors": [
+     [
+      "2602.11351v2_c0000"
+     ],
+     [
+      "2602.11351v2_c0004"
+     ]
+    ],
+    "paper": "2602.11351v2"
+   }
+  ],
+  "human_verified": false
+ },
+ {
+  "id": "C14",
+  "category": "table / business implications",
+  "question": "For an accounting firm choosing between a commercial reranker and an in-house reranker in the metadata-driven financial RAG study, what quality and latency trade-off does Table 1 show, and what business implications do the authors themselves draw?",
+  "required_points": [
+   {
+    "point_id": "C14.1",
+    "expected": "Full pipeline with the Cohere reranker on contextual chunks: F1 44.4, mean latency 13.18 s.",
+    "anchors": [
+     [
+      "2510.24402v1_table_de629a5f57790c34_9"
+     ]
+    ],
+    "paper": "2510.24402v1"
+   },
+   {
+    "point_id": "C14.2",
+    "expected": "Same pipeline with the in-house reranker: F1 43.2, mean latency 12.43 s.",
+    "anchors": [
+     [
+      "2510.24402v1_table_de629a5f57790c34_10"
+     ]
+    ],
+    "paper": "2510.24402v1"
+   },
+   {
+    "point_id": "C14.3",
+    "expected": "Authors: an in-house, transparent model is competitive, avoids high operational costs and vendor lock-in, and is more auditable and explainable.",
+    "anchors": [
+     [
+      "2510.24402v1_c0045"
+     ]
+    ],
+    "paper": "2510.24402v1"
+   },
+   {
+    "point_id": "C14.4",
+    "expected": "Authors: naive chunk expansion hurt (relevance over quantity; more hallucination, less faithful answers).",
+    "anchors": [
+     [
+      "2510.24402v1_c0045"
+     ]
+    ],
+    "paper": "2510.24402v1"
+   }
+  ],
+  "human_verified": false
+ },
+ {
+  "id": "C15",
+  "category": "cross-paper / business implications",
+  "question": "A bank is considering a finance-specialized LLM. What do the LLM Pro Finance and Financial Bias Indicators studies each report about domain-specific financial training?",
+  "required_points": [
+   {
+    "point_id": "C15.1",
+    "expected": "LLM Pro Finance: fine-tuned models improve over the baseline by a large margin (especially in French), with smaller fine-tuned models outperforming larger base models on English acronyms.",
+    "anchors": [
+     [
+      "2511.08621v1_c0016"
+     ]
+    ],
+    "paper": "2511.08621v1"
+   },
+   {
+    "point_id": "C15.2",
+    "expected": "FBI: financially trained models may show higher score variability and risk inclination, and financial training data (e.g. embellished research reports) may embed irrationality.",
+    "anchors": [
+     [
+      "2402.12713v2_c0025"
+     ]
+    ],
+    "paper": "2402.12713v2"
+   }
+  ],
+  "human_verified": false
+ }
+]

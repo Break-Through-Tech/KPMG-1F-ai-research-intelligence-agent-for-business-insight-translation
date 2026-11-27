@@ -1,0 +1,28 @@
+# Template. Set the approved private image digest and workspace registry credential
+# before use. Applying this creates a billable service; see README.md.
+services:
+  - type: web
+    name: kpmg-research-review
+    runtime: image
+    image:
+      url: ghcr.io/APPROVED-OWNER/kpmg-research@sha256:APPROVED-DIGEST
+      creds:
+        fromRegistryCreds:
+          name: kpmg-private-image
+    plan: standard
+    numInstances: 1
+    autoDeployTrigger: "off"
+    healthCheckPath: /healthz
+    disk:
+      name: kpmg-review-state
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: KPMG_STATE_DIR
+        value: /var/data
+      - key: KPMG_GEMINI_DEDICATED_FREE
+        sync: false
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: KPMG_REVIEW_PASSWORD
+        generateValue: true

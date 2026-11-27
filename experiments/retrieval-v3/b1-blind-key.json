@@ -1,0 +1,61 @@
+{
+ "labels": {
+  "J03": {
+   "A": "B1",
+   "B": "S2"
+  },
+  "K05": {
+   "A": "S2",
+   "B": "B1"
+  },
+  "K07": {
+   "A": "S2",
+   "B": "B1"
+  }
+ },
+ "metrics": {
+  "J03": {
+   "S2_s": 89.962,
+   "B1_s": 100.066,
+   "S2_tok": 41218,
+   "B1_tok": 42142,
+   "applied": {
+    "enabled": true,
+    "requested_papers": [
+     "2406.09923v2",
+     "2410.01553v2"
+    ],
+    "applied": true
+   }
+  },
+  "K05": {
+   "S2_s": 98.834,
+   "B1_s": 139.873,
+   "S2_tok": 43274,
+   "B1_tok": 44726,
+   "applied": {
+    "enabled": true,
+    "requested_papers": [
+     "2611.02134v1",
+     "2611.02791v2"
+    ],
+    "applied": true
+   }
+  },
+  "K07": {
+   "S2_s": 62.973,
+   "B1_s": 108.973,
+   "S2_tok": 43098,
+   "B1_tok": 43162,
+   "applied": {
+    "enabled": true,
+    "requested_papers": [
+     "2611.01409v1",
+     "2611.02041v1"
+    ],
+    "applied": true
+   }
+  }
+ },
+ "packet_sha256": "926b6147f4b1daec20671a19e68f65fefed912b1f69866967ff47f607483cbbc"
+}

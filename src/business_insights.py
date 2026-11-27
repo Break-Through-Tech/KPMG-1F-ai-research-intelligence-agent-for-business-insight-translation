@@ -12,7 +12,8 @@ from src.research_contracts import validate_result, validate_business_insight
 from src.research_pipeline import content_fingerprint
 from src.research_review import make_review_packet, require_current_review
 
-PROMPT = Path(__file__).resolve().parents[1] / 'prompts/business_translation/downstream-v1.1.txt'
+PROMPT_VERSION = '1.2'
+PROMPT = Path(__file__).resolve().parents[1] / f'prompts/business_translation/downstream-v{PROMPT_VERSION}.txt'
 
 
 def digest(value):
@@ -59,8 +60,8 @@ def translate_result(result, *, context, generate, metadata=None, expected_finge
     execution = (metadata or {}).get('execution')
     generation_kind = ('fixture' if execution in {'canned_fixture', 'injected_fixture', 'offline_fixture'}
                        else 'model' if provider and provider not in {'injected', 'injected_test'} else 'injected')
-    info = {'policy': 'downstream-business-v1.1', 'prompt_id': 'business-translation/downstream',
-            'prompt_version': '1.1', 'research_input': origin,
+    info = {'policy': f'downstream-business-v{PROMPT_VERSION}', 'prompt_id': 'business-translation/downstream',
+            'prompt_version': PROMPT_VERSION, 'research_input': origin,
             'generation_kind': generation_kind,
             'usefulness_review_criteria': ['generic_recommendations', 'workflow_parroting',
                                          'semantic_repetition', 'pilot_overreliance'],

@@ -57,7 +57,7 @@ class DownstreamTests(unittest.TestCase):
             self.assertEqual(envelope['result'][field], source[field])
         require_current_review(envelope['result'])
         self.assertNotIn('SECRET', json.dumps(envelope))
-        self.assertIn('downstream; version: 1.1', generator.call_args.args[0])
+        self.assertIn('downstream; version: 1.2', generator.call_args.args[0])
 
     def test_quote_bounds_exclude_same_chunk_tail_and_audit(self):
         source = result_for(); summary = source['summary']; evidence = source['evidence']
@@ -121,6 +121,8 @@ class DownstreamTests(unittest.TestCase):
         envelope, generator = self.call(result=source)
         generator.assert_not_called()
         self.assertEqual(envelope['result']['business_insight']['status'], 'insufficient_evidence')
+        self.assertNotIn('passed the evidence and advice checks',
+                         ' '.join(envelope['result']['business_insight']['limitations']))
         self.assertIsNone(envelope['error'])
 
     def test_provider_failure_and_malformed_output_keep_research_and_are_sanitized(self):

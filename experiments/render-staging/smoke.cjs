@@ -169,10 +169,14 @@ async function main() {
       .startsWith('https://arxiv.org/html/2602.00931v2'));
     await page.keyboard.press('Escape');
     await page.locator('#inspector').waitFor({state: 'hidden'});
-    await page.locator('summary:visible').filter({hasText: /All evidence tables|Data and charts/}).click();
+    // Four-tab layout: source tables live in the Evidence tab of the current answer.
+    await page.getByRole('tab', {name: 'Evidence', exact: true}).last().click();
     const table = page.locator('figure.ev-figure:not(.compact):visible').filter({hasText: 'Full table shown (16 rows)'});
     await table.waitFor();
-    await page.getByText('Unresolved discrepancy.', {exact: true}).first().waitFor({state: 'attached'});
+    // Discrepancies are listed in Research notes (four-tab layout); the box must be shown with an entry.
+    const discrepancy = page.locator('#thread .turn').last().locator('.discrepancy-box:not([hidden]) .notes-list li');
+    await discrepancy.first().waitFor({state: 'attached'});
+    assert.ok(await discrepancy.count() >= 1);
     assert.equal(await table.locator('tbody tr').count(), 16);
     assert.equal(await table.getByRole('link', {name: /open .* in the paper/i}).getAttribute('href'),
       'https://arxiv.org/html/2602.00931v2#S3.T2');

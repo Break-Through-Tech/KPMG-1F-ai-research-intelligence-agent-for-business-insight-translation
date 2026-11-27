@@ -239,6 +239,7 @@ body.side-collapsed .side-mode { justify-content: center; }
 .home-intro { margin-bottom: var(--s5); text-align: center; }
 .home h1 { font-family: var(--serif); font-size: var(--fs-home); font-weight: 400; line-height: 1.2; letter-spacing: -.01em; }
 .home-sub { max-width: 56ch; margin: var(--s3) auto 0; color: var(--muted); font-size: var(--fs-ui); line-height: 1.55; }
+.home-sub:empty { display: none; }
 .composer-slot { width: 100%; }
 .recent { margin-top: var(--s7); }
 .recent-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: var(--s2); }

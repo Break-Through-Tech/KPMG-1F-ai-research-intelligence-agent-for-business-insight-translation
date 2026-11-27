@@ -131,8 +131,8 @@
   },
   "frontend": {
     "ui-consult/design/merge-with-codex/app.js": "28db8f7af59dfe7d5d03af6802d461f74fe8011088012c65ffc08f7431a565f7",
-    "ui-consult/design/merge-with-codex/consult.css": "c699a1daa0a7d7565046705eef0a07f9dd4bf74a320b9c9c9c4e83526d7e713f",
-    "ui-consult/design/merge-with-codex/index.html": "fa2e6a5185c1d38064ff01a1c1d1a8cb3a96bce76f42a00834b12f5f24c21d8b",
+    "ui-consult/design/merge-with-codex/consult.css": "1f2073d8593cdc1b34d26b1519de0caaea87051e674385d68ed75ece9c1be650",
+    "ui-consult/design/merge-with-codex/index.html": "8b8a71d4ea90f6d896a0c70056e08c99c768b0276d399696eca411c97b2eed9b",
     "ui-consult/design/merge-with-codex/mock-api.js": "dd6d469be53c6b59eca017dd1d841849cba32c609d49fc529999755a50df40c7",
     "ui-consult/design/merge-with-codex/serve.py": "102f32391cc5dcf9cf2716d4cadca0ef20fffeabab680206d7cff2ce800ac94c",
     "ui-consult/async-guards.js": "d83e616eb47d20c407827cb45b30aef845d58fa27d00a4c669a64b1a023ac586",

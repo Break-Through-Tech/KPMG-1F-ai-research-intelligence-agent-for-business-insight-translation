@@ -24,14 +24,15 @@
 :root {
   color-scheme: light;
   --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px; --s7: 48px; --s8: 64px;
-  --fs-xs: .75rem; --fs-sm: .8125rem; --fs-md: .875rem; --fs-ui: .9375rem; --fs-lg: 1.0625rem;
-  --fs-prose: 1.25rem; --fs-lead: 1.375rem; --fs-q: 1.625rem; --fs-home: 2rem;
-  --lh: 1.65;
+  /* One Inter scale: 24 titles · 16 reading · 14 controls and tables · 12 secondary metadata. */
+  --fs-xs: .75rem; --fs-sm: .75rem; --fs-md: .875rem; --fs-ui: .875rem; --fs-lg: 1rem;
+  --fs-prose: 1rem; --fs-lead: 1rem; --fs-q: 1.5rem; --fs-home: 1.5rem;
+  --lh: 1.62;
   --sans: "Inter", "Inter Variable", "RI Sans Fallback", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  --serif: "Source Serif 4", "Source Serif 4 Display", "Source Serif Pro", "Iowan Old Style", "Charter", "RI Serif Fallback", "Sitka Text", Cambria, Georgia, serif;
+  --serif: var(--sans); /* one family across prose, headings, controls, tables and charts */
   --mono: ui-monospace, "Cascadia Mono", Consolas, Menlo, monospace;
   --ease: cubic-bezier(.22, .9, .24, 1);
-  --side: 248px; --side-collapsed: 60px; --topbar: 56px; --col: 800px; --wide: 1040px;
+  --side: 248px; --side-collapsed: 60px; --topbar: 56px; --col: 720px; --wide: 920px; --radius: 10px;
 
   /* Light theme: white reading area with black text; KPMG-blue chrome (see below). */
   --bg: #ffffff; --surface: #ffffff; --surface-2: #eef4fb; --surface-3: #deebf7;
@@ -831,7 +832,7 @@ body.side-collapsed .side-mode { justify-content: center; }
 }
 
 /* ---------- Responsive ---------- */
-@media (min-width: 1600px) { :root { --col: 820px; } }
+
 @media (max-width: 1100px) { .thread-title { display: none; } }
 @media (max-width: 920px) {
   .sidebar { position: fixed; top: 0; left: 0; bottom: 0; width: min(300px, 86vw) !important; transform: translateX(-102%); transition: transform .28s var(--ease); box-shadow: var(--shadow-float); }
@@ -885,3 +886,207 @@ body.side-collapsed .side-mode { justify-content: center; }
 :is(.state, .chip, .facet, .ev-flag, .note, .aside-line).bad .icon { color: var(--bad); }
 .paper-use.ok::before { content: "● "; font-size: .7em; vertical-align: .15em; }
 .mode-banner[data-tone="offline"] strong { color: var(--text); }
+
+
+/* ===== Azure UX refinement (2026-11-27): one Inter scale, four tabs with separate jobs ===== */
+.stage[data-tab="evidence"] .turn, .stage[data-tab="workspace"] .turn { max-width: var(--wide); }
+.question { font-size: var(--fs-q); font-weight: 600; letter-spacing: -.015em; line-height: 1.3; }
+.pane-title, .home h1, .library-head h1 { font-family: var(--sans); font-size: var(--fs-q); font-weight: 600; letter-spacing: -.015em; }
+.pane-head { margin-bottom: var(--s5); }
+.pane-sub { font-size: var(--fs-md); }
+.section-h { font-size: var(--fs-lg); font-weight: 600; letter-spacing: 0; }
+.prose { font-family: var(--sans); font-size: var(--fs-prose); line-height: var(--lh); letter-spacing: -.003em; }
+.prose > p { margin: 0 0 1em; }
+.prose > p.lead { font-size: var(--fs-prose); line-height: var(--lh); font-weight: 500; }
+.prose .prose-h { font-size: var(--fs-lg); }
+.prose .interpretation { font-size: var(--fs-prose); }
+.mode-label { display: inline-flex; padding: 2px var(--s2); border-radius: 6px; background: var(--surface-2); color: var(--text-2); font-size: var(--fs-xs); font-weight: 500; }
+.turn-head { margin-bottom: var(--s2); }
+
+/* Answer: quiet source line, actions, slim notes line */
+.answer-source-line { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); margin: 0 0 var(--s5); color: var(--muted); font-size: var(--fs-xs); }
+.paper-chip { display: inline-flex; align-items: center; gap: 6px; max-width: 42ch; padding: 3px var(--s2); border-radius: 6px; background: var(--accent-soft); color: var(--accent); font-size: var(--fs-xs); font-weight: 500; }
+.paper-chip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.paper-chip .icon { width: 14px; height: 14px; }
+.paper-chip:hover { background: var(--surface-3); }
+.source-count::before { content: "· "; }
+.answer-asides { margin-top: 0; }
+.aside-line { font-size: var(--fs-md); }
+.answer-actions { margin-top: var(--s4); }
+.act-btn { font-size: var(--fs-md); }
+.act-quiet { color: var(--muted); }
+.answer-note-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 4px var(--s4); width: 100%; margin-top: var(--s3); padding: var(--s2) var(--s3);
+  border: 1px solid var(--border); border-radius: var(--radius); color: var(--muted); font-size: var(--fs-xs); text-align: left; transition: background .15s; }
+.answer-note-strip:hover { background: var(--surface-2); }
+.answer-note-strip > .icon:last-child { margin-left: auto; width: 14px; height: 14px; }
+.answer-note-strip .strip-title { display: inline-flex; align-items: center; gap: 6px; color: var(--text); font-weight: 600; }
+.answer-note-strip .icon { width: 14px; height: 14px; }
+.answer-note-strip .strip-count:empty { display: none; }
+.answer-note-strip .strip-count::before { content: none; }
+
+/* Sources */
+.paper-name { font-family: var(--sans); font-size: var(--fs-lg); font-weight: 600; }
+.paper-id { color: var(--muted); font-variant-numeric: tabular-nums; }
+.source-paper { padding: var(--s5) 0; }
+.source-rows { gap: 0; }
+.source-rows li + li .source-row { border-top: 1px solid var(--border); border-radius: 0; }
+.source-row { padding: var(--s3) var(--s2); }
+.row-loc { font-size: var(--fs-md); }
+.row-kind, .row-use { font-size: var(--fs-xs); }
+.other-sources { margin-top: var(--s3); }
+.other-sources > summary { font-size: var(--fs-md); color: var(--muted); }
+
+/* Evidence */
+.pane-evidence .ev-section:first-of-type { margin-top: 0; }
+.ev-name { font-size: var(--fs-lg); }
+.ev-toolbar { margin-top: var(--s3); }
+.table-details { margin-top: var(--s3); }
+.table-details > summary { font-size: var(--fs-md); color: var(--muted); }
+.table-details .ev-text { margin-top: var(--s2); }
+.table-details .ev-legend { margin-top: var(--s3); }
+.statement-text { font-family: var(--sans); font-size: var(--fs-prose); }
+.quote blockquote, .passage blockquote, .quote-excerpts blockquote { font-family: var(--sans); font-size: var(--fs-md); }
+
+/* Workspace */
+.ws-tabs { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: var(--s5); padding: 4px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); width: max-content; max-width: 100%; }
+.ws-tab { padding: 6px var(--s4); border-radius: 7px; color: var(--text-2); font-size: var(--fs-md); font-weight: 500; transition: background .15s, color .15s; }
+.ws-tab:hover { background: var(--surface-2); color: var(--text); }
+.ws-tab[aria-selected="true"] { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+.ws-panel-wrap { container-type: inline-size; }
+.ws-panel { display: grid; gap: var(--s5); }
+.ws-h { margin-bottom: var(--s2); color: var(--text); font-size: var(--fs-md); font-weight: 600; }
+.ws-kicker { color: var(--muted); font-size: var(--fs-xs); }
+.ws-group .notes-list { padding-left: 1.1em; }
+.ws-jump { justify-self: start; }
+.insight-card { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
+.insight-main, .insight-action { padding: var(--s5); }
+.insight-action { border-left: 1px solid var(--border); background: color-mix(in srgb, var(--accent-soft) 45%, var(--surface)); border-radius: 0 var(--radius) var(--radius) 0; }
+.insight-text { font-size: var(--fs-prose); line-height: var(--lh); }
+.insight-action p { font-size: var(--fs-md); line-height: 1.6; color: var(--text-2); }
+.insight-assumptions { grid-column: 1 / -1; margin: 0; padding: var(--s3) var(--s5); border-top: 1px solid var(--border); }
+@container (max-width: 620px) {
+  .insight-card { grid-template-columns: 1fr; }
+  .insight-action { border-left: 0; border-top: 1px solid var(--border); border-radius: 0; }
+}
+:root:is([data-reading-size="150"], [data-reading-size="200"]) .insight-card { grid-template-columns: 1fr; }
+:root:is([data-reading-size="150"], [data-reading-size="200"]) .insight-action { border-left: 0; border-top: 1px solid var(--border); border-radius: 0; }
+.check-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s3); }
+@container (max-width: 560px) { .check-grid { grid-template-columns: 1fr; } }
+:root:is([data-reading-size="150"], [data-reading-size="200"]) .check-grid { grid-template-columns: 1fr; }
+.check-card { padding: var(--s4); border: 1px solid color-mix(in srgb, var(--accent) 18%, var(--border)); border-radius: var(--radius); background: color-mix(in srgb, var(--accent-soft) 70%, var(--surface)); }
+.check-card p { color: var(--text-2); font-size: var(--fs-md); line-height: 1.55; }
+.discrepancy-box { padding: var(--s4); border: 1px solid #ecd6a6; border-radius: var(--radius); background: #fff8e9; }
+.discrepancy-box .notes-list { color: var(--text); }
+:root:is([data-theme="dark"], [data-theme="contrast-dark"]) .discrepancy-box { border-color: rgb(255 210 122 / .45); background: rgb(255 210 122 / .1); }
+@media (prefers-color-scheme: dark) { :root[data-theme="system"] .discrepancy-box { border-color: rgb(255 210 122 / .45); background: rgb(255 210 122 / .1); } }
+.review-status { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s3); margin-bottom: var(--s2); }
+.origin-fold { margin-top: 2px; }
+.origin-fold > summary { color: var(--faint); font-size: var(--fs-xs); cursor: pointer; }
+.checklist .origin { font-size: var(--fs-xs); }
+.source-stack, .brief-action { white-space: nowrap; flex: none; }
+.view-tab { white-space: nowrap; }
+@media (max-width: 1180px) { .source-stack { display: none !important; } }
+:root:is([data-reading-size="150"], [data-reading-size="200"]) .source-stack { display: none !important; }
+:root:is([data-reading-size="150"], [data-reading-size="200"]) .view-tab .icon { display: none; }
+.more-insights[open] > .insight-card { margin-top: var(--s3); }
+
+/* ===== Craft pass (2026-11-27): purposeful motion, restrained glass on the floating layer only =====
+   Timing: press 120 ms · state 180 ms · panels 260 ms. Easing: decelerate for entrances, standard for
+   size changes; no overshoot or bounce. Glass (blur + translucent fill + hairline) appears only on the
+   functional layer that floats above content: follow-up composer, citation preview, popovers and the
+   overlay inspector. Answers, tables and charts stay opaque. */
+:root {
+  interpolate-size: allow-keywords;
+  --ease-out: cubic-bezier(.2, .8, .2, 1); --ease-std: cubic-bezier(.4, 0, .2, 1);
+  --t-press: 120ms; --t-ui: 180ms; --t-panel: 260ms;
+  --glass-fill: rgb(255 255 255 / .74); --glass-line: rgb(0 51 141 / .12);
+  --glass-shadow: 0 12px 32px rgb(0 32 96 / .12), 0 1px 3px rgb(0 32 96 / .08);
+  --elev-1: 0 1px 2px rgb(0 32 96 / .05), 0 2px 10px rgb(0 32 96 / .05);
+}
+
+/* Interaction feedback: hover tints in 180 ms, presses settle in 120 ms. */
+:is(.act-btn, .quiet-btn, .text-btn, .solid-btn, .primary-btn, .icon-btn, .ws-tab, .paper-chip, .quick-chip, .side-item, .side-link,
+  .source-row, .answer-note-strip, .view-tab, .seg-btn, .source-tab, .example, .brief-open, .example-card, .pill, .inline-link) {
+  transition: background-color var(--t-ui) var(--ease-std), color var(--t-ui) var(--ease-std), border-color var(--t-ui) var(--ease-std),
+    box-shadow var(--t-ui) var(--ease-std), transform var(--t-press) var(--ease-out), opacity var(--t-ui) var(--ease-std);
+}
+:is(.act-btn, .quiet-btn, .solid-btn, .primary-btn, .icon-btn, .ws-tab, .paper-chip, .quick-chip, .side-item, .pill, .seg-btn, .source-tab):active:not(:disabled) { transform: scale(.97); }
+.send { transition: opacity var(--t-ui) var(--ease-std), transform var(--t-press) var(--ease-out), background-color var(--t-ui); }
+.composer.has-text .send:active { transform: scale(.92); }
+:focus-visible { outline-offset: 2px; transition: outline-offset var(--t-press) var(--ease-out); }
+
+/* Sliding tab indicator: one bar moves between Answer, Sources, Evidence and Workspace. */
+.view-tabs { position: relative; }
+.view-tab[aria-selected="true"]::after { content: none; }
+.tab-indicator { position: absolute; left: 0; bottom: -1px; height: 2px; width: 0; border-radius: 2px; background: #fff;
+  transition: transform var(--t-panel) var(--ease-std), width var(--t-panel) var(--ease-std); pointer-events: none; }
+.tab-indicator.instant { transition: none; }
+.view-tabs[hidden] + * .tab-indicator { display: none; }
+
+/* Views and history: a short cross-fade with a 6 px settle, so continuity is felt rather than watched. */
+@keyframes settle-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.brief-pane, .ws-panel:not([hidden]) { animation: settle-in 220ms var(--ease-out); }
+.thread > .turn:not([hidden]), .library:not([hidden]), .home:not([hidden]) { animation: settle-in 260ms var(--ease-out); }
+
+/* Sidebar: width animates; labels fade instead of popping, icons stay put. */
+.sidebar { transition: width var(--t-panel) var(--ease-std); overflow: hidden; }
+.side-head { justify-content: space-between; }
+.side-item, .side-link, .side-section-toggle { white-space: nowrap; }
+.side-label, .side-brand, .side-history-wrap, .side-mode { transition: opacity var(--t-ui) var(--ease-std), visibility 0s linear 0s; }
+body.side-collapsed .sidebar .side-label { display: inline; opacity: 0; }
+body.side-collapsed .side-brand { display: inline-flex; opacity: 0; width: 0; overflow: hidden; pointer-events: none; }
+body.side-collapsed .side-history-wrap { display: flex; opacity: 0; visibility: hidden; transition: opacity var(--t-ui), visibility 0s linear var(--t-ui); }
+body.side-collapsed .side-head { justify-content: flex-end; padding: 0; }
+body.side-collapsed .side-item { justify-content: flex-start; padding: 0 var(--s3); }
+
+/* Disclosures (research notes folds, table details, other sources, diagnostics) open smoothly. */
+details::details-content { block-size: 0; overflow: clip;
+  transition: block-size var(--t-panel) var(--ease-std), content-visibility var(--t-panel) allow-discrete; }
+details[open]::details-content { block-size: auto; }
+
+/* Floating follow-up composer (glass): the reading column scrolls beneath it with a soft edge. */
+.stage[data-view="thread"] .dock { position: absolute; left: 0; right: 0; bottom: 0; width: auto; margin: 0; padding: 0 0 var(--s4); background: none; pointer-events: none; }
+.stage[data-view="thread"] .dock > * { width: min(var(--col), 100% - 48px); margin-inline: auto; pointer-events: auto; }
+.stage[data-view="thread"] .scroll { padding-bottom: calc(var(--dock-h, 120px) + var(--s4));
+  mask-image: linear-gradient(to bottom, #000 calc(100% - var(--dock-h, 120px) - 24px), rgb(0 0 0 / .4) 100%); }
+.stage[data-view="thread"] .composer { background: var(--glass-fill); border-color: var(--glass-line); box-shadow: var(--glass-shadow);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4); backdrop-filter: blur(24px) saturate(1.4); }
+.stage[data-view="thread"] .composer:focus-within { border-color: color-mix(in srgb, var(--accent) 40%, var(--glass-line)); }
+.stage[data-view="thread"] .suggestions .quick-chip { background: var(--glass-fill); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); }
+.composer { box-shadow: var(--elev-1); transition: border-color var(--t-ui), box-shadow var(--t-ui); }
+
+/* Citation preview and popovers: glass, fading in from where they were opened. */
+@keyframes pop-in { from { opacity: 0; transform: translateY(-4px) scale(.98); } to { opacity: 1; transform: none; } }
+#citation-preview, .export-pop, .chart-menu-list { background: rgb(255 255 255 / .86); border-color: var(--glass-line); box-shadow: var(--glass-shadow);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4); backdrop-filter: blur(24px) saturate(1.4); }
+#citation-preview:popover-open, .export-menu[open] .export-pop, .chart-menu[open] .chart-menu-list { animation: pop-in var(--t-ui) var(--ease-out); transform-origin: top left; }
+
+/* Inspector: docked beside the text on wide screens (opaque); an overlay glass sheet below 1280 px. */
+.drawer-panel { transition: opacity var(--t-ui) var(--ease-std); }
+.drawer:not(.insp-open #inspector):not(.review-open #review-drawer) .drawer-panel { opacity: 0; }
+.insp-open #inspector .drawer-panel, .review-open #review-drawer .drawer-panel { opacity: 1; }
+@media (max-width: 1279px) {
+  .drawer-panel { background: rgb(255 255 255 / .9); -webkit-backdrop-filter: blur(28px) saturate(1.3); backdrop-filter: blur(28px) saturate(1.3); }
+}
+@media (min-width: 1280px) { .drawer { transition: width var(--t-panel) var(--ease-std), visibility 0s linear var(--t-panel); } }
+
+/* Depth: one soft elevation for cards that group related content; content surfaces stay flat. */
+.insight-card, .answer-note-strip:hover { box-shadow: var(--elev-1); }
+.check-card { box-shadow: none; }
+
+/* Loading: show something at once; a quiet spinner and calm placeholder lines, no shimmer. */
+.loading-line .orb { width: 14px; height: 14px; border-radius: 50%; background: none; border: 2px solid var(--accent-soft); border-top-color: var(--accent); animation: spin .9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.skeleton i { animation: calm 1.6s var(--ease-std) infinite alternate; }
+.skeleton i:nth-child(2) { animation-delay: .15s; } .skeleton i:nth-child(3) { animation-delay: .3s; } .skeleton i:nth-child(4) { animation-delay: .45s; }
+@keyframes calm { from { opacity: 1; } to { opacity: .45; } }
+
+/* Accessibility states for the material: opaque surfaces when people ask for less transparency or more contrast. */
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  .stage[data-view="thread"] .composer, #citation-preview, .export-pop, .chart-menu-list, .drawer-panel, .stage[data-view="thread"] .suggestions .quick-chip {
+    -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--surface); }
+  .stage[data-view="thread"] .scroll { mask-image: none; }
+}
+
+/* The close button already returns to the answer; the duplicate link goes. */
+#inspector .source-return { display: none; }

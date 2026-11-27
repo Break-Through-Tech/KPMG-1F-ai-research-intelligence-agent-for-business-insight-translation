@@ -2,7 +2,8 @@
 (() => {
   const key = '1f.reading-preferences.v1';
   const defaults = {theme: 'light', size: '100', spacing: 'standard', explanation: 'technical'};
-  const choices = {theme: ['system', 'light', 'dark', 'contrast-light', 'contrast-dark'], size: ['100', '125', '150', '200'],
+  // One theme (KPMG blue chrome, white reader) and three text sizes; any other saved value falls back to the default.
+  const choices = {theme: ['light'], size: ['100', '125', '150'],
     spacing: ['standard', 'relaxed', 'wide'], explanation: ['technical', 'plain']};
   let preferences = {...defaults};
   let storageUnavailable = false;

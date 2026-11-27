@@ -510,7 +510,8 @@
     }
     const decision = demo.library?.reviews?.at(-1)?.decision;
     if (decision !== 'approve') {
-      items.push({text: decision ? `The latest human review is "${decision}"; this version is not approved.` : 'No person has approved this answer. Save it as a brief and record a review.',
+      items.push({text: decision ? `The latest human review is "${decision}"; this version is not approved.`
+        : demo.library ? 'No person has approved this saved version yet. Record a review.' : 'No person has approved this answer. Save it as a brief and record a review.',
         origin: demo.library ? 'brief review history' : 'not saved'});
     }
     return items;

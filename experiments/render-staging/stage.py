@@ -63,8 +63,8 @@ def snapshot(args):
         hashes[dest] = sources[dest]
 
     candidate = args.ui / 'ui-consult/design/merge-with-codex'
-    expected = {'app.js': '6e662c0e4a4db620', 'consult.css': 'ec26ad6fc7f2dab6',
-                'index.html': '81e9636e02d4ef38', 'mock-api.js': 'dd6d469be53c6b59',
+    expected = {'app.js': 'eb824084cb8c5323', 'consult.css': '79aeb2c642419ee0',
+                'index.html': '1fff3ac4a0063bba', 'mock-api.js': 'dd6d469be53c6b59',
                 'serve.py': '102f32391cc5dcf9'}
     for name, prefix in expected.items():
         if not checksum(candidate / name).startswith(prefix):

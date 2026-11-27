@@ -65,6 +65,7 @@
   }
 
   const stage = $('#stage'), thread = $('#thread'), scroller = $('#scroll'), dock = $('#dock');
+  new ResizeObserver(() => document.documentElement.style.setProperty('--dock-h', `${Math.ceil(dock.getBoundingClientRect().height)}px`)).observe(dock);
   const form = $('#composer'), queryInput = $('#query'), submit = $('#submit'), scenarioSelect = $('#scenario');
   const industryInput = $('#industry'), suggestions = $('#suggestions'), jumpLatest = $('#jump-latest');
   const inspector = $('#inspector'), inspectorBody = $('#inspector-body'), inspectorHeading = $('#inspector-heading');
@@ -184,15 +185,32 @@
 
   /* ---------- Answer views (Answer / Sources / Evidence) and the top bar ---------- */
   const tabButtons = [...document.querySelectorAll('#view-tabs .view-tab')];
+  // One indicator slides between the view tabs instead of each tab drawing its own underline.
+  const tabIndicator = h('span', {class: 'tab-indicator', 'aria-hidden': 'true'});
+  $('#view-tabs').append(tabIndicator);
+  function moveIndicator(animate = true) {
+    const selected = tabButtons.find(button => button.getAttribute('aria-selected') === 'true');
+    if (!selected || $('#view-tabs').hidden) return;
+    tabIndicator.classList.toggle('instant', !animate);
+    tabIndicator.style.width = `${selected.offsetWidth}px`;
+    tabIndicator.style.transform = `translateX(${selected.offsetLeft}px)`;
+  }
+  addEventListener('resize', () => moveIndicator(false));
+  document.addEventListener('reading-preferences-applied', () => requestAnimationFrame(() => moveIndicator(false)));
   function setTab(name, {focus = false, scroll = true} = {}) {
     const turn = activeTurn;
     const panes = turn ? turn.querySelectorAll('.brief-pane') : [];
     if (!panes.length) return;
+    // Each view keeps its own reading position: leaving a tab remembers where you were.
+    turn.scrollMemory = turn.scrollMemory || {};
+    const previous = turn.dataset.tab;
+    if (previous && previous !== name) turn.scrollMemory[previous] = scroller.scrollTop;
     turn.dataset.tab = name;
     panes.forEach(node => { node.hidden = node.dataset.pane !== name; });
     stage.dataset.tab = name;
     tabButtons.forEach(button => { const selected = button.dataset.tab === name; button.setAttribute('aria-selected', String(selected)); button.tabIndex = selected ? 0 : -1; });
-    if (scroll) scroller.scrollTop = 0;
+    moveIndicator(previous !== undefined && previous !== name);
+    if (scroll) scroller.scrollTop = previous === name ? scroller.scrollTop : (turn.scrollMemory[name] || 0);
     if (focus) $(`.brief-pane[data-pane="${name}"] .pane-title`, turn)?.focus({preventScroll: true});
   }
   tabButtons.forEach(button => button.addEventListener('click', () => setTab(button.dataset.tab)));
@@ -265,13 +283,9 @@
   const prefControls = {};
   (() => {
     const body = $('#prefs-body');
-    const themeSelect = h('select', {id: 'reading-theme', onchange: event => morph(() => ReadingPrefs.set('theme', event.target.value))},
-      [['system', 'System'], ['light', 'Light'], ['dark', 'Dark'], ['contrast-light', 'High contrast light'], ['contrast-dark', 'High contrast dark']]
-        .map(([value, text]) => h('option', {value, text})));
-    prefControls.theme = {select: value => { themeSelect.value = value; }};
-    body.append(h('div', {class: 'field'}, h('label', {htmlFor: 'reading-theme', text: 'Theme'}), themeSelect));
+    // A single theme: no appearance picker.
     for (const [name, label, options] of [
-      ['size', 'Text size', [['100', '100%'], ['125', '125%'], ['150', '150%'], ['200', '200%']]],
+      ['size', 'Text size', [['100', '100%'], ['125', '125%'], ['150', '150%']]],
       ['spacing', 'Line spacing', [['standard', 'Standard'], ['relaxed', 'Relaxed'], ['wide', 'Wide']]],
       ['explanation', 'Explanation style', [['technical', 'Technical'], ['plain', 'Plain language']]]]) {
       prefControls[name] = segmented(`pref-${name}`, options, ReadingPrefs.get(name), value => ReadingPrefs.set(name, value));
@@ -294,9 +308,9 @@
 
   /* ---------- Composer ---------- */
   const enterKey = 'research-desk.enter-behavior.v1';
-  let enterBehavior = store.get(enterKey) === 'send' ? 'send' : 'newline';
+  let enterBehavior = 'send'; void enterKey; // Enter sends; Shift+Enter inserts a newline.
   function updateEntryHint() {
-    $('#entry-hint').textContent = `Enter ${enterBehavior === 'send' ? 'sends a question' : 'inserts a newline'}. Ctrl+Enter or Command+Enter sends. Shift+Enter always inserts a newline.`;
+    $('#entry-hint').textContent = 'Enter sends the question. Shift+Enter inserts a new line.';
   }
   $('#enter-seg').append(segmented('enter-label', [['newline', 'Inserts newline'], ['send', 'Sends question']], enterBehavior, value => {
     enterBehavior = value; updateEntryHint();
@@ -706,7 +720,7 @@
       h('div', {class: 'loading', role: 'status'}, h('div', {class: 'loading-line'}, h('span', {class: 'orb'}), h('p', {text: loading}), elapsedCounter()),
         h('div', {class: 'skeleton'}, h('i'), h('i'), h('i'), h('i'))));
     const turn = h('section', {class: 'turn', id: `turn-${number}`, 'aria-labelledby': question.id, hidden: true},
-      h('header', {class: 'turn-head'}, h('p', {class: 'question-label', text: questionLabel}), question),
+      h('header', {class: 'turn-head'}, h('p', {class: 'question-label', text: questionLabel, hidden: !/Multi-Agent|clarification/i.test(questionLabel)}), question),
       answer, h('div', {class: 'followup-slot'}, h('h2', {class: 'followup-title', text: 'Ask a follow-up'})));
     $('#session-section').hidden = false;
     const entry = h('li', null, h('button', {type: 'button', class: 'rail-link', title: query, onclick: () => activateTurn(turn)},
@@ -929,7 +943,9 @@
       'aria-label': `Open ${tableTitle(table)} in the paper, opens in a new tab`}, icon('external'), h('span', {text: 'Open in paper'})) : null;
     const chartReason = h('div', {class: 'ev-chart-reason'});
 
+    const detailFlags = h('ul', {class: 'ev-flags'});
     function renderFlags() {
+      detailFlags.replaceChildren();
       const forWhat = ctx.preview ? 'for this question' : 'for this answer';
       flags.replaceChildren(
         table.completeness === 'complete_from_index'
@@ -940,10 +956,11 @@
         table.fidelity === 'round_trip_ok'
           ? statusRow('check', 'ok', 'All values match the paper exactly.')
           : statusRow('alert', 'bad', 'The values could not be matched to the paper, so only the source text is shown.'));
-      if (ctx.compact) for (const item of [...flags.children]) if (item.classList.contains('ok')) item.remove(); // the key chart lists problems only
+      // Routine confirmations move into Table details; warnings that change interpretation stay inline.
+      for (const item of [...flags.children]) if (item.classList.contains('ok')) { if (ctx.compact) item.remove(); else detailFlags.append(item); }
       if (fullNote) flags.append(statusRow('info', '', fullNote));
       if (countIssue && !ctx.compact) flags.append(statusRow('alert', 'warn', `Count check: ${countIssue.text}`));
-      if (table.notes.length) flags.append(h('li', {class: 'ev-flag'}, icon('info'), h('span', {text: `Source notes: ${table.notes.map(n => n.text).join(' ')}`})));
+      if (table.notes.length) detailFlags.append(h('li', {class: 'ev-flag'}, icon('info'), h('span', {text: `Source notes: ${table.notes.map(n => n.text).join(' ')}`})));
     }
     function setMode(next) {
       if (next !== 'table' && !anyChart()) return;
@@ -998,8 +1015,7 @@
         h('summary', {text: current === 'table' ? `Suggested chart: ${eligible.find(v => v.kind === defaultView.kind).label}` : 'About this chart'}));
       details.append(texText(h('p'), current === 'table' || current === defaultView.kind ? defaultView.why : selected.reason));
       if (plan.excluded.length) details.append(texText(h('p'), `Columns not charted: ${plan.excluded.map(e => `${e.header} (${e.reason})`).join('; ')}.`));
-      if (unavailable.length) details.append(h('p', {class: 'about-sub', text: 'Charts not offered for this table, and why:'}),
-        h('ul', {class: 'plain-list'}, unavailable.map(view => h('li', null, h('strong', {text: `${view.label}: `}), texText(h('span'), view.reason)))));
+      void unavailable; // charts that are not offered are simply not listed
       chartReason.append(details);
     }
     function renderTiles() {
@@ -1067,26 +1083,31 @@
         h('span', null, h('span', {class: 'dot'}), ' retrieved, not cited'),
         table.completeness === 'complete_from_index' ? h('span', {text: 'unmarked: loaded from the index to complete the table'}) : null,
         h('span', {text: 'Select any value to open its source.'}));
+      void legend; // the row-mark legend lives in Table details
       return h('div', null,
         h('div', {class: 'table-scroll', tabIndex: 0, role: 'region', 'aria-label': `${tableTitle(table)}, scrollable`},
-          h('table', {class: 'ev-table'}, h('caption', {class: 'sr-only', text: `${tableTitle(table)}: ${captionBody(table)}`}), h('thead', null, head), body)),
-        legend);
+          h('table', {class: 'ev-table'}, h('caption', {class: 'sr-only', text: `${tableTitle(table)}: ${captionBody(table)}`}), h('thead', null, head), body)));
     }
 
     const fullLink = ctx.compact ? h('button', {type: 'button', class: 'quiet-btn', onclick: () => ctx.showFullTable && ctx.showFullTable(table)},
       icon('table'), h('span', {text: 'See the full table'})) : null;
     const toolbar = ctx.compact ? h('div', {class: 'ev-toolbar'}, menu, h('div', {class: 'ev-actions'}, fullLink, open))
-      : h('div', {class: 'ev-toolbar'}, tabs, menu, h('div', {class: 'ev-actions'}, copy, open));
+      : h('div', {class: 'ev-toolbar'}, tabs, menu, h('div', {class: 'ev-actions'}, open));
+    const tableDetails = ctx.compact ? null : h('details', {class: 'fold table-details'}, h('summary', {text: 'Table details'}),
+      texText(h('p', {class: 'ev-text'}), captionBody(table)), detailFlags,
+      h('p', {class: 'ev-legend'}, h('span', null, h('span', {class: 'cite-num', text: 'n'}), ' cited in this answer'),
+        h('span', null, h('span', {class: 'dot'}), ' retrieved, not cited'),
+        h('span', {text: 'unmarked: loaded from the index to complete the table'})),
+      h('div', {class: 'row'}, copy));
     figure.append(
       ctx.compact
         ? h('figcaption', {class: 'ev-caption key-source'}, texText(h('p', {class: 'fig-title'}), captionBody(table) || tableTitle(table)),
           h('p', {class: 'fig-source'}, h('span', {text: `${tableTitle(table)}, `}), h('cite', {text: table.paper_title}),
             h('span', {text: '. Values as printed in the paper; select a mark to see its source.'})))
         : h('figcaption', {class: 'ev-caption'},
-          h('p', {class: 'ev-title'}, h('span', {class: 'ev-name', text: tableTitle(table)}), h('span', {class: 'ev-paper', text: table.paper_title})),
-          texText(h('p', {class: 'ev-text'}), captionBody(table))),
+          h('p', {class: 'ev-title'}, h('span', {class: 'ev-name', text: tableTitle(table)}), h('span', {class: 'ev-paper', text: table.paper_title}))),
       // KPI tiles are not shown: a number lifted out of its table loses its row, column and conditions.
-      ...[ctx.compact ? null : flags, toolbar, ctx.compact ? null : chartReason, view, ctx.compact ? flags : null].filter(Boolean));
+      ...[ctx.compact ? null : flags, toolbar, ctx.compact ? null : chartReason, view, ctx.compact ? flags : tableDetails].filter(Boolean));
     // The key chart appears only once a chart can be drawn from the complete table.
     function syncCompact() {
       if (!ctx.compact) return;
@@ -1681,7 +1702,7 @@
   // What a reviewer should resolve, taken from the answer as shown (material notes first, then routine checks).
   function issueList(number) {
     const turn = document.getElementById(`turn-${number}`);
-    const texts = turn ? [...turn.querySelectorAll('.research-notes .notes-list > li')].map(li => li.textContent.trim()).filter(Boolean) : [];
+    const texts = turn ? [...turn.querySelectorAll('.ws-panel .notes-list > li')].map(li => li.textContent.trim()).filter(Boolean) : [];
     return texts.length ? h('ul', {class: 'bullets'}, texts.map(text => h('li', {text}))) : h('p', {class: 'muted small', text: 'The automatic checks recorded no outstanding issues for this version.'});
   }
   // Table checks can add a material issue after the workspace opened; keep its list current.
@@ -1749,6 +1770,8 @@
     if (!target) return;
     const pane = target.closest('.brief-pane');
     if (pane?.hidden && pane.closest('.turn') === activeTurn) setTab(pane.dataset.pane, {scroll: false});
+    const wsPanel = target.closest('.ws-panel');
+    if (wsPanel?.hidden) target.closest('.brief')?.selectWorkspace?.(wsPanel.id.split('-ws-')[1]);
     for (let node = target; node; node = node.parentElement) if (node.tagName === 'DETAILS') node.open = true;
     target.scrollIntoView({block: 'start', behavior: reduced.matches ? 'auto' : 'smooth'});
     (target.querySelector('.block-title, h2, h3, summary') || target).focus?.({preventScroll: true});
@@ -2005,19 +2028,20 @@
     const cites = EM.citationMap(result);
     const body = h('div', {class: 'brief'});
     const pane = (key, label) => h('section', {class: `brief-pane pane-${key}`, 'data-pane': key, 'aria-label': label, hidden: key !== 'answer'});
-    const paneAnswer = pane('answer', 'Answer'), paneSources = pane('sources', 'Sources'), paneEvidence = pane('evidence', 'Evidence');
-    body.append(paneAnswer, paneSources, paneEvidence);
+    const paneAnswer = pane('answer', 'Answer'), paneSources = pane('sources', 'Sources'),
+      paneEvidence = pane('evidence', 'Evidence'), paneWorkspace = pane('workspace', 'Workspace');
+    body.append(paneAnswer, paneSources, paneEvidence, paneWorkspace);
     const stage = demo.error?.stage;
+    const tableAnchor = table => `#a${number}-tbl-${table.table_id.replace(/[^A-Za-z0-9]/g, '-')}`;
 
-    /* Layer 2: research notes, collected while the answer is built. */
+    /* Research notes are collected while the answer is built and shown in Workspace. */
     const notes = {coverage: [], limits: [], business: [], other: []};
-    const notesBox = h('details', {class: 'research-notes', id: `a${number}-notes`});
-    const notesLink = () => h('button', {type: 'button', class: 'inline-link', onclick: () => { notesBox.open = true; notesBox.scrollIntoView({block: 'nearest', behavior: reduced.matches ? 'auto' : 'smooth'}); $('summary', notesBox).focus({preventScroll: true}); }, text: 'Research notes'});
-    /* Layer 1 caveats: only uncertainty that changes how the answer can be read, said once, in place. */
+    const openWorkspace = section => { setTab('workspace', {scroll: true}); selectWorkspace(section, true); };
+    /* Answer caveats: only what is specifically missing or in conflict, said once, near the answer. */
     const asides = h('div', {class: 'answer-asides'});
-    const aside = (content, tone = 'warn', withLink = true) => {
+    const aside = (content, tone = 'warn') => {
       const line = h('p', {class: `aside-line ${tone}`}, icon(tone === 'info' ? 'info' : 'alert'),
-        h('span', null, typeof content === 'string' ? h('span', {text: content}) : content, withLink ? [' ', notesLink()] : null));
+        h('span', null, typeof content === 'string' ? h('span', {text: content}) : content));
       asides.append(line);
       return line;
     };
@@ -2025,16 +2049,15 @@
     if (window.MOCK_API === true) paneAnswer.append(h('p', {class: 'mock-stamp', role: 'note'}, icon('info'),
       h('span', {text: 'Mock data for interface testing. Papers, numbers and tables are invented and are not research output.'})));
 
-    /* Sources this answer rests on, one line, before the prose (opens the Sources view). */
+    /* Quiet source line: the lead paper and the retrieved passage count; opens Sources. */
     const citedPapers = studies.filter(study => study.citations.length);
     if (evidence.length) {
-      const strip = h('button', {type: 'button', class: 'source-strip', 'aria-label': `Sources: ${plural(citedPapers.length || studies.length, 'paper')}, ${plural(evidence.length, 'passage')}. Open the Sources view.`,
-        onclick: () => setTab('sources', {focus: true})},
-        icon('layers'),
-        (citedPapers.length ? citedPapers : studies).slice(0, 3).map(study => h('span', {class: 'strip-paper', title: study.title, text: sectionTitle(study.title)})),
-        (citedPapers.length || studies.length) > 3 ? h('span', {class: 'strip-more', text: `+${(citedPapers.length || studies.length) - 3}`}) : null,
-        h('span', {class: 'strip-count', text: plural(evidence.length, 'passage')}));
-      paneAnswer.append(strip);
+      const lead = (citedPapers.length ? citedPapers : studies);
+      paneAnswer.append(h('p', {class: 'answer-source-line'},
+        h('button', {type: 'button', class: 'paper-chip', title: lead[0].title, 'aria-label': `Sources: ${lead[0].title}. Open Sources for this answer.`,
+          onclick: () => setTab('sources', {focus: true})}, icon('layers'), h('span', {text: sectionTitle(lead[0].title)})),
+        lead.length > 1 ? h('span', {class: 'source-more', text: `+${plural(lead.length - 1, 'paper')}`}) : null,
+        h('span', {class: 'source-count', text: `${plural(evidence.length, 'passage')} retrieved`})));
     }
 
     /* ---- The answer ---- */
@@ -2045,11 +2068,8 @@
     const scoped = isSynthesis(demo) && summary.limitation_support?.length ? summary.limitation_support : null;
     const gapItems = (summary.limitation_support || []).filter(item => item.kind === 'coverage_gap');
     // answer_lead is a coverage note in every pipeline that sets it (answer_quality, evidence_led,
-    // consolidated publication, S3, agentic, completion): the review gap and/or "Some drafted findings
-    // could not be verified … withheld". It is uncited, so it is shown as a caveat line and in the
-    // research notes, never as the answer's opening paragraph. The answer opens with its first finding.
+    // consolidated publication, S3, agentic, completion). It is uncited, so it is a caveat, never the opening.
     const coverageNote = !abstained && summary.answer_lead ? String(summary.answer_lead).trim() : null;
-    const lead = null;
     const held = Array.isArray(summary.held_claims) ? summary.held_claims : [];
 
     const prose = h('div', {class: 'prose', id: `a${number}-summary`});
@@ -2070,7 +2090,7 @@
           h('ul', {class: 'prose-list'}, scoped ? scoped.map(item => cited('li', item, demo, number)) : plain.map(text => h('li', {math: text}))));
       }
     } else {
-      if (lead) prose.append(emphasizeQuantities(h('p', {class: 'lead', math: lead})));
+      // The direct finding first, then short supporting paragraphs (at most three findings each), in recorded order.
       const sections = paperSections(claims, evidence);
       if (sections) {
         for (const run of sections) {
@@ -2078,8 +2098,11 @@
           prose.append(h('h3', {class: 'prose-h', title, text: sectionTitle(title)}));
           paragraphs(run.claims).forEach(group => prose.append(para(group)));
         }
-      } else paragraphs(claims).forEach(group => prose.append(para(group)));
-      if (!lead) prose.querySelector('p')?.classList.add('lead');
+      } else if (claims.length) {
+        prose.append(para([claims[0]]));
+        paragraphs(claims.slice(1)).forEach(group => prose.append(para(group)));
+      }
+      prose.querySelector('p')?.classList.add('lead');
       for (const item of interpretations) {
         prose.append(h('p', {class: 'interpretation'}, h('span', {class: 'label', text: 'Interpretation'}),
           cited('span', item, demo, number, 'claim')));
@@ -2087,7 +2110,7 @@
     }
     paneAnswer.append(prose, asides);
 
-    // Plain-language view (same rules as before: findings only; switch lives in the actions row).
+    // Plain-language view (findings only).
     const plainFallback = h('p', {class: 'aside-line info', hidden: true});
     asides.append(plainFallback);
     function selectView() {
@@ -2107,96 +2130,21 @@
     explanationRenderers.set(answer, selectView);
     selectView();
 
-    /* A chart sits right after the paragraph whose finding cites a row of its table; with no such
-       citation the table stays in Evidence (no relationship is implied). */
-    const keyTable = tables.find(table => table.rows.some(row => row.citedBy.length));
-    if (keyTable) {
-      const rowIds = new Set(keyTable.rows.map(row => row.chunk_id));
-      const anchor = claimNodes.find(entry => (entry.claim.chunk_ids || []).some(id => rowIds.has(id)))?.node.closest('p');
-      if (anchor) {
-        const slot = h('div', {class: 'answer-figure', hidden: true});
-        const keyCtx = {...ctx, compact: true, chartChoice: new Map(), onCompact: shown => { slot.hidden = !shown; },
-          showFullTable: table => openTo(`#a${number}-tbl-${table.table_id.replace(/[^A-Za-z0-9]/g, '-')}`)};
-        slot.append(renderEvidenceTable(keyTable, keyCtx));
-        anchor.after(slot);
-      }
-    }
-
-    /* Material uncertainty, in plain words. */
-    if (partial || coverageNote) {
-      const gap = coverageNote || gapItems[0]?.text || null;
-      aside(h('span', null, h('strong', {text: partial ? 'Partial answer. ' : 'Note. '}), h('span', {math: gap || 'The answer covers only part of the question.'})));
-    }
+    /* What is missing, once, only when the answer records what it is. */
+    const gap = coverageNote || gapItems[0]?.text || null;
+    if (gap) aside(h('span', null, h('strong', {text: partial ? 'Partial answer. ' : 'Note. '}), h('span', {math: gap})));
     const numberChecks = result.provenance?.agentic?.claims_needing_number_check || [];
     if (numberChecks.length) {
-      aside(`Check the numbers in ${plural(numberChecks.length, 'finding')} yourself: code could not confirm what they refer to, and only the verification agent judged them supported.`);
+      aside(`Check the numbers in ${plural(numberChecks.length, 'finding')}: code could not confirm what they refer to.`);
       notes.other.push(...numberChecks);
     }
-    if (demo.error && !['business', 'regulatory'].includes(stage)) aside(demo.error.message || String(demo.error), 'bad', false);
-
-    /* Side-by-side comparison, only when the question itself names two or more retrieved papers. */
-    const named = studies.length >= 2 ? EM.namedStudies(studies, ctx.question()) : [];
-    if (named.length >= 2) {
-      paneAnswer.append(h('section', {class: 'answer-section', id: `a${number}-compare`, 'aria-labelledby': `a${number}-compare-h`},
-        h('h2', {class: 'section-h', id: `a${number}-compare-h`, text: named.map(study => sectionTitle(study.title)).join(' and ')}),
-        focusedComparison(named, studies, ctx)));
-    }
-
-    /* Requested business implications: part of the answer, labelled as interpretation. */
-    if (insight) {
-      const section = h('section', {class: 'answer-section', id: `a${number}-business`, 'aria-labelledby': `a${number}-business-h`},
-        h('h2', {class: 'section-h', id: `a${number}-business-h`, tabIndex: -1, text: `Implications for ${insight.industry}`}),
-        h('p', {class: 'section-note', text: 'Conditional interpretations for business use, drawn from the findings above. The studies did not test them.'}));
-      if (result.provenance?.agentic) {
-        const dropped = (result.provenance.agentic.business_screening || []).filter(item => item.status === 'removed').length;
-        section.append(h('p', {class: 'aside-line warn'}, icon('alert'), h('span', {text: `Drafted by the business insight agent and not checked by the verification agent or a person. ${plural(dropped, 'unsupported statement')} ${dropped === 1 ? 'was' : 'were'} withheld.`})));
-      }
-      if (!insight.implications.length) section.append(h('p', {class: 'muted', text: 'No supported business implications.'}));
-      for (const implication of insight.implications) {
-        const item = h('div', {class: 'implication'}, cited('p', implication, demo, number, 'implication-text'));
-        if (implication.suggested_action) item.append(h('p', {class: 'implication-action'}, h('span', {class: 'label', text: 'Suggested action'}), h('span', {math: implication.suggested_action})));
-        if (implication.assumptions?.length) item.append(h('details', {class: 'fold'}, h('summary', {text: `Assumptions (${implication.assumptions.length})`}), bullets(implication.assumptions)));
-        section.append(item);
-      }
-      paneAnswer.append(section);
-      for (const risk of insight.risks || []) notes.business.push({text: risk, label: 'Risk'});
-      for (const limit of insight.limitations || []) notes.business.push({text: limit, label: 'Limit'});
-    } else if (stage === 'business') {
-      aside('Business implications could not be generated. The research answer above is unaffected.', 'warn');
+    if (demo.error && !['business', 'regulatory'].includes(stage)) aside(demo.error.message || String(demo.error), 'bad');
+    if (stage === 'business') {
+      aside('Business implications could not be generated. The research answer above is unaffected.');
       notes.other.push(`Business translation: ${demo.error.message || 'failed'}`);
     }
-
-    /* Risk & compliance checkpoint (optional, advisory). */
-    const checkpoint = result.regulatory_checkpoint;
-    if (checkpoint) {
-      const assessed = checkpoint.status === 'assessed';
-      const regulatoryEvidence = checkpoint.regulatory_evidence;
-      const section = h('section', {class: 'answer-section', id: `a${number}-regulatory`, 'aria-labelledby': `a${number}-regulatory-h`},
-        h('h2', {class: 'section-h', id: `a${number}-regulatory-h`, text: 'Risk and compliance'}),
-        h('p', {class: 'section-note', text: `${assessed ? 'Assessed' : `Assessment ${checkpoint.status}`}. Advisory only; not legal advice or compliance approval. A person must review it.${checkpoint.jurisdiction || regulatoryEvidence?.jurisdiction ? ` Jurisdiction: ${checkpoint.jurisdiction || regulatoryEvidence.jurisdiction} · as of ${regulatoryEvidence?.as_of || 'not recorded'}.` : ''}`}));
-      if (!assessed || !checkpoint.assessment) {
-        section.append(h('p', {class: 'aside-line warn'}, icon('alert'), h('span', {text: `No regulatory conclusion was produced: ${checkpoint.reason || 'no assessment was returned.'} The research findings are unaffected.`})));
-      } else {
-        section.append(h('p', {class: 'section-text', math: checkpoint.summary || ''}));
-        const grid = h('div', {class: 'two-col'});
-        for (const [key, title] of [['regulatory_compliance', 'Regulatory compliance'], ['legal_constraints', 'Legal constraints'],
-          ['governance', 'Governance'], ['operational_feasibility', 'Operational feasibility']]) {
-          const finding = checkpoint.assessment[key];
-          if (!finding) continue;
-          const sources = (regulatoryEvidence?.sources || []).filter(source => (finding.source_ids || []).includes(source.source_id));
-          grid.append(h('div', {class: 'col'}, h('h3', {text: `${title} · ${finding.status}`}), h('p', {math: finding.explanation || ''}),
-            sources.length ? h('ul', {class: 'bullets'}, sources.map(source => h('li', null, /^https?:\/\//.test(source.url || '')
-              ? h('a', {href: source.url, target: '_blank', rel: 'noopener noreferrer', text: source.title || `Regulatory source ${source.source_id}`})
-              : h('span', {text: source.title || `Regulatory source ${source.source_id}`})))) : null));
-        }
-        section.append(grid);
-        if (checkpoint.assessment.risks?.length) section.append(h('h3', {class: 'prose-h', text: 'Identified risks'}), bullets(checkpoint.assessment.risks));
-        section.append(h('p', {class: 'section-note', text: 'Sources and applicability have not been independently verified by a person.'}));
-      }
-      paneAnswer.append(section);
-    }
     if (stage === 'regulatory') {
-      aside('The risk and compliance assessment did not complete. No regulatory conclusion exists; the research answer is unaffected.', 'warn');
+      aside('The risk and compliance assessment did not complete. No regulatory conclusion exists; the research answer is unaffected.');
       notes.other.push(`Risk & compliance: ${demo.error.message || 'failed'}`);
     }
 
@@ -2233,8 +2181,8 @@
         if (coverageNote && key === coverageNote) notes.coverage.push(text);
         else notes.limits.push(text);
       }
-      if (coverageNote && !notes.coverage.some(text => String(text).trim() === coverageNote)) notes.coverage.unshift(coverageNote);
-      // Withheld drafts: how many and why, from the recorded gate reasons. Their text is unverified, so it is not shown.
+      // The missing information itself is stated once, in the Completeness card; the list keeps only other gaps.
+      notes.coverage = notes.coverage.filter(text => String(text).trim() !== coverageNote);
       if (held.length) {
         const reasons = [...new Set(held.flatMap(item => item.reasons || []))];
         notes.coverage.push(`${plural(held.length, 'drafted statement')} ${held.length === 1 ? 'was' : 'were'} withheld by the verification gates${reasons.length ? ` (${reasons.join('; ')})` : ''}.`);
@@ -2245,133 +2193,226 @@
     if (tables.some(t => !t.headerStatus.verified) && tables.some(t => t.rows.some(r => r.citedBy.length))) {
       notes.other.push('Table column headings were read automatically; compare them with the paper before quoting numbers.');
     }
+    if (insight) {
+      for (const risk of insight.risks || []) notes.business.push({text: risk, label: 'Risk'});
+      for (const limit of insight.limitations || []) notes.business.push({text: limit, label: 'Limit'});
+    }
 
-    /* ---- Actions under the answer ---- */
-    const papersCount = new Set(evidence.map(paperKey)).size;
+    /* ---- Actions right below the response ---- */
+    const review = humanReview(demo);
+    const quoteChecked = isSynthesis(demo) || Boolean(summary.support_check);
     const actions = h('div', {class: 'answer-actions', role: 'group', 'aria-label': 'Answer actions'},
       demo.library
-        ? h('button', {type: 'button', class: 'act-btn', onclick: () => tools.reveal('brief')}, icon('check'), h('span', {text: 'Saved'}), h('span', {class: 'act-sub', text: '· Review'}))
+        ? h('button', {type: 'button', class: 'act-btn', onclick: () => openWorkspace('review')}, icon('check'), h('span', {text: 'Saved'}), h('span', {class: 'act-sub', text: '· Review'}))
         : h('button', {type: 'button', class: 'act-btn', onclick: () => tools.reveal('brief')}, icon('bookmark'), h('span', {text: 'Save'})),
       h('details', {class: 'export-menu'},
         h('summary', {class: 'act-btn'}, icon('download'), h('span', {text: 'Export'})),
         h('div', {class: 'export-pop'}, exportControls(demo, number), snapshotButton(demo),
-          h('p', {class: 'export-note', text: `Exports contain the answer as generated and its sources, not the review record. Current review: ${humanReview(demo).short}.`}))),
+          h('p', {class: 'export-note', text: `Exports contain the answer as generated and its sources, not the review record. Current review: ${review.short}.`}))),
       tools.listenButton,
-      evidence.length ? h('button', {type: 'button', class: 'act-btn', onclick: () => setTab('sources', {focus: true})}, icon('layers'),
-        h('span', {text: `${plural(papersCount, 'paper')} · ${plural(evidence.length, 'passage')}`})) : null,
+      evidence.length ? h('button', {type: 'button', class: 'act-btn', onclick: () => setTab('sources', {focus: true})}, icon('layers'), h('span', {text: 'Sources'})) : null,
+      insight?.implications?.length ? h('button', {type: 'button', class: 'act-btn act-quiet', onclick: () => openWorkspace('business')}, icon('bulb'), h('span', {text: 'Business insight'})) : null,
       view?.status === 'available' && claimNodes.length ? h('div', {class: 'act-switch'}, h('span', {id: `a${number}-explain-label`, class: 'sr-only', text: 'Explanation style'}), explanationSwitch(`a${number}-explain-label`)) : null);
     paneAnswer.append(actions, tools.listenPanel);
 
-    /* ---- Research notes (layer 2): what was checked, and what is missing or uncertain ---- */
-    const review = humanReview(demo);
-    const quoteChecked = isSynthesis(demo) || Boolean(summary.support_check);
-    const facet = (iconName, tone, text) => h('span', {class: `facet ${tone}`}, icon(iconName), h('span', {text}));
+    /* Slim line: research notes and the real review status; opens Workspace. */
+    const noteCount = h('span', {class: 'strip-count'});
+    paneAnswer.append(h('button', {type: 'button', class: 'answer-note-strip', onclick: () => openWorkspace('notes')},
+      h('span', {class: 'strip-title'}, icon('info'), h('span', {text: 'Research notes'})),
+      h('span', {class: 'facet'}, icon(quoteChecked ? 'check' : 'info'), h('span', {text: quoteChecked ? 'Quotes matched' : 'Quote check not recorded'})),
+      abstained ? h('span', {class: 'facet warn'}, icon('alert'), h('span', {text: 'No answer'})) : partial ? h('span', {class: 'facet warn'}, icon('alert'), h('span', {text: 'Partial'})) : null,
+      h('span', {class: `facet ${review.tone === 'ok' ? 'ok' : review.tone === 'bad' ? 'bad' : ''}`}, icon(review.tone === 'ok' ? 'check' : 'shield'),
+        h('span', {text: review.tone === 'draft' ? (demo.library ? 'Not reviewed by a person' : 'Not saved or reviewed') : review.short})),
+      noteCount, icon('chevron')));
+
+    /* ---- Workspace: Business insight / Research notes / Review ---- */
+    const wsTabs = h('div', {class: 'ws-tabs', role: 'tablist', 'aria-label': 'Workspace sections'});
+    const wsBody = h('div', {class: 'ws-panel-wrap'});
+    const wsSections = [];
+    function wsSection(key, label) {
+      const panel = h('section', {class: 'ws-panel', id: `a${number}-ws-${key}`, role: 'tabpanel', 'aria-label': label, hidden: true});
+      const button = h('button', {type: 'button', role: 'tab', class: 'ws-tab', 'aria-selected': 'false', 'aria-controls': panel.id, onclick: () => selectWorkspace(key, true)}, h('span', {text: label}));
+      wsSections.push({key, panel, button});
+      wsTabs.append(button); wsBody.append(panel);
+      return panel;
+    }
+    function selectWorkspace(key, focus = false) {
+      for (const s of wsSections) {
+        const on = s.key === key;
+        s.panel.hidden = !on; s.button.setAttribute('aria-selected', String(on)); s.button.tabIndex = on ? 0 : -1;
+        if (on && focus) s.button.focus({preventScroll: true});
+      }
+    }
+    wsTabs.addEventListener('keydown', event => {
+      if (!['ArrowRight', 'ArrowLeft'].includes(event.key)) return;
+      const i = wsSections.findIndex(s => s.button === document.activeElement);
+      const next = wsSections[(i + (event.key === 'ArrowRight' ? 1 : wsSections.length - 1)) % wsSections.length];
+      selectWorkspace(next.key, true);
+    });
+    paneWorkspace.append(h('header', {class: 'pane-head'}, h('h2', {class: 'pane-title', id: `a${number}-workspace`, tabIndex: -1, text: 'Workspace'})), wsTabs, wsBody);
+
+    // Business insight: one interpretation tied to the industry and its cited finding; the action beside it.
+    if (insight) {
+      const panel = wsSection('business', 'Business insight');
+      panel.append(h('p', {class: 'ws-kicker', text: `Industry: ${insight.industry} · an interpretation for business use, not something the paper measured`}));
+      if (result.provenance?.agentic) {
+        const dropped = (result.provenance.agentic.business_screening || []).filter(item => item.status === 'removed').length;
+        panel.append(h('p', {class: 'aside-line warn'}, icon('alert'), h('span', {text: `Drafted by the business insight agent and not checked by the verification agent or a person. ${plural(dropped, 'unsupported statement')} ${dropped === 1 ? 'was' : 'were'} withheld.`})));
+      }
+      if (!insight.implications.length) panel.append(h('p', {class: 'muted', text: 'No supported business implications.'}));
+      const more = h('details', {class: 'fold more-insights'}, h('summary', {text: `More interpretations (${Math.max(0, insight.implications.length - 1)})`}));
+      insight.implications.forEach((implication, i) => {
+        (i ? more : panel).append(h('article', {class: 'insight-card'},
+          h('div', {class: 'insight-main'}, h('h3', {class: 'ws-h', text: 'Interpretation'}), cited('p', implication, demo, number, 'insight-text')),
+          implication.suggested_action ? h('div', {class: 'insight-action'}, h('h3', {class: 'ws-h', text: 'Suggested action'}), h('p', {math: implication.suggested_action})) : null,
+          implication.assumptions?.length ? h('details', {class: 'fold insight-assumptions'}, h('summary', {text: `Assumptions (${implication.assumptions.length})`}), bullets(implication.assumptions)) : null));
+      });
+      if (insight.implications.length > 1) panel.append(more);
+      const checkpoint = result.regulatory_checkpoint;
+      if (checkpoint) {
+        const assessed = checkpoint.status === 'assessed';
+        const reg = h('section', {class: 'ws-group', id: `a${number}-regulatory`}, h('h3', {class: 'ws-h', text: 'Risk and compliance (advisory)'}),
+          h('p', {class: 'section-note', text: `${assessed ? 'Assessed' : `Assessment ${checkpoint.status}`}. Not legal advice or compliance approval; a person must review it.`}));
+        if (assessed && checkpoint.assessment) {
+          reg.append(h('p', {math: checkpoint.summary || ''}));
+          const grid = h('div', {class: 'two-col'});
+          for (const [key, title] of [['regulatory_compliance', 'Regulatory compliance'], ['legal_constraints', 'Legal constraints'],
+            ['governance', 'Governance'], ['operational_feasibility', 'Operational feasibility']]) {
+            const finding = checkpoint.assessment[key];
+            if (finding) grid.append(h('div', {class: 'col'}, h('h4', {text: `${title} · ${finding.status}`}), h('p', {math: finding.explanation || ''})));
+          }
+          reg.append(grid);
+          if (checkpoint.assessment.risks?.length) reg.append(bullets(checkpoint.assessment.risks));
+        } else reg.append(h('p', {class: 'aside-line warn'}, icon('alert'), h('span', {text: `No regulatory conclusion was produced: ${checkpoint.reason || 'no assessment was returned.'}`})));
+        panel.append(reg);
+      }
+    }
+
+    // Research notes: discrepancies first, then what was checked, then risks and limits.
+    const notesPanel = wsSection('notes', 'Research notes');
     const discrepancyList = h('ul', {class: 'notes-list'});
-    const discrepancySection = h('section', {class: 'notes-group', hidden: true}, h('h3', {text: 'Unresolved discrepancies'}), discrepancyList);
-    const notesSummary = h('summary', null,
-      h('span', {class: 'notes-title'}, icon('info'), h('span', {text: 'Research notes'})),
-      h('span', {class: 'facets'},
-        quoteChecked ? facet('check', 'ok', 'Quotes matched in sources') : facet('info', '', 'Quote check not recorded'),
-        abstained ? facet('alert', 'warn', 'No answer') : partial ? facet('alert', 'warn', 'Partial answer') : summary.answer_scope === 'full' ? facet('check', 'ok', 'Covers the question') : null,
-        facet(review.tone === 'ok' ? 'check' : 'shield', review.tone === 'ok' ? 'ok' : review.tone === 'bad' ? 'bad' : '', review.tone === 'ok' ? review.short : review.tone === 'draft' ? 'Not reviewed by a person' : review.short)),
-      h('span', {class: 'notes-count'}), icon('down'));
+    const discrepancyBox = h('section', {class: 'discrepancy-box', hidden: true}, h('h3', {class: 'ws-h', text: 'Unresolved discrepancies'}), discrepancyList);
     const support = result.provenance?.agentic
-      ? 'Each claim was re-checked in code (quotes, numbers, units, directions, qualifiers) and then judged by a separate verification agent. The agent is a model; no person has checked support.'
-      : summary.quality_review
-        ? 'A model reviewed whether the quotes support their claims and are relevant. No person has checked this.'
-        : quoteChecked ? 'Not checked. A matching quote shows the words are in the paper, not that they fully support the claim. Read the quote against the claim.'
+      ? 'Each claim was re-checked in code and judged by a separate verification agent (a model). No person has checked support.'
+      : summary.quality_review ? 'A model reviewed whether each quote supports its claim. No person has checked this.'
+        : quoteChecked ? 'Not checked. A matching quote shows the words are in the paper, not that they support the claim.'
           : 'Not recorded for this saved result.';
-    const completeness = abstained ? 'No answer. The retrieved evidence did not support one.'
-      : partial ? 'Partial. The answer covers only part of the question; what is missing is listed below.'
-        : summary.answer_scope === 'full' ? 'The pipeline judged that the answer covers the question.'
-          : 'Not assessed for this answer.';
-    const explained = h('dl', {class: 'checks-explained'},
-      h('dt', {text: 'Quotations'}), h('dd', {text: quoteChecked ? 'Every quote attached to a statement was found word-for-word in its source paper.' : 'This saved result does not record a quote check.'}),
-      h('dt', {text: 'Claim support'}), h('dd', {text: support}),
-      h('dt', {text: 'Completeness'}), h('dd', {text: completeness}),
-      h('dt', {text: 'Human approval'}), h('dd', {text: review.long}));
-    const group = (title, items, render = item => typeof item === 'string' ? h('li', {math: item}) : item.chunk_ids ? cited('li', item, demo, number)
-      : h('li', null, item.label ? h('span', {class: 'li-label', text: `${item.label}. `}) : null, h('span', {math: item.text}))) => items.length
-      ? h('section', {class: 'notes-group'}, h('h3', {text: title}), h('ul', {class: 'notes-list'}, items.map(render))) : null;
-    notesBox.append(notesSummary, h('div', {class: 'notes-body'},
-      h('section', {class: 'notes-group'}, h('h3', {text: 'How this answer was checked'}), explained),
+    const completeness = abstained ? 'No answer: the retrieved evidence did not support one.'
+      : partial ? (gap ? `Partial. Missing: ${gap}` : 'Partial. The review marked the answer as incomplete.')
+        : summary.answer_scope === 'full' ? 'The automated review judged that the answer covers the question.' : 'Not assessed for this answer.';
+    const card = (title, text, tone = '') => h('article', {class: `check-card ${tone}`}, h('h3', {class: 'ws-h', text: title}), h('p', {text}));
+    const group = (title, items) => items.length ? h('section', {class: 'ws-group'}, h('h3', {class: 'ws-h', text: title}),
+      h('ul', {class: 'notes-list'}, items.map(item => typeof item === 'string' ? h('li', {math: item}) : item.chunk_ids ? cited('li', item, demo, number)
+        : h('li', null, item.label ? h('span', {class: 'li-label', text: `${item.label}. `}) : null, h('span', {math: item.text}))))) : null;
+    notesPanel.append(discrepancyBox,
+      h('div', {class: 'check-grid'},
+        card('Quotations', quoteChecked ? 'Every quote attached to a statement was found word-for-word in its source paper. This does not show that the quote supports the statement.' : 'This saved result does not record a quote check.'),
+        card('Claim support', support),
+        card('Completeness', completeness, partial || abstained ? 'warn' : ''),
+        card('Human approval', review.long, review.tone === 'ok' ? 'ok' : '')),
       group('What the answer does not cover', notes.coverage),
-      discrepancySection,
       group('Limitations of the evidence', notes.limits),
-      group(insight ? `Risks and limits of the ${insight.industry} implications` : 'Business risks', notes.business),
+      group(insight ? `Risks and limits of the ${insight.industry} insight` : 'Business risks', notes.business),
       group('Other notes', notes.other),
-      h('button', {type: 'button', class: 'inline-link', 'data-checks': 'card', onclick: () => openTo(`#a${number}-verify`),
-        text: `See all ${checks.length} checks and where each comes from`})));
+      h('button', {type: 'button', class: 'quiet-btn ws-jump', onclick: () => selectWorkspace('review', true)}, icon('shield'), h('span', {text: 'Review checks'})));
     const countNotes = () => {
-      const n = notesBox.querySelectorAll('.notes-list > li').length;
-      $('.notes-count', notesSummary).textContent = n ? plural(n, 'note') : '';
+      const n = notesPanel.querySelectorAll('.notes-list > li').length;
+      noteCount.textContent = n ? plural(n, 'note') : '';
     };
     countNotes();
-    paneAnswer.append(notesBox);
-    if (recordedMode && demo.library?.replayed) paneAnswer.append(followUpNote());
 
-    /* A table-level check (a cited model count that differs from the paper's table) becomes an
-       unresolved discrepancy in the notes, one line in the answer, and a review item. The recorded
-       answer itself is never changed. */
+    // Review: the saved brief's actual status and what a person needs to check.
+    const reviewPanel = wsSection('review', 'Review');
+    const checklist = h('ol', {class: 'checklist'}, checks.map(item => h('li', null, h('span', {class: 'box', 'aria-hidden': 'true'}),
+      h('div', null, h('p', {text: item.text}), h('details', {class: 'origin-fold'}, h('summary', {text: 'Check origin'}), h('p', {class: 'origin', text: item.origin}))))));
+    reviewPanel.append(h('section', {class: 'ws-group', id: `a${number}-verify`},
+      h('div', {class: 'review-status'}, h('span', {class: `state ${reviewTone(demo)}`}, icon('shield'), h('span', {text: reviewText(demo)})),
+        demo.library
+          ? h('button', {type: 'button', class: 'solid-btn', onclick: () => tools.reveal('brief')}, icon('shield'), h('span', {text: 'Record a review'}))
+          : h('button', {type: 'button', class: 'solid-btn', onclick: () => tools.reveal('brief')}, icon('bookmark'), h('span', {text: 'Save as brief to review'}))),
+      h('p', {class: 'section-note', text: demo.library
+        ? 'Saving, quote matching and automated checks are not human approval. Approval applies only to this saved version.'
+        : 'Save this draft as a brief first; reviews attach to a saved version.'}),
+      h('h3', {class: 'ws-h', text: 'Checks before relying on this answer'}), checklist,
+      h('p', {class: 'section-note', text: `Exports do not include the review record. Compare an exported file with saved version ${demo.library?.version?.number ?? '—'} before claiming it was approved.`})));
+    selectWorkspace(insight ? 'business' : 'notes');
+
+    /* A table-level count check: one actionable link near the answer; details in Research notes and Evidence. */
     let discrepancyAside = null;
-    ctx.addCaveat = content => {
+    ctx.addCaveat = (content, table) => {
       discrepancyList.append(typeof content === 'string' ? h('li', {text: content}) : h('li', null, content));
-      discrepancySection.hidden = false;
+      discrepancyBox.hidden = false;
       countNotes();
-      if (!discrepancyAside) discrepancyAside = aside(h('span', null, h('strong', {text: 'Unresolved discrepancy. '}),
-        h('span', {text: 'A number in this answer differs from the paper’s own table.'})));
+      if (!discrepancyAside) discrepancyAside = aside(h('button', {type: 'button', class: 'inline-link',
+        onclick: () => table ? openTo(tableAnchor(table)) : openWorkspace('notes')}, h('span', {text: 'Check model count'})));
       refreshIssues(number);
     };
-    const reviewIssues = new Set(), pendingIssues = [];
+    const reviewIssues = new Set();
     ctx.onReviewIssue = (table, issue) => {
       const key = `${table.key}|${issue.phrase}`;
       if (reviewIssues.has(key)) return;
       reviewIssues.add(key);
-      const list = $(`#a${number}-verify .checklist`, body);
-      const item = h('li', {class: 'review-issue'}, h('span', {class: 'box', 'aria-hidden': 'true'}),
-        h('div', null, h('p', {text: `${tableTitle(table)} (${table.paper_title}): ${issue.text}`}), h('p', {class: 'origin', text: 'From count check: answer claim vs. complete table'})));
-      if (list) list.append(item); else pendingIssues.push(item);
+      checklist.append(h('li', {class: 'review-issue'}, h('span', {class: 'box', 'aria-hidden': 'true'}),
+        h('div', null, h('p', {text: `${tableTitle(table)} (${table.paper_title}): ${issue.text}`}),
+          h('details', {class: 'origin-fold'}, h('summary', {text: 'Check origin'}), h('p', {class: 'origin', text: 'Count check: answer claim vs. complete table'})))));
       const quoted = summary.claims.some(claim => (claim.support || []).some(s => (s.quote || '').includes(issue.phrase)));
-      ctx.addCaveat(h('span', {text: `${quoted ? 'The cited passage of the paper reports' : 'The answer states'} “${issue.phrase}”, but ${tableTitle(table)} of the same paper lists ${issue.distinct} models. The evidence does not settle which is right; confirm which models the figure covers before quoting it.`}));
-      const total = list ? list.children.length : checks.length + pendingIssues.length;
-      setCheckCount(body, total);
+      ctx.addCaveat(h('span', {text: `${quoted ? 'The cited passage of the paper reports' : 'The answer states'} “${issue.phrase}”, but ${tableTitle(table)} of the same paper lists ${issue.distinct} models. The evidence does not settle which is right; confirm which models the figure covers before quoting it.`}), table);
+      setCheckCount(body, checklist.children.length);
     };
 
-    /* ---- Sources view: one entry per paper, its passages beneath ---- */
+    /* ---- Sources: grouped by paper, cited passages first, other retrieved passages folded ---- */
     const statementCount = passage => [summary.claims, summary.limitation_support, insight?.implications]
       .flatMap(list => list || []).filter(item => item.chunk_ids?.includes(passage.chunk_id)).length;
+    const citedTotal = evidence.filter(p => cites.has(p.chunk_id)).length;
     paneSources.append(h('header', {class: 'pane-head'},
       h('h2', {class: 'pane-title', id: `a${number}-sources`, tabIndex: -1, text: 'Sources'}),
-      h('p', {class: 'pane-sub', text: evidence.length
-        ? `${plural(studies.length, 'paper')} · ${plural(evidence.length, 'passage')} retrieved · ${evidence.filter(p => cites.has(p.chunk_id)).length} cited in the answer`
-        : 'No passages were retrieved for this question.'})));
+      h('p', {class: 'pane-sub', text: evidence.length ? `${plural(studies.length, 'paper')} · ${plural(citedTotal, 'cited passage')}` : 'No passages were retrieved for this question.'})));
+    const settingOf = passage => (passage.table_cells || []).slice(1).map(c => c.text).find(text => text && !EM.parseNumber(text)) || null;
+    const sourceRow = index => {
+      const passage = evidence[index];
+      const count = statementCount(passage);
+      const where = passage.representation === 'linearized_table'
+        ? [(passage.caption || '').split(/[:.]/)[0].trim() || 'Table', passage.row_label, settingOf(passage)].filter(Boolean).join(' · ')
+        : sourceLocation(passage);
+      const open = h('button', {type: 'button', class: 'source-row', 'aria-label': `Open source ${index + 1}, ${citationSourceContext(passage)}`,
+        onclick: () => showEvidence(demo, number, index, open)},
+        h('span', {class: 'cite-num', text: String(index + 1)}),
+        h('span', {class: 'row-where'}, texText(h('span', {class: 'row-loc'}), where), h('span', {class: 'row-kind', text: kindOf(passage)})),
+        h('span', {class: `row-use ${count ? 'is-cited' : ''}`, text: count ? `Cited by ${plural(count, 'statement')}` : 'Retrieved, not cited'}));
+      open.dataset.passage = index;
+      return h('li', null, open);
+    };
     const orderedStudies = [...studies].sort((a, b) => (b.citations.length ? 1 : 0) - (a.citations.length ? 1 : 0));
     for (const study of orderedStudies) {
       const link = /^https?:\/\//.test(study.html_url || '') ? study.html_url : null;
-      const rows = study.passages.map(n => n - 1).map(index => {
-        const passage = evidence[index];
-        const count = statementCount(passage);
-        const open = h('button', {type: 'button', class: 'source-row', 'aria-label': `Inspect source ${index + 1}, ${citationSourceContext(passage)}`,
-          onclick: () => showEvidence(demo, number, index, open)},
-          h('span', {class: 'cite-num', text: String(index + 1)}),
-          h('span', {class: 'row-where'}, texText(h('span', {class: 'row-loc'}), whereOf(passage)), h('span', {class: 'row-kind', text: kindOf(passage)})),
-          h('span', {class: `row-use ${count ? 'is-cited' : ''}`, text: count ? `Cited by ${plural(count, 'statement')}` : 'Retrieved, not cited'}));
-        open.dataset.passage = index;
-        return h('li', null, open);
-      });
-      paneSources.append(h('article', {class: `source-paper${study.citations.length ? ' is-cited' : ''}`},
+      const indices = study.passages.map(n => n - 1);
+      const citedRows = indices.filter(i => statementCount(evidence[i]) > 0);
+      const otherRows = indices.filter(i => !citedRows.includes(i));
+      paneSources.append(h('article', {class: `source-paper${citedRows.length ? ' is-cited' : ''}`},
         h('header', {class: 'paper-head'},
           h('h3', {class: 'paper-name', text: study.title || 'Untitled source'}),
-          h('p', {class: 'paper-meta'}, study.arxiv_id ? h('span', {class: 'mono', text: `arXiv ${study.arxiv_id}`}) : null,
-            h('span', {class: `paper-use ${study.citations.length ? 'ok' : ''}`, text: study.citations.length ? `Cited (${plural(study.citations.length, 'passage')})` : 'Retrieved, not cited'}),
+          h('p', {class: 'paper-meta'}, study.arxiv_id ? h('span', {class: 'paper-id', text: `arXiv ${study.arxiv_id}`}) : null,
             link ? h('a', {href: link, target: '_blank', rel: 'noopener noreferrer'}, h('span', {text: 'Open paper'}), icon('external')) : null)),
-        h('ol', {class: 'source-rows'}, rows)));
+        citedRows.length ? h('ol', {class: 'source-rows'}, citedRows.map(sourceRow)) : null,
+        otherRows.length ? h('details', {class: 'fold other-sources'}, h('summary', {text: `Other retrieved passages (${otherRows.length})`}),
+          h('ol', {class: 'source-rows'}, otherRows.map(sourceRow))) : null));
     }
 
-    /* ---- Evidence view ---- */
-    paneEvidence.append(h('header', {class: 'pane-head'},
-      h('h2', {class: 'pane-title', id: `a${number}-evidence`, tabIndex: -1, text: 'Evidence'}),
-      h('p', {class: 'pane-sub', text: 'What each statement rests on: the exact quotes, the source tables, and every check still open.'})));
+    /* ---- Evidence: source tables first, then the comparison and the statements behind the answer ---- */
+    paneEvidence.append(h('header', {class: 'pane-head'}, h('h2', {class: 'pane-title', id: `a${number}-evidence`, tabIndex: -1, text: 'Evidence'})));
+    if (tables.length) {
+      paneEvidence.append(h('section', {class: 'ev-section block-numbers', id: `a${number}-numbers`, 'aria-labelledby': `a${number}-numbers-h`},
+        h('h2', {class: 'section-h', id: `a${number}-numbers-h`, tabIndex: -1, text: 'Source tables'}),
+        tables.map(table => renderEvidenceTable(table, ctx))));
+    }
+    const named = studies.length >= 2 ? EM.namedStudies(studies, ctx.question()) : [];
+    if (named.length >= 2) {
+      paneEvidence.append(h('section', {class: 'ev-section', id: `a${number}-compare`},
+        h('h2', {class: 'section-h', text: named.map(study => sectionTitle(study.title)).join(' and ')}), focusedComparison(named, studies, ctx)));
+    } else if (studies.length >= 2) {
+      paneEvidence.append(h('section', {class: 'ev-section', id: `a${number}-compare-all`},
+        h('h2', {class: 'section-h', text: 'What each paper covers'}), renderStudies(studies, ctx)));
+    }
     const quotesFor = item => {
       const quotes = (item.support || []).filter(s => s.quote);
       if (!quotes.length) return h('p', {class: 'quote-missing', text: 'Cited without a recorded quote. Read the passage to judge the support.'});
@@ -2387,67 +2428,38 @@
       ...(scoped || []).filter(item => item.kind !== 'coverage_gap' && (item.chunk_ids || []).length).map(c => [c, 'Limitation']),
       ...(insight?.implications || []).map(c => [c, 'Implication'])];
     if (statementItems.length) {
-      paneEvidence.append(h('section', {class: 'ev-section', id: `a${number}-claims`, 'aria-labelledby': `a${number}-claims-h`},
-        h('h2', {class: 'section-h', id: `a${number}-claims-h`, tabIndex: -1, text: 'Statements and their quotes'}),
+      paneEvidence.append(h('section', {class: 'ev-section', id: `a${number}-claims`},
+        h('h2', {class: 'section-h', text: 'Statements and their quotes'}),
         h('ol', {class: 'statements'}, statementItems.map(([item, label]) => h('li', {class: 'statement'},
           h('p', {class: 'statement-kind', text: label}), cited('p', item, demo, number, 'statement-text'), quotesFor(item))))));
     }
-    if (tables.length) {
-      paneEvidence.append(h('section', {class: 'ev-section block-numbers', id: `a${number}-numbers`, 'aria-labelledby': `a${number}-numbers-h`},
-        h('h2', {class: 'section-h', id: `a${number}-numbers-h`, tabIndex: -1, text: 'Source tables'}),
-        h('p', {class: 'section-note', text: 'Rebuilt cell by cell from each paper’s HTML. Values appear exactly as printed; select one to open where it came from.'}),
-        tables.map(table => renderEvidenceTable(table, ctx))));
-    }
-    if (studies.length >= 2 && named.length < 2) {
-      paneEvidence.append(h('section', {class: 'ev-section', id: `a${number}-compare-all`, 'aria-labelledby': `a${number}-compare-all-h`},
-        h('h2', {class: 'section-h', id: `a${number}-compare-all-h`, text: 'What each paper covers'}),
-        h('p', {class: 'section-note', text: 'What each paper’s retrieved evidence actually measures. Use it to see what can and cannot be compared.'}),
-        renderStudies(studies, ctx)));
-    }
-    const checklist = h('ol', {class: 'checklist'}, checks.map(item => h('li', null, h('span', {class: 'box', 'aria-hidden': 'true'}),
-      h('div', null, h('p', {text: item.text}), h('p', {class: 'origin', text: `From ${item.origin}`})))));
-    checklist.append(...pendingIssues);
-    paneEvidence.append(h('section', {class: 'ev-section', id: `a${number}-verify`, 'aria-labelledby': `a${number}-verify-h`},
-      h('h2', {class: 'section-h', id: `a${number}-verify-h`, tabIndex: -1, text: 'Checks before relying on this answer'}),
-      h('p', {class: 'section-note', text: 'What a person still needs to check. Each item comes from the answer’s own records.'}),
-      checklist,
-      h('div', {class: 'verify-foot'}, h('span', {class: `state ${reviewTone(demo)}`}, icon('shield'), h('span', {text: reviewText(demo)})),
-        h('button', {type: 'button', class: 'quiet-btn', onclick: () => tools.reveal('brief')}, h('span', {text: demo.library ? 'Record a review' : 'Save to record a review'})))));
-    if (pendingIssues.length) setCheckCount(body, checklist.children.length);
-
-    // Plain-language definitions (only when the answer carries a plain-language version).
     if (view?.status === 'available') {
       const definitions = h('details', {class: 'fold'}, h('summary', {text: 'Term definitions and plain-language details'}));
       for (const definition of view.definitions) {
         definitions.append(h('div', {class: 'definition'}, h('p', {class: 'term', text: definition.term}),
           definition.status === 'supported' ? cited('p', definition, demo, number) : h('p', {class: 'muted', text: `Definition unavailable: ${definition.reason}`})));
       }
-      if (!view.definitions.length) definitions.append(h('p', {class: 'muted', text: 'No supported term definitions supplied.'}));
-      definitions.append(h('p', {class: 'muted small', text: `${view.fixture ? 'Synthetic fixture demonstration. ' : ''}Meaning and uncertainty review pending. Only research findings are rewritten; interpretations, business actions, assumptions, limitations and source passages stay unchanged.`}));
+      definitions.append(h('p', {class: 'muted small', text: `${view.fixture ? 'Synthetic fixture demonstration. ' : ''}Only research findings are rewritten; source passages stay unchanged.`}));
       paneEvidence.append(h('section', {class: 'ev-section'}, definitions));
     }
-
-    /* Layer 4: developer diagnostics, last and folded. */
     const trust = [];
     if (isSynthesis(demo)) trust.push('Citation IDs and source quotes checked');
     if (summary.quality_review) trust.push('automated support and relevance review applied (model judgment)');
     if (result.provenance?.agentic) trust.push('each claim re-checked in code, then judged by a separate verification agent (model judgment)');
     if (trust.length) ctx.technical.push(`${trust.join('; ').replace(/^./, c => c.toUpperCase())}. Claim support has not been independently verified by a person.`);
     ctx.technical.push(provenanceLabel(demo));
-    const diagnostics = h('details', {class: 'diagnostics', id: `a${number}-diagnostics`},
+    paneEvidence.append(h('details', {class: 'diagnostics', id: `a${number}-diagnostics`},
       h('summary', null, icon('code'), h('span', {text: 'Developer diagnostics'})),
       h('div', {class: 'diag-body'},
         h('ul', {class: 'bullets'}, ctx.technical.map(text => h('li', {text}))),
         result.provenance?.agentic ? agentTraceBlock(result.provenance.agentic, number) : null,
         search?.candidates?.length ? h('details', {class: 'fold'}, h('summary', {text: `Papers examined on arXiv (${search.candidates.length})`}),
-          h('ul', {class: 'bullets'}, search.candidates.map(candidate => {
-            const safe = /^https?:\/\//.test(candidate.url || '');
-            return h('li', null, safe ? h('a', {href: candidate.url, target: '_blank', rel: 'noopener noreferrer', text: candidate.title || candidate.arxiv_id})
-              : h('span', {text: candidate.title || candidate.arxiv_id}), h('span', {class: 'muted', text: ` · ${candidate.arxiv_id} · ${candidate.status}`}));
-          })), h('p', {class: 'muted small', text: `Search used: ${search.query}`})) : null,
-        tools.diagnostics));
-    paneEvidence.append(diagnostics);
+          h('ul', {class: 'bullets'}, search.candidates.map(candidate => h('li', null, /^https?:\/\//.test(candidate.url || '')
+            ? h('a', {href: candidate.url, target: '_blank', rel: 'noopener noreferrer', text: candidate.title || candidate.arxiv_id})
+            : h('span', {text: candidate.title || candidate.arxiv_id}), h('span', {class: 'muted', text: ` · ${candidate.arxiv_id} · ${candidate.status}`}))))) : null,
+        tools.diagnostics)));
 
+    body.selectWorkspace = selectWorkspace;
     answer.append(body);
     return body;
   }
@@ -2530,7 +2542,7 @@
       const plainLabel = /draft/i.test(label) && tone === 'ok' ? 'Draft answer' : label;
       // Review status lives under the answer; above the question only material warnings remain.
       void plainLabel;
-      const chips = [demo.result?.provenance?.agentic ? h('span', {class: 'state warn', text: 'Multi-agent research · Experimental'}) : null,
+      const chips = [demo.result?.provenance?.agentic ? h('span', {class: 'mode-label', text: 'Multi-agent research · Experimental'}) : null,
       ].filter(Boolean);
       label2.replaceChildren(...chips);
       label2.hidden = !chips.length;
@@ -3304,7 +3316,7 @@
     $('#side-new').addEventListener('click', () => { if (!$('#new-research').hidden) $('#new-research').click(); else setView('home'); });
     $('#side-library').addEventListener('click', () => $('#library-open').click());
     $('#side-display').addEventListener('click', () => $('#prefs-open').click());
-    $('#side-theme').addEventListener('click', () => $('#theme-toggle').click());
+    document.getElementById('side-theme')?.addEventListener('click', () => $('#theme-toggle').click());
     const syncLibrary = () => { $('#side-library').hidden = $('#library-open').hidden; };
     new MutationObserver(syncNew).observe($('#new-research'), {attributes: true, attributeFilter: ['hidden']});
     new MutationObserver(syncLibrary).observe($('#library-open'), {attributes: true, attributeFilter: ['hidden']});

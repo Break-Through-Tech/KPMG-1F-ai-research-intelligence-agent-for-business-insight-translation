@@ -42,8 +42,7 @@
     </div>
     <div class="side-foot">
       <p id="side-mode" class="side-mode" role="status"></p>
-      <button id="side-display" class="side-item" type="button" title="Theme, text size and spacing"><span data-icon="type"></span><span class="side-label">Display</span></button>
-      <button id="side-theme" class="side-item" type="button" title="Switch theme"><span data-icon="moon"></span><span class="side-label">Theme</span></button>
+      <button id="side-display" class="side-item" type="button" title="Text size and spacing"><span data-icon="type"></span><span class="side-label">Display</span></button>
     </div>
   </aside>
   <div id="side-scrim" class="side-scrim" hidden></div>
@@ -54,7 +53,8 @@
     <nav id="view-tabs" class="view-tabs" role="tablist" aria-label="Answer views" hidden>
       <button id="tab-answer" class="view-tab" type="button" role="tab" aria-selected="true" data-tab="answer"><span data-icon="sparkle"></span><span>Answer</span></button>
       <button id="tab-sources" class="view-tab" type="button" role="tab" aria-selected="false" data-tab="sources"><span data-icon="layers"></span><span>Sources</span><span class="tab-count" id="tab-sources-count"></span></button>
-      <button id="tab-evidence" class="view-tab" type="button" role="tab" aria-selected="false" data-tab="evidence"><span data-icon="shield"></span><span>Evidence</span></button>
+      <button id="tab-evidence" class="view-tab" type="button" role="tab" aria-selected="false" data-tab="evidence"><span data-icon="table"></span><span>Evidence</span></button>
+      <button id="tab-workspace" class="view-tab" type="button" role="tab" aria-selected="false" data-tab="workspace"><span data-icon="shield"></span><span>Workspace</span></button>
     </nav>
     <p id="thread-title" class="thread-title" aria-hidden="true"></p>
     <div class="topbar-end">
@@ -167,7 +167,7 @@
                 <div id="explanation-seg"></div>
                 <p class="hint">Plain language rewrites research findings only, when available. Sources and business actions stay unchanged.</p>
               </div>
-              <div class="field">
+              <div class="field" hidden>
                 <span class="field-label" id="enter-label">Enter key</span>
                 <div id="enter-seg"></div>
                 <p id="entry-hint" class="hint"></p>
@@ -219,7 +219,7 @@
     <div class="sheet-head"><h2 id="prefs-heading">Display preferences</h2><button id="prefs-close" class="icon-btn" type="button" aria-label="Close display preferences"><span data-icon="x"></span></button></div>
     <div id="prefs-body"></div>
     <button id="prefs-reset" class="link-btn" type="button">Reset display preferences</button>
-    <p class="hint">Stored only in this browser when available. Reset returns to the light theme.</p>
+    <p class="hint">Stored only in this browser when available.</p>
     <p id="prefs-status" class="hint" role="status"></p>
   </dialog>
 

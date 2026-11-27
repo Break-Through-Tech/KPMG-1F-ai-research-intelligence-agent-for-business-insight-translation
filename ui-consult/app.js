@@ -417,6 +417,7 @@
   const isSynthesis = demo => demo.mode === 'indexed' || demo.mode === 'live-synthesis' || demo.result?.summary.generation_method === 'cited-synthesis-v1';
   const isReal = demo => demo.mode !== 'fixture';
   const runLabel = demo => {
+    if (demo.curated_preview) return 'Demo answer with examples added from the original sources';
     if (demo.library?.replayed) return 'Saved snapshot · No new research executed · Original provenance retained';
     if (isSynthesis(demo)) return 'LLM synthesis · Citation quotes checked · Not independently verified';
     const generation = demo.result?.provenance?.generation;
@@ -985,13 +986,12 @@
       const eligible = views.filter(view => view.eligible);
       const tableButton = h('button', {type: 'button', role: 'tab', class: 'seg-btn', onclick: () => setMode('table')}, icon('table'), h('span', {text: 'Table'}));
       tableButton.dataset.view = 'table';
-      const chartButton = h('button', {type: 'button', role: 'tab', class: 'seg-btn', disabled: !eligible.length,
-        title: eligible.length ? null : defaultView.why, onclick: () => setMode('chart')},
+      const chartButton = h('button', {type: 'button', role: 'tab', class: 'seg-btn', onclick: () => setMode('chart')},
         icon('chart'), h('span', {text: 'Chart'}), h('span', {class: 'tab-detail'}));
       chartButton.dataset.view = 'chart';
-      viewButtons = ctx.compact ? [] : [tableButton, chartButton];
+      viewButtons = ctx.compact || !eligible.length ? [] : [tableButton, chartButton];
       tabs.replaceChildren(...viewButtons);
-      tabs.hidden = Boolean(ctx.compact);
+      tabs.hidden = !viewButtons.length;
       menuList.replaceChildren(...eligible.map(view => {
         const button = h('button', {type: 'button', class: 'chart-menu-item', onclick: () => { menu.open = false; setMode(view.kind); menu.querySelector('summary').focus(); }},
           h('span', {class: 'chart-menu-name', text: view.label}), view.kind === defaultView.kind ? h('span', {class: 'seg-note', text: 'Suggested'}) : null);
@@ -1000,22 +1000,13 @@
       }));
       menu.hidden = eligible.length < 2;
     }
-    /* What the reader needs to know about the current view: a refusal stays visible (it is the
-       finding); the rationale, other views and uncharted columns sit behind one disclosure. */
     function renderAbout(current) {
-      const eligible = views.filter(view => view.eligible);
       chartReason.replaceChildren();
-      if (!eligible.length) {
-        chartReason.append(texText(h('p', {class: 'off'}), `Shown as a table: ${defaultView.why}`));
-        return;
-      }
+      if (current === 'table') return;
       const selected = views.find(view => view.kind === current);
-      const unavailable = views.filter(view => !view.eligible);
-      const details = h('details', {class: 'fold view-about'},
-        h('summary', {text: current === 'table' ? `Suggested chart: ${eligible.find(v => v.kind === defaultView.kind).label}` : 'About this chart'}));
-      details.append(texText(h('p'), current === 'table' || current === defaultView.kind ? defaultView.why : selected.reason));
+      const details = h('details', {class: 'fold view-about'}, h('summary', {text: 'About this chart'}));
+      details.append(texText(h('p'), current === defaultView.kind ? defaultView.why : selected.reason));
       if (plan.excluded.length) details.append(texText(h('p'), `Columns not charted: ${plan.excluded.map(e => `${e.header} (${e.reason})`).join('; ')}.`));
-      void unavailable; // charts that are not offered are simply not listed
       chartReason.append(details);
     }
     function renderTiles() {
@@ -1491,38 +1482,6 @@
         h('span', {class: 'legend-note', text: 'Each column has its own scale. Darker does not mean better: for some metrics lower is better (↓ in the label, where the paper gives one). Unshaded cells are text, empty, or not a plain number.'})));
   }
 
-  /* Question-focused comparison: when the question names two or more retrieved papers, show those papers
-     side by side with what the answer actually found from each (verbatim, cited), or say plainly that no
-     supported finding came from it. Other retrieved sources stay available, folded. */
-  function shortTitle(title) { const head = (title || 'Untitled source').split(':')[0].trim(); return head.length <= 40 ? head : `${head.slice(0, 38)}…`; }
-  function focusedComparison(named, studies, ctx) {
-    const result = ctx.demo.result;
-    const chunksOf = study => new Set((result.evidence || []).filter(p => (p.arxiv_id || p.title) === (study.arxiv_id || study.title)).map(p => p.chunk_id));
-    const findings = (result.summary.claims || []).filter(claim => claim.kind !== 'interpretation');
-    const reasons = result.summary.limitation_support || [];
-    const column = study => {
-      const chunks = chunksOf(study);
-      const own = list => list.filter(item => (item.chunk_ids || []).some(id => chunks.has(id)));
-      const found = own(findings), why = own(reasons);
-      const textCount = (result.evidence || []).filter(p => chunks.has(p.chunk_id) && p.representation !== 'linearized_table').length;
-      return h('section', {class: 'compare-col', 'aria-label': study.title},
-        h('h3', {class: 'compare-name', text: shortTitle(study.title)}),
-        h('p', {class: 'compare-full', text: study.title}),
-        h('p', {class: 'compare-retrieved', text: `Retrieved: ${[textCount ? `${textCount} text passage${textCount === 1 ? '' : 's'}` : null,
-          study.tables.length ? `${study.tables.length} table${study.tables.length === 1 ? '' : 's'}` : null].filter(Boolean).join(', ') || 'nothing'}.`}),
-        h('h4', {text: 'What the answer found'}),
-        found.length ? h('ul', {class: 'bullets'}, found.map(item => cited('li', item, ctx.demo, ctx.number)))
-          : h('p', {class: 'compare-missing'}, icon('alert'), h('span', {text: 'The answer states no finding from this paper.'})),
-        why.length ? h('div', null, h('h4', {text: 'Why it is missing or limited'}), h('ul', {class: 'bullets'}, why.map(item => cited('li', item, ctx.demo, ctx.number)))) : null);
-    };
-    const others = studies.filter(study => !named.includes(study));
-    return h('div', {class: 'compare-focus'},
-      h('p', {class: 'block-intro', text: `The question names ${named.length} papers. Each column shows only what the answer found from that paper, quoted from the cited evidence.`}),
-      h('div', {class: 'compare-cols'}, named.map(column)),
-      note('Findings are shown as reported; they are not placed on one scale or ranked against each other.', '', 'info'),
-      others.length ? h('details', {class: 'fold'}, h('summary', {text: `Other sources retrieved for this answer (${others.length})`}), renderStudies(others, ctx)) : null);
-  }
-
   /* ---------- Study comparison (never a shared scale across papers) ---------- */
   function renderStudies(studies, ctx) {
     const rows = studies.map(study => h('tr', null,
@@ -1966,6 +1925,7 @@
   }
   function provenanceLabel(demo) {
     if (window.MOCK_API === true) return 'Prototype mock data, not research output';
+    if (demo.curated_preview) return runLabel(demo);
     if (demo.library?.replayed) {
       const created = demo.library.version?.created_at ? ` from ${when(demo.library.version.created_at)}` : '';
       return `Saved research snapshot${created}, opened without a model call`;
@@ -1974,12 +1934,8 @@
     return isSynthesis(demo) ? 'Live research answer' : 'Saved research result';
   }
 
-  /* ---------- Brief rendering: one answer, three views (research-publication layout, 2026-11-26) ----------
-     Answer: the recorded lead and findings as prose, a chart beside the finding that cites its table,
-     requested implications, then one compact "Research notes" disclosure. Sources: grouped by paper.
-     Evidence: statements with their exact quotes, source tables, comparisons, every check and the
-     review, and developer diagnostics last. The page only arranges recorded fields: it never writes,
-     rewords or summarises research text, and every safeguard below is the same data as before. */
+  /* Answer shows the recorded findings. Sources lists the papers and passages. Evidence connects
+     statements to original quotes and tables. Workspace holds implications, notes, and review. */
   const plural = (n, one, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
   const paperKey = passage => passage.arxiv_id || passage.title || 'unknown';
   const sectionTitle = title => { const head = String(title || 'Untitled source').split(/\s[·:–—]\s|:\s/)[0].trim(); return head.length <= 64 ? head : `${head.slice(0, 62)}…`; };
@@ -2057,7 +2013,8 @@
         h('button', {type: 'button', class: 'paper-chip', title: lead[0].title, 'aria-label': `Sources: ${lead[0].title}. Open Sources for this answer.`,
           onclick: () => setTab('sources', {focus: true})}, icon('layers'), h('span', {text: sectionTitle(lead[0].title)})),
         lead.length > 1 ? h('span', {class: 'source-more', text: `+${plural(lead.length - 1, 'paper')}`}) : null,
-        h('span', {class: 'source-count', text: `${plural(evidence.length, 'passage')} retrieved`})));
+        h('span', {class: 'source-count', text: demo.curated_preview
+          ? `${plural(evidence.length, 'source passage')} · Demo with added examples` : `${plural(evidence.length, 'passage')} retrieved`})));
     }
 
     /* ---- The answer ---- */
@@ -2208,7 +2165,8 @@
       h('details', {class: 'export-menu'},
         h('summary', {class: 'act-btn'}, icon('download'), h('span', {text: 'Export'})),
         h('div', {class: 'export-pop'}, exportControls(demo, number), snapshotButton(demo),
-          h('p', {class: 'export-note', text: `Exports contain the answer as generated and its sources, not the review record. Current review: ${review.short}.`}))),
+          h('p', {class: 'export-note', text: demo.curated_preview ? 'The export includes the examples added for this demo.'
+            : `Exports contain the answer as generated and its sources, not the review record. Current review: ${review.short}.`}))),
       tools.listenButton,
       evidence.length ? h('button', {type: 'button', class: 'act-btn', onclick: () => setTab('sources', {focus: true})}, icon('layers'), h('span', {text: 'Sources'})) : null,
       insight?.implications?.length ? h('button', {type: 'button', class: 'act-btn act-quiet', onclick: () => openWorkspace('business')}, icon('bulb'), h('span', {text: 'Business insight'})) : null,
@@ -2398,41 +2356,67 @@
           h('ol', {class: 'source-rows'}, otherRows.map(sourceRow))) : null));
     }
 
-    /* ---- Evidence: source tables first, then the comparison and the statements behind the answer ---- */
-    paneEvidence.append(h('header', {class: 'pane-head'}, h('h2', {class: 'pane-title', id: `a${number}-evidence`, tabIndex: -1, text: 'Evidence'})));
-    if (tables.length) {
-      paneEvidence.append(h('section', {class: 'ev-section block-numbers', id: `a${number}-numbers`, 'aria-labelledby': `a${number}-numbers-h`},
-        h('h2', {class: 'section-h', id: `a${number}-numbers-h`, tabIndex: -1, text: 'Source tables'}),
-        tables.map(table => renderEvidenceTable(table, ctx))));
-    }
-    const named = studies.length >= 2 ? EM.namedStudies(studies, ctx.question()) : [];
-    if (named.length >= 2) {
-      paneEvidence.append(h('section', {class: 'ev-section', id: `a${number}-compare`},
-        h('h2', {class: 'section-h', text: named.map(study => sectionTitle(study.title)).join(' and ')}), focusedComparison(named, studies, ctx)));
-    } else if (studies.length >= 2) {
-      paneEvidence.append(h('section', {class: 'ev-section', id: `a${number}-compare-all`},
-        h('h2', {class: 'section-h', text: 'What each paper covers'}), renderStudies(studies, ctx)));
-    }
-    const quotesFor = item => {
+    /* ---- Evidence: keep statements beside their source quotes, and show each statement once. ---- */
+    const statementRow = ([item, label]) => {
       const quotes = (item.support || []).filter(s => s.quote);
-      if (!quotes.length) return h('p', {class: 'quote-missing', text: 'Cited without a recorded quote. Read the passage to judge the support.'});
-      return quotes.map(s => {
+      const figures = quotes.map(s => {
         const index = evidence.findIndex(p => p.chunk_id === s.chunk_id);
         const passage = evidence[index];
         const open = passage ? h('button', {type: 'button', class: 'quote-src', onclick: () => showEvidence(demo, number, index, open, item)},
           h('span', {class: 'cite-num', text: String(index + 1)}), h('span', {text: `${sectionTitle(passage.title)} · ${whereOf(passage)}`})) : null;
         return h('figure', {class: 'quote'}, h('blockquote', {math: s.quote}), open && h('figcaption', null, open));
       });
+      return h('li', {class: 'statement'}, h('p', {class: 'statement-kind', text: label}),
+        cited('p', item, demo, number, 'statement-text'),
+        quotes.length ? h('details', {class: 'fold statement-quotes'},
+          h('summary', {text: quotes.length === 1 ? 'Source quote' : plural(quotes.length, 'source quote')}), figures)
+          : h('p', {class: 'quote-missing', text: item.chunk_ids?.some(id => cites.has(id))
+            ? 'No quote recorded. Use the citation to read the passage.' : 'No source quote recorded.'}));
     };
-    const statementItems = [...claims.map(c => [c, 'Finding']), ...interpretations.map(c => [c, 'Interpretation']),
-      ...(scoped || []).filter(item => item.kind !== 'coverage_gap' && (item.chunk_ids || []).length).map(c => [c, 'Limitation']),
+    const named = studies.length >= 2 ? EM.namedStudies(studies, ctx.question()) : [];
+    const comparedPapers = named.length >= 2 ? named : citedPapers.length >= 2 ? citedPapers : [];
+    const comparing = comparedPapers.length >= 2;
+    const limits = comparing ? summary.limitation_support : scoped;
+    const statementItems = [...claims.map(item => [item, 'Finding']), ...interpretations.map(item => [item, 'Interpretation']),
+      ...(limits || []).filter(item => (comparing || item.kind !== 'coverage_gap') && item.chunk_ids?.length).map(item => [item, 'Limitation']),
       ...(insight?.implications || []).map(c => [c, 'Implication'])];
-    if (statementItems.length) {
-      paneEvidence.append(h('section', {class: 'ev-section', id: `a${number}-claims`},
-        h('h2', {class: 'section-h', text: 'Statements and their quotes'}),
-        h('ol', {class: 'statements'}, statementItems.map(([item, label]) => h('li', {class: 'statement'},
-          h('p', {class: 'statement-kind', text: label}), cited('p', item, demo, number, 'statement-text'), quotesFor(item))))));
+    const assigned = new Set();
+    paneEvidence.append(h('header', {class: 'pane-head'}, h('h2', {class: 'pane-title', id: `a${number}-evidence`, tabIndex: -1, text: 'Evidence'})));
+    if (comparing) {
+      const columns = comparedPapers.map(study => {
+        const chunks = new Set(study.passages.map(n => evidence[n - 1].chunk_id));
+        const rows = statementItems.filter(([item, label]) => (label === 'Finding' || label === 'Limitation') &&
+          item.chunk_ids?.length && item.chunk_ids.every(id => chunks.has(id)));
+        rows.forEach(row => assigned.add(row));
+        const hasReference = statementItems.some(([item]) => item.chunk_ids?.some(id => chunks.has(id)));
+        return h('section', {class: 'compare-col', 'aria-label': study.title},
+          h('header', {class: 'compare-head'},
+            h('h3', {class: 'compare-name', title: study.title, text: sectionTitle(study.title)}),
+            h('p', {class: 'compare-meta', text: `${plural(study.passages.length, 'passage')} retrieved`})),
+          rows.length ? h('ol', {class: 'statements'}, rows.map(statementRow))
+            : h('p', {class: 'compare-missing'}, hasReference
+              ? h('button', {type: 'button', class: 'inline-link', text: 'See supporting statements',
+                onclick: () => openTo(`#a${number}-claims`)}) : 'No cited statement from this paper.'));
+      });
+      paneEvidence.append(h('section', {class: 'ev-section', id: `a${number}-compare`},
+        h('h2', {class: 'section-h', text: 'Evidence by paper'}), h('div', {class: 'compare-cols'}, columns)));
     }
+    const remaining = statementItems.filter(row => !assigned.has(row));
+    const supporting = remaining.length ? h('section', {class: 'ev-section', id: `a${number}-claims`},
+      h('h2', {class: 'section-h', tabIndex: -1, text: 'Supporting statements'}),
+      h('ol', {class: 'statements'}, remaining.map(statementRow))) : null;
+    if (comparing && supporting) paneEvidence.append(supporting);
+    if (tables.length) {
+      paneEvidence.append(h('section', {class: 'ev-section block-numbers', id: `a${number}-numbers`, 'aria-labelledby': `a${number}-numbers-h`},
+        h('h2', {class: 'section-h', id: `a${number}-numbers-h`, tabIndex: -1, text: 'Source tables'}),
+        tables.map(table => renderEvidenceTable(table, ctx))));
+    }
+    if (!comparing && studies.length >= 2) {
+      paneEvidence.append(h('section', {class: 'ev-section', id: `a${number}-compare-all`},
+        h('details', {class: 'fold'}, h('summary', {text: 'What the retrieved papers cover'}), renderStudies(studies, ctx))));
+    }
+    if (!comparing && supporting) paneEvidence.append(supporting);
+    if (!evidence.length && !supporting) paneEvidence.append(h('p', {class: 'muted', text: 'No source evidence was recorded for this answer.'}));
     if (view?.status === 'available') {
       const definitions = h('details', {class: 'fold'}, h('summary', {text: 'Term definitions and plain-language details'}));
       for (const definition of view.definitions) {
@@ -2448,8 +2432,8 @@
     if (result.provenance?.agentic) trust.push('each claim re-checked in code, then judged by a separate verification agent (model judgment)');
     if (trust.length) ctx.technical.push(`${trust.join('; ').replace(/^./, c => c.toUpperCase())}. Claim support has not been independently verified by a person.`);
     ctx.technical.push(provenanceLabel(demo));
-    paneEvidence.append(h('details', {class: 'diagnostics', id: `a${number}-diagnostics`},
-      h('summary', null, icon('code'), h('span', {text: 'Developer diagnostics'})),
+    notesPanel.append(h('details', {class: 'fold diagnostics', id: `a${number}-diagnostics`},
+      h('summary', {text: 'Run details'}),
       h('div', {class: 'diag-body'},
         h('ul', {class: 'bullets'}, ctx.technical.map(text => h('li', {text}))),
         result.provenance?.agentic ? agentTraceBlock(result.provenance.agentic, number) : null,
@@ -2534,7 +2518,7 @@
     const seconds = demo.result?.provenance?.timings_seconds?.total;
     const turn = answer.closest('.turn');
     const label2 = $('.question-label', turn);
-    const runDetails = [demo.library?.replayed ? 'Saved snapshot: no new research was run to show this answer.' : null,
+    const runDetails = [demo.curated_preview ? runLabel(demo) : demo.library?.replayed ? 'Saved snapshot: no new research was run to show this answer.' : null,
       Number.isFinite(seconds) ? `Research took ${seconds.toFixed(1)} s.` : null,
       demo.mode === 'indexed' ? (demo.history_policy === 'server_owned_bounded_intent_only' ? 'Indexed research, bounded conversation.' : 'Indexed research, independent query.') : null,
       demo.result?.provenance?.arxiv_search ? 'arXiv fallback search was used.' : null].filter(Boolean);

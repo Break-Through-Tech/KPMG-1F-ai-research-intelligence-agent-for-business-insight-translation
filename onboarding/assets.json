@@ -130,8 +130,8 @@
     }
   },
   "frontend": {
-    "ui-consult/design/merge-with-codex/app.js": "a978a6fb794fe4e532da9c8b8ab4534ecc06106f0b6c3a339ceb5091b65839c6",
-    "ui-consult/design/merge-with-codex/consult.css": "190e5b04a6c8877985bb8dc93a2845c64f9d3bfebbc64d0d83dc7443df25bab2",
+    "ui-consult/design/merge-with-codex/app.js": "2bccd49804d1803f1a7925032b8cfadaf39bc0bffe54d1aa2de64529c8e1ee07",
+    "ui-consult/design/merge-with-codex/consult.css": "9e18f121d8235c4aa8e12c17c185304d2c682d8d83b3af3d6fe5835392e8d230",
     "ui-consult/design/merge-with-codex/index.html": "1fff3ac4a0063bba40afda1075c26d29f7c3f391f1d7a7a1a2527bcc3ce8c792",
     "ui-consult/design/merge-with-codex/mock-api.js": "dd6d469be53c6b59eca017dd1d841849cba32c609d49fc529999755a50df40c7",
     "ui-consult/design/merge-with-codex/serve.py": "102f32391cc5dcf9cf2716d4cadca0ef20fffeabab680206d7cff2ce800ac94c",

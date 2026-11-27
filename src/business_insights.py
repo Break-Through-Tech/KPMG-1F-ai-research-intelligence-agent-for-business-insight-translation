@@ -44,14 +44,45 @@ APPLIED_QUESTION = re.compile(
     r'which\b[^?]*\b(?:decisions?|questions follow)\b|(?:should|can|could)\b)', re.I,
 )
 BUSINESS_TERM = re.compile(
-    r'\b(?:invoice|staffing|procurement|routing|handoffs|workflow|payback|'
+    r'\b(?:invoice|staffing|procurement|routing|model routers?|route (?:AI )?models?|handoffs|workflow|payback|'
     r'maintenance|audit|release[- ]review|brief review|warehouse|grant enquiries)\b', re.I,
 )
+BUSINESS_INTENT = re.compile(
+    r'\b(?:business (?:insights?|implications?|case|value|opportunit(?:y|ies)|risks?)|'
+    r'(?:operational|practical) implications?|(?:how|what) (?:can|could|should) '
+    r'(?:our|a|the) (?:firm|company|team|business)\b|'
+    r'payback|return on investment|ROI)\b', re.I,
+)
 EXPLICIT_INDUSTRY = re.compile(
-    r'^(?:industry:\s*([^,;?]+)[,;]\s*|(?:in|for) '
-    r'(banking|insurance|retail|healthcare|manufacturing|education|logistics|energy)\s*,\s*)',
+    r'\bindustry\s*:\s*([^,;?.\n]+)|\b(?:in|for|across)\s+(?:the\s+)?'
+    r'(financial services|banking|insurance|retail|healthcare|manufacturing|education|logistics|energy)\b',
     re.I,
 )
+RESEARCH_ONLY = re.compile(r'\b(?:research only|academic only|'
+                           r'(?:no|without)\s+(?:any\s+)?business (?:insights?|implications?|recommendations?))\b', re.I)
+
+
+def application_signals(question):
+    industry = EXPLICIT_INDUSTRY.search(question)
+    explicit_business = bool(BUSINESS_INTENT.search(question))
+    # Remove only a leading industry qualifier, preserving mid-question workflow wording.
+    subject = question[industry.end():].lstrip(' ,;') if industry and industry.start() == 0 else question
+    application = next((s for s in reversed(re.split(r'(?<=[.!?])\s+', subject))
+                        if (APPLIED_QUESTION.match(s) or BUSINESS_INTENT.search(s))
+                        and (APPLICATION.search(s) or BUSINESS_TERM.search(s))), '')
+    return industry, explicit_business, application
+
+
+def automatic_business_context(question):
+    """Conservative eligibility for an automatic call after a live answer is saved."""
+    question = ' '.join(question.split())
+    industry, explicit_business, application = application_signals(question)
+    if RESEARCH_ONLY.search(question) or not (explicit_business or (industry and application)):
+        return None
+    try:
+        return derive_business_context(question, {})
+    except ValueError:
+        return None
 
 
 def derive_business_context(question, supplied):
@@ -66,13 +97,9 @@ def derive_business_context(question, supplied):
     if all(fields.values()):
         return business_context(fields)
     question = ' '.join(question.split())
-    industry = EXPLICIT_INDUSTRY.match(question)
-    bare = question[industry.end():] if industry else question
-    applied_question = next(
-        (sentence for sentence in reversed(re.split(r'(?<=[.!?])\s+', bare))
-         if APPLIED_QUESTION.match(sentence) and (APPLICATION.search(sentence) or BUSINESS_TERM.search(sentence))),
-        '',
-    )
+    industry, explicit_business, applied_question = application_signals(question)
+    if not applied_question and (industry or explicit_business) and BUSINESS_TERM.search(question):
+        applied_question = question
     if not fields['workflow']:
         match = APPLICATION.search(applied_question)
         clause = (match[1] if match else applied_question).strip(' ?.\t')

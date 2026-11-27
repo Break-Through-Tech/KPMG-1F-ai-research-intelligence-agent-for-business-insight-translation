@@ -1969,7 +1969,7 @@
 
   let businessTranslationEnabled = false;
 
-  function renderBusinessForm(demo, onTranslated) {
+  function renderBusinessForm(demo, answer, businessStatus, onTranslated, onCustomize) {
     const saved = demo.library;
     const previous = demo.result.provenance?.business_translation?.context || {};
     const fields = {
@@ -1981,34 +1981,53 @@
       h('summary', {text: 'Customize'}),
       ...[['industry', 'Industry'], ['workflow', 'Business Workflow'], ['decision', 'Decision']]
         .map(([name, label]) => h('label', {class: 'field'}, h('span', {text: label}), fields[name])));
-    const status = h('p', {class: 'section-note', role: 'status'});
-    const send = h('button', {type: 'submit', class: 'act-btn', text: 'Generate business insights'});
-    const form = h('form', {class: 'review-form', onsubmit: async event => {
-      event.preventDefault();
-      if (send.disabled) return;
-      send.disabled = true;
-      status.textContent = 'Generating from the saved findings…';
+    const send = h('button', {type: 'submit', class: 'act-btn', 'data-business-trigger': '',
+      text: demo.result.business_insight ? 'Generate another interpretation' : 'Generate business insights'});
+    const start = async (automatic = false) => {
+      if (answer.businessPending) return;
+      answer.businessPending = true;
+      const updateStatus = message => {
+        businessStatus.hidden = !message;
+        businessStatus.textContent = message;
+      };
+      const disable = value => {
+        for (const button of answer.querySelectorAll('[data-business-trigger]')) button.disabled = value;
+      };
+      const current = () => form.isConnected &&
+        answer.closest('.turn')?.demoState?.demo.library?.version?.id === saved.version.id;
+      disable(true);
+      updateStatus('Generating business insights from the saved findings…');
       try {
+        const context = automatic ? {} : Object.fromEntries(
+          Object.entries(fields).map(([key, input]) => [key, input.value]));
         const response = await fetch('/api/business', {method: 'POST', headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({brief_id: saved.brief.id, expected_version: saved.version.id,
-            fingerprint: demo.result.review_fingerprint,
-            context: Object.fromEntries(Object.entries(fields).map(([key, input]) => [key, input.value]))}),
+            fingerprint: demo.result.review_fingerprint, context, automatic}),
           signal: AbortSignal.timeout(180000)});
         const updated = await response.json();
         if (!response.ok) {
-          if (response.status === 400 && updated.error?.startsWith('Add a business workflow')) {
+          if (!automatic && current() && response.status === 400 && updated.error?.startsWith('Add a business workflow')) {
+            onCustomize();
             customize.open = true;
             fields.workflow.focus();
           }
           throw new Error(updated.error || 'Business translation failed.');
         }
-        if (form.isConnected) onTranslated(updated);
+        if (current()) onTranslated(updated);
       } catch (error) {
-        status.textContent = error.name === 'TimeoutError'
+        updateStatus(error.name === 'TimeoutError'
           ? 'Reload the saved answer before retrying. The translation may already have been saved.'
-          : error.message || 'Business translation failed. Your saved research is available.';
-      } finally { send.disabled = false; }
-    }}, h('p', {class: 'section-note', text: 'Uses the saved question and findings. Use only public research and non-confidential context.'}), customize, send, status);
+          : error.message || 'Business translation failed. Your saved research is available.');
+      } finally {
+        answer.businessPending = false;
+        disable(false);
+      }
+    };
+    const form = h('form', {class: 'review-form', onsubmit: event => {
+      event.preventDefault();
+      void start();
+    }}, h('p', {class: 'section-note', text: 'Uses the saved question and findings. Use only public research and non-confidential context.'}), customize, send);
+    form.startBusiness = start;
     return form;
   }
 
@@ -2041,15 +2060,15 @@
     const eligibleBusiness = businessTranslationEnabled && demo.library?.version?.id &&
       ['full', 'partial'].includes(summary.quality_review?.coverage) &&
       summary.claims?.some(claim => !claim.kind || claim.kind === 'finding');
-    const businessForm = eligibleBusiness ? renderBusinessForm(demo, updated => {
+    const businessStatus = h('p', {class: 'section-note', role: 'status', hidden: true});
+    const businessForm = eligibleBusiness ? renderBusinessForm(demo, answer, businessStatus, updated => {
       ResearchSpeech.stopAll();
+      const selected = answer.querySelector('.ws-tab[aria-selected="true"]')?.getAttribute('aria-controls');
       renderDemo(updated, number, answer);
       loadRecentBriefs();
-      if (answer.closest('.turn') === activeTurn && currentView === 'thread') {
-        setTab('workspace', {scroll: false});
-        answer.querySelector('.brief')?.selectWorkspace?.('business', true);
-      }
-    }) : null;
+      if (selected) answer.querySelector('.brief')?.selectWorkspace?.(selected.split('-').at(-1));
+    }, () => openWorkspace('business')) : null;
+    answer.startAutomaticBusiness = businessForm ? () => businessForm.startBusiness(true) : null;
     /* Answer caveats: only what is specifically missing or in conflict, said once, near the answer. */
     const asides = h('div', {class: 'answer-asides'});
     const aside = (content, tone = 'warn') => {
@@ -2153,10 +2172,6 @@
       notes.other.push(...numberChecks);
     }
     if (demo.error && !['business', 'regulatory'].includes(stage)) aside(demo.error.message || String(demo.error), 'bad');
-    if (stage === 'business') {
-      aside('Business implications could not be generated. The research answer above is unaffected.');
-      notes.other.push(`Business translation: ${demo.error.message || 'failed'}`);
-    }
     if (stage === 'regulatory') {
       aside('The risk and compliance assessment did not complete. No regulatory conclusion exists; the research answer is unaffected.');
       notes.other.push(`Risk & compliance: ${demo.error.message || 'failed'}`);
@@ -2212,6 +2227,44 @@
       for (const limit of insight.limitations || []) notes.business.push({text: limit, label: 'Limit'});
     }
 
+    /* Business is a separate stage, rendered in the answer as soon as it is available. */
+    const businessSection = h('section', {class: 'answer-business', 'aria-label': 'Business insights'});
+    if (insight || stage === 'business') {
+      businessSection.append(h('h2', {class: 'pane-title', text: 'Business insights'}));
+    }
+    businessSection.append(businessStatus);
+    if (stage === 'business') {
+      businessSection.append(h('p', {class: 'aside-line warn', role: 'status', text: demo.error.message}));
+    }
+    if (insight) {
+      const panel = businessSection;
+      if (insight.industry !== 'Industry unspecified') {
+        panel.append(h('p', {class: 'section-note', text: insight.industry}));
+      }
+      if (result.provenance?.agentic) {
+        const dropped = (result.provenance.agentic.business_screening || []).filter(item => item.status === 'removed').length;
+        panel.append(h('p', {class: 'aside-line warn'}, icon('alert'), h('span', {text: `Drafted by the business insight agent and not checked by the verification agent or a person. ${plural(dropped, 'unsupported statement')} ${dropped === 1 ? 'was' : 'were'} withheld.`})));
+      }
+      if (!insight.implications.length) panel.append(h('p', {class: 'muted', text: 'No supported business implications.'}));
+      const more = h('details', {class: 'fold more-insights'}, h('summary', {text: `More interpretations (${Math.max(0, insight.implications.length - 1)})`}));
+      insight.implications.forEach((implication, i) => {
+        (i ? more : panel).append(h('article', {class: 'insight-card'},
+          h('div', {class: 'insight-main'}, h('h3', {class: 'ws-h', text: 'Interpretation'}), cited('p', implication, demo, number, 'insight-text')),
+          implication.suggested_action ? h('div', {class: 'insight-action'}, h('h3', {class: 'ws-h', text: 'Suggested action'}), h('p', {math: implication.suggested_action})) : null,
+          implication.assumptions?.length ? h('details', {class: 'fold insight-assumptions'}, h('summary', {text: `Assumptions (${implication.assumptions.length})`}), bullets(implication.assumptions)) : null));
+      });
+      if (insight.implications.length > 1) panel.append(more);
+      const caveats = [...(insight.risks || []), ...(insight.limitations || [])];
+      if (caveats.length) {
+        panel.append(h('details', {class: 'fold'}, h('summary', {text: 'Risks and limitations'}), bullets(caveats)));
+      }
+      if (businessForm) {
+        panel.append(h('button', {type: 'button', class: 'quiet-btn ws-jump', onclick: () => openWorkspace('business'),
+          text: 'Customize in Workspace'}));
+      }
+    }
+    paneAnswer.append(businessSection);
+
     /* ---- Actions right below the response ---- */
     const review = humanReview(demo);
     const quoteChecked = isSynthesis(demo) || Boolean(summary.support_check);
@@ -2226,10 +2279,9 @@
             : `Exports contain the answer as generated and its sources, not the review record. Current review: ${review.short}.`}))),
       tools.listenButton,
       evidence.length ? h('button', {type: 'button', class: 'act-btn', onclick: () => setTab('sources', {focus: true})}, icon('layers'), h('span', {text: 'Sources'})) : null,
-      insight?.implications?.length ? h('button', {type: 'button', class: 'act-btn act-quiet', onclick: () => openWorkspace('business')}, icon('bulb'), h('span', {text: 'Business insight'})) : businessForm
-        ? h('button', {type: 'button', class: 'act-btn act-quiet', onclick: () => {
-          openWorkspace('business'); businessForm.requestSubmit();
-        }}, icon('bulb'), h('span', {text: 'Generate business insights'})) : null,
+      businessForm && !insight
+        ? h('button', {type: 'button', class: 'act-btn act-quiet', 'data-business-trigger': '',
+          onclick: () => businessForm.requestSubmit()}, icon('bulb'), h('span', {text: 'Generate business insights'})) : null,
       view?.status === 'available' && claimNodes.length ? h('div', {class: 'act-switch'}, h('span', {id: `a${number}-explain-label`, class: 'sr-only', text: 'Explanation style'}), explanationSwitch(`a${number}-explain-label`)) : null);
     paneAnswer.append(actions, tools.listenPanel);
 
@@ -2269,28 +2321,10 @@
     });
     paneWorkspace.append(h('header', {class: 'pane-head'}, h('h2', {class: 'pane-title', id: `a${number}-workspace`, tabIndex: -1, text: 'Workspace'})), wsTabs, wsBody);
 
-    // Business insight: one interpretation tied to the industry and its cited finding; the action beside it.
-    const businessPanel = insight || businessForm ? wsSection('business', 'Business insight') : null;
-    if (demo.error?.stage === 'business' && businessPanel) {
-      businessPanel.append(h('p', {class: 'aside-line warn', role: 'status', text: demo.error.message}));
-    }
+    const businessPanel = insight || businessForm || stage === 'business' ? wsSection('business', 'Business insight') : null;
     if (businessForm) businessPanel.append(businessForm);
     if (insight) {
       const panel = businessPanel;
-      panel.append(h('p', {class: 'ws-kicker', text: `Industry: ${insight.industry} · an interpretation for business use, not something the paper measured`}));
-      if (result.provenance?.agentic) {
-        const dropped = (result.provenance.agentic.business_screening || []).filter(item => item.status === 'removed').length;
-        panel.append(h('p', {class: 'aside-line warn'}, icon('alert'), h('span', {text: `Drafted by the business insight agent and not checked by the verification agent or a person. ${plural(dropped, 'unsupported statement')} ${dropped === 1 ? 'was' : 'were'} withheld.`})));
-      }
-      if (!insight.implications.length) panel.append(h('p', {class: 'muted', text: 'No supported business implications.'}));
-      const more = h('details', {class: 'fold more-insights'}, h('summary', {text: `More interpretations (${Math.max(0, insight.implications.length - 1)})`}));
-      insight.implications.forEach((implication, i) => {
-        (i ? more : panel).append(h('article', {class: 'insight-card'},
-          h('div', {class: 'insight-main'}, h('h3', {class: 'ws-h', text: 'Interpretation'}), cited('p', implication, demo, number, 'insight-text')),
-          implication.suggested_action ? h('div', {class: 'insight-action'}, h('h3', {class: 'ws-h', text: 'Suggested action'}), h('p', {math: implication.suggested_action})) : null,
-          implication.assumptions?.length ? h('details', {class: 'fold insight-assumptions'}, h('summary', {text: `Assumptions (${implication.assumptions.length})`}), bullets(implication.assumptions)) : null));
-      });
-      if (insight.implications.length > 1) panel.append(more);
       const checkpoint = result.regulatory_checkpoint;
       if (checkpoint) {
         const assessed = checkpoint.status === 'assessed';
@@ -3017,6 +3051,7 @@
         throw new Error('Research execution failed.');
       }
       renderDemo(demo, number, answer);
+      if (demo.business_auto === true) void answer.startAutomaticBusiness?.();
       if (agentic && demo.agentic_charts) chartPreview = startChartPreview(turn, query, number, demo.agentic_charts);
       settleChartPreview(chartPreview, {kind: demo.result?.summary?.status === 'ok' ? 'answered' : 'insufficient', demo});
       if (demo.library) loadRecentBriefs();

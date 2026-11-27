@@ -956,6 +956,10 @@ body.side-collapsed .side-mode { justify-content: center; }
 .ws-kicker { color: var(--muted); font-size: var(--fs-xs); }
 .ws-group .notes-list { padding-left: 1.1em; }
 .ws-jump { justify-self: start; }
+.answer-business { display: grid; gap: var(--s3); container-type: inline-size; margin-block: var(--s5); }
+.answer-business:not(:has(> :not([hidden]))) { display: none; }
+.answer-business > .section-note { margin: 0; }
+.answer-business .pane-title { margin: 0; }
 .insight-card { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
 .insight-main, .insight-action { padding: var(--s5); }
 .insight-action { border-left: 1px solid var(--border); }

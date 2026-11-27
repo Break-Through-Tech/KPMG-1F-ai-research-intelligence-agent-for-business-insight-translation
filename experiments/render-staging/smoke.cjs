@@ -1,13 +1,15 @@
-/* node smoke.cjs <python> <image-context> <empty-state-dir> <playwright> <chrome> */
+/* node smoke.cjs <python> <image-context> <empty-state-dir> <playwright> <chrome> [--business-intent] */
 const assert = require('node:assert/strict');
 const {spawn} = require('node:child_process');
 const {createInterface} = require('node:readline');
 const path = require('node:path');
 const [python, image, state, playwright, executablePath] = process.argv.slice(2);
+const businessIntent = process.argv.includes('--business-intent');
 const {chromium} = require(playwright);
 
 async function launch() {
-  const child = spawn(python, ['-B', path.join(__dirname, 'smoke_server.py'), image, state],
+  const child = spawn(python, ['-B', path.join(__dirname, 'smoke_server.py'), image, state,
+    ...(businessIntent ? ['--business-intent'] : [])],
     {env: {...process.env, OMP_NUM_THREADS: '1', MKL_NUM_THREADS: '1', OPENBLAS_NUM_THREADS: '1',
       HF_HUB_OFFLINE: '1', TRANSFORMERS_OFFLINE: '1', HF_HUB_DISABLE_PROGRESS_BARS: '1'},
       stdio: ['ignore', 'pipe', 'inherit']});
@@ -26,6 +28,81 @@ async function launch() {
   } catch (error) {
     child.kill();
     throw error;
+  }
+}
+
+async function smokeBusiness() {
+  const service = await launch();
+  let browser;
+  try {
+    const {origin} = service;
+    browser = await chromium.launch({executablePath, headless: true});
+    const context = await browser.newContext({viewport: {width: 1440, height: 960},
+      httpCredentials: {username: 'reviewer', password: 'local-fixture-only-not-a-secret', origin}, reducedMotion: 'reduce'});
+    const page = await context.newPage();
+    page.setDefaultTimeout(25000);
+    const errors = [];
+    page.on('pageerror', error => errors.push(error.message));
+    const businessRequests = [];
+    page.on('request', request => {
+      if (request.url() === origin + '/api/business') businessRequests.push(request.postDataJSON());
+    });
+    const responseFor = route => page.waitForResponse(response => response.url() === origin + '/api/' + route);
+    const ready = responseFor('config');
+    await page.goto(origin);
+    assert.equal((await (await ready).json()).business_translation, true);
+
+    const ask = async question => {
+      await page.locator('#query').fill(question);
+      const response = responseFor('research');
+      await page.locator('#composer button[type=submit]').click();
+      const envelope = await (await response).json();
+      assert.equal(envelope.result?.summary?.status, 'ok', JSON.stringify(envelope.error));
+      assert.ok(envelope.library.version.id);
+      return envelope;
+    };
+    const finding = page.getByText(/35–46% to 68–78%/);
+    const appliedResponse = responseFor('business');
+    const applied = await ask('What are the business implications of the CU-DPO accuracy results for AI model routing in financial services?');
+    assert.equal(applied.business_auto, true);
+    const panel = page.locator('.answer-business').last();
+    await finding.first().waitFor();
+    await panel.getByText(/Generating business insights/).waitFor();
+    assert.equal(await page.locator('.turn').last().getByRole('button', {name: 'Generate business insights', exact: true}).first().isDisabled(), true);
+    const translated = await (await appliedResponse).json();
+    assert.equal(translated.result.business_insight.industry, 'financial services');
+    assert.equal(translated.result.provenance.business_translation.generation_kind, 'fixture');
+    assert.deepEqual(translated.result.summary, applied.result.summary);
+    assert.deepEqual(translated.result.evidence, applied.result.evidence);
+    assert.equal(translated.library.version.number, 2);
+    await panel.getByText('Compare routing accuracy on the review queue.').waitFor();
+    assert.equal(await panel.locator('details[open]').count(), 0);
+    assert.equal(await page.locator('#view-tabs [data-tab="answer"]').getAttribute('aria-selected'), 'true');
+    await page.screenshot({path: path.join(state, 'business-answer-desktop.png')});
+    await panel.locator('button.citation').first().press('Enter');
+    await page.locator('#inspector').waitFor();
+    await page.keyboard.press('Escape');
+    await page.setViewportSize({width: 390, height: 844});
+    await panel.getByRole('heading', {name: 'Business insights'}).scrollIntoViewIfNeeded();
+    assert.equal(await panel.locator('.insight-card').evaluate(node => node.scrollWidth <= node.clientWidth + 2), true);
+    await page.screenshot({path: path.join(state, 'business-answer-mobile.png')});
+    await page.setViewportSize({width: 1440, height: 960});
+
+    const failedResponse = responseFor('business');
+    const research = await ask('What are the business implications of the CU-DPO accuracy results for AI model routing in banking?');
+    const failed = await (await failedResponse).json();
+    assert.equal(failed.error.stage, 'business');
+    assert.deepEqual(failed.result.summary, research.result.summary);
+    await page.locator('.answer-business').last().getByText(failed.error.message, {exact: true}).waitFor();
+    const academic = await ask('By how much did the CU-DPO training method improve strategy-selection accuracy, and on how many base models?');
+    assert.equal(academic.business_auto, undefined);
+    await page.locator('.turn').last().getByRole('button', {name: 'Generate business insights', exact: true}).first().waitFor();
+    assert.deepEqual(businessRequests.map(request => request.automatic), [true, true]);
+    assert.deepEqual(errors, []);
+    console.log('Offline Standard S2 + business fixtures passed: progressive answer, financial services, citations, mobile, failure, optional academic flow, and one dispatch per eligible answer.');
+  } finally {
+    await browser?.close();
+    service.child.kill();
   }
 }
 
@@ -154,4 +231,4 @@ async function main() {
     service.child.kill();
   }
 }
-main().catch(error => { console.error(error); process.exitCode = 1; });
+(businessIntent ? smokeBusiness() : main()).catch(error => { console.error(error); process.exitCode = 1; });

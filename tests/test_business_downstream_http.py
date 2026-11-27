@@ -9,8 +9,8 @@ import unittest
 from unittest.mock import Mock
 
 from src.brief_store import BriefStore
-from src.business_demo import BusinessHandler
-from src.business_insights import derive_business_context
+from src.business_demo import BusinessHandler, automatic_offer
+from src.business_insights import automatic_business_context, derive_business_context
 from src.research_demo import DemoHandler
 from tests.test_downstream_business import CONTEXT, business, result_for
 
@@ -135,6 +135,38 @@ class BusinessHttpTests(unittest.TestCase):
         status, response = self.request(payload={**self.payload(), 'context': {'industry': 'banking'}})
         self.assertEqual(status, 400)
         self.assertIn('Add a business workflow', response['error'])
+        self.generator.assert_not_called()
+
+    def test_automatic_offer_and_saved_financial_services_context(self):
+        question = 'What are the business implications of AI model routing in financial services?'
+        source = {'mode': 'indexed', 'submitted_request': {'query': question}, 'result': result_for()}
+        self.assertFalse(automatic_offer(source))
+        self.saved = self.store.save(source)
+        just_saved = {**self.saved, 'library': {**self.saved['library'], 'replayed': False}}
+        self.assertTrue(automatic_offer(just_saved))
+        self.assertFalse(automatic_offer({**self.saved, 'library': {**self.saved['library'], 'replayed': True}}))
+        self.assertFalse(automatic_offer({**just_saved, 'result': {**source['result'], 'evidence': []}}))
+        self.generator.return_value = json.dumps({**business(), 'industry': 'financial services'})
+        payload = {**self.payload(), 'context': {}, 'automatic': True}
+        self.assertEqual(self.request(payload={**payload, 'context': CONTEXT})[0], 400)
+        status, translated = self.request(payload=payload)
+        self.assertEqual(status, 200)
+        self.assertEqual(translated['result']['business_insight']['industry'], 'financial services')
+        self.assertEqual(translated['result']['summary'], source['result']['summary'])
+        self.assertEqual(translated['result']['evidence'], source['result']['evidence'])
+        self.assertEqual(self.request(payload=payload)[0], 409)
+        self.generator.assert_called_once()
+
+    def test_automatic_mode_leaves_technical_or_unclear_questions_optional(self):
+        for question in ('How does AI model routing work?', 'Summarize model routing research in financial services.',
+                         'What are the business implications?',
+                         'How should we use model routing in banking? Research only, no business insights.'):
+            with self.subTest(question=question):
+                self.assertIsNone(automatic_business_context(question))
+                self.saved = self.store.save({'mode': 'indexed', 'submitted_request': {'query': question},
+                                              'result': result_for()})
+                self.assertFalse(automatic_offer(self.saved))
+                self.assertEqual(self.request(payload={**self.payload(), 'context': {}, 'automatic': True})[0], 400)
         self.generator.assert_not_called()
 
     def test_context_derivation_and_explicit_overrides(self):

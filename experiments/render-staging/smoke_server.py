@@ -59,12 +59,17 @@ def main():
                 raise ValueError('Unexpected business intent fixture question.')
         return scripted(prompt, response_schema=response_schema, question=question)
 
+    failures = []
+
     def business(prompt):
         time.sleep(1.5)
-        if FAILURE in prompt:
-            raise RuntimeError('Offline provider failure fixture.')
+        if FAILURE in prompt and not failures:
+            # First attempt: the provider is temporarily unavailable (as after a 503 and its retry).
+            failures.append(1)
+            from src.business_generation import BusinessTranslationUnavailable
+            raise BusinessTranslationUnavailable('Offline provider failure fixture.')
         chunk = re.search(r'"chunk_id"\s*:\s*"([^"]+)"', prompt)[1]
-        return json.dumps({'status': 'ok', 'industry': 'financial services', 'risks': [],
+        return json.dumps({'status': 'ok', 'industry': 'banking' if FAILURE in prompt else 'financial services', 'risks': [],
                            'limitations': ['The benchmark uses mathematical reasoning tasks.'],
                            'implications': [{'text': 'Use the benchmark to choose what to measure in routing.',
                                              'chunk_ids': [chunk],

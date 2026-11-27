@@ -85,6 +85,189 @@ RESEARCH_ONLY = re.compile(r'\b(?:research only|academic only|'
                            r'(?:no|without)\s+(?:any\s+)?business (?:insights?|implications?|recommendations?))\b', re.I)
 
 
+# ---- Generalized pass (runs only when the rules above find no application) ----
+# A business question names an organisation acting (sector actor, organisation noun or first person),
+# an adoption decision or business objective, and a workflow. Academic objects and research actors
+# keep a question research-only.
+SECTOR_TERMS = (
+    ('financial services', r'financial services|fintech|asset managers?|wealth managers?|payments? (?:firms?|providers?)'),
+    ('banking', r'banks?|banking|lenders?|credit unions?'),
+    ('insurance', r'insurers?|insurance'),
+    ('healthcare', r'hospitals?|clinics?|health ?care|health systems?|hospital networks?|care providers?'),
+    ('pharmaceuticals', r'pharmaceuticals?|pharma|drug makers?|biotech'),
+    ('logistics', r'logistics|freight|shipping (?:firms?|companies)|couriers?|carriers?'),
+    ('retail', r'retail|retailers?|e-?commerce|stores?|merchants?'),
+    ('manufacturing', r'manufactur\w*|factor(?:y|ies)|plants?'),
+    ('telecommunications', r'telecoms?|telecommunications?|telcos?|mobile operators?|network operators?'),
+    ('legal', r'law firms?|legal|attorneys?|lawyers?'),
+    ('accounting', r'accounting|accountants?|audit firms?'),
+    ('energy', r'energy|utilit(?:y|ies)|oil and gas|power (?:companies|providers?)'),
+    ('aviation', r'airlines?|aviation|airports?'),
+    ('hospitality', r'hotels?|hotel chains?|hospitality|restaurants?'),
+    ('government', r'government(?: agenc(?:y|ies))?|public sector|councils?|municipalit(?:y|ies)'),
+    ('education', r'schools?|universit(?:y|ies)|education'),
+    ('transportation', r'transit|transportation|railways?|rail operators?'),
+    ('real estate', r'real estate|property managers?'),
+    ('media', r'media|publishers?|newsrooms?'),
+    ('agriculture', r'agricultur\w*|farms?'),
+    ('construction', r'construction'),
+    ('automotive', r'automotive|car makers?|automakers?'),
+)
+ORG_NOUN = (r'compan(?:y|ies)|firms?|business(?:es)?|organi[sz]ations?|enterprises?|operators?|providers?|'
+            r'agenc(?:y|ies)|plants?|chains?|networks?|teams?|departments?|call cent(?:er|re)s?|contact cent(?:er|re)s?|'
+            r'vendors?|institutions?|groups?|offices?|startups?|insurers?|banks?|hospitals?|retailers?|airlines?')
+ORG_ACTOR = re.compile(rf'\b(?:{ORG_NOUN}|steering group|board|desk|unit|office|manager|director)\b|'
+                       r"\b(?:our|my|we|we're|we are|us)\b", re.I)
+RESEARCH_ACTOR = re.compile(r'\b(?:researchers?|authors?|scientists?|academics?|students?)\b', re.I)
+ACADEMIC_OBJECT = re.compile(
+    r'\b(?:benchmarks?|datasets?|ablations?|papers?|studies|study|authors?|base models?|baselines?|'
+    r'(?:pre-?)?train(?:ed|ing)? (?:language )?models?|fine-?tun\w*|state of the art|arxiv)\b', re.I)
+ADOPTION = re.compile(
+    r'\b(?:should|could|can|might|would|will)\b[^?]{0,80}\b(?:adopt|use|deploy|implement|invest|roll(?:ing)? out|'
+    r'rely on|apply|automate|evaluate|pilot|buy|procure|integrate|introduce|replace|route|reduce|cut|lower|'
+    r'speed up|handle|answer|help|pay off)\w*|'
+    r'\b(?:is it (?:worth|cost-?effective|safe|viable)|pay(?:s)? off|cost-?effective|return on investment|'
+    r'business case|what would it take|implementation risks?|risks? of (?:using|adopting|deploying|automating|relying)|'
+    r'(?:weigh|consider|require|need|ask (?:vendors )?for)\b[^?]{0,40}\bbefore|before (?:a |the )?(?:rollout|roll-out|deploy\w*|'
+    r'adopt\w*|implement\w*|invest\w*|using|relying)|(?:are|is) considering|evaluat\w+ [^?]{0,60} before|'
+    r'what evidence|what checks)\b', re.I)
+OBJECTIVE = re.compile(
+    r'\b(?:(?:reduce|cut|lower|save|trim)\w*\s+[\w -]{0,30}?(?:costs?|time|workload|effort|headcount|errors?)|'
+    r'more cheaply|cheaper|speed (?:up|of)|faster|productivity|efficiency|throughput|customer satisfaction|'
+    r'operat(?:ing|ional) costs?|cost savings?|roi)\b', re.I)
+AI_TOOL = (r'(?:LLMs?|AI(?:[- ](?:based|powered|driven))?(?: (?:tools?|agents?|assistants?|systems?|models?))?|'
+           r'LLM[- ](?:based|powered) [\w-]+|language models?|(?:[\w-]+ )?agents?|assistants?|chatbots?|copilots?|'
+           r'multi-agent systems?|(?:[\w-]+ )?models?|pipelines?|routers?|automation)')
+DELIBERATION = re.compile(
+    r'\b(?:evaluat\w*|consider\w*|weigh\w*|think\w* (?:about|of)|explor\w*|look\w* (?:at|into)|'
+    r'test(?:ing)? whether|decid\w* whether|assess\w*|pilot\w*|siz\w+ up|sanity-check\w*|wonder\w*|'
+    r'want(?:s)? to know (?:if|whether)|commit\w* (?:budget|to)|fund\w*|budget|justif\w*|invest\w*|adopt\w*|'
+    r'deploy\w*|roll(?:ing)? (?:it )?out|rollout|go-live|launch\w*|roi|money pit|make sense|mature enough|worth|'
+    r'cheaper|cost(?:s|-benefit|ing)?|budget\w*|efficiency (?:case|gains?)|trade-?offs?|case for|buy\w*|commission\w*|'
+    r'introduc\w+|replac\w+|implement\w*|go wrong|realistic\w*|sensible|exposed to|savings?|handling time)\b', re.I)
+FIRST_PERSON_ORG = re.compile(r"\b(?:our|we|we're|us|my (?:team|company|firm|business|organi[sz]ation))\b|\bI run\b", re.I)
+_STOP = (r'(?=\s*(?:[?.;:,]|\b(?:and|with|without|before|is|are|end to end|at our|for our|across|to reduce|to save|'
+         r'to cut|to lower|given|this|next|so)\b|$))')
+_LEAD = r'(?:help (?:with |us )?|improve |handle |answer |speed up |support |automate |streamline |run |do |manage )?'
+WORKFLOW_PATTERNS = (
+    # "use LLM agents to improve delivery route planning", "apply LLMs to speed up regulatory submissions"
+    re.compile(r'\b(?:use|using|apply|applying|adopt\w*|deploy\w*|implement\w*|rely on|relying on|leverag\w+|'
+               r'introduc\w+|integrat\w+|invest(?:ing)? in|putting|put|pilot\w*)\s+(?:[\w -]{0,40}?\b)?' + AI_TOOL +
+               r'\b[\w -]{0,20}?\s+(?:to|for|on)\s+' + _LEAD + r'([^?.;,]{3,120}?)' + _STOP, re.I),
+    # "an agent that drafts work orders", "an LLM that summarizes medical records"
+    re.compile(AI_TOOL + r'\s+that\s+((?:[\w-]+s)\s+[^?.;,]{3,100}?)' + _STOP, re.I),
+    # "an LLM agent could handle prior authorization triage", "a planning agent can schedule nurse shifts"
+    re.compile(AI_TOOL + r'\s+(?:could|can|would|will|might)\s+' + _LEAD + r'([^?.;,]{3,100}?)' + _STOP, re.I),
+    # "automating claims triage with LLMs", "route easy tickets to a small model"
+    re.compile(r'\b(?:automat\w+|rout\w+|triag\w+|summari[sz]\w+|handl\w+)\s+([^?.;,]{3,80}?)\s+(?:with|to|using|by|through)\s+'
+               r'(?:a |an |the )?(?:small |smaller |cheaper )?' + AI_TOOL, re.I),
+    # "whether contract clause review by an LLM is accurate"
+    re.compile(r'\b(?:whether|if)\s+([^?.;,]{3,60}?)\s+by\s+(?:an?|the)\s+' + AI_TOOL, re.I),
+    # "an AI assistant for loan underwriting", "AI on month-end close reconciliation", "AI for audit sampling"
+    re.compile(AI_TOOL + r'\s+(?:for|on|to)\s+' + _LEAD + r'([^?.;,]{3,100}?)' + _STOP, re.I),
+    # "AI-assisted crew rostering", "AI-generated client portfolio commentary"
+    re.compile(r'\b(?:AI|LLM)[- ](?:generated|assisted|driven|written)\s+([\w -]{3,60}?)' + _STOP, re.I),
+    # "LLM-based crew scheduling assistants", "AI concierge chatbots"
+    re.compile(r'\b(?:LLM|AI)(?:[- ](?:based|powered))?\s+([a-z][\w -]{2,40}?)\s+(?:assistants?|chatbots?|copilots?|agents?|tools?)\b', re.I),
+    # "LLM screening of applications"
+    re.compile(r'\b(?:LLM|AI|agent|model)\s+(\w+ing of [^?.;,]{3,60}?)' + _STOP, re.I),
+    # "cut call-centre costs by routing simple queries"
+    re.compile(r'\b(?:by|through|via)\s+((?!(?:it|this|that|them)\b)[^?.;,]{3,100}?)(?=\s*(?:[?.;,]|\band\b|$))', re.I),
+    re.compile(r'\b(?:reduce|cut|lower)\s+([\w -]{3,40}?)\s+(?:workload|costs?|time|effort)\b', re.I),
+)
+
+
+def sector_of(question):
+    """Normalized sector named as an organisation acting in the question, or ''."""
+    for sector, terms in SECTOR_TERMS:
+        for match in re.finditer(rf'\b(?:{terms})\b', question, re.I):
+            after = question[match.end():match.end() + 40]
+            before = question[max(0, match.start() - 25):match.start()]
+            noun_itself = re.fullmatch(rf'(?:{ORG_NOUN}|{terms})', match[0], re.I) and re.search(
+                r'(?:s|y|ies|ers?|firms?|chains?|networks?|operators?|providers?|agenc\w+|plants?)$', match[0], re.I)
+            if (re.match(rf"\s*(?:'s\s+)?(?:[\w-]+\s+)?(?:{ORG_NOUN})\b", after, re.I)
+                    or re.search(r'\b(?:in|for|across|within|at|our|my|a|an|the)\s+(?:[\w-]+\s+)?$', before, re.I)
+                    or noun_itself):
+                if RESEARCH_ACTOR.match(after.strip()) or re.match(r"\s*(?:'s|s')\s", after):
+                    continue
+                return sector
+    return ''
+
+
+GENERIC_WORDS = set('''a an the of to for in on at by with from into over and or but our we us my your their its it this that
+these those is are be been was were would could should can might will do does did have has had any some much more most less
+use using used ai llm llms model models agent agents agentic assistant assistants tool tools system systems chatbot pipeline
+layer service suite multi tool-calling tool-use preference-tuned generative off-the-shelf vendor vendors team firm company
+business cost costs cheaper budget risk risks case pilot efficiency realistic realistically whether how what which who why
+if so than then also just only even very really about advise give please note short put together think you like such
+there here own build buy funding fund rolling roll out first next quarter month year this autumn small mid-sized large'''.split())
+
+
+def _clause_workflow(question):
+    """Verbatim clause naming the AI capability and its task, when it is specific enough to act on."""
+    for clause in re.split(r'(?<=[?.;!])\s+|,\s+(?:and|but|so|given)\s+|;\s*', question):
+        tool = re.search(AI_TOOL, clause, re.I)
+        if not tool:
+            continue
+        text = re.sub(r'^(?:advise us on|please|give us|do you think|would it|could|should|how (?:would|could|should|do|can)'
+                      r'|what|which|is (?:it|there)|if|ok so|so)\b[\s,]*', '', clause.strip(' ?.!'), flags=re.I).strip()
+        specific = [w for w in re.findall(r"[a-z][a-z'-]{2,}", text.lower()) if w not in GENERIC_WORDS]
+        if len(specific) >= 3 and 8 <= len(text) <= 240:
+            return text
+    return ''
+
+
+def extract_workflow(question):
+    for pattern in WORKFLOW_PATTERNS:
+        match = pattern.search(question)
+        if match:
+            clause = re.sub(r'^(?:the|our|their|its|a|an)\s+', '', match[1].strip(' ?.,;'), flags=re.I)
+            if len(clause) >= 3 and not re.fullmatch(r'(?:it|this|that|them|these|those|do so)', clause, re.I):
+                return clause
+    return _clause_workflow(question)
+
+
+def business_signals(question):
+    """Generalized signals: (industry, has_org_actor, has_intent, workflow)."""
+    q = ' '.join(question.split())
+    if RESEARCH_ONLY.search(q) or RESEARCH_ACTOR.search(q):
+        return '', False, False, ''
+    industry = sector_of(q)
+    org = bool(industry or ORG_ACTOR.search(q))
+    # An organisation deliberating about its own adoption or spend is business intent even if it cites papers.
+    owner_deliberation = bool(FIRST_PERSON_ORG.search(q) and DELIBERATION.search(q))
+    intent = bool(ADOPTION.search(q) or OBJECTIVE.search(q) or BUSINESS_INTENT.search(q) or owner_deliberation
+                  or (org and DELIBERATION.search(q)))
+    if ACADEMIC_OBJECT.search(q) and not (OBJECTIVE.search(q) or BUSINESS_INTENT.search(q) or owner_deliberation):
+        intent = False
+    return industry, org, intent, extract_workflow(q) if org and intent else ''
+
+
+VAGUE = re.compile(r'\b(?:broadly(?: speaking)?|in general|generally speaking|somehow|big[- ]picture|any thoughts|'
+                   r'high[- ]level|^where (?:could|might|would|does|do)\b)', re.I)
+
+
+def generalized_business_context(question):
+    q = ' '.join(question.split())
+    industry, org, intent, workflow = business_signals(q)
+    if not (org and intent and workflow) or VAGUE.search(q):
+        return None
+    return business_context({'industry': industry or 'Industry unspecified', 'workflow': workflow,
+                             'decision': q if len(q) <= 600 else ''})
+
+
+def business_context_hint(question):
+    """Known context for prefilling when intent is clear but the question lacks something."""
+    q = ' '.join(question.split())
+    industry, org, intent, workflow = business_signals(q)
+    if not (org and intent):
+        return None
+    if workflow:
+        return None  # complete context: automatic generation handles it
+    # Industry is optional ("Industry unspecified" is valid); only the workflow is genuinely required.
+    return {'industry': industry, 'workflow': '', 'decision': q if len(q) <= 600 else '', 'missing': ['workflow']}
+
+
 def application_signals(question):
     sectors = list(EXPLICIT_INDUSTRY.finditer(question))
     industry_match = next((match for match in sectors if match[1]), None) or next(iter(sectors), None)
@@ -114,12 +297,14 @@ def automatic_business_context(question):
     """Conservative eligibility for an automatic call after a live answer is saved."""
     question = ' '.join(question.split())
     industry, explicit_business, application = application_signals(question)
-    if RESEARCH_ONLY.search(question) or not (explicit_business or (industry and application)):
+    if RESEARCH_ONLY.search(question):
         return None
-    try:
-        return derive_business_context(question, {})
-    except ValueError:
-        return None
+    if explicit_business or (industry and application):
+        try:
+            return derive_business_context(question, {})
+        except ValueError:
+            pass
+    return generalized_business_context(question)
 
 
 def derive_business_context(question, supplied):
@@ -142,11 +327,14 @@ def derive_business_context(question, supplied):
         if not match and BUSINESS_GOAL.search(question):
             match = GOAL_METHOD.search(applied_question)
         clause = (match[1] if match else applied_question).strip(' ?.\t')
+        if not clause:
+            clause = extract_workflow(question)
+            applied_question = question if clause else applied_question
         if not clause or len(clause) > 600:
             raise ValueError('Add a business workflow under Customize. The saved question does not give a clear application.')
         fields['workflow'] = clause
     if not fields['industry']:
-        fields['industry'] = industry or 'Industry unspecified'
+        fields['industry'] = industry or sector_of(question) or 'Industry unspecified'
     if not fields['decision'] and applied_question and len(question) <= 600:
         fields['decision'] = question
     return business_context(fields)

@@ -63,7 +63,7 @@ def snapshot(args):
         hashes[dest] = sources[dest]
 
     candidate = args.ui / 'ui-consult/design/merge-with-codex'
-    expected = {'app.js': 'a7f55af398addfdc', 'consult.css': '4a07333a1229c180',
+    expected = {'app.js': '9d804c391741e632', 'consult.css': '4a07333a1229c180',
                 'index.html': 'fa2e6a5185c1d380', 'mock-api.js': 'dd6d469be53c6b59',
                 'serve.py': '102f32391cc5dcf9'}
     for name, prefix in expected.items():

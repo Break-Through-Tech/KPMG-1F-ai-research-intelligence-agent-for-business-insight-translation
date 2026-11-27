@@ -1960,7 +1960,8 @@
 
   function renderBusinessForm(demo, answer, businessStatus, onTranslated, onCustomize) {
     const saved = demo.library;
-    const previous = demo.result.provenance?.business_translation?.context || {};
+    // Prefill from the previous translation, or from what the question already says (business_hint).
+    const previous = demo.result.provenance?.business_translation?.context || demo.business_hint || {};
     const fields = {
       industry: h('input', {type: 'text', maxLength: 300, value: previous.industry === 'Industry unspecified' ? '' : previous.industry || ''}),
       workflow: h('input', {type: 'text', maxLength: 600, value: previous.workflow || ''}),
@@ -1972,6 +1973,10 @@
         .map(([name, label]) => h('label', {class: 'field'}, h('span', {text: label}), fields[name]))));
     const send = h('button', {type: 'submit', class: 'solid-btn', 'data-business-trigger': '',
       text: demo.result.business_insight ? 'Generate another interpretation' : 'Generate business insights'});
+    if (!demo.result.business_insight && demo.business_hint?.missing?.length) {
+      customize.open = true;
+      setTimeout(() => { if (customize.isConnected) fields[demo.business_hint.missing[0]]?.focus({preventScroll: true}); }, 0);
+    }
     const start = async (automatic = false) => {
       if (answer.businessPending) return;
       answer.businessPending = true;
@@ -2209,12 +2214,25 @@
 
     /* Business is a separate stage, rendered in the answer as soon as it is available. */
     const businessSection = h('section', {class: 'answer-business', 'aria-label': 'Business insights'});
-    if (insight || stage === 'business') {
+    // Business intent with a missing field: ask for only that, inline, with the known fields prefilled.
+    const askInline = Boolean(businessForm && !insight && stage !== 'business' && demo.business_hint?.missing?.length);
+    if (insight || stage === 'business' || askInline) {
       businessSection.append(h('h2', {class: 'pane-title', text: 'Business insights'}));
     }
     businessSection.append(businessStatus);
     if (stage === 'business') {
       businessSection.append(h('p', {class: 'aside-line warn', role: 'status', text: demo.error.message}));
+      // Temporary provider failure: retry inline with the same saved context; the pending guard and the
+      // server's same-version check prevent duplicate dispatch.
+      if (businessForm && demo.error.code === 'business_unavailable') {
+        businessSection.append(h('button', {type: 'button', class: 'act-btn business-retry', 'data-business-trigger': '',
+          onclick: () => businessForm.requestSubmit()}, h('span', {text: 'Try again'})));
+      }
+    }
+    if (askInline) {
+      businessSection.append(h('p', {class: 'section-note', text:
+        'Add the business workflow this decision is about to generate business insights for this answer.'}),
+      businessForm);
     }
     if (insight) {
       const panel = businessSection;
@@ -2346,7 +2364,7 @@
         panel.append(reg);
       }
     }
-    if (businessForm) {
+    if (businessForm && !askInline) {
       businessPanel.append(insight?.implications?.length ? h('details', {class: 'fold business-update'},
         h('summary', {text: 'Update business insight'}), businessForm) : businessForm);
     }

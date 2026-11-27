@@ -7,7 +7,8 @@ from http.server import ThreadingHTTPServer
 
 from src.brief_store import BriefStore, BriefConflict
 from src.business_handoff import accepted_research
-from src.business_insights import automatic_business_context, derive_business_context, translate_result
+from src.business_insights import (automatic_business_context, business_context_hint, derive_business_context,
+                                    translate_result)
 
 
 def automatic_offer(response, *, allow_replayed=False):
@@ -26,6 +27,18 @@ def automatic_offer(response, *, allow_replayed=False):
         return bool(summary['claims'] and evidence)
     except (KeyError, TypeError, ValueError):
         return False
+
+
+def research_business_flags(body):
+    """Mark a fresh research answer for automatic business insights, or attach a prefill hint
+    when the question shows business intent but no workflow. Spends no call."""
+    if automatic_offer(body):
+        return {**body, 'business_auto': True}
+    if body.get('mode') == 'indexed' and not body.get('error') and body.get('library'):
+        hint = business_context_hint((body.get('submitted_request') or {}).get('query', ''))
+        if hint:
+            return {**body, 'business_hint': hint}
+    return body
 from src.research_demo import DemoHandler
 
 
@@ -40,8 +53,8 @@ class BusinessHandler(DemoHandler):
         if self.path == '/api/config' and status == 200 and isinstance(body, dict):
             body = {**body, 'business_translation': type(self).business_generate is not None}
         if (self.path == '/api/research' and status == 200 and isinstance(body, dict)
-                and type(self).business_generate is not None and automatic_offer(body)):
-            body = {**body, 'business_auto': True}
+                and type(self).business_generate is not None):
+            body = research_business_flags(body)
         super().respond(status, body, content_type)
 
     def do_POST(self):

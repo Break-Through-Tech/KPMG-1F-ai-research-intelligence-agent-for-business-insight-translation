@@ -94,10 +94,19 @@ async function smokeBusiness() {
     assert.equal(failed.error.stage, 'business');
     assert.deepEqual(failed.result.summary, research.result.summary);
     await page.locator('.answer-business').last().getByText(failed.error.message, {exact: true}).waitFor();
+    // Temporary provider failure: one inline retry with the saved context, then results in place.
+    const retryButton = page.locator('.answer-business').last().getByRole('button', {name: 'Try again'});
+    const retriedResponse = responseFor('business');
+    await retryButton.click();
+    const retried = await (await retriedResponse).json();
+    assert.equal(retried.result.business_insight.industry, 'banking');
+    assert.deepEqual(retried.result.summary, research.result.summary);
+    await page.locator('.answer-business').last().locator('.insight-card').first().waitFor();
+    assert.equal(await page.locator('.answer-business').last().getByRole('button', {name: 'Try again'}).count(), 0);
     const academic = await ask('By how much did the CU-DPO training method improve strategy-selection accuracy, and on how many base models?');
     assert.equal(academic.business_auto, undefined);
     await page.locator('.turn').last().getByRole('button', {name: 'Generate business insights', exact: true}).first().waitFor();
-    assert.deepEqual(businessRequests.map(request => request.automatic), [true, true]);
+    assert.deepEqual(businessRequests.map(request => request.automatic), [true, true, false]);
     assert.deepEqual(errors, []);
     console.log('Offline Standard S2 + business fixtures passed: progressive answer, financial services, citations, mobile, failure, optional academic flow, and one dispatch per eligible answer.');
   } finally {

@@ -9,7 +9,31 @@ def norm(value):
     return re.sub(r'\s+', ' ', value).strip()
 
 
-def accepted_research(summary, passages, *, require_review=True):
+NAMED_SCOPE = re.compile(
+    r'^(?:The )?([A-Za-z][A-Za-z0-9-]+) (?:framework|method|model|system)\b'
+    r'[^.!?]*\b(?:only|limited to)\b[^.!?]*\b(?:evaluated|tested|studied|scale)\b[^.!?]*[.!?]?$', re.I,
+)
+MATERIAL_WARNING = re.compile(
+    r'\b(?:risk|safety|unsafe|harm|error|bias|privacy|security|fail\w*|counterevidence|compar\w*|'
+    r'reliability|contraindicat\w*|compliance|production|deployment|financial|payback|costs?)\b', re.I,
+)
+
+
+def separate_method_scope(caveat, finding_papers, by_id, references):
+    """Omit only narrow scope of a separately sourced named method absent from the decision."""
+    text = caveat['text']
+    match = NAMED_SCOPE.match(text)
+    if not match or MATERIAL_WARNING.search(text) or not finding_papers or not all(finding_papers):
+        return False
+    method = match[1]
+    papers = [by_id[cid].get('arxiv_id') for cid in caveat['chunk_ids']]
+    # Without an identifiable method or reliable source separation, retain the caveat.
+    return (sum(character.isupper() for character in method) >= 2
+            and all(papers) and not finding_papers.intersection(papers)
+            and not re.search(rf'\b{re.escape(method)}\b', references, re.I))
+
+
+def accepted_research(summary, passages, *, require_review=True, application=None):
     """Never pass audit drafts or uncited tails to the business generator.
 
     Review metadata is a pipeline declaration, not authentication or human approval.
@@ -29,8 +53,6 @@ def accepted_research(summary, passages, *, require_review=True):
     limits = summary.get('limitation_support', [])
     if not isinstance(limits, list):
         raise ValueError('Accepted limitation support must be a list.')
-    quotes, whole = {}, set()
-
     def clean(item):
         ids = item.get('chunk_ids')
         if not isinstance(ids, list) or not ids or not set(ids) <= set(by_id):
@@ -46,17 +68,27 @@ def accepted_research(summary, passages, *, require_review=True):
                 if (cid not in ids or not isinstance(quote, str) or not quote.strip()
                         or norm(quote) not in norm(by_id[cid]['text'])):
                     raise ValueError('Accepted quote does not occur in its evidence.')
-                quotes.setdefault(cid, []).append(norm(quote))
                 copied.append({'chunk_id': cid, 'quote': norm(quote)})
             if {s['chunk_id'] for s in copied} != set(ids):
                 raise ValueError('Every accepted citation requires its own support.')
             row['support'] = copied
-        else:
-            whole.update(ids)
         return row
 
     accepted = [clean(c) for c in claims]
     caveats = [clean(c) for c in limits]
+    if application is not None:
+        finding_papers = {by_id[cid].get('arxiv_id') for claim in accepted for cid in claim['chunk_ids']}
+        references = ' '.join([summary['query'], *application.values(),
+                               *(claim['text'] for claim in accepted),
+                               *(s['quote'] for claim in accepted for s in claim.get('support', []))])
+        caveats = [c for c in caveats if not separate_method_scope(c, finding_papers, by_id, references)]
+    quotes, whole = {}, set()
+    for item in accepted + caveats:
+        if 'support' in item:
+            for supporting in item['support']:
+                quotes.setdefault(supporting['chunk_id'], []).append(supporting['quote'])
+        else:
+            whole.update(item['chunk_ids'])
     cited = {cid for c in accepted + caveats for cid in c['chunk_ids']}
     evidence, bounds = [], {}
     for p in passages:

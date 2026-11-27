@@ -45,7 +45,9 @@ APPLIED_QUESTION = re.compile(
 )
 BUSINESS_TERM = re.compile(
     r'\b(?:invoice|staffing|procurement|routing|model routers?|route (?:AI )?models?|handoffs|workflow|payback|'
-    r'maintenance|audit|release[- ]review|brief review|warehouse|grant enquiries)\b', re.I,
+    r'maintenance|audit|release[- ]review|brief review|warehouse|grant enquiries|dispatch|'
+    r'claims (?:review|triage|processing)|patient (?:intake|triage|scheduling)|inventory|'
+    r'customer (?:service|support|returns)|credit[- ]risk)\b', re.I,
 )
 BUSINESS_INTENT = re.compile(
     r'\b(?:business (?:insights?|implications?|case|value|opportunit(?:y|ies)|risks?)|'
@@ -53,24 +55,59 @@ BUSINESS_INTENT = re.compile(
     r'(?:our|a|the) (?:firm|company|team|business)\b|'
     r'payback|return on investment|ROI)\b', re.I,
 )
+BUSINESS_GOAL = re.compile(
+    r'\b(?:operat(?:ing|ional) costs?|cost savings|(?:reduce|cut|lower|measure|compare) [\w -]{0,24}costs?|'
+    r'customer wait times?|service levels?|decision[- ]makers?|'
+    r'(?:before|whether to|should we|consider) (?:adopt\w*|deploy\w*|invest\w*|purchas\w*|implement\w*))\b', re.I,
+)
+GOAL_METHOD = re.compile(r'\b(?:via|through|by (?:using|automating|adopting))\s+'
+                         r'((?!(?:it|this|that|them)\b)[^?.;,]+)', re.I)
+DECISION_REQUEST = re.compile(
+    r'\b(?:should|could|can|would)\b|\b(?:recommend|assess|evaluate|compare|identify|outline|'
+    r'decide|choose|what evidence|what checks)\b', re.I,
+)
+OPERATIONAL_WORKFLOW = re.compile(
+    r'\b(?:invoice|staffing|procurement|dispatch|inventory|customer (?:support|returns|service)|'
+    r'claims (?:review|triage|processing)|patient (?:intake|triage|scheduling)|credit[- ]risk)\b', re.I,
+)
+ACADEMIC_SCOPE = re.compile(r'\b(?:benchmarks?|datasets?|ablation|mathematical proof|paper reports?)\b', re.I)
+SECTOR = r'financial services|banking|insurance|retail|healthcare|health care|manufacturing|education|logistics|energy'
 EXPLICIT_INDUSTRY = re.compile(
-    r'\bindustry\s*:\s*([^,;?.\n]+)|\b(?:in|for|across)\s+(?:the\s+)?'
-    r'(financial services|banking|insurance|retail|healthcare|manufacturing|education|logistics|energy)\b',
+    rf'\bindustry\s*:\s*([^,;?.\n]+)|\b(?:in|for|across|within)\s+(?:the\s+)?({SECTOR})\b|'
+    rf'\b({SECTOR})\s+(?:firms?|companies|providers?|teams?|sector|industry|organizations?|'
+    r'operations?|institutions?|business(?:es)?|clinics?|stores?|insurers?)\b|'
+    r'\b(banks?|hospitals?|insurers?|retailers?)\b',
     re.I,
 )
+SECTOR_ALIASES = {'bank': 'banking', 'banks': 'banking', 'hospital': 'healthcare', 'hospitals': 'healthcare',
+                  'insurer': 'insurance', 'insurers': 'insurance', 'retailer': 'retail', 'retailers': 'retail'}
 RESEARCH_ONLY = re.compile(r'\b(?:research only|academic only|'
                            r'(?:no|without)\s+(?:any\s+)?business (?:insights?|implications?|recommendations?))\b', re.I)
 
 
 def application_signals(question):
-    industry = EXPLICIT_INDUSTRY.search(question)
+    sectors = list(EXPLICIT_INDUSTRY.finditer(question))
+    industry_match = next((match for match in sectors if match[1]), None) or next(iter(sectors), None)
+    industry = next((part.strip() for part in industry_match.groups() if part), '') if industry_match else ''
+    if industry_match and not industry_match[1]:
+        industry = SECTOR_ALIASES.get(industry.lower(), industry.lower())
+    # Strip a leading qualifier only when punctuation separates it from the request.
+    subject = question
+    if industry_match and industry_match.start() == 0 and re.match(r'\s*[,;:.]', question[industry_match.end():]):
+        subject = question[industry_match.end():].lstrip(' ,;:.')
+    sentences = re.split(r'(?<=[.!?])\s+', subject)
     explicit_business = bool(BUSINESS_INTENT.search(question))
-    # Remove only a leading industry qualifier, preserving mid-question workflow wording.
-    subject = question[industry.end():].lstrip(' ,;') if industry and industry.start() == 0 else question
-    application = next((s for s in reversed(re.split(r'(?<=[.!?])\s+', subject))
-                        if (APPLIED_QUESTION.match(s) or BUSINESS_INTENT.search(s))
-                        and (APPLICATION.search(s) or BUSINESS_TERM.search(s))), '')
-    return industry, explicit_business, application
+    decision = bool(DECISION_REQUEST.search(question))
+    goal = bool(BUSINESS_GOAL.search(question))
+    operational = bool(OPERATIONAL_WORKFLOW.search(question) or APPLICATION.search(question))
+    application = next((sentence for sentence in reversed(sentences)
+                        if (APPLICATION.search(sentence) or BUSINESS_TERM.search(sentence)
+                            or (goal and GOAL_METHOD.search(sentence)))
+                        and (APPLIED_QUESTION.match(sentence) or explicit_business
+                             or (decision and (goal or operational)))), '')
+    if ACADEMIC_SCOPE.search(question) and not (explicit_business or goal or operational):
+        application = ''
+    return industry, explicit_business or (decision and goal), application
 
 
 def automatic_business_context(question):
@@ -102,12 +139,14 @@ def derive_business_context(question, supplied):
         applied_question = question
     if not fields['workflow']:
         match = APPLICATION.search(applied_question)
+        if not match and BUSINESS_GOAL.search(question):
+            match = GOAL_METHOD.search(applied_question)
         clause = (match[1] if match else applied_question).strip(' ?.\t')
         if not clause or len(clause) > 600:
             raise ValueError('Add a business workflow under Customize. The saved question does not give a clear application.')
         fields['workflow'] = clause
     if not fields['industry']:
-        fields['industry'] = next(part.strip() for part in industry.groups() if part) if industry else 'Industry unspecified'
+        fields['industry'] = industry or 'Industry unspecified'
     if not fields['decision'] and applied_question and len(question) <= 600:
         fields['decision'] = question
     return business_context(fields)
@@ -161,7 +200,7 @@ def translate_result(result, *, context, generate, metadata=None, expected_finge
     error, started = None, perf_counter()
     try:
         info['prompt_sha256'] = sha256(PROMPT.read_bytes()).hexdigest()
-        summary, evidence, bounds = accepted_research(result['summary'], result['evidence'])
+        summary, evidence, bounds = accepted_research(result['summary'], result['evidence'], application=context)
         info.update(accepted_bundle_sha256=digest([summary, evidence]), evidence_bounds=bounds)
         summary['business_context'] = context
         def invoke(prompt):

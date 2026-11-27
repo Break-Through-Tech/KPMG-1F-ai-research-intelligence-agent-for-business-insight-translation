@@ -82,6 +82,33 @@ class DownstreamTests(unittest.TestCase):
         self.assertNotIn('SECRET', json.dumps(clean))
         self.assertIn('did not evaluate', clean['limitations'][-1])
 
+    def test_business_scope_omits_unrelated_named_method_but_keeps_material_limits(self):
+        source = result_for(); summary = source['summary']; evidence = source['evidence']
+        evidence[0]['arxiv_id'] = '2402.01622v4'
+        rows = (
+            ('p2', '2501.00001v1', 'The SWRouter framework is currently evaluated only on 7B/8B scale models.'),
+            ('p3', '2402.01622v4', 'The PlanBench framework was only evaluated in a fixed experimental setting.'),
+            ('p4', '2501.00002v1', 'The RouterPlus system was only tested at low load, and showed safety failures.'),
+            ('p5', '2501.00003v1', 'The study did not evaluate commercial deployment or financial outcomes.'),
+        )
+        for cid, paper, quote in rows:
+            evidence.append({**deepcopy(evidence[0]), 'chunk_id': cid, 'arxiv_id': paper, 'text': quote})
+            summary['limitation_support'].append({'text': quote, 'chunk_ids': [cid],
+                                                   'support': [{'chunk_id': cid, 'quote': quote}]})
+        source['review_fingerprint'] = content_fingerprint(source)
+        output, generate = self.call(result=source)
+        self.assertIsNone(output['error'])
+        self.assertNotIn('SWRouter', generate.call_args.args[0])
+        limits = output['result']['business_insight']['limitations']
+        self.assertNotIn(rows[0][2], limits)
+        self.assertTrue(all(quote in limits for _, _, quote in rows[1:]))
+        self.assertEqual(output['result']['summary'], source['summary'])
+        self.assertEqual(output['result']['evidence'], evidence)
+        self.assertNotIn('p2', output['result']['provenance']['business_translation']['evidence_bounds'])
+        retained, _, _ = accepted_research(summary, evidence,
+                                            application={**CONTEXT, 'workflow': 'Compare SWRouter with the current workflow'})
+        self.assertIn(rows[0][2], retained['limitations'])
+
     def test_invalid_quote_never_falls_back_to_whole_passage(self):
         for mutation in ('wrong_quote', 'missing_source', 'incomplete_support'):
             source = result_for()

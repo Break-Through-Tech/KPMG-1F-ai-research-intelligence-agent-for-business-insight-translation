@@ -169,6 +169,37 @@ class BusinessHttpTests(unittest.TestCase):
                 self.assertEqual(self.request(payload={**self.payload(), 'context': {}, 'automatic': True})[0], 400)
         self.generator.assert_not_called()
 
+    def test_automatic_intent_recognizes_industry_and_objective_variations(self):
+        cases = (
+            ('banking', 'In banking, how should teams evaluate automation before using it for credit-risk review?', 'credit-risk review'),
+            ('financial services', 'How can AI model routing help financial services firms reduce operational costs '
+             'without compromising response quality, and what evidence should decision-makers require before '
+             'investing in such a system?', 'AI model routing'),
+            ('financial services', 'Assess how financial services firms can cut operating costs through document extraction.', 'document extraction'),
+            ('logistics', 'We are reviewing dispatch in logistics. What evidence should we require before investing?', 'dispatch'),
+            ('healthcare', 'Healthcare providers want to reduce operating costs. How should we evaluate patient intake workflow?', 'patient intake'),
+            ('retail', 'Compare automation for customer returns across retail operations.', 'customer returns'),
+            ('insurance', 'Which checks should insurers run before using AI for claims triage?', 'claims triage'),
+            ('banking', 'What evidence should banks collect to compare model routing costs before adopting it?', 'model routing'),
+            ('insurance', 'Assess whether to deploy AI for claims processing. Industry: insurance.', 'claims processing'),
+        )
+        for sector, question, workflow in cases:
+            with self.subTest(question=question):
+                context = automatic_business_context(question)
+                self.assertIsNotNone(context)
+                self.assertEqual(context['industry'], sector)
+                self.assertIn(workflow, context['workflow'])
+                self.assertIn(context['workflow'], question)
+                self.assertEqual(context['decision'], question)
+        for question in (
+                'How can model routing improve benchmark accuracy in healthcare?',
+                'Compare model routing ablation results in financial services papers.',
+                'What does the banking model-routing paper report about accuracy?',
+                'How does dynamic programming choose a route?',
+                'What are the business implications of model routing in retail? Academic only.'):
+            with self.subTest(question=question):
+                self.assertIsNone(automatic_business_context(question))
+
     def test_context_derivation_and_explicit_overrides(self):
         question = 'In banking, what should we measure before using invoice routing?'
         self.assertEqual(derive_business_context(question, {}),

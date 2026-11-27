@@ -6,7 +6,7 @@ import subprocess
 import unittest
 from unittest.mock import Mock, patch
 
-from src.business_generation import (BusinessTranslationUnavailable, GEMINI_ENDPOINT, MODEL,
+from src.business_generation import (BusinessProviderError, BusinessTranslationUnavailable, GEMINI_ENDPOINT, MODEL,
                                      RETRY_DELAY_SECONDS, TIMEOUT_MS, business_config,
                                      create_business_generate)
 from src.business_handoff import accepted_research
@@ -109,7 +109,8 @@ class RetryTests(unittest.TestCase):
     def test_non_503_errors_are_not_retried(self):
         client = fake_client(Error400(), reply())
         generate, _ = create_business_generate(ENV, client=client, sleep=Mock())
-        with self.assertRaises(Error400): generate('p')
+        with self.assertRaises(BusinessProviderError) as raised: generate('p')
+        self.assertEqual(raised.exception.category, 'invalid_request')  # classified, not retried
         self.assertEqual(client.models.generate_content.call_count, 1)
 
     def test_unavailable_state_preserves_research(self):

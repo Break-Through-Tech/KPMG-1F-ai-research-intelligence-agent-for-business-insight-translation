@@ -2256,11 +2256,27 @@
     businessSection.append(businessStatus);
     if (stage === 'business') {
       businessSection.append(h('p', {class: 'aside-line warn', role: 'status', text: demo.error.message}));
-      // Temporary provider failure: retry inline with the same saved context; the pending guard and the
-      // server's same-version check prevent duplicate dispatch.
-      if (businessForm && demo.error.code === 'business_unavailable') {
-        businessSection.append(h('button', {type: 'button', class: 'act-btn business-retry', 'data-business-trigger': '',
-          onclick: () => businessForm.requestSubmit()}, h('span', {text: 'Try again'})));
+      // Retry inline only when the server marks the failure retryable (temporary outage, rate limit,
+      // validation). Exhausted quota, rejected credentials and invalid requests offer no retry. The pending
+      // guard and the server's same-version check prevent duplicate dispatch.
+      const retryable = demo.error.retryable ?? demo.error.code === 'business_unavailable';
+      if (businessForm && retryable) {
+        const label = h('span', {text: 'Try again'});
+        const retry = h('button', {type: 'button', class: 'act-btn business-retry', 'data-business-trigger': '',
+          onclick: () => businessForm.requestSubmit()}, label);
+        let wait = Math.ceil(Number(demo.error.retry_after_seconds) || 0);
+        if (wait > 0) {
+          retry.disabled = true;
+          const tick = () => {
+            if (!retry.isConnected) return;
+            if (wait <= 0) { retry.disabled = false; label.textContent = 'Try again'; return; }
+            label.textContent = `Try again in ${wait} s`;
+            wait -= 1;
+            setTimeout(tick, 1000);
+          };
+          tick();
+        }
+        businessSection.append(retry);
       }
     }
     if (askInline) {

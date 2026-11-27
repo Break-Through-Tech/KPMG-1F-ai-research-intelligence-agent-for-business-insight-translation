@@ -8,7 +8,10 @@ from time import perf_counter
 
 from src.business_handoff import accepted_research
 from src.business_translation import translate
-from src.business_generation import BusinessTranslationUnavailable
+import sys
+
+from src.business_generation import (AUTHENTICATION, INVALID_REQUEST, QUOTA_EXHAUSTED, RATE_LIMITED, TEMPORARY,
+                                     UNKNOWN, BusinessProviderError, BusinessTranslationUnavailable)
 from src.research_contracts import validate_result, validate_business_insight
 from src.research_pipeline import content_fingerprint
 from src.research_review import make_review_packet, require_current_review
@@ -340,6 +343,44 @@ def derive_business_context(question, supplied):
     return business_context(fields)
 
 
+# What the reader sees for each failure class, and whether an inline retry is offered.
+# Permanent provider failures (exhausted quota, rejected credentials, invalid request) offer none.
+FAILURES = {
+    TEMPORARY: ('business_unavailable', True,
+                'Business insights are temporarily unavailable. The research answer is retained; try again in a moment.'),
+    RATE_LIMITED: ('business_rate_limited', True,
+                   'The business insight service is busy right now. The research answer is retained; try again shortly.'),
+    QUOTA_EXHAUSTED: ('business_quota_exhausted', False,
+                      'The business insight quota for this project is used up. The research answer is retained; '
+                      'business insights can resume after the quota resets.'),
+    AUTHENTICATION: ('business_configuration', False,
+                     'Business insights are not configured correctly: the provider rejected the credentials. '
+                     'The research answer is retained; an administrator needs to check the configuration.'),
+    INVALID_REQUEST: ('business_request_rejected', False,
+                      'The business insight service rejected this request. The research answer is retained.'),
+    UNKNOWN: ('business_provider_error', True,
+              'Business insights could not be generated. The research answer is retained; you can try again.'),
+    'validation': ('business_failed', True,
+                   'Business insights did not pass validation, so nothing was published. The research answer is retained; '
+                   'you can try again.'),
+}
+# Sanitized names for our own validation messages (never provider text).
+VALIDATION_CHECKS = (
+    ('provider must return nonempty JSON', 'empty_output'),
+    ('malformed JSON', 'malformed_json'),
+    ('exceeds the concise policy', 'concise_length'),
+    ('Business caveats exceed the concise policy', 'caveat_limits'),
+    ('industry does not match', 'industry_mismatch'),
+    ('citation', 'citation_integrity'),
+    ('chunk', 'citation_integrity'),
+)
+
+
+def validation_check(error):
+    message = str(error)
+    return next((name for needle, name in VALIDATION_CHECKS if needle.lower() in message.lower()), 'business_schema')
+
+
 def translate_result(result, *, context, generate, metadata=None, expected_fingerprint=None, research_input=None):
     """Translate a server-owned or explicitly loaded frozen result in one call.
 
@@ -399,13 +440,22 @@ def translate_result(result, *, context, generate, metadata=None, expected_finge
             info['attempted_calls'] += 1
             try:
                 return generate(prompt)
-            except BusinessTranslationUnavailable:
-                info['provider_unavailable'] = True
+            except BusinessProviderError as failure:
+                # Recorded here because translate() deliberately replaces provider exceptions.
+                info['failure'] = failure.diagnostics()
+                if isinstance(failure, BusinessTranslationUnavailable):
+                    info['provider_unavailable'] = True
+                raise
+            except Exception:
+                info['failure'] = {'category': UNKNOWN}
                 raise
             finally:
                 attempts = getattr(generate, 'provider_attempts', None)
                 if isinstance(attempts, int) and not isinstance(attempts, bool):
                     info['provider_attempts'] = attempts
+                log = getattr(generate, 'attempt_log', None)
+                if isinstance(log, list):
+                    info['provider_attempt_log'] = [dict(entry) for entry in log if isinstance(entry, dict)][:2]
         business = translate(summary, evidence, industry=context['industry'], generate=invoke,
                              concise=True, _prompt_path=PROMPT)
         if any(len(business[field]) > 4 or any(len(line) > 500 for line in business[field])
@@ -419,15 +469,22 @@ def translate_result(result, *, context, generate, metadata=None, expected_finge
         validate_business_insight(business, {p['chunk_id'] for p in evidence}, industry=context['industry'])
         output['business_insight'] = business
         info.update(status=business['status'])
-    except Exception:
-        if info.get('provider_unavailable'):
-            info['status'] = 'unavailable'
-            error = {'stage': 'business', 'code': 'business_unavailable',
-                     'message': 'Business translation is temporarily unavailable. The research answer is retained; try again later.'}
+    except Exception as failure:
+        if 'failure' in info:
+            category = info['failure'].get('category', UNKNOWN)
         else:
-            info['status'] = 'failed'
-            error = {'stage': 'business', 'code': 'business_failed',
-                     'message': 'Business translation could not be validated. The research answer is retained.'}
+            category = 'validation'
+            info['failure'] = {'category': 'validation', 'check': validation_check(failure)}
+        if category not in FAILURES:
+            category = info['failure']['category'] = UNKNOWN
+        code, retryable, message = FAILURES[category]
+        info['status'] = 'unavailable' if category in {TEMPORARY, RATE_LIMITED} else 'failed'
+        error = {'stage': 'business', 'code': code, 'message': message, 'retryable': retryable}
+        if retryable and info['failure'].get('retry_after_seconds'):
+            error['retry_after_seconds'] = info['failure']['retry_after_seconds']
+        # One sanitized line for operators: enums and status codes only.
+        print('business-failure ' + ' '.join(f'{key}={value}' for key, value in sorted(info['failure'].items()))
+              + f" attempts={info.get('provider_attempts', 0)}", file=sys.stderr, flush=True)
     info['elapsed_seconds'] = round(perf_counter() - started, 4)
     output.setdefault('provenance', {})['business_translation'] = info
     output['review_fingerprint'] = content_fingerprint(output)

@@ -1,0 +1,16 @@
+{
+  "provider": "gemini",
+  "model": "gemini-3.1-flash-lite",
+  "project_label": "Proofline-Business-Evaluation",
+  "project_id": "gen-lang-client-0342254126",
+  "project_number": "728857451887",
+  "excluded_projects": ["gen-lang-client-0472314693", "gen-lang-client-0559861169"],
+  "independent_project_confirmed": true,
+  "temperature": 0,
+  "sdk_attempts": 1,
+  "response_mime_type": "application/json",
+  "thinking_settings": "same provider defaults through the pinned adapter",
+  "minimum_start_spacing_seconds": 7,
+  "api_key_env": "BUSINESS_EVAL_API_KEY",
+  "hard_cap": 16
+}

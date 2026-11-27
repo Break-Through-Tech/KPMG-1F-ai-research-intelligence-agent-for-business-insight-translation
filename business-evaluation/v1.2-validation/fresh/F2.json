@@ -1,0 +1,70 @@
+{
+  "id": "F2",
+  "result": {
+    "schema_version": "1.0",
+    "review_fingerprint_version": 2,
+    "request": {
+      "query": "Can the image-compression result inform a decision about sending fewer bytes from field sites, and what would justify a change if some photos are also needed for later human review?",
+      "top_k": 5
+    },
+    "summary": {
+      "query": "Can the image-compression result inform a decision about sending fewer bytes from field sites, and what would justify a change if some photos are also needed for later human review?",
+      "status": "ok",
+      "claims": [
+        {
+          "text": "Prompt-guided prefiltering preserves task-relevant regions and smooths less relevant ones. On the studied visual question answering benchmarks it yielded 25\u201350% average bitrate reduction at the same task accuracy.",
+          "kind": "finding",
+          "chunk_ids": [
+            "2604.00314v1_pdf_p1_f2"
+          ],
+          "support": [
+            {
+              "chunk_id": "2604.00314v1_pdf_p1_f2",
+              "quote": "We propose a lightweight, plug-and-play, promptguided prefiltering module to identify image regions most relevant to the text prompt, and consequently to the downstream task. The module preserves important details while smoothing out less relevant areas to improve compression efficiency. It is codecagnostic and can be applied before conventional and learned encoders. Experiments on several VQA benchmarks show that our approach achieves a 25\u201350% average bitrate reduction while maintaining the same task accuracy."
+            }
+          ]
+        }
+      ],
+      "limitations": [
+        "The supplied evidence does not establish outcomes in the target workflow."
+      ],
+      "limitation_support": [],
+      "answer_scope": "partial",
+      "answer_lead": "The supplied evidence does not establish outcomes in the target workflow.",
+      "quality_review": {
+        "coverage": "partial",
+        "reviewer": "assistant_primary_source_check",
+        "gap": "The supplied evidence does not establish outcomes in the target workflow."
+      }
+    },
+    "evidence": [
+      {
+        "chunk_id": "2604.00314v1_pdf_p1_f2",
+        "text": "We propose a lightweight, plug-and-play, promptguided prefiltering module to identify image regions most relevant to the text prompt, and consequently to the downstream task. The module preserves important details while smoothing out less relevant areas to improve compression efficiency. It is codecagnostic and can be applied before conventional and learned encoders. Experiments on several VQA benchmarks show that our approach achieves a 25\u201350% average bitrate reduction while maintaining the same task accuracy.",
+        "arxiv_id": "2604.00314v1",
+        "source": "pdf",
+        "title": "Prompt-Guided Prefiltering for VLM Image Compression",
+        "source_url": "https://arxiv.org/pdf/2604.00314v1#page=1",
+        "pdf_url": "https://arxiv.org/pdf/2604.00314v1",
+        "page_number": 1
+      }
+    ],
+    "human_review": {
+      "status": "pending",
+      "reviewer": null,
+      "notes": null
+    },
+    "approved": false,
+    "provenance": {
+      "preparation": "manual acceptance against the original local PDF",
+      "research_generation": false
+    },
+    "review_fingerprint": "6d53776c6c6b41a07e68932902d09d1ebe5f826ebfb9876407648248a78626ad"
+  },
+  "context": {
+    "industry": "Equipment service operations",
+    "workflow": "Sending technician photographs to an image-question assistant",
+    "decision": "Can the image-compression result inform a decision about sending fewer bytes from field sites, and what would justify a change if some photos are also needed for later human review?"
+  },
+  "shared_input_sha256": "8d2db7e8cc7f194b2f7f1cf513fd885a4e8b364041f20728d300600851c930e4"
+}

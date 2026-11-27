@@ -1,0 +1,70 @@
+{
+  "id": "F5",
+  "result": {
+    "schema_version": "1.0",
+    "review_fingerprint_version": 2,
+    "request": {
+      "query": "A vendor says a live data feed makes continuous model updates necessary. How should an operations team decide between a fixed detector and adaptive updates after a warehouse sensor change?",
+      "top_k": 5
+    },
+    "summary": {
+      "query": "A vendor says a live data feed makes continuous model updates necessary. How should an operations team decide between a fixed detector and adaptive updates after a warehouse sensor change?",
+      "status": "ok",
+      "claims": [
+        {
+          "text": "In a unified streaming time-series anomaly detection benchmark with initial training and online evaluation, static methods outperformed streaming methods in most settings. The investigators also created TSB-drift to isolate settings in which updates are theoretically justified.",
+          "kind": "finding",
+          "chunk_ids": [
+            "2609.39215v1_pdf_p1_f5"
+          ],
+          "support": [
+            {
+              "chunk_id": "2609.39215v1_pdf_p1_f5",
+              "quote": "In this work, we carry out the first large-scale experimental study comparing streaming and static TSAD methods under a unified streaming evaluation benchmark. We consider a realistic setting in which an initial batch of data is available for model training, followed by online evaluation of both detection accuracy and computational efficiency. In addition, we propose a distribution-drift dataset of real time series, called TSB-drift, to isolate scenarios where streaming updates are theoretically justified. Our results show that, contrary to common assumptions, static TSAD methods significantly outperform streaming approaches in most streaming settings. Such finding highlights a critical gap between the design of existing streaming methods and the requirements of modern TSAD, and calls for a rethinking of how streaming capabilities should be integrated into TSAD."
+            }
+          ]
+        }
+      ],
+      "limitations": [
+        "The supplied evidence does not establish outcomes in the target workflow."
+      ],
+      "limitation_support": [],
+      "answer_scope": "partial",
+      "answer_lead": "The supplied evidence does not establish outcomes in the target workflow.",
+      "quality_review": {
+        "coverage": "partial",
+        "reviewer": "assistant_primary_source_check",
+        "gap": "The supplied evidence does not establish outcomes in the target workflow."
+      }
+    },
+    "evidence": [
+      {
+        "chunk_id": "2609.39215v1_pdf_p1_f5",
+        "text": "In this work, we carry out the first large-scale experimental study comparing streaming and static TSAD methods under a unified streaming evaluation benchmark. We consider a realistic setting in which an initial batch of data is available for model training, followed by online evaluation of both detection accuracy and computational efficiency. In addition, we propose a distribution-drift dataset of real time series, called TSB-drift, to isolate scenarios where streaming updates are theoretically justified. Our results show that, contrary to common assumptions, static TSAD methods significantly outperform streaming approaches in most streaming settings. Such finding highlights a critical gap between the design of existing streaming methods and the requirements of modern TSAD, and calls for a rethinking of how streaming capabilities should be integrated into TSAD.",
+        "arxiv_id": "2609.39215v1",
+        "source": "pdf",
+        "title": "In a Streaming World, Should You Stand Still? A Comprehensive Benchmark of Anomaly Detection in Streams",
+        "source_url": "https://arxiv.org/pdf/2609.39215v1#page=1",
+        "pdf_url": "https://arxiv.org/pdf/2609.39215v1",
+        "page_number": 1
+      }
+    ],
+    "human_review": {
+      "status": "pending",
+      "reviewer": null,
+      "notes": null
+    },
+    "approved": false,
+    "provenance": {
+      "preparation": "manual acceptance against the original local PDF",
+      "research_generation": false
+    },
+    "review_fingerprint": "aee7cdbb64341644cc900bf69c2d627734f708766d72fadf0ab5f68621336f85"
+  },
+  "context": {
+    "industry": "Cold-chain logistics",
+    "workflow": "Choosing how to update temperature excursion detectors",
+    "decision": "A vendor says a live data feed makes continuous model updates necessary. How should an operations team decide between a fixed detector and adaptive updates after a warehouse sensor change?"
+  },
+  "shared_input_sha256": "f1f59e0ddce2a3573d9fb09027b91b7474211034ca72f64e924c3f0ee8c36496"
+}

@@ -1,0 +1,70 @@
+{
+  "id": "F3",
+  "result": {
+    "schema_version": "1.0",
+    "review_fingerprint_version": 2,
+    "request": {
+      "query": "A staffing team has good one-shot forecast scores for its assistant. What additional evidence should it require before using the assistant during a planning meeting where forecasts and constraints can change?",
+      "top_k": 5
+    },
+    "summary": {
+      "query": "A staffing team has good one-shot forecast scores for its assistant. What additional evidence should it require before using the assistant during a planning meeting where forecasts and constraints can change?",
+      "status": "ok",
+      "claims": [
+        {
+          "text": "TimeSage-MT evaluates agentic time-series reasoning across multiple turns. The authors report sharp performance drops on decision-oriented tasks, linked to memory, uncertainty handling and domain-based decision making.",
+          "kind": "finding",
+          "chunk_ids": [
+            "2606.01498v1_pdf_p1_f3"
+          ],
+          "support": [
+            {
+              "chunk_id": "2606.01498v1_pdf_p1_f3",
+              "quote": "In this work, we introduce TimeSage-MT, a multi-turn benchmark for agentic time series reasoning with 240 tasks and 2,680 dialogue turns across 8 real-world domains, spanning basic exploration to decision-oriented analysis. TimeSage-MT is built through a reproducible pipeline that converts real-world time series data into multi-turn conversations with verifiable answers. It provides a unified evaluation protocol and public leaderboard for comparing time series agentic systems. To demonstrate the benchmark\u2019s utility, we evaluate frontier LLMs alongside TimeSage, a novel structured agent equipped with a comprehensive time series skill library. The results show sharp performance drops on decision-oriented tasks, driven by failures in memory, uncertainty handling, and domain-based decision making."
+            }
+          ]
+        }
+      ],
+      "limitations": [
+        "The supplied evidence does not establish outcomes in the target workflow."
+      ],
+      "limitation_support": [],
+      "answer_scope": "partial",
+      "answer_lead": "The supplied evidence does not establish outcomes in the target workflow.",
+      "quality_review": {
+        "coverage": "partial",
+        "reviewer": "assistant_primary_source_check",
+        "gap": "The supplied evidence does not establish outcomes in the target workflow."
+      }
+    },
+    "evidence": [
+      {
+        "chunk_id": "2606.01498v1_pdf_p1_f3",
+        "text": "In this work, we introduce TimeSage-MT, a multi-turn benchmark for agentic time series reasoning with 240 tasks and 2,680 dialogue turns across 8 real-world domains, spanning basic exploration to decision-oriented analysis. TimeSage-MT is built through a reproducible pipeline that converts real-world time series data into multi-turn conversations with verifiable answers. It provides a unified evaluation protocol and public leaderboard for comparing time series agentic systems. To demonstrate the benchmark\u2019s utility, we evaluate frontier LLMs alongside TimeSage, a novel structured agent equipped with a comprehensive time series skill library. The results show sharp performance drops on decision-oriented tasks, driven by failures in memory, uncertainty handling, and domain-based decision making.",
+        "arxiv_id": "2606.01498v1",
+        "source": "pdf",
+        "title": "TimeSage-MT: A Multi-Turn Benchmark for Evaluating Agentic Time Series Reasoning",
+        "source_url": "https://arxiv.org/pdf/2606.01498v1#page=1",
+        "pdf_url": "https://arxiv.org/pdf/2606.01498v1",
+        "page_number": 1
+      }
+    ],
+    "human_review": {
+      "status": "pending",
+      "reviewer": null,
+      "notes": null
+    },
+    "approved": false,
+    "provenance": {
+      "preparation": "manual acceptance against the original local PDF",
+      "research_generation": false
+    },
+    "review_fingerprint": "c23b8741f299489814f3bed15af37cd4b7239e8c28ce52f844b83884036afeba"
+  },
+  "context": {
+    "industry": "Workforce planning",
+    "workflow": "Reviewing staffing recommendations when queue forecasts are revised",
+    "decision": "A staffing team has good one-shot forecast scores for its assistant. What additional evidence should it require before using the assistant during a planning meeting where forecasts and constraints can change?"
+  },
+  "shared_input_sha256": "a2be5d89a4cb4c692f2bcd04eb9a6438e1eace923ed0041b7e4754a742ae69ea"
+}

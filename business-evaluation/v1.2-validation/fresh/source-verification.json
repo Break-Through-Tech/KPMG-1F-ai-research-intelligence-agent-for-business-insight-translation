@@ -1,0 +1,82 @@
+[
+  {
+    "id": "F1",
+    "pdf_file": "2602.00933v3.pdf",
+    "title": "MCP-Atlas: A Large-Scale Benchmark for Tool-Use Competency with Real MCP Servers",
+    "versioned_arxiv_id": "2602.00933v3",
+    "locator": "https://arxiv.org/pdf/2602.00933v3#page=1",
+    "pdf_sha256": "2cd00f60d5ac0324ee9edd8693a4a3be61dc3a06c550209310fbf7581917315d",
+    "quote_sha256": "6f74b7f52b331ca658dbe3fa913205c10d29423795546e39a8d1e80f9989d92a",
+    "page": 1,
+    "dual_extractors": [
+      "PyMuPDF",
+      "pypdf"
+    ],
+    "membership": "matched after normalization of layout whitespace, punctuation, and ligatures",
+    "assistant_source_check": "Rendered page and measured population, metric, comparator, and source wording inspected. Local PDF identity; no remote revalidation."
+  },
+  {
+    "id": "F2",
+    "pdf_file": "2604.00314v1.pdf",
+    "title": "Prompt-Guided Prefiltering for VLM Image Compression",
+    "versioned_arxiv_id": "2604.00314v1",
+    "locator": "https://arxiv.org/pdf/2604.00314v1#page=1",
+    "pdf_sha256": "9aaa244c39396d4ad0c6511069e98884bcfd42693cdef3db314f9fc4978a6d0e",
+    "quote_sha256": "997137e94b172072f6236f2e3e5c2eaf8ec2aaffb30845b8c6152ec72629f277",
+    "page": 1,
+    "dual_extractors": [
+      "PyMuPDF",
+      "pypdf"
+    ],
+    "membership": "matched after normalization of layout whitespace, punctuation, and ligatures",
+    "assistant_source_check": "Rendered page and measured population, metric, comparator, and source wording inspected. Local PDF identity; no remote revalidation."
+  },
+  {
+    "id": "F3",
+    "pdf_file": "2606.01498v1.pdf",
+    "title": "TimeSage-MT: A Multi-Turn Benchmark for Evaluating Agentic Time Series Reasoning",
+    "versioned_arxiv_id": "2606.01498v1",
+    "locator": "https://arxiv.org/pdf/2606.01498v1#page=1",
+    "pdf_sha256": "ebf5c2313d4521f374628617dcccac6e556410278b0503eb974d1a0daf348d68",
+    "quote_sha256": "1e3b68aa31342f2d50415cec3bd0038d37edf0c14a745f31a3e21cb61f75f2ce",
+    "page": 1,
+    "dual_extractors": [
+      "PyMuPDF",
+      "pypdf"
+    ],
+    "membership": "matched after normalization of layout whitespace, punctuation, and ligatures",
+    "assistant_source_check": "Rendered page and measured population, metric, comparator, and source wording inspected. Local PDF identity; no remote revalidation."
+  },
+  {
+    "id": "F4",
+    "pdf_file": "2607.00274v1.pdf",
+    "title": "SEFORA: Student Essays with Feedback Corpus and LLM Feedback Evaluation Framework",
+    "versioned_arxiv_id": "2607.00274v1",
+    "locator": "https://arxiv.org/pdf/2607.00274v1#page=1",
+    "pdf_sha256": "970d4b48f8b706356733b496c9516105e0250e2a631031985bd4c9eb2501d06d",
+    "quote_sha256": "842f11d6540feb7d399f7571c61d7ecaad94630ad7e237190cd27d12b7378695",
+    "page": 1,
+    "dual_extractors": [
+      "PyMuPDF",
+      "pypdf"
+    ],
+    "membership": "matched after normalization of layout whitespace, punctuation, and ligatures",
+    "assistant_source_check": "Rendered page and measured population, metric, comparator, and source wording inspected. Local PDF identity; no remote revalidation."
+  },
+  {
+    "id": "F5",
+    "pdf_file": "2609.39215v1.pdf",
+    "title": "In a Streaming World, Should You Stand Still? A Comprehensive Benchmark of Anomaly Detection in Streams",
+    "versioned_arxiv_id": "2609.39215v1",
+    "locator": "https://arxiv.org/pdf/2609.39215v1#page=1",
+    "pdf_sha256": "bb53ca55128753c0ab3f4ab93e81d6c607f9b919579f1ccdafe2346a19785074",
+    "quote_sha256": "80e6e93ab2ca5c997b5b222dd08dc134cc648c4509282c9888ddf2b7c755cdc8",
+    "page": 1,
+    "dual_extractors": [
+      "PyMuPDF",
+      "pypdf"
+    ],
+    "membership": "matched after normalization of layout whitespace, punctuation, and ligatures",
+    "assistant_source_check": "Rendered page and measured population, metric, comparator, and source wording inspected. Local PDF identity; no remote revalidation."
+  }
+]

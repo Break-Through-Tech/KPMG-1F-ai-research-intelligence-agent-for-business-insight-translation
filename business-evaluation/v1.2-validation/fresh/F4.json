@@ -1,0 +1,70 @@
+{
+  "id": "F4",
+  "result": {
+    "schema_version": "1.0",
+    "review_fingerprint_version": 2,
+    "request": {
+      "query": "Should an internal training team select a feedback assistant based on how many comments it makes? What evidence would give a better basis for choosing a feedback workflow?",
+      "top_k": 5
+    },
+    "summary": {
+      "query": "Should an internal training team select a feedback assistant based on how many comments it makes? What evidence would give a better basis for choosing a feedback workflow?",
+      "status": "ok",
+      "claims": [
+        {
+          "text": "In SEFORA the researchers compare generated feedback units with instructor annotations. Across 74 configurations no setting exceeds 0.4 F1 on that matching metric, and more generated feedback is associated with degraded performance.",
+          "kind": "finding",
+          "chunk_ids": [
+            "2607.00274v1_pdf_p1_f4"
+          ],
+          "support": [
+            {
+              "chunk_id": "2607.00274v1_pdf_p1_f4",
+              "quote": "SEFORA is a public corpus1 pairing instructor inline feedback with assignment prompts, rubrics, scores, and multi-draft revisions across various college writing genres, comprising 564 drafts and 8,240 instructor annotations. UNIMATCH is a referencebased evaluation framework for open-ended generation: it segments feedback into feedback units, scores their semantic correspondence under instructor-derived criteria, and aligns them via optimal matching to yield interpretable precision, recall, and F1. Across 74 experimental configurations spanning multiple LLMs, no setting exceeds 0.4 F1. UNIMATCH reveals that models struggle to identify the feedback instructors would prioritize, and performance degrades as models generate more."
+            }
+          ]
+        }
+      ],
+      "limitations": [
+        "The supplied evidence does not establish outcomes in the target workflow."
+      ],
+      "limitation_support": [],
+      "answer_scope": "partial",
+      "answer_lead": "The supplied evidence does not establish outcomes in the target workflow.",
+      "quality_review": {
+        "coverage": "partial",
+        "reviewer": "assistant_primary_source_check",
+        "gap": "The supplied evidence does not establish outcomes in the target workflow."
+      }
+    },
+    "evidence": [
+      {
+        "chunk_id": "2607.00274v1_pdf_p1_f4",
+        "text": "SEFORA is a public corpus1 pairing instructor inline feedback with assignment prompts, rubrics, scores, and multi-draft revisions across various college writing genres, comprising 564 drafts and 8,240 instructor annotations. UNIMATCH is a referencebased evaluation framework for open-ended generation: it segments feedback into feedback units, scores their semantic correspondence under instructor-derived criteria, and aligns them via optimal matching to yield interpretable precision, recall, and F1. Across 74 experimental configurations spanning multiple LLMs, no setting exceeds 0.4 F1. UNIMATCH reveals that models struggle to identify the feedback instructors would prioritize, and performance degrades as models generate more.",
+        "arxiv_id": "2607.00274v1",
+        "source": "pdf",
+        "title": "SEFORA: Student Essays with Feedback Corpus and LLM Feedback Evaluation Framework",
+        "source_url": "https://arxiv.org/pdf/2607.00274v1#page=1",
+        "pdf_url": "https://arxiv.org/pdf/2607.00274v1",
+        "page_number": 1
+      }
+    ],
+    "human_review": {
+      "status": "pending",
+      "reviewer": null,
+      "notes": null
+    },
+    "approved": false,
+    "provenance": {
+      "preparation": "manual acceptance against the original local PDF",
+      "research_generation": false
+    },
+    "review_fingerprint": "ab01bf03e144889ac872bf7c6813936ce604ca3b49ce89de134998665ca70693"
+  },
+  "context": {
+    "industry": "Learning and development",
+    "workflow": "Reviewing feedback on employee practice incident reports",
+    "decision": "Should an internal training team select a feedback assistant based on how many comments it makes? What evidence would give a better basis for choosing a feedback workflow?"
+  },
+  "shared_input_sha256": "dfa125a77a7a42c662c364830941562b94667a01b3900cfa8c615645bde28466"
+}

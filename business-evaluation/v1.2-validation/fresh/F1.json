@@ -1,0 +1,70 @@
+{
+  "id": "F1",
+  "result": {
+    "schema_version": "1.0",
+    "review_fingerprint_version": 2,
+    "request": {
+      "query": "The review board has been shown tool-call success logs. What should it ask for before relying on the assistant to explain invoice mismatches?",
+      "top_k": 5
+    },
+    "summary": {
+      "query": "The review board has been shown tool-call success logs. What should it ask for before relying on the assistant to explain invoice mismatches?",
+      "status": "ok",
+      "claims": [
+        {
+          "text": "MCP-Atlas scores atomic claims against tool outputs. Its automated diagnostics attribute 63.3% of diagnosed failures to cognitive rather than tool-call causes, and several high-performing models fail after successful execution.",
+          "kind": "finding",
+          "chunk_ids": [
+            "2602.00933v3_pdf_p1_f1"
+          ],
+          "support": [
+            {
+              "chunk_id": "2602.00933v3_pdf_p1_f1",
+              "quote": "We introduce MCP-Atlas, a benchmark for measuring tool-use competency against production MCP servers. MCP-Atlas contains 1,000 natural-language tasks written and verified by human experts spanning 36 real MCP servers and 220 tools. Prompts do not specify servers, tools, or parameters, requiring agents to identify relevant tools among semantically plausible distractors and to compose multistep, cross-server workflows. Each task is scored with a claim-level rubric, where final answers are scored against atomic factual claims grounded in tool outputs. This answer-centric scoring permits valid alternative tool-call trajectories to receive credit. We pair this with an 11-category diagnostic taxonomy that disentangles tool-call failures from cognitive failures in task understanding, synthesis, parsing, and stopping. Evaluating 20 frontier models from six providers under matched task-level conditions, we find pass rates up to 82.2% at a 0.75 claim coverage threshold and a clear three-tier performance structure. Automated diagnostics show that 63.3% of diagnosed failures are cognitive rather than tool-call related. Notably, several high-performing models fail after successful tool execution due to premature stopping or incorrect synthesis."
+            }
+          ]
+        }
+      ],
+      "limitations": [
+        "The supplied evidence does not establish outcomes in the target workflow."
+      ],
+      "limitation_support": [],
+      "answer_scope": "partial",
+      "answer_lead": "The supplied evidence does not establish outcomes in the target workflow.",
+      "quality_review": {
+        "coverage": "partial",
+        "reviewer": "assistant_primary_source_check",
+        "gap": "The supplied evidence does not establish outcomes in the target workflow."
+      }
+    },
+    "evidence": [
+      {
+        "chunk_id": "2602.00933v3_pdf_p1_f1",
+        "text": "We introduce MCP-Atlas, a benchmark for measuring tool-use competency against production MCP servers. MCP-Atlas contains 1,000 natural-language tasks written and verified by human experts spanning 36 real MCP servers and 220 tools. Prompts do not specify servers, tools, or parameters, requiring agents to identify relevant tools among semantically plausible distractors and to compose multistep, cross-server workflows. Each task is scored with a claim-level rubric, where final answers are scored against atomic factual claims grounded in tool outputs. This answer-centric scoring permits valid alternative tool-call trajectories to receive credit. We pair this with an 11-category diagnostic taxonomy that disentangles tool-call failures from cognitive failures in task understanding, synthesis, parsing, and stopping. Evaluating 20 frontier models from six providers under matched task-level conditions, we find pass rates up to 82.2% at a 0.75 claim coverage threshold and a clear three-tier performance structure. Automated diagnostics show that 63.3% of diagnosed failures are cognitive rather than tool-call related. Notably, several high-performing models fail after successful tool execution due to premature stopping or incorrect synthesis.",
+        "arxiv_id": "2602.00933v3",
+        "source": "pdf",
+        "title": "MCP-Atlas: A Large-Scale Benchmark for Tool-Use Competency with Real MCP Servers",
+        "source_url": "https://arxiv.org/pdf/2602.00933v3#page=1",
+        "pdf_url": "https://arxiv.org/pdf/2602.00933v3",
+        "page_number": 1
+      }
+    ],
+    "human_review": {
+      "status": "pending",
+      "reviewer": null,
+      "notes": null
+    },
+    "approved": false,
+    "provenance": {
+      "preparation": "manual acceptance against the original local PDF",
+      "research_generation": false
+    },
+    "review_fingerprint": "3dc86d1d7a0d30484e32f04d55be0a26ed8782d11aee13b85b5144658cbafd19"
+  },
+  "context": {
+    "industry": "Procurement operations",
+    "workflow": "Reviewing a supplier invoice reconciliation assistant",
+    "decision": "The review board has been shown tool-call success logs. What should it ask for before relying on the assistant to explain invoice mismatches?"
+  },
+  "shared_input_sha256": "3617d3ca1baae9b196546eea15d0e4e9683e23da4d42d236207ea6d0bfdb8baa"
+}

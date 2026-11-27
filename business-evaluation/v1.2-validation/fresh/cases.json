@@ -1,0 +1,47 @@
+[
+  {
+    "id": "F1",
+    "split": "fresh",
+    "title": "Supplier reconciliation evidence",
+    "question": "The review board has been shown tool-call success logs. What should it ask for before relying on the assistant to explain invoice mismatches?",
+    "source_id": "2602.00933v3",
+    "expected_calls": 1,
+    "review_focus": "Distinguish tool execution from correctness of the explanation. Preserve the diagnosed-failure denominator and judge whether the proposed review would catch bad synthesis or premature stopping."
+  },
+  {
+    "id": "F2",
+    "split": "fresh",
+    "title": "Field photography transfer and cost",
+    "question": "Can the image-compression result inform a decision about sending fewer bytes from field sites, and what would justify a change if some photos are also needed for later human review?",
+    "source_id": "2604.00314v1",
+    "expected_calls": 1,
+    "review_focus": "Keep bitrate and visual-question accuracy distinct from actual spend, latency and human evidence quality. Name a comparison that tests both uses and surface assumptions about when the question is known."
+  },
+  {
+    "id": "F3",
+    "split": "fresh",
+    "title": "Operations planning under revised inputs",
+    "question": "A staffing team has good one-shot forecast scores for its assistant. What additional evidence should it require before using the assistant during a planning meeting where forecasts and constraints can change?",
+    "source_id": "2606.01498v1",
+    "expected_calls": 1,
+    "review_focus": "Use the multi-turn finding to formulate a concrete revision or state-tracking test. Avoid claiming that the benchmark establishes savings or validates staffing decisions."
+  },
+  {
+    "id": "F4",
+    "split": "fresh",
+    "title": "Workplace training feedback",
+    "question": "Should an internal training team select a feedback assistant based on how many comments it makes? What evidence would give a better basis for choosing a feedback workflow?",
+    "source_id": "2607.00274v1",
+    "expected_calls": 1,
+    "review_focus": "Distinguish annotation correspondence from learner outcomes. Look for a way to compare missed priority feedback and unnecessary comments using an appropriate internal reference."
+  },
+  {
+    "id": "F5",
+    "split": "fresh",
+    "title": "Cold-chain alert policy",
+    "question": "A vendor says a live data feed makes continuous model updates necessary. How should an operations team decide between a fixed detector and adaptive updates after a warehouse sensor change?",
+    "source_id": "2609.39215v1",
+    "expected_calls": 1,
+    "review_focus": "Treat the static advantage as a benchmark result, preserve the drift question, and identify evidence about the actual sensor change and alert errors. Avoid a blanket choice or a compliance claim."
+  }
+]

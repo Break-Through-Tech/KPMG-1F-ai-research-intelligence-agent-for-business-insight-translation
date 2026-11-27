@@ -1,0 +1,26 @@
+{
+  "source": "Unmodified v1 frozen rubric.json",
+  "assessment_kind": "AI-assisted engineering evaluation",
+  "known": {
+    "eligible": 11,
+    "availability_minimum": 10,
+    "zero_call_empty_control": "U7; all three outcomes reported; saved controls use original receipts",
+    "minimum_usefulness_fidelity_and_limitations_per_split": 4.0,
+    "maximum_material_cases_per_defect": 2,
+    "minimum_paired_usefulness_gain_vs_baseline": 0.25,
+    "v1.1_pairing": "Descriptive on common available pairs, with availability transitions and all eligible-case scores separately"
+  },
+  "fresh": {
+    "eligible": 5,
+    "availability_minimum": 5,
+    "minimum_usefulness_fidelity_and_limitations": 4.0,
+    "maximum_material_cases_per_defect": 0,
+    "count_gate_conversion": "Use the frozen rates directly: available/5 >= 10/11 and material/5 <= 2/11, separately for each defect. This is 5/5 and 0/5 at this sample size.",
+    "paired_improvement": "not_applicable_no_comparator"
+  },
+  "critical_claims_allowed_per_set": 0,
+  "human_acceptance": "unverified",
+  "missing_scores": "NA for empty-control, execution-failed and not-run outcomes; eligible abstentions receive their 1–5 scores; all eligible outcomes count toward availability",
+  "supplemental_observations_are_gates": false,
+  "stop_rule": "One execution, at most 16 attempted translations, no retries, replacements, repairs or critic API calls. No further optimization after this validation."
+}

@@ -11,11 +11,13 @@ import importlib.util
 import json
 import sys
 import socket
+import tempfile
 import threading
 import time
 import unittest
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from unittest.mock import patch
 
 HERE = Path(__file__).resolve().parent
 spec = importlib.util.spec_from_file_location('consult_serve', HERE.parent / 'serve.py')
@@ -108,7 +110,15 @@ class ServeTests(unittest.TestCase):
 
     def test_tests_are_served_only_on_request(self):
         self.assertEqual(self.request('GET', '/tests/evidence.test.html', self.tests_host)[0], 200)
-        self.assertEqual(self.request('GET', '/tests/fixtures/recorded-cu-dpo.json', self.tests_host)[0], 200)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            path = 'tests/fixtures/portable-example.json'
+            fixture = root / path
+            fixture.parent.mkdir(parents=True)
+            fixture.write_bytes(b'{"fixture": true}')
+            with patch.object(serve, 'ROOTS', (*serve.ROOTS, root)):
+                self.assertEqual(self.request('GET', '/' + path)[0], 404)
+                self.assertEqual(self.request('GET', '/' + path, self.tests_host), (200, b'{"fixture": true}'))
         self.assertEqual(self.request('GET', '/design/UI-QA-REPORT.md', self.tests_host)[0], 404)
 
     def test_table_route_is_get_only_and_refusals_never_reach_the_backend(self):

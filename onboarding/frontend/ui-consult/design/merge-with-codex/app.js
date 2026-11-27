@@ -57,6 +57,10 @@
   };
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const narrow = matchMedia('(max-width: 920px)');
+  const dockedSources = matchMedia('(min-width: 1024px)');
+  let activeClick;
+  document.addEventListener('click', event => { activeClick = event; }, {capture: true});
+  const pointerMotion = () => !reduced.matches && activeClick?.detail > 0 && activeClick.eventPhase !== Event.NONE;
   function morph(change) {
     if (!document.startViewTransition || reduced.matches || document.hidden) return change();
     // A skipped or timed-out transition still applies the change; it only loses the animation.
@@ -198,7 +202,7 @@
     panes.forEach(node => { node.hidden = node.dataset.pane !== name; });
     stage.dataset.tab = name;
     tabButtons.forEach(button => { const selected = button.dataset.tab === name; button.setAttribute('aria-selected', String(selected)); button.tabIndex = selected ? 0 : -1; });
-    moveIndicator(previous !== undefined && previous !== name);
+    moveIndicator(pointerMotion() && previous !== undefined && previous !== name);
     if (scroll) scroller.scrollTop = previous === name ? scroller.scrollTop : (turn.scrollMemory[name] || 0);
     if (focus) $(`.brief-pane[data-pane="${name}"] .pane-title`, turn)?.focus({preventScroll: true});
   }
@@ -467,17 +471,35 @@
   }
 
   /* ---------- Evidence inspector ---------- */
-  function setInspector(open, trigger = null) {
+  let readerShift;
+  function setInspector(open, trigger = null, {motion = true} = {}) {
+    const wasOpen = document.body.classList.contains('insp-open');
+    const animate = motion && pointerMotion();
+    const reader = animate && wasOpen !== open && dockedSources.matches && currentView === 'thread'
+      && !document.body.classList.contains('review-open') ? activeTurn : null;
+    const before = reader?.getBoundingClientRect();
+    if (wasOpen !== open) {
+      readerShift?.cancel();
+      readerShift = null;
+    }
+    document.body.toggleAttribute('data-inspector-motion', animate);
     returnFocus?.closest('.ev-table tbody tr')?.removeAttribute('data-inspected');
     if (open && trigger) returnFocus = trigger;
     if (open) returnFocus?.closest('.ev-table tbody tr')?.setAttribute('data-inspected', '');
-    const wasOpen = document.body.classList.contains('insp-open');
     if (open && document.body.classList.contains('review-open')) { document.body.classList.remove('review-open'); $('#review-drawer').inert = true; }
     document.body.classList.toggle('insp-open', open);
     inspector.inert = !open;
     $('#evidence-toggle').setAttribute('aria-expanded', String(open));
     syncScrim();
     if (!open && wasOpen) { ResearchSpeech.stopAll(); focusInitiator(returnFocus); }
+    if (before?.width) {
+      const after = reader.getBoundingClientRect();
+      const shift = before.left - after.left;
+      if (Math.abs(before.width - after.width) < 1 && Math.abs(shift) > 1) {
+        readerShift = reader.animate([{transform: `translateX(${shift}px)`}, {transform: 'translateX(0)'}],
+          {duration: 205, easing: 'cubic-bezier(.23, 1, .32, 1)'});
+      }
+    }
   }
   $('#inspector-close').addEventListener('click', () => setInspector(false));
   $('#evidence-toggle').addEventListener('click', event => {
@@ -965,7 +987,10 @@
           : statusRow('alert', 'bad', 'The values could not be matched to the paper, so only the source text is shown.'));
       // Routine confirmations move into Table details; warnings that change interpretation stay inline.
       for (const item of [...flags.children]) if (item.classList.contains('ok')) { if (ctx.compact) item.remove(); else detailFlags.append(item); }
-      if (fullNote) flags.append(statusRow('info', '', fullNote));
+      if (fullNote) {
+        const destination = ctx.compact || fullNote.startsWith('Full table not used:') ? flags : detailFlags;
+        destination.append(statusRow('info', '', fullNote));
+      }
       if (countIssue && !ctx.compact) flags.append(statusRow('alert', 'warn', `Count check: ${countIssue.text}`));
       if (table.notes.length) detailFlags.append(h('li', {class: 'ev-flag'}, icon('info'), h('span', {text: `Source notes: ${table.notes.map(n => n.text).join(' ')}`})));
     }
@@ -1081,8 +1106,11 @@
         table.completeness === 'complete_from_index' ? h('span', {text: 'unmarked: loaded from the index to complete the table'}) : null,
         h('span', {text: 'Select any value to open its source.'}));
       void legend; // the row-mark legend lives in Table details
+      const tableRegion = ctx.compact || ctx.preview
+        ? {class: 'table-scroll', tabIndex: 0, role: 'region', 'aria-label': `${tableTitle(table)}, scrollable`}
+        : {class: 'table-scroll evidence-data-table'};
       return h('div', null,
-        h('div', {class: 'table-scroll', tabIndex: 0, role: 'region', 'aria-label': `${tableTitle(table)}, scrollable`},
+        h('div', tableRegion,
           h('table', {class: 'ev-table'}, h('caption', {class: 'sr-only', text: `${tableTitle(table)}: ${captionBody(table)}`}), h('thead', null, head), body)));
     }
 
@@ -1548,9 +1576,13 @@
         }
       } else details.append(...seg.nodes);
     });
+    const claimDetails = claimSeg && h('details', {class: 'source-details'},
+      h('summary', {text: claimSeg.head.textContent}), ...claimSeg.nodes.slice(1));
+    const surrounding = context.length > 1 && (quote || row) ? [h('details', {class: 'source-details'},
+      h('summary', {text: 'Surrounding passage'}), ...context.slice(1))] : context;
     const where = [passage.section, passage.source === 'pdf' ? `PDF${passage.page_number != null ? `, page ${passage.page_number}` : ''}` : 'web (HTML) version'].filter(Boolean).join(' · ');
     view.replaceChildren(...[ret, title, h('p', {class: 'source-sub', text: where}), link, ...keepTop,
-      ...(quote?.nodes || []), ...(row?.nodes || []), checks, ...(claimSeg?.nodes || []), ...context, details].filter(Boolean));
+      ...(quote?.nodes || []), ...(row?.nodes || []), checks, claimDetails, ...surrounding, details].filter(Boolean));
   }
 
   /* Perplexity-style source row under the answer: the sources the answer cites, one click to inspect. */
@@ -2125,9 +2157,11 @@
     explanationRenderers.set(answer, selectView);
     selectView();
 
-    /* What is missing, once, only when the answer records what it is. */
+    /* Keep the recorded coverage status visible, with the specific gap when available. */
     const gap = coverageNote || gapItems[0]?.text || null;
     if (gap) aside(h('span', null, h('strong', {text: partial ? 'Partial answer. ' : 'Note. '}), h('span', {math: gap})));
+    else if (partial && !abstained) aside(h('span', null, h('strong', {text: 'Partial answer. '}),
+      h('button', {type: 'button', class: 'inline-link', onclick: () => openWorkspace('notes'), text: 'Research notes'})));
     const numberChecks = result.provenance?.agentic?.claims_needing_number_check || [];
     if (numberChecks.length) {
       aside(`Check the numbers in ${plural(numberChecks.length, 'finding')}: code could not confirm what they refer to.`);
@@ -2436,6 +2470,10 @@
       ...(insight?.implications || []).map(c => [c, 'Implication'])];
     const assigned = new Set();
     paneEvidence.append(h('header', {class: 'pane-head'}, h('h2', {class: 'pane-title', id: `a${number}-evidence`, tabIndex: -1, text: 'Evidence'})));
+    const sourceTables = tables.length ? h('section', {class: 'ev-section block-numbers', id: `a${number}-numbers`, 'aria-labelledby': `a${number}-numbers-h`},
+      h('h2', {class: 'section-h', id: `a${number}-numbers-h`, tabIndex: -1, text: 'Source tables'}),
+      tables.map(table => renderEvidenceTable(table, ctx))) : null;
+    if (sourceTables && named.length < 2) paneEvidence.append(sourceTables);
     if (comparing) {
       const columns = comparedPapers.map(study => {
         const chunks = new Set(study.passages.map(n => evidence[n - 1].chunk_id));
@@ -2460,11 +2498,7 @@
       h('h2', {class: 'section-h', tabIndex: -1, text: 'Supporting statements'}),
       h('ol', {class: 'statements'}, remaining.map(statementRow))) : null;
     if (comparing && supporting) paneEvidence.append(supporting);
-    if (tables.length) {
-      paneEvidence.append(h('section', {class: 'ev-section block-numbers', id: `a${number}-numbers`, 'aria-labelledby': `a${number}-numbers-h`},
-        h('h2', {class: 'section-h', id: `a${number}-numbers-h`, tabIndex: -1, text: 'Source tables'}),
-        tables.map(table => renderEvidenceTable(table, ctx))));
-    }
+    if (sourceTables && named.length >= 2) paneEvidence.append(sourceTables);
     if (!comparing && studies.length >= 2) {
       paneEvidence.append(h('section', {class: 'ev-section', id: `a${number}-compare-all`},
         h('details', {class: 'fold'}, h('summary', {text: 'What the retrieved papers cover'}), renderStudies(studies, ctx))));
@@ -2510,7 +2544,7 @@
   let reviewReturn = null;
   function setReview(open, trigger = null) {
     if (open && trigger) reviewReturn = trigger;
-    if (open) setInspector(false);
+    if (open) setInspector(false, null, {motion: false});
     document.body.classList.toggle('review-open', open);
     reviewDrawer.inert = !open;
     if (!open) focusInitiator(reviewReturn);

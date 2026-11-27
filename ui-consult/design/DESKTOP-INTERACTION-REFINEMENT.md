@@ -34,6 +34,14 @@ The four tabs share the same reading column and typography. Sources keeps papers
 
 This polish changes three presentation areas in `app.js`: `setInspector` marks the table row that opened the inspector, `renderBrief` shows four compact verification disclosures with the original explanations, and `sourceRow` presents table row context beneath the row label. Research notes retains the visible discrepancy and original review limitations.
 
+## Research Desk implementation
+
+The approved Research Desk is the full-window desktop layout. The blue gradient is shared by the sidebar and header, and the reading surfaces remain opaque. The four tabs share a centered 716 px reading column. Citation inspection docks on the right at 1024 px and above, with the existing overlay at smaller widths.
+
+In `app.js`, `setTab` and `setInspector` use short motion for pointer input and honor reduced motion. The source inspector keeps the selected quote and evidence checks visible and puts supporting context in disclosures. `renderEvidenceTable` lets Evidence tables grow with their rows in the main scroller. `renderBrief` keeps a recorded partial status visible and presents tables first when the question does not name a comparison. Table validation, source matching, and publication checks still use the existing paths.
+
+The Business insight generation and inline Answer markup remain on `integration/proofline-business-hydrogen` through `e644589`. During reconciliation, retain its request dispatch and inline markup while applying the Research Desk styles and the existing staged-asset synchronization.
+
 ## Design references and decisions
 
 - [Impeccable](https://impeccable.style/) supplied the critique, audit, and simplification criteria. Findings were checked against the browser rather than estimated from code. The review used the local reference text and existing fixture tooling.

@@ -129,6 +129,8 @@ def snapshot(args):
     downstream = 'prompts/business_translation/downstream-v1.2.txt'
     add(ROOT / downstream, 'snapshot/' + downstream)
     add(ROOT / downstream, downstream)
+    intent = 'prompts/business_intent/semantic-v1.txt'
+    add(ROOT / intent, intent)
     for name in ('server.py', 'engine_runtime.py', 'dev_server.py', 'smoke_server.py'):
         add(HERE / name, f'experiments/render-staging/{name}')
     for folder, modules in RUNTIME_FILES.items():

@@ -165,6 +165,42 @@ def quota_generate(generate, budget, *, sleep=time.sleep, recover_review_limitat
     return guarded
 
 
+INTENT_WAIT_SECONDS = 10
+
+
+def semantic_intent(execute, generate, budget):
+    """Classify the question on a side thread while research runs; attach the sanitized record.
+
+    One attempt, no retry, its own local budget ledger, so research quota and behavior are untouched.
+    Every failure is recorded and the deterministic rules take over downstream."""
+    from threading import Thread
+    from src.business_intent import classify
+
+    def once(prompt, *, response_schema=None):
+        budget.reserve(len(prompt.encode()) // 2 + 512)
+        text = generate(prompt, response_schema=wire_schema(response_schema))
+        return text
+
+    def execute_with_intent(payload, **kwargs):
+        query = payload.get('query') if isinstance(payload, dict) else None
+        box = {}
+        worker = None
+        if isinstance(query, str) and query.strip():
+            worker = Thread(target=lambda: box.update(record=classify(query, once)), daemon=True)
+            worker.start()
+        response = execute(payload, **kwargs)
+        if worker is not None and isinstance(response, dict):
+            worker.join(INTENT_WAIT_SECONDS)
+            record = box.get('record') or {'status': 'unavailable', 'reason': 'timeout'}
+            if record.get('status') != 'ok':
+                print(f"business-intent fallback=rules status={record.get('status')} reason={record.get('reason')}",
+                      file=sys.stderr, flush=True)
+            response['business_intent'] = record
+        return response
+
+    return execute_with_intent
+
+
 def verify_snapshot(path):
     manifest = json.loads((path / 'manifest.json').read_text(encoding='utf-8'))
     for name, expected in manifest['files'].items():
@@ -200,6 +236,8 @@ def build_handler(snapshot, state, origin, password, generate, metadata, *, synt
         retrieval = open_b2(bundle, encoder_path=encoder, reranker_path=reranker)
         index = retrieval[1]()
         research = create_research(retrieval, guarded, metadata, top_k=8)
+    if business_generate is not None and os.environ.get('BUSINESS_INTENT_SEMANTIC', '1') != '0':
+        research.execute = semantic_intent(research.execute, generate, Budget(state / 'intent-usage.sqlite3'))
     tables = TableIndex(bundle / 'parents.jsonl', snapshot / 'artifacts/table-audit.json')
     if tables.audit_problem or tables.index_sha256 != index['indexed_records_sha256']:
         raise ValueError('Table audit or retrieval identity does not match the bundle.')

@@ -1,0 +1,270 @@
+{
+ "description": "Recorded gemini-3.1-flash-lite outputs from the 27 Nov 2026 semantic pilot (prompt semantic-v1, question only). 16 of 24 calls returned; 8 were HTTP 429 and are omitted. Gold labels were fixed before the calls.",
+ "rows": [
+  {
+   "q": "Could a hotel chain use AI agents to handle guest complaints faster without making customer service worse?",
+   "label": "business",
+   "gold_industry": [
+    "hospitality"
+   ],
+   "gold_workflow": "handle guest complaints",
+   "model_output": {
+    "business_context": {
+     "is_business": true,
+     "industry": "hospitality",
+     "workflow": "handle guest complaints",
+     "decision": "use AI agents to handle guest complaints faster without making customer service worse",
+     "confidence": "high"
+    }
+   }
+  },
+  {
+   "q": "Our accounting team spends hours checking invoices for mistakes. Could AI agents help without increasing the number of errors?",
+   "label": "business",
+   "gold_industry": [
+    "accounting"
+   ],
+   "gold_workflow": "checking invoices for mistakes",
+   "model_output": {
+    "business_context": {
+     "is_business": true,
+     "industry": "accounting",
+     "workflow": "checking invoices for mistakes",
+     "decision": "Could AI agents help without increasing the number of errors?",
+     "confidence": "high"
+    }
+   }
+  },
+  {
+   "q": "Can automated agents help restaurant managers predict how much food to order so they waste less money?",
+   "label": "business",
+   "gold_industry": [
+    "hospitality",
+    "retail"
+   ],
+   "gold_workflow": "predict how much food to order",
+   "model_output": {
+    "business_context": {
+     "is_business": true,
+     "industry": "hospitality",
+     "workflow": "predict how much food to order",
+     "decision": "Can automated agents help restaurant managers",
+     "confidence": "high"
+    }
+   }
+  },
+  {
+   "q": "My developers spend too much time reviewing AI-generated code. Could having a second AI check the first one's work make things better?",
+   "label": "business",
+   "gold_industry": [
+    "software",
+    "unspecified"
+   ],
+   "gold_workflow": "reviewing AI-generated code",
+   "model_output": {
+    "business_context": {
+     "is_business": true,
+     "industry": "software",
+     "workflow": "reviewing AI-generated code",
+     "decision": "Could having a second AI check the first one's work make things better?",
+     "confidence": "high"
+    }
+   }
+  },
+  {
+   "q": "Our claims team spends most of each day checking claims against policy exclusions by hand. Do any of the methods in these papers look like they would cut that time without adding errors?",
+   "label": "business",
+   "gold_industry": [
+    "insurance"
+   ],
+   "gold_workflow": "checking claims against policy exclusions",
+   "model_output": {
+    "business_context": {
+     "is_business": true,
+     "industry": "insurance",
+     "workflow": "checking claims against policy exclusions by hand",
+     "decision": "cut that time without adding errors",
+     "confidence": "high"
+    }
+   }
+  },
+  {
+   "q": "Our nurse coordinators spend too many hours on scheduling and paper forms. Is AI able to help with this, and how much it cost compared to hiring one more person?",
+   "label": "business",
+   "gold_industry": [
+    "healthcare"
+   ],
+   "gold_workflow": "scheduling and paper forms",
+   "model_output": {
+    "business_context": {
+     "is_business": true,
+     "industry": "healthcare",
+     "workflow": "scheduling and paper forms",
+     "decision": "Is AI able to help with this, and how much it cost compared to hiring one more person",
+     "confidence": "high"
+    }
+   }
+  },
+  {
+   "q": "Freight dispatch mistakes eat margin. Automate it?",
+   "label": "business",
+   "gold_industry": [
+    "logistics"
+   ],
+   "gold_workflow": "Freight dispatch",
+   "model_output": {
+    "business_context": {
+     "is_business": true,
+     "industry": "logistics",
+     "workflow": "Freight dispatch",
+     "decision": "Automate it?",
+     "confidence": "high"
+    }
+   }
+  },
+  {
+   "q": "We run a mid-sized law firm focused on commercial leases. Associates currently review each lease for nonstandard indemnity and termination clauses, which takes around six hours per document. Partners want to know whether a retrieval-based assistant with a human sign-off step would be accurate enough to shorten that review, and what the implementation risk looks like if it misses a clause.",
+   "label": "business",
+   "gold_industry": [
+    "legal"
+   ],
+   "gold_workflow": "review each lease for nonstandard indemnity and termination clauses",
+   "model_output": {
+    "business_context": {
+     "is_business": true,
+     "industry": "legal",
+     "workflow": "review each lease for nonstandard indemnity and termination clauses",
+     "decision": "whether a retrieval-based assistant with a human sign-off step would be accurate enough to shorten that review, and what the implementation risk looks like if it misses a clause",
+     "confidence": "high"
+    }
+   }
+  },
+  {
+   "q": "Which papers in the set report hallucination rates for retrieval-augmented versus fine-tuned models on open-domain question answering?",
+   "label": "research",
+   "gold_industry": null,
+   "gold_workflow": null,
+   "model_output": {
+    "business_context": {
+     "is_business": false,
+     "industry": "unspecified",
+     "workflow": "",
+     "decision": "",
+     "confidence": "high"
+    }
+   }
+  },
+  {
+   "q": "Did any of the multi-agent debate papers test on financial reporting or earnings-call data, and how did consensus accuracy change with the number of agents?",
+   "label": "research",
+   "gold_industry": null,
+   "gold_workflow": null,
+   "model_output": {
+    "business_context": {
+     "is_business": false,
+     "industry": "unspecified",
+     "workflow": "",
+     "decision": "",
+     "confidence": "high"
+    }
+   }
+  },
+  {
+   "q": "Has any paper benchmarked a legal research product such as CoCounsel or Lexis+ AI against a plain frontier model on statute retrieval, and what accuracy gap did they report?",
+   "label": "research",
+   "gold_industry": null,
+   "gold_workflow": null,
+   "model_output": {
+    "business_context": {
+     "is_business": false,
+     "industry": "legal",
+     "workflow": "",
+     "decision": "",
+     "confidence": "high"
+    }
+   }
+  },
+  {
+   "q": "Our board keeps asking about AI and I honestly don't know where to begin. Where should we even start thinking about it?",
+   "label": "optional",
+   "gold_industry": null,
+   "gold_workflow": null,
+   "model_output": {
+    "business_context": {
+     "is_business": true,
+     "industry": "unspecified",
+     "workflow": "",
+     "decision": "Where should we even start thinking about it?",
+     "confidence": "high"
+    }
+   }
+  },
+  {
+   "q": "We run claims triage at a mid-sized insurer and I need to know whether swapping our rules engine for an LLM agent would cut handling time without raising error rates. What should the pilot measure?",
+   "label": "business",
+   "gold_industry": [
+    "insurance"
+   ],
+   "gold_workflow": "claims triage",
+   "model_output": {
+    "business_context": {
+     "is_business": true,
+     "industry": "insurance",
+     "workflow": "claims triage",
+     "decision": "swapping our rules engine for an LLM agent",
+     "confidence": "high"
+    }
+   }
+  },
+  {
+   "q": "As procurement lead for a county council, how should I score vendor bids for an AI summarisation tool for planning applications, given our budget limits?",
+   "label": "business",
+   "gold_industry": [
+    "government"
+   ],
+   "gold_workflow": "summarisation tool for planning applications",
+   "model_output": {
+    "business_context": {
+     "is_business": true,
+     "industry": "government",
+     "workflow": "score vendor bids for an AI summarisation tool for planning applications",
+     "decision": "how should I score vendor bids for an AI summarisation tool for planning applications, given our budget limits",
+     "confidence": "high"
+    }
+   }
+  },
+  {
+   "q": "The agent paper claims a threefold drop in API spend against a GPT-4 baseline. How was spend computed in their cost table, and are retry tokens included?",
+   "label": "research",
+   "gold_industry": null,
+   "gold_workflow": null,
+   "model_output": {
+    "business_context": {
+     "is_business": false,
+     "industry": "unspecified",
+     "workflow": "",
+     "decision": "",
+     "confidence": "high"
+    }
+   }
+  },
+  {
+   "q": "We piloted an LLM for call-centre summaries in one region with good results. How do we scale to nine countries without quality drift? Budget and staffing implications too.",
+   "label": "business",
+   "gold_industry": [
+    "unspecified",
+    "telecommunications"
+   ],
+   "gold_workflow": "call-centre summaries",
+   "model_output": {
+    "business_context": {
+     "is_business": true,
+     "industry": "unspecified",
+     "workflow": "scale to nine countries",
+     "decision": "How do we scale to nine countries without quality drift? Budget and staffing implications too.",
+     "confidence": "high"
+    }
+   }
+  }
+ ]
+}

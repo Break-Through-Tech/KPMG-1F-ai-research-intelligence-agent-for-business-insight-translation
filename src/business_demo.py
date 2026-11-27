@@ -7,8 +7,7 @@ from http.server import ThreadingHTTPServer
 
 from src.brief_store import BriefStore, BriefConflict
 from src.business_handoff import accepted_research
-from src.business_insights import (automatic_business_context, business_context_hint, derive_business_context,
-                                    translate_result)
+from src.business_insights import derive_business_context, resolve_business_intent, translate_result
 
 
 def automatic_offer(response, *, allow_replayed=False):
@@ -21,7 +20,7 @@ def automatic_offer(response, *, allow_replayed=False):
         return False
     try:
         question = response.get('submitted_request', result['request'])['query']
-        if automatic_business_context(question) is None:
+        if resolve_business_intent(question, response.get('business_intent'))['context'] is None:
             return False
         summary, evidence, _ = accepted_research(result['summary'], result['evidence'])
         return bool(summary['claims'] and evidence)
@@ -35,7 +34,8 @@ def research_business_flags(body):
     if automatic_offer(body):
         return {**body, 'business_auto': True}
     if body.get('mode') == 'indexed' and not body.get('error') and body.get('library'):
-        hint = business_context_hint((body.get('submitted_request') or {}).get('query', ''))
+        question = (body.get('submitted_request') or {}).get('query', '')
+        hint = resolve_business_intent(question, body.get('business_intent'))['hint']
         if hint:
             return {**body, 'business_hint': hint}
     return body
@@ -91,7 +91,9 @@ class BusinessHandler(DemoHandler):
             if payload.get('automatic'):
                 if payload['context'] != {} or not automatic_offer(source, allow_replayed=True):
                     return self.respond(400, {'error': 'Automatic business insights are unavailable for this answer.'})
-                context = automatic_business_context(source['submitted_request']['query'])
+                # Reuse the classification saved with the answer; never classify again here.
+                context = resolve_business_intent(source['submitted_request']['query'],
+                                                  source.get('business_intent'))['context']
             else:
                 context = derive_business_context(source['submitted_request']['query'], payload['context'])
         except ValueError as error:

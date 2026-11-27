@@ -343,3 +343,4 @@
 /onboarding/runtime-metadata/demo-100/manifest.json -text
 /onboarding/runtime-metadata/table-audit-demo-100.json -text
 /prompts/business_translation/downstream-v1.2.txt -text
+/prompts/business_intent/semantic-v1.txt -text

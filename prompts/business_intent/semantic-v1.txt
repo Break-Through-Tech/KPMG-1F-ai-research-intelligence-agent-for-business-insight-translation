@@ -1,0 +1,5 @@
+Classify the QUESTION below. Return only JSON matching the supplied schema.
+
+SEPARATE TASK, about the QUESTION text only (not the passages), returned in "business_context": decide whether the asker is a person or organisation considering adopting, using, buying, funding, replacing work with or evaluating AI or the studied methods for a concrete work activity, or asking about the cost, efficiency, staffing, return or implementation risk of doing so. A question about what papers, benchmarks, methods or results report is NOT business, even when it names a sector, company or cost. A business-flavoured question with no concrete work activity is business with an empty workflow. Copy "workflow" (the work activity) and "decision" (what they are deciding or asking) as EXACT substrings of the QUESTION, or "" when the question does not state them. Never paraphrase or invent context. "industry" is one of the allowed values; use "unspecified" when none is stated or implied by the organisation. "confidence" is high, medium or low.
+INPUT:
+$question_json

@@ -310,6 +310,31 @@ def automatic_business_context(question):
     return generalized_business_context(question)
 
 
+def resolve_business_intent(question, record=None):
+    """Semantic classification first; the deterministic rules only when it is missing or unusable.
+
+    Returns {'source', 'context', 'hint'}: context starts automatic insights, hint prefills the inline form.
+    An explicit research-only request always wins.
+    """
+    from src.business_intent import ACCEPTED_CONFIDENCE, trusted_value
+    q = ' '.join(question.split())
+    if RESEARCH_ONLY.search(q):
+        return {'source': 'research_only', 'context': None, 'hint': None}
+    value = trusted_value(record, q) if record else None
+    if value is not None:
+        if not value['is_business']:
+            return {'source': 'semantic', 'context': None, 'hint': None}
+        industry = '' if value['industry'] == 'unspecified' else value['industry']
+        decision = value['decision'] or (q if len(q) <= 600 else '')
+        if value['workflow'] and value['confidence'] in ACCEPTED_CONFIDENCE:
+            return {'source': 'semantic', 'hint': None, 'context': business_context(
+                {'industry': industry or 'Industry unspecified', 'workflow': value['workflow'], 'decision': decision})}
+        return {'source': 'semantic', 'context': None,
+                'hint': {'industry': industry, 'workflow': '', 'decision': decision, 'missing': ['workflow']}}
+    context = automatic_business_context(q)
+    return {'source': 'rules', 'context': context, 'hint': None if context else business_context_hint(q)}
+
+
 def derive_business_context(question, supplied):
     if not isinstance(supplied, dict) or set(supplied) - {'industry', 'workflow', 'decision'}:
         raise ValueError('Use only industry, workflow and decision to customize this translation.')

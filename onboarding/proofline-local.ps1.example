@@ -1,0 +1,19 @@
+# Proofline local session defaults for PowerShell 7.
+# Copy outside Git before use. Inject secrets through an approved local store
+# or a masked prompt. Keep this template free of credential values.
+$env:KPMG_DEPLOY_MODE = 'real'
+$env:RESEARCH_ENGINE = 's2'
+$env:S2_PAPER_BALANCE = '0'
+$env:KPMG_GEMINI_SMOKE = '0'
+$env:PORT = '8821'
+$env:KPMG_ORIGIN = 'http://127.0.0.1:8821'
+$env:BUSINESS_TRANSLATION_ENABLED = '0'
+$env:KPMG_STATE_DIR = Join-Path $env:LOCALAPPDATA 'Proofline\state'
+New-Item -ItemType Directory -Force -Path $env:KPMG_STATE_DIR | Out-Null
+
+# KPMG_GEMINI_DEDICATED_FREE: set to true after verifying the approved research project.
+# GOOGLE_API_KEY: research project credential.
+# BUSINESS_TRANSLATION_API_KEY: distinct dedicated Hydrogen project credential.
+# KPMG_REVIEW_PASSWORD: local reviewer login, 24+ printable ASCII characters.
+# KPMG_ASSET_REPO: optional approved private OWNER/REPO for setup.
+# Keep Vertex and Gemini endpoint overrides out of this session.

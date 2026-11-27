@@ -1,5 +1,10 @@
 # Portable developer setup
 
+The [Windows development handoff](../docs/proofline-windows-handoff.md) covers
+the integrated Standard S2 and Hydrogen application, including the exact
+checkout commands and [credential-free PowerShell template](proofline-local.ps1.example).
+Use the synthetic fixture below while arranging access to the approved real index.
+
 The public integration branch can run the synthetic developer preview
 without GitHub CLI authentication or restricted project assets. Install Git,
 Python 3.11, and a running Docker Linux container daemon. From the checkout

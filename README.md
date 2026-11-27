@@ -19,6 +19,11 @@ remediation, see [Data quality findings](docs/data-quality-findings.md) and the
 
 ## Run locally
 
+For the current four-tab Proofline build with Standard S2 and optional Hydrogen,
+use the [Windows development handoff](docs/proofline-windows-handoff.md). It has
+the exact Git pins, team asset setup, offline fixture commands, and the local
+environment template.
+
 Use Python 3.10 or newer. From the repository root:
 
 ```bash

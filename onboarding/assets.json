@@ -130,9 +130,9 @@
     }
   },
   "frontend": {
-    "ui-consult/design/merge-with-codex/app.js": "4e64e64050947762efae07390ec0f9454fb0785fb84e375874f316371e23746b",
-    "ui-consult/design/merge-with-codex/consult.css": "4a07333a1229c180e3eb70155180f9f818f1544b6a2e9db3500409382b992892",
-    "ui-consult/design/merge-with-codex/index.html": "fa2e6a5185c1d38064ff01a1c1d1a8cb3a96bce76f42a00834b12f5f24c21d8b",
+    "ui-consult/design/merge-with-codex/app.js": "05f8afa904f6848cdfa7c13afe7428046450f785e60e46b947992469aba5dcd5",
+    "ui-consult/design/merge-with-codex/consult.css": "7d4d9060f450f9bfb38eb0081ef777d8e4d35cd8dc051b80bbb06edaa70c6965",
+    "ui-consult/design/merge-with-codex/index.html": "d4dd018fe1e143294096a864f0d0680392a194040d600b9436a64528017baa8c",
     "ui-consult/design/merge-with-codex/mock-api.js": "dd6d469be53c6b59eca017dd1d841849cba32c609d49fc529999755a50df40c7",
     "ui-consult/design/merge-with-codex/serve.py": "102f32391cc5dcf9cf2716d4cadca0ef20fffeabab680206d7cff2ce800ac94c",
     "ui-consult/async-guards.js": "d83e616eb47d20c407827cb45b30aef845d58fa27d00a4c669a64b1a023ac586",

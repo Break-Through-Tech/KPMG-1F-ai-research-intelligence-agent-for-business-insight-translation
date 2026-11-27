@@ -6,7 +6,7 @@ The reader work on `khoi/azure-ux-refinement` through `ed15a63` is carried forwa
 
 Workspace shows the cited interpretation and suggested action before controls to generate an update. Assumptions, risks, source limitations, and additional interpretations are available in disclosures. The notice about the limits of applying study results stays visible. Research notes still contains its original checks and warnings.
 
-The Answer footer retains the one-click action for eligible saved research and a shortcut to an existing insight. In `app.js`, `renderBusinessForm` and the Workspace render change presentation and focus. The capability flag, eligibility check, request body, automatic context behavior, timeout, and error handling keep the integrated contract. The reader-only changes still need the staged copies and pins described below.
+On the UI branch, the Answer footer provides a one-click action for eligible saved research and a shortcut to an existing insight. The presentation changes in `renderBusinessForm` and Workspace keep the base contract. The current inline Answer workflow belongs to the business branch described below.
 
 ## Browser review
 
@@ -26,13 +26,29 @@ The local browser journey uses recorded CU-DPO and Fin-RATE results, including a
 - **`paragraphs`, `renderBrief`.** Group recorded findings into shorter paragraphs without reordering or editing them. Skip absent DOM sections in Research notes. Keep the integration branch’s interpretation, save, and review logic in this area.
 - **`chartView`, `viewBody`.** Start on a single metric, expose the existing selector and optional glossary, and show one selected state through `aria-checked`. Plot generation, eligibility, original scales, and cell inspection remain on the existing paths.
 
-Rebuild the hosted copy from the reconciled `ui-consult/app.js` and `consult.css`. Verify the corresponding files under `onboarding/frontend/ui-consult/design/merge-with-codex/`, the frontend manifest in `onboarding/assets.json`, and the check in `experiments/render-staging/stage.py`. The two frontend source files and their staged counterparts are intended to be byte-identical after LF normalization.
+The UI branch synchronizes `app.js`, `consult.css`, and `index.html` with `onboarding/frontend/ui-consult/design/merge-with-codex/`. After reconciliation, repeat the copy from `ui-consult` with LF line endings and regenerate both the full hashes in `onboarding/assets.json` and the prefixes in `experiments/render-staging/stage.py`.
 
 ## Final product polish
 
-The four tabs share the same reading column and typography. Sources keeps papers and passage links together, Evidence keeps the tables and charts, and Workspace holds business interpretation, research notes, and review. The separate inline Business insight change is at `36709f76c9a1dac27119bbc6f76c5ab4f6d336cf` on `integration/proofline-business-hydrogen`. During reconciliation, place its `.answer-business` section after the findings and before the reading footer. Its existing interpretation, action and disclosure markup uses the new reader styles. Retain the integration branch’s generation, pending states, and form behavior.
+The four tabs share the same reading column and typography. Sources keeps papers and passage links together, Evidence keeps the tables and charts, and Workspace holds business interpretation, research notes, and review.
 
 This polish changes three presentation areas in `app.js`: `setInspector` marks the table row that opened the inspector, `renderBrief` shows four compact verification disclosures with the original explanations, and `sourceRow` presents table row context beneath the row label. Research notes retains the visible discrepancy and original review limitations.
+
+## Research Desk implementation
+
+The approved Research Desk is the full-window desktop layout. The blue gradient is shared by the sidebar and header, and the reading surfaces remain opaque. The four tabs share a centered 716 px reading column. Citation inspection docks on the right at 1024 px and above, with the existing overlay at smaller widths.
+
+In `app.js`, `setTab` and `setInspector` use short motion for pointer input and honor reduced motion. The source inspector keeps the selected quote and evidence checks visible and puts supporting context in disclosures. `renderEvidenceTable` lets Evidence tables grow with their rows in the main scroller. `renderBrief` keeps a recorded partial status visible and presents tables first when the question does not name a comparison. Table validation, source matching, and publication checks still use the existing paths.
+
+Research Home omits the generic indexed-research introduction. Settings retains Industry context, Risk & compliance, and Explanation style with their inputs and labels. The three explanatory paragraphs below those controls are removed.
+
+## Integration with the current business branch
+
+The UI changes after the shared base `9b5af91` are the Research Desk layout (`5d33cd1`), the copy cleanup (`bb7b209`), and this handoff. Use `khoi/proofline-business-intent` at `b0a35af`, which descends from Azure's `7d762c8`, as the source of the current business flow. Preserve its automatic intent detection and context extraction, the `demo.business_auto` dispatch and pending guard, the inline `.answer-business` result and retry, and the inline workflow field and Workspace customization.
+
+Reconcile `renderBrief` in the primary `ui-consult/app.js`, keeping both the Desk evidence and citation presentation and the business branch's Answer and Workspace markup. Retain the business rules in `consult.css` alongside the Desk styles. The staged `app.js` and `consult.css` and both pin files show conflicts against Azure and the business branch. Regenerate those four files from the reconciled frontend and retain the business branch's staging logic.
+
+Offline verification on the UI branch passed 55 evidence browser tests, the recorded-answer desktop journeys, the Research Home and Settings replay, the loading and recoverable-error journey, and eight development-host tests with the local CU-DPO fixture. All 48 frontend hashes and five staging pins matched. Verify the combined business workflow again after reconciliation.
 
 ## Design references and decisions
 

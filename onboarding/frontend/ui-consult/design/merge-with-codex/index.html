@@ -91,7 +91,7 @@
         <section id="hero" class="home" aria-labelledby="hero-title">
           <div class="home-intro">
             <h1 id="hero-title">What would you like to research?</h1>
-            <p id="hero-sub" class="home-sub">Answers from indexed research papers. Every statement links to the passage or table it came from.</p>
+            <p id="hero-sub" class="home-sub"></p>
           </div>
           <div id="home-slot" class="composer-slot"></div>
           <section id="recent-section" class="recent" aria-labelledby="recent-heading" hidden>
@@ -152,19 +152,16 @@
                 <label for="industry">Industry context <span class="optional">optional</span></label>
                 <input id="industry" type="text" maxlength="300" placeholder="e.g. banking" autocomplete="off">
                 <div id="industry-quick" class="quick" role="group" aria-label="Common industries"></div>
-                <p class="hint">Requests conditional business implications for this industry. Leave empty for a research summary only.</p>
               </div>
               <div class="field" id="risk-field" hidden>
                 <span class="field-label">Risk &amp; compliance <span class="optional">optional</span></span>
                 <label class="check"><input id="risk-assessment" type="checkbox"> Add source-backed risk and compliance assessment</label>
                 <label for="jurisdiction" class="sr-only">Jurisdiction (required for assessment)</label>
                 <input id="jurisdiction" type="text" maxlength="200" placeholder="Jurisdiction, e.g. United States" autocomplete="off">
-                <p class="hint">Advisory only. Needs an industry context and a jurisdiction. If it fails, your research answer is kept.</p>
               </div>
               <div class="field">
                 <span class="field-label" id="explanation-label">Explanation style</span>
                 <div id="explanation-seg"></div>
-                <p class="hint">Plain language rewrites research findings only, when available. Sources and business actions stay unchanged.</p>
               </div>
               <div class="field" hidden>
                 <span class="field-label" id="enter-label">Enter key</span>

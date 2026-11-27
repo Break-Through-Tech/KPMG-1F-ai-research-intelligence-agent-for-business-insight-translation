@@ -51,6 +51,8 @@ class FakeBackend(BaseHTTPRequestHandler):
         length = int(self.headers.get('Content-Length') or 0)
         self.rfile.read(length)
         FakeBackend.seen.append(('POST', self.path))
+        if self.path == '/api/business':
+            time.sleep(0.6)  # Longer than the generic API timeout used in these tests.
         if '/5104dead/' in self.path:
             # Late commit: the write is stored only after the proxy has given up waiting.
             time.sleep(1.2)
@@ -133,6 +135,10 @@ class ServeTests(unittest.TestCase):
             FakeBackend.big = 0
         self.assertEqual(status, 502)
         self.assertEqual(json.loads(body)['code'], 'backend_response_too_large')
+
+    def test_business_waits_beyond_generic_api_timeout(self):
+        status, _ = self.request('POST', '/api/business', body=b'{}')
+        self.assertEqual(status, 200)
 
     def test_proxy_timeout_after_forwarding_a_write_is_unknown_not_rejected(self):
         # Verification blocker 1: a 504 after the write was forwarded must not read as a rejection.

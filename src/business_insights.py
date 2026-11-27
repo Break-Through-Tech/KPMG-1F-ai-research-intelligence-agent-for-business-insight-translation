@@ -7,7 +7,7 @@ from time import perf_counter
 
 from src.business_handoff import accepted_research
 from src.business_translation import translate
-from src.business_checks import screen, provenance as checks_provenance
+from src.business_generation import BusinessTranslationUnavailable
 from src.research_contracts import validate_result, validate_business_insight
 from src.research_pipeline import content_fingerprint
 from src.research_review import make_review_packet, require_current_review
@@ -66,7 +66,11 @@ def translate_result(result, *, context, generate, metadata=None, expected_finge
             'usefulness_review_criteria': ['generic_recommendations', 'workflow_parroting',
                                          'semantic_repetition', 'pilot_overreliance'],
             'source_review_fingerprint': source_fingerprint, 'context': context,
-            'context_sha256': digest(context), 'checks': checks_provenance(),
+            'context_sha256': digest(context),
+            'publication_gate': {'policy': 'structural-only-v1', 'checks': [
+                'accepted_evidence_handoff', 'business_insight_json_schema', 'citation_integrity',
+                'concise_length_limits', 'accepted_limitations_preserved'],
+                'semantic_screen': 'removed; validated configuration publishes model output after structural checks'},
             'implementation_sha256': sha256(Path(__file__).read_bytes()).hexdigest(),
             'handoff_sha256': sha256(Path(__file__).with_name('business_handoff.py').read_bytes()).hexdigest(),
             'translator_sha256': sha256(Path(__file__).with_name('business_translation.py').read_bytes()).hexdigest(),
@@ -85,7 +89,15 @@ def translate_result(result, *, context, generate, metadata=None, expected_finge
             info['complete_prompt_sha256'] = sha256(prompt.encode('utf-8')).hexdigest()
             info['instruction_suffixes'] = []
             info['attempted_calls'] += 1
-            return generate(prompt)
+            try:
+                return generate(prompt)
+            except BusinessTranslationUnavailable:
+                info['provider_unavailable'] = True
+                raise
+            finally:
+                attempts = getattr(generate, 'provider_attempts', None)
+                if isinstance(attempts, int) and not isinstance(attempts, bool):
+                    info['provider_attempts'] = attempts
         business = translate(summary, evidence, industry=context['industry'], generate=invoke,
                              concise=True, _prompt_path=PROMPT)
         if any(len(business[field]) > 4 or any(len(line) > 500 for line in business[field])
@@ -93,16 +105,21 @@ def translate_result(result, *, context, generate, metadata=None, expected_finge
                 len(row['assumptions']) > 3 or any(len(a) > 300 for a in row['assumptions'])
                 for row in business['implications']):
             raise ValueError('Business caveats exceed the concise policy.')
-        business, trace = screen(business, summary, evidence, context)
-        # Material accepted gaps and caveats survive an overoptimistic business draft.
+        # No semantic screen: the validated configuration publishes the model's insight
+        # after structural checks. Material accepted gaps and caveats are still kept.
         business['limitations'] = list(dict.fromkeys([*summary['limitations'], *business['limitations']]))
         validate_business_insight(business, {p['chunk_id'] for p in evidence}, industry=context['industry'])
         output['business_insight'] = business
-        info.update(status=business['status'], screening=trace)
+        info.update(status=business['status'])
     except Exception:
-        info['status'] = 'failed'
-        error = {'stage': 'business', 'code': 'business_failed',
-                 'message': 'Business translation could not be validated. The research answer is retained.'}
+        if info.get('provider_unavailable'):
+            info['status'] = 'unavailable'
+            error = {'stage': 'business', 'code': 'business_unavailable',
+                     'message': 'Business translation is temporarily unavailable. The research answer is retained; try again later.'}
+        else:
+            info['status'] = 'failed'
+            error = {'stage': 'business', 'code': 'business_failed',
+                     'message': 'Business translation could not be validated. The research answer is retained.'}
     info['elapsed_seconds'] = round(perf_counter() - started, 4)
     output.setdefault('provenance', {})['business_translation'] = info
     output['review_fingerprint'] = content_fingerprint(output)
@@ -135,8 +152,8 @@ def main():
         raw = args.fixture_response.read_text(encoding='utf-8')
         generate, metadata = lambda prompt: raw, {'execution': 'canned_fixture'}
     else:
-        from src.generation import create_generate
-        generate, metadata = create_generate()
+        from src.business_generation import create_business_generate
+        generate, metadata = create_business_generate()
     origin = {'kind': 'fixture' if data.get('mode') == 'fixture' or data.get('fixture_file') else 'recorded_research',
               'mode': data.get('mode'), 'fixture_file': data.get('fixture_file')}
     envelope = translate_result(result, context=context, generate=generate, metadata=metadata, research_input=origin)

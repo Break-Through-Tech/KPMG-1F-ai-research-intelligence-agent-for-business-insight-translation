@@ -2534,7 +2534,7 @@
           body: JSON.stringify({brief_id: demo.library.brief.id, expected_version: demo.library.version.id,
             fingerprint: demo.result.review_fingerprint,
             context: {industry: industry.value, workflow: workflow.value, decision: decision.value}}),
-          signal: AbortSignal.timeout(180000)});
+          signal: AbortSignal.timeout(180000)}); // Business proxy waits up to 170 seconds.
         const updated = await response.json();
         if (!response.ok) throw new Error(updated.error || 'Business translation failed.');
         if (form.isConnected) onChanged(updated);
@@ -2547,7 +2547,8 @@
     h('label', null, h('span', {text: 'Business workflow'}), workflow),
     h('label', null, h('span', {text: 'Decision'}), decision), send, status);
     return h('details', {class: 'fold'}, h('summary', {text: 'Business implications'}),
-      h('p', {class: 'muted small', text: 'Uses the saved findings in one additional model call. Research is not rerun.'}), form);
+      h('p', {class: 'muted small', text: 'Translates the saved findings. The request may take up to three minutes if the provider needs a retry.'}),
+      h('p', {class: 'muted small', text: 'Evaluation configuration on a free API tier: do not enter client names or confidential details in these fields.'}), form);
   }
 
   function renderDemo(demo, number, answer) {

@@ -82,8 +82,8 @@ def main():
     parser.add_argument('--configured-provider', action='store_true', required=True,
                         help='Explicit provider selection; business requests make a model call.')
     args = parser.parse_args()
-    from src.generation import create_generate
-    generate, metadata = create_generate()
+    from src.business_generation import create_business_generate
+    generate, metadata = create_business_generate()  # Hydrogen only; never the research model.
     BusinessHandler.business_generate = staticmethod(generate)
     BusinessHandler.business_metadata = metadata
     BusinessHandler.library = BriefStore(args.library)

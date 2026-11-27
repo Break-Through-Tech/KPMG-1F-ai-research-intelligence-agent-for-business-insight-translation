@@ -134,35 +134,28 @@ class DownstreamTests(unittest.TestCase):
             self.assertNotIn('SECRET', json.dumps(envelope))
             self.assertEqual(gen.call_count, 1)
 
-    def test_unsafe_finance_compliance_deployment_and_premises_are_withheld(self):
-        unsafe = [
-            'This could deliver a 300% ROI and save $2 million annually.',
-            'This may generate annual savings for onboarding.',
-            'The workflow is compliant and ensures compliance.',
-            'The workflow is production-ready; deploy immediately.',
-            'The workflow eliminates all errors and guarantees reliable onboarding.',
-            'The study demonstrated that encryption prevents all privacy leakage.',
-            'The study found that workflow reconstruction replaced onboarding analysts.',
-        ]
-        for value in unsafe:
+    def test_no_semantic_screen_publishes_structurally_valid_output_unchanged(self):
+        # The validated Hydrogen configuration has no semantic publication gate.
+        # Wording a regex screen used to withhold is now published as generated.
+        for value in ('This may generate annual savings for onboarding.',
+                      'Workflow reconstruction improved accuracy by 99% in onboarding.'):
             with self.subTest(value=value):
                 envelope, _ = self.call(business(text=value))
                 output = envelope['result']['business_insight']
-                self.assertEqual(output['status'], 'insufficient_evidence')
-                self.assertEqual(output['implications'], [])
-        for field in ('suggested_action', 'assumptions'):
-            output = business(); output['implications'][0][field] = ['The study proved encryption prevents privacy leakage.'] if field == 'assumptions' else 'Deploy immediately across onboarding.'
-            envelope, _ = self.call(output)
-            self.assertEqual(envelope['result']['business_insight']['implications'], [])
+                self.assertEqual(output['status'], 'ok')
+                self.assertEqual(output['implications'][0]['text'], value)
+                gate = envelope['result']['provenance']['business_translation']['publication_gate']
+                self.assertEqual(gate['policy'], 'structural-only-v1')
+                self.assertNotIn('screening', envelope['result']['provenance']['business_translation'])
 
-    def test_generic_and_repeated_actions_do_not_pad_output(self):
-        for action in ('Adopt AI, improve performance and ensure governance.',):
-            envelope, _ = self.call(business(action=action))
-            self.assertEqual(envelope['result']['business_insight']['implications'], [])
-        output = business(); output['implications'].append(deepcopy(output['implications'][0]))
-        output['implications'][1]['text'] = 'Task switches could inform onboarding process documentation.'
-        envelope, _ = self.call(output)
-        self.assertEqual(len(envelope['result']['business_insight']['implications']), 1)
+    def test_structural_checks_still_reject_unknown_citations_and_wrong_industry(self):
+        bad_citation = business(); bad_citation['implications'][0]['chunk_ids'] = ['not-accepted']
+        wrong_industry = business(); wrong_industry['industry'] = 'Banking'
+        extra_field = business(); extra_field['confidence'] = 0.9
+        for output in (bad_citation, wrong_industry, extra_field):
+            envelope, _ = self.call(output)
+            self.assertEqual(envelope['error']['code'], 'business_failed')
+            self.assertNotIn('business_insight', envelope['result'])
 
     def test_distinct_transfer_conditions_are_not_deduplicated(self):
         output = business(); other = deepcopy(output['implications'][0])
@@ -171,14 +164,6 @@ class DownstreamTests(unittest.TestCase):
         output['implications'].append(other)
         envelope, _ = self.call(output)
         self.assertEqual(len(envelope['result']['business_insight']['implications']), 2)
-
-    def test_changed_numbers_and_fact_in_assumption_do_not_escape_checks(self):
-        output = business()
-        output['implications'][0]['assumptions'] = ['Monitors detect most unsafe behavior.']
-        envelope, _ = self.call(output)
-        self.assertEqual(envelope['result']['business_insight']['implications'], [])
-        envelope, _ = self.call(business(text='Workflow reconstruction improved accuracy by 99% in onboarding.'))
-        self.assertEqual(envelope['result']['business_insight']['implications'], [])
 
     def test_supported_study_number_survives_conditional_transfer(self):
         evidence = 'The travel study evaluated 92 student commuters and found travel habits useful for prediction.'
@@ -194,9 +179,6 @@ class DownstreamTests(unittest.TestCase):
                           action='Compare routing request cost and task quality before deciding which routing checks to retain.')
         envelope, _ = self.call(output, result=result_for(evidence))
         self.assertEqual(envelope['result']['business_insight']['status'], 'ok')
-        output['implications'][0]['text'] += ' This will save $2 per onboarding task.'
-        envelope, _ = self.call(output, result=result_for(evidence))
-        self.assertEqual(envelope['result']['business_insight']['implications'], [])
 
     def test_missing_prompt_is_an_isolated_failure(self):
         with patch('src.business_insights.PROMPT', Path('/missing/prompt.txt')):

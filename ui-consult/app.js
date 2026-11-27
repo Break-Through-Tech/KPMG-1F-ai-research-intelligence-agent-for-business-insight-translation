@@ -468,7 +468,9 @@
 
   /* ---------- Evidence inspector ---------- */
   function setInspector(open, trigger = null) {
+    returnFocus?.closest('.ev-table tbody tr')?.removeAttribute('data-inspected');
     if (open && trigger) returnFocus = trigger;
+    if (open) returnFocus?.closest('.ev-table tbody tr')?.setAttribute('data-inspected', '');
     const wasOpen = document.body.classList.contains('insp-open');
     if (open && document.body.classList.contains('review-open')) { document.body.classList.remove('review-open'); $('#review-drawer').inert = true; }
     document.body.classList.toggle('insp-open', open);
@@ -2310,16 +2312,21 @@
     const completeness = abstained ? 'No answer: the retrieved evidence did not support one.'
       : partial ? (gap ? `Partial. Missing: ${gap}` : 'Partial. The review marked the answer as incomplete.')
         : summary.answer_scope === 'full' ? 'The automated review judged that the answer covers the question.' : 'Not assessed for this answer.';
-    const card = (title, text, tone = '') => h('article', {class: `check-card ${tone}`}, h('h3', {class: 'ws-h', text: title}), h('p', {text}));
+    const check = (title, status, explanation, tone = '') => h('details', {class: 'fold check-row'},
+      h('summary', null, h('span', {class: 'check-label', text: title}),
+        h('span', {class: `check-status ${tone}`, text: status})),
+      h('p', {text: explanation}));
     const group = (title, items) => items.length ? h('section', {class: 'ws-group'}, h('h3', {class: 'ws-h', text: title}),
       h('ul', {class: 'notes-list'}, items.map(item => typeof item === 'string' ? h('li', {math: item}) : item.chunk_ids ? cited('li', item, demo, number)
         : h('li', null, item.label ? h('span', {class: 'li-label', text: `${item.label}. `}) : null, h('span', {math: item.text}))))) : null;
     notesPanel.append(...[discrepancyBox,
-      h('div', {class: 'check-grid'},
-        card('Quotations', quoteChecked ? 'Every quote attached to a statement was found word-for-word in its source paper. This does not show that the quote supports the statement.' : 'This saved result does not record a quote check.'),
-        card('Claim support', support),
-        card('Completeness', completeness, partial || abstained ? 'warn' : ''),
-        card('Human approval', review.long, review.tone === 'ok' ? 'ok' : '')),
+      h('div', {class: 'check-list'},
+        check('Quotations', quoteChecked ? 'Quotes matched' : 'Not recorded',
+          quoteChecked ? 'Every quote attached to a statement was found word-for-word in its source paper. This does not show that the quote supports the statement.' : 'This saved result does not record a quote check.'),
+        check('Claim support', result.provenance?.agentic || summary.quality_review ? 'Model reviewed' : quoteChecked ? 'Meaning not checked' : 'Not recorded', support),
+        check('Completeness', abstained ? 'No answer' : partial ? 'Partial' : summary.answer_scope === 'full' ? 'Marked complete' : 'Not assessed',
+          completeness, partial || abstained ? 'warn' : ''),
+        check('Human approval', review.short, review.long, review.tone)),
       group('What the answer does not cover', notes.coverage),
       group('Limitations of the evidence', notes.limits),
       group(insight ? `Risks and limits of the ${insight.industry} insight` : 'Business risks', notes.business),
@@ -2374,13 +2381,15 @@
     const sourceRow = index => {
       const passage = evidence[index];
       const count = statementCount(passage);
-      const where = passage.representation === 'linearized_table'
-        ? [(passage.caption || '').split(/[:.]/)[0].trim() || 'Table', passage.row_label, settingOf(passage)].filter(Boolean).join(' · ')
+      const isTableRow = passage.representation === 'linearized_table';
+      const where = isTableRow
+        ? [(passage.caption || '').split(/[:.]/)[0].trim() || 'Table', passage.row_label].filter(Boolean).join(' · ')
         : sourceLocation(passage);
+      const detail = (isTableRow ? settingOf(passage) : null) || kindOf(passage);
       const open = h('button', {type: 'button', class: 'source-row', 'aria-label': `Open source ${index + 1}, ${citationSourceContext(passage)}`,
         onclick: () => showEvidence(demo, number, index, open)},
         h('span', {class: 'cite-num', text: String(index + 1)}),
-        h('span', {class: 'row-where'}, texText(h('span', {class: 'row-loc'}), where), h('span', {class: 'row-kind', text: kindOf(passage)})),
+        h('span', {class: 'row-where'}, texText(h('span', {class: 'row-loc'}), where), h('span', {class: 'row-kind', text: detail})),
         h('span', {class: `row-use ${count ? 'is-cited' : ''}`, text: count ? `Cited by ${plural(count, 'statement')}` : 'Retrieved, not cited'}));
       open.dataset.passage = index;
       return h('li', null, open);

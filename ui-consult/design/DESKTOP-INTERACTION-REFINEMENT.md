@@ -28,6 +28,12 @@ The local browser journey uses recorded CU-DPO and Fin-RATE results, including a
 
 Rebuild the hosted copy from the reconciled `ui-consult/app.js` and `consult.css`. Verify the corresponding files under `onboarding/frontend/ui-consult/design/merge-with-codex/`, the frontend manifest in `onboarding/assets.json`, and the check in `experiments/render-staging/stage.py`. The two frontend source files and their staged counterparts are intended to be byte-identical after LF normalization.
 
+## Final product polish
+
+The four tabs share the same reading column and typography. Sources keeps papers and passage links together, Evidence keeps the tables and charts, and Workspace holds business interpretation, research notes, and review. The separate inline Business insight change is at `36709f76c9a1dac27119bbc6f76c5ab4f6d336cf` on `integration/proofline-business-hydrogen`. During reconciliation, place its `.answer-business` section after the findings and before the reading footer. Its existing interpretation, action and disclosure markup uses the new reader styles. Retain the integration branch’s generation, pending states, and form behavior.
+
+This polish changes three presentation areas in `app.js`: `setInspector` marks the table row that opened the inspector, `renderBrief` shows four compact verification disclosures with the original explanations, and `sourceRow` presents table row context beneath the row label. Research notes retains the visible discrepancy and original review limitations.
+
 ## Design references and decisions
 
 - [Impeccable](https://impeccable.style/) supplied the critique, audit, and simplification criteria. Findings were checked against the browser rather than estimated from code. The review used the local reference text and existing fixture tooling.

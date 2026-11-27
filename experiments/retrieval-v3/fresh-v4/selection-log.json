@@ -1,0 +1,107 @@
+[
+ {
+  "theme": "T1",
+  "arxiv_id": "2611.01409v1",
+  "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+  "passages": 59,
+  "prose_chunks": 27,
+  "table_rows": 32,
+  "decision": "selected"
+ },
+ {
+  "theme": "T1",
+  "arxiv_id": "2611.02018v1",
+  "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+  "passages": 45,
+  "prose_chunks": 20,
+  "table_rows": 25,
+  "decision": "selected"
+ },
+ {
+  "theme": "T2",
+  "arxiv_id": "2611.01386v1",
+  "title": "Learning by Doing: Autonomously Compiling and Curating Agent Skills from Verified Traces",
+  "passages": 56,
+  "prose_chunks": 56,
+  "table_rows": 0,
+  "decision": "skip: no extracted table rows"
+ },
+ {
+  "theme": "T2",
+  "arxiv_id": "2611.01394v1",
+  "title": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting",
+  "passages": 53,
+  "prose_chunks": 11,
+  "table_rows": 42,
+  "decision": "selected"
+ },
+ {
+  "theme": "T2",
+  "arxiv_id": "2611.01415v1",
+  "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+  "passages": 45,
+  "prose_chunks": 23,
+  "table_rows": 22,
+  "decision": "selected"
+ },
+ {
+  "theme": "T3",
+  "arxiv_id": "2611.02134v1",
+  "title": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety",
+  "passages": 130,
+  "prose_chunks": 40,
+  "table_rows": 90,
+  "decision": "selected"
+ },
+ {
+  "theme": "T3",
+  "arxiv_id": "2611.02791v2",
+  "title": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models",
+  "passages": 167,
+  "prose_chunks": 44,
+  "table_rows": 123,
+  "decision": "selected"
+ },
+ {
+  "theme": "T4",
+  "arxiv_id": "2611.01409v1",
+  "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+  "decision": "skip: already selected for an earlier theme"
+ },
+ {
+  "theme": "T4",
+  "arxiv_id": "2611.02011v2",
+  "title": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment",
+  "passages": 73,
+  "prose_chunks": 24,
+  "table_rows": 49,
+  "decision": "selected"
+ },
+ {
+  "theme": "T4",
+  "arxiv_id": "2611.02041v1",
+  "title": "ECGJev: Question-Conditioned Option Scoring for 12-Lead ECG Interpretation",
+  "passages": 29,
+  "prose_chunks": 13,
+  "table_rows": 16,
+  "decision": "selected"
+ },
+ {
+  "theme": "T5",
+  "arxiv_id": "2611.01411v1",
+  "title": "Sensitivity Inflation from Cross-Record Precision Routing in Private Quantized Fine-Tuning",
+  "passages": 52,
+  "prose_chunks": 23,
+  "table_rows": 29,
+  "decision": "selected"
+ },
+ {
+  "theme": "T5",
+  "arxiv_id": "2611.01704v1",
+  "title": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference",
+  "passages": 36,
+  "prose_chunks": 27,
+  "table_rows": 9,
+  "decision": "selected"
+ }
+]

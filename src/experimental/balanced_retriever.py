@@ -2,7 +2,7 @@
 import re,math
 import numpy as np
 from .retriever import Retriever,tokens
-from .evidence_coverage import coverage_candidates
+from .evidence_coverage import comparison_pair, coverage_candidates
 
 def facets(query):
     parts=re.split(r',\s*and\s+(?=(?:what|how|why|whether)\b)|;\s*',query,flags=re.I)
@@ -12,7 +12,10 @@ def facets(query):
     return list(dict.fromkeys(result))[:2]
 
 class FacetRetriever(Retriever):
-    def __init__(self,index,reranker,model):super().__init__(index,reranker);self.model=model
+    def __init__(self,index,reranker,model,*,table_comparisons=False):
+        super().__init__(index,reranker)
+        self.model=model
+        self.table_comparisons=table_comparisons
     def rank_facets(self,query,qv):
         routes,debug=super().rank(query,qv,with_reranker=False)
         hybrid=routes['document_hybrid'];fqs=facets(query);docs=set(debug['paper_candidates'])
@@ -71,5 +74,8 @@ class FacetRetriever(Retriever):
             best=min(candidates,key=lambda i:(ranks[i],i))
             if best not in selected:selected.append(best)
         if hybrid[0] not in selected:selected.append(hybrid[0])
+        pair = comparison_pair(query, order, self.byid, docs) if self.table_comparisons else []
+        if pair:
+            selected = pair + [ident for ident in selected if ident not in pair]
         order=selected+[i for i in order if i not in selected]
-        return order,{'facets':fqs,'candidate_count':len(candidates),'pairs_scored':pairs_total,'paper_candidates':debug['paper_candidates'],'balanced_prefix':selected}
+        return order,{'facets':fqs,'candidate_count':len(candidates),'pairs_scored':pairs_total,'paper_candidates':debug['paper_candidates'],'balanced_prefix':selected,'comparison_pair':pair}

@@ -18,4 +18,24 @@ jobs:
           python-version: '3.12'
           cache: pip
       - run: python -m pip install -r requirements.txt
-      - run: python -m pytest
+      - name: Fetch the pinned Hydrogen replay inputs
+        run: git fetch --no-tags --depth=1 origin 928bdd3f364ef5f8ac4c3f0afdbf024f33f9773b
+      # These frozen evaluation harnesses require the original private corpus or
+      # local-only helper modules. Keep the rest of pytest discovery enabled.
+      - name: Run portable Python tests
+        run: >-
+          python -m pytest
+          --ignore=experiments/agentic/test_ab_dryrun.py
+          --ignore=experiments/agentic/test_ab_harness.py
+          --ignore=experiments/consolidated/test_consolidated.py
+          --ignore=experiments/consolidated/test_runner.py
+          --ignore=experiments/consolidated-v2/test_consolidated.py
+          --ignore=experiments/consolidated-v2/test_runner.py
+          --ignore=experiments/consolidated-v2/test_v2.py
+          --ignore=experiments/evidence-budget/test_combined.py
+          --ignore=experiments/table-endpoint/test_evidence_tables.py
+          --ignore=experiments/verification-repair/test_interpretation_gate.py
+          --deselect=experiments/agentic/test_adversarial.py::SharedLimits::test_progress_reports_mode_agent_and_call_limit
+          --deselect=experiments/agentic/test_integration.py::CumulativeLedger
+          --deselect=experiments/retrieval-v3/test_s2_paper_balance.py::ReproducesOffline
+          -k 'not test_saved_v2_leads_are_not_false_positives and not test_replay_saved_s2_through_s3_publish_is_identical'

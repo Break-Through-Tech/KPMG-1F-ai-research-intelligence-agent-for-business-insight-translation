@@ -1,0 +1,2 @@
+# Deployment scripts run on Linux; keep LF on every platform.
+* text eol=lf

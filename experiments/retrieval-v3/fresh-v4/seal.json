@@ -1,0 +1,12 @@
+{
+ "experiments/retrieval-v3/fresh-v4/answer-key.md": "5ac7f702661b50bf7e8fd0e52607c91309e46d91b926b3989aa4cddd6bbf8a4e",
+ "experiments/retrieval-v3/fresh-v4/bundle-record.json": "4a508f79419f72af2531677b483d143b73f2fdc51ee142e9c9a7e9e552fa7b7c",
+ "experiments/retrieval-v3/fresh-v4/KEY-REVIEW-RECORD.md": "ffa558bbb0dafcedb725d884b983df6a9409400c7c829a1207362eddb82b3cf9",
+ "experiments/retrieval-v3/fresh-v4/KEY-REVIEW-REPORT.md": "203aaba66dd96831d365fc874a937e82bbacebbd4c16e82917a379e9df2a69c7",
+ "experiments/retrieval-v3/fresh-v4/questions.json": "7c3a00d22f21e323ee5a8a330ff9283f5bdc5a837d54e5672327dcafd1134ed3",
+ "experiments/retrieval-v3/fresh-v4/references.json": "a9bb7715707f504b7f50b8b4b79b0708c87c0d64b8ab1d34e7617e10195282c9",
+ "experiments/retrieval-v3/fresh-v4/rules.json": "82be26f4974918540e4c73d94910a4215a82720da71b49bf57d086d77aaff9f0",
+ "experiments/retrieval-v3/fresh-v4/selection-log.json": "a8eacdfdb547118c11e8ec089a0d7b2dee21d722e72773df719a1f8dfadae52a",
+ "experiments/retrieval-v3/fresh-v4/SELECTION-RULE.md": "c1ad4fa41710b044211e4bae566635f1fa77750316945a4228d5cff0b24cae60",
+ "experiments/retrieval-v3/fresh-v4/sources.json": "d282e9769dd6520a7d62c625461ccd90c85903fd164c8f3cd0b04a377320e8c2"
+}

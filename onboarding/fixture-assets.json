@@ -1,0 +1,22 @@
+{
+  "demo-100/manifest.json": {
+    "bytes": 470,
+    "sha256": "be91fc7a7e7deaac155cd9e59aba2b533e090e1284508419dba65eee33a20391"
+  },
+  "demo-100/parents.jsonl": {
+    "bytes": 224,
+    "sha256": "c8c8ee399b4211751939eafaf9e0e38ad19d62901c75b4fe1e22a095d157c41e"
+  },
+  "demo-100/vectors.npy": {
+    "bytes": 1664,
+    "sha256": "3cc96ed0b9699b3833fa4bc8c3c005a0a40d655e4724cddbc869542d78b6d965"
+  },
+  "demo-100/views.json": {
+    "bytes": 303,
+    "sha256": "d9e2b020fbb6cb54e431701b171b8f3b600489c409154e6b689a56354c4b2d67"
+  },
+  "table-audit-demo-100.json": {
+    "bytes": 130,
+    "sha256": "8bc7f3368578040eb355172b85101b6daff5214b39bd9086157f548f870661fe"
+  }
+}

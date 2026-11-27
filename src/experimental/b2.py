@@ -8,7 +8,7 @@ from .search_index import SearchViewIndex
 
 METHOD = 'document-table-balanced-facets-v1'
 
-def open_b2(index_path, *, encoder_path, reranker_path, encoder=None, reranker=None):
+def open_b2(index_path, *, encoder_path, reranker_path, encoder=None, reranker=None, table_comparisons=False):
     """Require explicitly selected local artifacts; never fall back or download."""
     model_paths = [Path(encoder_path).resolve(), Path(reranker_path).resolve()]
     if any(not p.is_dir() for p in model_paths):
@@ -22,7 +22,7 @@ def open_b2(index_path, *, encoder_path, reranker_path, encoder=None, reranker=N
     index = SearchViewIndex(index_path, model=encoder)
     if index.manifest['strategy'] not in {'token224_parent', 'semantic95_token224_parent'}:
         raise ValueError('B2 requires the bounded token224_parent bundle; no alternate strategy selected.')
-    engine = FacetRetriever(index, reranker, encoder)
+    engine = FacetRetriever(index, reranker, encoder, table_comparisons=table_comparisons)
     here = Path(__file__).resolve().parent
     names = ('b2.py','retriever.py','balanced_retriever.py','evidence_coverage.py','search_index.py','search_chunks.py','semantic_views.py')
     hashes = {name: sha256((here/name).read_bytes()).hexdigest() for name in names}
@@ -40,7 +40,8 @@ def open_b2(index_path, *, encoder_path, reranker_path, encoder=None, reranker=N
         for name, digest in hashes.items():
             if sha256((here/name if name in names else here.parent/name).read_bytes()).hexdigest() != digest:
                 raise ValueError('Retrieval implementation changed; restart before querying.')
-        return {**index.identity(), 'candidate_algorithm': METHOD, 'algorithm_sha256': deepcopy(hashes)}
+        return {**index.identity(), 'candidate_algorithm': METHOD, 'algorithm_sha256': deepcopy(hashes),
+                **({'table_comparisons': True} if table_comparisons else {})}
     def retrieve(query, top_k=5):
         identity()
         if not isinstance(query,str) or not query.strip():
@@ -58,4 +59,4 @@ def open_b2(index_path, *, encoder_path, reranker_path, encoder=None, reranker=N
         'method':METHOD,'strategy':index.manifest['strategy'],'experimental':True,'human_acceptance':'pending',
         'generation_calls':0,'document_index_rebuilt':False,
         'embedding_model':'all-MiniLM-L6-v2','reranker':str(model_paths[1]),
-        'algorithm_sha256':hashes}
+        'algorithm_sha256':hashes, **({'table_comparisons': True} if table_comparisons else {})}

@@ -1,0 +1,52 @@
+[
+ {
+  "arxiv_id": "2611.01409v1",
+  "title": "RAG-TRACE: Tracing Measurement Evidence and Diagnostic Completeness in AI-Generated ECG Reports",
+  "html_path": "html/2611.01409v1.html"
+ },
+ {
+  "arxiv_id": "2611.02018v1",
+  "title": "CULTURE-CMT: Benchmarking Contextualized Social Media Translation",
+  "html_path": "html/2611.02018v1.html"
+ },
+ {
+  "arxiv_id": "2611.01394v1",
+  "title": "ERIA: An Instruction-Optimized Agent for Clinical EEG Reporting",
+  "html_path": "html/2611.01394v1.html"
+ },
+ {
+  "arxiv_id": "2611.01415v1",
+  "title": "Latent Harness: Compiling Agent Behaviors into Post-Block Activation Shifts",
+  "html_path": "html/2611.01415v1.html"
+ },
+ {
+  "arxiv_id": "2611.02134v1",
+  "title": "HaloGuard 2.0: An Open-Weights Constitutional Output Guard for Multilingual Response Safety",
+  "html_path": "html/2611.02134v1.html"
+ },
+ {
+  "arxiv_id": "2611.02791v2",
+  "title": "PGuard: A Native, Streaming, and Plug-in Guardrail for Multimodal Large Language Models",
+  "html_path": "html/2611.02791v2.html"
+ },
+ {
+  "arxiv_id": "2611.02011v2",
+  "title": "MedPsy: State-of-the-Art Small Medical Language Models for Efficient Edge Deployment",
+  "html_path": "html/2611.02011v2.html"
+ },
+ {
+  "arxiv_id": "2611.02041v1",
+  "title": "ECGJev: Question-Conditioned Option Scoring for 12-Lead ECG Interpretation",
+  "html_path": "html/2611.02041v1.html"
+ },
+ {
+  "arxiv_id": "2611.01411v1",
+  "title": "Sensitivity Inflation from Cross-Record Precision Routing in Private Quantized Fine-Tuning",
+  "html_path": "html/2611.01411v1.html"
+ },
+ {
+  "arxiv_id": "2611.01704v1",
+  "title": "MatMoE: Matryoshka Mixture-of-Experts with Dynamic Mixed-Precision Quantization for Efficient Inference",
+  "html_path": "html/2611.01704v1.html"
+ }
+]

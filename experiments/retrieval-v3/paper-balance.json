@@ -1,0 +1,1482 @@
+{
+ "by_set": {
+  "heldout-v1": {
+   "points": 27,
+   "S2": 27,
+   "B1": 27,
+   "B2": 27,
+   "triggered": 0,
+   "questions": 10
+  },
+  "completion-eval-v1": {
+   "points": 41,
+   "S2": 34,
+   "B1": 34,
+   "B2": 34,
+   "triggered": 0,
+   "questions": 15
+  },
+  "combined-v1": {
+   "points": 44,
+   "S2": 30,
+   "B1": 30,
+   "B2": 30,
+   "triggered": 0,
+   "questions": 10
+  },
+  "consolidated/fresh-v2": {
+   "points": 36,
+   "S2": 28,
+   "B1": 28,
+   "B2": 28,
+   "triggered": 2,
+   "questions": 8
+  },
+  "consolidated-v2/fresh-v3": {
+   "points": 38,
+   "S2": 23,
+   "B1": 25,
+   "B2": 23,
+   "triggered": 2,
+   "questions": 8
+  },
+  "fresh-v4": {
+   "points": 50,
+   "S2": 36,
+   "B1": 40,
+   "B2": 41,
+   "triggered": 2,
+   "questions": 10
+  }
+ },
+ "questions": [
+  {
+   "set": "heldout-v1",
+   "q": "H01",
+   "type": "table",
+   "reference_papers": 1,
+   "resolved": [],
+   "points": 3,
+   "S2": 3,
+   "B1": 3,
+   "B2": 3,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 5659,
+    "B1": 5659,
+    "B2": 5659
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "heldout-v1",
+   "q": "H02",
+   "type": "numeric",
+   "reference_papers": 1,
+   "resolved": [],
+   "points": 3,
+   "S2": 3,
+   "B1": 3,
+   "B2": 3,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 6034,
+    "B1": 6034,
+    "B2": 6034
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "heldout-v1",
+   "q": "H03",
+   "type": "table",
+   "reference_papers": 1,
+   "resolved": [],
+   "points": 2,
+   "S2": 2,
+   "B1": 2,
+   "B2": 2,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 5996,
+    "B1": 5996,
+    "B2": 5996
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "heldout-v1",
+   "q": "H04",
+   "type": "multi-paper",
+   "reference_papers": 2,
+   "resolved": [
+    "2506.06622v2"
+   ],
+   "points": 2,
+   "S2": 2,
+   "B1": 2,
+   "B2": 2,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 5957,
+    "B1": 5957,
+    "B2": 5957
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "heldout-v1",
+   "q": "H05",
+   "type": "numeric",
+   "reference_papers": 1,
+   "resolved": [
+    "2602.16901v1"
+   ],
+   "points": 3,
+   "S2": 3,
+   "B1": 3,
+   "B2": 3,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 6000,
+    "B1": 6000,
+    "B2": 6000
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "heldout-v1",
+   "q": "H06",
+   "type": "qualitative",
+   "reference_papers": 1,
+   "resolved": [],
+   "points": 3,
+   "S2": 3,
+   "B1": 3,
+   "B2": 3,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 6161,
+    "B1": 6161,
+    "B2": 6161
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "heldout-v1",
+   "q": "H07",
+   "type": "numeric",
+   "reference_papers": 1,
+   "resolved": [
+    "2608.09253v1"
+   ],
+   "points": 3,
+   "S2": 3,
+   "B1": 3,
+   "B2": 3,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 5951,
+    "B1": 5951,
+    "B2": 5951
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "heldout-v1",
+   "q": "H08",
+   "type": "limitations",
+   "reference_papers": 1,
+   "resolved": [
+    "2502.10950v2"
+   ],
+   "points": 2,
+   "S2": 2,
+   "B1": 2,
+   "B2": 2,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 6204,
+    "B1": 6204,
+    "B2": 6204
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "heldout-v1",
+   "q": "H09",
+   "type": "qualitative",
+   "reference_papers": 1,
+   "resolved": [
+    "2508.08529v1"
+   ],
+   "points": 3,
+   "S2": 3,
+   "B1": 3,
+   "B2": 3,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 5959,
+    "B1": 5959,
+    "B2": 5959
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "heldout-v1",
+   "q": "H10",
+   "type": "limitations",
+   "reference_papers": 1,
+   "resolved": [],
+   "points": 3,
+   "S2": 3,
+   "B1": 3,
+   "B2": 3,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 5896,
+    "B1": 5896,
+    "B2": 5896
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "completion-eval-v1",
+   "q": "C01",
+   "type": "numeric / risk",
+   "reference_papers": 1,
+   "resolved": [],
+   "points": 3,
+   "S2": 3,
+   "B1": 3,
+   "B2": 3,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 5975,
+    "B1": 5975,
+    "B2": 5975
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "completion-eval-v1",
+   "q": "C02",
+   "type": "governance / cost",
+   "reference_papers": 1,
+   "resolved": [
+    "2505.14607v3"
+   ],
+   "points": 4,
+   "S2": 4,
+   "B1": 4,
+   "B2": 4,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 5998,
+    "B1": 5998,
+    "B2": 5998
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "completion-eval-v1",
+   "q": "C03",
+   "type": "qualitative / risk",
+   "reference_papers": 1,
+   "resolved": [],
+   "points": 3,
+   "S2": 3,
+   "B1": 3,
+   "B2": 3,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 6330,
+    "B1": 6330,
+    "B2": 6330
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "completion-eval-v1",
+   "q": "C04",
+   "type": "numeric / limitations",
+   "reference_papers": 1,
+   "resolved": [],
+   "points": 2,
+   "S2": 2,
+   "B1": 2,
+   "B2": 2,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 6195,
+    "B1": 6195,
+    "B2": 6195
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "completion-eval-v1",
+   "q": "C05",
+   "type": "cost-performance",
+   "reference_papers": 1,
+   "resolved": [],
+   "points": 3,
+   "S2": 3,
+   "B1": 3,
+   "B2": 3,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 6215,
+    "B1": 6215,
+    "B2": 6215
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "completion-eval-v1",
+   "q": "C06",
+   "type": "numeric / robustness",
+   "reference_papers": 1,
+   "resolved": [
+    "2508.03553v1"
+   ],
+   "points": 3,
+   "S2": 3,
+   "B1": 3,
+   "B2": 3,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 6123,
+    "B1": 6123,
+    "B2": 6123
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "completion-eval-v1",
+   "q": "C07",
+   "type": "cross-paper",
+   "reference_papers": 2,
+   "resolved": [
+    "2508.03553v1"
+   ],
+   "points": 3,
+   "S2": 1,
+   "B1": 1,
+   "B2": 1,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 6117,
+    "B1": 6117,
+    "B2": 6117
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "completion-eval-v1",
+   "q": "C08",
+   "type": "qualitative / limitations",
+   "reference_papers": 1,
+   "resolved": [],
+   "points": 3,
+   "S2": 2,
+   "B1": 2,
+   "B2": 2,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 6254,
+    "B1": 6254,
+    "B2": 6254
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "completion-eval-v1",
+   "q": "C09",
+   "type": "numeric / applications",
+   "reference_papers": 1,
+   "resolved": [],
+   "points": 2,
+   "S2": 2,
+   "B1": 2,
+   "B2": 2,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 5992,
+    "B1": 5992,
+    "B2": 5992
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "completion-eval-v1",
+   "q": "C10",
+   "type": "qualitative / adoption",
+   "reference_papers": 1,
+   "resolved": [],
+   "points": 2,
+   "S2": 2,
+   "B1": 2,
+   "B2": 2,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 5943,
+    "B1": 5943,
+    "B2": 5943
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "completion-eval-v1",
+   "q": "C11",
+   "type": "numeric / governance",
+   "reference_papers": 1,
+   "resolved": [],
+   "points": 3,
+   "S2": 2,
+   "B1": 2,
+   "B2": 2,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 5910,
+    "B1": 5910,
+    "B2": 5910
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "completion-eval-v1",
+   "q": "C12",
+   "type": "limitations / risk",
+   "reference_papers": 1,
+   "resolved": [],
+   "points": 2,
+   "S2": 2,
+   "B1": 2,
+   "B2": 2,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 6040,
+    "B1": 6040,
+    "B2": 6040
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "completion-eval-v1",
+   "q": "C13",
+   "type": "qualitative / customer experience",
+   "reference_papers": 1,
+   "resolved": [],
+   "points": 2,
+   "S2": 2,
+   "B1": 2,
+   "B2": 2,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 5994,
+    "B1": 5994,
+    "B2": 5994
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "completion-eval-v1",
+   "q": "C14",
+   "type": "table / business implications",
+   "reference_papers": 1,
+   "resolved": [],
+   "points": 4,
+   "S2": 2,
+   "B1": 2,
+   "B2": 2,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 6214,
+    "B1": 6214,
+    "B2": 6214
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "completion-eval-v1",
+   "q": "C15",
+   "type": "cross-paper / business implications",
+   "reference_papers": 2,
+   "resolved": [],
+   "points": 2,
+   "S2": 1,
+   "B1": 1,
+   "B2": 1,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 6065,
+    "B1": 6065,
+    "B2": 6065
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "combined-v1",
+   "q": "G01",
+   "type": "single-paper",
+   "reference_papers": 1,
+   "resolved": [],
+   "points": 4,
+   "S2": 3,
+   "B1": 3,
+   "B2": 3,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 6176,
+    "B1": 6176,
+    "B2": 6176
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "combined-v1",
+   "q": "G02",
+   "type": "single-paper",
+   "reference_papers": 1,
+   "resolved": [
+    "2503.05773v1"
+   ],
+   "points": 4,
+   "S2": 4,
+   "B1": 4,
+   "B2": 4,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 5850,
+    "B1": 5850,
+    "B2": 5850
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "combined-v1",
+   "q": "G03",
+   "type": "cross-paper",
+   "reference_papers": 2,
+   "resolved": [],
+   "points": 5,
+   "S2": 4,
+   "B1": 4,
+   "B2": 4,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 6122,
+    "B1": 6122,
+    "B2": 6122
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "combined-v1",
+   "q": "G04",
+   "type": "cross-paper",
+   "reference_papers": 2,
+   "resolved": [],
+   "points": 5,
+   "S2": 4,
+   "B1": 4,
+   "B2": 4,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 6173,
+    "B1": 6173,
+    "B2": 6173
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "combined-v1",
+   "q": "G05",
+   "type": "cross-paper",
+   "reference_papers": 2,
+   "resolved": [],
+   "points": 5,
+   "S2": 3,
+   "B1": 3,
+   "B2": 3,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 5917,
+    "B1": 5917,
+    "B2": 5917
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "combined-v1",
+   "q": "G06",
+   "type": "numerical/table",
+   "reference_papers": 1,
+   "resolved": [],
+   "points": 4,
+   "S2": 2,
+   "B1": 2,
+   "B2": 2,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 5991,
+    "B1": 5991,
+    "B2": 5991
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "combined-v1",
+   "q": "G07",
+   "type": "numerical/table",
+   "reference_papers": 1,
+   "resolved": [
+    "2506.23273v2"
+   ],
+   "points": 4,
+   "S2": 2,
+   "B1": 2,
+   "B2": 2,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 5953,
+    "B1": 5953,
+    "B2": 5953
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "combined-v1",
+   "q": "G08",
+   "type": "numerical/table",
+   "reference_papers": 1,
+   "resolved": [],
+   "points": 5,
+   "S2": 4,
+   "B1": 4,
+   "B2": 4,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 5945,
+    "B1": 5945,
+    "B2": 5945
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "combined-v1",
+   "q": "G09",
+   "type": "partially unanswerable",
+   "reference_papers": 1,
+   "resolved": [
+    "2601.17692v1"
+   ],
+   "points": 4,
+   "S2": 2,
+   "B1": 2,
+   "B2": 2,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 5946,
+    "B1": 5946,
+    "B2": 5946
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "combined-v1",
+   "q": "G10",
+   "type": "partially unanswerable",
+   "reference_papers": 1,
+   "resolved": [],
+   "points": 4,
+   "S2": 2,
+   "B1": 2,
+   "B2": 2,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 6020,
+    "B1": 6020,
+    "B2": 6020
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "consolidated/fresh-v2",
+   "q": "H01",
+   "type": "single-paper",
+   "reference_papers": 1,
+   "resolved": [
+    "2601.01627v3"
+   ],
+   "points": 5,
+   "S2": 5,
+   "B1": 5,
+   "B2": 5,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 5946,
+    "B1": 5946,
+    "B2": 5946
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "consolidated/fresh-v2",
+   "q": "H02",
+   "type": "numerical/table",
+   "reference_papers": 1,
+   "resolved": [],
+   "points": 5,
+   "S2": 4,
+   "B1": 4,
+   "B2": 4,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 4717,
+    "B1": 4717,
+    "B2": 4717
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "consolidated/fresh-v2",
+   "q": "H03",
+   "type": "cross-paper",
+   "reference_papers": 2,
+   "resolved": [
+    "2406.03805v1",
+    "2510.18728v1"
+   ],
+   "points": 5,
+   "S2": 3,
+   "B1": 3,
+   "B2": 3,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [
+    "H03.2"
+   ],
+   "B2_lost": [
+    "H03.5"
+   ],
+   "tokens": {
+    "S2": 5884,
+    "B1": 5884,
+    "B2": 5850
+   },
+   "serialized_ratio_B2": 0.898,
+   "extra_search_s_B2": 2.0
+  },
+  {
+   "set": "consolidated/fresh-v2",
+   "q": "H04",
+   "type": "cross-paper",
+   "reference_papers": 2,
+   "resolved": [],
+   "points": 5,
+   "S2": 2,
+   "B1": 2,
+   "B2": 2,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 5981,
+    "B1": 5981,
+    "B2": 5981
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "consolidated/fresh-v2",
+   "q": "H05",
+   "type": "numerical/table",
+   "reference_papers": 1,
+   "resolved": [],
+   "points": 4,
+   "S2": 4,
+   "B1": 4,
+   "B2": 4,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 6258,
+    "B1": 6258,
+    "B2": 6258
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "consolidated/fresh-v2",
+   "q": "H06",
+   "type": "partially unanswerable",
+   "reference_papers": 1,
+   "resolved": [
+    "2405.17440v1"
+   ],
+   "points": 4,
+   "S2": 3,
+   "B1": 3,
+   "B2": 3,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 5980,
+    "B1": 5980,
+    "B2": 5980
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "consolidated/fresh-v2",
+   "q": "H07",
+   "type": "cross-paper",
+   "reference_papers": 2,
+   "resolved": [
+    "2512.11437v1",
+    "2601.01627v3"
+   ],
+   "points": 4,
+   "S2": 4,
+   "B1": 4,
+   "B2": 4,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 6119,
+    "B1": 6140,
+    "B2": 6140
+   },
+   "serialized_ratio_B2": 1.08,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "consolidated/fresh-v2",
+   "q": "H08",
+   "type": "partially unanswerable",
+   "reference_papers": 1,
+   "resolved": [
+    "2512.11437v1"
+   ],
+   "points": 4,
+   "S2": 3,
+   "B1": 3,
+   "B2": 3,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 6155,
+    "B1": 6155,
+    "B2": 6155
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "consolidated-v2/fresh-v3",
+   "q": "J01",
+   "type": "single-paper; numerical; business",
+   "reference_papers": 1,
+   "resolved": [],
+   "points": 5,
+   "S2": 4,
+   "B1": 4,
+   "B2": 4,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 5991,
+    "B1": 5991,
+    "B2": 5991
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "consolidated-v2/fresh-v3",
+   "q": "J02",
+   "type": "single-paper; numerical/table",
+   "reference_papers": 1,
+   "resolved": [],
+   "points": 4,
+   "S2": 2,
+   "B1": 2,
+   "B2": 2,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 5969,
+    "B1": 5969,
+    "B2": 5969
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "consolidated-v2/fresh-v3",
+   "q": "J03",
+   "type": "cross-paper",
+   "reference_papers": 2,
+   "resolved": [
+    "2406.09923v2",
+    "2410.01553v2"
+   ],
+   "points": 5,
+   "S2": 1,
+   "B1": 3,
+   "B2": 2,
+   "B1_gained": [
+    "J03.1",
+    "J03.3"
+   ],
+   "B1_lost": [],
+   "B2_gained": [
+    "J03.3"
+   ],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 5877,
+    "B1": 6035,
+    "B2": 5969
+   },
+   "serialized_ratio_B2": 1.01,
+   "extra_search_s_B2": 3.1300000000000003
+  },
+  {
+   "set": "consolidated-v2/fresh-v3",
+   "q": "J04",
+   "type": "cross-paper; misleading-evidence probe",
+   "reference_papers": 2,
+   "resolved": [
+    "2410.01553v2",
+    "2504.15330v1"
+   ],
+   "points": 5,
+   "S2": 2,
+   "B1": 2,
+   "B2": 1,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [
+    "J04.1"
+   ],
+   "tokens": {
+    "S2": 5865,
+    "B1": 5989,
+    "B2": 5978
+   },
+   "serialized_ratio_B2": 1.015,
+   "extra_search_s_B2": 1.72
+  },
+  {
+   "set": "consolidated-v2/fresh-v3",
+   "q": "J05",
+   "type": "single-paper; numerical/table; partially unanswerable",
+   "reference_papers": 1,
+   "resolved": [
+    "2606.04500v1"
+   ],
+   "points": 5,
+   "S2": 5,
+   "B1": 5,
+   "B2": 5,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 5769,
+    "B1": 5769,
+    "B2": 5769
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "consolidated-v2/fresh-v3",
+   "q": "J06",
+   "type": "single-paper; partially unanswerable",
+   "reference_papers": 1,
+   "resolved": [
+    "2404.08309v1"
+   ],
+   "points": 4,
+   "S2": 4,
+   "B1": 4,
+   "B2": 4,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 6276,
+    "B1": 6276,
+    "B2": 6276
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "consolidated-v2/fresh-v3",
+   "q": "J07",
+   "type": "single-paper (survey); partially unanswerable",
+   "reference_papers": 1,
+   "resolved": [],
+   "points": 6,
+   "S2": 4,
+   "B1": 4,
+   "B2": 4,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 6069,
+    "B1": 6069,
+    "B2": 6069
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "consolidated-v2/fresh-v3",
+   "q": "J08",
+   "type": "cross-paper",
+   "reference_papers": 2,
+   "resolved": [],
+   "points": 4,
+   "S2": 1,
+   "B1": 1,
+   "B2": 1,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 6038,
+    "B1": 6038,
+    "B2": 6038
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "fresh-v4",
+   "q": "K01",
+   "type": "single",
+   "reference_papers": 1,
+   "resolved": [
+    "2611.01409v1"
+   ],
+   "points": 5,
+   "S2": 5,
+   "B1": 5,
+   "B2": 5,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 5983,
+    "B1": 5983,
+    "B2": 5983
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "fresh-v4",
+   "q": "K02",
+   "type": "single",
+   "reference_papers": 1,
+   "resolved": [
+    "2611.02018v1"
+   ],
+   "points": 5,
+   "S2": 5,
+   "B1": 5,
+   "B2": 5,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 6370,
+    "B1": 6370,
+    "B2": 6370
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "fresh-v4",
+   "q": "K03",
+   "type": "single",
+   "reference_papers": 1,
+   "resolved": [
+    "2611.01394v1"
+   ],
+   "points": 5,
+   "S2": 5,
+   "B1": 5,
+   "B2": 5,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 6005,
+    "B1": 6005,
+    "B2": 6005
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "fresh-v4",
+   "q": "K04",
+   "type": "single",
+   "reference_papers": 1,
+   "resolved": [],
+   "points": 5,
+   "S2": 4,
+   "B1": 4,
+   "B2": 4,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 5862,
+    "B1": 5862,
+    "B2": 5862
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "fresh-v4",
+   "q": "K05",
+   "type": "cross",
+   "reference_papers": 2,
+   "resolved": [
+    "2611.02134v1",
+    "2611.02791v2"
+   ],
+   "points": 5,
+   "S2": 1,
+   "B1": 3,
+   "B2": 3,
+   "B1_gained": [
+    "K05.3",
+    "K05.4"
+   ],
+   "B1_lost": [],
+   "B2_gained": [
+    "K05.3",
+    "K05.4"
+   ],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 5992,
+    "B1": 5980,
+    "B2": 6557
+   },
+   "serialized_ratio_B2": 1.134,
+   "extra_search_s_B2": 7.503333333333334
+  },
+  {
+   "set": "fresh-v4",
+   "q": "K06",
+   "type": "single",
+   "reference_papers": 1,
+   "resolved": [
+    "2611.02011v2"
+   ],
+   "points": 5,
+   "S2": 5,
+   "B1": 5,
+   "B2": 5,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 5933,
+    "B1": 5933,
+    "B2": 5933
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "fresh-v4",
+   "q": "K07",
+   "type": "cross",
+   "reference_papers": 2,
+   "resolved": [
+    "2611.01409v1",
+    "2611.02041v1"
+   ],
+   "points": 5,
+   "S2": 1,
+   "B1": 3,
+   "B2": 4,
+   "B1_gained": [
+    "K07.1",
+    "K07.2"
+   ],
+   "B1_lost": [],
+   "B2_gained": [
+    "K07.1",
+    "K07.2",
+    "K07.3"
+   ],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 5947,
+    "B1": 5993,
+    "B2": 6000
+   },
+   "serialized_ratio_B2": 0.975,
+   "extra_search_s_B2": 6.54
+  },
+  {
+   "set": "fresh-v4",
+   "q": "K08",
+   "type": "single",
+   "reference_papers": 1,
+   "resolved": [],
+   "points": 5,
+   "S2": 3,
+   "B1": 3,
+   "B2": 3,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 5919,
+    "B1": 5919,
+    "B2": 5919
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "fresh-v4",
+   "q": "K09",
+   "type": "single",
+   "reference_papers": 1,
+   "resolved": [
+    "2611.01704v1"
+   ],
+   "points": 5,
+   "S2": 4,
+   "B1": 4,
+   "B2": 4,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 6236,
+    "B1": 6236,
+    "B2": 6236
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  },
+  {
+   "set": "fresh-v4",
+   "q": "K10",
+   "type": "single",
+   "reference_papers": 1,
+   "resolved": [
+    "2611.02791v2"
+   ],
+   "points": 5,
+   "S2": 3,
+   "B1": 3,
+   "B2": 3,
+   "B1_gained": [],
+   "B1_lost": [],
+   "B2_gained": [],
+   "B2_lost": [],
+   "tokens": {
+    "S2": 5932,
+    "B1": 5932,
+    "B2": 5932
+   },
+   "serialized_ratio_B2": 1.0,
+   "extra_search_s_B2": 0.0
+  }
+ ]
+}

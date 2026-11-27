@@ -1,0 +1,1212 @@
+{
+  "builder_revision": "727b0b3",
+  "library_revision": "de825d43375a7c97781607e5443c8ce8216dcaae",
+  "strategy": "token224_parent",
+  "budget": 224,
+  "overlap": 32,
+  "parent_line_endings": "CRLF",
+  "embedding_device": "cpu",
+  "papers": [
+    {
+      "id": "2401.09890v1",
+      "title": "A Survey on Hardware Accelerators for Large Language Models",
+      "html_sha256": "ef3a9d3cae585a361d92c38f341429b1304b7d0f7762196a91b8d016f3af89d8",
+      "parents": 64,
+      "parents_sha256": "a3bbc74e62955d1fa4085dd218619456be331db0b63744c0ea10de54262f9dea",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2401.11641v5",
+      "title": "Revolutionizing Finance with LLMs: An Overview of Applications and Insights",
+      "html_sha256": "7a6442bff69139634e02178ad3e6ce6e5fd33379954ecd4e62142a4c89e606da",
+      "parents": 58,
+      "parents_sha256": "e52a13fe5dad994fb58e0750d2dd89cb1869daf22393fe205e9efac693794f7c",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2402.01030v4",
+      "title": "Executable Code Actions Elicit Better LLM Agents",
+      "html_sha256": "682a6278f847924da9f778077f8f342dc7d7d01df947b82c64e77a9025802318",
+      "parents": 32,
+      "parents_sha256": "6793347105fa6e7503262c26e5851a9e40f90ad97d32c91bdddb2b0c6a856dd5",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2402.01622v4",
+      "title": "TravelPlanner: A Benchmark for Real-World Planning with Language Agents",
+      "html_sha256": "5b5569437acd6f010d6ca71b0958c15a92ecdc3c5e90e8ecc13966d9ebdd7699",
+      "parents": 59,
+      "parents_sha256": "fa112bce89da5d92c927767edba9ee1c1e50aaa2d59f5eba16142fe10d62a82b",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2402.08416v1",
+      "title": "Pandora: Jailbreak GPTs by Retrieval Augmented Generation Poisoning",
+      "html_sha256": "110c8f693b72159662b96ce8c002624630c935b1483adbe77d5ec1aae44c74e1",
+      "parents": 24,
+      "parents_sha256": "fa53b7231984f690d08fc047b46da983b0f2810a7fa5b3c355536c119735a282",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2402.09742v4",
+      "title": "AI Hospital: Benchmarking Large Language Models in a Multi-agent Medical Interaction Simulator",
+      "html_sha256": "7493eb071dbcfab93f90e8069b9502892c3c12c5be322e9c65891ee027ab0b2b",
+      "parents": 46,
+      "parents_sha256": "c7d8db80a733fa385ff3b14b740030b5853aecd413e71966a381aada473e8281",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2402.09748v1",
+      "title": "Model Compression and Efficient Inference for Large Language Models: A Survey",
+      "html_sha256": "66a648cf805392456ece1cc89a3d944b4519e0cb2039b3725ef4e9c4dc605499",
+      "parents": 206,
+      "parents_sha256": "f3452f6ce7f9247be2a4acb8fbb61d6e3641f46015c4d0d721d30ef409b9abbf",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2402.12713v2",
+      "title": "Are LLMs Rational Investors? A Study on Detecting and Reducing the Financial Bias in LLMs",
+      "html_sha256": "400d950a069833b5e031678b3800eae062689b717718a4cd2f14900ebe981dcb",
+      "parents": 209,
+      "parents_sha256": "96619d3d713ea3328726413db5b8e4f4ab8d4ebf163cf478f2370cc5d7360d5c",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2403.12482v2",
+      "title": "Embodied LLM Agents Learn to Cooperate in Organized Teams",
+      "html_sha256": "80e3c95d6d63c2e32231886b1b06fef12bd8589a07db9d92e8ebc77e78c3a2ad",
+      "parents": 28,
+      "parents_sha256": "3d98805f969b164d80940ae79bcf9c42e4bd24d2f8bf2edce6ce089bac85d476",
+      "extractors": [
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2403.13313v1",
+      "title": "Polaris: A Safety-focused LLM Constellation Architecture for Healthcare",
+      "html_sha256": "5a1f1e296a19bf0224c71f4a9f8db56e883afd810556aca748c5af68d1683ae0",
+      "parents": 112,
+      "parents_sha256": "c44de538a8b397aad168427e7746b946d7b757618886bd5a83949c5257a85fc8",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2404.00246v1",
+      "title": "Your Co-Workers Matter: Evaluating Collaborative Capabilities of Language Models in Blocks World",
+      "html_sha256": "901d6d9eb4fabb9883e5dcbd3664004f3d89d8b7b80c85a3eefa8c6ffe6a2410",
+      "parents": 31,
+      "parents_sha256": "5998b6b9bd2a0bc607cf555369e07966bb0bdb42661250193e3afbbd82d599a1",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2404.08309v1",
+      "title": "Subtoxic Questions: Dive Into Attitude Change of LLM's Response in Jailbreak Attempts",
+      "html_sha256": "157df9c3b0119f19d2896a555af44e6105d68daf3a7be0b247c13725df9706b2",
+      "parents": 11,
+      "parents_sha256": "929ac0817d118538488ed2b4c31c75970bf0d72623df77d4621f2eb32d2bb379",
+      "extractors": [
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2404.18043v3",
+      "title": "Utilizing Large Language Models for Information Extraction from Real Estate Transactions",
+      "html_sha256": "dbafb7ef62c677b01ab1374612f1e9f58d71da45aec52b7131d6640aecdb634e",
+      "parents": 26,
+      "parents_sha256": "cfbdef77b5e96d913ed8b10a7066528e4d6b116f9f75aa9cd4cfd42766a6ec04",
+      "extractors": [
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2405.17440v1",
+      "title": "CataLM: Empowering Catalyst Design Through Large Language Models",
+      "html_sha256": "c5cacf330c594f9740e52a4030fe712f29c6a239424e577eee37b5140d37743b",
+      "parents": 45,
+      "parents_sha256": "83bdb5d36d4e0abca8f4046b3fd28178118d7c1777f66439557be6f2cf0440a4",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2405.17602v1",
+      "title": "Augmenting Textual Generation via Topology Aware Retrieval",
+      "html_sha256": "799610b9e8d0fe456c664bec8929a02b2d29785a65628215c7087e01b1a07f16",
+      "parents": 45,
+      "parents_sha256": "65b4017ac52bc887d33ae47c34e95c79b2becae431b44c4668061115bfecd242",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2405.19358v2",
+      "title": "Robustifying Safety-Aligned Large Language Models through Clean Data Curation",
+      "html_sha256": "ee8803811a18858245f888ff01eb0dce9d59870e37e442e554cb2ab2734bd2f9",
+      "parents": 41,
+      "parents_sha256": "46786d30d44c99e36418b859f20a20c494e8101290b7d0fc4526601883397e20",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2406.01749v1",
+      "title": "Towards Harnessing Large Language Models for Comprehension of Conversational Grounding",
+      "html_sha256": "cdc1738be2f85cf196169fe5092fdbb3dee4f77b47bf6b12e881a703e30ff061",
+      "parents": 57,
+      "parents_sha256": "cb5e19afe9640f4298c3464133d22a66202ed998a395c20635ddf8f1923baaf8",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2406.03805v1",
+      "title": "AutoJailbreak: Exploring Jailbreak Attacks and Defenses through a Dependency Lens",
+      "html_sha256": "2c3e79b43ea3eaa8016f4f4dcb67418749a44246ccb41fe7cb83bde3c7194167",
+      "parents": 68,
+      "parents_sha256": "df387a628fdd2f456ffa99ec5f5bb199031b4bb153dd66f7835f8f08dbd70596",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2406.06622v1",
+      "title": "Adversarial Tuning: Defending Against Jailbreak Attacks for LLMs",
+      "html_sha256": "b33713b83f79312a673c47f42b4c34f05ce68326bf0291d4cd43ca9e1e58103b",
+      "parents": 94,
+      "parents_sha256": "e0f2f3df23af3815bdbc3da98840da165af5d727aa5020f55d42be7450fabac3",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2406.09923v2",
+      "title": "CliBench: A Multifaceted and Multigranular Evaluation of Large Language Models for Clinical Decision Making",
+      "html_sha256": "9e859011765bcb0dafecf6c714720ce9d7be5663f5e95249f17ff363f518558e",
+      "parents": 65,
+      "parents_sha256": "15489c2b37c833ce09eb39c9d7ea3f03dc3c0f8b85b5af1261d1885987d049c7",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2406.11087v5",
+      "title": "DP-MemArc: Differential Privacy Transfer Learning for Memory Efficient Language Models",
+      "html_sha256": "e4d190176a5bb0a415a0617f27e5281bb1eeccbc269ea9736484a2501fcacdc2",
+      "parents": 27,
+      "parents_sha256": "927b464b73fbdc4f9af4022daecf85ee522bf1362ac9fd6cefb86bc3df4b1b82",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2407.01158v2",
+      "title": "Learning to Explore and Select for Coverage-Conditioned Retrieval-Augmented Generation",
+      "html_sha256": "0b9d5fc0305a109157e5fbfd38d369dcaff708ddb8004e25dfd4496d507e3679",
+      "parents": 38,
+      "parents_sha256": "d338eb6da374f0e98a853395aaf7f1ea2f90d8b8150a820d2a2da1575c73b5a0",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2407.10020v1",
+      "title": "Causality extraction from medical text using Large Language Models (LLMs)",
+      "html_sha256": "987c41b5a277e4769c8d94d9f8431faa99664eb3d24b0d85bad260dff7e4b05a",
+      "parents": 33,
+      "parents_sha256": "9778e1ff8108f362c2faff023cbff92f703f49794adf0810ecd379e2b89a31a5",
+      "extractors": [
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2409.01666v1",
+      "title": "In Defense of RAG in the Era of Long-Context Language Models",
+      "html_sha256": "50553c16162698474b86bc665d8bf8f91f1e1a8bb93647d937b660c39ff5ed64",
+      "parents": 12,
+      "parents_sha256": "a3b600b8adb83c27751c05e6d7a61a9b690b9dbff9578f1124e62f3087c3ef2b",
+      "extractors": [
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2409.10955v2",
+      "title": "Investigating Context-Faithfulness in Large Language Models: The Roles of Memory Strength and Evidence Style",
+      "html_sha256": "c6bb84773c8e2392cbc960a55c87112d0caec9df6497ad25df9ca47fd9a5fc7d",
+      "parents": 78,
+      "parents_sha256": "21b4e7350ffb4f08ed73d08f6350c890327c44dbb14f4b8d7351cdfff52f60c5",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2409.19854v1",
+      "title": "The Construction of Instruction-tuned LLMs for Finance without Instruction Data Using Continual Pretraining and Model Merging",
+      "html_sha256": "d3b5d10e3768780fff0d91e69586f366371c91a5db95b8ffadaacb12d8d3c9cd",
+      "parents": 25,
+      "parents_sha256": "ab4d072f08cfb673e81324b66f492ca0c55d737e4ef40d3a8c353ebd973d9998",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2410.01553v2",
+      "title": "MedQA-CS: Objective Structured Clinical Examination (OSCE)-Style Benchmark for Evaluating LLM Clinical Skills",
+      "html_sha256": "20419d1a9de3b1a1425c7169da6cac0c436fb3a68c05ed7d0481b9301c590654",
+      "parents": 268,
+      "parents_sha256": "a60878ddfb7c5c7f02f07957433d69017cd34ebca29f607b6a46f79b3c93bee6",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2410.11321v1",
+      "title": "Self-adaptive Multimodal Retrieval-Augmented Generation",
+      "html_sha256": "331ba6fb3b346c331bfa0d82d045a6b552b9118de878a8dee4536f4c87e25831",
+      "parents": 27,
+      "parents_sha256": "5929334a7408b1c6f71a7c63c7ce64cfc34bf098d5bd0be0e74bd1fff05fb2e9",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2410.16285v1",
+      "title": "Assessing the Performance of Human-Capable LLMs -- Are LLMs Coming for Your Job?",
+      "html_sha256": "4f3e8bee6734ae3038a0a10df4b84ff3471026f1b79570ec54f28f8652bf09c8",
+      "parents": 67,
+      "parents_sha256": "3b08479ef9cdb4e62f2542c3e974b866557ef09864fa1f334190c610dc1cf539",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2411.14442v2",
+      "title": "AI Ethics by Design: Implementing Customizable Guardrails for Responsible AI Development",
+      "html_sha256": "11f542233a878e3f9e2c7f2e040007a7786dd18b692d82a1be79adbcd1d03cf3",
+      "parents": 37,
+      "parents_sha256": "df9901fc9d537fef271f59479937e428a6c6f41fdb36f2179bc0bd769622e426",
+      "extractors": [
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2412.06681v2",
+      "title": "Toward LLM-Agent-Based Modeling of Transportation Systems: A Conceptual Framework",
+      "html_sha256": "3ff5439a3d87777a379df971f84432e0a4da33b002079085b942cad0faebb02e",
+      "parents": 73,
+      "parents_sha256": "073e7d6d0736234dd5ab2d33bf9e080fd5086f278fed5f0fc401b5f9cf680048",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2412.14470v2",
+      "title": "Agent-SafetyBench: Evaluating the Safety of LLM Agents",
+      "html_sha256": "d75e5fb230a89a9ffa0484fbfe694ac609b7b5de3aa59204cadf73b473737338",
+      "parents": 112,
+      "parents_sha256": "98c3cfcbce0fc34ba335278c46fddb907e418eab0818fdeaf7802806b0ded3a3",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2412.15272v2",
+      "title": "SimGRAG: Leveraging Similar Subgraphs for Knowledge Graphs Driven Retrieval-Augmented Generation",
+      "html_sha256": "0debb83b8ee144a1e048a588423e9f0f148099eeec6dcbf3c98b5fcf1c8ca73b",
+      "parents": 92,
+      "parents_sha256": "2202b1b8f3f65256e9953a1d28e17795dfd48c9130c121fc5ef111bcd8ef606b",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2412.18690v1",
+      "title": "AgreeMate: Teaching LLMs to Haggle",
+      "html_sha256": "14c2c2989b9a7a5cc60de5366b0b1c7cb37351598c29d7dd330a09ff8142527a",
+      "parents": 46,
+      "parents_sha256": "96c794b59df35cd5cc2e66ba17b868b617f1c12567b5d4936f5559a7e12d41d2",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2412.21154v1",
+      "title": "Aviary: training language agents on challenging scientific tasks",
+      "html_sha256": "3e2875949eb1bd3c2cdaa11f9f854e3f305fcc1e1dff92e4156a088b1deaed7b",
+      "parents": 37,
+      "parents_sha256": "13da4dad5e4174cd3a0ce56f59eaba1630328114e01ea32ecf753524a3e0de11",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2501.15067v1",
+      "title": "CG-RAG: Research Question Answering by Citation Graph Retrieval-Augmented LLMs",
+      "html_sha256": "f291b694e229ea0ac262b5f825cc401f01c86e39f6d55941ca9f23e341a6ecf4",
+      "parents": 43,
+      "parents_sha256": "93dc5d5a363cd948ea95c3534bfc39302caacb2907978a77d9e69166cab4cf36",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2501.17755v2",
+      "title": "AI Governance through Markets",
+      "html_sha256": "a55b6f4a1f2365e671d02da08ddb13999047a43e14b878ab1ab401dda6784bb4",
+      "parents": 66,
+      "parents_sha256": "679db35ec139cfa547ae38344c5e8af6812f2ffd03c0080bb41e4c660519be8e",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2502.05219v1",
+      "title": "Enabling External Scrutiny of AI Systems with Privacy-Enhancing Technologies",
+      "html_sha256": "da0b9661c29deaaf5991af944103596267c65e61a8774de789fb67daaea9e78d",
+      "parents": 12,
+      "parents_sha256": "8b4aa20e67eeb1aa2dbf87bf45eb2e5c3db46ac44e67317322163ef7a8c01588",
+      "extractors": [
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2502.06864v1",
+      "title": "Knowledge Graph-Guided Retrieval Augmented Generation",
+      "html_sha256": "4a1c2e119e505289a4e2b67881b2ab62c6253915eb12323ef76b250f51680ea1",
+      "parents": 27,
+      "parents_sha256": "ca4424788a81bbe5089d421944ac277dca88af2230d9ae632e5cf0ae4be7fc8c",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2502.10950v2",
+      "title": "SpeechT-RAG: Reliable Depression Detection in LLMs with Retrieval-Augmented Generation Using Speech Timing Information",
+      "html_sha256": "ff525b2972c66c0fde78c375fef0c7202099e68d47054a12d33002281e98b3ca",
+      "parents": 42,
+      "parents_sha256": "49b1238842f9eb829b38132c00b0d04285bb1e6e186014c1ce2e55d652452610",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2502.13294v2",
+      "title": "The \"Who\", \"What\", and \"How\" of Responsible AI Governance: A Systematic Review and Meta-Analysis of (Actor, Stage)-Specific Tools",
+      "html_sha256": "5cad1b873218764ec1d60b74666516b6eeecbd18314e418f745ee016b4780f77",
+      "parents": 55,
+      "parents_sha256": "696f026a2a6a0ccfffa9b00c8ad6f698a152a9e22070aebea2a78b38ce42d88b",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2502.17874v2",
+      "title": "Neural Graph Matching Improves Retrieval Augmented Generation in Molecular Machine Learning",
+      "html_sha256": "2e50d986d17afd94c2e5263f815ae0d284f0991325ee115d7ff79434a1342d36",
+      "parents": 63,
+      "parents_sha256": "2c75ca44593d541edce2dcd4585a1e725ff7c18ca58eb9f811230ab754728adb",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2502.18471v2",
+      "title": "FinBloom: Knowledge Grounding Large Language Model with Real-time Financial Data",
+      "html_sha256": "a4ccf618ddeb9cd7a7eafdea3c5288d5ac4aaa5d811414f84accfc41501dfff7",
+      "parents": 70,
+      "parents_sha256": "8867ba3ae1a159bb56ab3ceb4efbf7afffd9f7e78d78af6afb8a72b0fdd5a320",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2503.05773v1",
+      "title": "Between Innovation and Oversight: A Cross-Regional Study of AI Risk Management Frameworks in the EU, U.S., UK, and China",
+      "html_sha256": "d186e2fd860e8253de537b78a50f7e0a070513663a6741dd33b881bfb4aab93a",
+      "parents": 78,
+      "parents_sha256": "cd296a7e2aa9f3e3b55f0ffae0a7b2d02fdff76832926c30b0659ab8884bbc9a",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2503.20518v1",
+      "title": "Exploring the Effect of Robotic Embodiment and Empathetic Tone of LLMs on Empathy Elicitation",
+      "html_sha256": "a38dc133e46564dd853ef5536243568f25cdafda43bc1cfe808c02d2c3731d45",
+      "parents": 19,
+      "parents_sha256": "86fc3fa4b86b6d639061e5d5fe4968f4a3aa149d9cd7bc6efcbf16bd33d2228f",
+      "extractors": [
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2503.21760v2",
+      "title": "MemInsight: Autonomous Memory Augmentation for LLM Agents",
+      "html_sha256": "4797e784fa9270640b252c072f5cc06c5674a3fc59a015b0576e3b0047e2cfce",
+      "parents": 45,
+      "parents_sha256": "605a3711bfc86b24f862fbe7534fe2374f39c76127b0afaba74b3881ed6ea835",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2504.01566v1",
+      "title": "GPT Adoption and the Impact of Disclosure Policies",
+      "html_sha256": "ca51f345a9d236e421e6b67d01391f6c0f94d42e0673ccbcf004f3ff855d5ea8",
+      "parents": 52,
+      "parents_sha256": "9b96b80215f4a57618092370151e52c082010bcc3514c0fe806abd23b88e305d",
+      "extractors": [
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2504.05104v2",
+      "title": "AI for Climate Finance: Agentic Retrieval and Multi-Step Reasoning for Early Warning System Investments",
+      "html_sha256": "48b0c1780a6bcc4250e6fba691e929f55f16e7e411f6b5b0c6a36bf584cf60c6",
+      "parents": 31,
+      "parents_sha256": "47428ebb9604599c82c55574a4d54a861665f60cc07033c534eb296ad418d05d",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2504.15330v1",
+      "title": "Med-CoDE: Medical Critique based Disagreement Evaluation Framework",
+      "html_sha256": "5dd059f2f870547cdb1be4ed34eb6b2c0b58745c86edee0d7e7064a8b63a638f",
+      "parents": 21,
+      "parents_sha256": "5d58cb4a90c63d68288ded65a1eb0feeaa7d00228a16e282f3388f57ea757cc8",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2505.14607v3",
+      "title": "sudoLLM: On Multi-role Alignment of Language Models",
+      "html_sha256": "46797562df2945db4f7b4ac4a9cb9e0619ff6f5b7ffbede4fe6b5b44af74e4c3",
+      "parents": 42,
+      "parents_sha256": "fe16e536d02b33c3cd2c64138a4850f3fcd09f4d52cba025e18553db9852624d",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2505.15753v1",
+      "title": "Scalable Defense against In-the-wild Jailbreaking Attacks with Safety Context Retrieval",
+      "html_sha256": "c4f355e6177f2da5ba68194fff0477a796b3ebe244b0997aa6b3b459a7200a81",
+      "parents": 57,
+      "parents_sha256": "864700e1bac9cc8e913e315f2586a8792114a7f086351f9d2f7df4f3deb14349",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2505.23417v1",
+      "title": "Toward Effective AI Governance: A Review of Principles",
+      "html_sha256": "f0bb903f6a842e49b233fdd33fb6a14063858b39a3d154a23daece1b1d236960",
+      "parents": 35,
+      "parents_sha256": "ceab4e88f714ebac2b91fbfaa4d2f055593bf30be53773c6584156161302dd82",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2506.03610v3",
+      "title": "Orak: A Foundational Benchmark for Training and Evaluating LLM Agents on Diverse Video Games",
+      "html_sha256": "7fd0631cb2a5d912f754132ade03fec4540aa5a5e66816e73ed4691c196c5efc",
+      "parents": 405,
+      "parents_sha256": "0853fc5530dac6aadf59edf8ea37fbbefe35cba86e62c47847abec0018e93e50",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2506.06622v2",
+      "title": "QuantMCP: Grounding Large Language Models in Verifiable Financial Reality",
+      "html_sha256": "45b61cb256fa42eff12f00018d46551c0b6cfe6811da8415aed20b9e16f27acf",
+      "parents": 21,
+      "parents_sha256": "6c5eb8cbbf0164b876ddfd23e5c6e2ce02b33622962e663fe815da733b491dd0",
+      "extractors": [
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2506.10022v1",
+      "title": "LLMs Caught in the Crossfire: Malware Requests and Jailbreak Challenges",
+      "html_sha256": "60962b6d4cc88658d8852224d287a2b291c4d606d7ff4356bfe5c04623bfc95f",
+      "parents": 99,
+      "parents_sha256": "7e05b5106a668b73e492701dd699c4900f2a2fb385df36ff64a0fdaf5355c44d",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2506.17299v2",
+      "title": "Toward Principled LLM Safety Testing: Solving the Jailbreak Oracle Problem",
+      "html_sha256": "32f482e9edae75e8b72ff4201793facdb406b4fb95124674edeafd6a5267023b",
+      "parents": 74,
+      "parents_sha256": "96df58ecb67da4309782b0a4e4b6752e3c2a40545ce8cd0ca16190a72c9871df",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2506.20821v1",
+      "title": "MultiFinRAG: An Optimized Multimodal Retrieval-Augmented Generation (RAG) Framework for Financial Question Answering",
+      "html_sha256": "49ca6d504963a79d506d7931c922eca21fdf74d99518a3d9ba366894b400e199",
+      "parents": 31,
+      "parents_sha256": "71d5c50f586f96825f855dbce99346ad88bb434d98b7fb35107c13f068dfc5d8",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2506.23123v1",
+      "title": "The Societal Impact of Foundation Models: Advancing Evidence-based AI Policy",
+      "html_sha256": "999f9153400a5868385adc3ecc9390c084c0b28cebacca21b2a78503ead33299",
+      "parents": 506,
+      "parents_sha256": "b8b340c7d9f81606251295e12fc8cb2cc71cc0f4c1f9a94d6b886d851e246957",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2506.23273v2",
+      "title": "FinStat2SQL: A Text2SQL Pipeline for Financial Statement Analysis",
+      "html_sha256": "bf7b111b9d6e2a5c3ee1278ae405fa0f71dde693754633daaf106f9fe92cabbc",
+      "parents": 48,
+      "parents_sha256": "b47a8e3fb3ea69db335ab13eade87a3d86af1a052a4d8eedb005bc9218317cf6",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2508.03553v1",
+      "title": "MultiRAG: A Knowledge-guided Framework for Mitigating Hallucination in Multi-source Retrieval Augmented Generation",
+      "html_sha256": "0bc00f8c5be89eccacfa0b0643b8e57f2ae3c6b3a2ad1204ffaaa939d55bac3f",
+      "parents": 59,
+      "parents_sha256": "64ca0a94a9cf64f501cbb39a10fa3b62356adb0cb18b58157d980d09bb409a08",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2508.08345v2",
+      "title": "Do AI Companies Make Good on Voluntary Commitments to the White House?",
+      "html_sha256": "340e46332c0c6db64dd05fbce1b6fab59f295637a3313518da49d0e006574cd1",
+      "parents": 73,
+      "parents_sha256": "5d8b1ed8e665ce05b2ff6fce05f4ce67270cde2f2077aebcc203094b104d4f9b",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2508.08529v1",
+      "title": "SynLLM: A Comparative Analysis of Large Language Models for Medical Tabular Synthetic Data Generation via Prompt Engineering",
+      "html_sha256": "27494cecc5f5f8a46ddd88846f8bd78472b459231a0964b16a6a2a52cd57b2bb",
+      "parents": 94,
+      "parents_sha256": "628ff69b20562d06ced0075880c1bf872c11c74fcd320e95cc70c5721a0dea30",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2508.19097v1",
+      "title": "Reasoning LLMs in the Medical Domain: A Literature Survey",
+      "html_sha256": "ce51e8a1c10db5eda793622628b37d859f1f4ae1af44d68f947611ccab69919e",
+      "parents": 40,
+      "parents_sha256": "264b3c92a46a15c59761d8c54faeef5a19d2d0815ee63856217e36052e076ae3",
+      "extractors": [
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2509.25240v1",
+      "title": "HAMMER: Hamiltonian Curiosity Augmented Large Language Model Reinforcement",
+      "html_sha256": "4e615ff86053e113babb214ff67e1b9630d52415db1684cfa6216d5844123bd5",
+      "parents": 58,
+      "parents_sha256": "6bd22280c3f6dc578fe7bdfaf2f7d859f69b299b6b0727ce05a5751b47b64dcd",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2510.02243v2",
+      "title": "AccurateRAG: A Framework for Building Accurate Retrieval-Augmented Question-Answering Applications",
+      "html_sha256": "4c5159d799683b1b523a48765e2d70eca477c138d54a0a90f37d18a21e0c40e6",
+      "parents": 33,
+      "parents_sha256": "ff6c6486c394c48c3c1e922446d73dcc7f6cc5dd74b6901e2e19f2a710e6442e",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2510.02833v4",
+      "title": "Attack via Overfitting: 10-shot Benign Fine-tuning to Jailbreak LLMs",
+      "html_sha256": "53c6a2fa63a27226e7f8b6dd826bcda7a6e3c328db1f838101c9d1c64a120f69",
+      "parents": 39,
+      "parents_sha256": "2b08945829fcff9c8152589f72f3d7c5d51f370ab0bb407d108a11b62b047f09",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2510.18728v1",
+      "title": "HarmNet: A Framework for Adaptive Multi-Turn Jailbreak Attacks on Large Language Models",
+      "html_sha256": "60fc4003437615f77b8c3f59acdc5814e99d28d0004b67cb8e8e8f608861f0e4",
+      "parents": 10,
+      "parents_sha256": "5892a6d6f08a92b2285192636dbd716bda6e2dd139028a753ad3ad7a61dac234",
+      "extractors": [
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2510.24402v1",
+      "title": "Metadata-Driven Retrieval-Augmented Generation for Financial Question Answering",
+      "html_sha256": "d49819d158a8fa01572fdbb1ca77af7899479dc6c12173649f0c9addc2ae0209",
+      "parents": 60,
+      "parents_sha256": "9cc68af142a08f603f2b90411998a4535db294d17a64b5ee44d2887e73ea97ea",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2511.08621v1",
+      "title": "The LLM Pro Finance Suite: Multilingual Large Language Models for Financial Applications",
+      "html_sha256": "a63c038c5571eb47eff6205afdf827412f7cc7f619869634cf9dab1c52ef4927",
+      "parents": 58,
+      "parents_sha256": "ff146403371eb8177d5161479c566f5a8075cfe57d570510f1debbb76a09be4b",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2512.11437v1",
+      "title": "CLINIC: Evaluating Multilingual Trustworthiness in Language Models for Healthcare",
+      "html_sha256": "9a5a96ac40c562ed039e8434f8d9b980c9e264960ebe8200af4e2c7488ec9a32",
+      "parents": 455,
+      "parents_sha256": "25c2824e7849e11f8a0ed35e3f9f9988b26acaf6643605471c2699fad6aad7bd",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2512.17756v1",
+      "title": "AncientBench: Towards Comprehensive Evaluation on Excavated and Transmitted Chinese Corpora",
+      "html_sha256": "c57437c455b8415a0d278f39bb9a0edfb730eaa66bced0a625f92ed864b436b3",
+      "parents": 57,
+      "parents_sha256": "4666390741c0229de25b97e4abe441216389f7a68e63bed57d584b2c97311f1d",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2512.20002v3",
+      "title": "LoFT-LLM: Low-Frequency Time-Series Forecasting with Large Language Models",
+      "html_sha256": "6bdcfbc11dd20e384de8a7f53955f5045d2f1799dfbf279a1b803155c0bb7f43",
+      "parents": 59,
+      "parents_sha256": "7e379745a99e3237498d78af8b3bf1e566a23af59d9d7d9024b39372f3999947",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2601.01627v3",
+      "title": "JMedEthicBench: A Multi-Turn Conversational Benchmark for Evaluating Medical Safety in Japanese Large Language Models",
+      "html_sha256": "afa9303b47e82ae1233401f8e824ee70b5923b23a73e5c217f03a1cac110d8d9",
+      "parents": 56,
+      "parents_sha256": "d2627a59c0b234e981d0cee7571142203b0d8a87849661d72a84eb43a95bc04a",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2601.07754v1",
+      "title": "Structure First, Reason Next: Enhancing a Large Language Model using Knowledge Graph for Numerical Reasoning in Financial Documents",
+      "html_sha256": "34cb0187e676c01348c5682c6bb913a0408de09db7b35398554627918bb1fa31",
+      "parents": 16,
+      "parents_sha256": "ab86a251819a2a76ef5f544bc4de62cc151c8131509f2ad3c071306f7436c3ff",
+      "extractors": [
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2601.07954v1",
+      "title": "A Human-Centric Pipeline for Aligning Large Language Models with Chinese Medical Ethics",
+      "html_sha256": "e15beec12db96c4968dffbdf0fa178d71999ac23c56a381a6836f5967300bb4f",
+      "parents": 82,
+      "parents_sha256": "2dbefa6d59e04188dd34ce37dfeadfde14225160c1e331be640ea72ef36946a9",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2601.17692v1",
+      "title": "LegalMALR:Multi-Agent Query Understanding and LLM-Based Reranking for Chinese Statute Retrieval",
+      "html_sha256": "a4c9eea0455183fdbcb49b83e3294fb30bc24b371fc3b6997eee70ed188a670b",
+      "parents": 111,
+      "parents_sha256": "3e8ac96773cde9842a42d1720dd2c3cbb4264df96f9fe5378ac7999d35ab3ce4",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2602.00931v2",
+      "title": "Continuous-Utility Direct Preference Optimization",
+      "html_sha256": "f4048f31e3a129c36cb209fee67dc76f15c63aae7543b524ef38d5f2d2b98fa8",
+      "parents": 222,
+      "parents_sha256": "bea82f74c5cb0234845b91b80774891fd49c4e164beb122f21df6ddaff6b8dd5",
+      "extractors": [
+        "html-evidence-v1.2",
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 27
+    },
+    {
+      "id": "2602.00933v3",
+      "title": "MCP-Atlas: A Large-Scale Benchmark for Tool-Use Competency with Real MCP Servers",
+      "html_sha256": "31773889b23d68e964581966a9d13b89d7ffae23542bbce757876cb30e140d2c",
+      "parents": 151,
+      "parents_sha256": "0579ef3fd7657dd03f1aba3393cfd76773e6296bad541a8c08094ed3cd87ecc9",
+      "extractors": [
+        "html-evidence-v1.2",
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 23
+    },
+    {
+      "id": "2602.07294v4",
+      "title": "Fin-RATE: A Real-world Financial Analytics and Tracking Evaluation Benchmark for LLMs on SEC Filings",
+      "html_sha256": "08f46f69e083e66ad444fe1f0a06f03e65f34a2c970f62b0d439efa125b5d373",
+      "parents": 209,
+      "parents_sha256": "f2aaf719cc25e0f6a53294f8813f3441f42b3002d022b1bb5a003c63bebbb1e3",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2602.11351v2",
+      "title": "Pushing Forward Pareto Frontiers of Proactive Agents with Behavioral Agentic Optimization",
+      "html_sha256": "9d2fb574dcb51af28a71c66316949a2a719076ce633f7cc3b4d375f52f4288bc",
+      "parents": 54,
+      "parents_sha256": "8958fe41e5c33da2d5b1edca7f27b9467df02d5d834cd8f512fc1cc9cf6d11be",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2602.12285v1",
+      "title": "From Biased Chatbots to Biased Agents: Examining Role Assignment Effects on LLM Agent Robustness",
+      "html_sha256": "de03613de252d7d5beeb00321aff45ffb427605f83f3ec76688f4a0ebb5fb2aa",
+      "parents": 37,
+      "parents_sha256": "3942a8c87001672a19269361deded5ecf563c6fa04ec905f1ebfc327ac7f6907",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2602.16901v1",
+      "title": "AgentLAB: Benchmarking LLM Agents against Long-Horizon Attacks",
+      "html_sha256": "ccc3a5e1ab7294d536f92ba2e3ab43369568328f2abb6e808d5250ee5a67d17b",
+      "parents": 37,
+      "parents_sha256": "0785c719808fd256f420e7f0952e82afef68ac2c6c9366a827fdc5a2aa146cd7",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2602.16977v1",
+      "title": "Fail-Closed Alignment for Large Language Models",
+      "html_sha256": "8d8ebb57352ab93e53890d799563c6af8ea71d89f059d99570fea34b558bff9c",
+      "parents": 81,
+      "parents_sha256": "b4cfdeccb479681f05a54991cd11e03b8db45b3387618afa166088b1427ac1fe",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2603.00824v2",
+      "title": "A Gauge Theory of Superposition: Toward a Sheaf-Theoretic Atlas of Neural Representations",
+      "html_sha256": "cbeef743c6e085bb84fdae53c4e08817043f86a8e2003dcf4a83a68d03dc3be1",
+      "parents": 294,
+      "parents_sha256": "540a9357b057ca7f0e6f74179e3707f8b51e28b0c8fcba85967c60d4e648f73c",
+      "extractors": [
+        "html-evidence-v1.2",
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 41
+    },
+    {
+      "id": "2603.15712v1",
+      "title": "LLM-Driven Discovery of High-Entropy Catalysts via Retrieval-Augmented Generation",
+      "html_sha256": "6582a2bd7f09848e2c2c89a575d532cc7d67c3a12a408f03cd709e532c65d500",
+      "parents": 48,
+      "parents_sha256": "09c8c19bcc732d9bcf21879622a1d0b8e1ae0edf651fce080a25ee448e8bf19e",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2603.17192v1",
+      "title": "Narrative Frames: A New Approach to Analysing Metaphors in AI Ethics and Policy Discourse",
+      "html_sha256": "999c698fff830b715e5bcc01b5a1ad892c08700b6aa034552b5b5cbb42ef2600",
+      "parents": 47,
+      "parents_sha256": "06fe9db922dff596a96a3169767360805d8ac7300edf911d0321209095d364fd",
+      "extractors": [
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2604.00314v1",
+      "title": "Prompt-Guided Prefiltering for VLM Image Compression",
+      "html_sha256": "b601223fbde9e2a8f303217e55a552e649c09b05e64997c25bddf68612d72e6b",
+      "parents": 44,
+      "parents_sha256": "a6b4d5cd768e74ac1c3c42b3f4a61fffa762ac943e6973c392cb3adc1f14bb24",
+      "extractors": [
+        "html-evidence-v1.2",
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 22
+    },
+    {
+      "id": "2604.00324v1",
+      "title": "The Persistent Vulnerability of Aligned AI Systems",
+      "html_sha256": "3eabd23101417afdcc74b7bdbe70b3997c5d7b3d75777ffb2f42566b6515bdb2",
+      "parents": 177,
+      "parents_sha256": "a10da518f5d01c7c27f2b169c39c8f5d92f57aaee46a1644b7968fe03e343b33",
+      "extractors": [
+        "html-evidence-v1.2",
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 145
+    },
+    {
+      "id": "2604.12735v2",
+      "title": "AffectAgent: Collaborative Multi-Agent Reasoning for Retrieval-Augmented Multimodal Emotion Recognition",
+      "html_sha256": "8e12e8838b3d0a251e0703e2af104c1b929a1b3d6baa6d92459f56eb822198ef",
+      "parents": 62,
+      "parents_sha256": "1e4f73b842e4ab43effe1c1a7adce62bb73d3ed57cad4cf4531df56119a23207",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2604.12817v1",
+      "title": "Understanding and Improving Continuous Adversarial Training for LLMs via In-context Learning Theory",
+      "html_sha256": "c4a5092cba10928aa34c6a5d9fc45358f79f96d05268a2fab6ab7c4f45ae19a4",
+      "parents": 49,
+      "parents_sha256": "e9fab6e44daeeaa2440b24f4561cc92c42e1745b15e1811d1087916ba1a7a9b2",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2606.04500v1",
+      "title": "SANE Schema-aware Natural-language Evaluation of Biological Data",
+      "html_sha256": "336bf0b0b3c5ffc0e34ea905a1a9775cf8a2eb0766edd22a09bae1941dd7faaf",
+      "parents": 18,
+      "parents_sha256": "b46263c4c32f53313265cdeb1c43813f00edcee9a080535487c028921ac5d5f5",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2606.20041v2",
+      "title": "AI Economist Agent: An Agentic Framework for Evidence-Based Economic and Financial Analysis with RAG, Knowledge Graphs, and Large Language Models",
+      "html_sha256": "7c2a6ebb286c804dbf6b7dc30f3fa853142daa7569fd5216b04c8b6fa624a220",
+      "parents": 112,
+      "parents_sha256": "103f952dc8e540efa91549fc2a83dddb7b581b400aa53b031dd4ceab820183b2",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2606.28456v1",
+      "title": "Is Lying an Emergent Behaviour in LLMs? Evidence from Gaslighting AI agents in a Sustainability Game",
+      "html_sha256": "e62a851328974216a148861a0e8f882d44608f7d8b3b468e99786d9e08c36104",
+      "parents": 72,
+      "parents_sha256": "1fc9322c223204ecc20937cba2b3804e5a00892920c92ddd3bc1d2613d0f35ff",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2607.00274v1",
+      "title": "SEFORA: Student Essays with Feedback Corpus and LLM Feedback Evaluation Framework",
+      "html_sha256": "77c371d2c9c68aa48acdac1a346fbbc40bcccefa49a3549ebfd2fdc79a425804",
+      "parents": 36,
+      "parents_sha256": "6eb27d86e131b77a28cc90a86370608501a6f461afab6dee02fda5694d143b3b",
+      "extractors": [
+        "html-evidence-v1.2",
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 18
+    },
+    {
+      "id": "2607.00275v1",
+      "title": "Entropy-Regularized Probabilistic Gates for Sparse Model Discovery in Scarce-Data Federated Learning",
+      "html_sha256": "284d4b007c3812051a33421f5c3ebb7bbdc90505dacba6eecdf9aef83d722f33",
+      "parents": 30,
+      "parents_sha256": "d549bb506d378d0b28837778d11f7570486e64873a8abc39672793341cabb4e5",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 23
+    },
+    {
+      "id": "2608.09253v1",
+      "title": "SkillSentry: Reliable Skill Execution for LLM Agents via Runtime Assurance",
+      "html_sha256": "bd0077cf7ffbdd6da9258796629726a559ff4bd5c04650c869c92272ca548be0",
+      "parents": 41,
+      "parents_sha256": "b656bcf118d73316be0cb350c2fb13b407a5f3cd9e9a736aaeb9d0af1a0974bc",
+      "extractors": [
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2608.21326v1",
+      "title": "Invisible Agents, Uninformed Patients: Towards Responsible Deployment Of Autonomous AI Diagnostic Agents In Sub-Saharan Africa",
+      "html_sha256": "6deab74c86a426d9913af0f9fcc7aec989c60b542df8d567c50d9840cbd28f39",
+      "parents": 30,
+      "parents_sha256": "5e613e78dcb3301f8b65e17b3f146b6d53a4177990fed6a40aa83de180692e83",
+      "extractors": [
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2609.11414v1",
+      "title": "SWRouter: Similarity-Contractive Window Routing for Multi-Turn Large Language Model Conversations",
+      "html_sha256": "a1a7a0951038657d59cfd6875d44533e39034b2789f8701e63c24b9c47acd3c3",
+      "parents": 84,
+      "parents_sha256": "91c76eedc1d2a7a76566c20454440f03422d8f06312a7026b4ac187d3ffecfed",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 0
+    },
+    {
+      "id": "2609.39199v1",
+      "title": "UniAE-MoE: A Unified Audio Encoder via Mixture of Experts",
+      "html_sha256": "f453e1766a3ed3ee7ebbd91b1d726ad9b4e5cc4b6a25a3c66a0c3dc6194f9a1f",
+      "parents": 54,
+      "parents_sha256": "0b31319426ec2d5a8b2c5ef1e4f1b0ac4e7d081fafd6bca2d283ce3b7558ba14",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 18
+    },
+    {
+      "id": "2609.39215v1",
+      "title": "In a Streaming World, Should You Stand Still? A Comprehensive Benchmark of Anomaly Detection in Streams",
+      "html_sha256": "581e1a101717e88560a4a80dd2a1013c96a634e345b8bb66207be63d94a0858c",
+      "parents": 83,
+      "parents_sha256": "602415bab49fd37345ab72838407581dac75670d849357da3273a6fed565f6e3",
+      "extractors": [
+        "html-evidence-v2.1-stage-a",
+        "legacy-prose-chunker"
+      ],
+      "rows_without_html_hash": 42
+    }
+  ],
+  "observed_ingestion_environment": {
+    "python": "3.11.9",
+    "beautifulsoup4": "4.15.0",
+    "langchain-text-splitters": "1.1.3",
+    "langchain-core": "1.7.1",
+    "pandas": "3.1.0",
+    "pymupdf": "2.0",
+    "sentence-transformers": "6.2.0",
+    "numpy": "2.4.6",
+    "torch": "2.15.0"
+  }
+}

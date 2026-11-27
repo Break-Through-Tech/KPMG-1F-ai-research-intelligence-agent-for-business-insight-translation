@@ -1,0 +1,150 @@
+{
+ "medians": {
+  "standard": {
+   "synthesis_v1": 28604.5,
+   "synthesis_v2": 13110.5,
+   "review_v1": 32688.0,
+   "review_v2": 17570.0,
+   "synthesis_reduction": 0.542,
+   "review_reduction": 0.462
+  },
+  "deep": {
+   "synthesis_v1": 35301.5,
+   "synthesis_v2": 15779.0,
+   "review_v1": 39724.0,
+   "review_v2": 20557.0,
+   "synthesis_reduction": 0.553,
+   "review_reduction": 0.483
+  }
+ },
+ "rows": [
+  {
+   "arm": "standard",
+   "q": "H01",
+   "synthesis_v1": 31257,
+   "synthesis_v2": 14169,
+   "review_v1": 35600,
+   "review_v2": 18689
+  },
+  {
+   "arm": "standard",
+   "q": "H02",
+   "synthesis_v1": 28837,
+   "synthesis_v2": 12176,
+   "review_v1": 33382,
+   "review_v2": 16898
+  },
+  {
+   "arm": "standard",
+   "q": "H03",
+   "synthesis_v1": 25201,
+   "synthesis_v2": 13258,
+   "review_v1": 29598,
+   "review_v2": 17832
+  },
+  {
+   "arm": "standard",
+   "q": "H04",
+   "synthesis_v1": 24938,
+   "synthesis_v2": 12963,
+   "review_v1": 29116,
+   "review_v2": 17318
+  },
+  {
+   "arm": "standard",
+   "q": "H05",
+   "synthesis_v1": 28372,
+   "synthesis_v2": 11407,
+   "review_v1": 30632,
+   "review_v2": 13844
+  },
+  {
+   "arm": "standard",
+   "q": "H06",
+   "synthesis_v1": 27863,
+   "synthesis_v2": 13514,
+   "review_v1": 31994,
+   "review_v2": 17822
+  },
+  {
+   "arm": "standard",
+   "q": "H07",
+   "synthesis_v1": 33667,
+   "synthesis_v2": 13545,
+   "review_v1": 37972,
+   "review_v2": 18027
+  },
+  {
+   "arm": "standard",
+   "q": "H08",
+   "synthesis_v1": 39121,
+   "synthesis_v2": 12175,
+   "review_v1": 43170,
+   "review_v2": 16400
+  },
+  {
+   "arm": "deep",
+   "q": "H01",
+   "synthesis_v1": 40647,
+   "synthesis_v2": 18237,
+   "review_v1": 45622,
+   "review_v2": 23388
+  },
+  {
+   "arm": "deep",
+   "q": "H02",
+   "synthesis_v1": 31324,
+   "synthesis_v2": 13350,
+   "review_v1": 35649,
+   "review_v2": 17853
+  },
+  {
+   "arm": "deep",
+   "q": "H03",
+   "synthesis_v1": 35787,
+   "synthesis_v2": 16576,
+   "review_v1": 39967,
+   "review_v2": 20934
+  },
+  {
+   "arm": "deep",
+   "q": "H04",
+   "synthesis_v1": 31768,
+   "synthesis_v2": 16185,
+   "review_v1": 36280,
+   "review_v2": 20874
+  },
+  {
+   "arm": "deep",
+   "q": "H05",
+   "synthesis_v1": 31647,
+   "synthesis_v2": 12684,
+   "review_v1": 34167,
+   "review_v2": 15382
+  },
+  {
+   "arm": "deep",
+   "q": "H06",
+   "synthesis_v1": 34816,
+   "synthesis_v2": 15398,
+   "review_v1": 39481,
+   "review_v2": 20240
+  },
+  {
+   "arm": "deep",
+   "q": "H07",
+   "synthesis_v1": 41160,
+   "synthesis_v2": 16160,
+   "review_v1": 45722,
+   "review_v2": 20897
+  },
+  {
+   "arm": "deep",
+   "q": "H08",
+   "synthesis_v1": 40149,
+   "synthesis_v2": 12654,
+   "review_v1": 43692,
+   "review_v2": 16375
+  }
+ ]
+}

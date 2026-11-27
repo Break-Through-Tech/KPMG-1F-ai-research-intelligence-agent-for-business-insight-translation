@@ -1,0 +1,37 @@
+{
+  "execution": "handwritten_canned_fixtures",
+  "split": "reference_aligned_development",
+  "source_note": "Synthetic abbreviated evidence inspired by the five KPMG examples; not verified paper excerpts, model output or unseen evaluation. Runtime never reads this file.",
+  "cases": [
+    {
+      "id": "collection",
+      "evidence": "The three-part workflow collected survey responses, organized the data and predicted travel demand in a small student sample.",
+      "context": {"industry": "Advisory", "workflow": "Survey collection and analysis handoffs", "decision": ""},
+      "business": {"status": "ok", "industry": "Advisory", "implications": [{"text": "The three-part workflow connected survey collection, data organization and travel prediction in a small student sample. This could inform clearer handoffs in advisory survey analysis.", "chunk_ids": ["p1"], "suggested_action": "Map the survey collection and analysis handoffs to the studied stages; document inputs, outputs and review responsibilities before deciding which stage merits automation.", "assumptions": ["Transfer to the proposed workflow remains untested."]}], "risks": [], "limitations": ["Transfer gap: a small student sample does not establish performance for client populations."]}
+    },
+    {
+      "id": "traces",
+      "evidence": "Workflow reconstruction from computer-use traces preserved task switches that a standard process summary omitted.",
+      "context": {"industry": "Advisory", "workflow": "Documenting onboarding task switches", "decision": ""},
+      "business": {"status": "ok", "industry": "Advisory", "implications": [{"text": "Workflow reconstruction preserved task switches omitted by a standard summary. This could reveal missing onboarding handoffs in process documentation.", "chunk_ids": ["p1"], "suggested_action": "Ask process owners to compare reconstructed task switches with documented onboarding handoffs and record missing steps.", "assumptions": ["Transfer to the proposed workflow remains untested."]}], "risks": ["Potential concern: collecting onboarding screen traces could expose sensitive information; consent and data minimization need review."], "limitations": ["Transfer gap: the observed traces do not establish onboarding performance."]}
+    },
+    {
+      "id": "routing",
+      "evidence": "The routing method used a low-cost estimate and reserved expensive model checks for decisions where more information was valuable.",
+      "context": {"industry": "Technology advisory", "workflow": "Selecting models for document classification", "decision": ""},
+      "business": {"status": "ok", "industry": "Technology advisory", "implications": [{"text": "The routing method reserved expensive model checks for decisions where more information was valuable. This could inform model-selection rules for document classification without establishing cost savings.", "chunk_ids": ["p1"], "suggested_action": "Compare the routing method with fixed model selection on representative document classification cases; measure answer quality, request cost and latency to decide when extra checks are justified.", "assumptions": ["Transfer to the proposed workflow remains untested."]}], "risks": [], "limitations": ["Transfer gap: the routing result does not establish savings or suitable rules for this workflow."]}
+    },
+    {
+      "id": "ai4ai",
+      "evidence": "Coding agents mainly changed training settings rather than learning methods; meaningful algorithmic improvement remained limited.",
+      "context": {"industry": "Technology advisory", "workflow": "Reviewing claimed training algorithm improvements", "decision": ""},
+      "business": {"status": "ok", "industry": "Technology advisory", "implications": [{"text": "Coding agents mainly changed training settings rather than learning methods. This could help reviewers distinguish configuration changes from claimed algorithmic improvements.", "chunk_ids": ["p1"], "suggested_action": "Ask the technical team to classify each claimed training improvement and rerun the changed code against the same baseline; compare repeatable results before accepting an algorithmic claim.", "assumptions": ["Transfer to the proposed workflow remains untested."]}], "risks": [], "limitations": ["Evidence gap: these benchmark findings do not determine the quality of a particular vendor tool."]}
+    },
+    {
+      "id": "gcarl",
+      "evidence": "The medical report system separately checked factual support and coverage of patient needs; clinicians preferred its responses in the study.",
+      "context": {"industry": "Trusted AI", "workflow": "Reviewing executive research briefs", "decision": ""},
+      "business": {"status": "ok", "industry": "Trusted AI", "implications": [{"text": "The medical report system separately checked factual support and coverage of patient needs. This could inform separate accuracy and coverage checks for executive research briefs.", "chunk_ids": ["p1"], "suggested_action": "Revise the brief-review checklist to assess factual support and coverage separately; ask subject-matter reviewers to identify unsupported claims and missing required points.", "assumptions": ["Transfer to the proposed workflow remains untested."]}], "risks": [], "limitations": ["Transfer gap: clinician preference in medical report interpretation does not establish executive brief quality."]}
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+{
+ "arms": {
+  "S": {
+   "points": 26.5,
+   "pct": 73.6,
+   "full": [],
+   "per_q": {
+    "H01": 4.5,
+    "H02": 3.0,
+    "H03": 2.5,
+    "H04": 4.0,
+    "H05": 3.5,
+    "H06": 3.5,
+    "H07": 3,
+    "H08": 2.5
+   },
+   "lost": {
+    "synthesis": 3.0,
+    "review-relevance": 1,
+    "retrieval": 5.5
+   }
+  },
+  "D": {
+   "points": 27.5,
+   "pct": 76.4,
+   "full": [
+    "H01"
+   ],
+   "per_q": {
+    "H01": 5,
+    "H02": 3.5,
+    "H03": 2.5,
+    "H04": 4.0,
+    "H05": 3.5,
+    "H06": 2.5,
+    "H07": 3,
+    "H08": 3.5
+   },
+   "lost": {
+    "synthesis": 4.5,
+    "retrieval": 4.0
+   }
+  }
+ },
+ "deep_decision_criteria": {
+  "points >= S + 3.6": false,
+  "full answers (more, or no fewer with +3.6)": true,
+  "both arms pass safety gate (AI-assisted)": true,
+  "median total latency <= 2x S": true,
+  "p90 total <= 300 s": true,
+  "<= 1 execution error after resume": true
+ },
+ "deep_preferred": false,
+ "mechanics": {
+  "S": {
+   "calls": 16,
+   "failed_calls": 0,
+   "median_total_s": 119.0,
+   "p90_total_s": 139.7,
+   "median_success_s": 119.0,
+   "p90_success_s": 139.7,
+   "estimated_request_tokens": 512407,
+   "actual_input_tokens": 620383,
+   "actual_output_tokens": 39263,
+   "published_items": 129,
+   "quote_not_exact": [],
+   "number_not_in_quotes": []
+  },
+  "D": {
+   "calls": 24,
+   "failed_calls": 0,
+   "median_total_s": 140.0,
+   "p90_total_s": 143.2,
+   "median_success_s": 140.0,
+   "p90_success_s": 143.2,
+   "estimated_request_tokens": 617102,
+   "actual_input_tokens": 801826,
+   "actual_output_tokens": 44138,
+   "published_items": 135,
+   "quote_not_exact": [],
+   "number_not_in_quotes": []
+  }
+ }
+}

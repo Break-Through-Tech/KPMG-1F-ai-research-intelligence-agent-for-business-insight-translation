@@ -1,0 +1,26 @@
+[Unit]
+Description=KPMG supervised research preview
+After=network-online.target
+Wants=network-online.target
+RequiresMountsFor=/var/lib/kpmg
+
+[Service]
+Type=simple
+User=kpmg
+Group=kpmg
+WorkingDirectory=/opt/kpmg/app
+EnvironmentFile=/etc/kpmg/preview.env
+Environment=HOME=/opt/kpmg PATH=/opt/kpmg/venv/bin:/usr/bin:/bin
+ExecStart=/opt/kpmg/venv/bin/python -B deploy/render/start.py
+Restart=on-failure
+RestartSec=10
+TimeoutStartSec=300
+MemoryMax=3G
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target

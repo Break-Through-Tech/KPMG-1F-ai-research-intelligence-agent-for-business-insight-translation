@@ -1,0 +1,52 @@
+[
+ {
+  "id": "H01",
+  "category": "table",
+  "question": "In the metadata-driven RAG study on FinanceBench, what F1-scores did the Naive RAG baseline, the best-performing architecture and the authors’ proposed custom-reranker architecture achieve, and which configuration performed worst?"
+ },
+ {
+  "id": "H02",
+  "category": "numeric",
+  "question": "On M3ToolEval, how did CodeAct compare with text or JSON actions, and how large was the gap between the best open-source and closed-source models?"
+ },
+ {
+  "id": "H03",
+  "category": "table",
+  "question": "Which domains and source datasets make up CodeActInstruct, and how many instances does each contribute for trajectory generation?"
+ },
+ {
+  "id": "H04",
+  "category": "multi-paper",
+  "question": "How do QuantMCP and the metadata-driven financial RAG architecture each try to keep LLM answers about financial information accurate?"
+ },
+ {
+  "id": "H05",
+  "category": "numeric",
+  "question": "In AgentLAB, how did long-horizon attacks compare with a one-shot injection baseline, how vulnerable was GPT-5.1, and which agent resisted?"
+ },
+ {
+  "id": "H06",
+  "category": "qualitative",
+  "question": "In the study of persona assignments for LLM agents, which kinds of agent tasks were most and least sensitive to demographic personas, and how large were the largest reported drops?"
+ },
+ {
+  "id": "H07",
+  "category": "numeric",
+  "question": "How did SkillSentry change LLM agents’ task success and runtime cost?"
+ },
+ {
+  "id": "H08",
+  "category": "limitations",
+  "question": "What dataset was SpeechT-RAG evaluated on, and what limitation do the authors attribute to that choice?"
+ },
+ {
+  "id": "H09",
+  "category": "qualitative",
+  "question": "In SynLLM, which prompting strategy gave the best privacy–utility balance, what trade-off did example-based prompts show, and what limitation applies to its privacy evaluation?"
+ },
+ {
+  "id": "H10",
+  "category": "limitations",
+  "question": "In the medical-guideline causality extraction study, how did BERT-family models compare with GPT-4 and LLAMA2, and what limited LLAMA2’s practical use?"
+ }
+]

@@ -1,0 +1,76 @@
+{
+ "points": {
+  "B0": 17.5,
+  "S1": 25.5,
+  "S2": 25.0,
+  "D2": 26.5
+ },
+ "percent": {
+  "B0": 46.05263157894737,
+  "S1": 67.10526315789474,
+  "S2": 65.78947368421052,
+  "D2": 69.73684210526316
+ },
+ "full": {
+  "B0": 0,
+  "S1": 0,
+  "S2": 0,
+  "D2": 0
+ },
+ "mechanics": {
+  "B0": {
+   "input_tokens": 256666,
+   "median_total_s": 68.94999999999999,
+   "p90_total_s": 365.76599999999996,
+   "complete": 7,
+   "first_pass": 6,
+   "execution_errors": 1
+  },
+  "S1": {
+   "input_tokens": 505844,
+   "median_total_s": 107.0055,
+   "p90_total_s": 119.741,
+   "complete": 8,
+   "first_pass": 8,
+   "execution_errors": 0
+  },
+  "S2": {
+   "input_tokens": 335683,
+   "median_total_s": 94.8105,
+   "p90_total_s": 145.775,
+   "complete": 8,
+   "first_pass": 8,
+   "execution_errors": 0
+  },
+  "D2": {
+   "input_tokens": 453573,
+   "median_total_s": 108.30000000000001,
+   "p90_total_s": 152.404,
+   "complete": 8,
+   "first_pass": 8,
+   "execution_errors": 0
+  }
+ },
+ "S2_criteria": {
+  "completeness >= 80%": false,
+  ">= 4/8 full": false,
+  ">= B0 + 10 pp": true,
+  "no regression vs S1": false,
+  "safety": true,
+  "all 8 complete and >= 7/8 first pass": true,
+  "median <= 120 s": true,
+  "p90 <= 180 s": true,
+  "input tokens <= 0.8 x S1": true
+ },
+ "S2_qualifies": false,
+ "D2_criteria": {
+  "safety": true,
+  "completeness >= 80%": false,
+  ">= S2 + 10 pp": false,
+  "full >= S2": true,
+  "median <= 2 x S2": true,
+  "p90 <= 300 s": true,
+  "<= 1 execution error": true
+ },
+ "D2_qualifies": false
+}

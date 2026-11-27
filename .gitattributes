@@ -342,3 +342,4 @@
 /onboarding/fixture/table-audit-demo-100.json -text
 /onboarding/runtime-metadata/demo-100/manifest.json -text
 /onboarding/runtime-metadata/table-audit-demo-100.json -text
+/prompts/business_translation/downstream-v1.2.txt -text

@@ -1967,6 +1967,51 @@
       : sourceLocation(passage);
   }
 
+  let businessTranslationEnabled = false;
+
+  function renderBusinessForm(demo, onTranslated) {
+    const saved = demo.library;
+    const previous = demo.result.provenance?.business_translation?.context || {};
+    const fields = {
+      industry: h('input', {type: 'text', maxLength: 300, value: previous.industry === 'Industry unspecified' ? '' : previous.industry || ''}),
+      workflow: h('input', {type: 'text', maxLength: 600, value: previous.workflow || ''}),
+      decision: h('input', {type: 'text', maxLength: 600, value: previous.decision || ''}),
+    };
+    const customize = h('details', {class: 'fold'},
+      h('summary', {text: 'Customize'}),
+      ...[['industry', 'Industry'], ['workflow', 'Business Workflow'], ['decision', 'Decision']]
+        .map(([name, label]) => h('label', {class: 'field'}, h('span', {text: label}), fields[name])));
+    const status = h('p', {class: 'section-note', role: 'status'});
+    const send = h('button', {type: 'submit', class: 'act-btn', text: 'Generate business insights'});
+    const form = h('form', {class: 'review-form', onsubmit: async event => {
+      event.preventDefault();
+      if (send.disabled) return;
+      send.disabled = true;
+      status.textContent = 'Generating from the saved findings…';
+      try {
+        const response = await fetch('/api/business', {method: 'POST', headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({brief_id: saved.brief.id, expected_version: saved.version.id,
+            fingerprint: demo.result.review_fingerprint,
+            context: Object.fromEntries(Object.entries(fields).map(([key, input]) => [key, input.value]))}),
+          signal: AbortSignal.timeout(180000)});
+        const updated = await response.json();
+        if (!response.ok) {
+          if (response.status === 400 && updated.error?.startsWith('Add a business workflow')) {
+            customize.open = true;
+            fields.workflow.focus();
+          }
+          throw new Error(updated.error || 'Business translation failed.');
+        }
+        if (form.isConnected) onTranslated(updated);
+      } catch (error) {
+        status.textContent = error.name === 'TimeoutError'
+          ? 'Reload the saved answer before retrying. The translation may already have been saved.'
+          : error.message || 'Business translation failed. Your saved research is available.';
+      } finally { send.disabled = false; }
+    }}, h('p', {class: 'section-note', text: 'Uses the saved question and findings. Use only public research and non-confidential context.'}), customize, send, status);
+    return form;
+  }
+
   function renderBrief(demo, number, answer, tools) {
     const result = demo.result, summary = result.summary, insight = result.business_insight, view = demo.plain_language;
     const evidence = result.evidence || [];
@@ -1993,6 +2038,18 @@
     /* Research notes are collected while the answer is built and shown in Workspace. */
     const notes = {coverage: [], limits: [], business: [], other: []};
     const openWorkspace = section => { setTab('workspace', {scroll: true}); selectWorkspace(section, true); };
+    const eligibleBusiness = businessTranslationEnabled && demo.library?.version?.id &&
+      ['full', 'partial'].includes(summary.quality_review?.coverage) &&
+      summary.claims?.some(claim => !claim.kind || claim.kind === 'finding');
+    const businessForm = eligibleBusiness ? renderBusinessForm(demo, updated => {
+      ResearchSpeech.stopAll();
+      renderDemo(updated, number, answer);
+      loadRecentBriefs();
+      if (answer.closest('.turn') === activeTurn && currentView === 'thread') {
+        setTab('workspace', {scroll: false});
+        answer.querySelector('.brief')?.selectWorkspace?.('business', true);
+      }
+    }) : null;
     /* Answer caveats: only what is specifically missing or in conflict, said once, near the answer. */
     const asides = h('div', {class: 'answer-asides'});
     const aside = (content, tone = 'warn') => {
@@ -2169,7 +2226,10 @@
             : `Exports contain the answer as generated and its sources, not the review record. Current review: ${review.short}.`}))),
       tools.listenButton,
       evidence.length ? h('button', {type: 'button', class: 'act-btn', onclick: () => setTab('sources', {focus: true})}, icon('layers'), h('span', {text: 'Sources'})) : null,
-      insight?.implications?.length ? h('button', {type: 'button', class: 'act-btn act-quiet', onclick: () => openWorkspace('business')}, icon('bulb'), h('span', {text: 'Business insight'})) : null,
+      insight?.implications?.length ? h('button', {type: 'button', class: 'act-btn act-quiet', onclick: () => openWorkspace('business')}, icon('bulb'), h('span', {text: 'Business insight'})) : businessForm
+        ? h('button', {type: 'button', class: 'act-btn act-quiet', onclick: () => {
+          openWorkspace('business'); businessForm.requestSubmit();
+        }}, icon('bulb'), h('span', {text: 'Generate business insights'})) : null,
       view?.status === 'available' && claimNodes.length ? h('div', {class: 'act-switch'}, h('span', {id: `a${number}-explain-label`, class: 'sr-only', text: 'Explanation style'}), explanationSwitch(`a${number}-explain-label`)) : null);
     paneAnswer.append(actions, tools.listenPanel);
 
@@ -2210,8 +2270,13 @@
     paneWorkspace.append(h('header', {class: 'pane-head'}, h('h2', {class: 'pane-title', id: `a${number}-workspace`, tabIndex: -1, text: 'Workspace'})), wsTabs, wsBody);
 
     // Business insight: one interpretation tied to the industry and its cited finding; the action beside it.
+    const businessPanel = insight || businessForm ? wsSection('business', 'Business insight') : null;
+    if (demo.error?.stage === 'business' && businessPanel) {
+      businessPanel.append(h('p', {class: 'aside-line warn', role: 'status', text: demo.error.message}));
+    }
+    if (businessForm) businessPanel.append(businessForm);
     if (insight) {
-      const panel = wsSection('business', 'Business insight');
+      const panel = businessPanel;
       panel.append(h('p', {class: 'ws-kicker', text: `Industry: ${insight.industry} · an interpretation for business use, not something the paper measured`}));
       if (result.provenance?.agentic) {
         const dropped = (result.provenance.agentic.business_screening || []).filter(item => item.status === 'removed').length;
@@ -3538,6 +3603,7 @@
       appReady = true;
       liveSynthesis = config.live;
       libraryEnabled = config.library === true;
+      businessTranslationEnabled = config.business_translation === true;
       $('#library-open').hidden = !libraryEnabled;
       finishRevision();
       presentationEnabled = config.plain_language === true;

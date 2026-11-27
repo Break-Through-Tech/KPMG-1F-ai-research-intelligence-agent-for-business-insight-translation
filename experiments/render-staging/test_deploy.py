@@ -126,6 +126,39 @@ class DeploymentUnitTests(unittest.TestCase):
         with self.assertRaises(ValidationError):
             call('input', response_schema=schema)
 
+    def test_s2_review_can_withhold_only_an_empty_support_limitation(self):
+        import sys
+        sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'consolidated-v2'))
+        from review import review_schema
+
+        schema = review_schema(['allowed'], 1)[0]
+        supported = {'text': 'English questions only.', 'support': [
+            {'chunk_id': 'allowed', 'quote': 'Only English questions were evaluated.'}]}
+        reply = {'coverage': 'full', 'gap': '', 'decisions': [],
+                 'limitations': [{'text': 'Uncited statement.', 'support': []}, supported]}
+        provider = Mock(return_value=json.dumps(reply))
+        call = quota_generate(provider, Budget(self.path, clock=self.clock), recover_review_limitations=True)
+        result = json.loads(call('Synthetic review', response_schema=schema))
+        self.assertEqual(result['limitations'], [supported])
+        self.assertEqual(result['decisions'], reply['decisions'])
+        self.assertEqual(result['coverage'], 'partial')
+        self.assertIn('human review', result['gap'])
+        self.assertEqual(1, self.attempts())
+
+        reply['limitations'][1]['support'][0]['chunk_id'] = 'unknown'
+        provider.return_value = json.dumps(reply)
+        with self.assertRaises(ValidationError):
+            call('Synthetic review', response_schema=schema)
+
+    def test_empty_support_recovery_does_not_apply_to_draft_claims(self):
+        schema = synthesis_schema(['allowed'])
+        invalid = json.dumps({'status': 'ok', 'claims': [
+            {'text': 'Uncited finding.', 'kind': 'finding', 'support': []}], 'limitations': []})
+        call = quota_generate(Mock(return_value=invalid), Budget(self.path, clock=self.clock),
+                              recover_review_limitations=True)
+        with self.assertRaises(ValidationError):
+            call('Synthetic draft', response_schema=schema)
+
     def test_budget_refusal_prevents_provider_call(self):
         provider = Mock()
         call = quota_generate(provider, Budget(self.path, clock=self.clock))

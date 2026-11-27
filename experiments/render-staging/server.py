@@ -23,6 +23,7 @@ from evidence_tables import TableIndex
 from recorded_backend import make_handler
 from src.experimental.b2 import open_b2
 from src.experimental.demo import create_research
+from src.business_demo import BusinessHandler
 from src.generation import ProviderUnavailable, create_generate, log_provider_failure
 from src.generation_config import GenerationConfig
 from src.indexed_research import fingerprint
@@ -103,7 +104,36 @@ def reservation(payload_bytes):
 TRANSIENT_RETRY_DELAYS = (2, 6)  # seconds before the 2nd and 3rd attempt after a provider 5xx
 
 
-def quota_generate(generate, budget, *, sleep=time.sleep):
+def validate_generation(text, schema, *, recover_review_limitations=False):
+    validator = Draft202012Validator(schema)
+    result = json.loads(text)
+    if not recover_review_limitations or set(schema.get('properties', {})) != {
+            'coverage', 'gap', 'decisions', 'limitations'}:
+        validator.validate(result)
+        return text
+
+    errors = list(validator.iter_errors(result))
+    if not errors:
+        return text
+    withheld = set()
+    for error in errors:
+        path = list(error.absolute_path)
+        if not (error.validator == 'minItems' and error.validator_value == 1 and error.instance == []
+                and len(path) == 3 and path[0] == 'limitations' and path[2] == 'support'
+                and type(path[1]) is int):
+            raise errors[0]
+        withheld.add(path[1])
+    result['limitations'] = [item for i, item in enumerate(result['limitations']) if i not in withheld]
+    if result['coverage'] == 'full':
+        result['coverage'] = 'partial'
+    result['gap'] = 'An uncited review limitation was withheld. Answer coverage needs human review.'
+    validator.validate(result)
+    print(f'provider-response-recovery stage=review withheld_uncited_limitations={len(withheld)}',
+          file=sys.stderr, flush=True)
+    return json.dumps(result, ensure_ascii=False)
+
+
+def quota_generate(generate, budget, *, sleep=time.sleep, recover_review_limitations=False):
     def guarded(prompt, *, response_schema=None):
         wire = wire_schema(response_schema) if response_schema is not None else None
         payload = json.dumps({'prompt': prompt, 'schema': wire}, ensure_ascii=False).encode()
@@ -124,7 +154,8 @@ def quota_generate(generate, budget, *, sleep=time.sleep):
                 sleep(TRANSIENT_RETRY_DELAYS[attempt])
         if response_schema is not None:
             try:
-                Draft202012Validator(response_schema).validate(json.loads(text))
+                text = validate_generation(text, response_schema,
+                                           recover_review_limitations=recover_review_limitations)
             except Exception as error:
                 log_provider_failure('contract_schema', error)
                 raise
@@ -142,8 +173,14 @@ def verify_snapshot(path):
     return manifest
 
 
-def build_handler(snapshot, state, origin, password, generate, metadata, *, synthetic_fixture=False):
+def build_handler(snapshot, state, origin, password, generate, metadata, *, synthetic_fixture=False,
+                  business_generate=None, business_metadata=None):
     manifest = verify_snapshot(snapshot)
+    if business_generate is not None:
+        from src.business_insights import PROMPT
+        prompt_name = 'prompts/business_translation/' + PROMPT.name
+        if prompt_name not in manifest['files'] or PROMPT.read_bytes() != (snapshot / prompt_name).read_bytes():
+            raise ValueError('Business translation requires the verified staged prompt.')
     if bool(manifest.get('synthetic_fixture')) != synthetic_fixture:
         raise ValueError('Synthetic snapshots require explicit offline fixture mode.')
     bundle = snapshot / 'artifacts/bundle'
@@ -152,7 +189,8 @@ def build_handler(snapshot, state, origin, password, generate, metadata, *, synt
     if smoke not in ('0', '1') or (smoke == '1' and (engine != 's2' or paper_balance)):
         raise ValueError('Gemini smoke mode requires Standard S2.')
     ledger = state / ('gemini-smoke-attempts.sqlite3' if smoke == '1' else 'provider-usage.sqlite3')
-    guarded = quota_generate(generate, Budget(ledger, smoke=smoke == '1'))
+    guarded = quota_generate(generate, Budget(ledger, smoke=smoke == '1'),
+                             recover_review_limitations=engine == 's2')
     encoder = snapshot / 'artifacts/encoder'
     reranker = snapshot / 'artifacts/reranker'
     if engine == 's2':
@@ -175,7 +213,7 @@ def build_handler(snapshot, state, origin, password, generate, metadata, *, synt
     authority = urlsplit(origin).netloc
     assets = snapshot / 'assets'
 
-    class Handler(base):
+    class Handler(BusinessHandler, base):
         def local_request(self):
             # Auth and exact Host/Origin are checked before entering the inherited handler.
             return self.accepted
@@ -227,7 +265,9 @@ def build_handler(snapshot, state, origin, password, generate, metadata, *, synt
         def do_POST(self):
             if not self.admit(write=True):
                 return
-            if not WRITE_API.fullmatch(urlsplit(self.path).path) or self.headers.get('Transfer-Encoding'):
+            path = urlsplit(self.path).path
+            business_route = path == '/api/business' and type(self).business_generate is not None
+            if (not business_route and not WRITE_API.fullmatch(path)) or self.headers.get('Transfer-Encoding'):
                 return self.respond(404, {'error': 'Not found.'})
             if engine != 's2' or self.path != '/api/research':
                 return super().do_POST()
@@ -250,6 +290,9 @@ def build_handler(snapshot, state, origin, password, generate, metadata, *, synt
 
     original_prepare = research.prepare_request
     research.prepare_request = research_only
+    Handler.business_generate = staticmethod(business_generate) if business_generate else None
+    Handler.business_metadata = business_metadata
+    Handler.business_lock = Lock()
     Handler.research = research
     Handler.research_lock = Lock()
     return Handler
@@ -312,7 +355,12 @@ def main():
     generate, metadata = create_generate(config)
     snapshot = Path(os.environ.get('KPMG_SNAPSHOT', ROOT / 'snapshot')).resolve()
     start = time.perf_counter()
-    handler = build_handler(snapshot, state, origin, password, generate, metadata)
+    business_generate = business_metadata = None
+    if os.environ.get("BUSINESS_TRANSLATION_ENABLED", "").strip().lower() in {"1", "true", "yes"}:
+        from src.business_generation import create_business_generate
+        business_generate, business_metadata = create_business_generate()
+    handler = build_handler(snapshot, state, origin, password, generate, metadata,
+                            business_generate=business_generate, business_metadata=business_metadata)
     with Server(('0.0.0.0' if render else '127.0.0.1', port), handler) as service:
         print(f'Research preview ready in {time.perf_counter() - start:.1f}s on port {port}.', flush=True)
         service.serve_forever()

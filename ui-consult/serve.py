@@ -50,7 +50,7 @@ TYPES = {'.png': 'image/png', '.js': 'text/javascript', '.mjs': 'text/javascript
 # 405 (known route, wrong method) and never reaches the backend.
 ROUTES = (
     (re.compile(r'/api/(?:config|saved-result)'), {'GET'}),
-    (re.compile(r'/api/(?:research|demo)'), {'POST'}),
+    (re.compile(r'/api/(?:research|demo|business)'), {'POST'}),
     (re.compile(r'/api/evidence-table'), {'GET'}),
     # Experimental, model-free chart-first routes (offered only by the isolated backend).
     (re.compile(r'/api/progress'), {'GET'}),
@@ -90,6 +90,7 @@ def static_allowed(name, serve_tests=False):
 
 class ResponseTooLarge(Exception):
     pass
+BUSINESS_TIMEOUT = 170  # Two provider attempts plus retry, with margin.
 RESEARCH_TIMEOUT = 1600  # The page's own research timeout is 1560 s.
 # Multi-agent worst case: 6 model calls of up to 300 s each plus retrieval. The page waits 1860 s.
 AGENTIC_TIMEOUT = 1900
@@ -198,7 +199,8 @@ class Handler(BaseHTTPRequestHandler):
             status, payload, kind = self.upstream(
                 method, target, body if method == 'POST' else None,
                 AGENTIC_TIMEOUT if parts.path == '/api/agentic-research'
-                else RESEARCH_TIMEOUT if parts.path in {'/api/research', '/api/demo'} else self.api_timeout,
+                else RESEARCH_TIMEOUT if parts.path in {'/api/research', '/api/demo'}
+                else BUSINESS_TIMEOUT if parts.path == '/api/business' else self.api_timeout,
                 MAX_RESPONSE.get(parts.path, MAX_RESPONSE_DEFAULT), delivery)
         except ResponseTooLarge:
             return self.send(502, {'code': 'backend_response_too_large', 'write_outcome': 'unknown' if method == 'POST' else None,

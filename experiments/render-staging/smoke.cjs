@@ -172,7 +172,8 @@ async function main() {
     await page.getByText(/35–46% to 68–78%/).first().waitFor();
     const citation = page.locator('#thread button.citation:visible').first();
     await citation.click();
-    await page.locator('#inspector').waitFor();
+    // The docked inspector is laid out while closed; wait for the opened panel's content.
+    await page.locator('body.insp-open #inspector').getByText(/seven base models/).first().waitFor();
     assert.match(await page.locator('#inspector').innerText(), /seven base models/);
     assert.ok((await page.locator('#inspector').getByRole('link', {name: /open.*paper/i}).first().getAttribute('href'))
       .startsWith('https://arxiv.org/html/2602.00931v2'));

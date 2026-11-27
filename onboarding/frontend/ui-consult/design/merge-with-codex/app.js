@@ -65,7 +65,6 @@
   }
 
   const stage = $('#stage'), thread = $('#thread'), scroller = $('#scroll'), dock = $('#dock');
-  new ResizeObserver(() => document.documentElement.style.setProperty('--dock-h', `${Math.ceil(dock.getBoundingClientRect().height)}px`)).observe(dock);
   const form = $('#composer'), queryInput = $('#query'), submit = $('#submit'), scenarioSelect = $('#scenario');
   const industryInput = $('#industry'), suggestions = $('#suggestions'), jumpLatest = $('#jump-latest');
   const inspector = $('#inspector'), inspectorBody = $('#inspector-body'), inspectorHeading = $('#inspector-heading');
@@ -150,36 +149,27 @@
     else if (currentView === 'thread' && activeTurn) $('#main').append(dock);
     dock.hidden = currentView === 'library' || (currentView === 'thread' && !activeTurn);
   }
-  // The requested view is recorded immediately; an animated change applies whichever view is
-  // requested last, so a quick Library → brief switch cannot be overtaken by a pending transition.
-  let targetView = null;
   // Navigation token (audit M2): every navigation advances it; a slow saved-brief response may
   // change the view only if its token is still current when it arrives.
   const nav = AsyncGuards.createNavGuard();
-  function setView(requested, animate = true) {
-    if ((targetView ?? stage.dataset.view) === requested) return;
+  function setView(view) {
+    if (stage.dataset.view === view) return;
     nav.bump();
-    targetView = requested;
-    const change = () => {
-      const view = targetView;
-      if (stage.dataset.view === view) return;
-      currentView = view;
-      stage.dataset.view = view;
-      stage.classList.toggle('is-home', view === 'home');
-      $('#hero').hidden = view !== 'home'; thread.hidden = view !== 'thread'; $('#library-view').hidden = view !== 'library';
-      $('#examples').hidden = view !== 'home' || recordedMode || pageMode === 'mock' || pageMode === 'offline';
-      $('#thread-title').classList.toggle('show', view === 'thread');
-      $('#nav-research').toggleAttribute('aria-current', view !== 'library');
-      if (view !== 'library') $('#nav-research').setAttribute('aria-current', 'page');
-      $('#library-open').toggleAttribute('aria-current', view === 'library');
-      if (view === 'library') $('#library-open').setAttribute('aria-current', 'page');
-      if (view !== 'thread') { suggestions.hidden = true; jumpLatest.hidden = true; }
-      placeDock();
-      autosize();
-      syncTopbar();
-      if (view !== 'thread') scroller.scrollTop = 0;
-    };
-    if (animate) morph(change); else change();
+    currentView = view;
+    stage.dataset.view = view;
+    stage.classList.toggle('is-home', view === 'home');
+    $('#hero').hidden = view !== 'home'; thread.hidden = view !== 'thread'; $('#library-view').hidden = view !== 'library';
+    $('#examples').hidden = view !== 'home' || recordedMode || pageMode === 'mock' || pageMode === 'offline';
+    $('#thread-title').classList.toggle('show', view === 'thread');
+    $('#nav-research').toggleAttribute('aria-current', view !== 'library');
+    if (view !== 'library') $('#nav-research').setAttribute('aria-current', 'page');
+    $('#library-open').toggleAttribute('aria-current', view === 'library');
+    if (view === 'library') $('#library-open').setAttribute('aria-current', 'page');
+    if (view !== 'thread') { suggestions.hidden = true; jumpLatest.hidden = true; }
+    placeDock();
+    autosize();
+    syncTopbar();
+    if (view !== 'thread') scroller.scrollTop = 0;
   }
   $('#nav-research').addEventListener('click', () => setView(activeTurn ? 'thread' : 'home'));
 
@@ -192,8 +182,7 @@
     const selected = tabButtons.find(button => button.getAttribute('aria-selected') === 'true');
     if (!selected || $('#view-tabs').hidden) return;
     tabIndicator.classList.toggle('instant', !animate);
-    tabIndicator.style.width = `${selected.offsetWidth}px`;
-    tabIndicator.style.transform = `translateX(${selected.offsetLeft}px)`;
+    tabIndicator.style.transform = `translateX(${selected.offsetLeft}px) scaleX(${selected.offsetWidth})`;
   }
   addEventListener('resize', () => moveIndicator(false));
   document.addEventListener('reading-preferences-applied', () => requestAnimationFrame(() => moveIndicator(false)));
@@ -215,9 +204,13 @@
   }
   tabButtons.forEach(button => button.addEventListener('click', () => setTab(button.dataset.tab)));
   $('#view-tabs').addEventListener('keydown', event => {
-    if (!['ArrowRight', 'ArrowLeft'].includes(event.key)) return;
+    if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(event.key)) return;
     const index = tabButtons.indexOf(document.activeElement);
-    const next = tabButtons[(index + (event.key === 'ArrowRight' ? 1 : tabButtons.length - 1)) % tabButtons.length];
+    if (index < 0) return;
+    event.preventDefault();
+    const nextIndex = event.key === 'Home' ? 0 : event.key === 'End' ? tabButtons.length - 1
+      : (index + (event.key === 'ArrowRight' ? 1 : tabButtons.length - 1)) % tabButtons.length;
+    const next = tabButtons[nextIndex];
     next.click(); next.focus();
   });
   function syncTopbar() {
@@ -343,7 +336,7 @@
     $('#settings-summary').textContent = parts.join(' · ');
     const current = industryInput.value.trim().toLowerCase();
     for (const toggle of inlineIndustry) toggle.setAttribute('aria-pressed', String(toggle.dataset.industry === current));
-    $('#industry-inline').hidden = $('#industry-field').hidden;
+    $('#industry-inline').hidden = recordedMode || $('#industry-field').hidden;
   }
   function requestBusinessInsights(query) {
     // Summary-only answers: keep the question, open settings at the industry field.
@@ -536,7 +529,6 @@
         if (anchor) anchor.before(label, grid, status); else passageView.append(label, grid, status);
       }
       tidySource(passageView, passage);
-      passageView.classList.remove('swap'); void passageView.offsetWidth; passageView.classList.add('swap');
       ResearchSpeech.attach(passageView, {id: `source:${number}:${passage.chunk_id}`,
         label: `Citation ${index + 1} · ${citationSourceContext(passage)}`, text: ResearchSpeech.source(passage, index + 1)});
       document.querySelectorAll('.source-row[data-active]').forEach(row => row.removeAttribute('data-active'));
@@ -558,6 +550,14 @@
     }
     inspectorBody.scrollTop = 0;
     setInspector(true, trigger);
+    const activeChoice = $('.source-tab[aria-pressed="true"]', choices);
+    if (activeChoice) {
+      const strip = choices.getBoundingClientRect();
+      const item = activeChoice.getBoundingClientRect();
+      if (item.left < strip.left || item.right > strip.right) {
+        choices.scrollLeft += item.left - strip.left - (strip.width - item.width) / 2;
+      }
+    }
     if (trigger || focusWasInContent) inspectorHeading.focus({preventScroll: true});
   }
 
@@ -1157,12 +1157,10 @@
     const paired = plan.form === 'paired_dot';
     const metrics = plan.panels;
     const choices = ctx.chartChoice || (ctx.chartChoice = new Map());
-    const preferred = metrics.findIndex(panel => panel.unit && panel.unit.zero);
-    let choice = initial !== undefined ? initial
-      : choices.has(table.key) ? choices.get(table.key) : preferred >= 0 ? preferred : (metrics.length > 1 ? 'all' : 0);
+    let choice = initial ?? choices.get(table.key) ?? 0;
     const title = h('h4', {class: 'chart-title'});
     const unitLine = h('p', {class: 'chart-unit'});
-    const takeawayData = ctx.takeaway ? ctx.takeaway(table) : null;
+    const takeawayData = ctx.compact && ctx.takeaway ? ctx.takeaway(table) : null;
     const takeaway = takeawayData ? h('p', {class: 'chart-takeaway'},
       h('span', {class: 'term', text: 'From the answer'}), h('span', {math: takeawayData.text}),
       takeawayData.citations.length ? h('span', {class: 'cites'}, takeawayData.citations.map(n => h('span', {class: 'cite-num', text: String(n)}))) : null) : null;
@@ -1170,7 +1168,7 @@
     const options = [...metrics.map((panel, index) => ({value: index, label: panel.header})),
       ...(metrics.length > 1 ? [{value: 'all', label: 'All metrics'}] : [])];
     const buttons = options.map(option => {
-      const button = h('button', {type: 'button', role: 'radio', class: 'seg-btn', onclick: () => { picked = true; show(option.value, true); }});
+      const button = h('button', {type: 'button', role: 'radio', class: 'seg-btn', onclick: () => show(option.value, true)});
       texText(button, option.label);
       button.dataset.metric = String(option.value);
       return button;
@@ -1181,19 +1179,18 @@
       event.preventDefault();
       const index = options.findIndex(option => option.value === choice);
       const step = event.key === 'ArrowRight' || event.key === 'ArrowDown' ? 1 : options.length - 1;
-      picked = true; show(options[(index + step) % options.length].value, true);
+      show(options[(index + step) % options.length].value, true);
     });
     const legend = paired ? h('p', {class: 'chart-legend'},
       h('span', {class: 'key'}, h('span', {class: 'swatch a', 'aria-hidden': 'true'}), h('span', {text: plan.category.values[0]})),
-      h('span', {class: 'key'}, h('span', {class: 'swatch b', 'aria-hidden': 'true'}), h('span', {text: plan.category.values[1]})),
-      h('span', {class: 'legend-note', text: `Labels as written in the “${plan.category.header}” column.`})) : null;
+      h('span', {class: 'key'}, h('span', {class: 'swatch b', 'aria-hidden': 'true'}), h('span', {text: plan.category.values[1]}))) : null;
     const frame = h('div', {class: 'chart-frame'});
     const hint = scrollHint();
-    const why = h('p', {class: 'chart-why'});
     const foot = h('p', {class: 'chart-foot'});
     const glossHost = h('div', {class: 'gloss-host'});
-    wrap.append(...[h('div', {class: 'chart-head'}, title, unitLine, glossHost, takeaway, metrics.length > 1 || metrics[0]?.unit?.zero ? chartOptions(selector) : null), legend, hint, frame, why, foot].filter(Boolean)); // append(null) would print "null"
-    let chart = null, picked = false;
+    const definitions = h('details', {class: 'fold chart-notes'}, h('summary', {text: 'Metric definitions'}), glossHost);
+    wrap.append(...[h('div', {class: 'chart-head'}, title, unitLine, takeaway, metrics.length > 1 ? selector : null), legend, hint, frame, foot, definitions].filter(Boolean));
+    let chart = null;
     const draw = options => {
       if (!chart) return;
       chart.update(Math.round(frame.clientWidth || wrap.clientWidth || 0), options);
@@ -1210,9 +1207,9 @@
       texText(unitLine, `${EM.chartTitle(table, plan, panel)}. ${panel
         ? (panel.unit && panel.unit.zero ? `Unit: ${panel.unit.label}, as stated in the table.` : 'The paper gives no unit for these values.')
         : 'Each measure has its own scale.'}`);
-      glossHost.replaceChildren(glossLine([...(panel ? [panel.header] : metrics.map(m => m.header))]) || '');
-      why.textContent = panel && !bars ? 'No unit with a true zero is stated, so values are compared by position rather than bar length.' : '';
-      why.hidden = !why.textContent;
+      const glossary = glossLine(panel ? [panel.header] : metrics.map(m => m.header));
+      glossHost.replaceChildren(...(glossary ? [glossary] : []));
+      definitions.hidden = !glossary;
       foot.textContent = bars
         ? 'Bars start at zero on one shared scale. Values exactly as written; nothing computed or ranked.'
         : 'Scale: lowest to highest printed value, labelled at both ends. Values exactly as written; nothing computed or ranked.'
@@ -1220,7 +1217,6 @@
       buttons.forEach(button => {
         const selected = button.dataset.metric === String(next);
         button.setAttribute('aria-checked', String(selected));
-        button.setAttribute('aria-selected', String(selected));
         button.tabIndex = selected ? 0 : -1;
       });
       chart = ChartSvg.mount({document, frame, table, plan, title: tableTitle(table),
@@ -1230,12 +1226,9 @@
       if (focusSelector) buttons.find(button => button.dataset.metric === String(next))?.focus();
     }
     show(choice);
-    // "All metrics" side by side is the default only when it fits; on a narrower frame the chart
-    // opens on the first metric instead of scrolling (the reader can still choose "All metrics").
     requestAnimationFrame(() => {
       if (!wrap.isConnected) return;
       draw({force: true});
-      if (!picked && choice === 'all' && frame.classList.contains('scrolls')) show(0);
     });
     // Redraw only while attached; a detached chart stops observing (audit L2).
     const observer = new ResizeObserver(() => { if (wrap.isConnected) draw(); else observer.disconnect(); });
@@ -1302,7 +1295,7 @@
   function viewBody(table, plan, ctx, analysis, view) {
     const title = tableTitle(table);
     const open = (row, cell, trigger) => openRowSource(ctx, table, row, cell, trigger);
-    if (view.kind === 'paired' || view.kind === 'dots') return chartView(table, plan, ctx, plan.panels.length > 1 ? 'all' : 0);
+    if (view.kind === 'paired' || view.kind === 'dots') return chartView(table, plan, ctx);
     if (view.kind === 'bars') return chartView(table, plan, ctx, plan.panels.findIndex(panel => panel.unit && panel.unit.zero));
     if (view.kind === 'heatmap') return heatmapView(table, ctx, view);
     // SVG views share one frame with a resize observer, like chartView.
@@ -1584,10 +1577,10 @@
 
 
   /* ---------- Answer reading helpers (answer-first layout, 2026-11-22) ---------- */
-  // Group consecutive findings into short paragraphs (three sentences at most) for continuous reading.
+  // Keep supporting findings in short groups without changing their wording or order.
   function paragraphs(items) {
     const out = [];
-    for (let i = 0; i < items.length; i += 3) out.push(items.slice(i, i + 3));
+    for (let i = 0; i < items.length; i += 2) out.push(items.slice(i, i + 2));
     return out;
   }
   // Selective emphasis: bold quantities exactly as written (percentages, ranges, signed points), nothing else.
@@ -2262,7 +2255,7 @@
     const group = (title, items) => items.length ? h('section', {class: 'ws-group'}, h('h3', {class: 'ws-h', text: title}),
       h('ul', {class: 'notes-list'}, items.map(item => typeof item === 'string' ? h('li', {math: item}) : item.chunk_ids ? cited('li', item, demo, number)
         : h('li', null, item.label ? h('span', {class: 'li-label', text: `${item.label}. `}) : null, h('span', {math: item.text}))))) : null;
-    notesPanel.append(discrepancyBox,
+    notesPanel.append(...[discrepancyBox,
       h('div', {class: 'check-grid'},
         card('Quotations', quoteChecked ? 'Every quote attached to a statement was found word-for-word in its source paper. This does not show that the quote supports the statement.' : 'This saved result does not record a quote check.'),
         card('Claim support', support),
@@ -2272,7 +2265,7 @@
       group('Limitations of the evidence', notes.limits),
       group(insight ? `Risks and limits of the ${insight.industry} insight` : 'Business risks', notes.business),
       group('Other notes', notes.other),
-      h('button', {type: 'button', class: 'quiet-btn ws-jump', onclick: () => selectWorkspace('review', true)}, icon('shield'), h('span', {text: 'Review checks'})));
+      h('button', {type: 'button', class: 'quiet-btn ws-jump', onclick: () => selectWorkspace('review', true)}, icon('shield'), h('span', {text: 'Review checks'}))].filter(Boolean));
     const countNotes = () => {
       const n = notesPanel.querySelectorAll('.notes-list > li').length;
       noteCount.textContent = n ? plural(n, 'note') : '';
@@ -3079,7 +3072,7 @@
   const briefSearch = $('#brief-search'), briefArchived = $('#brief-archived');
   let offset = 0, loadSequence = 0;
   // The library is a page of the workspace rather than a modal; this keeps the shared call sites unchanged.
-  const libraryDialog = {get open() { return currentView === 'library'; }, close() { setView(activeTurn ? 'thread' : 'home', false); }};
+  const libraryDialog = {get open() { return currentView === 'library'; }, close() { setView(activeTurn ? 'thread' : 'home'); }};
   function openSnapshot(demo) {
     // Replays are display-only: never feed them into live conversation history.
     const number = ++turnNumber;
@@ -3333,7 +3326,7 @@
       const status = h('span');
       $('#recent-briefs').replaceChildren(...data.briefs.slice(0, recordedMode ? 6 : 4).map(brief => recordedMode ? exampleCard(brief, status) : briefRow(brief, status)));
       $('#recent-briefs').classList.toggle('example-grid', recordedMode);
-      $('#recent-heading').textContent = recordedMode ? 'Saved research to explore' : 'Recent research';
+      $('#recent-heading').textContent = recordedMode ? 'Recent briefs' : 'Recent research';
       $('#recent-all').textContent = recordedMode ? 'All saved research' : 'Open library';
       $('#recent-section').hidden = !data.briefs.length;
     } catch { $('#recent-section').hidden = true; }
@@ -3576,8 +3569,8 @@
       else setMode('demo', 'This backend serves prepared fixture examples only. Questions are not researched.');
       $('#risk-field').hidden = !indexedMode || mock;
       if (recordedMode) {
-        $('#hero-title').textContent = 'What would you like to research?';
-        $('#hero-sub').textContent = 'Answers from the indexed research papers, with every claim linked to the passage or table cell it came from. Asking new questions is not available in this copy, so start from saved research below.';
+        $('#hero-title').textContent = 'Saved research';
+        $('#hero-sub').textContent = 'Open an answer to read its findings and inspect the original evidence.';
         form.hidden = true; $('#industry-inline').hidden = true; $('#examples').hidden = true;
         composerNote.textContent = '';
       } else if (!liveSynthesis) {
@@ -3642,7 +3635,7 @@
       $('#examples').hidden = true;
     }).finally(() => { setQuestionBusy(false); autosize(); });
   }
-  syncTheme(); syncPrefs(); setView('home', false); autosize();
+  syncTheme(); syncPrefs(); setView('home'); autosize();
   /* ---------- Chart gallery (test page: ?gallery=1, needs serve.py --serve-tests) ----------
      Renders real verified tables from the research index, exported read-only into a test fixture,
      through the same renderEvidenceTable path an answer uses. It is labelled as not an answer:
@@ -3682,7 +3675,7 @@
     thread.append(turn);
     for (const other of thread.querySelectorAll('.turn:not(.gallery)')) other.hidden = true;
     turn.hidden = false;
-    setView('thread', false);
+    setView('thread');
     $('#thread-title').textContent = 'Chart gallery (test page)';
   }
 

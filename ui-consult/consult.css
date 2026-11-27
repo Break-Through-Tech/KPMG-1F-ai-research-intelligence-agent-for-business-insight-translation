@@ -37,7 +37,7 @@
   /* Light theme: white reading area with black text; KPMG-blue chrome (see below). */
   --bg: #ffffff; --surface: #ffffff; --surface-2: #eef4fb; --surface-3: #deebf7;
   --border: #c6dbef; --border-strong: #9ecae1;
-  --text: #000000; --text-2: rgb(0 0 0 / .84); --muted: rgb(0 0 0 / .66); --faint: rgb(0 0 0 / .42);
+  --text: #000000; --text-2: rgb(0 0 0 / .84); --muted: rgb(0 0 0 / .66); --faint: rgb(0 0 0 / .58);
   --accent: #00338d; --accent-hover: #001f5c; --accent-soft: #deebf7; --accent-ink: #ffffff;
   --ok: #1f7a43; --warn: #a86b00; --bad: #b3261e;
   --hl: #deebf7;
@@ -226,11 +226,11 @@ body.side-collapsed .side-mode { justify-content: center; }
 .stage { position: relative; display: flex; flex: 1; min-height: 0; }
 .rail { display: none !important; }
 .main { position: relative; display: flex; flex-direction: column; flex: 1; min-width: 0; }
-.scroll { flex: 1; min-height: 0; overflow-y: auto; scroll-behavior: smooth; }
+.scroll { flex: 1; min-height: 0; overflow-y: auto; scrollbar-gutter: stable both-edges; }
 .scroll:focus { outline: none; }
 
 /* ---------- Home ---------- */
-.home { display: flex; flex-direction: column; width: min(var(--col), 100% - 48px); margin: 0 auto; padding: clamp(48px, 14vh, 140px) 0 var(--s8); }
+.home { display: flex; flex-direction: column; width: min(var(--col), 100% - 48px); margin: 0 auto; padding: clamp(40px, 9vh, 88px) 0 var(--s8); }
 .home-intro { margin-bottom: var(--s5); text-align: center; }
 .home h1 { font-family: var(--serif); font-size: var(--fs-home); font-weight: 400; line-height: 1.2; letter-spacing: -.01em; }
 .home-sub { max-width: 56ch; margin: var(--s3) auto 0; color: var(--muted); font-size: var(--fs-ui); line-height: 1.55; }
@@ -239,6 +239,10 @@ body.side-collapsed .side-mode { justify-content: center; }
 .recent-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: var(--s2); }
 .recent-head h2 { color: var(--muted); font-size: var(--fs-sm); font-weight: 500; }
 .recent-head .link-btn { font-size: var(--fs-sm); }
+body[data-mode="recorded"] .home { padding-top: var(--s6); }
+body[data-mode="recorded"] .home-intro { text-align: left; }
+body[data-mode="recorded"] .home-sub { margin-inline: 0; }
+body[data-mode="recorded"] .recent { margin-top: var(--s2); }
 .brief-rows { list-style: none; border-top: 1px solid var(--border); }
 .brief-rows li { border-bottom: 1px solid var(--border); }
 .brief-open, .example-card { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 2px var(--s4); width: 100%; padding: var(--s3) var(--s1); text-align: left; transition: background .15s; }
@@ -256,7 +260,7 @@ body.side-collapsed .side-mode { justify-content: center; }
 .composer:focus-within { border-color: var(--border-strong); }
 .composer textarea#query { display: block; width: 100%; min-height: 52px; max-height: 240px; padding: 14px var(--s4) 4px; border: 0; outline: 0; resize: none; background: transparent; font-size: var(--fs-ui); line-height: 1.55; }
 .stage[data-view="thread"] .composer textarea#query { min-height: 46px; padding-top: 12px; }
-.composer textarea::placeholder { color: var(--faint); }
+.composer textarea::placeholder { color: var(--muted); }
 .composer-bar { display: flex; align-items: center; gap: var(--s2); padding: 4px var(--s2) var(--s2) var(--s3); }
 .pill { display: inline-flex; align-items: center; gap: 6px; height: 30px; max-width: 100%; padding: 0 var(--s2); border-radius: 8px; color: var(--muted); font-size: var(--fs-sm); font-weight: 500; transition: background .15s, color .15s; }
 .pill .icon { width: 15px; height: 15px; }
@@ -292,7 +296,7 @@ body.side-collapsed .side-mode { justify-content: center; }
 .seg label { display: inline-flex; }
 .seg input { position: absolute; opacity: 0; pointer-events: none; }
 .seg label > span, .seg-btn { display: inline-flex; align-items: center; gap: 6px; padding: 4px var(--s3); border-radius: 6px; font-size: var(--fs-sm); font-weight: 500; color: var(--muted); cursor: pointer; transition: background .15s, color .15s; }
-.seg input:checked + span, .seg-btn[aria-selected="true"] { background: var(--surface); color: var(--text); box-shadow: 0 0 0 1px var(--border); }
+.seg input:checked + span, .seg-btn:is([aria-selected="true"], [aria-checked="true"]) { background: var(--surface); color: var(--text); box-shadow: 0 0 0 1px var(--border); }
 .seg input:focus-visible + span { outline: 2px solid var(--accent); }
 .seg-btn .icon { width: 15px; height: 15px; }
 .seg-btn:disabled { opacity: .45; cursor: not-allowed; }
@@ -464,7 +468,7 @@ body.side-collapsed .side-mode { justify-content: center; }
 .statement-kind { margin-bottom: 4px; color: var(--muted); font-size: var(--fs-xs); font-weight: 600; }
 .statement-text { font-family: var(--serif); font-size: 1.125rem; line-height: 1.55; }
 .quote { margin-top: var(--s3); padding-left: var(--s4); border-left: 2px solid var(--border-strong); }
-.quote blockquote { color: var(--text-2); font-family: var(--serif); font-size: 1.0625rem; font-style: italic; line-height: 1.55; }
+.quote blockquote { color: var(--text-2); font-family: var(--serif); font-size: 1.0625rem; line-height: 1.55; }
 .quote figcaption { margin-top: 6px; }
 .quote-src { display: inline-flex; align-items: center; gap: var(--s2); color: var(--muted); font-size: var(--fs-sm); text-align: left; }
 .quote-src:hover { color: var(--text); }
@@ -531,7 +535,7 @@ body.side-collapsed .side-mode { justify-content: center; }
 .ev-flag .icon { width: 14px; height: 14px; margin-top: 3px; color: var(--faint); }
 .ev-flag.ok .icon { color: var(--ok); } .ev-flag.warn .icon { color: var(--warn); } .ev-flag.bad, .ev-flag.bad .icon { color: var(--bad); }
 .ev-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); margin-top: var(--s4); }
-.ev-toolbar .quiet-btn { min-height: 30px; font-size: var(--fs-sm); }
+.ev-toolbar .quiet-btn, .ev-toolbar .seg-btn, .metric-seg .seg-btn { min-height: 32px; font-size: var(--fs-md); }
 .ev-actions { display: flex; flex-wrap: nowrap; gap: var(--s2); margin-left: auto; }
 .ev-chart-reason { max-width: var(--col); margin-top: var(--s2); color: var(--muted); font-size: var(--fs-sm); line-height: 1.5; }
 .ev-chart-reason:empty { display: none; }
@@ -576,9 +580,10 @@ body.side-collapsed .side-mode { justify-content: center; }
 .chart-menu-item:hover, .chart-menu-item:focus-visible, .chart-menu-item[aria-pressed="true"] { background: var(--surface-2); }
 .key-wait { padding: var(--s4) 0; }
 .ev-chart { min-width: 0; padding: var(--s4); border: 1px solid var(--border); border-radius: 10px; background: var(--surface); }
-.chart-head { display: grid; gap: 4px; margin-bottom: var(--s3); }
+.chart-head { display: grid; justify-items: start; gap: var(--s2); margin-bottom: var(--s3); }
 .chart-title { font-size: var(--fs-ui); font-weight: 600; line-height: 1.4; color: var(--text); }
 .chart-unit { font-size: var(--fs-sm); color: var(--muted); }
+.metric-seg { margin-top: var(--s1); }
 .chart-takeaway { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px var(--s2); margin-top: 4px; font-size: var(--fs-md); line-height: 1.5; color: var(--text-2); }
 .chart-takeaway .term { font-size: var(--fs-xs); font-weight: 600; color: var(--muted); }
 .chart-takeaway .cites { display: inline-flex; gap: 4px; margin: 0; }
@@ -735,7 +740,6 @@ body.side-collapsed .side-mode { justify-content: center; }
 .source-tab[aria-pressed="true"] { background: var(--surface-2); color: var(--text); }
 .source-tab[aria-pressed="true"] b { background: var(--text); color: var(--bg); }
 .passage { display: grid; gap: var(--s3); font-size: var(--fs-md); line-height: 1.6; }
-.passage.swap { animation: fade .25s var(--ease); }
 .passage h3 { font-family: var(--serif); font-size: 1.125rem; font-weight: 600; line-height: 1.4; }
 .passage h4 { margin-top: var(--s2); color: var(--muted); font-size: var(--fs-xs); font-weight: 600; }
 .passage blockquote { margin: 0; padding: var(--s1) 0 var(--s1) var(--s3); border-left: 2px solid var(--accent); color: var(--text); font-family: var(--serif); font-size: 1.0625rem; line-height: 1.55; }
@@ -823,8 +827,8 @@ body.side-collapsed .side-mode { justify-content: center; }
 /* Wide screens: the inspector and the review drawer sit beside the reading column instead of over
    it, so the sentence being checked stays visible. */
 @media (min-width: 1280px) {
-  .drawer { position: relative; flex: none; width: 0; transform: none; transition: width .3s var(--ease), visibility 0s linear .3s; overflow: hidden; }
-  .insp-open #inspector, .review-open #review-drawer { width: 440px; transition: width .3s var(--ease), visibility 0s; }
+  .drawer { position: relative; flex: none; width: 0; transform: none; transition: none; overflow: hidden; }
+  .insp-open #inspector, .review-open #review-drawer { width: 440px; }
   .drawer-panel { width: 440px; box-shadow: none; }
 }
 
@@ -944,6 +948,7 @@ body.side-collapsed .side-mode { justify-content: center; }
 .table-details .ev-legend { margin-top: var(--s3); }
 .statement-text { font-family: var(--sans); font-size: var(--fs-prose); }
 .quote blockquote, .passage blockquote, .quote-excerpts blockquote { font-family: var(--sans); font-size: var(--fs-md); }
+.statement-quotes .quote blockquote { margin: 0; padding: 0; border: 0; font-style: normal; }
 
 /* Workspace */
 .ws-tabs { display: flex; flex-wrap: wrap; gap: var(--s1); margin-bottom: var(--s5); }
@@ -968,10 +973,10 @@ body.side-collapsed .side-mode { justify-content: center; }
 }
 :root:is([data-reading-size="150"], [data-reading-size="200"]) .insight-card { grid-template-columns: 1fr; }
 :root:is([data-reading-size="150"], [data-reading-size="200"]) .insight-action { border-left: 0; border-top: 1px solid var(--border); border-radius: 0; }
-.check-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s3); }
+.check-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--border); overflow: hidden; }
 @container (max-width: 560px) { .check-grid { grid-template-columns: 1fr; } }
 :root:is([data-reading-size="150"], [data-reading-size="200"]) .check-grid { grid-template-columns: 1fr; }
-.check-card { padding: var(--s4); border: 1px solid color-mix(in srgb, var(--accent) 18%, var(--border)); border-radius: var(--radius); background: color-mix(in srgb, var(--accent-soft) 70%, var(--surface)); }
+.check-card { padding: var(--s4) var(--s5); background: var(--surface); }
 .check-card p { color: var(--text-2); font-size: var(--fs-md); line-height: 1.55; }
 .discrepancy-box { padding: var(--s4); border: 1px solid #ecd6a6; border-radius: var(--radius); background: #fff8e9; }
 .discrepancy-box .notes-list { color: var(--text); }
@@ -988,18 +993,10 @@ body.side-collapsed .side-mode { justify-content: center; }
 :root:is([data-reading-size="150"], [data-reading-size="200"]) .view-tab .icon { display: none; }
 .more-insights[open] > .insight-card { margin-top: var(--s3); }
 
-/* ===== Craft pass (2026-11-27): purposeful motion, restrained glass on the floating layer only =====
-   Timing: press 120 ms · state 180 ms · panels 260 ms. Easing: decelerate for entrances, standard for
-   size changes; no overshoot or bounce. Glass (blur + translucent fill + hairline) appears only on the
-   functional layer that floats above content: follow-up composer, citation preview, popovers and the
-   overlay inspector. Answers, tables and charts stay opaque. */
+/* Short feedback for controls. Text and tables stay still as views change. */
 :root {
-  interpolate-size: allow-keywords;
   --ease-out: cubic-bezier(.2, .8, .2, 1); --ease-std: cubic-bezier(.4, 0, .2, 1);
-  --t-press: 120ms; --t-ui: 180ms; --t-panel: 260ms;
-  --glass-fill: rgb(255 255 255 / .74); --glass-line: rgb(0 51 141 / .12);
-  --glass-shadow: 0 12px 32px rgb(0 32 96 / .12), 0 1px 3px rgb(0 32 96 / .08);
-  --elev-1: 0 1px 2px rgb(0 32 96 / .05), 0 2px 10px rgb(0 32 96 / .05);
+  --t-press: 100ms; --t-ui: 140ms; --t-panel: 180ms;
 }
 
 /* Interaction feedback: hover tints in 180 ms, presses settle in 120 ms. */
@@ -1010,21 +1007,14 @@ body.side-collapsed .side-mode { justify-content: center; }
 }
 :is(.act-btn, .quiet-btn, .solid-btn, .primary-btn, .icon-btn, .ws-tab, .paper-chip, .quick-chip, .side-item, .pill, .seg-btn, .source-tab):active:not(:disabled) { transform: scale(.97); }
 .send { transition: opacity var(--t-ui) var(--ease-std), transform var(--t-press) var(--ease-out), background-color var(--t-ui); }
-.composer.has-text .send:active { transform: scale(.92); }
-:focus-visible { outline-offset: 2px; transition: outline-offset var(--t-press) var(--ease-out); }
+.composer.has-text .send:active { transform: scale(.97); }
 
 /* Sliding tab indicator: one bar moves between Answer, Sources, Evidence and Workspace. */
 .view-tabs { position: relative; }
 .view-tab[aria-selected="true"]::after { content: none; }
-.tab-indicator { position: absolute; left: 0; bottom: -1px; height: 2px; width: 0; border-radius: 2px; background: #fff;
-  transition: transform var(--t-panel) var(--ease-std), width var(--t-panel) var(--ease-std); pointer-events: none; }
+.tab-indicator { position: absolute; left: 0; bottom: -1px; height: 2px; width: 1px; background: #fff; transform-origin: left center;
+  transition: transform var(--t-panel) var(--ease-std); pointer-events: none; }
 .tab-indicator.instant { transition: none; }
-.view-tabs[hidden] + * .tab-indicator { display: none; }
-
-/* Views and history: a short cross-fade with a 6 px settle, so continuity is felt rather than watched. */
-@keyframes settle-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-.brief-pane, .ws-panel:not([hidden]) { animation: settle-in 220ms var(--ease-out); }
-.thread > .turn:not([hidden]), .library:not([hidden]), .home:not([hidden]) { animation: settle-in 260ms var(--ease-out); }
 
 /* Sidebar: width animates; labels fade instead of popping, icons stay put. */
 .sidebar { transition: width var(--t-panel) var(--ease-std); overflow: hidden; }
@@ -1037,53 +1027,27 @@ body.side-collapsed .side-history-wrap { display: flex; opacity: 0; visibility: 
 body.side-collapsed .side-head { justify-content: flex-end; padding: 0; }
 body.side-collapsed .side-item { justify-content: flex-start; padding: 0 var(--s3); }
 
-/* Disclosures (research notes folds, table details, other sources, diagnostics) open smoothly. */
-details::details-content { block-size: 0; overflow: clip;
-  transition: block-size var(--t-panel) var(--ease-std), content-visibility var(--t-panel) allow-discrete; }
-details[open]::details-content { block-size: auto; }
+/* The composer has its own space beneath the reader. */
+.stage[data-view="thread"][data-tab]:not([data-tab="answer"]) .dock { display: none; }
+.stage[data-view="thread"] .composer:focus-within { border-color: var(--accent); }
 
-/* Floating follow-up composer (glass): the reading column scrolls beneath it with a soft edge. */
-.stage[data-view="thread"] .dock { position: absolute; left: 0; right: 0; bottom: 0; width: auto; margin: 0; padding: 0 0 var(--s4); background: none; pointer-events: none; }
-.stage[data-view="thread"] .dock > * { width: min(var(--col), 100% - 48px); margin-inline: auto; pointer-events: auto; }
-.stage[data-view="thread"] .scroll { padding-bottom: calc(var(--dock-h, 120px) + var(--s4));
-  mask-image: linear-gradient(to bottom, #000 calc(100% - var(--dock-h, 120px) - 24px), rgb(0 0 0 / .4) 100%); }
-.stage[data-view="thread"] .composer { background: var(--glass-fill); border-color: var(--glass-line); box-shadow: var(--glass-shadow);
-  -webkit-backdrop-filter: blur(24px) saturate(1.4); backdrop-filter: blur(24px) saturate(1.4); }
-.stage[data-view="thread"] .composer:focus-within { border-color: color-mix(in srgb, var(--accent) 40%, var(--glass-line)); }
-.stage[data-view="thread"] .suggestions .quick-chip { background: var(--glass-fill); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); }
-.composer { box-shadow: var(--elev-1); transition: border-color var(--t-ui), box-shadow var(--t-ui); }
-
-/* Citation preview and popovers: glass, fading in from where they were opened. */
-@keyframes pop-in { from { opacity: 0; transform: translateY(-4px) scale(.98); } to { opacity: 1; transform: none; } }
-#citation-preview, .export-pop, .chart-menu-list { background: rgb(255 255 255 / .86); border-color: var(--glass-line); box-shadow: var(--glass-shadow);
-  -webkit-backdrop-filter: blur(24px) saturate(1.4); backdrop-filter: blur(24px) saturate(1.4); }
+/* Keep translucency to the small, transient citation preview. */
+@keyframes pop-in { from { opacity: 0; transform: translateY(-3px); } to { opacity: 1; transform: none; } }
+@supports (backdrop-filter: blur(8px)) {
+  #citation-preview { background: color-mix(in srgb, var(--surface) 96%, transparent); backdrop-filter: blur(8px); }
+}
 #citation-preview:popover-open, .export-menu[open] .export-pop, .chart-menu[open] .chart-menu-list { animation: pop-in var(--t-ui) var(--ease-out); transform-origin: top left; }
 
-/* Inspector: docked beside the text on wide screens (opaque); an overlay glass sheet below 1280 px. */
-.drawer-panel { transition: opacity var(--t-ui) var(--ease-std); }
-.drawer:not(.insp-open #inspector):not(.review-open #review-drawer) .drawer-panel { opacity: 0; }
-.insp-open #inspector .drawer-panel, .review-open #review-drawer .drawer-panel { opacity: 1; }
-@media (max-width: 1279px) {
-  .drawer-panel { background: rgb(255 255 255 / .9); -webkit-backdrop-filter: blur(28px) saturate(1.3); backdrop-filter: blur(28px) saturate(1.3); }
-}
-@media (min-width: 1280px) { .drawer { transition: width var(--t-panel) var(--ease-std), visibility 0s linear var(--t-panel); } }
+/* The docked inspector changes layout immediately. The overlay slides. */
+@media (max-width: 1279px) { .drawer { transition-duration: var(--t-panel), 0s; } }
 
-/* Depth: one soft elevation for cards that group related content; content surfaces stay flat. */
-.insight-card, .answer-note-strip:hover { box-shadow: var(--elev-1); }
-.check-card { box-shadow: none; }
-
-/* Loading: show something at once; a quiet spinner and calm placeholder lines, no shimmer. */
+/* One progress indicator is enough. Reserve the answer area with static lines. */
 .loading-line .orb { width: 14px; height: 14px; border-radius: 50%; background: none; border: 2px solid var(--accent-soft); border-top-color: var(--accent); animation: spin .9s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.skeleton i { animation: calm 1.6s var(--ease-std) infinite alternate; }
-.skeleton i:nth-child(2) { animation-delay: .15s; } .skeleton i:nth-child(3) { animation-delay: .3s; } .skeleton i:nth-child(4) { animation-delay: .45s; }
-@keyframes calm { from { opacity: 1; } to { opacity: .45; } }
 
 /* Accessibility states for the material: opaque surfaces when people ask for less transparency or more contrast. */
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
-  .stage[data-view="thread"] .composer, #citation-preview, .export-pop, .chart-menu-list, .drawer-panel, .stage[data-view="thread"] .suggestions .quick-chip {
-    -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--surface); }
-  .stage[data-view="thread"] .scroll { mask-image: none; }
+  #citation-preview { backdrop-filter: none; background: var(--surface); }
 }
 
 /* The close button already returns to the answer; the duplicate link goes. */

@@ -30,7 +30,9 @@ def scripted(prompt, *, response_schema, question=QUESTION, quote=QUOTE, claim=C
         if 'that one' in query:
             return json.dumps({'decision': 'clarify', 'resolved_query': '', 'question': 'Which result do you mean?',
                                'options': [{'text': 'The strategy-selection accuracy gain', 'support': []}]})
-        return json.dumps({'decision': 'continue', 'resolved_query': question, 'question': '', 'options': []})
+        # A risks follow-up continues the business question (scripted resolution writes the topic in).
+        resolved = APPLIED if 'risks' in query else question
+        return json.dumps({'decision': 'continue', 'resolved_query': resolved, 'question': '', 'options': []})
     if prompt.startswith('Synthesize an answer'):
         request = json.loads(prompt.split('\n', 1)[1])
         if request['question'] != question:

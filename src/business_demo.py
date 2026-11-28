@@ -20,7 +20,8 @@ def automatic_offer(response, *, allow_replayed=False):
         return False
     try:
         question = response.get('submitted_request', result['request'])['query']
-        if resolve_business_intent(question, response.get('business_intent'))['context'] is None:
+        if resolve_business_intent(question, response.get('business_intent'),
+                                   response.get('business_context_inherited'))['context'] is None:
             return False
         summary, evidence, _ = accepted_research(result['summary'], result['evidence'])
         return bool(summary['claims'] and evidence)
@@ -35,7 +36,7 @@ def research_business_flags(body):
         return {**body, 'business_auto': True}
     if body.get('mode') == 'indexed' and not body.get('error') and body.get('library'):
         question = (body.get('submitted_request') or {}).get('query', '')
-        hint = resolve_business_intent(question, body.get('business_intent'))['hint']
+        hint = resolve_business_intent(question, body.get('business_intent'), body.get('business_context_inherited'))['hint']
         if hint:
             return {**body, 'business_hint': hint}
     return body
@@ -186,10 +187,17 @@ class BusinessHandler(DemoHandler):
                 if payload['context'] != {} or not automatic_offer(source, allow_replayed=True):
                     return self.respond(400, {'error': 'Automatic business insights are unavailable for this answer.'})
                 # Reuse the classification saved with the answer; never classify again here.
-                context = resolve_business_intent(source['submitted_request']['query'],
-                                                  source.get('business_intent'))['context']
+                resolved = resolve_business_intent(source['submitted_request']['query'], source.get('business_intent'),
+                                                   source.get('business_context_inherited'))
+                context = resolved['context']
+                provenance = {'source': resolved['source']}
+                if resolved['source'] == 'inherited':
+                    carried = source['business_context_inherited']
+                    provenance.update({k: carried[k] for k in ('from_position', 'from_brief_id', 'source', 'reason') if k in carried})
+                    provenance['source'], provenance['inherited_from'] = 'inherited', carried.get('source')
             else:
                 context = derive_business_context(source['submitted_request']['query'], payload['context'])
+                provenance = {'source': 'user_context' if any(payload['context'].values()) else 'derived'}
         except ValueError as error:
             return self.respond(400, {'error': str(error)})
         if not self.business_lock.acquire(blocking=False):
@@ -202,7 +210,7 @@ class BusinessHandler(DemoHandler):
                 return self.respond(409, {'error': 'This conversation was deleted from history. No business insight was generated.'})
             response = translate_result(source['result'], context=context,
                 generate=type(self).business_generate, metadata=type(self).business_metadata,
-                expected_fingerprint=payload['fingerprint'],
+                expected_fingerprint=payload['fingerprint'], context_provenance=provenance,
                 research_input={'kind': 'fixture' if source.get('fixture_file') or source.get('mode') == 'fixture' else 'recorded_research',
                                 'mode': source.get('mode'), 'fixture_file': source.get('fixture_file')})
             response['submitted_request'] = source['submitted_request']

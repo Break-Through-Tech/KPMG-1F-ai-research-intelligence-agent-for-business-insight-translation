@@ -46,3 +46,19 @@ def resolve(question, history, generate, *, force=False):
     resolved = ' '.join(decision['resolved_query'].split())
     kind = 'unchanged' if resolved.casefold() == ' '.join(question.split()).casefold() else 'resolved'
     return 'research', resolved, {'kind': kind, 'calls': 1, 'turns_used': len(history) // 2}
+
+
+STOP_WORDS = {'the', 'a', 'an', 'of', 'for', 'and', 'or', 'to', 'in', 'on', 'with', 'by', 'using', 'use', 'ai', 'llm'}
+
+
+def continues_business_topic(resolved_question, earlier_context):
+    """True when the resolved question carries the earlier business topic: the resolver wrote the earlier
+    workflow (at least half of its content words) or the named industry into the standalone question."""
+    words = lambda text: {w for w in re.findall(r"[a-z][a-z'-]+", text.lower()) if w not in STOP_WORDS}
+    question = words(resolved_question)
+    workflow = words(earlier_context.get('workflow', ''))
+    industry = earlier_context.get('industry', '')
+    if workflow and len(workflow & question) * 2 >= len(workflow):
+        return True
+    return bool(industry and industry != 'Industry unspecified' and industry.lower() in resolved_question.lower())
+

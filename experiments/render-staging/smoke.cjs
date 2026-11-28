@@ -107,6 +107,29 @@ async function smokeBusiness() {
     assert.equal(academic.business_auto, undefined);
     await page.locator('.turn').last().getByRole('button', {name: 'Generate business insights', exact: true}).first().waitFor();
     assert.deepEqual(businessRequests.map(request => request.automatic), [true, true, false]);
+    // Business context inheritance: the classifier is unavailable in this harness, so a confirmed follow-up
+    // inherits the previous turn's verified context instead of the rules; the decision is the new question.
+    await page.locator('#side-new').click();
+    const inheritedAsk = async text => {
+      await page.locator('#query').fill(text);
+      const answered = responseFor('research');
+      await page.locator('#composer button[type=submit]').click();
+      return (await answered).json();
+    };
+    const parentBusiness = responseFor('business');
+    const parent = await inheritedAsk('What are the business implications of the CU-DPO accuracy results for AI model routing in financial services?');
+    assert.equal(parent.business_auto, true);
+    assert.ok((await (await parentBusiness).json()).result.business_insight);
+    const childBusiness = responseFor('business');
+    const child = await inheritedAsk('What about the risks?');
+    assert.equal(child.conversation.id, parent.conversation.id);
+    assert.equal(child.business_context_inherited.source, 'business_insight');
+    assert.equal(child.business_context_inherited.from_position, 1);
+    assert.equal(child.business_context_inherited.decision, child.conversation_turn.resolved_question);
+    assert.equal(child.business_auto, true);
+    const childInsight = await (await childBusiness).json();
+    assert.equal(childInsight.result.provenance.business_translation.context_provenance.source, 'inherited');
+    assert.equal(childInsight.result.provenance.business_translation.context.decision, child.conversation_turn.resolved_question);
     assert.deepEqual(errors, []);
     console.log('Offline Standard S2 + business fixtures passed: progressive answer, financial services, citations, mobile, failure, optional academic flow, and one dispatch per eligible answer.');
   } finally {

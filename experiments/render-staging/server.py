@@ -212,7 +212,7 @@ def conversational(execute, generate, budget, store_path):
     One resolution call at most, without retry, on the classifier's ledger; self-contained questions
     and first questions make no call. Unresolvable follow-ups return a clarification and no research."""
     from threading import Lock
-    from src.conversation_context import resolve
+    from src.conversation_context import continues_business_topic, resolve
     from src.conversation_store import ConversationStore
     conversations = ConversationStore(store_path)
     pending, lock = {}, Lock()
@@ -262,6 +262,19 @@ def conversational(execute, generate, budget, store_path):
         response = execute({**payload, 'query': text}, **kwargs)
         if isinstance(response, dict):
             response['conversation_turn'] = turn
+            record = response.get('business_intent')
+            # Confirmed continuity only (not a topic change or self-contained question), and only when the
+            # classifier produced no usable verdict for the new question. No extra model call.
+            if (resolution.get('kind') == 'resolved' and response.get('result')
+                    and not (isinstance(record, dict) and record.get('status') == 'ok')):
+                try:
+                    earlier_context = conversations.previous_business_context(conversation_id)
+                except (KeyError, ValueError):
+                    earlier_context = None
+                if earlier_context and continues_business_topic(text, earlier_context):
+                    response['business_context_inherited'] = {
+                        **earlier_context, 'decision': text,
+                        'reason': 'classifier_' + (record.get('status', 'missing') if isinstance(record, dict) else 'missing')}
         return response
 
     def forget(conversation_id):

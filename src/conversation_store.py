@@ -161,3 +161,28 @@ class ConversationStore:
             messages += [{'role': 'user', 'content': question[:2000]},
                          {'role': 'assistant', 'content': ('Earlier findings (not evidence): ' + note)[:MAX_ANSWER_NOTE_CHARS]}]
         return messages
+
+    def previous_business_context(self, conversation_id):
+        """Verified business context of the immediately previous research turn, or None.
+
+        Verified means either the context of a published (validated) business insight on that turn, or the
+        turn's trusted semantic classification with a verbatim workflow. Older turns are never used, so a
+        topic change in between always breaks inheritance. No model call is made.
+        """
+        from src.business_intent import trusted_value
+        turns = self.turns(conversation_id)
+        if not turns:
+            return None
+        last = turns[-1]
+        envelope = self.store.load(last['brief_id'])
+        result = envelope.get('result') or {}
+        origin = {'from_position': last['position'], 'from_brief_id': last['brief_id']}
+        context = (result.get('provenance') or {}).get('business_translation', {}).get('context')
+        if result.get('business_insight') and isinstance(context, dict) and context.get('workflow'):
+            return {'industry': context['industry'], 'workflow': context['workflow'], 'source': 'business_insight', **origin}
+        question = (envelope.get('submitted_request') or {}).get('query', '')
+        value = trusted_value(envelope.get('business_intent'), ' '.join(question.split()))
+        if value and value['is_business'] and value['workflow'] and value['confidence'] in {'high', 'medium'}:
+            industry = 'Industry unspecified' if value['industry'] == 'unspecified' else value['industry']
+            return {'industry': industry, 'workflow': value['workflow'], 'source': 'semantic', **origin}
+        return None

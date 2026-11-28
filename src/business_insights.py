@@ -310,7 +310,7 @@ def automatic_business_context(question):
     return generalized_business_context(question)
 
 
-def resolve_business_intent(question, record=None):
+def resolve_business_intent(question, record=None, inherited=None):
     """Semantic classification first; the deterministic rules only when it is missing or unusable.
 
     Returns {'source', 'context', 'hint'}: context starts automatic insights, hint prefills the inline form.
@@ -331,8 +331,31 @@ def resolve_business_intent(question, record=None):
                 {'industry': industry or 'Industry unspecified', 'workflow': value['workflow'], 'decision': decision})}
         return {'source': 'semantic', 'context': None,
                 'hint': {'industry': industry, 'workflow': '', 'decision': decision, 'missing': ['workflow']}}
+    carried = inherited_business_context(q, inherited)
+    if carried:
+        return {'source': 'inherited', 'context': carried, 'hint': None}
     context = automatic_business_context(q)
     return {'source': 'rules', 'context': context, 'hint': None if context else business_context_hint(q)}
+
+
+def inherited_business_context(question, inherited):
+    """Business context carried from the previous turn of a confirmed follow-up (see conversation_store).
+
+    The industry and workflow come from that turn's verified context; the decision is always the new
+    question, so the earlier decision is never reused."""
+    from src.business_intent import SECTORS
+    if not isinstance(inherited, dict) or inherited.get('source') not in {'business_insight', 'semantic'}:
+        return None
+    industry, workflow, decision = inherited.get('industry'), inherited.get('workflow'), inherited.get('decision')
+    if not all(isinstance(v, str) and v.strip() for v in (industry, workflow, decision)):
+        return None
+    if ' '.join(decision.split()) != question or not (industry == 'Industry unspecified' or industry in SECTORS
+                                                      or inherited['source'] == 'business_insight'):
+        return None
+    try:
+        return business_context({'industry': industry, 'workflow': workflow, 'decision': question[:600]})
+    except ValueError:
+        return None
 
 
 def derive_business_context(question, supplied):
@@ -406,7 +429,8 @@ def validation_check(error):
     return next((name for needle, name in VALIDATION_CHECKS if needle.lower() in message.lower()), 'business_schema')
 
 
-def translate_result(result, *, context, generate, metadata=None, expected_fingerprint=None, research_input=None):
+def translate_result(result, *, context, generate, metadata=None, expected_fingerprint=None, research_input=None,
+                     context_provenance=None):
     """Translate a server-owned or explicitly loaded frozen result in one call.
 
     Structural/precondition errors raise before generation. Business stage failures
@@ -440,6 +464,7 @@ def translate_result(result, *, context, generate, metadata=None, expected_finge
             'usefulness_review_criteria': ['generic_recommendations', 'workflow_parroting',
                                          'semantic_repetition', 'pilot_overreliance'],
             'source_review_fingerprint': source_fingerprint, 'context': context,
+            **({'context_provenance': dict(context_provenance)} if isinstance(context_provenance, dict) else {}),
             'context_sha256': digest(context),
             'publication_gate': {'policy': 'structural-only-v1', 'checks': [
                 'accepted_evidence_handoff', 'business_insight_json_schema', 'citation_integrity',

@@ -241,3 +241,99 @@ class RecordingTests(Base):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class InheritanceTests(Base):
+    """A confirmed follow-up may inherit the previous turn's verified business context when the classifier fails."""
+    RESOLVED = 'What are the risks of using AI agents in insurance claims processing?'
+
+    def business_turn(self, conversation_id=None):
+        from src.business_intent import VERSION
+        body = self.save(FIRST)
+        envelope = {'mode': 'indexed', 'submitted_request': {'query': FIRST}, 'result': result_for(),
+                    'business_intent': {'version': VERSION, 'status': 'ok', 'value': {
+                        'is_business': True, 'industry': 'insurance', 'workflow': 'insurance claims processing',
+                        'decision': FIRST, 'confidence': 'high'}}}
+        brief = self.briefs.save(envelope)['library']['brief']['id']
+        conversation_id = conversation_id or self.store.create(FIRST)
+        self.store.append_turn(conversation_id, brief, original_question=FIRST, resolved_question=FIRST,
+                               resolution={'kind': 'first', 'calls': 0})
+        return conversation_id
+
+    def wrapped(self, resolved, classifier_record):
+        execute = Mock(side_effect=lambda payload, **kw: {'mode': 'indexed', 'result': {'summary': {}},
+                                                           'business_intent': classifier_record})
+        generate = Mock(return_value=decision(resolved=resolved))
+        return server.conversational(execute, generate, Mock(), self.path), generate
+
+    def test_confirmed_follow_up_inherits_when_classifier_times_out(self):
+        from src.business_insights import resolve_business_intent
+        conversation_id = self.business_turn()
+        run, generate = self.wrapped(self.RESOLVED, {'status': 'unavailable', 'reason': 'timeout'})
+        response = run({'query': 'What about the risks?', 'conversation_id': conversation_id, 'context_id': 'x'})
+        carried = response['business_context_inherited']
+        self.assertEqual((carried['industry'], carried['workflow'], carried['source'], carried['from_position']),
+                         ('insurance', 'insurance claims processing', 'semantic', 1))
+        self.assertEqual(carried['decision'], self.RESOLVED)  # the new question, not the earlier decision
+        self.assertEqual(carried['reason'], 'classifier_unavailable')
+        self.assertEqual(generate.call_count, 1)  # only the resolution call; no extra model call
+        resolved = resolve_business_intent(self.RESOLVED, response['business_intent'], carried)
+        self.assertEqual(resolved['source'], 'inherited')
+        self.assertEqual(resolved['context'], {'industry': 'insurance', 'workflow': 'insurance claims processing',
+                                               'decision': self.RESOLVED})
+
+    def test_no_inheritance_on_topic_change_or_a_usable_classifier_verdict(self):
+        conversation_id = self.business_turn()
+        topic = 'How do LLM agents perform on the TravelPlanner benchmark?'
+        run, _ = self.wrapped(topic, {'status': 'unavailable'})
+        response = run({'query': 'And what about TravelPlanner results?', 'conversation_id': conversation_id, 'context_id': 'x'})
+        self.assertEqual(response['conversation_turn']['resolution']['kind'], 'resolved')
+        self.assertNotIn('business_context_inherited', response)  # reworded topic change: earlier topic absent
+        from src.business_intent import VERSION
+        verdict = {'version': VERSION, 'status': 'ok', 'value': {'is_business': False, 'industry': 'unspecified',
+                   'workflow': '', 'decision': '', 'confidence': 'high'}}
+        run, _ = self.wrapped(self.RESOLVED, verdict)
+        response = run({'query': 'What about the risks?', 'conversation_id': conversation_id, 'context_id': 'x'})
+        self.assertNotIn('business_context_inherited', response)  # the classifier's own verdict wins
+        run, _ = self.wrapped('What about the risks?', {'status': 'unavailable'})
+        response = run({'query': 'What about the risks?', 'conversation_id': conversation_id, 'context_id': 'x'})
+        self.assertEqual(response['conversation_turn']['resolution']['kind'], 'unchanged')
+        self.assertNotIn('business_context_inherited', response)  # resolver did not confirm continuity
+
+    def test_research_only_ambiguous_tampered_and_older_turns_never_inherit(self):
+        from src.business_insights import resolve_business_intent
+        carried = {'industry': 'insurance', 'workflow': 'insurance claims processing', 'source': 'semantic',
+                   'decision': self.RESOLVED + ' Research only.'}
+        self.assertEqual(resolve_business_intent(self.RESOLVED + ' Research only.', None, carried)['source'], 'research_only')
+        for broken in ({**carried, 'decision': FIRST}, {**carried, 'source': 'guess'}, {**carried, 'industry': 'fintech'},
+                       {**carried, 'workflow': ''}):
+            with self.subTest(broken=broken):
+                self.assertNotEqual(resolve_business_intent(self.RESOLVED, None, {**broken, **(
+                    {'decision': self.RESOLVED} if broken.get('decision') != FIRST else {})})['source'], 'inherited')
+        # Ambiguous follow-up: clarification, no research and therefore nothing to inherit.
+        conversation_id = self.business_turn()
+        execute = Mock()
+        run = server.conversational(execute, Mock(return_value=decision('clarify', question='Which risks?')), Mock(), self.path)
+        response = run({'query': 'What about that?', 'conversation_id': conversation_id, 'context_id': 'x'})
+        self.assertNotIn('business_context_inherited', response)
+        execute.assert_not_called()
+        # Only the immediately previous turn counts: a non-business turn in between breaks inheritance.
+        brief = self.save('How do LLM agents perform on the TravelPlanner benchmark?')['library']['brief']['id']
+        self.store.append_turn(conversation_id, brief, original_question='TravelPlanner?', resolved_question='TravelPlanner?',
+                               resolution={'kind': 'standalone', 'calls': 0})
+        self.assertIsNone(self.store.previous_business_context(conversation_id))
+
+    def test_continuity_requires_the_earlier_business_topic_in_the_resolved_question(self):
+        from src.conversation_context import continues_business_topic
+        earlier = {'industry': 'insurance', 'workflow': 'insurance claims processing'}
+        self.assertTrue(continues_business_topic(self.RESOLVED, earlier))
+        self.assertFalse(continues_business_topic('How do LLM agents perform on the TravelPlanner benchmark?', earlier))
+        self.assertTrue(continues_business_topic('What evidence supports agents for claims processing?', earlier))
+
+    def test_inherited_context_is_recorded_in_business_provenance(self):
+        from src.business_insights import translate_result
+        from tests.test_downstream_business import CONTEXT, business
+        provenance = {'source': 'inherited', 'inherited_from': 'semantic', 'from_position': 1, 'reason': 'classifier_unavailable'}
+        envelope = translate_result(result_for(), context=CONTEXT, generate=Mock(return_value=json.dumps(business())),
+                                    metadata={'provider': 'injected_test'}, context_provenance=provenance)
+        self.assertEqual(envelope['result']['provenance']['business_translation']['context_provenance'], provenance)

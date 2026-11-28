@@ -994,6 +994,7 @@ body[data-mode="recorded"] .recent { margin-top: var(--s2); }
 .answer-business:not(:has(> :not([hidden]))) { display: none; }
 .answer-business > h2 { font-size: var(--fs-lg); line-height: 1.4; font-weight: 600; }
 .answer-business > .section-note, .answer-business > .fold { margin-block: 0; }
+.answer-business > .model-note { font-size: var(--fs-sm, 0.8125rem); color: var(--muted); }
 .answer-business:has(> :not([hidden])) + .answer-footer { margin-top: var(--s4); }
 .insight-assumptions, .more-insights, .insight-limits, .business-update, .business-context { margin-top: 0; }
 .insight-limits, .business-update { padding-top: var(--s3); border-top: 1px solid var(--border); }

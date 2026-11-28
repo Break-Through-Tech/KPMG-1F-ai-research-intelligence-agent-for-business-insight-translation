@@ -396,7 +396,14 @@ def main():
     business_generate = business_metadata = None
     if os.environ.get("BUSINESS_TRANSLATION_ENABLED", "").strip().lower() in {"1", "true", "yes"}:
         from src.business_generation import create_business_generate
+        from src.business_fallback import MODEL as FALLBACK_MODEL, fallback_from_environment, with_fallback
         business_generate, business_metadata = create_business_generate()
+        muse = fallback_from_environment(state)
+        if muse is not None:
+            # Hydrogen stays primary; Muse Wonder only after quota, rate-limit or temporary failures.
+            business_generate = with_fallback(business_generate, muse)
+            business_metadata = {**business_metadata, 'fallback_model': FALLBACK_MODEL}
+        print(f"business-fallback {'enabled' if muse is not None else 'disabled'}", file=sys.stderr, flush=True)
     handler = build_handler(snapshot, state, origin, password, generate, metadata,
                             business_generate=business_generate, business_metadata=business_metadata)
     with Server(('0.0.0.0' if render else '127.0.0.1', port), handler) as service:

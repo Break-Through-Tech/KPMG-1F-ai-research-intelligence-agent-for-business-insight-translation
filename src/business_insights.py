@@ -449,7 +449,7 @@ def translate_result(result, *, context, generate, metadata=None, expected_finge
             'handoff_sha256': sha256(Path(__file__).with_name('business_handoff.py').read_bytes()).hexdigest(),
             'translator_sha256': sha256(Path(__file__).with_name('business_translation.py').read_bytes()).hexdigest(),
             'generator': {k: v for k, v in (metadata or {}).items() if k in
-                          {'provider', 'model', 'temperature', 'effort', 'execution'}},
+                          {'provider', 'model', 'temperature', 'effort', 'execution', 'fallback_model'}},
             'attempted_calls': 0}
     error, started = None, perf_counter()
     try:
@@ -481,6 +481,12 @@ def translate_result(result, *, context, generate, metadata=None, expected_finge
                 log = getattr(generate, 'attempt_log', None)
                 if isinstance(log, list):
                     info['provider_attempt_log'] = [dict(entry) for entry in log if isinstance(entry, dict)][:2]
+                used = getattr(generate, 'generator_used', None)
+                if isinstance(used, dict):
+                    info['generator_used'] = dict(used)  # actual model; fallback reason, usage and cost
+                fallback_failure = getattr(generate, 'fallback_failure', None)
+                if isinstance(fallback_failure, dict):
+                    info['fallback_failure'] = dict(fallback_failure)
         business = translate(summary, evidence, industry=context['industry'], generate=invoke,
                              concise=True, _prompt_path=PROMPT)
         if any(len(business[field]) > 4 or any(len(line) > 500 for line in business[field])

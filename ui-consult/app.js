@@ -16,7 +16,7 @@
     check: 'M5 12.5l4.5 4.5L19 7.5', external: 'M14 5h5v5|M19 5l-8 8|M11 6H6v12h12v-5', volume: 'M5 9v6h3l5 4V5L8 9z|M16 9a4 4 0 0 1 0 6',
     code: 'M8 8l-4 4 4 4|M16 8l4 4-4 4|M13 5l-2 14', clock: 'M12 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16z|M12 8v4l3 2',
     layers: 'M12 4l8 4-8 4-8-4z|M4 12l8 4 8-4|M4 16l8 4 8-4', refresh: 'M20 12a8 8 0 1 1-2.5-5.8|M20 4v4h-4',
-    sparkle: 'M12 4l1.8 4.7 4.7 1.8-4.7 1.8L12 17l-1.8-4.7-4.7-1.8 4.7-1.8z|M18.5 16.5v3|M17 18h3', archive: 'M4 5h16v4H4z|M6 9v10h12V9|M10 13h4',
+    sparkle: 'M12 4l1.8 4.7 4.7 1.8-4.7 1.8L12 17l-1.8-4.7-4.7-1.8 4.7-1.8z|M18.5 16.5v3|M17 18h3', archive: 'M4 5h16v4H4z|M6 9v10h12V9|M10 13h4', dots: 'M5 12h.01|M12 12h.01|M19 12h.01', trash: 'M4 7h16|M9 7V4h6v3|M6 7l1 13h10l1-13',
     pencil: 'M4 20l1-4L16 5l3 3L8 19z', arrow: 'M5 12h14|M13 6l6 6-6 6',
     table: 'M4 5h16v14H4z|M4 10h16|M4 15h16|M10 5v14', chart: 'M5 19V5|M5 19h14|M9 15l3-4 3 2 4-6',
     copy: 'M9 9h10v10H9z|M5 15V5h10', type: 'M3 19l5-13 5 13|M5 14.5h6|M15 19v-5.5a2.75 2.75 0 0 1 5.5 0V19|M15 15.5h5.5', info: 'M12 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16z|M12 11v5|M12 8v.5',
@@ -86,6 +86,8 @@
   let clarificationCard = null, conversationHistory = [], activePaperContextId = null, requestPending = false;
   let latestAnswer = null, appReady = false, retryContext = null, composing = false, compositionEndedAt = -Infinity;
   let needsDivider = false, toastTimer, libraryEnabled = false, revision = null, recordedMode = false;
+  // Server-owned research conversation (indexed mode): follow-ups are resolved into standalone questions.
+  let activeConversationId = null;
   const explanationRenderers = new WeakMap();
 
   /* ---------- Status ---------- */
@@ -2866,12 +2868,142 @@
     (options.querySelector('input') || free).focus({preventScroll: true});
   }
 
+  /* ---------- Research conversations (server-owned) ---------- */
+  function clearConversationView() {
+    activeConversationId = null;
+    thread.querySelectorAll(':scope > .turn, :scope > .divider').forEach(node => node.remove());
+    $('#session-list')?.replaceChildren();
+    activeTurn = null; activeDemo = null;
+    needsDivider = false;
+    renderSidebar();
+  }
+  // Show the standalone question that was researched when a follow-up was resolved from context.
+  function showInterpretation(turn, info) {
+    const resolved = info?.resolved_question, original = info?.original_question;
+    if (!turn || !resolved || !original || info.resolution?.kind !== 'resolved' || resolved === original) return;
+    $('.interpreted', turn)?.remove();
+    const edit = h('button', {type: 'button', class: 'text-btn interpreted-edit', text: 'Edit',
+      onclick: () => { setQuery(resolved); queryInput.focus(); }});
+    $('.question', turn).after(h('p', {class: 'interpreted'}, h('span', {class: 'interpreted-label', text: 'Interpreted as '}),
+      h('span', {text: resolved}), edit));
+  }
+  function renderConversationClarification(demo, answer) {
+    const ask = demo.conversation_clarification || {};
+    $('.loading', answer)?.remove();
+    const options = (ask.options || []).map(text => h('button', {type: 'button', class: 'quick-chip', text,
+      onclick: () => { setQuery(text); queryInput.focus(); }}));
+    answer.append(h('div', {class: 'conversation-clarify'},
+      h('p', {class: 'aside-line info', role: 'status'}, icon('info'), h('span', {text: ask.question || 'Please restate your question.'})),
+      options.length ? h('div', {class: 'quick-chips'}, ...options) : null,
+      h('p', {class: 'section-note', text: 'No research was run. Reply in the box below; your answer stays in this conversation.'})));
+    $('.question-label', answer.closest('.turn'))?.removeAttribute('hidden');
+    $('.question-label', answer.closest('.turn')).textContent = 'Clarification needed';
+    queryInput.focus({preventScroll: true});
+  }
+  async function loadConversations() {
+    if (!libraryEnabled) return;
+    try {
+      const data = await api('/api/conversations?archived=0');
+      renderSidebar.conversations = data.conversations || [];
+      renderSidebar();
+    } catch { /* history stays as last shown */ }
+  }
+  async function openConversation(id, status) {
+    const token = nav.begin();
+    try {
+      const data = await api(`/api/conversations/${id}`);
+      if (!nav.isCurrent(token)) return;
+      clearConversationView();
+      activeConversationId = id;
+      resetEvidence('Select a saved citation to inspect the retained evidence.');
+      let last = null;
+      for (const saved of data.turns) {
+        const number = ++turnNumber;
+        const {turn, answer} = createTurn(saved.original_question, number, 'Saved question · No new research', 'Opening saved answer…');
+        thread.append(turn);
+        renderDemo(saved.envelope, number, answer);
+        showInterpretation(turn, saved);
+        last = turn;
+      }
+      if (last) activateTurn(last);
+      renderSidebar();
+    } catch (error) {
+      status.textContent = error.message || 'Could not open the conversation.';
+      announce(status.textContent);
+    }
+  }
+  function conversationDialog(heading, body, confirmLabel, {danger = false, input = null} = {}) {
+    return new Promise(resolve => {
+      const dialog = h('dialog', {class: 'popover-panel conversation-dialog', 'aria-labelledby': 'conversation-dialog-h'});
+      const done = value => { dialog.close(); dialog.remove(); resolve(value); };
+      dialog.append(h('h2', {id: 'conversation-dialog-h', text: heading}), h('p', {class: 'section-note', text: body}),
+        input || '', h('div', {class: 'conversation-dialog-actions'},
+          h('button', {type: 'button', class: 'text-btn', text: 'Cancel', onclick: () => done(null)}),
+          h('button', {type: 'button', class: danger ? 'solid-btn danger-btn' : 'solid-btn', text: confirmLabel,
+            onclick: () => done(input ? input.value.trim() : true)})));
+      dialog.addEventListener('cancel', event => { event.preventDefault(); done(null); });
+      document.body.append(dialog);
+      dialog.showModal();
+      (input || dialog.querySelector('.text-btn')).focus();
+    });
+  }
+  async function conversationAction(conversation, action, status) {
+    const path = `/api/conversations/${conversation.id}`;
+    try {
+      if (action === 'rename') {
+        const input = h('input', {type: 'text', class: 'conversation-title-input', maxLength: 200, value: conversation.title, 'aria-label': 'Conversation name'});
+        const title = await conversationDialog('Rename conversation', 'The new name is shown in your history.', 'Rename', {input});
+        if (!title) return;
+        await api(path, {title});
+        announce('Conversation renamed.');
+      } else if (action === 'archive') {
+        await api(path, {archived: true});
+        announce('Conversation archived. It no longer appears in history; its saved answers remain in the Library.');
+      } else if (action === 'delete') {
+        const ok = await conversationDialog('Delete conversation?',
+          `“${conversation.title}” will be removed from your history and can no longer be opened or continued. ` +
+          'For audit purposes the underlying research records are retained on the server and are not permanently erased.',
+          'Delete', {danger: true});
+        if (!ok) return;
+        await api(`${path}/delete`, {confirm: true});
+        if (conversation.id === activeConversationId) { clearConversationView(); setView('home'); }
+        announce('Conversation deleted from history.');
+      }
+      loadConversations();
+    } catch (error) {
+      status.textContent = error.message || 'The conversation could not be changed. Nothing was changed.';
+      announce(status.textContent);
+    }
+  }
+  function conversationMenu(conversation, status) {
+    const panel = h('div', {class: 'side-menu', role: 'menu', hidden: true});
+    const toggle = h('button', {type: 'button', class: 'side-menu-btn', 'aria-haspopup': 'menu', 'aria-expanded': 'false',
+      'aria-label': `More options for ${conversation.title}`, title: 'More options'}, icon('dots'));
+    const close = () => { panel.hidden = true; toggle.setAttribute('aria-expanded', 'false'); };
+    const entry = (label, iconName, action) => h('button', {type: 'button', role: 'menuitem', class: 'side-menu-item',
+      onclick: () => { close(); conversationAction(conversation, action, status); }}, icon(iconName), h('span', {text: label}));
+    panel.append(entry('Rename', 'pencil', 'rename'), entry('Archive', 'archive', 'archive'), entry('Delete from history', 'trash', 'delete'));
+    toggle.addEventListener('click', event => {
+      event.stopPropagation();
+      const open = panel.hidden;
+      document.querySelectorAll('.side-menu').forEach(menu => { menu.hidden = true; });
+      panel.hidden = !open; toggle.setAttribute('aria-expanded', String(open));
+      if (open) panel.querySelector('button').focus();
+    });
+    panel.addEventListener('keydown', event => { if (event.key === 'Escape') { close(); toggle.focus(); } });
+    return [toggle, panel];
+  }
+  document.addEventListener('click', event => {
+    if (!event.target.closest?.('.side-menu')) document.querySelectorAll('.side-menu').forEach(menu => { menu.hidden = true; });
+  });
+
   /* ---------- Conversations ---------- */
   function clearRetries() { retryContext = null; document.querySelectorAll('.retry-question').forEach(button => button.remove()); }
   async function startResearchConversation() {
     if (requestPending) return false;
     if (!clarificationEnabled) {
       conversationHistory = []; finishRevision(); clearRetries();
+      clearConversationView();
       needsDivider = true; setQuery(''); suggestions.hidden = true; setView('home'); queryInput.focus();
       return true;
     }
@@ -3081,7 +3213,8 @@
     let submissionContext = indexedMode ? (retryContext || {context_id: indexedContextId, interpret_context: true,
       ...(industry && !clarificationPending ? {industry} : {}),
       ...(risk && !clarificationPending ? {risk_assessment: true, jurisdiction} : {}),
-      ...(clarificationEnabled ? {conversation_id: researchConversationId, action: clarificationPending ? 'resume' : 'ask'} : {})}) : liveSynthesis ? (retryContext || {
+      ...(clarificationEnabled ? {conversation_id: researchConversationId, action: clarificationPending ? 'resume' : 'ask'} : {}),
+      ...(!clarificationEnabled && activeConversationId ? {conversation_id: activeConversationId} : {})}) : liveSynthesis ? (retryContext || {
       history: conversationHistory.map(message => ({...message})), paper_context_id: activePaperContextId}) : null;
     setSettings(false);
     if (!query.trim()) {
@@ -3137,6 +3270,14 @@
         }
         throw new Error('Request rejected.');
       }
+      if (demo.conversation?.id) activeConversationId = demo.conversation.id;
+      if (demo.error?.code === 'conversation_missing') activeConversationId = null;
+      if (demo.scenario === 'conversation_clarification') {
+        renderConversationClarification(demo, answer);
+        if (queryInput.value === query) setQuery('');
+        loadConversations();
+        return;
+      }
       if (demo.scenario === 'clarification') {
         setClarificationPending(true);
         renderClarification(demo, number, answer);
@@ -3159,6 +3300,12 @@
         throw new Error('Research execution failed.');
       }
       renderDemo(demo, number, answer);
+      showInterpretation(turn, demo.conversation_turn);
+      if (demo.conversation?.deleted) {
+        answer.prepend(h('p', {class: 'aside-line warn', role: 'status'}, icon('alert'),
+          h('span', {text: 'This conversation was deleted while the answer was prepared. The answer is shown here but was not added to your history.'})));
+        activeConversationId = null;
+      }
       if (demo.business_auto === true) void answer.startAutomaticBusiness?.();
       if (agentic && demo.agentic_charts) chartPreview = startChartPreview(turn, query, number, demo.agentic_charts);
       settleChartPreview(chartPreview, {kind: demo.result?.summary?.status === 'ok' ? 'answered' : 'insufficient', demo});
@@ -3438,7 +3585,28 @@
         h('ul', null, unsaved.map(turn => item($('.question', turn)?.textContent || 'Answer', currentView === 'thread' && turn === activeTurn,
           () => { activateTurn(turn); setView('thread'); renderSidebar(); })))));
     }
-    if (briefs.length) {
+    const conversations = renderSidebar.conversations;
+    if (conversations) {
+      const groups = new Map();
+      for (const conversation of conversations) {
+        const key = sideGroup(conversation.updated_at);
+        if (!groups.has(key)) groups.set(key, []);
+        groups.get(key).push(conversation);
+      }
+      const section = h('section', {class: 'side-group'}, h('h2', {class: 'side-title', text: 'Conversations'}));
+      for (const key of ['Today', 'Yesterday', 'Previous 7 days', 'Older']) {
+        if (!groups.has(key)) continue;
+        section.append(h('h3', {class: 'side-when', text: key}), h('ul', null, groups.get(key).map(conversation => {
+          const row = item(conversation.title, currentView === 'thread' && conversation.id === activeConversationId,
+            () => openConversation(conversation.id, status),
+            `${conversation.title} · ${conversation.turn_count} question${conversation.turn_count === 1 ? '' : 's'}`);
+          row.classList.add('side-conversation');
+          row.append(...conversationMenu(conversation, status));
+          return row;
+        })));
+      }
+      if (conversations.length) parts.push(section);
+    } else if (briefs.length) {
       const groups = new Map();
       for (const brief of briefs) {
         const key = sideGroup(brief.updated_at);
@@ -3538,6 +3706,7 @@
     try {
       const data = await api('/api/briefs?q=&archived=0&offset=0');
       renderSidebar.briefs = data.briefs; renderSidebar();
+      loadConversations();
       const status = h('span');
       $('#recent-briefs').replaceChildren(...data.briefs.slice(0, recordedMode ? 6 : 4).map(brief => recordedMode ? exampleCard(brief, status) : briefRow(brief, status)));
       $('#recent-briefs').classList.toggle('example-grid', recordedMode);

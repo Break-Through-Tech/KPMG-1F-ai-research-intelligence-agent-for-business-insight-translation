@@ -1149,3 +1149,23 @@ body.side-collapsed .side-item { justify-content: flex-start; padding: 0 var(--s
 
 /* The close button already returns to the answer; the duplicate link goes. */
 #inspector .source-return { display: none; }
+
+/* Research conversations: history menu, dialogs and the resolved-question line */
+.side-conversation { position: relative; }
+.side-conversation > .side-link { padding-right: 30px; }
+.side-menu-btn { position: absolute; top: 50%; right: 4px; display: inline-grid; place-items: center; width: 24px; height: 24px; transform: translateY(-50%); border-radius: 6px; color: var(--text-2); opacity: 0; transition: opacity .15s, background .15s; }
+.side-conversation:hover .side-menu-btn, .side-menu-btn:focus-visible, .side-menu-btn[aria-expanded="true"], .side-conversation > .side-link[aria-current] + .side-menu-btn { opacity: 1; }
+.side-menu-btn:hover { background: var(--accent-soft); color: var(--text); }
+.side-menu { position: absolute; z-index: 30; top: calc(100% + 2px); right: 0; display: grid; min-width: 11rem; padding: 4px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text); box-shadow: var(--shadow-float); }
+.side-menu[hidden] { display: none; }
+.side-menu-item { display: flex; align-items: center; gap: var(--s2); padding: 6px var(--s2); border-radius: 6px; color: var(--text); font-size: var(--fs-md); text-align: left; }
+.side-menu-item:hover, .side-menu-item:focus-visible { background: var(--accent-soft); }
+.side-menu-item:last-child { color: var(--bad); }
+.conversation-dialog h2 { margin: 0 0 var(--s2); font-size: var(--fs-lg); }
+.conversation-dialog .conversation-title-input { width: 100%; margin-bottom: var(--s4); }
+.conversation-dialog-actions { display: flex; justify-content: flex-end; gap: var(--s2); }
+.danger-btn { background: var(--bad); border-color: var(--bad); }
+.interpreted { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--s2); margin: var(--s1) 0 0; color: var(--muted); font-size: var(--fs-md); }
+.interpreted-label { font-weight: 550; }
+.interpreted-edit { font-size: var(--fs-md); }
+.conversation-clarify { display: grid; gap: var(--s3); margin-top: var(--s3); }

@@ -40,6 +40,29 @@ def research_business_flags(body):
             return {**body, 'business_hint': hint}
     return body
 from src.research_demo import DemoHandler
+from src.conversation_store import ConversationStore
+from urllib.parse import parse_qs, urlsplit
+import re
+
+CONVERSATION_PATH = re.compile(r'/api/conversations/([0-9a-f]{32,33})(/delete)?')
+BRIEF_PATH = re.compile(r'/api/briefs/([0-9a-f]{32})')
+
+
+def record_conversation_turn(library, body):
+    """Attach a saved research turn to its conversation (creating one for a first question)."""
+    turn = body.get('conversation_turn')
+    if not isinstance(turn, dict) or library is None:
+        return body
+    conversations = ConversationStore(library)
+    saved = (body.get('library') or {}).get('brief', {}).get('id')
+    if not saved:
+        if turn.get('conversation_id'):
+            body = {**body, 'conversation': {'id': turn['conversation_id'], 'awaiting_clarification': True}}
+        return body
+    conversation_id = turn.get('conversation_id') or conversations.create(turn['original_question'] or 'Research')
+    recorded = conversations.append_turn(conversation_id, saved, original_question=turn['original_question'],
+                                         resolved_question=turn['resolved_question'], resolution=turn['resolution'])
+    return {**body, 'conversation': recorded}
 
 
 class BusinessHandler(DemoHandler):
@@ -52,12 +75,80 @@ class BusinessHandler(DemoHandler):
     def respond(self, status, body, content_type='application/json; charset=utf-8'):
         if self.path == '/api/config' and status == 200 and isinstance(body, dict):
             body = {**body, 'business_translation': type(self).business_generate is not None}
-        if (self.path == '/api/research' and status == 200 and isinstance(body, dict)
-                and type(self).business_generate is not None):
-            body = research_business_flags(body)
+        if self.path == '/api/research' and status == 200 and isinstance(body, dict):
+            try:
+                body = record_conversation_turn(self.library, body)
+            except (sqlite3.Error, KeyError, ValueError):
+                body = {**body, 'conversation_error': 'Answer saved, but it could not be added to the conversation.'}
+            deleted = (body.get('conversation') or {}).get('deleted')
+            if type(self).business_generate is not None and not deleted:
+                body = research_business_flags(body)
         super().respond(status, body, content_type)
 
+    def conversations(self):
+        if self.library is None:
+            raise LookupError
+        return ConversationStore(self.library)
+
+    def do_GET(self):
+        parts = urlsplit(self.path)
+        try:
+            if parts.path == '/api/conversations':
+                params = parse_qs(parts.query)
+                return self.respond(200, {'conversations': self.conversations().list(
+                    archived=params.get('archived', ['0'])[0] == '1', query=params.get('q', [''])[0],
+                    offset=int(params.get('offset', ['0'])[0]))})
+            match = CONVERSATION_PATH.fullmatch(parts.path)
+            if match and not match[2]:
+                return self.respond(200, self.conversations().load(match[1]))
+            match = BRIEF_PATH.fullmatch(parts.path)
+            if match and self.library is not None:
+                owner = self.conversations().conversation_of_brief(match[1])
+                if owner and owner['deleted']:
+                    return self.respond(404, {'error': 'This conversation was deleted from history.'})
+        except KeyError:
+            return self.respond(404, {'error': 'Conversation not found.'})
+        except (LookupError, sqlite3.Error):
+            return self.respond(503, {'error': 'Saved conversations are unavailable.'})
+        except ValueError as error:
+            return self.respond(400, {'error': str(error)})
+        return super().do_GET()
+
+    def conversation_write(self, conversation_id, delete):
+        if not self.local_request():
+            return self.respond(403, {'error': 'Use the local research page.'})
+        if self.headers.get_content_type() != 'application/json':
+            return self.respond(415, {'error': 'Use application/json.'})
+        try:
+            size = int(self.headers.get('Content-Length', '0'))
+            if not 0 < size <= 4096:
+                raise ValueError('Invalid conversation request size.')
+            payload = json.loads(self.rfile.read(size))
+            if not isinstance(payload, dict):
+                raise ValueError('Use a JSON object.')
+            store = self.conversations()
+            if delete:
+                if payload != {'confirm': True}:
+                    raise ValueError('Deleting a conversation requires confirmation.')
+                result = store.soft_delete(conversation_id)
+                forget = getattr(getattr(type(self).research, 'execute', None), 'forget', None)
+                if callable(forget):
+                    forget(conversation_id)
+                return self.respond(200, result)
+            if not payload or set(payload) - {'title', 'archived'}:
+                raise ValueError('Use title and/or archived.')
+            return self.respond(200, store.update(conversation_id, title=payload.get('title'), archived=payload.get('archived')))
+        except KeyError:
+            return self.respond(404, {'error': 'Conversation not found.'})
+        except (LookupError, sqlite3.Error):
+            return self.respond(503, {'error': 'Saved conversations are unavailable. Nothing changed.'})
+        except ValueError as error:
+            return self.respond(400, {'error': str(error)})
+
     def do_POST(self):
+        match = CONVERSATION_PATH.fullmatch(urlsplit(self.path).path)
+        if match:
+            return self.conversation_write(match[1], bool(match[2]))
         if self.path != '/api/business':
             return super().do_POST()
         if not self.local_request():
@@ -78,6 +169,9 @@ class BusinessHandler(DemoHandler):
             if not all(isinstance(payload[k], str) and payload[k] for k in ('brief_id', 'expected_version', 'fingerprint')):
                 raise ValueError('Invalid saved research reference.')
             self.library.check_current(payload['brief_id'], payload['expected_version'])
+            owner = ConversationStore(self.library).conversation_of_brief(payload['brief_id'])
+            if owner and owner['deleted']:
+                return self.respond(409, {'error': 'This conversation was deleted from history. No business insight was generated.'})
             source = self.library.load(payload['brief_id'], payload['expected_version'])
         except BriefConflict:
             return self.respond(409, {'error': 'Saved research changed. Reload before translating.'})
@@ -103,6 +197,9 @@ class BusinessHandler(DemoHandler):
         try:
             # Another request can save a new version between the first check and lock acquisition.
             self.library.check_current(payload['brief_id'], payload['expected_version'])
+            owner = ConversationStore(self.library).conversation_of_brief(payload['brief_id'])
+            if owner and owner['deleted']:
+                return self.respond(409, {'error': 'This conversation was deleted from history. No business insight was generated.'})
             response = translate_result(source['result'], context=context,
                 generate=type(self).business_generate, metadata=type(self).business_metadata,
                 expected_fingerprint=payload['fingerprint'],

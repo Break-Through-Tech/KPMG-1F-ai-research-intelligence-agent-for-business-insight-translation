@@ -38,8 +38,9 @@ ASSETS = {
 VENDOR = re.compile(r'vendor/katex/(?:katex\.min\.(?:js|css)|fonts/[A-Za-z0-9_-]+\.woff2)')
 FONTS = re.compile(r'fonts/[a-z0-9-]+\.woff2')  # bundled Inter and Source Serif 4
 BRIEF = r'/api/briefs/[0-9a-f]{32}'
-READ_API = re.compile(rf'/api/(?:config|saved-result|evidence-table|briefs)|{BRIEF}')
-WRITE_API = re.compile(rf'/api/(?:research|briefs)|{BRIEF}(?:/reviews)?')
+CONVERSATION = r'/api/conversations/[0-9a-f]{32,33}'
+READ_API = re.compile(rf'/api/(?:config|saved-result|evidence-table|briefs|conversations)|{BRIEF}|{CONVERSATION}')
+WRITE_API = re.compile(rf'/api/(?:research|briefs)|{BRIEF}(?:/reviews)?|{CONVERSATION}(?:/delete)?')
 MODEL = 'gemini-3.1-flash-lite'
 
 
@@ -201,6 +202,76 @@ def semantic_intent(execute, generate, budget):
     return execute_with_intent
 
 
+MAX_PENDING_CLARIFICATIONS = 64
+
+
+def conversational(execute, generate, budget, store_path):
+    """Resolve follow-ups into standalone questions before research (hosting layer, outside S2).
+
+    The research engine receives only the standalone question; prior answers never become evidence.
+    One resolution call at most, without retry, on the classifier's ledger; self-contained questions
+    and first questions make no call. Unresolvable follow-ups return a clarification and no research."""
+    from threading import Lock
+    from src.conversation_context import resolve
+    from src.conversation_store import ConversationStore
+    conversations = ConversationStore(store_path)
+    pending, lock = {}, Lock()
+
+    def once(prompt, *, response_schema=None):
+        budget.reserve(len(prompt.encode()) // 2 + 512)
+        return generate(prompt, response_schema=wire_schema(response_schema))
+    once.supports_response_schema = True
+
+    def execute_in_conversation(payload, **kwargs):
+        if not isinstance(payload, dict) or not payload.get('conversation_id'):
+            response = execute(payload, **kwargs)
+            if isinstance(response, dict) and isinstance(payload, dict):
+                response['conversation_turn'] = {'conversation_id': None, 'original_question': payload.get('query'),
+                                                 'resolved_question': payload.get('query'), 'resolution': {'kind': 'first', 'calls': 0}}
+            return response
+        payload = dict(payload)
+        conversation_id = payload.pop('conversation_id')
+        question = payload.get('query', '')
+        try:
+            history = conversations.history(conversation_id)
+        except KeyError:
+            return {'mode': 'indexed', 'result': None, 'error': {'stage': 'conversation', 'code': 'conversation_missing',
+                    'message': 'This conversation was removed or is unavailable. Start a new chat.'}}
+        with lock:
+            earlier = pending.pop(conversation_id, None)
+        if earlier:  # the user is answering our clarification question
+            history = (history + [{'role': 'user', 'content': earlier['question_from_user'][:2000]},
+                                  {'role': 'assistant', 'content': ('Clarification asked: ' + earlier['asked'])[:1500]}])[-12:]
+        action, text, resolution = resolve(question, history, once, force=bool(earlier))
+        if action == 'research' and len(text) > 2000:
+            action, text, resolution = 'clarify', 'Please shorten the question to under 2,000 characters.', {**resolution, 'kind': 'too_long'}
+        turn = {'conversation_id': conversation_id, 'original_question': question,
+                'resolved_question': text if action == 'research' else question, 'resolution': resolution}
+        if earlier:
+            turn['resolution'] = {**resolution, 'clarified_question': earlier['question_from_user']}
+        if action == 'clarify':
+            with lock:
+                if len(pending) >= MAX_PENDING_CLARIFICATIONS:
+                    pending.pop(next(iter(pending)))
+                pending[conversation_id] = {'question_from_user': earlier['question_from_user'] if earlier else question,
+                                            'asked': text}
+            print(f"conversation-resolution kind={resolution['kind']} calls={resolution['calls']}", file=sys.stderr, flush=True)
+            return {'mode': 'indexed', 'result': None, 'error': None, 'scenario': 'conversation_clarification',
+                    'conversation_clarification': {'question': text, 'options': resolution.get('options', [])},
+                    'conversation_turn': turn}
+        response = execute({**payload, 'query': text}, **kwargs)
+        if isinstance(response, dict):
+            response['conversation_turn'] = turn
+        return response
+
+    def forget(conversation_id):
+        with lock:
+            pending.pop(conversation_id, None)
+
+    execute_in_conversation.forget = forget
+    return execute_in_conversation
+
+
 def verify_snapshot(path):
     manifest = json.loads((path / 'manifest.json').read_text(encoding='utf-8'))
     for name, expected in manifest['files'].items():
@@ -236,8 +307,13 @@ def build_handler(snapshot, state, origin, password, generate, metadata, *, synt
         retrieval = open_b2(bundle, encoder_path=encoder, reranker_path=reranker)
         index = retrieval[1]()
         research = create_research(retrieval, guarded, metadata, top_k=8)
+    intent_budget = Budget(state / 'intent-usage.sqlite3')
     if business_generate is not None and os.environ.get('BUSINESS_INTENT_SEMANTIC', '1') != '0':
-        research.execute = semantic_intent(research.execute, generate, Budget(state / 'intent-usage.sqlite3'))
+        research.execute = semantic_intent(research.execute, generate, intent_budget)
+    # Conversations: migrate saved briefs (one turn each, idempotent), then resolve follow-ups before research.
+    from src.conversation_store import ConversationStore
+    ConversationStore(state / 'briefs.sqlite3').migrate()
+    research.execute = conversational(research.execute, generate, intent_budget, state / 'briefs.sqlite3')
     tables = TableIndex(bundle / 'parents.jsonl', snapshot / 'artifacts/table-audit.json')
     if tables.audit_problem or tables.index_sha256 != index['indexed_records_sha256']:
         raise ValueError('Table audit or retrieval identity does not match the bundle.')

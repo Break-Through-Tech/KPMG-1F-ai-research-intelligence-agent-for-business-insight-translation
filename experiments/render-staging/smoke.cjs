@@ -224,7 +224,53 @@ async function main() {
       assert.match(reviewedExport, /Recorded review for this version: Changes requested/);
       assert.match(stale, /No matching review decision/);
     }
+    // Conversation continuity: follow-ups stay in one conversation and are resolved into standalone questions.
+    const askHere = async text => {
+      await page.locator('#query').fill(text);
+      const answered = page.waitForResponse(result => result.url() === origin + '/api/research');
+      await page.locator('#composer button[type=submit]').click();
+      return (await answered).json();
+    };
+    await page.locator('#side-new').click();
+    assert.equal(await page.locator('#thread .turn').count(), 0);
+    const first = await askHere(question);
+    assert.ok(first.conversation?.id);
+    assert.equal(first.conversation.position, 1);
+    const follow = await askHere('How many base models was that across?');
+    assert.equal(follow.conversation.id, first.conversation.id);
+    assert.equal(follow.conversation.position, 2);
+    assert.equal(follow.conversation_turn.original_question, 'How many base models was that across?');
+    assert.equal(follow.conversation_turn.resolved_question, question);
+    await page.locator('.turn:not([hidden]) .interpreted').filter({hasText: 'strategy-selection accuracy'}).waitFor();
+    const ambiguous = await askHere('What about that one?');
+    assert.equal(ambiguous.scenario, 'conversation_clarification');
+    assert.equal(ambiguous.result, null);
+    await page.locator('.turn:not([hidden]) .conversation-clarify').getByText('Which result do you mean?').waitFor();
+    const current = page.locator('#side-history .side-conversation:has(> .side-link[aria-current])');
+    await current.locator('.side-menu-btn').click();
+    await current.getByRole('menuitem', {name: 'Rename'}).click();
+    await page.locator('.conversation-dialog input').fill('CU-DPO follow-ups');
+    await page.locator('.conversation-dialog').getByRole('button', {name: 'Rename'}).click();
+    await page.locator('#side-history .side-link').filter({hasText: 'CU-DPO follow-ups'}).waitFor();
+    await page.reload();
+    await page.locator('#side-history .side-link').filter({hasText: 'CU-DPO follow-ups'}).click();
+    await page.locator('#thread .turn .interpreted').first().waitFor({state: 'attached'});
+    assert.equal(await page.locator('#thread > .turn').count(), 2);  // complete history restored
+    const reopened2 = page.locator('#side-history .side-conversation:has(> .side-link[aria-current])');
+    await reopened2.locator('.side-menu-btn').click();
+    await reopened2.getByRole('menuitem', {name: 'Delete from history'}).click();
+    assert.match(await page.locator('.conversation-dialog').innerText(), /retained on the server/);
+    await page.locator('.conversation-dialog').getByRole('button', {name: 'Delete'}).click();
+    await page.locator('#side-history .side-link').filter({hasText: 'CU-DPO follow-ups'}).waitFor({state: 'detached'});
+    assert.equal(await page.locator('#thread > .turn').count(), 0);
+    const deletedConversation = first.conversation.id;
+    assert.equal((await fetch(origin + '/api/conversations/' + deletedConversation, {headers: auth})).status, 404);
+    const deletedBrief = follow.library.brief.id;
+    assert.equal((await fetch(origin + '/api/briefs/' + deletedBrief, {headers: auth})).status, 404);
+    const remaining = (await (await fetch(origin + '/api/conversations?archived=0', {headers: auth})).json()).conversations;
+    assert.ok(remaining.length >= 1 && remaining.every(c => c.id !== deletedConversation));
     assert.deepEqual(errors, []);
+    console.log('Conversation continuity, clarification, rename, reopen and delete passed.');
     console.log('Browser, auth, exact quote, full chart, saved brief and review passed. Startup ' +
       service.seconds + 's; real retrieval + scripted generation request ' + duration + 's.');
 
@@ -238,6 +284,8 @@ async function main() {
     const saved = await reopened.json();
     assert.equal(reopened.status, 200);
     assert.equal(saved.library.version.fingerprint, version.fingerprint);
+    // Deletion persists across a server restart; the saved brief behind it is retained but not served.
+    assert.equal((await fetch(origin + '/api/conversations/' + deletedConversation, {headers: {Authorization: 'Basic ' + service.auth}})).status, 404);
     assert.equal(saved.library.reviews[0].decision, 'revise');
     console.log('SQLite brief and review survived a complete server restart.');
   } finally {

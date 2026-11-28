@@ -24,6 +24,13 @@ def scripted(prompt, *, response_schema, question=QUESTION, quote=QUOTE, claim=C
             'supported_text': '', 'reduced_entailed': False, 'related': False,
             'added_support': [], 'flag_resolutions': []
         }]})
+    if prompt.startswith('Decide whether this research question genuinely needs clarification'):
+        # Scripted follow-up resolution through the existing query-clarification contract.
+        query = json.loads(prompt.rsplit('\n', 1)[1])['query']
+        if 'that one' in query:
+            return json.dumps({'decision': 'clarify', 'resolved_query': '', 'question': 'Which result do you mean?',
+                               'options': [{'text': 'The strategy-selection accuracy gain', 'support': []}]})
+        return json.dumps({'decision': 'continue', 'resolved_query': question, 'question': '', 'options': []})
     if prompt.startswith('Synthesize an answer'):
         request = json.loads(prompt.split('\n', 1)[1])
         if request['question'] != question:

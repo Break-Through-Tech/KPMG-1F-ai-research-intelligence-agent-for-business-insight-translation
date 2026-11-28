@@ -37,7 +37,7 @@ class BriefStoreTests(unittest.TestCase):
         with self.store.connection() as db:
             self.assertEqual(db.execute('PRAGMA user_version').fetchone()[0], 1)
             self.assertEqual({r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type='table'")},
-                             {'briefs', 'brief_versions', 'reviews'})
+                             {'briefs', 'brief_versions', 'reviews', 'conversations', 'conversation_turns'})
 
     def test_review_is_exact_version_and_never_inherited_or_imported(self):
         lib = self.save()

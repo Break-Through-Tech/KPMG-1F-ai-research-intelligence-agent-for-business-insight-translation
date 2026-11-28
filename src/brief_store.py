@@ -103,6 +103,23 @@ class BriefStore:
                     BEGIN SELECT RAISE(ABORT, 'Reviews are append-only'); END;
                 CREATE TRIGGER IF NOT EXISTS reviews_immutable_delete BEFORE DELETE ON reviews
                     BEGIN SELECT RAISE(ABORT, 'Reviews are append-only'); END;
+                -- Conversations group immutable research turns (src/conversation_store.py). Removing a
+                -- conversation from history is a soft delete: briefs, versions and reviews are kept.
+                CREATE TABLE IF NOT EXISTS conversations (
+                    id TEXT PRIMARY KEY, title TEXT NOT NULL, created_at TEXT NOT NULL, updated_at TEXT NOT NULL,
+                    archived INTEGER NOT NULL DEFAULT 0 CHECK(archived IN (0,1)), deleted_at TEXT
+                );
+                CREATE TABLE IF NOT EXISTS conversation_turns (
+                    conversation_id TEXT NOT NULL REFERENCES conversations(id), position INTEGER NOT NULL,
+                    brief_id TEXT NOT NULL UNIQUE REFERENCES briefs(id), original_question TEXT NOT NULL,
+                    resolved_question TEXT NOT NULL, resolution_json TEXT NOT NULL, created_at TEXT NOT NULL,
+                    PRIMARY KEY(conversation_id, position)
+                );
+                CREATE INDEX IF NOT EXISTS conversation_order ON conversations(deleted_at, archived, updated_at DESC);
+                CREATE TRIGGER IF NOT EXISTS turns_immutable_update BEFORE UPDATE ON conversation_turns
+                    BEGIN SELECT RAISE(ABORT, 'Conversation turns are immutable'); END;
+                CREATE TRIGGER IF NOT EXISTS turns_immutable_delete BEFORE DELETE ON conversation_turns
+                    BEGIN SELECT RAISE(ABORT, 'Conversation turns are immutable'); END;
                 PRAGMA user_version = 1;
             ''')
 
@@ -210,6 +227,8 @@ class BriefStore:
                     COALESCE((SELECT decision FROM reviews WHERE version_id=v.id ORDER BY id DESC LIMIT 1), 'pending') AS review_status
                 FROM briefs b JOIN brief_versions v ON v.id=b.current_version
                 WHERE b.archived=? AND (instr(lower(b.title),lower(?))>0 OR instr(lower(b.original_question),lower(?))>0)
+                    AND b.id NOT IN (SELECT t.brief_id FROM conversation_turns t JOIN conversations c
+                                     ON c.id=t.conversation_id WHERE c.deleted_at IS NOT NULL)
                 ORDER BY b.updated_at DESC, b.id LIMIT ? OFFSET ?
             ''', (int(archived), query, query, limit, offset))]
 

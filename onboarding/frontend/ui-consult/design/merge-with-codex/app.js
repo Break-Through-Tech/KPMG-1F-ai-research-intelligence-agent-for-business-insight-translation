@@ -2945,6 +2945,7 @@
       document.body.append(dialog);
       dialog.showModal();
       (input || dialog.querySelector('.text-btn')).focus();
+      input?.select();
     });
   }
   async function conversationAction(conversation, action, status) {

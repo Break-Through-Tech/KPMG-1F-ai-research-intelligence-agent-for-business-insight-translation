@@ -1151,6 +1151,8 @@ body.side-collapsed .side-item { justify-content: flex-start; padding: 0 var(--s
 #inspector .source-return { display: none; }
 
 /* Research conversations: history menu, dialogs and the resolved-question line */
+/* The history menu sits inside the blue sidebar but uses the light surface tokens, like the dialogs. */
+.side-menu { --text: #101a2a; --border: #d8e3f0; --accent-soft: #deebf7; --bad: #b3261e; --surface: #ffffff; }
 .side-conversation { position: relative; }
 .side-conversation > .side-link { padding-right: 30px; }
 .side-menu-btn { position: absolute; top: 50%; right: 4px; display: inline-grid; place-items: center; width: 24px; height: 24px; transform: translateY(-50%); border-radius: 6px; color: var(--text-2); opacity: 0; transition: opacity .15s, background .15s; }

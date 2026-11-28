@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
   <link rel="icon" href="data:,">
+  <link rel="preload" href="/fonts/inter-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
   <script src="/prefs.js"></script>
   <link rel="stylesheet" href="/vendor/katex/katex.min.css">
   <link rel="stylesheet" href="/read-aloud.css">
@@ -51,7 +52,7 @@
   <header class="topbar">
     <button id="menu-open" class="icon-btn menu-open" type="button" aria-label="Open navigation" aria-controls="sidebar" aria-expanded="false"><span data-icon="menu"></span></button>
     <nav id="view-tabs" class="view-tabs" role="tablist" aria-label="Answer views" hidden>
-      <button id="tab-answer" class="view-tab" type="button" role="tab" aria-selected="true" data-tab="answer"><span data-icon="sparkle"></span><span>Answer</span></button>
+      <button id="tab-answer" class="view-tab" type="button" role="tab" aria-selected="true" data-tab="answer"><span>Answer</span></button>
       <button id="tab-sources" class="view-tab" type="button" role="tab" aria-selected="false" data-tab="sources"><span data-icon="layers"></span><span>Sources</span><span class="tab-count" id="tab-sources-count"></span></button>
       <button id="tab-evidence" class="view-tab" type="button" role="tab" aria-selected="false" data-tab="evidence"><span data-icon="table"></span><span>Evidence</span></button>
       <button id="tab-workspace" class="view-tab" type="button" role="tab" aria-selected="false" data-tab="workspace"><span data-icon="shield"></span><span>Workspace</span></button>
@@ -181,7 +182,9 @@
           <span id="industry-inline-chips" class="quick"></span>
           <span class="hint">Optional. Leave empty for a research summary only.</span>
         </div>
-        <div id="examples" class="examples" role="group" aria-label="Example questions"></div>
+        <div id="examples" class="examples" role="group" aria-labelledby="examples-heading">
+          <h2 id="examples-heading">Example questions</h2>
+        </div>
         <p id="composer-note" class="composer-note"></p>
         <noscript>This local interface requires JavaScript. No provider credentials are needed.</noscript>
       </div>

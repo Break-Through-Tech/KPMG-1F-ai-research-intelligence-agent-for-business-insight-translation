@@ -61,6 +61,11 @@
   let activeClick;
   document.addEventListener('click', event => { activeClick = event; }, {capture: true});
   const pointerMotion = () => !reduced.matches && activeClick?.detail > 0 && activeClick.eventPhase !== Event.NONE;
+  function revealPanel(panel) {
+    if (!panel || narrow.matches || reduced.matches) return;
+    panel.animate([{opacity: .78, transform: 'translateY(3px)'}, {opacity: 1, transform: 'none'}],
+      {duration: 180, easing: 'cubic-bezier(.23, 1, .32, 1)'});
+  }
   function morph(change) {
     if (!document.startViewTransition || reduced.matches || document.hidden) return change();
     // A skipped or timed-out transition still applies the change; it only loses the animation.
@@ -201,7 +206,12 @@
     turn.dataset.tab = name;
     panes.forEach(node => { node.hidden = node.dataset.pane !== name; });
     stage.dataset.tab = name;
-    tabButtons.forEach(button => { const selected = button.dataset.tab === name; button.setAttribute('aria-selected', String(selected)); button.tabIndex = selected ? 0 : -1; });
+    for (const button of tabButtons) {
+      const selected = button.dataset.tab === name;
+      button.setAttribute('aria-selected', String(selected));
+      button.setAttribute('aria-controls', $(`.brief-pane[data-pane="${button.dataset.tab}"]`, turn).id);
+      button.tabIndex = selected ? 0 : -1;
+    }
     moveIndicator(pointerMotion() && previous !== undefined && previous !== name);
     if (scroll) scroller.scrollTop = previous === name ? scroller.scrollTop : (turn.scrollMemory[name] || 0);
     if (focus) $(`.brief-pane[data-pane="${name}"] .pane-title`, turn)?.focus({preventScroll: true});
@@ -323,15 +333,16 @@
   $('#risk-assessment').addEventListener('change', syncSettingsSummary);
   scenarioSelect.addEventListener('change', syncSettingsSummary);
   function syncSettingsSummary() {
-    // Always say what the next question will use, so the current configuration is visible without opening the panel.
+    // Show choices that change the default question settings.
+    const industry = industryInput.value.trim();
     const parts = [];
     if (researchEngine === 'agentic') parts.push('Multi-Agent');
-    if (!$('#industry-field').hidden) parts.push(industryInput.value.trim() ? `Industry: ${industryInput.value.trim()}` : 'No industry');
-    parts.push(ReadingPrefs.get('explanation') === 'plain' ? 'Plain language' : 'Technical');
+    if (!$('#industry-field').hidden && industry) parts.push(`Industry: ${industry}`);
+    if (ReadingPrefs.get('explanation') === 'plain') parts.push('Plain language');
     if (!$('#risk-field').hidden && $('#risk-assessment').checked) parts.push('Risk & compliance check');
     if (!$('#scenario-field').hidden && scenarioSelect.selectedIndex > 0) parts.push(scenarioSelect.selectedOptions[0].textContent);
-    $('#settings-summary').textContent = parts.join(' · ');
-    const current = industryInput.value.trim().toLowerCase();
+    $('#settings-summary').textContent = parts.join(', ');
+    const current = industry.toLowerCase();
     for (const toggle of inlineIndustry) toggle.setAttribute('aria-pressed', String(toggle.dataset.industry === current));
     $('#industry-inline').hidden = recordedMode || $('#industry-field').hidden;
   }
@@ -383,7 +394,7 @@
       if (requestPending) return;
       setQuery(text); queryInput.focus();
       announce('Example added. Edit the question, then send when ready.');
-    }}, h('span', {text}), icon('arrow')));
+    }}, h('span', {text})));
   }
 
   function setQuestionBusy(busy) {
@@ -483,9 +494,13 @@
       readerShift = null;
     }
     document.body.toggleAttribute('data-inspector-motion', animate);
+    returnFocus?.removeAttribute('data-inspected');
     returnFocus?.closest('.ev-table tbody tr')?.removeAttribute('data-inspected');
     if (open && trigger) returnFocus = trigger;
-    if (open) returnFocus?.closest('.ev-table tbody tr')?.setAttribute('data-inspected', '');
+    if (open) {
+      if (returnFocus?.matches('.citation')) returnFocus.setAttribute('data-inspected', '');
+      returnFocus?.closest('.ev-table tbody tr')?.setAttribute('data-inspected', '');
+    }
     if (open && document.body.classList.contains('review-open')) { document.body.classList.remove('review-open'); $('#review-drawer').inert = true; }
     document.body.classList.toggle('insp-open', open);
     inspector.inert = !open;
@@ -746,8 +761,9 @@
     needsDivider = false;
     const question = h('h1', {id: `question-${number}`, class: 'question', text: query});
     const answer = h('article', {class: 'answer', 'aria-labelledby': `question-${number}`}, answerHeading(number),
-      h('div', {class: 'loading', role: 'status'}, h('div', {class: 'loading-line'}, h('span', {class: 'orb'}), h('p', {text: loading}), elapsedCounter()),
-        h('div', {class: 'skeleton'}, h('i'), h('i'), h('i'), h('i'))));
+      h('div', {class: 'loading'}, h('div', {class: 'loading-line'},
+        h('span', {class: 'activity-mark', 'aria-hidden': 'true'}), h('p', {role: 'status', text: loading}), elapsedCounter()),
+        h('div', {class: 'skeleton', 'aria-hidden': 'true'}, h('i'), h('i'), h('i'), h('i'))));
     const turn = h('section', {class: 'turn', id: `turn-${number}`, 'aria-labelledby': question.id, hidden: true},
       h('header', {class: 'turn-head'}, h('p', {class: 'question-label', text: questionLabel, hidden: !/Multi-Agent|clarification/i.test(questionLabel)}), question),
       answer, h('div', {class: 'followup-slot'}, h('h2', {class: 'followup-title', text: 'Ask a follow-up'})));
@@ -1990,7 +2006,7 @@
 
   let businessTranslationEnabled = false;
 
-  function renderBusinessForm(demo, answer, businessStatus, onTranslated, onCustomize) {
+  function renderBusinessForm(demo, answer, statuses, onTranslated, onCustomize) {
     const saved = demo.library;
     // Prefill from the previous translation, or from what the question already says (business_hint).
     const previous = demo.result.provenance?.business_translation?.context || demo.business_hint || {};
@@ -2012,9 +2028,12 @@
     const start = async (automatic = false) => {
       if (answer.businessPending) return;
       answer.businessPending = true;
-      const updateStatus = message => {
-        businessStatus.hidden = !message;
-        businessStatus.textContent = message;
+      const updateStatus = (state, message) => {
+        for (const status of statuses) {
+          status.dataset.state = state;
+          status.hidden = false;
+          status.textContent = message;
+        }
       };
       const disable = value => {
         for (const button of answer.querySelectorAll('[data-business-trigger]')) button.disabled = value;
@@ -2022,7 +2041,7 @@
       const current = () => form.isConnected &&
         answer.closest('.turn')?.demoState?.demo.library?.version?.id === saved.version.id;
       disable(true);
-      updateStatus('Generating business insights from the saved findings…');
+      updateStatus('pending', 'Generating business insights from the saved findings…');
       try {
         const context = automatic ? {} : Object.fromEntries(
           Object.entries(fields).map(([key, input]) => [key, input.value]));
@@ -2041,7 +2060,7 @@
         }
         if (current()) onTranslated(updated);
       } catch (error) {
-        updateStatus(error.name === 'TimeoutError'
+        updateStatus('error', error.name === 'TimeoutError'
           ? 'Reload the saved answer before retrying. The translation may already have been saved.'
           : error.message || 'Business translation failed. Your saved research is available.');
       } finally {
@@ -2074,9 +2093,10 @@
     const checks = EM.verificationItems(demo, tables);
     const cites = EM.citationMap(result);
     const body = h('div', {class: 'brief'});
-    const pane = (key, label) => h('section', {class: `brief-pane pane-${key}`, 'data-pane': key, 'aria-label': label, hidden: key !== 'answer'});
-    const paneAnswer = pane('answer', 'Answer'), paneSources = pane('sources', 'Sources'),
-      paneEvidence = pane('evidence', 'Evidence'), paneWorkspace = pane('workspace', 'Workspace');
+    const pane = key => h('section', {class: `brief-pane pane-${key}`, id: `a${number}-pane-${key}`,
+      'data-pane': key, role: 'tabpanel', 'aria-labelledby': `tab-${key}`, hidden: key !== 'answer'});
+    const paneAnswer = pane('answer'), paneSources = pane('sources'),
+      paneEvidence = pane('evidence'), paneWorkspace = pane('workspace');
     body.append(paneAnswer, paneSources, paneEvidence, paneWorkspace);
     const stage = demo.error?.stage;
     const tableAnchor = table => `#a${number}-tbl-${table.table_id.replace(/[^A-Za-z0-9]/g, '-')}`;
@@ -2087,8 +2107,13 @@
     const eligibleBusiness = businessTranslationEnabled && demo.library?.version?.id &&
       ['full', 'partial'].includes(summary.quality_review?.coverage) &&
       summary.claims?.some(claim => !claim.kind || claim.kind === 'finding');
-    const businessStatus = h('p', {class: 'section-note', role: 'status', hidden: true});
-    const businessForm = eligibleBusiness ? renderBusinessForm(demo, answer, businessStatus, updated => {
+    const statusNode = () => h('p', {class: 'business-status', role: 'status', hidden: true});
+    const answerStatus = statusNode(), workspaceStatus = statusNode();
+    const generator = result.provenance?.business_translation?.generator_used;
+    const modelNote = generator?.fallback_from
+      ? () => h('p', {class: 'model-note', text: 'Generated by Muse Wonder 1.0 because the primary model was unavailable.'})
+      : () => null;
+    const businessForm = eligibleBusiness ? renderBusinessForm(demo, answer, [answerStatus, workspaceStatus], updated => {
       ResearchSpeech.stopAll();
       const selected = answer.querySelector('.ws-tab[aria-selected="true"]')?.getAttribute('aria-controls');
       renderDemo(updated, number, answer);
@@ -2250,19 +2275,20 @@
     const businessSection = h('section', {class: 'answer-business', 'aria-label': 'Business insights'});
     // Business intent with a missing field: ask for only that, inline, with the known fields prefilled.
     const askInline = Boolean(businessForm && !insight && stage !== 'business' && demo.business_hint?.missing?.length);
+    const retryInline = stage === 'business' && businessForm && (demo.error.retryable ?? demo.error.code === 'business_unavailable');
     if (insight || stage === 'business' || askInline) {
-      businessSection.append(h('h2', {class: 'pane-title', text: 'Business insights'}));
+      businessSection.append(h('header', {class: 'business-heading'}, h('h2', {text: 'Business insights'}),
+        insight && insight.industry !== 'Industry unspecified' ? h('p', {class: 'section-note', text: insight.industry}) : null));
     }
-    businessSection.append(businessStatus);
+    businessSection.append(answerStatus);
     if (stage === 'business') {
-      businessSection.append(h('p', {class: 'aside-line warn', role: 'status', text: demo.error.message}));
+      businessSection.append(h('p', {class: 'business-status business-outcome', 'data-state': 'error', role: 'status'}, icon('alert'), h('span', {text: demo.error.message})));
       // Retry inline only when the server marks the failure retryable (temporary outage, rate limit,
       // validation). Exhausted quota, rejected credentials and invalid requests offer no retry. The pending
       // guard and the server's same-version check prevent duplicate dispatch.
-      const retryable = demo.error.retryable ?? demo.error.code === 'business_unavailable';
-      if (businessForm && retryable) {
+      if (retryInline) {
         const label = h('span', {text: 'Try again'});
-        const retry = h('button', {type: 'button', class: 'act-btn business-retry', 'data-business-trigger': '',
+        const retry = h('button', {type: 'button', class: 'quiet-btn business-retry', 'data-business-trigger': '',
           onclick: () => businessForm.requestSubmit()}, label);
         let wait = Math.ceil(Number(demo.error.retry_after_seconds) || 0);
         if (wait > 0) {
@@ -2286,14 +2312,6 @@
     }
     if (insight) {
       const panel = businessSection;
-      if (insight.industry !== 'Industry unspecified') {
-        panel.append(h('p', {class: 'section-note', text: insight.industry}));
-      }
-      // Subtle disclosure, only when the fallback model produced this insight.
-      const used = result.provenance?.business_translation?.generator_used;
-      if (used?.fallback_from) {
-        panel.append(h('p', {class: 'section-note model-note', text: 'Generated by Muse Wonder 1.0 because the primary model was unavailable.'}));
-      }
       if (result.provenance?.agentic) {
         const dropped = (result.provenance.agentic.business_screening || []).filter(item => item.status === 'removed').length;
         panel.append(h('p', {class: 'aside-line warn'}, icon('alert'), h('span', {text: `Drafted by the business insight agent and not checked by the verification agent or a person. ${plural(dropped, 'unsupported statement')} ${dropped === 1 ? 'was' : 'were'} withheld.`})));
@@ -2311,6 +2329,8 @@
       if (caveats.length) {
         panel.append(h('details', {class: 'fold'}, h('summary', {text: 'Risks and limitations'}), bullets(caveats)));
       }
+      const disclosure = modelNote();
+      if (disclosure) panel.append(disclosure);
       if (businessForm) {
         panel.append(h('button', {type: 'button', class: 'quiet-btn ws-jump', onclick: () => openWorkspace('business'),
           text: 'Customize in Workspace'}));
@@ -2331,9 +2351,9 @@
           h('p', {class: 'export-note', text: demo.curated_preview ? 'The export includes the examples added for this demo.'
             : `Exports contain the original draft and sources. Review record: ${review.short}.`}))));
     moreActions.addEventListener('toggle', () => { if (moreActions.open) tools.prepareListen(); });
-    const businessEntry = insight?.implications?.length
+    const businessEntry = insight?.implications?.length && !businessForm
       ? btn('View business insight', () => openWorkspace('business'), 'act-btn business-entry')
-      : businessForm ? h('button', {type: 'button', class: 'act-btn business-entry', 'data-business-trigger': '',
+      : businessForm && !insight?.implications?.length && !askInline && !retryInline ? h('button', {type: 'button', class: 'act-btn business-entry', 'data-business-trigger': '',
         onclick: () => businessForm.requestSubmit()}, h('span', {text: 'Generate business insights'})) : null;
     paneAnswer.append(h('footer', {class: 'answer-footer'},
       h('div', {class: 'answer-footer-meta'},
@@ -2356,7 +2376,9 @@
     function selectWorkspace(key, focus = false) {
       for (const s of wsSections) {
         const on = s.key === key;
+        const animate = on && s.panel.hidden && pointerMotion();
         s.panel.hidden = !on; s.button.setAttribute('aria-selected', String(on)); s.button.tabIndex = on ? 0 : -1;
+        if (animate) revealPanel(s.panel);
         if (on && focus) s.button.focus({preventScroll: true});
       }
     }
@@ -2373,11 +2395,12 @@
     if (businessPanel) {
       businessPanel.classList.add('business-panel');
       businessPanel.append(h('header', {class: 'business-heading'},
-        h('h3', {text: insight && insight.industry !== 'Industry unspecified' ? `Business insight · ${insight.industry}` : 'Business insight'}),
+        h('h3', {text: insight && insight.industry !== 'Industry unspecified' ? `Business insight for ${insight.industry}` : 'Business insight'}),
         insight ? h('p', {class: 'section-note', text: 'A business interpretation of the evidence. The cited studies did not test this application.'}) : null));
+      businessPanel.append(workspaceStatus);
     }
     if (stage === 'business' && businessPanel) {
-      businessPanel.append(h('p', {class: 'aside-line warn', role: 'status', text: demo.error.message}));
+      businessPanel.append(h('p', {class: 'business-status business-outcome', 'data-state': 'error', role: 'status'}, icon('alert'), h('span', {text: demo.error.message})));
     }
     if (insight) {
       const panel = businessPanel;
@@ -2400,6 +2423,8 @@
         h('summary', {text: `Risks and limitations (${risks.length + limitations.length})`}),
         risks.length ? h('section', null, h('h4', {class: 'ws-h', text: 'Risks'}), bullets(risks)) : null,
         limitations.length ? h('section', null, h('h4', {class: 'ws-h', text: 'Limitations'}), bullets(limitations)) : null));
+      const disclosure = modelNote();
+      if (disclosure) panel.append(disclosure);
       const checkpoint = result.regulatory_checkpoint;
       if (checkpoint) {
         const assessed = checkpoint.status === 'assessed';
@@ -2708,6 +2733,8 @@
       label2.hidden = !chips.length;
     }
     answer.runDetails = runDetails;
+    const wasLoading = Boolean($('.loading', answer));
+    const wasTranslating = Boolean($('.business-status[data-state="pending"]', answer));
     answer.replaceChildren(answerHeading(number));
     if (demo.result) {
       const onChanged = updated => {
@@ -2723,6 +2750,10 @@
       // remain for the screen-reader announcement below.)
       void explanation; void tone; void abstention;
       renderBrief(demo, number, answer, tools);
+      if (!demo.library?.replayed && wasLoading) revealPanel($('.pane-answer', answer));
+      else if (wasTranslating && demo.result.business_insight) {
+        revealPanel(turn.dataset.tab === 'workspace' ? $('.business-panel', answer) : $('.answer-business', answer));
+      }
       turn.tools = tools;
       if (demo.library_error) openReview(demo, number, onChanged, null);
       turn.demoState = {demo, number};
@@ -2938,9 +2969,9 @@
           const step = (state.steps || []).filter(item => String(item.step).startsWith('generation')).length + 1;
           const most = state.max_calls || state.budget?.per_question_max;
           const who = state.mode === 'agentic' ? `${AGENT_NAMES[state.agent] || 'Multi-agent research'} is waiting for the AI` : 'Waiting for the AI explanation';
-          text = `${who} · model call ${step}${most ? ` of up to ${most}` : ''} · ${Math.round(state.call.seconds)} s of its ${state.call.timeout} s limit`;
+          text = `${who} (call ${step}${most ? ` of up to ${most}` : ''}, ${Math.round(state.call.seconds)} s of a ${state.call.timeout} s limit)`;
         }
-        line.textContent = text;
+        if (line.textContent !== text) line.textContent = text;
       } catch { /* keep the last message; the request itself reports failures */ }
       if (!stopped) timer = setTimeout(tick, 1000);
     };
